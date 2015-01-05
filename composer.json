@@ -23,6 +23,9 @@
             "url":  "git@github.com:dreamfactorysoftware/fabric-db.git"
         }, {
             "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/dfe-db.git"
+        }, {
+            "type": "vcs",
             "url":  "git@github.com:dreamfactorysoftware/fabric-queue.git"
         }, {
             "type": "vcs",
