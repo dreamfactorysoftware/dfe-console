@@ -1,37 +1,77 @@
 {
-	"name": "laravel/laravel",
-	"description": "The Laravel Framework.",
-	"keywords": ["framework", "laravel"],
-	"license": "MIT",
-	"type": "project",
-	"require": {
-		"laravel/framework": "4.2.*"
-	},
-	"autoload": {
-		"classmap": [
-			"app/commands",
-			"app/controllers",
-			"app/models",
-			"app/database/migrations",
-			"app/database/seeds",
-			"app/tests/TestCase.php"
-		]
-	},
-	"scripts": {
-		"post-install-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-update-cmd": [
-			"php artisan clear-compiled",
-			"php artisan optimize"
-		],
-		"post-create-project-cmd": [
-			"php artisan key:generate"
-		]
-	},
-	"config": {
-		"preferred-install": "dist"
-	},
-	"minimum-stability": "stable"
+    "name":              "dreamfactory/dfe-console",
+    "description":       "DreamFactory Enterprise(tm) Administrative Console",
+    "homepage":          "https://www.dreamfactory.com/",
+    "keywords":          ["dreamfactory", "fabric", "utility", "cli"],
+    "license":           ["proprietary"],
+    "authors":           [
+        {
+            "name":  "Jerry Ablan",
+            "email": "jerryablan@dreamfactory.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "repositories":      [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/lib-dfphp.git"
+        }, {
+            "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/fabric-common.git"
+        }, {
+            "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/fabric-db.git"
+        }, {
+            "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/fabric-queue.git"
+        }, {
+            "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/fabric-queue-models.git"
+        }, {
+            "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/fabric-couchdb.git"
+        }
+    ],
+    "require":           {
+        "kisma/kisma":                "~0.2",
+        "laravel/framework":          "4.2.*",
+        "doctrine/couchdb-odm":       "*",
+        "dreamfactory/console-tools": "dev-develop as dev-master",
+        "dreamfactory/fabric-queue":  "dev-develop as dev-master",
+        "dreamfactory/php-utils":     "*"
+    },
+    "require-dev":       {
+        "phpunit/phpunit": "@stable"
+    },
+    "extra":             {
+        "branch-alias": {
+            "dev-develop": "1.0.x-dev"
+        }
+    },
+    "autoload":          {
+        "classmap": [
+            "app/commands",
+            "app/controllers",
+            "app/models",
+            "app/database/migrations",
+            "app/database/seeds",
+            "app/tests/TestCase.php"
+        ],
+        "psr-4":    {
+            "DreamFactory\\Enterprise\\Console\\": "app/"
+        }
+    },
+    "scripts":           {
+        "post-install-cmd":        [
+            "php artisan clear-compiled",
+            "php artisan optimize"
+        ],
+        "post-update-cmd":         [
+            "php artisan clear-compiled",
+            "php artisan optimize"
+        ],
+        "post-create-project-cmd": [
+            "php artisan key:generate"
+        ]
+    }
 }
