@@ -14,16 +14,10 @@
     "repositories":      [
         {
             "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/lib-dfphp.git"
-        }, {
-            "type": "vcs",
             "url":  "git@github.com:dreamfactorysoftware/fabric-common.git"
         }, {
             "type": "vcs",
             "url":  "git@github.com:dreamfactorysoftware/fabric-db.git"
-        }, {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/dfe-db.git"
         }, {
             "type": "vcs",
             "url":  "git@github.com:dreamfactorysoftware/fabric-queue.git"
@@ -36,7 +30,6 @@
         }
     ],
     "require":           {
-        "kisma/kisma":                "~0.2",
         "laravel/framework":          "4.2.*",
         "doctrine/couchdb-odm":       "*",
         "dreamfactory/console-tools": "dev-develop as dev-master",
