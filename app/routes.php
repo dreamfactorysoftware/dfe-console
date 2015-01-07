@@ -2,15 +2,16 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
-/** @noinspection PhpUndefinedMethodInspection */
-Route::get( '/', 'HomeController@showWelcome' );
+//******************************************************************************
+//* Implicit Controllers
+//******************************************************************************
 
 /** @noinspection PhpUndefinedMethodInspection */
+Route::controller( 'app', 'AppController' );
 Route::get(
-    'users',
+    '/',
     function ()
     {
-        /** @noinspection PhpUndefinedMethodInspection */
         return View::make( 'users' );
     }
 );

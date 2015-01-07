@@ -16,7 +16,7 @@ class HomeController extends BaseController
     public function showWelcome()
     {
         /** @noinspection PhpUndefinedMethodInspection */
-        return View::make( 'hello' );
+        return View::make( 'users' );
     }
 
 }

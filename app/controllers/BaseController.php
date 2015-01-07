@@ -8,15 +8,6 @@ use Illuminate\Support\Facades\View;
 class BaseController extends Controller
 {
     //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /**
-     * @type string Our layout name
-     */
-    protected $layout = 'layouts.master';
-
-    //******************************************************************************
     //* Methods
     //******************************************************************************
 
@@ -33,5 +24,4 @@ class BaseController extends Controller
             $this->layout = View::make( $this->layout );
         }
     }
-
 }

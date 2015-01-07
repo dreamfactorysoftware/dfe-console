@@ -1,9 +1,0 @@
-<script src="/static/plugins/jquery/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
-<script src="//cdn.datatables.net/colvis/1.1.1/js/dataTables.colVis.min.js"></script>
-<script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
-<script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
-<script src="/static/highcharts/4.0.4/exporting.min.js"></script>
-<script src="/js/EnterpriseServer.js"></script>
-<script src="/js/cerberus.js"></script>
