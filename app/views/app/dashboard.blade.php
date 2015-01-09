@@ -170,7 +170,3 @@
         </div>
     </div>
 @stop
-
-@section('footer-section')
-    <script src="/js/cerberus.dashboard.js"></script>
-@stop

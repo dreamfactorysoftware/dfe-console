@@ -118,13 +118,13 @@ jQuery(function($) {
 					$_content.addClass('col-md-12');
 				});
 			});
-		} else {+
-			//	Hidden, so show
-			$_content.removeClass('col-md-12').promise().done(function() {
-				$_content.addClass('col-md-10').promise().done(function() {
-					$_sidebar.show('fast');
+		} else {
+			+//	Hidden, so show
+				$_content.removeClass('col-md-12').promise().done(function() {
+					$_content.addClass('col-md-10').promise().done(function() {
+						$_sidebar.show('fast');
+					});
 				});
-			});
 		}
 
 		//	Redraw data table when animations complete

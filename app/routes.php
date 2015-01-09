@@ -8,10 +8,14 @@ use Illuminate\Support\Facades\View;
 
 /** @noinspection PhpUndefinedMethodInspection */
 Route::controller( 'app', 'AppController' );
+/** @noinspection PhpUndefinedMethodInspection */
+Route::controller( 'fabric', 'FabricController' );
+/** @noinspection PhpUndefinedMethodInspection */
 Route::get(
     '/',
     function ()
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         return View::make( 'users' );
     }
 );

@@ -57,13 +57,6 @@ class AppController extends BaseController
     }
 
     /**
-     * @param array $parameters
-     */
-    protected function _processRequest( $parameters = array() )
-    {
-    }
-
-    /**
      * Renders a breadcrumb trail
      *
      * @param array $trail

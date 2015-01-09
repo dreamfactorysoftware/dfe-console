@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<?php
+if ( !isset( $_trail ) )
+    $_trail = null;
+?>
+<!DOCTYPE html >
 <html lang="en">
 <head>
     @section('title-section')
@@ -8,9 +12,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//fonts.googleapis.com/css?family=Roboto+Condensed|Open+Sans" rel="stylesheet" type="text/css">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="//cdn.datatables.net/1.10.3/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+    <link href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
     <link href="//cdn.datatables.net/colvis/1.1.1/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
     <link href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css" rel="stylesheet" type="text/css">
     <link href="/css/main.css" rel="stylesheet">
@@ -160,16 +164,15 @@
 
 <div id="loading-overlay" style="display: none;">Loading...</div>
 
-@section('footer-section')
-    <script src="/static/plugins/jquery/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.3/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/colvis/1.1.1/js/dataTables.colVis.min.js"></script>
-    <script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
-    <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
-    <script src="/static/highcharts/4.0.4/exporting.min.js"></script>
-    <script src="/js/EnterpriseServer.js"></script>
-    <script src="/js/cerberus.js"></script>
-@stop
+<script src="/static/plugins/jquery/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/colvis/1.1.1/js/dataTables.colVis.min.js"></script>
+<script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+<script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
+<script src="/static/highcharts/4.0.4/exporting.min.js"></script>
+<script src="/js/EnterpriseServer.js"></script>
+<script src="/js/cerberus.js"></script>
+<script src="/js/cerberus.dashboard.js"></script>
 </body>
 </html>
