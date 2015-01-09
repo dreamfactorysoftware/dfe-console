@@ -1,7 +1,6 @@
-<div class="row">
-    <?php echo $this->_renderTrail( array('Dashboard' => '/', 'Server Error' => false), false ); ?>
-</div>
+@extends('layout')
 
+@section('content')
 <div class="row">
     <div class="col-xs-12 text-center page-404 error-wrapper">
         <img src="/img/bg-planet.png" />
@@ -17,3 +16,4 @@
         <p><a href="/">Go Home</a></p>
     </div>
 </div>
+@stop
