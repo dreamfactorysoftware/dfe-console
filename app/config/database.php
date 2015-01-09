@@ -8,23 +8,29 @@ return array(
     'migrations'  => 'migration_t',
     /** Connections */
     'connections' => array(
-        'dfe-deploy' => array(
-            'driver'        => 'mysql',
-            'host'          => 'cerberus.fabric.dreamfactory.com',
-            'port'          => 3306,
-            'database-name' => 'fabric_deploy',
-            'username'      => 'deploy_user',
-            'password'      => '3hgc9nKuhh658_MJ-_D-PDqpkVEyta',
+        'fabric-deploy' => array(
+            'driver'    => 'mysql',
+            'host'      => 'cerberus.fabric.dreamfactory.com',
+            'port'      => 3306,
+            'database'  => 'fabric_deploy',
+            'username'  => 'deploy_user',
+            'password'  => '3hgc9nKuhh658_MJ-_D-PDqpkVEyta',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
         ),
-        'dfe-auth'   => array(
-            'driver'        => 'mysql',
-            'host'          => 'cerberus.fabric.dreamfactory.com',
-            'port'          => 3306,
-            'database-name' => 'fabric_auth',
-            'username'      => 'auth_user',
-            'password'      => 'yu-qZQGie_JAzqT0VkU7qt8Cf',
+        'fabric-auth'   => array(
+            'driver'    => 'mysql',
+            'host'      => 'cerberus.fabric.dreamfactory.com',
+            'port'      => 3306,
+            'database'  => 'fabric_auth',
+            'username'  => 'auth_user',
+            'password'  => 'yu-qZQGie_JAzqT0VkU7qt8Cf',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
         ),
-        'dfe-local'  => array(
+        'dfe-local'     => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
             'database'  => 'dfe_local',

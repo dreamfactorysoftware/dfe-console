@@ -1,4 +1,7 @@
 <?php
+use DreamFactory\Library\Fabric\Database\Models\Auth\User;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -8,10 +11,10 @@ class AppController extends BaseController
     //* Members
     //******************************************************************************
 
-    /**
-     * @type Request
-     */
+    /** @type Request */
     protected $_request = null;
+    /** @type string */
+    protected $_action = null;
 
     //********************************************************************************
     //* Public Methods
@@ -22,6 +25,7 @@ class AppController extends BaseController
      */
     public function __construct()
     {
+        $this->layout = 'layouts.blank';
         $this->_request = Request::createFromGlobals();
     }
 
@@ -32,14 +36,24 @@ class AppController extends BaseController
      */
     public function missingMethod( $parameters = array() )
     {
-        try
+        $this->_action = array_shift( $parameters );
+
+        $_viewName = 'app.' . $this->_action;
+        $parameters['_trail'] = $this->_renderTrail( array('Dashboard' => false), false );
+
+        if ( View::exists( $_viewName ) )
         {
-            $this->_processRequest( $parameters );
+            $parameters['_active'] = array(
+                'instances' => number_format( Instance::count(), 0 ),
+                'clusters'  => number_format( Cluster::count(), 0 ),
+                'users'     => number_format( User::count(), 0 ),
+            );
+
+            return View::make( $_viewName, $parameters );
         }
-        catch ( \Exception $_ex )
-        {
-            parent::missingMethod( $parameters );
-        }
+
+        //  Show 404
+        return View::make( 'app.404', array('_trail' => 'Page Not Found') );
     }
 
     /**
@@ -47,10 +61,6 @@ class AppController extends BaseController
      */
     protected function _processRequest( $parameters = array() )
     {
-        $_action = array_shift( $parameters );
-        $this->layout = null;
-
-        return View::make( 'app.' . $_action, $parameters );
     }
 
     /**
