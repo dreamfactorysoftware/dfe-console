@@ -16,6 +16,9 @@ Route::get(
     function ()
     {
         /** @noinspection PhpUndefinedMethodInspection */
-        return View::make( 'users' );
+        return View::make(
+            'app.dashboard',
+            array('_trail' => null, '_active' => array('instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0))
+        );
     }
 );

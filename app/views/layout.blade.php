@@ -164,15 +164,17 @@ if ( !isset( $_trail ) )
 
 <div id="loading-overlay" style="display: none;">Loading...</div>
 
-<script src="/static/plugins/jquery/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-<script src="//cdn.datatables.net/colvis/1.1.1/js/dataTables.colVis.min.js"></script>
-<script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
-<script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
-<script src="/static/highcharts/4.0.4/exporting.min.js"></script>
-<script src="/js/EnterpriseServer.js"></script>
-<script src="/js/cerberus.js"></script>
-<script src="/js/cerberus.dashboard.js"></script>
+@section('footer')
+    <script src="/static/plugins/jquery/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/colvis/1.1.1/js/dataTables.colVis.min.js"></script>
+    <script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+    <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
+    <script src="/static/highcharts/4.0.4/exporting.min.js"></script>
+    <script src="/js/EnterpriseServer.js"></script>
+    <script src="/js/cerberus.js"></script>
+    <script src="/js/cerberus.dashboard.js"></script>
+@stop
 </body>
 </html>
