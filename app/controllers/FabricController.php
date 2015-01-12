@@ -4,6 +4,7 @@ use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides data to the client application
@@ -14,14 +15,6 @@ class FabricController extends BaseController
     //* Constants
     //******************************************************************************
 
-    /**
-     * @type string
-     */
-    const FABRIC_AUTH = 'fabric-auth';
-    /**
-     * @type string
-     */
-    const FABRIC_DEPLOY = 'fabric-deploy';
     /**
      * @type int
      */
@@ -72,6 +65,8 @@ class FabricController extends BaseController
 
     /**
      * Returns data to a view
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getServers()
     {
@@ -85,65 +80,37 @@ FROM
     server_type_t t
 WHERE
     s.server_type_id = t.id
-ORDER BY
-    {$this->_order} {$this->_direction}
-LIMIT
-    {$this->_skip}, {$this->_limit}
+{$this->_order}
+{$this->_limit}
 SQL;
 
-        $_rows = DB::table( 'server_t' )
-            ->select( '' )
-            ->join( 'server_type_t', 'server_t.server_type_id', '=', 'server_type_t.id' )
-            ->orderBy( $this->_order, $this->_direction )
-            ->skip( $this->_skip )
-            ->take( $this->_limit )
-            ->get();
+        $_data = DB::select( DB::raw( $_sql ) );
 
-        return $this->_sendResponse( $_rows, Server::count() );
+        if ( !empty( $_data ) )
+        {
+            return $this->_sendResponse( $_data, Server::count() );
+        }
+
+        throw new NotFoundHttpException();
     }
 
     /**
-     * @param string $serverId
+     * @param int $id
      *
-     * @throws \CHttpException
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function actionServer( $serverId = null )
+    public function getServer( $id = null )
     {
-        $_update = false;
-        $_view = 'form';
-        $this->_modelClass = 'Cerberus\\Yii\\Models\\Deploy\\Server';
+        $_sql = <<<SQL
+SELECT
+    *
+FROM
+    server_t
+WHERE
+    id = {$id}
+SQL;
 
-        $serverId = $serverId ?: current( array_keys( $this->getActionParams() ) );
-
-        try
-        {
-            /** @type BaseFabricModel $_model */
-            /** @noinspection PhpInternalEntityUsedInspection */
-            $_model = $serverId ? $this->loadModel( $serverId ) : new $this->_modelClass;
-        }
-        catch ( CHttpException $_ex )
-        {
-        }
-
-        if ( empty( $_model ) )
-        {
-            throw new CHttpException( 404 );
-        }
-
-        switch ( $this->_method )
-        {
-            case Request::METHOD_GET:
-                break;
-
-            case Request::METHOD_POST:
-                $_update = true;
-                break;
-
-            case Request::METHOD_DELETE:
-                break;
-        }
-
-        $this->renderPartial( $_view, array('model' => $_model, 'update' => $_update, 'form' => $this->_renderFormConfig( $_model )) );
+        return $this->_sendResponse( DB::select( DB::raw( $_sql ) ) );
     }
 
     /**
@@ -233,6 +200,12 @@ SQL;
      */
     protected function _sendResponse( $data, $totalRows = null, $totalFiltered = null )
     {
+        //  Don't wrap if there are no totals
+        if ( null === $totalRows && null === $totalFiltered )
+        {
+            return Response::json( $data );
+        }
+
         $_recordsFiltered = (integer)( $totalFiltered ?: $totalRows );
         $data = array('data' => $data);
 
@@ -244,21 +217,20 @@ SQL;
     }
 
     /**
-     * Parses inbound data request for limits and sort and search
+     * Converts data to JSON and spits it out
      *
-     * @param int|string $defaultSort Default sort column name or number
+     * @param array $data
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    protected function _parseDataRequest( $defaultSort = 1 )
+    protected function _sendSingleResponse( $data )
     {
-        $this->_skip = IfSet::get( $_REQUEST, 'start', 0 );
-        $this->_limit = IfSet::get( $_REQUEST, 'length', static::DEFAULT_PER_PAGE );
-        $this->_order = null;
-        $this->_direction = null;
-
-        if ( null !== ( $_sortOrder = IfSet::get( $_REQUEST, 'order' ) ) && is_string( $_sortOrder ) )
+        //  Unwrap data if single row
+        if ( is_array( $data ) && count( $data ) === 1 )
         {
-            $this->_order = $_sortOrder;
-            $this->_direction = IfSet::get( $_REQUEST, 'dir', 'asc' );
+            $data = array_shift( $data );
         }
+
+        return Response::json( $data );
     }
 }

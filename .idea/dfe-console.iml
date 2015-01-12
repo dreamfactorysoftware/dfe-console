@@ -32,6 +32,9 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/monolog/monolog/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/vendor/monolog/monolog/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/vendor/classpreloader/classpreloader/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
