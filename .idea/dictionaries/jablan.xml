@@ -2,6 +2,7 @@
   <dictionary name="jablan">
     <words>
       <w>classmap</w>
+      <w>paginator</w>
       <w>strpos</w>
     </words>
   </dictionary>

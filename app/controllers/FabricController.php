@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FabricController extends BaseController
 {
-    ///
     //******************************************************************************
     //* Constants
     //******************************************************************************
@@ -74,12 +73,26 @@ class FabricController extends BaseController
     /**
      * Returns data to a view
      */
-    public function actionServers()
+    public function getServers()
     {
         $this->_parseDataRequest( 's.server_type_id' );
 
+        $_sql = <<<SQL
+SELECT
+    s.id, s.server_type_id, t.type_name_text, s.host_text, s.lmod_date
+FROM
+    server_t s,
+    server_type_t t
+WHERE
+    s.server_type_id = t.id
+ORDER BY
+    {$this->_order} {$this->_direction}
+LIMIT
+    {$this->_skip}, {$this->_limit}
+SQL;
+
         $_rows = DB::table( 'server_t' )
-            ->select( 'server_t.id, server_t.server_type_id, server_type_t.type_name_text, server_t.host_text, server_t.lmod_date' )
+            ->select( '' )
             ->join( 'server_type_t', 'server_t.server_type_id', '=', 'server_type_t.id' )
             ->orderBy( $this->_order, $this->_direction )
             ->skip( $this->_skip )

@@ -37,6 +37,7 @@
         "dreamfactory/php-utils":     "*"
     },
     "require-dev":       {
+        "way/generators": "~2.0",
         "phpunit/phpunit": "@stable"
     },
     "extra":             {
