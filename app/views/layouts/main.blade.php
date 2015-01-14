@@ -3,6 +3,7 @@ if ( !isset( $_trail ) )
     $_trail = null;
 ?>
 <!DOCTYPE html >
+<!--suppress HtmlUnknownTarget -->
 <html lang="en">
 <head>
     @section('title-section')
@@ -11,7 +12,7 @@ if ( !isset( $_trail ) )
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="//fonts.googleapis.com/css?family=Roboto+Condensed|Open+Sans" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Roboto+Condensed|Open+Sans|Lato" rel="stylesheet" type="text/css">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">

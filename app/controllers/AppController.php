@@ -25,7 +25,7 @@ class AppController extends BaseController
      */
     public function __construct()
     {
-        $this->layout = 'layouts.blank';
+        $this->layout = 'layouts.main';
         $this->_request = Request::createFromGlobals();
     }
 

@@ -140,7 +140,8 @@ p.footer-copyright a:hover, p.footer-text a:hover {
 }
 
 h1, .h1, h2, .h2, h3, .h3 {
-	margin: 0;
+	margin:      0;
+	font-family: "Lato", "Open Sans", Arial, sans-serif;
 }
 
 .navbar {

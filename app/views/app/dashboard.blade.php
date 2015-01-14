@@ -1,10 +1,10 @@
-@extends('layout')
+@extends('layouts.main')
 
 @section('content')
     <div class="scrollable-content">
         <div id="dashboard-header" class="row">
             <div class="col-md-6 no-padding-left">
-                <h3>Enterprise Dashboard</h3>
+                <h3>dashboard</h3>
             </div>
             <div class="col-md-2">
                 <div class="dashboard-header-info">{{ $_active['instances'] }}
