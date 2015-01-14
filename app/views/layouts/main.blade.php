@@ -1,183 +1,246 @@
-<?php
-if ( !isset( $_trail ) )
-    $_trail = null;
-?>
-<!DOCTYPE html >
-<!--suppress HtmlUnknownTarget -->
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    @section('title-section')
-        <title>DreamFactory Enterprise&trade; - Dashboard</title>
-    @stop
-
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="//fonts.googleapis.com/css?family=Roboto+Condensed|Open+Sans|Lato" rel="stylesheet" type="text/css">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
-    <link href="//cdn.datatables.net/colvis/1.1.1/css/dataTables.colVis.css" rel="stylesheet" type="text/css">
-    <link href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css" rel="stylesheet" type="text/css">
-    <link href="/css/main.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->        <!--[if lt IE 9]>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv-printshiv.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>    <![endif]-->
+    <meta name="description" content="DreamFactory Enterprise(tm)">
+    <meta name="author" content="DreamFactory Software, Inc.">
+    <title>DreamFactory Enterprise&trade;</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.superhero.min.css" rel="stylesheet">
+    <!-- DFE Mods -->
+    <link href="/css/dfe-console.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/themes/css/sb-admin.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="/themes/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --><!-- WARNING: Respond.js doesn't work if you view the page via file:// --><!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script><![endif]-->
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
+<div id="wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <div class="navbar-logo">
-                <a class="navbar-brand" href="/">DreamFactory Enterprise&trade;</a>
-            </div>
+            <a class="navbar-brand" href="/"><img src="/img/logo-dreamfactory.png" alt=""></a>
         </div>
+        <!-- Top Menu Items -->
+        <ul class="nav navbar-right top-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i> <b class="caret"></b></a>
 
-        <div class="collapse navbar-collapse" id="main-navbar">
-            <ul class="nav navbar-nav pull-right">
-                <li class="hidden-xs navbar-icon hide">
-                    <a href="#" class="modal-link"> <i class="fa fa-bell"></i></a>
-                </li>
-                <li class="hidden-xs navbar-icon hide">
-                    <a href="/app/messages" class="ajax-link"> <i class="fa fa-envelope"></i></a>
-                </li>
-                <li class="dropdown avatar img-circle ">
-                    <div class="avatar-image" data-hash="{{ md5( trim( strtolower( 'a user' ) ) ) }}"></div>
-                </li>
-                <li class="dropdown user-info">
-                    <a href="#" class="dropdown-toggle account" data-toggle="dropdown">{{ 'a user' }}
-                        <span class="caret"></span>
-                    </a>
+                <ul class="dropdown-menu message-dropdown">
+                    <li class="message-preview">
+                        <a href="#">
+                            <div class="media">
+                            <span class="pull-left">
+                                <img class="media-object" src="http://placehold.it/50x50" alt="">
+                            </span>
+                                <div class="media-body">
+                                    <h5 class="media-heading">
+                                        <strong>John Smith</strong>
+                                    </h5>
 
-                    <ul class="dropdown-menu" role="menu">
+                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+
+                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message-preview">
+                        <a href="#">
+                            <div class="media">
+                                    <span class="pull-left">
+                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                    </span>
+                                <div class="media-body">
+                                    <h5 class="media-heading">
+                                        <strong>John Smith</strong>
+                                    </h5>
+
+                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+
+                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message-preview">
+                        <a href="#">
+                            <div class="media">
+                                    <span class="pull-left">
+                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                    </span>
+                                <div class="media-body">
+                                    <h5 class="media-heading">
+                                        <strong>John Smith</strong>
+                                    </h5>
+
+                                    <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+
+                                    <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="message-footer">
+                        <a href="#">Read All New Messages</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
+
+                <ul class="dropdown-menu alert-dropdown">
+                    <li>
+                        <a href="#">Alert Name
+                            <span class="label label-default">Alert Badge</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">Alert Name
+                            <span class="label label-primary">Alert Badge</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">Alert Name
+                            <span class="label label-success">Alert Badge</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">Alert Name
+                            <span class="label label-info">Alert Badge</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">Alert Name
+                            <span class="label label-warning">Alert Badge</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">Alert Name
+                            <span class="label label-danger">Alert Badge</span>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">View All</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav side-nav">
+                <li>
+                    <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
+                </li>
+                <li>
+                    <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
+                </li>
+                <li>
+                    <a href="forms.html"><i class="fa fa-fw fa-edit"></i> Forms</a>
+                </li>
+                <li>
+                    <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
+                </li>
+                <li>
+                    <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown
+                        <i class="fa fa-fw fa-caret-down"></i></a>
+
+                    <ul id="demo" class="collapse">
                         <li>
-                            <a class="ajax-link" href="/app/profile"> <i class="fa fa-user"></i>
-
-                                <span>Profile</span>
-                            </a>
+                            <a href="#">Dropdown Item</a>
                         </li>
                         <li>
-                            <a href="/app/messages" class="ajax-link"> <i class="fa fa-envelope"></i>
-
-                                <span>Messages</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="ajax-link" href="/app/settings"> <i class="fa fa-cog"></i>
-
-                                <span>Settings</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/web/logout"> <i class="fa fa-power-off"></i>
-
-                                <span>Logout</span>
-                            </a>
+                            <a href="#">Dropdown Item</a>
                         </li>
                     </ul>
                 </li>
+                <li class="active">
+                    <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Blank Page</a>
+                </li>
+                <li>
+                    <a href="index-rtl.html"><i class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a>
+                </li>
             </ul>
         </div>
-    </div>
-</nav>
+        <!-- /.navbar-collapse -->
+    </nav>
 
-<div id="main" class="container-fluid">
+    <div id="page-wrapper">
 
-    <div class="row">
+        <div class="container-fluid">
 
-        <div id="sidebar-left" class="hidden-sm hidden-xs col-md-2">
-            <ul class="nav main-menu">
-                <li>
-                    <a href="/app/dashboard" class="ajax-link"> <i class="fa fa-dashboard fa-2x"></i>
-
-                        <span class="hidden-xs">Dashboard</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="ajax-link" href="/app/users"> <i class="fa fa-users fa-2x"></i>
-
-                        <span class="hidden-xs">Users</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="ajax-link" href="/app/servers"> <i class="fa fa-gear fa-2x"></i>
-
-                        <span class="hidden-xs">Servers</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="ajax-link" href="/app/clusters"> <i class="fa fa-gears fa-2x"></i>
-
-                        <span class="hidden-xs">Clusters</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="ajax-link" href="/app/instances"> <i class="fa fa-rocket fa-2x"></i>
-
-                        <span class="hidden-xs">Instances</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="ajax-link" href="/app/usage"> <i class="fa fa-bar-chart fa-2x"></i>
-
-                        <span class="hidden-xs">Usage</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a class="ajax-link" href="/app/settings"> <i class="fa fa-cog fa-2x"></i>
-
-                        <span class="hidden-xs">Settings</span>
-                    </a>
-                </li>
-
-            </ul>
-        </div>
-
-        <div id="content" class="col-xs-12 col-sm-12 col-md-10">
-            <div class="loading-content" style="display: none;">
-                <img src="/img/img-loading.gif" class="loading-image" alt="Loading..." />
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        Blank Page
+                        <small>Subheading</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa fa-dashboard"></i> <a href="index.html">Dashboard</a>
+                        </li>
+                        <li class="active">
+                            <i class="fa fa-file"></i> Blank Page
+                        </li>
+                    </ol>
+                </div>
             </div>
+            <!-- /.row -->
 
-            <div id="ajax-content">
-                @include('app.dashboard.breadcrumbs',array('trail'=>))
-                    <div class="row">
-                        {{ $_trail }}
-                    </div>
-                @stop
-
-                @yield('content')
-            </div>
         </div>
+        <!-- /.container-fluid -->
 
     </div>
+    <!-- /#page-wrapper -->
 
 </div>
+<!-- /#wrapper -->
 
-<div id="loading-overlay" style="display: none;">Loading...</div>
+<!-- jQuery -->
+<script src="/themes/js/jquery.js"></script>
 
-@section('footer')
-    <script src="/static/plugins/jquery/jquery.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
-    <script src="//cdn.datatables.net/colvis/1.1.1/js/dataTables.colVis.min.js"></script>
-    <script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
-    <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
-    <script src="/static/highcharts/4.0.4/exporting.min.js"></script>
-    <script src="/js/EnterpriseServer.js"></script>
-    <script src="/js/cerberus.js"></script>
-    <script src="/js/cerberus.dashboard.js"></script>
-@stop
+<!-- Bootstrap Core JavaScript -->
+<script src="/themes/js/bootstrap.min.js"></script>
+
 </body>
+
 </html>

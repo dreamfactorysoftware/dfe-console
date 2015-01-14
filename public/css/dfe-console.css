@@ -1,0 +1,45 @@
+.navbar {
+	min-height: 50px;
+}
+
+.navbar-brand {
+	height:  50px;
+	padding: 10px 15px 0;
+}
+
+.navbar-inverse > .top-nav > li > a {
+	color: #2c3e50;
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-nav > li > a {
+	color:            rgba(255, 255, 255, .8);
+	background-color: transparent;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+	color:            rgba(255, 255, 255, 1);
+	background-color: transparent;
+}
+
+.side-nav {
+	/*font-size: 17px;*/
+}
+
+@media (min-width: 768px ) {
+	.page-header {
+		margin-top: 0;
+	}
+
+	.navbar-nav > li > a {
+		padding-top:    10px;
+		padding-bottom: 10px;
+	}
+}
+
+@media (max-width: 768px) {
+	.page-header {
+		margin-top: 22px;
+	}
+}
