@@ -151,9 +151,11 @@ if ( !isset( $_trail ) )
             </div>
 
             <div id="ajax-content">
-                <div class="row">
-                    {{ $_trail }}
-                </div>
+                @include('app.dashboard.breadcrumbs',array('trail'=>))
+                    <div class="row">
+                        {{ $_trail }}
+                    </div>
+                @stop
 
                 @yield('content')
             </div>
