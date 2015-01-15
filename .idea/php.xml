@@ -6,6 +6,13 @@
     </behat_settings>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="5.5.0" />
+  <component name="PhpStepFilterConfiguration">
+    <option name="skippedFunctions">
+      <list>
+        <option value="Composer\Autoload\ClassLoader-&gt;loadClass" />
+      </list>
+    </option>
+  </component>
   <component name="PhpUnit">
     <phpunit_settings>
       <PhpUnitSettings />

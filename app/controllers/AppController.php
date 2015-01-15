@@ -39,7 +39,7 @@ class AppController extends BaseController
         $this->_action = array_shift( $parameters );
 
         $_viewName = 'app.' . $this->_action;
-        $parameters['_trail'] = static::renderBreadcrumbs( array(ucwords( $this->_action ) => false), false );
+        $parameters['_trail'] = renderBreadcrumbs( array(ucwords( $this->_action ) => false), false );
 
         if ( View::exists( $_viewName ) )
         {
@@ -53,7 +53,7 @@ class AppController extends BaseController
         }
 
         //  Show 404
-        return View::make( 'app.404', array('_trail' => static::renderBreadcrumbs( array('Page Not Found' => false), false )) );
+        return View::make( 'app.404', array('_trail' => renderBreadcrumbs( array('Page Not Found' => false), false )) );
     }
 
 }

@@ -31,13 +31,14 @@
     ],
     "require":           {
         "laravel/framework":          "4.2.*",
+        "radic/blade-extensions":     "1.*",
         "doctrine/couchdb-odm":       "*",
         "dreamfactory/console-tools": "dev-develop as dev-master",
         "dreamfactory/fabric-queue":  "dev-develop as dev-master",
         "dreamfactory/php-utils":     "*"
     },
     "require-dev":       {
-        "way/generators": "~2.0",
+        "way/generators":  "~2.0",
         "phpunit/phpunit": "@stable"
     },
     "extra":             {

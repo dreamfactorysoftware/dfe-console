@@ -1,5 +1,17 @@
 @extends('layouts.main')
 
+@section('page-title')
+    Dashboard
+@stop
+
+@section('page-header')
+    Dashboard
+@stop
+
+@section('page-subheader')
+    all your instances are belong to you
+@stop
+
 @section('content')
     <div class="scrollable-content">
         <div id="dashboard-header" class="row">
