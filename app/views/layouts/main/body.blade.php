@@ -2,19 +2,12 @@
     @include('layouts.main.navbar')
 
     <div id="page-wrapper" class="container-fluid">
-        <div class="row">
-            <?php echo renderBreadcrumbs( array('Dashboard' => false), false ); ?>
-        </div>
-        <!-- Page Heading -->
+        @include('app.breadcrumbs', array( '_trail' => array( 'Dashboard' => false), '_buttons'=>false ))
+
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">@yield('page-header','Nada')
-                    <small>@yield('page-subheader','me so empty!')</small>
-                </h1>
+                @yield('content')
             </div>
         </div>
-        <!-- /.container-fluid -->
     </div>
-    <!-- /#page-wrapper -->
 </div>
-<!-- /#wrapper -->

@@ -1433,32 +1433,3 @@ ul.ColVis_collection {
 	z-index:          1000;
 }
 
-.panel-row {
-	margin-left:  0;
-	margin-right: 0;
-}
-
-.no-padding-left {
-	padding-left: 0;
-}
-
-.no-padding-right {
-	padding-right: 0;
-}
-
-.no-padding {
-	padding-right: 0;
-	padding-left:  0;
-}
-
-.tab-content {
-	display: none;
-}
-
-.tab-content.active {
-	display: block;
-}
-
-.panel-heading {
-	cursor: pointer;
-}

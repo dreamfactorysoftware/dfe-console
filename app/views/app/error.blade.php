@@ -1,32 +1,32 @@
-@extends('layouts.master')
+@extends('layouts.main')
 
-@section('head')
-    <title>DreamFactory Enterprise&trade; - Oops!</title>
+@section('body-class')
+    error-wrapper
 @stop
 
-@section('master.body')
-    <body class="error-wrapper">
+@section('head')
+    Oops!
+@stop
 
-    @include('master.content_header')
+@section('layouts.main.body')
+    <div id="wrapper">
+        @include('layouts.main.navbar')
 
-    <div class="container-fluid">
-        @yield('content')
-    </div>
-
-    <div id="footer">
-        <div class="container-fluid">
-            <div class="pull-left footer-copyright">
-                <p class="footer-text">&copy; <a target="_blank"
-                            href="https://www.dreamfactory.com">DreamFactory Software, Inc.</a> 2012-{{ date('Y') }}. All Rights Reserved.
-                </p>
+        <div id="page-wrapper" class="container-fluid">
+            <div class="row">
+                <?php echo renderBreadcrumbs( array('Dashboard' => false), false ); ?>
             </div>
-            <div class="pull-right footer-version"><p class="footer-text">
-                    <a href="https://github.com/dreamfactorysoftware/dsp-core/"
-                            target="_blank">v{{ $_version }}</a>
-                </p>
+            <!-- Page Heading -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">@yield('page-header','Nada')
+                        <small>@yield('page-subheader','me so empty!')</small>
+                    </h1>
+                </div>
             </div>
+            <!-- /.container-fluid -->
         </div>
+        <!-- /#page-wrapper -->
     </div>
-    @include('master.content_footer')
-    </body>
+    <!-- /#wrapper -->
 @overwrite
