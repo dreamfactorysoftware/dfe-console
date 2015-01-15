@@ -39,8 +39,8 @@ HTML;
 HTML;
 
     return <<<HTML
-<div id="breadcrumb" class="col-md-12">
-    <a href="#" class="show-sidebar"><i class="fa fa-bars"></i></a>
+<div id="breadcrumb" class="col-lg-12">
+    <a href="#" class="show-sidebar pull-left"><i class="fa fa-bars"></i></a>
     <ol class="breadcrumb pull-left">{$_html}</ol>
     {$_buttons}{$_spinner}
 </div>
