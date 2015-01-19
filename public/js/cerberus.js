@@ -95,6 +95,8 @@ jQuery(function($) {
 		$_avatar.html('<img class="gravatar-image" src="' + 'http://www.gravatar.com/avatar/' + $_avatar.data('hash') + '" alt="avatar" />');
 	}
 
+	$('.nano').nanoScroller();
+
 	$(document).on('ajaxStart', function() {
 		$('.breadcrumb-loader').show();
 		$('#main').css({cursor: 'wait'});

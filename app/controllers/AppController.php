@@ -47,6 +47,7 @@ class AppController extends BaseController
                 'instances' => number_format( Instance::count(), 0 ),
                 'clusters'  => number_format( Cluster::count(), 0 ),
                 'users'     => number_format( User::count(), 0 ),
+                'user'      => static::getUserInfo(),
             );
 
             return View::make( $_viewName, $parameters );

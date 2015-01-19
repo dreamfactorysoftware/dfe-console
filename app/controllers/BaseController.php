@@ -1,6 +1,7 @@
 <?php
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 
@@ -123,4 +124,28 @@ class BaseController extends Controller
 
         return Response::json( $data );
     }
+
+    /**
+     * @param bool $asArray
+     *
+     * @return array|string The hashed email address
+     */
+    public static function getUserHash( $asArray = false )
+    {
+        $_hash = md5( strtolower( Auth::user() ? Auth::user()->email : 'nobody@dreamfactory.com' ) );
+
+        return $asArray ? array('_userHash' => $_hash) : $_hash;
+    }
+
+    public static function getUserInfo()
+    {
+        $_name = Auth::user() ? Auth::user()->email : 'nobody@dreamfactory.com';
+        $_hash = md5( strtolower( $_name ) );
+
+        return array(
+            'name' => $_name,
+            'hash' => $_hash,
+        );
+    }
+
 }

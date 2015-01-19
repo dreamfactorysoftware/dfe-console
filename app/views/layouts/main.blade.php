@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+<?php
+if ( !isset( $_user ) || !is_array( $_user ) )
+{
+    $_user = BaseController::getUserInfo();
+}
+?>
+<!DOCTYPE html >
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -6,9 +12,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="DreamFactory Enterprise(tm)">
     <meta name="author" content="DreamFactory Software, Inc.">
-    <title>DreamFactory Enterprise&trade; | @yield('page-title','Welcome!')</title>
+    <title> DreamFactory Enterprise & trade; | @yield('page-title','Welcome!')</title>
     <!-- Bootstrap Core CSS -->
     <link href="/css/bootstrap.superhero.min.css" rel="stylesheet">
+    <!-- Scroller CSS -->
+    <link rel="stylesheet" href="/css/nanoscroller.css">
     <!-- DFE Mods -->
     <link href="/css/dfe-console.css" rel="stylesheet">
     <!-- Custom CSS -->

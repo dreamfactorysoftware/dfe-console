@@ -1,4 +1,4 @@
-<div class="row no-padding breadcrumb-content">
+<div class="row breadcrumb-content">
     <div class="col-lg-9 no-padding-left">
         {{ renderBreadcrumbs($_trail,$_buttons) }}
     </div>

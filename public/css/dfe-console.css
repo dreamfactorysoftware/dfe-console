@@ -1,9 +1,15 @@
 @import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700|Open+Sans+Condensed:700,300|Open+Sans:400italic,700italic,700,400);
 
+html, body, #page-wrapper, #wrapper {
+	height: 100%;
+	width:  100%;
+}
+
 body {
-	font-family: "Open Sans Condensed", Arial, sans-serif;
+	font-family: "Open Sans", Arial, sans-serif;
 	font-weight: 300;
 	font-size:   14px;
+	overflow:    hidden;
 }
 
 i.fa {
@@ -13,13 +19,31 @@ i.fa {
 	margin-bottom:  2px;
 }
 
+.page-header {
+	margin-bottom: 15px;
+}
+
 /** page wrapper **/
 #page-wrapper.container-fluid {
-	padding-top: 0;
-	color:       #2c3e50;
+	color:    #2c3e50;
+	margin:   0;
+	padding:  0;
+	overflow: hidden;
+}
+
+#page-wrapper > .row.page-content {
+	margin: 0 -15px 10px 0;
+}
+
+#page-wrapper > .row.breadcrumb-content {
+	margin: 0 -15px 0 0;
 }
 
 /** navbar **/
+.top-nav > .open > .dropdown-menu {
+	box-shadow: -1px 1px 4px rgba(0, 0, 0, .75);
+}
+
 .navbar {
 	min-height:    50px;
 	margin-bottom: 0;
@@ -46,6 +70,24 @@ i.fa {
 	background-color: transparent;
 }
 
+/** user stuff **/
+.user-info {
+	height:      50px;
+	line-height: 50px;
+}
+
+.user-info-name {
+	display:       block;
+	font-size:     12px;
+	/*color:         #AA8383;*/
+	margin-bottom: -4px;
+}
+
+.user-info-welcome {
+	font-weight: bold;
+	margin-top:  2px;
+}
+
 /** sidebar **/
 .side-nav {
 	font-size:   17px;
@@ -56,10 +98,11 @@ i.fa {
 
 /** breadcrumbs **/
 .breadcrumb-content {
-	color:       #ebebeb;
-	background:  rgba(34, 34, 34, 1);
-	font-size:   17px;
-	font-family: "Open Sans", Arial, sans-serif;
+	color:        #ebebeb;
+	background:   rgba(34, 34, 34, 1);
+	font-size:    17px;
+	font-family:  "Open Sans Condensed", Arial, sans-serif;
+	margin-right: -10px;
 }
 
 #breadcrumb {
@@ -110,13 +153,8 @@ i.fa {
 
 /** dashboard **/
 .dashboard-content {
-	color: #2c3e50;
-}
-
-.dashboard-content > .row:first-child {
-	height:  40px !important;
-	margin:  0;
-	padding: 0;
+	color:      #2c3e50;
+	margin-top: 10px;
 }
 
 #dashboard-header {
@@ -135,19 +173,38 @@ i.fa {
 	height:         100%;
 	text-align:     center;
 	vertical-align: middle;
-	font-family:    "PT Sans Narrow", "Open Sans", Arial, sans-serif;
+	font-family:    "Open Sans Condensed", Arial, sans-serif;
 	font-size:      13px;
 	margin:         12px 8px 12px 8px;
 }
 
-#dashboard-content > .tab-content {
+.dashboard-content > .tab-content {
 	visibility: hidden;
 	position:   absolute;
 }
 
-#dashboard-content > .tab-content.active {
+.dashboard-content > .tab-content.active {
 	visibility: visible;
 	position:   relative;
+}
+
+/** avatar **/
+.avatar {
+	height:   40px;
+	width:    40px;
+	margin:   -10px 5px 0 -5px;
+	overflow: hidden;
+	display:  inline-block;
+}
+
+.avatar-image .gravatar-image {
+	margin-top:  -16px;
+	margin-left: -16px;
+}
+
+.avatar > img {
+	width:  48px;
+	height: 48px;
 }
 
 /** panels **/
@@ -167,11 +224,14 @@ i.fa {
 }
 
 .panel-heading {
-	cursor: pointer;
+	cursor:      pointer;
+	font-family: "Open Sans Condensed", "Open Sans Condensed", Arial, sans-serif;
+	font-weight: bold;
+	font-size:   17px;
 }
 
 .panel-heading h3 {
-	font-family: "Open Sans", Arial, Verdana, sans-serif;
+	font-family: "Open Sans Condensed", Arial, sans-serif;
 	font-weight: bold;
 }
 
@@ -219,3 +279,6 @@ i.fa {
 	overflow: auto;
 }
 
+.site-stats {
+	font-size: 10px;
+}

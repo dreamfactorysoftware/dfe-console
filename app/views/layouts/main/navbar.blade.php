@@ -24,48 +24,12 @@
                             </span>
                             <div class="media-body">
                                 <h5 class="media-heading">
-                                    <strong>John Smith</strong>
+                                    <strong>From User</strong>
                                 </h5>
 
-                                <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                <p class="small text-muted"><i class="fa fa-clock-o"></i> Received time </p>
 
-                                <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li class="message-preview">
-                    <a href="#">
-                        <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                            <div class="media-body">
-                                <h5 class="media-heading">
-                                    <strong>John Smith</strong>
-                                </h5>
-
-                                <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-
-                                <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                            </div>
-                        </div>
-                    </a>
-                </li>
-                <li class="message-preview">
-                    <a href="#">
-                        <div class="media">
-                                    <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                    </span>
-                            <div class="media-body">
-                                <h5 class="media-heading">
-                                    <strong>John Smith</strong>
-                                </h5>
-
-                                <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-
-                                <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                <p>Message Text</p>
                             </div>
                         </div>
                     </a>
@@ -75,48 +39,23 @@
                 </li>
             </ul>
         </li>
+
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> <b class="caret"></b></a>
 
             <ul class="dropdown-menu alert-dropdown">
-                <li>
-                    <a href="#">Alert Name
-                        <span class="label label-default">Alert Badge</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Alert Name
-                        <span class="label label-primary">Alert Badge</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Alert Name
-                        <span class="label label-success">Alert Badge</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Alert Name
-                        <span class="label label-info">Alert Badge</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Alert Name
-                        <span class="label label-warning">Alert Badge</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">Alert Name
-                        <span class="label label-danger">Alert Badge</span>
-                    </a>
-                </li>
-                <li class="divider"></li>
-                <li>
-                    <a href="#">View All</a>
-                </li>
             </ul>
         </li>
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle user-info" data-toggle="dropdown">
+                <div class="dropdown avatar img-circle ">
+                    <div class="avatar-image" data-hash="{{ $_user['hash'] }}"></div>
+                </div>
+                <div class="user-mini pull-right">
+                    <span>{{{ $_user['name'] }}}</span>
+                    <span class="caret"></span>
+                </div>
+            </a>
 
             <ul class="dropdown-menu">
                 <li>
