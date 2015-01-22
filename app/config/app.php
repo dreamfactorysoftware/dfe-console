@@ -107,6 +107,7 @@ return array(
         'Illuminate\Workbench\WorkbenchServiceProvider',
         'Way\Generators\GeneratorsServiceProvider',
         'Radic\BladeExtensions\BladeExtensionsServiceProvider',
+        'DreamFactory\Enterprise\Console\Services\ElkServiceProvider',
     ),
     /*
     |--------------------------------------------------------------------------
@@ -142,6 +143,7 @@ return array(
         'Crypt'             => 'Illuminate\Support\Facades\Crypt',
         'DB'                => 'Illuminate\Support\Facades\DB',
         'Eloquent'          => 'Illuminate\Database\Eloquent\Model',
+        'Elk'               => 'DreamFactory\Enterprise\Console\Services\ElkServiceProvider',
         'Event'             => 'Illuminate\Support\Facades\Event',
         'File'              => 'Illuminate\Support\Facades\File',
         'Form'              => 'Illuminate\Support\Facades\Form',

@@ -126,8 +126,8 @@ var _getData = function(which, facility, size) {
 			   dataType: 'json',
 			   async:    false, //			processData: false,
 			   success:  function(json, statusText, xhr) {
-				   json.facets.published_on.entries.forEach(function(element, index, array) {
-					   _data.push([element.time, element.count]);
+				   json.aggregations.published_on.buckets.forEach(function(element, index, array) {
+					   _data.push([element.key, element.doc_count]);
 				   });
 			   },
 			   error:    function(xhr, message, error) {

@@ -31,11 +31,15 @@
     ],
     "require":           {
         "laravel/framework":          "4.2.*",
+        "psr/log":                    "*",
         "radic/blade-extensions":     "1.*",
         "doctrine/couchdb-odm":       "*",
         "dreamfactory/console-tools": "dev-develop as dev-master",
         "dreamfactory/fabric-queue":  "dev-develop as dev-master",
-        "dreamfactory/php-utils":     "*"
+        "dreamfactory/php-utils":     "*",
+        "guzzlehttp/guzzle":          "*",
+        "ruflin/elastica":            "dev-master",
+        "monolog/monolog":            "*"
     },
     "require-dev":       {
         "way/generators":  "~2.0",
@@ -56,7 +60,7 @@
             "app/tests/TestCase.php"
         ],
         "psr-4":    {
-            "DreamFactory\\Enterprise\\Console\\": "app/"
+            "DreamFactory\\Enterprise\\Console\\": "src/"
         }
     },
     "scripts":           {

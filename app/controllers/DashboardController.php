@@ -1,5 +1,13 @@
 <?php
+use DreamFactory\Enterprise\Console\Enums\ElasticSearchIntervals;
+use DreamFactory\Enterprise\Console\Providers\Elk;
+use DreamFactory\Library\Fabric\Database\Models\Auth\User;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Utility\IfSet;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 /**
  * DashboardController.php
@@ -9,7 +17,7 @@ use DreamFactory\Library\Utility\IfSet;
  * @author     Jerry Ablan <jerryablan@dreamfactory.com>
  * @filesource
  */
-class DashboardController extends DreamRestController
+class DashboardController extends BaseController
 {
     //*************************************************************************
     //	Constants
@@ -19,63 +27,29 @@ class DashboardController extends DreamRestController
      * @var string
      */
     const DEFAULT_FACILITY = 'platform/api';
+    /**
+     * @var string
+     */
+    const BASE_STORAGE_PATH = '/data/storage';
 
     //********************************************************************************
     //* Methods
     //********************************************************************************
 
     /**
-     * Initialize the controller
-     *
-     * @return void
-     */
-    public function init()
-    {
-        parent::init();
-
-        //	We are resty
-        $this->setResponseFormat( static::RESPONSE_FORMAT_V2 );
-        $this->layout = false;
-        $this->defaultAction = false;
-
-        //	Only deal in JSON
-        $this->setContentType( 'application/json' );
-    }
-
-    /**
-     * {@InheritDoc}
-     */
-    public function accessRules()
-    {
-        return array(
-            array(
-                'allow',
-                //                'controllers' => array('dashboard'),
-                'users' => array('*'),
-                //                'ips'         => array('127.0.1.1', '127.0.0.1', '66.162.17.86', '50.167.198.120', '172.56.5.173', '73.184.87.168', 'localhost'),
-                'verbs' => array(HttpMethod::GET, HttpMethod::POST),
-            ),
-            //	Fail
-            array(
-                'deny',
-            ),
-        );
-    }
-
-    /**
      * Returns an object with various statistics...
      */
-    public function requestStats()
+    public function anyStats()
     {
         return array(
-            'user_count' => User::model()->count(),
+            'user_count' => User::count(),
             'dsp_count'  => array(
-                'live' => Instance::model()->count(),
-                'dead' => InstanceArch::model()->count(),
+                'live' => Instance::count(),
+                'dead' => InstanceArchive::count(),
             ),
             'disk_usage' => array(
-                'available' => @\disk_total_space( Storage::BASE_STORAGE_PATH ),
-                'storage'   => $this->_diskUsage( Storage::BASE_STORAGE_PATH ),
+                'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
+                'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
             )
         );
     }
@@ -83,19 +57,19 @@ class DashboardController extends DreamRestController
     /**
      * Returns an object with various statistics...
      */
-    public function requestLaunch()
+    public function postLaunch()
     {
-        Instance::launch( User::model()->findByPk( Pii::user()->getId() ), 'gha-test1' );
+        Instance::launch( User::findOrFail( Auth::user()->getId() ), 'gha-test1' );
 
         return array(
-            'user_count' => User::model()->count(),
+            'user_count' => User::count(),
             'dsp_count'  => array(
-                'live' => Instance::model()->count(),
-                'dead' => InstanceArch::model()->count(),
+                'live' => Instance::count(),
+                'dead' => InstanceArchive::count(),
             ),
             'disk_usage' => array(
-                'available' => @\disk_total_space( Storage::BASE_STORAGE_PATH ),
-                'storage'   => $this->_diskUsage( Storage::BASE_STORAGE_PATH ),
+                'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
+                'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
             )
         );
     }
@@ -103,14 +77,14 @@ class DashboardController extends DreamRestController
     /**
      * Retrieves logs
      */
-    public function requestLogs()
+    public function postLogs()
     {
-        $_which = trim( strtolower( FilterInput::request( 'which', null, FILTER_SANITIZE_STRING ) ) );
-        $_raw = ( 1 == FilterInput::request( 'raw', 0, FILTER_SANITIZE_NUMBER_INT ) );
-        $_facility = FilterInput::request( 'facility', static::DEFAULT_FACILITY );
-        $_interval = FilterInput::request( 'interval', ElasticSearchIntervals::Day );
-        $_from = FilterInput::request( 'from', 0, FILTER_SANITIZE_NUMBER_INT );
-        $_size = FilterInput::request( 'size', 30, FILTER_SANITIZE_NUMBER_INT );
+        $_which = trim( strtolower( Request::get( 'which', null, FILTER_SANITIZE_STRING ) ) );
+        $_raw = ( 1 == Request::get( 'raw', 0, FILTER_SANITIZE_NUMBER_INT ) );
+        $_facility = Request::get( 'facility', static::DEFAULT_FACILITY );
+        $_interval = Request::get( 'interval', ElasticSearchIntervals::DAY );
+        $_from = Request::get( 'from', 0, FILTER_SANITIZE_NUMBER_INT );
+        $_size = Request::get( 'size', 30, FILTER_SANITIZE_NUMBER_INT );
 
         if ( $_size < 1 || $_size > 120 )
         {
@@ -127,8 +101,8 @@ class DashboardController extends DreamRestController
             case 'logins':
                 $_facility = 'platform/api';
                 $_which = array(
-                    'message.message' => 'LOGIN /web/login',
-                    'message.method'  => 'POST',
+                    'fabric.message' => 'LOGIN /web/login',
+                    'fabric.method'  => 'POST',
                 );
                 break;
 
@@ -138,53 +112,57 @@ class DashboardController extends DreamRestController
                 break;
         }
 
-        $_source = new GraylogData( $this );
-        $_results = $_source->callOverTime( $_facility, $_interval, $_size, $_from, $_which );
-        $_facets = $_results->getFacets();
+        $_source = $this->_elk();
 
-        if ( !$_raw )
+        if ( false !== ( $_results = $_source->callOverTime( $_facility, $_interval, $_size, $_from, $_which ) ) )
         {
-            $_response = array('data' => array('time' => array(), 'facilities' => array()), 'label' => 'Time');
+            $_facets = $_results->getAggregations();
 
-            if ( !empty( $_facets ) )
+            if ( !$_raw )
             {
-                /** @var $_datapoint array */
-                foreach ( IfSet::getDeep( $_facets, 'published_on', 'entries', array() ) as $_datapoint )
+                $_response = array('data' => array('time' => array(), 'facilities' => array()), 'label' => 'Time');
+
+                if ( !empty( $_facets ) )
                 {
-                    array_push( $_response['data']['time'], array($_datapoint['time'], $_datapoint['count']) );
+                    /** @var $_datapoint array */
+                    foreach ( IfSet::get( $_facets, 'published_on', 'buckets', array() ) as $_datapoint )
+                    {
+                        array_push( $_response['data']['time'], array($_datapoint['time'], $_datapoint['count']) );
+                    }
+
+                    /** @var $_datapoint array */
+                    foreach ( IfSet::get( $_facets, 'facilities', 'buckets', array() ) as $_datapoint )
+                    {
+                        array_push( $_response['data']['facilities'], array($_datapoint['term'], $_datapoint['count']) );
+                    }
                 }
 
-                /** @var $_datapoint array */
-                foreach ( IfSet::getDeep( $_facets, 'facilities', 'terms', array() ) as $_datapoint )
-                {
-                    array_push( $_response['data']['facilities'], array($_datapoint['term'], $_datapoint['count']) );
-                }
+                return $_response;
             }
-
-            echo json_encode( $_response );
-        }
-        else
-        {
-            echo json_encode( $_results->getResponse()->getData() );
+            else
+            {
+                return $_results->getResponse()->getData();
+            }
         }
 
-        Pii::end();
+        return array();
     }
 
     /**
      * Returns current global stats
      */
-    public function requestGlobalStats()
+    public function getGlobalStats()
     {
-        $_source = new GraylogData( $this );
+        /** @type Elk $_source */
+        $_source = $this->_elk();
         $_stats = $_source->globalStats();
 
         return array_merge(
             $_stats,
             array(
                 'disk_usage' => array(
-                    'available' => @\disk_total_space( Storage::BASE_STORAGE_PATH ),
-                    'storage'   => $this->_diskUsage( Storage::BASE_STORAGE_PATH ),
+                    'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
+                    'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
                 )
             )
         );
@@ -193,9 +171,10 @@ class DashboardController extends DreamRestController
     /**
      * Returns current global stats
      */
-    public function requestAllStats()
+    public function anyAllStats()
     {
-        $_source = new GraylogData( $this );
+        /** @type Elk $_source */
+        $_source = App::make( 'elk.service' );
 
         return $_source->allStats();
     }
@@ -212,4 +191,13 @@ class DashboardController extends DreamRestController
         return round( $_kbs[0] / 1024, 1 );
     }
 
+    /**
+     * @return Elk
+     */
+    protected function _elk()
+    {
+        static $_service;
+
+        return $_service ?: $_service = App::make( 'elk.service' );
+    }
 }

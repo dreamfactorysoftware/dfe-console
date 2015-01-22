@@ -1,11 +1,32 @@
 <?php
-use Doctrine\CouchDB\HTTP\Client;
+namespace DreamFactory\Enterprise\Console\Providers;
+
+use DreamFactory\Enterprise\Console\Enums\ElasticSearchIntervals;
+use Elastica\Client;
+use Elastica\Exception\PartialShardFailureException;
+use Elastica\Facet\DateHistogram;
+use Elastica\Filter\Bool;
+use Elastica\Filter\Prefix;
+use Elastica\Query;
+use Elastica\ResultSet;
+use Elastica\Search;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Gets data from the ELK system
  */
-class ElkServiceProvider
+class Elk
 {
+    //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type int
+     */
+    const DEFAULT_CACHE_TTL = 5;
+
     //*************************************************************************
     //* Members
     //*************************************************************************
@@ -17,28 +38,23 @@ class ElkServiceProvider
     /**
      * @type array Array of elastic search shards
      */
-    protected static $_indices = array('graylog2_0', 'graylog2_1', 'graylog2_2');
+    protected static $_indices = null;
 
     //*************************************************************************
     //* Methods
     //*************************************************************************
 
     /**
-     * @param ConsumerLike $consumer
-     * @param array        $settings
-     *
-     * @throws \RuntimeException
+     * @param array $settings
      */
-    public function __construct( ConsumerLike $consumer, $settings = array() )
+    public function __construct( array $settings = array() )
     {
-        parent::__construct( $consumer, $settings );
-
-        /** @noinspection PhpIncludeInspection */
-        $_config = require_once \Kisma::get( 'app.config_path' ) . '/elasticsearch.config.php';
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_config = Config::get( 'elk' );
 
         if ( empty( $_config ) )
         {
-            throw new \RuntimeException( 'No configuration file found for elasticsearch.' );
+            throw new \RuntimeException( 'No configuration file found for ELK.' );
         }
 
         $this->_client = new Client( $_config );
@@ -51,31 +67,27 @@ class ElkServiceProvider
      */
     protected function _getIndices()
     {
-        /** @type \CCache $_cache */
-        $_cache = \Yii::app()->cache;
-
-        if ( $_cache && false !== ( $_indices = $_cache->get( 'es.indices' ) ) )
+        if ( null === static::$_indices )
         {
-            return static::$_indices = $_indices;
-        }
+            $_indices = array();
+            $_response = $this->_client->request( '_aliases?pretty=1' );
 
-        $_indices = array();
-        $_response = $this->_client->request( '_aliases?pretty=1' );
-
-        foreach ( $_response->getData() as $_index => $_aliases )
-        {
-            //  No recent index
-            if ( false === stripos( $_index, '_recent' ) )
+            foreach ( $_response->getData() as $_index => $_aliases )
             {
-                $_indices[] = $_index;
+                //  No recent index
+                if ( false === stripos( $_index, '_recent' ) && '.' !== $_index[0] )
+                {
+                    $_indices[] = $_index;
+                }
+            }
+
+            if ( !empty( $_indices ) )
+            {
+                static::$_indices = $_indices;
             }
         }
 
-        if ( !empty( $_indices ) )
-        {
-            static::$_indices = $_indices;
-            $_cache && $_cache->set( 'es.indices', $_indices, 3600 );
-        }
+        return static::$_indices;
     }
 
     /**
@@ -85,7 +97,6 @@ class ElkServiceProvider
      * @param int          $from
      * @param array|string $term
      *
-     * @throws \CHttpException
      * @return \Elastica\ResultSet
      */
     public function callOverTime( $facility, $interval = 'day', $size = 30, $from = 0, $term = null )
@@ -109,7 +120,7 @@ class ElkServiceProvider
         {
             Log::error( 'Exception retrieving logs: ' . $_ex->getMessage() );
 
-            throw new \CHttpException( 500, $_ex->getMessage() );
+            throw new \RuntimeException( 500, $_ex->getMessage() );
         }
 
         return $_results;
@@ -127,19 +138,21 @@ class ElkServiceProvider
      */
     protected function _buildQuery( $facility, $interval = 'day', $size = 30, $from = 0, $term = null )
     {
+        $facility = str_replace( '/', '?', $facility );
+
         $_query = array(
-            'size'   => $size,
-            'from'   => $from,
-            'facets' => array(
+            'size' => $size,
+            'from' => $from,
+            'aggs' => array(
                 'facilities'   => array(
                     'terms' => array(
-                        'field' => 'message.facility',
+                        'field' => 'fabric.facility',
                         'size'  => 10,
                     )
                 ),
                 'published_on' => array(
                     'date_histogram' => array(
-                        'field'    => 'message.timestamp',
+                        'field'    => 'fabric.@timestamp',
                         'interval' => $interval,
                     )
                 )
@@ -148,28 +161,25 @@ class ElkServiceProvider
 
         if ( empty( $term ) )
         {
-            $_query['facets']['paths'] = array(
+            $_query['aggs']['paths'] = array(
                 'terms' => array(
-                    'field' => 'message.path',
+                    'field' => 'fabric.path_info',
                     'size'  => 10,
                 )
             );
 
-            $_query['query'] = empty( $facility )
-                ? array(
-                    array(
-                        'match_all' => array(),
-                    ),
-                )
-                : array(
+            if ( !empty( $facility ) )
+            {
+                $_query['query'] = array(
                     'bool' => array(
                         'must' => array(
                             'wildcard' => array(
-                                'message.facility' => $facility,
+                                'fabric.facility' => $facility,
                             ),
                         ),
                     ),
                 );
+            }
         }
         else
         {
@@ -189,7 +199,7 @@ class ElkServiceProvider
                         'bool' => array(
                             'must' => array(
                                 'wildcard' => array(
-                                    'message.path' => $term,
+                                    'fabric.path_info' => $term,
                                 ),
                             ),
                         ),
@@ -249,15 +259,14 @@ class ElkServiceProvider
      * @param int $from
      * @param int $size
      */
-    public
-    function globalStats( $from = 0, $size = 1 )
+    public function globalStats( $from = 0, $size = 1 )
     {
         $_query = array(
             'query' => array(
                 array(
                     'bool' => array(
                         'must' => array(
-                            'term' => array('message.facility' => 'cloud/cli/global/metrics'),
+                            'term' => array('fabric.facility' => 'cloud/cli/global/metrics'),
                         ),
                     ),
                 ),
@@ -265,7 +274,7 @@ class ElkServiceProvider
             'size'  => $size,
             'from'  => $from,
             'sort'  => array(
-                'message.timestamp' => array(
+                'fabric.@timestamp' => array(
                     'order' => 'desc'
                 ),
             ),
@@ -295,15 +304,14 @@ class ElkServiceProvider
      *
      * @return array
      */
-    public
-    function allStats( $from = 0, $size = 1 )
+    public function allStats( $from = 0, $size = 1 )
     {
         $_query = array(
             'query' => array(
                 array(
                     'bool' => array(
                         'must' => array(
-                            'term' => array('message.facility' => 'cloud/cli/metrics'),
+                            'term' => array('fabric.facility' => 'cloud/cli/metrics'),
                         ),
                     ),
                 ),
@@ -311,7 +319,7 @@ class ElkServiceProvider
             'size'  => 99999999,
             'from'  => 0,
             'sort'  => array(
-                'message.timestamp' => array(
+                'fabric.@timestamp' => array(
                     'order' => 'desc'
                 ),
             ),
@@ -341,16 +349,15 @@ class ElkServiceProvider
      *
      * @return \Elastica\ResultSet
      */
-    public
-    function termQuery( $term, $value, $size = 30 )
+    public function termQuery( $term, $value, $size = 30 )
     {
-        $_facet = new Facet\DateHistogram( 'occurred_on' );
-        $_facet->setField( 'message.timestamp' );
+        $_facet = new DateHistogram( 'occurred_on' );
+        $_facet->setField( 'fabric.@timestamp' );
         $_facet->setInterval( 'day' );
 
         $_query = new Query();
         $_query->setSize( $size );
-        $_query->setSort( array('message.timestamp') );
+        $_query->setSort( array('fabric.@timestamp') );
 
         //	Filter for term
         $_filter = new Prefix( $term, $value );
@@ -367,9 +374,9 @@ class ElkServiceProvider
     /**
      * @return Client
      */
-    public
-    function getClient()
+    public function getClient()
     {
         return $this->_client;
     }
+
 }

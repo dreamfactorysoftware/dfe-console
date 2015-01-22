@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\View;
 /** @noinspection PhpUndefinedMethodInspection */
 Route::controller( 'app', 'AppController' );
 /** @noinspection PhpUndefinedMethodInspection */
+Route::controller( 'dashboard', 'DashboardController' );
+/** @noinspection PhpUndefinedMethodInspection */
 Route::group(
     array('prefix' => 'api/v1'),
     function ()
