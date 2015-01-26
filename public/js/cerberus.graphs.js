@@ -145,7 +145,7 @@ var _getData = function(which, facility, size) {
 $(function() {
 	var _update = function() {
 		$.ajax({
-				   url:      '/dashboard/globalStats',
+				   url:      '/dashboard/global-stats',
 				   type:     'GET',
 				   dataType: 'json',
 				   success:  function(json, statusText, xhr) {
