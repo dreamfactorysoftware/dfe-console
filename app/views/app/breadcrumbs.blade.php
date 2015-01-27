@@ -1,6 +1,10 @@
+<?php
+
+$_active = DashboardController::getActiveCounts();
+?>
 <div class="row breadcrumb-content">
     <div class="col-lg-9 no-padding-left">
-        {{ renderBreadcrumbs($_trail,$_buttons) }}
+        {{ renderBreadcrumbs(array(Route::currentRouteName()=>false,false),$_buttons) }}
     </div>
 
     <div class="col-lg-3 dashboard-header-info">

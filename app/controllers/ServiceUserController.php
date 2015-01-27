@@ -1,11 +1,10 @@
 <?php
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
-use Illuminate\Support\Facades\DB;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class UserController extends BaseController
+class ServiceUserController extends BaseDataController
 {
     //******************************************************************************
     //* Methods
@@ -18,22 +17,12 @@ class UserController extends BaseController
      */
     public function index()
     {
-        try
-        {
-            $this->_parseDataRequest( 'email_addr_text' );
-
-            $_response = DB::table( 'user_t' )
-                ->orderBy( $this->_order )
-                ->skip( $this->_skip )
-                ->take( $this->_limit )
-                ->get();
-
-            return $this->_respond( $_response, User::count(), count( $_response ) );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new BadRequestHttpException( $_ex->getMessage() );
-        }
+        return
+            $this->_processDataRequest(
+                'service_user_t',
+                ServiceUser::count(),
+                array('id', 'first_name_text', 'last_name_text', 'email_addr_text', 'lmod_date')
+            );
     }
 
     /**

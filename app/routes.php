@@ -11,6 +11,8 @@ Route::controller( 'app', 'AppController' );
 /** @noinspection PhpUndefinedMethodInspection */
 Route::controller( 'dashboard', 'DashboardController' );
 /** @noinspection PhpUndefinedMethodInspection */
+Route::controller( 'settings', 'SettingsController' );
+/** @noinspection PhpUndefinedMethodInspection */
 Route::group(
     array('prefix' => 'api/v1'),
     function ()
@@ -19,7 +21,7 @@ Route::group(
         Route::resource( 'clusters', 'ClusterController' );
         Route::resource( 'instances', 'InstanceController' );
         Route::resource( 'roles', 'RoleController' );
-        Route::resource( 'users', 'UserController' );
+        Route::resource( 'service-users', 'ServiceUserController' );
     }
 );
 /** @noinspection PhpUndefinedMethodInspection */

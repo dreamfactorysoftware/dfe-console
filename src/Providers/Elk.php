@@ -258,6 +258,8 @@ class Elk
     /**
      * @param int $from
      * @param int $size
+     *
+     * @return bool
      */
     public function globalStats( $from = 0, $size = 1 )
     {
@@ -284,7 +286,7 @@ class Elk
         catch ( PartialShardFailureException $_ex )
         {
             Log::info( 'Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).' );
-            $_result =  = $_ex->getResponse()->getData();
+            $_result = $_ex->getResponse()->getData();
 
             if ( array_key_exists( 'hits', $_result ) )
             {
@@ -293,6 +295,10 @@ class Elk
                     return $_result['hits']['hits'][0]['_source'];
                 }
             }
+
+            Log::warning( 'No global stats found.' );
+
+            return false;
         }
 
         return $_result['_source'];

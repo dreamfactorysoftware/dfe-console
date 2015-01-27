@@ -169,16 +169,14 @@ $(function() {
 		setTimeout(_update, _dashboardOptions.updateInterval);
 	};
 
-	$.getScript('/js/chart-theme.js', function() {
-		// Apply the theme
-		var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+	// Apply the theme
+	var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
 
-		_chart('#timeline-chart', 'Live DSP API Calls', 'Calls');
-		_chart('#timeline-chart-logins', 'DSP User Logins', 'Logins', 'logins');
-		_chart('#timeline-chart-activations', 'DSP User Activations', 'Activations', 'activations');
-		_chart('#timeline-chart-provision', 'Provisioning', 'Requests', '', 'fabric/queue/*');
-		_chart('#timeline-chart-fabric-api', 'Fabric API Calls', 'Calls', '', 'fabric/*');
+	_chart('#timeline-chart', 'Live DSP API Calls', 'Calls');
+	_chart('#timeline-chart-logins', 'DSP User Logins', 'Logins', 'logins');
+	_chart('#timeline-chart-activations', 'DSP User Activations', 'Activations', 'activations');
+	_chart('#timeline-chart-provision', 'Provisioning', 'Requests', '', 'fabric/queue/*');
+	_chart('#timeline-chart-fabric-api', 'Fabric API Calls', 'Calls', '', 'fabric/*');
 
-		_update();
-	});
+	_update();
 });

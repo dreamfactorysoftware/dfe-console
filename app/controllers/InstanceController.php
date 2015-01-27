@@ -1,11 +1,10 @@
 <?php
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class InstanceController extends BaseController
+class InstanceController extends BaseDataController
 {
     //******************************************************************************
     //* Methods
@@ -18,22 +17,22 @@ class InstanceController extends BaseController
      */
     public function index()
     {
-        try
-        {
-            $this->_parseDataRequest( 'instance_id_text' );
+        $_columns =
+            array(
+                'instance_t.id',
+                'instance_t.instance_id_text',
+                'cluster_t.cluster_id_text',
+                'instance_t.create_date',
+                'user_t.email_addr_text',
+                'user_t.lmod_date',
+            );
 
-            $_response = DB::table( 'instance_t' )
-                ->orderBy( $this->_order )
-                ->skip( $this->_skip )
-                ->take( $this->_limit )
-                ->get();
+        /** @type Builder $_query */
+        $_query = Instance::join( 'user_t', 'instance_t.user_id', '=', 'user_t.id' )
+            ->join( 'cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id' )
+            ->select( $_columns );
 
-            return $this->_respond( $_response, Instance::count(), count( $_response ) );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new BadRequestHttpException( $_ex->getMessage() );
-        }
+        return $this->_processDataRequest( 'instance_t.instance_id_text', Instance::count(), $_columns, $_query );
     }
 
     /**

@@ -32,7 +32,7 @@ i.fa {
 }
 
 #page-wrapper > .row.page-content {
-	margin: 0 -15px 10px 0;
+	margin: 10px -15px 10px 0;
 }
 
 #page-wrapper > .row.breadcrumb-content {
@@ -41,7 +41,11 @@ i.fa {
 
 /** navbar **/
 .top-nav > .open > .dropdown-menu {
-	box-shadow: -1px 1px 4px rgba(0, 0, 0, .75);
+	/*box-shadow:              -1px 1px 4px rgba(0, 0, 0, .75);*/
+	border-top-left-radius:  0;
+	border-top-right-radius: 0;
+	margin:                  0;
+	right:                   15px;
 }
 
 .navbar {
@@ -71,9 +75,14 @@ i.fa {
 }
 
 /** user stuff **/
+.user-mini span:first-child {
+	font-size: 11px;
+}
+
 .user-info {
-	height:      50px;
-	line-height: 50px;
+	height:       50px;
+	line-height:  50px;
+	margin-right: 15px;
 }
 
 .user-info-name {
@@ -190,9 +199,9 @@ i.fa {
 
 /** avatar **/
 .avatar {
-	height:   40px;
-	width:    40px;
-	margin:   -10px 5px 0 -5px;
+	height:   32px;
+	width:    32px;
+	margin:   -5px 5px 0 -5px;
 	overflow: hidden;
 	display:  inline-block;
 }
@@ -233,6 +242,22 @@ i.fa {
 .panel-heading h3 {
 	font-family: "Open Sans Condensed", Arial, sans-serif;
 	font-weight: bold;
+}
+
+/** forms **/
+.form-control {
+	font-size: 11px;
+	display:   inherit;
+	width:     inherit;
+	height:    inherit;
+	padding:   5px 10pxat;
+}
+
+.dataTables_length label select {
+	height:    inherit;
+	padding:   inherit;
+	font-size: inherit;
+	display:   inline-block;
 }
 
 /** media-specific **/
@@ -282,3 +307,4 @@ i.fa {
 .site-stats {
 	font-size: 10px;
 }
+

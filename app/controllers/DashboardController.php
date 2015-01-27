@@ -102,7 +102,7 @@ class DashboardController extends BaseController
                 $_facility = 'platform/api';
                 $_which = array(
                     'fabric.short_message' => 'LOGIN /web/login',
-                    'fabric.method'  => 'POST',
+                    'fabric.method'        => 'POST',
                 );
                 break;
 
@@ -152,7 +152,10 @@ class DashboardController extends BaseController
     {
         /** @type Elk $_source */
         $_source = $this->_elk();
-        $_stats = $_source->globalStats();
+        if ( false === ( $_stats = $_source->globalStats() ) )
+        {
+            $_stats = array();
+        }
 
         return array_merge(
             $_stats,

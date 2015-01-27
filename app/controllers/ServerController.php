@@ -1,11 +1,10 @@
 <?php
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ServerController extends BaseController
+class ServerController extends BaseDataController
 {
     //******************************************************************************
     //* Methods
@@ -18,22 +17,12 @@ class ServerController extends BaseController
      */
     public function index()
     {
-        try
-        {
-            $this->_parseDataRequest( 'server_id_text' );
+        $_columns = array('server_t.id', 'server_t.server_id_text', 'server_type_t.type_name_text', 'server_t.host_text', 'server_t.lmod_date');
 
-            $_response = DB::table( 'server_t' )
-                ->orderBy( $this->_order )
-                ->skip( $this->_skip )
-                ->take( $this->_limit )
-                ->get();
+        /** @type Builder $_query */
+        $_query = Server::join( 'server_type_t', 'server_t.server_type_id', '=', 'server_type_t.id' )->select( $_columns );
 
-            return $this->_respond( $_response, Server::count(), count( $_response ) );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new BadRequestHttpException( $_ex->getMessage() );
-        }
+        return $this->_processDataRequest( 'instance_t.instance_id_text', Server::count(), $_columns, $_query );
     }
 
     /**
