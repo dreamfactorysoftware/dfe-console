@@ -1,5 +1,5 @@
 <?php
-use DreamFactory\Enterprise\Console\Enums\ElasticSearchIntervals;
+use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\Elk;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -82,7 +82,7 @@ class DashboardController extends BaseController
         $_which = trim( strtolower( Request::get( 'which', null, FILTER_SANITIZE_STRING ) ) );
         $_raw = ( 1 == Request::get( 'raw', 0, FILTER_SANITIZE_NUMBER_INT ) );
         $_facility = Request::get( 'facility', static::DEFAULT_FACILITY );
-        $_interval = Request::get( 'interval', ElasticSearchIntervals::DAY );
+        $_interval = Request::get( 'interval', ElkIntervals::DAY );
         $_from = Request::get( 'from', 0, FILTER_SANITIZE_NUMBER_INT );
         $_size = Request::get( 'size', 30, FILTER_SANITIZE_NUMBER_INT );
 

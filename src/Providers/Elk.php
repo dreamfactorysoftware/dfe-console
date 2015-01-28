@@ -2,6 +2,7 @@
 namespace DreamFactory\Enterprise\Console\Providers;
 
 use DreamFactory\Enterprise\Console\Enums\ElasticSearchIntervals;
+use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use Elastica\Client;
 use Elastica\Exception\PartialShardFailureException;
 use Elastica\Facet\DateHistogram;
@@ -70,20 +71,30 @@ class Elk
         if ( null === static::$_indices )
         {
             $_indices = array();
-            $_response = $this->_client->request( '_aliases?pretty=1' );
 
-            foreach ( $_response->getData() as $_index => $_aliases )
+            try
             {
-                //  No recent index
-                if ( false === stripos( $_index, '_recent' ) && '.' !== $_index[0] )
+                $_response = $this->_client->request( '_aliases?pretty=1' );
+
+                foreach ( $_response->getData() as $_index => $_aliases )
                 {
-                    $_indices[] = $_index;
+                    //  No recent index
+                    if ( false === stripos( $_index, '_recent' ) && '.kibana' !== $_index )
+                    {
+                        $_indices[] = $_index;
+                    }
+                }
+
+                if ( !empty( $_indices ) )
+                {
+                    static::$_indices = $_indices;
                 }
             }
-
-            if ( !empty( $_indices ) )
+            catch ( \Exception $_ex )
             {
-                static::$_indices = $_indices;
+                Log::error( $_ex );
+
+                throw $_ex;
             }
         }
 
@@ -99,11 +110,11 @@ class Elk
      *
      * @return \Elastica\ResultSet
      */
-    public function callOverTime( $facility, $interval = 'day', $size = 30, $from = 0, $term = null )
+    public function callOverTime( $facility, $interval = ElkIntervals::DAY, $size = 30, $from = 0, $term = null )
     {
-        if ( !ElasticSearchIntervals::contains( $interval ) )
+        if ( !ElkIntervals::contains( $interval ) )
         {
-            throw new \InvalidArgumentException( 'The interval of "' . $interval . '" is not valid.' );
+            throw new \InvalidArgumentException( 'Interval "' . $interval . '" is not valid.' );
         }
 
         $_query = $this->_buildQuery( $facility, $interval, $size, $from, $term );

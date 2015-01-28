@@ -4,9 +4,9 @@ namespace DreamFactory\Enterprise\Console\Enums;
 use DreamFactory\Library\Utility\Enums\FactoryEnum;
 
 /**
- * ElasticSearch Intervals
+ * Intervals for elk searching
  */
-class ElasticSearchIntervals extends FactoryEnum
+class ElkIntervals extends FactoryEnum
 {
     //*************************************************************************
     //* Constants
