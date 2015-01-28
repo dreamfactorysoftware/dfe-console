@@ -21,8 +21,7 @@ var EnterpriseServer = {
 	 */
 	defaults:      {
 		//	"<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md6'i><'col-md-6'p>>"
-		dom:        'Cfrltip',
-//		deferRender: true,
+		dom:        'Cfrltip', //		deferRender: true,
 		stateSave:  true,
 		language:   {
 			lengthMenu: '_MENU_ per page',
@@ -100,7 +99,7 @@ var EnterpriseServer = {
 	 */
 	setDataType: function(dataType, dataUrl, tableId) {
 		this.dataType = dataType + 's';
-		this.dataUrl = dataUrl || ('/fabric/' + this.dataType);
+		this.dataUrl = dataUrl || ('/api/v1/' + this.dataType);
 		this.tableId = tableId || ( '#dt-' + dataType );
 
 		this.initialized = true;

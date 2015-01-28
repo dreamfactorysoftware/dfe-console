@@ -157,13 +157,13 @@ class Elk
             'aggs' => array(
                 'facilities'   => array(
                     'terms' => array(
-                        'field' => 'fabric.facility',
+                        'field' => 'fabric.facility.raw',
                         'size'  => 10,
                     )
                 ),
                 'published_on' => array(
                     'date_histogram' => array(
-                        'field'    => 'fabric.@timestamp',
+                        'field'    => '@timestamp',
                         'interval' => $interval,
                     )
                 )
@@ -174,7 +174,7 @@ class Elk
         {
             $_query['aggs']['paths'] = array(
                 'terms' => array(
-                    'field' => 'fabric.path_info',
+                    'field' => 'fabric.path_info.raw',
                     'size'  => 10,
                 )
             );
@@ -185,7 +185,7 @@ class Elk
                     'bool' => array(
                         'must' => array(
                             'wildcard' => array(
-                                'fabric.facility' => $facility,
+                                'fabric.facility.raw' => $facility,
                             ),
                         ),
                     ),
@@ -210,7 +210,7 @@ class Elk
                         'bool' => array(
                             'must' => array(
                                 'wildcard' => array(
-                                    'fabric.path_info' => $term,
+                                    'fabric.path_info.raw' => $term,
                                 ),
                             ),
                         ),
@@ -269,23 +269,19 @@ class Elk
     /**
      * @param int $from
      * @param int $size
+     *
+     * @return bool
      */
     public function globalStats( $from = 0, $size = 1 )
     {
         $_query = array(
             'query' => array(
-                array(
-                    'bool' => array(
-                        'must' => array(
-                            'term' => array('fabric.facility' => 'cloud/cli/global/metrics'),
-                        ),
-                    ),
-                ),
+                'term' => array('fabric.facility.raw' => 'cloud/cli/global/metrics'),
             ),
             'size'  => $size,
             'from'  => $from,
             'sort'  => array(
-                'fabric.@timestamp' => array(
+                '@timestamp' => array(
                     'order' => 'desc'
                 ),
             ),
@@ -301,9 +297,19 @@ class Elk
         catch ( PartialShardFailureException $_ex )
         {
             Log::info( 'Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).' );
-            $_response = $_ex->getResponse()->getData();
+            $_result = $_ex->getResponse()->getData();
 
-            return $_response['hits']['hits'][0]['_source'];
+            if ( array_key_exists( 'hits', $_result ) )
+            {
+                if ( isset( $_result['total'] ) && 0 != $_result['total'] )
+                {
+                    return $_result['hits']['hits'][0]['_source'];
+                }
+            }
+
+            Log::warning( 'No global stats found.' );
+
+            return false;
         }
 
         return $_result['_source'];
@@ -319,18 +325,12 @@ class Elk
     {
         $_query = array(
             'query' => array(
-                array(
-                    'bool' => array(
-                        'must' => array(
-                            'term' => array('fabric.facility' => 'cloud/cli/metrics'),
-                        ),
-                    ),
-                ),
+                'term' => array('fabric.facility.raw' => 'cloud/cli/metrics'),
             ),
             'size'  => 99999999,
             'from'  => 0,
             'sort'  => array(
-                'fabric.@timestamp' => array(
+                '@timestamp' => array(
                     'order' => 'desc'
                 ),
             ),
@@ -363,12 +363,12 @@ class Elk
     public function termQuery( $term, $value, $size = 30 )
     {
         $_facet = new DateHistogram( 'occurred_on' );
-        $_facet->setField( 'fabric.@timestamp' );
+        $_facet->setField( '@timestamp' );
         $_facet->setInterval( 'day' );
 
         $_query = new Query();
         $_query->setSize( $size );
-        $_query->setSort( array('fabric.@timestamp') );
+        $_query->setSort( array('@timestamp') );
 
         //	Filter for term
         $_filter = new Prefix( $term, $value );

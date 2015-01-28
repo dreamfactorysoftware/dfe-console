@@ -101,8 +101,8 @@ class DashboardController extends BaseController
             case 'logins':
                 $_facility = 'platform/api';
                 $_which = array(
-                    'fabric.message' => 'LOGIN /web/login',
-                    'fabric.method'  => 'POST',
+                    'fabric.short_message' => 'LOGIN /web/login',
+                    'fabric.method'        => 'POST',
                 );
                 break;
 
@@ -116,11 +116,10 @@ class DashboardController extends BaseController
 
         if ( false !== ( $_results = $_source->callOverTime( $_facility, $_interval, $_size, $_from, $_which ) ) )
         {
-            $_facets = $_results->getAggregations();
-
             if ( !$_raw )
             {
                 $_response = array('data' => array('time' => array(), 'facilities' => array()), 'label' => 'Time');
+                $_facets = $_results->getAggregations();
 
                 if ( !empty( $_facets ) )
                 {
@@ -139,10 +138,8 @@ class DashboardController extends BaseController
 
                 return $_response;
             }
-            else
-            {
-                return $_results->getResponse()->getData();
-            }
+
+            return $_results->getResponse()->getData();
         }
 
         return array();
@@ -155,7 +152,10 @@ class DashboardController extends BaseController
     {
         /** @type Elk $_source */
         $_source = $this->_elk();
-        $_stats = $_source->globalStats();
+        if ( false === ( $_stats = $_source->globalStats() ) )
+        {
+            $_stats = array();
+        }
 
         return array_merge(
             $_stats,

@@ -1,41 +1,37 @@
-<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+<?php
+$_uri = URL::getRequest()->getRequestUri();
+?>
 <div class="collapse navbar-collapse navbar-collapse-sidebar">
-    <ul class="nav navbar-nav side-nav">
-        <li>
-            <a href="/"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+    <ul class="nav nav-pills nav-stacked side-nav">
+        <li role="presentation" {{ '/' == $_uri ? ' class="active"' : null }}>
+            <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
         </li>
-        <li>
-            <a href="/charts"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
-        </li>
-        <li>
-            <a href="/tables"><i class="fa fa-fw fa-table"></i> Tables</a>
-        </li>
-        <li>
-            <a href="/forms"><i class="fa fa-fw fa-edit"></i> Forms</a>
-        </li>
-        <li>
-            <a href="/bootstrap-elements"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
-        </li>
-        <li>
-            <a href="/bootstrap-grid"><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
-        </li>
-        <li>
-            <a data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
+        <li role="presentation">
+            <a data-toggle="collapse" data-target="#menu-settings"><i class="fa fa-cogs fa-fw"></i> Configuration <i class="fa fa-caret-down fa-fw"></i></a>
 
-            <ul id="demo" class="collapse">
-                <li>
-                    <a href="#">Dropdown Item</a>
+            <ul id="menu-settings" class="nav nav-pills nav-stacked collapse in">
+                <li role="presentation" {{ '/settings/roles' == $_uri ? ' class="active"' : null }}>
+                    <a href="/settings/roles"><i class="fa fa-users fa-fw"></i> Roles & Limits</a>
                 </li>
-                <li>
-                    <a href="#">Dropdown Item</a>
+                <li role="presentation" {{ '/settings/servers' == $_uri ? ' class="active"' : null }}>
+                    <a href="/settings/servers"><i class="fa fa-desktop fa-fw"></i> Servers</a>
+                </li>
+                <li role="presentation" {{ '/settings/clusters' == $_uri ? ' class="active"' : null }}>
+                    <a href="/settings/clusters"><i class="fa fa-sitemap fa-fw"></i> Clusters</a>
+                </li>
+                <li role="presentation" {{ '/settings/instances' == $_uri ? ' class="active"' : null }}>
+                    <a href="/settings/instances"><i class="fa fa-desktop fa-fw"></i> Instances</a>
+                </li>
+                <li role="presentation" {{ '/settings/users' == $_uri ? ' class="active"' : null }}>
+                    <a href="/settings/users"><i class="fa fa-user fa-fw"></i> Users</a>
                 </li>
             </ul>
         </li>
-        <li>
-            <a href="/blank-page"><i class="fa fa-fw fa-file"></i> Blank Page</a>
+        <li role="presentation" {{ '/app/reports' == $_uri ? ' class="active"' : null }}>
+            <a href="/app/reports"><i class="fa fa-th-list fa-fw"></i> Reports</a>
         </li>
-        <li>
-            <a href="/index-rtl"><i class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a>
+        <li role="presentation" {{ '/app/support' == $_uri ? ' class="active"' : null }}>
+            <a href="/app/support"><i class="fa fa-info-circle fa-fw"></i> Support</a>
         </li>
     </ul>
 </div>

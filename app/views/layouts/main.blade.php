@@ -13,19 +13,23 @@ if ( !isset( $_user ) || !is_array( $_user ) )
     <meta name="description" content="DreamFactory Enterprise(tm)">
     <meta name="author" content="DreamFactory Software, Inc.">
     <title> DreamFactory Enterprise & trade; | @yield('page-title','Welcome!')</title>
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <!-- Bootstrap Core CSS -->
-    <link href="/css/bootstrap.superhero.min.css" rel="stylesheet">
+    {{--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">--}}
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/flatly/bootstrap.min.css" rel="stylesheet">
     <!-- Scroller CSS -->
     <link rel="stylesheet" href="/css/nanoscroller.css">
     <!-- DFE Mods -->
     <link href="/css/dfe-console.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="/themes/css/sb-admin.css" rel="stylesheet">
-    <!-- Custom Fonts -->
-    <link href="/themes/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- DataTables CSS -->
+    <link href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --><!-- WARNING: Respond.js doesn't work if you view the page via file:// --><!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
-    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script><![endif]-->
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script><![endif]--><!-- jQuery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body class="@yield('body-class')">
 @include('layouts.main.body')

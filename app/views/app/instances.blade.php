@@ -11,9 +11,9 @@
                         <th>ID</th>
                         <th>Name</th>
                         <th>Cluster</th>
-                        <th>Owner Email</th>
                         <th>Created On</th>
-                        <th>Last Modified</th>
+                        <th>Owner Email</th>
+                        <th>Last Visit</th>
                     </tr>
                 </thead>
             </table>

@@ -10,64 +10,17 @@
 //******************************************************************************
 
 /**
- * Loads content into ajax content div
+ * If this is a data table, load it up...
  * @param [url]
  */
-function _loadContent(url) {
-	var $_target = $('#ajax-content');
+function _loadData(url) {
+	var _type = $('.table-datatable').data('resource');
 
-	url = url || location.hash.replace(/^#/, '');
-
-	if (!url || url.length < 1) {
-		url = '/app/dashboard';
+	if (_type && _type.length) {
+		EnterpriseServer.populateTable(_type);
 	}
 
-	EnterpriseServer.loading(true);
-	$_target.hide().empty();
-
-	$.ajax({
-			   mimeType: 'text/html; charset=utf-8',
-			   url:      url,
-			   type:     'GET',
-			   success:  function(data) {
-				   $_target.removeClass('error-wrapper').html(data);
-			   },
-			   error:    function(jqXHR, textStatus, errorThrown) {
-				   $_target.show();
-				   EnterpriseServer.loading(false);
-
-				   if (jqXHR.status == 500 || jqXHR.status == 404) {
-					   $('#ajax-content').addClass('error-wrapper').html(jqXHR.responseText);
-					   $('#content').css({
-											 height:   '100%',
-											 overflow: 'hidden'
-										 });
-				   } else {
-					   alert(errorThrown);
-				   }
-			   },
-			   dataType: 'html'
-		   }).done(function() {
-		$_target.show();
-		EnterpriseServer.loading(false);
-
-		var _type = $('.table-datatable').data('resource');
-
-		if (_type && _type.length) {
-			EnterpriseServer.setDataType(_type).populateTable();
-		}
-
-		$('.tab-link').on('click', function(e) {
-			e.preventDefault();
-			var _tab = $(this).data('toggle');
-
-			$('#dashboard-tabs li, .tab-content').removeClass('active');
-			$(this).parent('li').addClass('active');
-			$(_tab).addClass('active');
-		});
-
-		_setActiveItem();
-	});
+	_setActiveItem();
 }
 
 /**
@@ -94,16 +47,6 @@ jQuery(function($) {
 	if ($_avatar.data('hash').length) {
 		$_avatar.html('<img class="gravatar-image" src="' + 'http://www.gravatar.com/avatar/' + $_avatar.data('hash') + '" alt="avatar" />');
 	}
-
-	$('.nano').nanoScroller();
-
-	$(document).on('ajaxStart', function() {
-		$('.breadcrumb-loader').show();
-		$('#main').css({cursor: 'wait'});
-	}).on('ajaxComplete', function() {
-		$('.breadcrumb-loader').hide();
-		$('#main').css({cursor: 'initial'});
-	});
 
 	//	Bind clickers
 	$('#main').on('click', '.show-sidebar', function(e) {
@@ -134,16 +77,9 @@ jQuery(function($) {
 			$_body.css({overflow: _flow || 'initial'});
 			EnterpriseServer.redrawTable();
 		});
-	}).on('click', '.ajax-link', function(e) {
-		e.preventDefault();
-
-		var _href = $(this).attr('href').trim();
-
-		if (_href && _href.length && _href != '#') {
-			window.location.hash = _href;
-			_loadContent(_href);
-		}
 	});
 
-	_loadContent();
+	_loadData();
+
+	$('.nano').nanoScroller();
 });

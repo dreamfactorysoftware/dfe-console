@@ -1,11 +1,10 @@
 <?php
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Role;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class RoleController extends BaseController
+class RoleController extends BaseDataController
 {
     //******************************************************************************
     //* Methods
@@ -20,15 +19,8 @@ class RoleController extends BaseController
     {
         try
         {
-            $this->_parseDataRequest( 'role_name_text' );
-
-            $_response = DB::table( 'role_t' )
-                ->orderBy( $this->_order )
-                ->skip( $this->_skip )
-                ->take( $this->_limit )
-                ->get();
-
-            return $this->_respond( $_response, Role::count(), count( $_response ) );
+            return
+                $this->_processDataRequest( 'role_t', Role::count(), array('id', 'role_name_text', 'active_ind', 'lmod_date') );
         }
         catch ( \Exception $_ex )
         {

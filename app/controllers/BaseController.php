@@ -1,7 +1,12 @@
 <?php
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 
@@ -36,7 +41,7 @@ class BaseController extends Controller
      */
     protected $_limit = null;
     /**
-     * @type string
+     * @type array
      */
     protected $_order = null;
 
@@ -56,73 +61,6 @@ class BaseController extends Controller
             /** @noinspection PhpUndefinedMethodInspection */
             $this->layout = View::make( $this->layout );
         }
-    }
-
-    /**
-     * Parses inbound data request for limits and sort and search
-     *
-     * @param int|string $defaultSort Default sort column name or number
-     */
-    protected function _parseDataRequest( $defaultSort = 1 )
-    {
-        $this->_dtRequest = isset( $_REQUEST, $_REQUEST['length'] );
-        $this->_skip = IfSet::get( $_REQUEST, 'start', 0 );
-        $this->_limit = IfSet::get( $_REQUEST, 'length', static::DEFAULT_PER_PAGE );
-        $this->_order = $defaultSort;
-
-        if ( null === ( $_sortOrder = IfSet::get( $_REQUEST, 'order' ) ) )
-        {
-            return;
-        }
-
-        if ( is_array( $_sortOrder ) )
-        {
-            $_sort = array();
-
-            foreach ( $_sortOrder as $_key => $_value )
-            {
-                if ( isset( $_value['column'] ) )
-                {
-                    $_sort[] = ( $_value['column'] + 1 ) . ' ' . IfSet::get( $_value, 'dir' );
-                }
-            }
-
-            if ( !empty( $_sort ) )
-            {
-                $this->_order = implode( ', ', $_sort );
-            }
-        }
-        elseif ( is_string( $_sortOrder ) )
-        {
-            $this->_order = trim( $_sortOrder . ' ' . IfSet::get( $_REQUEST, 'dir' ) );
-        }
-    }
-
-    /**
-     * Converts data to JSON and spits it out
-     *
-     * @param array $data
-     * @param int   $totalRows
-     * @param int   $totalFiltered
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function _respond( $data, $totalRows = null, $totalFiltered = null )
-    {
-        //  Don't wrap if there are no totals
-        if ( !$this->_dtRequest || ( null === $totalRows && null === $totalFiltered ) )
-        {
-            return Response::json( $data );
-        }
-
-        $_recordsFiltered = (integer)( $totalFiltered ?: $totalRows );
-        $data = array('data' => $data);
-
-        $data['draw'] = (integer)IfSet::get( $_REQUEST, 'draw' );
-        $data['recordsTotal'] = (integer)$totalRows;
-        $data['recordsFiltered'] = $_recordsFiltered;
-
-        return Response::json( $data );
     }
 
     /**
@@ -148,4 +86,27 @@ class BaseController extends Controller
         );
     }
 
+    /**
+     * Get and cache array of database stats
+     *
+     * @return array
+     */
+    public static function getActiveCounts()
+    {
+        $_counts = Cache::get( 'console.active_counts' );
+
+        if ( empty( $_counts ) )
+        {
+            $_counts = array(
+                'clusters'  => Cluster::count(),
+                'users'     => ServiceUser::count(),
+                'instances' => Instance::count(),
+                'servers'   => Server::count(),
+            );
+
+            Cache::put( 'console.active_counts', $_counts, 1 );
+        }
+
+        return $_counts;
+    }
 }
