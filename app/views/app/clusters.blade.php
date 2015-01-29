@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('breadcrumb-title')
+    Clusters
+@stop
+
 @section('content')
     <div class="row">
         <div class="col-md-12">

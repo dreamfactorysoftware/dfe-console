@@ -1,17 +1,25 @@
 <?php
-
-$_active = DashboardController::getActiveCounts();
+if ( !isset( $_active ) )
+{
+    $_active = DashboardController::getActiveCounts();
+}
 ?>
-<div class="row breadcrumb-content">
-    <div class="col-lg-9 no-padding-left">
-        {{ renderBreadcrumbs(array(Route::currentRouteName()=>false,false),$_buttons) }}
+<div class="row breadcrumb-wrapper">
+    <div class="col-md-6 breadcrumb-title">
+        @yield('breadcrumb-title')
     </div>
 
-    <div class="col-lg-3 dashboard-header-info">
+    <div class="col-md-6 breadcrumb-activity">
         <div class="pull-right">
-            <div>{{ $_active['clusters'] }} clusters</div>
-            <div>{{ $_active['instances'] }} instances</div>
-            <div>{{ $_active['users'] }} users</div>
+            <div>
+                <i class="fa fa-fw fa-sitemap"></i> <span id="breadcrumb-activity-clusters">@yield('breadcrumb-cluster-count', $_active['clusters'])</span>
+            </div>
+            <div><i class="fa fa-fw fa-desktop"></i>
+                <span id="breadcrumb-activity-provisioned">@yield('breadcrumb-instance-count', $_active['instances'])</span>
+            </div>
+            <div><i class="fa fa-fw fa-user"></i> <span id="breadcrumb-activity-users">@yield('breadcrumb-user-count', $_active['users'])</span>
+            </div>
         </div>
+
     </div>
 </div>

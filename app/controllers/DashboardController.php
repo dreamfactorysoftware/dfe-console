@@ -7,6 +7,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 
 /**
@@ -31,6 +32,10 @@ class DashboardController extends BaseController
      * @var string
      */
     const BASE_STORAGE_PATH = '/data/storage';
+    /**
+     * @type int The number of minutes to cache statistics
+     */
+    const STATS_CACHE_TTL = 5;
 
     //********************************************************************************
     //* Methods
@@ -41,17 +46,27 @@ class DashboardController extends BaseController
      */
     public function anyStats()
     {
-        return array(
-            'user_count' => User::count(),
-            'dsp_count'  => array(
-                'live' => Instance::count(),
-                'dead' => InstanceArchive::count(),
-            ),
-            'disk_usage' => array(
-                'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
-                'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
-            )
-        );
+        $_stats = Cache::get( 'stats.dashboard' );
+
+        if ( empty( $_stats ) )
+        {
+
+            $_stats = array(
+                'user_count' => User::count(),
+                'dsp_count'  => array(
+                    'live' => Instance::count(),
+                    'dead' => InstanceArchive::count(),
+                ),
+                'disk_usage' => array(
+                    'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
+                    'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
+                )
+            );
+
+            Cache::put( 'stats.dashboard', $_stats, static::STATS_CACHE_TTL );
+        }
+
+        return $_stats;
     }
 
     /**
@@ -61,17 +76,7 @@ class DashboardController extends BaseController
     {
         Instance::launch( User::findOrFail( Auth::user()->getId() ), 'gha-test1' );
 
-        return array(
-            'user_count' => User::count(),
-            'dsp_count'  => array(
-                'live' => Instance::count(),
-                'dead' => InstanceArchive::count(),
-            ),
-            'disk_usage' => array(
-                'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
-                'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
-            )
-        );
+        return $this->anyStats();
     }
 
     /**
@@ -149,6 +154,7 @@ class DashboardController extends BaseController
     {
         /** @type Elk $_source */
         $_source = $this->_elk();
+
         if ( false === ( $_stats = $_source->globalStats() ) )
         {
             $_stats = array();
@@ -156,12 +162,7 @@ class DashboardController extends BaseController
 
         return array_merge(
             $_stats,
-            array(
-                'disk_usage' => array(
-                    'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
-                    'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
-                )
-            )
+            $this->anyStats()
         );
     }
 
@@ -170,10 +171,7 @@ class DashboardController extends BaseController
      */
     public function anyAllStats()
     {
-        /** @type Elk $_source */
-        $_source = App::make( 'elk.service' );
-
-        return $_source->allStats();
+        return $this->_elk()->allStats();
     }
 
     /**

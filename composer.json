@@ -30,17 +30,18 @@
         }
     ],
     "require":           {
-        "laravel/framework":          "4.2.*",
-        "psr/log":                    "*",
-        "radic/blade-extensions":     "1.*",
-        "doctrine/couchdb-odm":       "*",
-        "dreamfactory/php-utils":     "*",
-        "dreamfactory/fabric-audit":  "~1.0",
-        "dreamfactory/console-tools": "dev-develop as dev-master",
-        "dreamfactory/fabric-queue":  "dev-develop as dev-master",
-        "guzzlehttp/guzzle":          "*",
-        "ruflin/elastica":            "dev-master",
-        "monolog/monolog":            "*"
+        "laravel/framework":              "4.2.*",
+        "psr/log":                        "*",
+        "radic/blade-extensions":         "1.*",
+        "doctrine/couchdb-odm":           "*",
+        "dreamfactory/php-utils":         "*",
+        "dreamfactory/fabric-api-common": "dev-develop as dev-master",
+        "dreamfactory/fabric-audit":      "~1.0",
+        "dreamfactory/console-tools":     "dev-develop as dev-master",
+        "dreamfactory/fabric-queue":      "dev-develop as dev-master",
+        "guzzlehttp/guzzle":              "*",
+        "ruflin/elastica":                "dev-master",
+        "monolog/monolog":                "*"
     },
     "require-dev":       {
         "way/generators":  "~2.0",

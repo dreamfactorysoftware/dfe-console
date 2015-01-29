@@ -53,6 +53,10 @@ i.fa {
 	margin-bottom: 0;
 }
 
+.navbar.navbar-default {
+	border-bottom: 1px solid #666666;
+}
+
 .navbar-brand {
 	height:  50px;
 	padding: 10px 15px 0;
@@ -106,39 +110,26 @@ i.fa {
 }
 
 /** breadcrumbs **/
-.breadcrumb-content {
-	color:        #ebebeb;
-	background:   rgba(34, 34, 34, 1);
-	font-size:    17px;
-	font-family:  "Open Sans Condensed", Arial, sans-serif;
-	margin-right: -10px;
+.breadcrumb-wrapper {
+	color:       #ebebeb;
+	background:  rgba(34, 34, 34, 1);
+	margin:      0 0 0 -15px;
+	padding-top: 10px;
 }
 
-#breadcrumb {
-	/*margin-bottom: 10px;*/
-	padding:    10px 15px 10px 0;
-	min-height: 40px;
+.breadcrumb-title {
+	margin-top:     0;
+	font-size:      19px;
+	font-weight:    bold;
+	padding-bottom: 8px;
 }
 
-.breadcrumb {
-	padding:               0 15px;
-	background:            none;
-	-webkit-border-radius: 0;
-	-moz-border-radius:    0;
-	border-radius:         0;
-	margin:                0;
-}
-
-.breadcrumb > li:last-child {
-	color: #9c9a78;
-}
-
-.breadcrumb > li > a {
-	/*color: #d8d8d8;*/
-}
-
-.breadcrumb > li > a:hover, .breadcrumb > li:last-child > a {
-	/*color: #f8f8f8;*/
+.breadcrumb-activity div {
+	display:        inline-block;
+	text-align:     center;
+	vertical-align: middle;
+	font-family:    "Open Sans Condensed", Arial, sans-serif;
+	font-size:      13px;
 }
 
 .breadcrumb-loader {
@@ -177,16 +168,6 @@ i.fa {
 	margin-top:  8px;
 }
 
-.dashboard-header-info div > div {
-	display:        inline-block;
-	height:         100%;
-	text-align:     center;
-	vertical-align: middle;
-	font-family:    "Open Sans Condensed", Arial, sans-serif;
-	font-size:      13px;
-	margin:         12px 8px 12px 8px;
-}
-
 .dashboard-content > .tab-content {
 	visibility: hidden;
 	position:   absolute;
@@ -218,13 +199,13 @@ i.fa {
 
 /** panels **/
 .panel {
-	background-color: #4e5d6c;
-	color:            #ebebeb;
+	/*background-color: #4e5d6c;*/
+	/*color:            #ebebeb;*/
 }
 
 .panel.panel-inverse {
-	background-color: rgba(255, 255, 255, .8);
-	color:            #2c3e50;
+	/*background-color: rgba(255, 255, 255, .8);*/
+	/*color:            #2c3e50;*/
 }
 
 .panel-row {
@@ -233,8 +214,8 @@ i.fa {
 }
 
 .panel-heading, .panel-heading h3 {
-	cursor:      pointer;
-	font-size:   14px;
+	cursor:    pointer;
+	font-size: 14px;
 }
 
 /** forms **/
@@ -243,7 +224,7 @@ i.fa {
 	display:   inherit;
 	width:     inherit;
 	height:    inherit;
-	padding:   5px 10 pxat;
+	padding:   5px 10px;
 }
 
 .dataTables_length label select {
