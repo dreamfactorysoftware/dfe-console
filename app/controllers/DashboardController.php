@@ -100,10 +100,7 @@ class DashboardController extends BaseController
 
             case 'logins':
                 $_facility = 'platform/api';
-                $_which = array(
-                    'fabric.short_message' => 'LOGIN /web/login',
-                    'fabric.method'        => 'POST',
-                );
+                $_which = 'user/session';
                 break;
 
             case 'activations':

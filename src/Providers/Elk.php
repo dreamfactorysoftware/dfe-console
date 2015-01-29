@@ -174,7 +174,7 @@ class Elk
         {
             $_query['aggs']['paths'] = array(
                 'terms' => array(
-                    'field' => 'fabric.path_info.raw',
+                    'field' => 'fabric.path.raw',
                     'size'  => 10,
                 )
             );
@@ -194,27 +194,18 @@ class Elk
         }
         else
         {
+            $_query['query'] = array('term' => array());
+
             if ( is_array( $term ) )
             {
-                $_query['query'] = array('bool' => array('should' => array()));
-
                 foreach ( $term as $_field => $_value )
                 {
-                    $_query['query']['bool']['should'][] = array('wildcard' => array($_field => $_value));
+                    $_query['query']['term'][$_field] = $_value;
                 }
             }
             else
             {
-                $_query['query'] =
-                    array(
-                        'bool' => array(
-                            'must' => array(
-                                'wildcard' => array(
-                                    'fabric.path_info.raw' => $term,
-                                ),
-                            ),
-                        ),
-                    );
+                $_query['query']['term']['fabric.path.raw'] = $term;
             }
 
         }
