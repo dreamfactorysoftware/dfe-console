@@ -108,6 +108,7 @@ return array(
         'Way\Generators\GeneratorsServiceProvider',
         'Radic\BladeExtensions\BladeExtensionsServiceProvider',
         'DreamFactory\Enterprise\Console\Services\ElkServiceProvider',
+        'DreamFactory\Library\Fabric\Api\Common\Providers\PacketServiceProvider',
     ),
     /*
     |--------------------------------------------------------------------------

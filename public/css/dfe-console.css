@@ -117,6 +117,10 @@ i.fa {
 	padding-top: 10px;
 }
 
+.breadcrumb-menu-icon {
+	margin-left: 5px;
+}
+
 .breadcrumb-title {
 	margin-top:     0;
 	font-size:      19px;

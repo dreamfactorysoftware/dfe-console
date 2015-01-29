@@ -6,7 +6,7 @@ if ( !isset( $_active ) )
 ?>
 <div class="row breadcrumb-wrapper">
     <div class="col-md-6 breadcrumb-title">
-        @yield('breadcrumb-title')
+        <i class="fa fa-fw fa-bars breadcrumb-menu-icon"></i> @yield('breadcrumb-title')
     </div>
 
     <div class="col-md-6 breadcrumb-activity">

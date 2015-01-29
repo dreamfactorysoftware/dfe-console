@@ -8,7 +8,7 @@
     Dashboard
 @stop
 
-@section('breadcrumb-header-left')
+@section('breadcrumb-title')
     Dashboard
 @stop
 

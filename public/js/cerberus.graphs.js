@@ -126,7 +126,7 @@ var _getData = function(which, facility, size) {
 			   dataType: 'json',
 			   async:    false, //			processData: false,
 			   success:  function(json, statusText, xhr) {
-				   json.aggregations.published_on.buckets.forEach(function(element, index, array) {
+				   json.response.aggregations.published_on.buckets.forEach(function(element, index, array) {
 					   _data.push([element.key, element.doc_count]);
 				   });
 			   },
@@ -146,11 +146,13 @@ var _update = function() {
 			   dataType: 'json',
 			   success:  function(json, statusText, xhr) {
 				   if (json && json.success) {
-					   $('#breadcrumb-activity-users').html(json.details._users_total);
-					   $('#breadcrumb-activity-provisioned').html(json.details._active_total);
-					   $('#breadcrumb-activity-deprovisioned').html(json.details._inactive_total);
-					   $('#breadcrumb-activity-tables').html(json.details._database_tables_system);
-					   $('#breadcrumb-activity-apps').html(json.details._apps_total - json.details._apps_system);
+					   $('#breadcrumb-activity-clusters').html(json.response.cluster_count);
+					   $('#breadcrumb-activity-servers').html(json.response.server_count);
+					   $('#breadcrumb-activity-users').html(json.response.user_count);
+					   $('#breadcrumb-activity-provisioned').html(json.response.dsp_count.live);
+//					   $('#breadcrumb-activity-deprovisioned').html(json.response.dsp_count.dead);
+//					   $('#breadcrumb-activity-tables').html(json.details._database_tables_system);
+//					   $('#breadcrumb-activity-apps').html(json.details._apps_total - json.details._apps_system);
 //						   $('li#disk_usage .bar').css({width: (500 / (json.details.disk_usage.available / 1024000000) ) + '%'});
 //						   $('li#disk_usage .stat').html(json.details.disk_usage.available);
 				   }

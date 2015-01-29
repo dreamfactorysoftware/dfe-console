@@ -3,8 +3,10 @@ use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\Elk;
 use DreamFactory\Library\Fabric\Api\Common\Facades\Packet;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
@@ -45,21 +47,26 @@ class DashboardController extends BaseController
 
     /**
      * Returns an object with various statistics...
+     *
+     * @param bool $envelope If true, response is wrapped in a response envelope
+     *
+     * @return array
      */
-    public function anyStats()
+    public function anyStats( $envelope = true )
     {
         $_stats = Cache::get( 'stats.dashboard' );
 
         if ( empty( $_stats ) )
         {
-
             $_stats = array(
-                'user_count' => User::count(),
-                'dsp_count'  => array(
-                    'live' => Instance::count(),
-                    'dead' => InstanceArchive::count(),
+                'cluster_count' => number_format( Cluster::count(), 0 ),
+                'server_count'  => number_format( Server::count(), 0 ),
+                'user_count'    => number_format( User::count(), 0 ),
+                'dsp_count'     => array(
+                    'live' => number_format( Instance::count(), 0 ),
+                    'dead' => number_format( InstanceArchive::count(), 0 ),
                 ),
-                'disk_usage' => array(
+                'disk_usage'    => array(
                     'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
                     'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
                 )
@@ -68,7 +75,7 @@ class DashboardController extends BaseController
             Cache::put( 'stats.dashboard', $_stats, static::STATS_CACHE_TTL );
         }
 
-        return Packet::success( Response::HTTP_OK, $_stats );
+        return $envelope ? Packet::success( Response::HTTP_OK, $_stats ) : $_stats;
     }
 
     /**
@@ -166,7 +173,7 @@ class DashboardController extends BaseController
             Response::HTTP_OK,
             array_merge(
                 $_stats,
-                $this->anyStats()
+                $this->anyStats( false )
             )
         );
     }
