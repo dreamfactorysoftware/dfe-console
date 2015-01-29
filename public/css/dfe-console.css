@@ -232,16 +232,9 @@ i.fa {
 	margin-right: 0;
 }
 
-.panel-heading {
+.panel-heading, .panel-heading h3 {
 	cursor:      pointer;
-	font-family: "Open Sans Condensed", "Open Sans Condensed", Arial, sans-serif;
-	font-weight: bold;
-	font-size:   17px;
-}
-
-.panel-heading h3 {
-	font-family: "Open Sans Condensed", Arial, sans-serif;
-	font-weight: bold;
+	font-size:   14px;
 }
 
 /** forms **/
@@ -250,7 +243,7 @@ i.fa {
 	display:   inherit;
 	width:     inherit;
 	height:    inherit;
-	padding:   5px 10pxat;
+	padding:   5px 10 pxat;
 }
 
 .dataTables_length label select {

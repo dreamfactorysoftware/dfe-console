@@ -36,10 +36,13 @@ var _chart = function(selector, name, yAxisName, which, facility, size) {
 								   zoomType: 'x'
 							   },
 							   title:       {
-								   text: name
+								   text: ''
 							   },
 							   subtitle:    {
-								   text: document.ontouchstart === undefined ? 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+								   text: document.ontouchstart ===
+										 undefined
+									   ? 'Click and drag in the plot area to zoom in'
+									   : 'Pinch the chart to zoom in'
 							   },
 							   xAxis:       {
 								   type: 'datetime'
@@ -52,7 +55,7 @@ var _chart = function(selector, name, yAxisName, which, facility, size) {
 							   plotLines:   [{
 												 value: 0,
 												 width: 1,
-												 color: '#808080'
+												 color: '#c0c0c0'
 											 }],
 							   tooltip:     {
 								   formatter: function() {
