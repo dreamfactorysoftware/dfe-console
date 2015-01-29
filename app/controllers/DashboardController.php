@@ -1,10 +1,12 @@
 <?php
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\Elk;
+use DreamFactory\Library\Fabric\Api\Common\Facades\Packet;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Utility\IfSet;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -66,7 +68,7 @@ class DashboardController extends BaseController
             Cache::put( 'stats.dashboard', $_stats, static::STATS_CACHE_TTL );
         }
 
-        return $_stats;
+        return Packet::success( Response::HTTP_OK, $_stats );
     }
 
     /**
@@ -141,10 +143,10 @@ class DashboardController extends BaseController
                 return $_response;
             }
 
-            return $_results->getResponse()->getData();
+            return Packet::success( Response::HTTP_OK, $_results->getResponse()->getData() );
         }
 
-        return array();
+        return Packet::success( Response::HTTP_OK );
     }
 
     /**
@@ -160,9 +162,12 @@ class DashboardController extends BaseController
             $_stats = array();
         }
 
-        return array_merge(
-            $_stats,
-            $this->anyStats()
+        return Packet::success(
+            Response::HTTP_OK,
+            array_merge(
+                $_stats,
+                $this->anyStats()
+            )
         );
     }
 
@@ -171,7 +176,7 @@ class DashboardController extends BaseController
      */
     public function anyAllStats()
     {
-        return $this->_elk()->allStats();
+        return Packet::success( Response::HTTP_OK, $this->_elk()->allStats() );
     }
 
     /**
