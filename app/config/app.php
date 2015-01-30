@@ -107,6 +107,7 @@ return array(
         'Illuminate\Workbench\WorkbenchServiceProvider',
         'Way\Generators\GeneratorsServiceProvider',
         'Radic\BladeExtensions\BladeExtensionsServiceProvider',
+        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'DreamFactory\Enterprise\Console\Services\ElkServiceProvider',
         'DreamFactory\Library\Fabric\Api\Common\Providers\PacketServiceProvider',
     ),

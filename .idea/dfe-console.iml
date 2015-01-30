@@ -34,7 +34,10 @@
       <sourceFolder url="file://$MODULE_DIR$/vendor/classpreloader/classpreloader/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/app/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/app/storage/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/app/storage/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/app/storage/sessions" />
+      <excludeFolder url="file://$MODULE_DIR$/app/storage/views" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />
