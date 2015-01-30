@@ -79,7 +79,7 @@ class DashboardController extends BaseController
      */
     public function postLaunch()
     {
-        Instance::launch( User::findOrFail( Auth::user()->id ), 'gha-test1' );
+        //Instance::launch( User::findOrFail( Auth::user()->id ), 'gha-test1' );
 
         return $this->anyStats();
     }
@@ -131,13 +131,13 @@ class DashboardController extends BaseController
                 if ( !empty( $_facets ) )
                 {
                     /** @var $_datapoint array */
-                    foreach ( IfSet::get( $_facets, 'published_on', 'buckets', array() ) as $_datapoint )
+                    foreach ( IfSet::getDeep( $_facets, 'published_on', 'buckets', array() ) as $_datapoint )
                     {
                         array_push( $_response['data']['time'], array($_datapoint['time'], $_datapoint['count']) );
                     }
 
                     /** @var $_datapoint array */
-                    foreach ( IfSet::get( $_facets, 'facilities', 'buckets', array() ) as $_datapoint )
+                    foreach ( IfSet::getDeep( $_facets, 'facilities', 'buckets', array() ) as $_datapoint )
                     {
                         array_push( $_response['data']['facilities'], array($_datapoint['term'], $_datapoint['count']) );
                     }

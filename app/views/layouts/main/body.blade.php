@@ -4,7 +4,7 @@
     <div id="page-wrapper" class="container-fluid">
         @include('app.breadcrumbs', array( '_trail' => array( 'Dashboard' => false), '_buttons'=>false ))
 
-        <div class="panel-row page-content nano">
+        <div class="page-content nano">
             <div class="nano-content">
                 @yield('content')
             </div>

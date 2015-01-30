@@ -1,12 +1,9 @@
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="/"><img src="/img/logo-dreamfactory.png" alt=""></a>
     </div>
@@ -22,6 +19,7 @@
                             <span class="pull-left">
                                 <img class="media-object" src="http://placehold.it/50x50" alt="">
                             </span>
+
                             <div class="media-body">
                                 <h5 class="media-heading">
                                     <strong>From User</strong>
@@ -52,8 +50,7 @@
                     <div class="avatar-image" data-hash="{{ $_user['hash'] }}"></div>
                 </div>
                 <div class="user-mini pull-right">
-                    <span>{{{ $_user['name'] }}}</span>
-                    <span class="caret"></span>
+                    <span>{{{ $_user['name'] }}}</span> <span class="caret"></span>
                 </div>
             </a>
 

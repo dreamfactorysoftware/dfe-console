@@ -1,7 +1,4 @@
 <?php
-use DreamFactory\Library\Fabric\Database\Models\Auth\User;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,11 +40,12 @@ class AppController extends BaseController
 
         if ( View::exists( $_viewName ) )
         {
+            //@todo remove this
             $parameters['_active'] = array(
-                'instances' => number_format( Instance::count(), 0 ),
-                'clusters'  => number_format( Cluster::count(), 0 ),
-                'users'     => number_format( User::count(), 0 ),
-                'user'      => static::getUserInfo(),
+                'instances' => 0,
+                'clusters'  => 0,
+                'users'     => 0,
+                'user'      => null,
             );
 
             return View::make( $_viewName, $parameters );

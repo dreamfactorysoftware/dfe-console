@@ -15,7 +15,7 @@ if ( !isset( $_user ) || !is_array( $_user ) )
     <title> DreamFactory Enterprise & trade; | @yield('page-title','Welcome!')</title>
     <!-- Bootstrap Core CSS -->
     {{--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">--}}
-    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/flatly/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/paper/bootstrap.min.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <!-- Scroller CSS -->
