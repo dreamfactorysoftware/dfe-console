@@ -45,7 +45,8 @@
     },
     "require-dev":       {
         "way/generators":  "~2.0",
-        "phpunit/phpunit": "@stable"
+        "phpunit/phpunit": "@stable",
+        "barryvdh/laravel-ide-helper": "~1.0"
     },
     "extra":             {
         "branch-alias": {

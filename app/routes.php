@@ -12,6 +12,23 @@ Route::controller( 'app', 'AppController' );
 Route::controller( 'dashboard', 'DashboardController' );
 /** @noinspection PhpUndefinedMethodInspection */
 Route::controller( 'settings', 'SettingsController' );
+Route::get(
+    'form',
+    function ()
+    {
+        return View::make( 'app.forms.user' );
+    }
+);
+Route::post(
+    'form-submit',
+    array(
+        'before' => 'csrf',
+        function ()
+        {
+            //  validation;
+        }
+    )
+);
 /** @noinspection PhpUndefinedMethodInspection */
 Route::group(
     array('prefix' => 'api/v1'),
@@ -22,6 +39,7 @@ Route::group(
         Route::resource( 'instances', 'InstanceController' );
         Route::resource( 'roles', 'RoleController' );
         Route::resource( 'service-users', 'ServiceUserController' );
+        Route::resource( 'users', 'UserController' );
     }
 );
 /** @noinspection PhpUndefinedMethodInspection */
