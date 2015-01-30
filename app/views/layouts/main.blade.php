@@ -16,14 +16,14 @@ if ( !isset( $_user ) || !is_array( $_user ) )
     <!-- Bootstrap Core CSS -->
     {{--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">--}}
     <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/paper/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/css/ripples.min.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/css/material-wfont.min.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <!-- Scroller CSS -->
-    <link rel="stylesheet" href="/css/nanoscroller.css">
+    {{--<link rel="stylesheet" href="/css/nanoscroller.css">--}}
     <!-- DFE Mods -->
-    <link href="/css/dfe-console.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="/themes/css/sb-admin.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <!-- DataTables CSS -->
     <link href="//cdn.datatables.net/1.10.4/css/jquery.dataTables.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries --><!-- WARNING: Respond.js doesn't work if you view the page via file:// --><!--[if lt IE 9]>
