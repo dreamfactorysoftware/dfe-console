@@ -2,7 +2,7 @@
 $_uri = URL::getRequest()->getRequestUri();
 ?>
 <ul class="nav nav-sidebar">
-    <li role="presentation" class="dropdown-header">Overview</li>
+    <li role="presentation" class="dropdown-header">Operations</li>
     <li role="presentation" {{ '/' == $_uri ? ' class="active"' : null }}>
         <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
     </li>
@@ -15,6 +15,7 @@ $_uri = URL::getRequest()->getRequestUri();
 </ul>
 
 <ul class="nav nav-sidebar">
+    <li role="presentation" class="dropdown-header">Settings</li>
     <li role="presentation" {{ '/settings/roles' == $_uri ? ' class="active"' : null }}>
         <a href="/settings/roles"><i class="fa fa-users fa-fw"></i> Roles & Limits</a>
     </li>

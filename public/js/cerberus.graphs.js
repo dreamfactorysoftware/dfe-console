@@ -39,7 +39,10 @@ var _chart = function(selector, name, yAxisName, which, facility, size) {
 								   text: ''
 							   },
 							   subtitle:    {
-								   text: document.ontouchstart === undefined ? 'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+								   text: document.ontouchstart ===
+										 undefined
+									   ? 'Click and drag in the plot area to zoom in'
+									   : 'Pinch the chart to zoom in'
 							   },
 							   xAxis:       {
 								   type: 'datetime'
@@ -150,11 +153,6 @@ var _update = function() {
 					   $('#breadcrumb-activity-servers').html(json.response.server_count);
 					   $('#breadcrumb-activity-users').html(json.response.user_count);
 					   $('#breadcrumb-activity-provisioned').html(json.response.dsp_count.live);
-//					   $('#breadcrumb-activity-deprovisioned').html(json.response.dsp_count.dead);
-//					   $('#breadcrumb-activity-tables').html(json.details._database_tables_system);
-//					   $('#breadcrumb-activity-apps').html(json.details._apps_total - json.details._apps_system);
-//						   $('li#disk_usage .bar').css({width: (500 / (json.details.disk_usage.available / 1024000000) ) + '%'});
-//						   $('li#disk_usage .stat').html(json.details.disk_usage.available);
 				   }
 				   return true;
 			   },
@@ -176,8 +174,6 @@ $(function() {
 
 	_chart('#timeline-chart', 'Live DSP API Calls', 'Calls');
 	_chart('#timeline-chart-logins', 'DSP User Logins', 'Logins', 'logins');
-//	_chart('#timeline-chart-activations', 'DSP User Activations', 'Activations', 'activations');
-//	_chart('#timeline-chart-provision', 'Provisioning', 'Requests', '', 'fabric/queue/*');
 	_chart('#timeline-chart-fabric-api', 'Fabric API Calls', 'Calls', '', 'fabric/*');
 
 	_update();

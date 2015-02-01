@@ -4,7 +4,7 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-	padding-top: 50px;
+	padding-top: 40px;
 }
 
 /*
@@ -26,7 +26,7 @@ body {
 
 /** navbar min reduction **/
 .navbar {
-	margin-bottom: 18px;
+	margin-bottom: 0;
 	min-height:    40px;
 	height:        40px;
 	overflow:      hidden;
@@ -36,6 +36,12 @@ body {
 .navbar .navbar-brand {
 	height:      40px;
 	line-height: 20px;
+}
+
+.navbar-toggle {
+	margin-top:    0;
+	margin-bottom: 0;
+	padding:       13px 0;
 }
 
 /** reduce padding to accommodate 50px bar **/
@@ -50,6 +56,13 @@ body {
 	padding-bottom: 8px;
 }
 
+@media (max-width: 1199px) {
+	.navbar .navbar-brand {
+		height:      40px;
+		padding-top: 4px;
+	}
+}
+
 /*
  * Sidebar
  */
@@ -62,7 +75,7 @@ body {
 @media (min-width: 768px) {
 	.sidebar {
 		position:         fixed;
-		top:              51px;
+		top:              41px;
 		bottom:           0;
 		left:             0;
 		z-index:          1000;
@@ -172,3 +185,9 @@ body {
 	margin-top:  2px;
 }
 
+.dropdown-header {
+	font-size:   19px;
+	font-weight: bold;
+	color:       #888;
+	font-family: RobotoDraft, Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
