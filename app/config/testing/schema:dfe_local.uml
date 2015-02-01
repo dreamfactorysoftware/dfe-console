@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.schema:dfe_local</OriginalElement>
+  <nodes>
+    <node x="332.0" y="675.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_arch_t</node>
+    <node x="656.0" y="675.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.migration_t</node>
+    <node x="0.0" y="580.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.deactivation_arch_t</node>
+    <node x="20.0" y="457.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.service_user_t</node>
+    <node x="201.0" y="580.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_janitor_t</node>
+    <node x="569.0" y="580.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_arch_t</node>
+    <node x="189.0" y="100.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_t</node>
+    <node x="101.64772727272725" y="220.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_role_asgn_t</node>
+    <node x="188.0" y="457.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_server_asgn_arch_t</node>
+    <node x="439.0" y="100.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_t</node>
+    <node x="370.16590909090905" y="341.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_server_asgn_t</node>
+    <node x="391.0" y="580.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_arch_t</node>
+    <node x="424.0" y="0.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_type_t</node>
+    <node x="584.7931818181819" y="100.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_t</node>
+    <node x="448.0" y="457.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_server_asgn_arch_t</node>
+    <node x="0.0" y="675.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.deactivation_t</node>
+    <node x="0.0" y="100.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.role_t</node>
+    <node x="523.2931818181819" y="220.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_server_asgn_t</node>
+    <node x="396.41590909090905" y="230.5">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_t</node>
+    <node x="495.0" y="675.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.route_hash_t</node>
+    <node x="167.0" y="675.984375">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.owner_hash_t</node>
+    <node x="296.0" y="100.0">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.environment_t</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_role_asgn_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.role_t">
+      <point x="-36.25" y="-35.5" />
+      <point x="137.89772727272725" y="200.0" />
+      <point x="74.5" y="200.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_server_asgn_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_t">
+      <point x="42.5" y="-35.5" />
+      <point x="22.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_server_asgn_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_t">
+      <point x="-42.5" y="-35.5" />
+      <point x="565.7931818181819" y="190.0" />
+      <point x="517.3" y="190.0" />
+      <point x="34.799999999999955" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_type_t">
+      <point x="0.0" y="-25.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_t">
+      <point x="8.25" y="-25.0" />
+      <point x="454.16590909090905" y="200.0" />
+      <point x="465.1" y="200.0" />
+      <point x="-17.399999999999977" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_role_asgn_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_t">
+      <point x="36.25" y="-35.5" />
+      <point x="210.39772727272725" y="200.0" />
+      <point x="232.5" y="200.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_t">
+      <point x="-41.25" y="-25.0" />
+      <point x="404.66590909090905" y="200.0" />
+      <point x="261.5" y="200.0" />
+      <point x="29.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.service_user_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.service_user_t">
+      <point x="0.0" y="25.0" />
+      <point x="81.5" y="527.0" />
+      <point x="0.0" y="527.0" />
+      <point x="0.0" y="482.0" />
+      <point x="-61.5" y="-0.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.environment_t">
+      <point x="-24.75" y="-25.0" />
+      <point x="421.16590909090905" y="190.0" />
+      <point x="357.5" y="190.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_t">
+      <point x="41.25" y="-25.0" />
+      <point x="487.16590909090905" y="200.0" />
+      <point x="606.7931818181819" y="200.0" />
+      <point x="-22.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_server_asgn_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_t">
+      <point x="-45.25" y="-35.5" />
+      <point x="415.41590909090905" y="316.0" />
+      <point x="445.91590909090905" y="316.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_server_asgn_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.server_t">
+      <point x="45.25" y="-35.5" />
+      <point x="505.91590909090905" y="190.0" />
+      <point x="499.9" y="190.0" />
+      <point x="17.399999999999977" y="25.0" />
+    </edge>
+    <edge source="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_t" target="82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_t">
+      <point x="-29.0" y="25.0" />
+      <point x="203.5" y="170.0" />
+      <point x="169.0" y="170.0" />
+      <point x="169.0" y="125.0" />
+      <point x="-43.5" y="-0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.7640750670241286" x="380.0" y="363.0" />
+  <SelectedNodes>
+    <node>82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.deactivation_t</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+  </Categories>
+</Diagram>
+

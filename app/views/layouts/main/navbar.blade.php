@@ -16,7 +16,7 @@
                             <a href="#">
                                 <div class="media">
                             <span class="pull-left">
-                                <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                <img class="media-object" src="//placehold.it/50x50" alt="">
                             </span>
 
                                     <div class="media-body">
@@ -69,7 +69,7 @@
                     </ul>
                 </li>
             </ul>
-            <form class="navbar-form navbar-right">
+            <form class="navbar-form navbar-right hidden">
                 <input type="text" class="form-control" placeholder="Search...">
             </form>
         </div>
