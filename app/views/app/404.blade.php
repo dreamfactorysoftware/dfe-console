@@ -1,5 +1,7 @@
 @extends('layouts.main')
 
+@section('body-class'){{ "body-404" }}@stop
+
 @section('content')
     <div class="text-center page-404 error-wrapper">
         <img src="/img/bg-planet.png" />

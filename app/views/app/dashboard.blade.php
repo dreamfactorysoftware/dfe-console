@@ -21,6 +21,8 @@
         <div class="dashboard-content">
             <div class="dashboard-heading">
                 <h3 class="page-header">Overview</h3>
+
+                <div class="hr"></div>
             </div>
 
             <div class="col-md-4">
