@@ -1,19 +1,41 @@
 @extends('layouts.main')
 
-@section('body-class'){{ "body-404" }}@stop
+@section('page-title')
+    oO!
+@stop
+
+@section('page-header')
+    I've Failed You!
+@stop
+
+@section('breadcrumb-title')
+    Page Not Found
+@stop
+
+@section('page-subheader')
+    all your instances are belong to you
+@stop
 
 @section('content')
-    <div class="text-center page-404 error-wrapper">
-        <img src="/img/bg-planet.png" />
+    <div class="row">
+        <div class="error-content">
+            <div class="error-heading">
+                <h3 class="page-header">We're terribly sorry, but...</h3>
 
-        <br /><br />
+                <div class="hr"></div>
+            </div>
 
-        <h1>Error 404</h1>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <div class="panel-title">Page Not Found</div>
+                </div>
 
-        <h2>P a g e&nbsp; n o t &nbsp; f o u n d</h2>
+                <div class="panel-body">
+                    <p>Whatever you are looking for could not be found. At least not on this server. Please check your request and try again.</p>
 
-        <p>Whatever you are looking for could not be found. At least not on this server. Please check your request and try again.</p>
-
-        <p><a href="/">Go Home</a></p>
+                    <p><a href="/">Go Home</a></p>
+                </div>
+            </div>
+        </div>
     </div>
 @stop

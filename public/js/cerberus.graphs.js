@@ -14,7 +14,7 @@ var _dashboardOptions = {
 
 	timelineSize:    30,
 	facility_filter: null,
-	updateInterval:  30000,
+	updateInterval:  3000000,
 	chart:           null
 };
 

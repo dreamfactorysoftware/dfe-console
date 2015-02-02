@@ -9,12 +9,15 @@ return array(
     /** Connections */
     'connections' => array(
         'fabric-deploy' => array(
-            'driver'   => 'mysql',
-            'host'     => 'localhost',
-            'port'     => 3306,
-            'database' => 'dfe_local',
-            'username' => 'dfe_user',
-            'password' => 'dfe_user',
+            'driver'    => 'mysql',
+            'host'      => 'localhost',
+            'port'      => 3306,
+            'database'  => 'dfe_local',
+            'username'  => 'dfe_user',
+            'password'  => 'dfe_user',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
         ),
         'fabric-auth'   => array(
             'driver'    => 'mysql',
@@ -30,6 +33,7 @@ return array(
         'dfe-local'     => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
+            'port'      => 3306,
             'database'  => 'dfe_local',
             'username'  => 'dfe_user',
             'password'  => 'dfe_user',

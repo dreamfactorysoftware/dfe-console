@@ -38,6 +38,7 @@
       <excludeFolder url="file://$MODULE_DIR$/app/storage/logs" />
       <excludeFolder url="file://$MODULE_DIR$/app/storage/sessions" />
       <excludeFolder url="file://$MODULE_DIR$/app/storage/views" />
+      <excludeFolder url="file://$MODULE_DIR$/bootstrap" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />

@@ -50,7 +50,7 @@ class DashboardController extends BaseController
      */
     public function anyStats( $envelope = true )
     {
-        $_stats = Cache::get( 'stats.dashboard' );
+        $_stats = Cache::get( 'stats.overall' );
 
         if ( empty( $_stats ) )
         {
@@ -68,7 +68,7 @@ class DashboardController extends BaseController
                 )
             );
 
-            Cache::put( 'stats.dashboard', $_stats, static::STATS_CACHE_TTL );
+            Cache::put( 'stats.overall', $_stats, static::STATS_CACHE_TTL );
         }
 
         return $envelope ? Packet::success( Response::HTTP_OK, $_stats ) : $_stats;
@@ -89,6 +89,8 @@ class DashboardController extends BaseController
      */
     public function postLogs()
     {
+        $_results = Cache::get( 'stats.dashboard' );
+
         $_which = trim( strtolower( Request::get( 'which', null, FILTER_SANITIZE_STRING ) ) );
         $_raw = ( 1 == Request::get( 'raw', 0, FILTER_SANITIZE_NUMBER_INT ) );
         $_facility = Request::get( 'facility', static::DEFAULT_FACILITY );
@@ -101,55 +103,56 @@ class DashboardController extends BaseController
             $_size = 30;
         }
 
-        switch ( $_which )
+        if ( empty( $_results ) )
         {
-            case 'metrics':
-                $_facility = 'cloud/cli/metrics';
-                $_which = null;
-                break;
-
-            case 'logins':
-                $_facility = 'platform/api';
-                $_which = 'user/session';
-                break;
-
-            case 'activations':
-                $_facility = 'platform/api';
-                $_which = 'web/activate';
-                break;
-        }
-
-        $_source = $this->_elk();
-
-        if ( false !== ( $_results = $_source->callOverTime( $_facility, $_interval, $_size, $_from, $_which ) ) )
-        {
-            if ( !$_raw )
+            switch ( $_which )
             {
-                $_response = array('data' => array('time' => array(), 'facilities' => array()), 'label' => 'Time');
-                $_facets = $_results->getAggregations();
+                case 'metrics':
+                    $_facility = 'cloud/cli/metrics';
+                    $_which = null;
+                    break;
 
-                if ( !empty( $_facets ) )
-                {
-                    /** @var $_datapoint array */
-                    foreach ( IfSet::getDeep( $_facets, 'published_on', 'buckets', array() ) as $_datapoint )
-                    {
-                        array_push( $_response['data']['time'], array($_datapoint['time'], $_datapoint['count']) );
-                    }
+                case 'logins':
+                    $_facility = 'platform/api';
+                    $_which = 'user/session';
+                    break;
 
-                    /** @var $_datapoint array */
-                    foreach ( IfSet::getDeep( $_facets, 'facilities', 'buckets', array() ) as $_datapoint )
-                    {
-                        array_push( $_response['data']['facilities'], array($_datapoint['term'], $_datapoint['count']) );
-                    }
-                }
-
-                return $_response;
+                case 'activations':
+                    $_facility = 'platform/api';
+                    $_which = 'web/activate';
+                    break;
             }
 
-            return Packet::success( Response::HTTP_OK, $_results->getResponse()->getData() );
+            if ( false !== ( $_results = $this->_elk()->callOverTime( $_facility, $_interval, $_size, $_from, $_which ) ) )
+            {
+                Cache::put( 'stats.dashboard', $_results, static::STATS_CACHE_TTL );
+            }
         }
 
-        return Packet::success( Response::HTTP_OK );
+        if ( !$_raw )
+        {
+            $_response = array('data' => array('time' => array(), 'facilities' => array()), 'label' => 'Time');
+            $_facets = $_results->getAggregations();
+
+            if ( !empty( $_facets ) )
+            {
+                /** @var $_datapoint array */
+                foreach ( IfSet::getDeep( $_facets, 'published_on', 'buckets', array() ) as $_datapoint )
+                {
+                    array_push( $_response['data']['time'], array($_datapoint['time'], $_datapoint['count']) );
+                }
+
+                /** @var $_datapoint array */
+                foreach ( IfSet::getDeep( $_facets, 'facilities', 'buckets', array() ) as $_datapoint )
+                {
+                    array_push( $_response['data']['facilities'], array($_datapoint['term'], $_datapoint['count']) );
+                }
+            }
+
+            return $_response;
+        }
+
+        return Packet::success( Response::HTTP_OK, $_results->getResponse()->getData() );
     }
 
     /**
@@ -157,12 +160,19 @@ class DashboardController extends BaseController
      */
     public function getGlobalStats()
     {
-        /** @type Elk $_source */
-        $_source = $this->_elk();
+        $_stats = Cache::get( 'stats.global-stats' );
 
-        if ( false === ( $_stats = $_source->globalStats() ) )
+        if ( empty( $_stats ) )
         {
-            $_stats = array();
+            /** @type Elk $_source */
+            $_source = $this->_elk();
+
+            if ( false === ( $_stats = $_source->globalStats() ) )
+            {
+                $_stats = array();
+            }
+
+            Cache::put( 'stats.global-stats', $_stats, static::STATS_CACHE_TTL );
         }
 
         return Packet::success(
@@ -179,7 +189,14 @@ class DashboardController extends BaseController
      */
     public function anyAllStats()
     {
-        return Packet::success( Response::HTTP_OK, $this->_elk()->allStats() );
+        $_stats = Cache::get( 'stats.all-stats' );
+
+        if ( empty( $_stats ) )
+        {
+            Cache::put( 'stats.all-stats', $_stats = $this->_elk()->allStats(), static::STATS_CACHE_TTL );
+        }
+
+        return Packet::success( Response::HTTP_OK, $_stats );
     }
 
     /**
@@ -189,7 +206,13 @@ class DashboardController extends BaseController
      */
     protected function _diskUsage( $path )
     {
-        preg_match( '/\d+/', `du -sk $path`, $_kbs );
+        $_kbs = Cache::get( 'stats.disk-usage' );
+
+        if ( empty( $_kbs ) )
+        {
+            preg_match( '/\d+/', `du -sk $path`, $_kbs );
+            Cache::put( 'stats.disk-usage', $_kbs, static::STATS_CACHE_TTL );
+        }
 
         return round( isset( $_kbs, $_kbs[0] ) ? $_kbs[0] / 1024 : 0, 1 );
     }

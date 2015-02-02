@@ -128,7 +128,7 @@ body.body-404 .main {
 }
 
 .main .page-header {
-	margin:         0 15px 0;
+	margin:         0;
 	padding-bottom: 0;
 	text-shadow:    0 1px 1px #fff;
 	color:          #444444;
@@ -137,7 +137,7 @@ body.body-404 .main {
 .hr {
 	height:              0;
 	clear:               both;
-	margin:              0 15px 15px;
+	margin:              0 auto 15px;
 	padding:             0;
 	border:              1px solid #ddd;
 	border-right-width:  0;
