@@ -5,8 +5,9 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-	padding-top: 40px;
-	font-family: "Lato", "Open Sans", Arial, Helvetica, sans-serif;
+	padding-top:      40px;
+	font-family:      "Lato", "Open Sans", Arial, Helvetica, sans-serif;
+	background-color: #eee;
 }
 
 /*
@@ -58,13 +59,6 @@ body {
 	padding-bottom: 8px;
 }
 
-@media (max-width: 1199px) {
-	.navbar .navbar-brand {
-		height:      40px;
-		padding-top: 4px;
-	}
-}
-
 /*
  * Sidebar
  */
@@ -72,22 +66,6 @@ body {
 /* Hide for mobile, show later */
 .sidebar {
 	display: none;
-}
-
-@media (min-width: 768px) {
-	.sidebar {
-		position:         fixed;
-		top:              41px;
-		bottom:           0;
-		left:             0;
-		z-index:          1000;
-		display:          block;
-		padding:          20px;
-		overflow-x:       hidden;
-		overflow-y:       auto; /* Scrollable contents if viewport is shorter than content. */
-		background-color: #f5f5f5;
-		border-right:     1px solid #eeeeee;
-	}
 }
 
 /* Sidebar navigation */
@@ -117,46 +95,18 @@ body {
 	padding: 20px;
 }
 
-.main form.form-horizontal .form-group {
-	/*margin-bottom: 5px;*/
-}
-
 .main form.form-horizontal .form-group .form-actions {
 	margin-top: 25px;
-}
-
-.main form.form-horizontal .control-label {
-	/*padding-left:  0;*/
-	/*padding-right: 8px;*/
-	/*color:         #444;*/
-	/*text-shadow:   0 1px 1px #fff;*/
-	/*font-size:     16px;*/
-	/*font-family:   Roboto, Arial, Helvetica, sans-serif;*/
-	/*padding-top:   4px;*/
 }
 
 body.body-404 .main {
 	padding: 0 20px 20px;
 }
 
-@media (min-width: 768px) {
-	.main {
-		padding-right: 15px;
-		padding-left:  15px;
-	}
-
-	.main form.form-horizontal .control-label {
-		/*text-align:    right;*/
-		/*margin-bottom: 0;*/
-		/*padding-left:  15px;*/
-	}
-}
-
 .main .page-header {
 	margin:         0;
-	padding-bottom: 0;
 	text-shadow:    0 1px 1px #fff;
-	color:          #444444;
+	padding-bottom: 4px;
 }
 
 .hr {
@@ -239,4 +189,36 @@ body.body-404 .main {
 /** tabs **/
 .tab-content {
 	margin-top: 20px;
+}
+
+/*------------------------------------------------------------------------------*/
+/* Media Queries                                                                */
+/*------------------------------------------------------------------------------*/
+
+@media (min-width: 768px) {
+	.main {
+		padding-right: 15px;
+		padding-left:  15px;
+	}
+
+	.sidebar {
+		position:         fixed;
+		top:              41px;
+		bottom:           0;
+		left:             0;
+		z-index:          1000;
+		display:          block;
+		padding:          20px;
+		overflow-x:       hidden;
+		overflow-y:       auto; /* Scrollable contents if viewport is shorter than content. */
+		background-color: #f5f5f5;
+		border-right:     1px solid #eeeeee;
+	}
+}
+
+@media (max-width: 1199px) {
+	.navbar .navbar-brand {
+		height:      40px;
+		padding-top: 4px;
+	}
 }

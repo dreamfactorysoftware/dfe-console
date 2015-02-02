@@ -1,24 +1,8 @@
 @extends('layouts.main')
 
-@section('page-title')
-    oO!
-@stop
-
-@section('page-header')
-    I've Failed You!
-@stop
-
-@section('breadcrumb-title')
-    Page Not Found
-@stop
-
-@section('page-subheader')
-    all your instances are belong to you
-@stop
-
 @section('content')
     <div class="row">
-        <div class="error-content">
+        <div class="col-md-12 error-content">
             <div class="error-heading">
                 <h3 class="page-header">We're terribly sorry, but...</h3>
 
