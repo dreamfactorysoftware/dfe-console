@@ -191,7 +191,7 @@ class DashboardController extends BaseController
     {
         preg_match( '/\d+/', `du -sk $path`, $_kbs );
 
-        return round( $_kbs[0] / 1024, 1 );
+        return round( isset( $_kbs, $_kbs[0] ) ? $_kbs[0] / 1024 : 0, 1 );
     }
 
     /**

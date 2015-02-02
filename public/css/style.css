@@ -112,7 +112,8 @@ body {
  */
 
 .main {
-	padding: 20px;
+	background: #222222 url(/img/bg-stars.png) no-repeat;
+	padding:    0 20px 20px;
 }
 
 @media (min-width: 768px) {
@@ -188,6 +189,6 @@ body {
 .dropdown-header {
 	font-size:   19px;
 	font-weight: bold;
-	color:       #888;
+	color:       #888888;
 	font-family: RobotoDraft, Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
