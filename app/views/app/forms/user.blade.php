@@ -11,7 +11,7 @@
             <li role="presentation"><a href="#activity" aria-controls="activity" role="tab" data-toggle="tab">Activity</a></li>
             <li role="presentation"><a href="#external" aria-controls="external" role="tab" data-toggle="tab">External</a></li>
         </ul>
-        <form class="form-horizontal" action="form-submit">
+        <form class="form-horizontal">
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="profile">
                     <div class="form-group">

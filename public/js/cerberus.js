@@ -38,48 +38,28 @@ var _setActiveItem = function() {
 	$('.main-menu a[href="' + _uri + '"]').parent('li').addClass('active');
 };
 
+//******************************************************************************
+//* DocReady
+//******************************************************************************
+
 /**
  * document ready
  */
 jQuery(function($) {
-	var $_avatar = $('.avatar-image');
+	//	Enable MD effects
+	if ($.material) {
+		$.material.init();
+	}
 
-	if ($_avatar.data('hash').length) {
+	var $_avatar = $('.avatar-image'), $_nano = $('.nano');
+
+	if ($_avatar.length && $_avatar.data('hash').length) {
 		$_avatar.html('<img class="gravatar-image" src="' + 'http://www.gravatar.com/avatar/' + $_avatar.data('hash') + '" alt="avatar" />');
 	}
 
-	//	Bind clickers
-	$('#main').on('click', '.show-sidebar', function(e) {
-		e.preventDefault();
-
-		var $_body = $('body'), $_sidebar = $('#sidebar-left'), $_content = $('#content'), _flow = $_body.css('overflow');
-
-		$_body.css({overflow: 'hidden'});
-
-		if ($_content.hasClass('col-md-10')) {
-			//	Shown, so hide
-			$_sidebar.hide('fast').promise().done(function() {
-				$_content.removeClass('col-md-10').promise().done(function() {
-					$_content.addClass('col-md-12');
-				});
-			});
-		} else {
-			+//	Hidden, so show
-				$_content.removeClass('col-md-12').promise().done(function() {
-					$_content.addClass('col-md-10').promise().done(function() {
-						$_sidebar.show('fast');
-					});
-				});
-		}
-
-		//	Redraw data table when animations complete
-		$($_sidebar, $_content).promise().done(function() {
-			$_body.css({overflow: _flow || 'initial'});
-			EnterpriseServer.redrawTable();
-		});
-	});
-
 	_loadData();
 
-	$('.nano').nanoScroller();
+	if ($_nano.length) {
+		$_nano.nanoScroller();
+	}
 });

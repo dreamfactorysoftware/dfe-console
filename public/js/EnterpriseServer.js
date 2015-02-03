@@ -21,28 +21,17 @@ var EnterpriseServer = {
 	 */
 	defaults:      {
 		//	"<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md6'i><'col-md-6'p>>"
-		dom:        'Cfrltip', //		deferRender: true,
-		stateSave:  true,
-		language:   {
-			lengthMenu: '_MENU_ per page',
-			search:     '<i class="fa fa-search"></i>'
-		},
-		classes:    {
-			sLengthSelect: 'form-control',
-			sFilterInput:  'form-control'
-		},
-		tableTools: {
-			sRowSelect:   'os',
-			sRowSelector: 'td:first-child',
-			aButtons:     []
-		},
-		colVis:     {
-			buttonText: '<i class="fa fa-eye"></i>',
-			restore:    'Restore',
-			showAll:    'Show All',
-			showNone:   'Show None',
-			align:      'right'
+		//'<"wrapper"<"row"<"col-md-1"l><"col-md-offset-4 col-md-2"r><"col-md-5"f>><"row"<"col-md-12"t>><"row"<ip>>', //		deferRender: true,
+		dom:       "<'row'<'col-md-6'l><'col-md-6'f>r><'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+		stateSave: true,
+		language:  {
+			sLengthMenu: '_MENU_ per page',
+			sSearch:     '<i class="fa fa-search"></i>'
 		}
+	},
+	classes:       {
+		sLengthSelect: 'form-control',
+		filterInput:   'form-control'
 	},
 	/**
 	 * @type string
@@ -133,6 +122,30 @@ var EnterpriseServer = {
 			}).on('click', 'tr', function(e) {
 				$(this).toggleClass('selected');
 			});
+
+			var _ac, _name, $_search = $('.wrapper .dataTables_filter'), $_length = $('.wrapper .dataTables_length');
+
+			if ($_search && $_search.length) {
+				_ac = $_search.find('input[type="search"]').attr('aria-controls');
+				$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
+							  _ac +
+							  '"/><i class="fa fa-search form-control-feedback"></i></div>');
+			}
+
+			if ($_length.length) {
+				var _options = $_length.find('select').html();
+
+				_name = $('select', $_length).attr('name');
+				_ac = $('select', $_length).attr('aria-controls');
+
+				$_length.html('<select class="form-control" name="' +
+							  _name +
+							  '" aria-controls="' +
+							  _ac +
+							  '">' +
+							  _options +
+							  '</select><span class="help-block">per page</span>');
+			}
 		}
 
 		return this;

@@ -7,7 +7,7 @@
 body {
 	padding-top:      40px;
 	font-family:      "Lato", "Open Sans", Arial, Helvetica, sans-serif;
-	background-color: #eee;
+	background-color: #eeeeee;
 }
 
 /*
@@ -105,7 +105,7 @@ body.body-404 .main {
 
 .main .page-header {
 	margin:         0;
-	text-shadow:    0 1px 1px #fff;
+	text-shadow:    0 1px 1px #ffffff;
 	padding-bottom: 4px;
 }
 
@@ -114,9 +114,9 @@ body.body-404 .main {
 	clear:               both;
 	margin:              0 auto 15px;
 	padding:             0;
-	border:              1px solid #ddd;
+	border:              1px solid #dddddd;
 	border-right-width:  0;
-	border-bottom-color: #fff;
+	border-bottom-color: #ffffff;
 	border-left-width:   0;
 }
 
@@ -182,13 +182,58 @@ body.body-404 .main {
 	font-size:   19px;
 	font-weight: bold;
 	color:       #888888;
-	font-family: Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	text-shadow: 1px 0 1px #fff;
+	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	text-shadow: 0 1px 1px #ffffff;
 }
 
 /** tabs **/
 .tab-content {
 	margin-top: 20px;
+}
+
+/** toolbar **/
+.page-header-toolbar button {
+	margin-top:    -10px;
+	margin-bottom: 0;
+	margin-left:   2px;
+}
+
+/*------------------------------------------------------------------------------*/
+/* filter && search                                                             */
+/*------------------------------------------------------------------------------*/
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+	margin-bottom: 8px;
+}
+
+.dataTables_wrapper .dataTables_length .help-block {
+	display:   inline-block;
+	float:     left;
+	margin:    0 0 0 4px;
+	padding:   6px 0 0;
+	font-size: 11px;
+}
+
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_length .help-block {
+	display: inline-block;
+	float:   left;
+}
+
+.dataTables_wrapper .dataTables_length select {
+	height: 28px;
+	width:  auto;
+	/*margin:      0;*/
+}
+
+.dataTables_wrapper .dataTables_filter input {
+	height:      28px;
+	float:       left;
+	margin-left: -0.5em;
+}
+
+.dataTables_wrapper .dataTables_filter i.form-control-feedback {
+	top: 7px;
 }
 
 /*------------------------------------------------------------------------------*/
