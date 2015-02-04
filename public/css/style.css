@@ -202,6 +202,15 @@ body.body-404 .main {
 /* filter && search                                                             */
 /*------------------------------------------------------------------------------*/
 
+.dataTables_length label {
+	text-indent: 4px;
+	margin-top:  0;
+	line-height: 23px;
+	font-weight: normal;
+	color:       #444;
+	text-shadow: 1px 0 1px #fff;
+}
+
 .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
 	margin-bottom: 8px;
 }

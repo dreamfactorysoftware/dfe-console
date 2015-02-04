@@ -58,5 +58,7 @@
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="jquery.nouislider" level="application" />
     <orderEntry type="library" name="jquery.dropdown" level="application" />
+    <orderEntry type="library" name="material" level="application" />
+    <orderEntry type="library" name="ripples" level="application" />
   </component>
 </module>
