@@ -5,13 +5,7 @@
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <h3 class="page-header">Clusters</h3>
-
-            <div class="hr"></div>
-        </div>
-    </div>
+    @include('app._page-header',array('pageName' => 'Clusters', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) )
 
     <div class="row">
         <div class="col-md-12">

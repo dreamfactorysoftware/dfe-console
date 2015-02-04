@@ -1,13 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="row">
-        <div class="col-md-12">
-            <h3 class="page-header">Groups</h3>
-
-            <div class="hr"></div>
-        </div>
-    </div>
+    @include('app._page-header',array('pageName' => 'Groups', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) )
 
     <div class="row">
         <div class="col-md-12">

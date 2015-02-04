@@ -22,16 +22,17 @@ var EnterpriseServer = {
 	defaults:      {
 		//	"<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md6'i><'col-md-6'p>>"
 		//'<"wrapper"<"row"<"col-md-1"l><"col-md-offset-4 col-md-2"r><"col-md-5"f>><"row"<"col-md-12"t>><"row"<ip>>', //		deferRender: true,
-		dom:       "<'row'<'col-md-6'l><'col-md-6'f>r><'row'<'col-md-12't>><'row'<'col-md-12'ip>>",
+		dom:       '<"wrapper"<"row"<"col-md-12"Clf>><"row"<"col-md-12"rt>><"row"<"col-md-12"ip>>>',
 		stateSave: true,
 		language:  {
 			sLengthMenu: '_MENU_ per page',
 			sSearch:     '<i class="fa fa-search"></i>'
+		},
+		classes:   {
+			sLengthSelect: 'form-control',
+			sFilterInput:  'form-control',
+			sDataTable:    'table-compact'
 		}
-	},
-	classes:       {
-		sLengthSelect: 'form-control',
-		filterInput:   'form-control'
 	},
 	/**
 	 * @type string

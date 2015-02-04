@@ -236,13 +236,16 @@ body.body-404 .main {
 }
 
 .dataTables_wrapper .dataTables_filter input {
-	height:      28px;
-	float:       left;
-	margin-left: -0.5em;
+	height: 28px;
+	float:  left;
 }
 
 .dataTables_wrapper .dataTables_filter i.form-control-feedback {
 	top: 7px;
+}
+
+.has-feedback .form-control:focus {
+	padding-right: 42.5px;
 }
 
 /*------------------------------------------------------------------------------*/

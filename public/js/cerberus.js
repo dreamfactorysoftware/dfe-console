@@ -46,15 +46,13 @@ var _setActiveItem = function() {
  * document ready
  */
 jQuery(function($) {
-	//	Enable MD effects
-	if ($.material) {
-		$.material.init();
-	}
-
 	var $_avatar = $('.avatar-image'), $_nano = $('.nano');
 
 	if ($_avatar.length && $_avatar.data('hash').length) {
-		$_avatar.html('<img class="gravatar-image" src="' + 'http://www.gravatar.com/avatar/' + $_avatar.data('hash') + '" alt="avatar" />');
+		$_avatar.html('<img class="gravatar-image" src="' +
+					  'http://www.gravatar.com/avatar/' +
+					  $_avatar.data('hash') +
+					  '" alt="avatar" />');
 	}
 
 	_loadData();
