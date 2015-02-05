@@ -12,6 +12,23 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class BaseDataController extends BaseController
 {
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type string
+     */
+    protected $_search;
+    /**
+     * @type array
+     */
+    protected $_columns;
+
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
+
     /**
      * Generic data retrieval method
      *
@@ -39,6 +56,21 @@ class BaseDataController extends BaseController
                 }
             }
 
+            if ( $this->_search && $this->_columns )
+            {
+                $_where = array();
+
+                foreach ( $this->_columns as $_column )
+                {
+                    if ( $_column['searchable'] )
+                    {
+                        $_where[] = $_column['name'] . ' LIKE \'%' . IfSet::getDeep( $_column, 'search', 'value', $this->_search ) . '%\'';
+                    }
+                }
+
+                $_table->whereRaw( implode( ' OR ', $_where ) );
+            }
+
             if ( false === $count )
             {
                 return $_table;
@@ -57,7 +89,7 @@ class BaseDataController extends BaseController
             /** @type array|Model $_response */
             $_response = $_table->get();
 
-            return $this->_respond( $_response, $count, $count );
+            return $this->_respond( $_response, $count, 0 );
         }
         catch ( \Exception $_ex )
         {
@@ -76,6 +108,8 @@ class BaseDataController extends BaseController
         $this->_skip = IfSet::get( $_REQUEST, 'start', 0 );
         $this->_limit = IfSet::get( $_REQUEST, 'length', static::DEFAULT_PER_PAGE );
         $this->_order = $defaultSort;
+        $this->_search = str_replace( '\'', null, IfSet::getDeep( $_REQUEST, 'search', 'value' ) );
+        $this->_columns = IfSet::get( $_REQUEST, 'columns', array() );
 
         if ( null === ( $_sortOrder = IfSet::get( $_REQUEST, 'order' ) ) )
         {
@@ -122,24 +156,27 @@ class BaseDataController extends BaseController
             return Response::json( $data );
         }
 
-        $_recordsFiltered = (integer)( $totalFiltered ?: $totalRows );
-        $data = array('data' => $this->_removeArrayKeys( $data ));
+        $totalRows = (integer)( $totalRows ?: 0 );
 
-        $data['draw'] = (integer)IfSet::get( $_REQUEST, 'draw' );
-        $data['recordsTotal'] = (integer)$totalRows;
-        $data['recordsFiltered'] = $_recordsFiltered;
+        $_response = array(
+            'draw'            => (integer)IfSet::get( $_REQUEST, 'draw' ),
+            'recordsTotal'    => $totalRows,
+            'recordsFiltered' => (integer)( $totalFiltered ?: $totalRows ),
+            'data'            => $this->_prepareResponseData( $data ),
+        );
 
-        return Response::json( $data );
+        return Response::json( $_response );
     }
 
     /**
-     * Removes the keys from objects in an array. Used by dataTables
+     * Cleans up any necessary things before the data is shipped back to the client. The default implementation adds a "DT_RowId" key to
+     * each returned row.
      *
      * @param array $data
      *
      * @return array
      */
-    protected function _removeArrayKeys( $data )
+    protected function _prepareResponseData( $data )
     {
         $_cleaned = array();
         $_collection = ( $data instanceof Collection );
@@ -147,9 +184,34 @@ class BaseDataController extends BaseController
         /** @type Model[] $data */
         foreach ( $data as $_item )
         {
-            $_cleaned[] = array_values( $_collection ? $_item->getAttributes() : $_item );
+            $_values = $_collection ? $_item->getAttributes() : $_item;
+
+            if ( null !== ( $_id = IfSet::get( $_values, 'id' ) ) )
+            {
+                $_values['DT_RowId'] = 'row_' . $this->_hashValue( $_id );
+            }
+
+            $_cleaned[] = $_values;
         }
 
         return $_cleaned;
+    }
+
+    /**
+     * @param string $value     The value to hash
+     * @param string $algorithm The algorithm to use. @See hash()
+     * @param null   $salt      Optional salt that is prefixed prior to hashing
+     * @param bool   $rawOutput Returns the binary hash
+     *
+     * @return null|string
+     */
+    protected function _hashValue( $value, $algorithm = 'sha256', $salt = null, $rawOutput = false )
+    {
+        if ( null === $value )
+        {
+            return null;
+        }
+
+        return hash( $algorithm, $value, $salt . $rawOutput );
     }
 }

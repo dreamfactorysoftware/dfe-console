@@ -10,12 +10,12 @@
                     id="dt-instance">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Cluster</th>
-                        <th>Created On</th>
-                        <th>Owner Email</th>
-                        <th>Last Visit</th>
+                        <th data-column-name="id">ID</th>
+                        <th data-column-name="instance_id_text">Name</th>
+                        <th data-column-name="cluster_id_text">Cluster</th>
+                        <th data-column-name="create_date">Created On</th>
+                        <th data-column-name="email_addr_text">Owner Email</th>
+                        <th data-column-name="lmod_date">Last Visit</th>
                     </tr>
                 </thead>
             </table>

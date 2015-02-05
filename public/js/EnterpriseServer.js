@@ -91,10 +91,33 @@ var EnterpriseServer = {
 		this.dataType = dataType + 's';
 		this.dataUrl = dataUrl || ('/api/v1/' + this.dataType);
 		this.tableId = tableId || ( '#dt-' + dataType );
+		this.columns = this._getTableColumns($(this.tableId));
 
 		this.initialized = true;
 
 		return this;
+	},
+
+	/**
+	 * Pulls the column name out of the table header "data-*"" fields
+	 *
+	 * @param $table
+	 * @returns {{columns: Array}}
+	 * @private
+	 */
+	_getTableColumns: function($table) {
+		var _columns = {columns: []};
+
+		$.each($table.find('thead th'), function(index, th) {
+			var _name = $(th).data('columnName');
+
+			if (_name && _name.length) {
+				var _point = {data: _name};
+				_columns.columns.push(_point);
+			}
+		});
+
+		return _columns;
 	},
 
 	/**
@@ -114,7 +137,9 @@ var EnterpriseServer = {
 
 			this.dt = $_table.DataTable($.extend(this.defaults, {
 				ajax:       this.dataUrl,
-				serverSide: true
+				serverSide: true,
+				processing: true,
+				columns:    this.columns.columns
 			})).on('init', function(e) {
 				_this.$_loader = $('#loading-content');
 				_this.$_dataLoader = $('#loading-overlay')
@@ -126,27 +151,27 @@ var EnterpriseServer = {
 
 			var _ac, _name, $_search = $('.wrapper .dataTables_filter'), $_length = $('.wrapper .dataTables_length');
 
-			if ($_search && $_search.length) {
-				_ac = $_search.find('input[type="search"]').attr('aria-controls');
-				$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
-							  _ac +
-							  '"/><i class="fa fa-search form-control-feedback"></i></div>');
-			}
+//			if ($_search && $_search.length) {
+//				_ac = $_search.find('input[type="search"]').attr('aria-controls');
+//				$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
+//							  _ac +
+//							  '"/><i class="fa fa-search form-control-feedback"></i></div>');
+//			}
 
-			if ($_length.length) {
-				var _options = $_length.find('select').html();
-
-				_name = $('select', $_length).attr('name');
-				_ac = $('select', $_length).attr('aria-controls');
-
-				$_length.html('<select class="form-control" name="' +
-							  _name +
-							  '" aria-controls="' +
-							  _ac +
-							  '">' +
-							  _options +
-							  '</select><span class="help-block">per page</span>');
-			}
+//			if ($_length.length) {
+//				var _options = $_length.find('select').html();
+//
+//				_name = $('select', $_length).attr('name');
+//				_ac = $('select', $_length).attr('aria-controls');
+//
+//				$_length.html('<select class="form-control" name="' +
+//							  _name +
+//							  '" aria-controls="' +
+//							  _ac +
+//							  '">' +
+//							  _options +
+//							  '</select><span class="help-block">per page</span>');
+//			}
 		}
 
 		return this;

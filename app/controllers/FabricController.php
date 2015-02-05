@@ -206,7 +206,7 @@ SQL;
             return Response::json( $data );
         }
 
-        $_recordsFiltered = (integer)( $totalFiltered ?: $totalRows );
+        $_recordsFiltered = (integer)( $totalFiltered ?: 0 );
         $data = array('data' => $data);
 
         $data['draw'] = (integer)IfSet::get( $_REQUEST, 'draw' );
