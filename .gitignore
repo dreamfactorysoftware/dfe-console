@@ -1,12 +1,3 @@
-/app/storage
 /vendor
-composer.phar
-composer.lock
-.env.*.php
-.env.php
-.DS_Store
-Thumbs.db
-.idea/workspace.xml
-.idea/tasks.xml
-
-bootstrap/compiled.php
+/node_modules
+.env
