@@ -33,7 +33,7 @@
         }
     ],
     "require":           {
-        "laravel/framework":              "4.2.*",
+        "laravel/framework":              "~4.2.0@dev",
         "psr/log":                        "*",
         "monolog/monolog":                "*",
         "doctrine/couchdb-odm":           "*",
@@ -50,7 +50,7 @@
     "require-dev":       {
         "way/generators":              "~2.0",
         "phpunit/phpunit":             "@stable",
-        "barryvdh/laravel-ide-helper": "~1.0",
+        "barryvdh/laravel-ide-helper": "~1.0.0",
         "doctrine/dbal":               "~2.3"
     },
     "extra":             {
