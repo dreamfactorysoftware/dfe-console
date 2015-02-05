@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
 use Illuminate\Support\Facades\View;
 

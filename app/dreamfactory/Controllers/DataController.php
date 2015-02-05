@@ -1,10 +1,9 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -26,6 +25,10 @@ class DataController extends FactoryController
      * @type array
      */
     protected $_columns;
+    /**
+     * @type array These columns will be forced to search on the base table
+     */
+    protected $_forcedColumns = array('id', 'create_date', 'lmod_date', 'user_id');
 
     //******************************************************************************
     //* Methods
@@ -49,6 +52,7 @@ class DataController extends FactoryController
 
             /** @type Builder $_table */
             $_table = $builder ?: DB::table( $table );
+            $_table->select( $columns );
 
             if ( !empty( $this->_order ) )
             {
@@ -66,7 +70,18 @@ class DataController extends FactoryController
                 {
                     if ( $_column['searchable'] )
                     {
-                        $_where[] = $_column['name'] . ' LIKE \'%' . IfSet::getDeep( $_column, 'search', 'value', $this->_search ) . '%\'';
+                        $_name = !empty( $_column['name'] ) ? $_column['name'] : ( !empty( $_column['data'] ) ? $_column['data'] : null );
+
+                        if ( !empty( $_name ) )
+                        {
+                            //  Add table name?
+                            if ( in_array( $_name, $this->_forcedColumns ) )
+                            {
+                                $_name = $table . '.' . $_name;
+                            }
+
+                            $_where[] = $_name . ' LIKE \'%' . $this->_search . '%\'';
+                        }
                     }
                 }
 
@@ -110,7 +125,7 @@ class DataController extends FactoryController
         $this->_skip = IfSet::get( $_REQUEST, 'start', 0 );
         $this->_limit = IfSet::get( $_REQUEST, 'length', static::DEFAULT_PER_PAGE );
         $this->_order = $defaultSort;
-        $this->_search = str_replace( '\'', null, IfSet::getDeep( $_REQUEST, 'search', 'value' ) );
+        $this->_search = trim( str_replace( '\'', null, IfSet::getDeep( $_REQUEST, 'search', 'value' ) ) );
         $this->_columns = IfSet::get( $_REQUEST, 'columns', array() );
 
         if ( null === ( $_sortOrder = IfSet::get( $_REQUEST, 'order' ) ) )
@@ -181,12 +196,12 @@ class DataController extends FactoryController
     protected function _prepareResponseData( $data )
     {
         $_cleaned = array();
-        $_collection = ( $data instanceof Collection );
 
         /** @type Model[] $data */
         foreach ( $data as $_item )
         {
-            $_values = $_collection ? $_item->getAttributes() : $_item;
+            $_values = ( is_object( $_item ) && method_exists( $_item, 'getAttributes' ) )
+                ? $_item->getAttributes() : (array)$_item;
 
             if ( null !== ( $_id = IfSet::get( $_values, 'id' ) ) )
             {

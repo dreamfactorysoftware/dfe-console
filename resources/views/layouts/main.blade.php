@@ -1,5 +1,5 @@
 <?php
-use App\Http\Controllers\FactoryController;
+use DreamFactory\Enterprise\Console\Controllers\FactoryController;
 
 if ( !isset( $_user ) || !is_array( $_user ) )
 {
@@ -14,9 +14,9 @@ if ( !isset( $_user ) || !is_array( $_user ) )
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ "DreamFactory Enterprise&trade;" }} | @yield('page-title','Welcome!')</title>
     <!-- Bootstrap Core CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet">
     {{--<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/paper/bootstrap.min.css" rel="stylesheet">--}}
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="/static/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/css/ripples.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/css/material-wfont.min.css" rel="stylesheet">
     <link href="//fezvrasta.github.io/snackbarjs/dist/snackbar.min.css" rel="stylesheet">

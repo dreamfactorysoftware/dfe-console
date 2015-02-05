@@ -6,8 +6,8 @@
     <div class="row">
         <div class="col-md-12">
             <table class="table table-compact table-bordered table-striped table-hover table-select table-datatable nowrap"
-                    data-resource="instance"
-                    id="dt-instance">
+                   data-resource="instance"
+                   id="dt-instance">
                 <thead>
                     <tr>
                         <th data-column-name="id">ID</th>

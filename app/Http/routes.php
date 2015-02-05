@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
 /** @noinspection PhpUndefinedMethodInspection */
-Route::controller( 'app', 'AppController' );
+Route::controller( 'app', '\\DreamFactory\\Enterprise\\Console\\Controllers\\AppController' );
 /** @noinspection PhpUndefinedMethodInspection */
-Route::controller( 'dashboard', 'DashboardController' );
+Route::controller( 'dashboard', '\\DreamFactory\\Enterprise\\Console\\Controllers\\DashboardController' );
 /** @noinspection PhpUndefinedMethodInspection */
-Route::controller( 'settings', 'SettingsController' );
+Route::controller( 'settings', '\\DreamFactory\\Enterprise\\Console\\Controllers\\SettingsController' );
 /** @noinspection PhpUndefinedMethodInspection */
 Route::get(
     'form',
@@ -48,12 +48,12 @@ Route::group(
     array('prefix' => 'api/v1'),
     function ()
     {
-        Route::resource( 'servers', 'ServerController' );
-        Route::resource( 'clusters', 'ClusterController' );
-        Route::resource( 'instances', 'InstanceController' );
-        Route::resource( 'roles', 'RoleController' );
-        Route::resource( 'service-users', 'ServiceUserController' );
-        Route::resource( 'users', 'UserController' );
+        Route::resource( 'servers', 'DreamFactory\\Enterprise\\Console\\Controllers\\ServerController' );
+        Route::resource( 'clusters', 'DreamFactory\\Enterprise\\Console\\Controllers\\ClusterController' );
+        Route::resource( 'instances', 'DreamFactory\\Enterprise\\Console\\Controllers\\InstanceController' );
+        Route::resource( 'roles', 'DreamFactory\\Enterprise\\Console\\Controllers\\RoleController' );
+        Route::resource( 'service-users', 'DreamFactory\\Enterprise\\Console\\Controllers\\ServiceUserController' );
+        Route::resource( 'users', 'DreamFactory\\Enterprise\\Console\\Controllers\\UserController' );
     }
 );
 /** @noinspection PhpUndefinedMethodInspection */
@@ -71,7 +71,7 @@ Route::get(
 
 Route::controllers(
     [
-        'auth'     => 'Auth\AuthController',
-        'password' => 'Auth\PasswordController',
+        'auth'     => 'App\\Http\\Controllers\\Auth\AuthController',
+        'password' => 'App\\Http\\Controllers\\Auth\PasswordController',
     ]
 );

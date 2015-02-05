@@ -107,6 +107,7 @@ body.body-404 .main {
 	margin:         0;
 	text-shadow:    0 1px 1px #ffffff;
 	padding-bottom: 4px;
+	color:          #444444;
 }
 
 .hr {
@@ -207,8 +208,8 @@ body.body-404 .main {
 	margin-top:  0;
 	line-height: 23px;
 	font-weight: normal;
-	color:       #444;
-	text-shadow: 1px 0 1px #fff;
+	color:       #444444;
+	text-shadow: 0 1px 1px #ffffff;
 }
 
 .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
@@ -242,6 +243,11 @@ body.body-404 .main {
 
 .dataTables_wrapper .dataTables_filter i.form-control-feedback {
 	top: 7px;
+}
+
+table.dataTable thead th {
+	font-size:   13px;
+	text-shadow: 0 1px 1px #ffffff;
 }
 
 .has-feedback .form-control:focus {

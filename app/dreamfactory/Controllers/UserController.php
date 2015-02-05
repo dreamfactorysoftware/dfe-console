@@ -1,12 +1,11 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ServiceUserController extends DataController
+class UserController extends DataController
 {
     //******************************************************************************
     //* Methods
@@ -21,10 +20,15 @@ class ServiceUserController extends DataController
     {
         return
             $this->_processDataRequest(
-                'service_user_t',
-                ServiceUser::count(),
+                'user_t',
+                User::count(),
                 array('id', 'first_name_text', 'last_name_text', 'email_addr_text', 'lmod_date')
             );
+    }
+
+    public function update()
+    {
+
     }
 
     /**
@@ -38,7 +42,7 @@ class ServiceUserController extends DataController
     {
         try
         {
-            return Response::json( User::findOrFail( $id ), \Symfony\Component\HttpFoundation\Response::HTTP_OK );
+            return Response::json( User::findOrFail( $id ), Response::HTTP_OK );
         }
         catch ( \Exception $_ex )
         {

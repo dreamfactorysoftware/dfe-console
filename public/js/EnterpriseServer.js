@@ -22,17 +22,14 @@ var EnterpriseServer = {
 	defaults:      {
 		//	"<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md6'i><'col-md-6'p>>"
 		//'<"wrapper"<"row"<"col-md-1"l><"col-md-offset-4 col-md-2"r><"col-md-5"f>><"row"<"col-md-12"t>><"row"<ip>>', //		deferRender: true,
-		//'<"wrapper"<"row"<"col-md-12"Clf>><"row"<"col-md-12"rt>><"row"<"col-md-12"ip>>>',
-		dom:       "<'row'<'col-sm-6'l><'col-sm-6'f>r>t<'row'<'col-sm-6'i><'col-sm-6'p>>",
-		stateSave: true,
-		language:  {
+		dom:      '<"wrapper"<"row"<"col-md-12"Clf>><"row"<"col-md-12"rt>><"row"<"col-md-12"ip>>>',
+		language: {
 			sLengthMenu: '_MENU_ per page',
 			sSearch:     '<i class="fa fa-search"></i>'
 		},
-		classes:   {
+		classes:  {
 			sLengthSelect: 'form-control',
-			sFilterInput:  'form-control',
-			sDataTable:    'table-compact'
+			sFilterInput:  'form-control'
 		}
 	},
 	/**
@@ -150,39 +147,15 @@ var EnterpriseServer = {
 				$(this).toggleClass('selected');
 			});
 
-			var _ac, _name, $_search = $('.wrapper .dataTables_filter'), $_length = $('.wrapper .dataTables_length');
+			var _ac, _name, $_search = $('.wrapper .dataTables_filter');
 
-//			if ($_search && $_search.length) {
-//				_ac = $_search.find('input[type="search"]').attr('aria-controls');
-//				$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
-//							  _ac +
-//							  '"/><i class="fa fa-search form-control-feedback"></i></div>');
-//			}
-
-//			if ($_length.length) {
-//				var _options = $_length.find('select').html();
-//
-//				_name = $('select', $_length).attr('name');
-//				_ac = $('select', $_length).attr('aria-controls');
-//
-//				$_length.html('<select class="form-control" name="' +
-//							  _name +
-//							  '" aria-controls="' +
-//							  _ac +
-//							  '">' +
-//							  _options +
-//							  '</select><span class="help-block">per page</span>');
-//			}
+			if ($_search && $_search.length) {
+				_ac = $_search.find('input[type="search"]').attr('aria-controls');
+				$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
+							  _ac +
+							  '"/><i class="fa fa-search form-control-feedback"></i></div>');
+			}
 		}
-
-		return this;
-	},
-
-	/**
-	 * Redraw the table
-	 */
-	redrawTable: function() {
-		this.dt && this.dt.draw();
 
 		return this;
 	},

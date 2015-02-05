@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\Elk;

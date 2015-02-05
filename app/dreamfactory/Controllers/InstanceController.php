@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Database\Query\Builder;
@@ -34,7 +34,7 @@ class InstanceController extends DataController
             ->join( 'cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id' )
             ->select( $_columns );
 
-        return $this->_processDataRequest( 'instance_t.instance_id_text', Instance::count(), $_columns, $_query );
+        return $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
     }
 
     /**

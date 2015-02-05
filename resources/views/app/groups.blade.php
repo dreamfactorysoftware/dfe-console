@@ -5,15 +5,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            <table class="table table-bordered table-striped table-hover table-heading table-datatable nowrap"
-                    data-resource="group"
-                    id="dt-group">
+            <table class="table table-compact table-bordered table-striped table-hover table-heading table-datatable nowrap"
+                   data-resource="group"
+                   id="dt-group">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Members</th>
+                        <th data-column-name="id">ID</th>
+                        <th data-column-name="group_name_text">Name</th>
+                        <th data-column-name="description_text">Description</th>
+                        <th data-column-name="member_count_nbr">Members</th>
                     </tr>
                 </thead>
             </table>

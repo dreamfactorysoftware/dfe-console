@@ -1,12 +1,12 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Role;
+use DreamFactory\Library\Fabric\Database\Models\Auth\User;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class RoleController extends DataController
+class ServiceUserController extends DataController
 {
     //******************************************************************************
     //* Methods
@@ -19,15 +19,12 @@ class RoleController extends DataController
      */
     public function index()
     {
-        try
-        {
-            return
-                $this->_processDataRequest( 'role_t', Role::count(), array('id', 'role_name_text', 'active_ind', 'lmod_date') );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new BadRequestHttpException( $_ex->getMessage() );
-        }
+        return
+            $this->_processDataRequest(
+                'service_user_t',
+                ServiceUser::count(),
+                array('id', 'first_name_text', 'last_name_text', 'email_addr_text', 'lmod_date')
+            );
     }
 
     /**
@@ -41,7 +38,7 @@ class RoleController extends DataController
     {
         try
         {
-            return Response::json( Role::findOrFail( $id ), \Symfony\Component\HttpFoundation\Response::HTTP_OK );
+            return Response::json( User::findOrFail( $id ), \Symfony\Component\HttpFoundation\Response::HTTP_OK );
         }
         catch ( \Exception $_ex )
         {

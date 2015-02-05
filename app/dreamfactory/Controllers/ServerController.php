@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use Illuminate\Database\Query\Builder;

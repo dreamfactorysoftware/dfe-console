@@ -1,8 +1,9 @@
 <?php
-namespace App\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Controllers;
 
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ClusterController extends DataController
@@ -18,8 +19,22 @@ class ClusterController extends DataController
      */
     public function index()
     {
-        return
-            $this->_processDataRequest( 'cluster_t', Cluster::count(), array('id', 'cluster_id_text', 'subdomain_text', 'lmod_date') );
+        try
+        {
+            $_columns =
+                array(
+                    'id',
+                    'cluster_id_text',
+                    'subdomain_text',
+                    'lmod_date',
+                );
+
+            return $this->_processDataRequest( 'cluster_t', Cluster::count(), $_columns );
+        }
+        catch ( \Exception $_ex )
+        {
+            throw new BadRequestHttpException( $_ex->getMessage() );
+        }
     }
 
     /**

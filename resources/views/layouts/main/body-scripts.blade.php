@@ -1,5 +1,5 @@
 <!-- Bootstrap Core JavaScript -->
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="/static/bootstrap-3.3.2/js/bootstrap.min.js"></script>
 <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
 <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
 <script src="/js/chart-theme.js"></script>
