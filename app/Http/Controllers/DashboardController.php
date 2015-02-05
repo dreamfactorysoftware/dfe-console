@@ -11,6 +11,9 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Request;
 
 /**
  * DashboardController.php

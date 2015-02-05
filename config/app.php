@@ -25,7 +25,7 @@ return [
     |
     */
 
-    'url'             => 'http://localhost',
+    'url'             => env( 'APP_URL', 'http://localhost' ),
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -37,7 +37,7 @@ return [
     |
     */
 
-    'timezone'        => 'UTC',
+    'timezone'        => 'America/New_York',
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'key'             => env( 'APP_KEY', 'SomeRandomString' ),
+    'key'             => env( 'APP_KEY', 'ngv?hS"qNs5:~Gn%]R(_NCRS#1{l?s@/' ),
     'cipher'          => MCRYPT_RIJNDAEL_128,
     /*
     |--------------------------------------------------------------------------

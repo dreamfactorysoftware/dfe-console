@@ -719,12 +719,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/fabric-api-common.git",
-                "reference": "a7d4cab3e96864496bad551de547bf59ae2b0cd3"
+                "reference": "7f72e7fd6245ba8083415707e04599732982167d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-api-common/zipball/a7d4cab3e96864496bad551de547bf59ae2b0cd3",
-                "reference": "a7d4cab3e96864496bad551de547bf59ae2b0cd3",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-api-common/zipball/7f72e7fd6245ba8083415707e04599732982167d",
+                "reference": "7f72e7fd6245ba8083415707e04599732982167d",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "queue",
                 "utility"
             ],
-            "time": "2015-01-29 21:34:30"
+            "time": "2015-02-05 19:46:25"
         },
         {
             "name": "dreamfactory/fabric-audit",
@@ -937,12 +937,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "015a6a3042c26a3dc69f170c7101d2d445aff613"
+                "reference": "58442f34db92eb3bc6b4749635234498b19032a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/015a6a3042c26a3dc69f170c7101d2d445aff613",
-                "reference": "015a6a3042c26a3dc69f170c7101d2d445aff613",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/58442f34db92eb3bc6b4749635234498b19032a6",
+                "reference": "58442f34db92eb3bc6b4749635234498b19032a6",
                 "shasum": ""
             },
             "require": {
@@ -984,7 +984,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-02-05 19:10:54"
+            "time": "2015-02-05 19:19:39"
         },
         {
             "name": "dreamfactory/fabric-queue",
