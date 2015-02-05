@@ -1,0 +1,281 @@
+/*
+ * Base structure
+ */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans|Lato|Roboto);
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+	padding-top:      40px;
+	font-family:      "Lato", "Open Sans", Arial, Helvetica, sans-serif;
+	background-color: #eeeeee;
+}
+
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+	padding-bottom: 10px;
+	border-bottom:  1px solid #eeeeee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+.navbar-fixed-top {
+	border: 0;
+}
+
+/** navbar min reduction **/
+.navbar {
+	margin-bottom: 0;
+	min-height:    40px;
+	height:        40px;
+	overflow:      hidden;
+}
+
+/*	navbar height to 50px */
+.navbar .navbar-brand {
+	height:      40px;
+	line-height: 20px;
+}
+
+.navbar-toggle {
+	margin-top:    0;
+	margin-bottom: 0;
+	padding:       13px 0;
+}
+
+/** reduce padding to accommodate 50px bar **/
+.navbar-brand {
+	padding-top: 4px;
+}
+
+/** navbar menu items padding reduction **/
+.navbar .navbar-nav > li > a {
+	color:          inherit;
+	padding-top:    8px;
+	padding-bottom: 8px;
+}
+
+/*
+ * Sidebar
+ */
+
+/* Hide for mobile, show later */
+.sidebar {
+	display: none;
+}
+
+/* Sidebar navigation */
+.nav-sidebar {
+	margin-right:  -21px; /* 20px padding + 1px border */
+	margin-bottom: 20px;
+	margin-left:   -20px;
+}
+
+.nav-sidebar > li > a {
+	padding-right: 20px;
+	padding-left:  20px;
+}
+
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+	color:            #ffffff;
+	background-color: #428bca;
+}
+
+/*
+ * Main content
+ */
+
+.main {
+	padding: 20px;
+}
+
+.main form.form-horizontal .form-group .form-actions {
+	margin-top: 25px;
+}
+
+body.body-404 .main {
+	padding: 0 20px 20px;
+}
+
+.main .page-header {
+	margin:         0;
+	text-shadow:    0 1px 1px #ffffff;
+	padding-bottom: 4px;
+}
+
+.hr {
+	height:              0;
+	clear:               both;
+	margin:              0 auto 15px;
+	padding:             0;
+	border:              1px solid #dddddd;
+	border-right-width:  0;
+	border-bottom-color: #ffffff;
+	border-left-width:   0;
+}
+
+/*
+ * Placeholder dashboard ideas
+ */
+.placeholders {
+	margin-bottom: 30px;
+	text-align:    center;
+}
+
+.placeholders h4 {
+	margin-bottom: 0;
+}
+
+.placeholder {
+	margin-bottom: 20px;
+}
+
+.placeholder img {
+	display:       inline-block;
+	border-radius: 50%;
+}
+
+/** avatar **/
+.avatar {
+	height:   32px;
+	width:    32px;
+	margin:   -5px 5px 0 -5px;
+	overflow: hidden;
+	display:  inline-block;
+}
+
+.avatar-image .gravatar-image {
+	margin-top:  -16px;
+	margin-left: -16px;
+}
+
+.avatar > img {
+	width:  48px;
+	height: 48px;
+}
+
+.user-info {
+	height:       50px;
+	line-height:  50px;
+	margin-right: 15px;
+}
+
+.user-info-name {
+	display:       block;
+	font-size:     12px;
+	/*color:         #AA8383;*/
+	margin-bottom: -4px;
+}
+
+.user-info-welcome {
+	font-weight: bold;
+	margin-top:  2px;
+}
+
+.dropdown-header {
+	font-size:   19px;
+	font-weight: bold;
+	color:       #888888;
+	font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	text-shadow: 0 1px 1px #ffffff;
+}
+
+/** tabs **/
+.tab-content {
+	margin-top: 20px;
+}
+
+/** toolbar **/
+.page-header-toolbar button {
+	margin-top:    -10px;
+	margin-bottom: 0;
+	margin-left:   2px;
+}
+
+/*------------------------------------------------------------------------------*/
+/* filter && search                                                             */
+/*------------------------------------------------------------------------------*/
+
+.dataTables_length label {
+	text-indent: 4px;
+	margin-top:  0;
+	line-height: 23px;
+	font-weight: normal;
+	color:       #444;
+	text-shadow: 1px 0 1px #fff;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+	margin-bottom: 8px;
+}
+
+.dataTables_wrapper .dataTables_length .help-block {
+	display:   inline-block;
+	float:     left;
+	margin:    0 0 0 4px;
+	padding:   6px 0 0;
+	font-size: 11px;
+}
+
+.dataTables_wrapper .dataTables_length select,
+.dataTables_wrapper .dataTables_length .help-block {
+	display: inline-block;
+	float:   left;
+}
+
+.dataTables_wrapper .dataTables_length select {
+	height: 28px;
+	width:  auto;
+	/*margin:      0;*/
+}
+
+.dataTables_wrapper .dataTables_filter input {
+	height: 28px;
+	float:  left;
+}
+
+.dataTables_wrapper .dataTables_filter i.form-control-feedback {
+	top: 7px;
+}
+
+.has-feedback .form-control:focus {
+	padding-right: 42.5px;
+}
+
+/*------------------------------------------------------------------------------*/
+/* Media Queries                                                                */
+/*------------------------------------------------------------------------------*/
+
+@media (min-width: 768px) {
+	.main {
+		padding-right: 15px;
+		padding-left:  15px;
+	}
+
+	.sidebar {
+		position:         fixed;
+		top:              41px;
+		bottom:           0;
+		left:             0;
+		z-index:          1000;
+		display:          block;
+		padding:          20px;
+		overflow-x:       hidden;
+		overflow-y:       auto; /* Scrollable contents if viewport is shorter than content. */
+		background-color: #f5f5f5;
+		border-right:     1px solid #eeeeee;
+	}
+}
+
+@media (max-width: 1199px) {
+	.navbar .navbar-brand {
+		height:      40px;
+		padding-top: 4px;
+	}
+}
