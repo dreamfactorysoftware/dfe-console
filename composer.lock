@@ -937,12 +937,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "5ceac3e5e79a2933f78f5d15d34047c47c564f02"
+                "reference": "015a6a3042c26a3dc69f170c7101d2d445aff613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/5ceac3e5e79a2933f78f5d15d34047c47c564f02",
-                "reference": "5ceac3e5e79a2933f78f5d15d34047c47c564f02",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/015a6a3042c26a3dc69f170c7101d2d445aff613",
+                "reference": "015a6a3042c26a3dc69f170c7101d2d445aff613",
                 "shasum": ""
             },
             "require": {
@@ -984,7 +984,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-02-05 16:33:13"
+            "time": "2015-02-05 19:10:54"
         },
         {
             "name": "dreamfactory/fabric-queue",
@@ -3404,12 +3404,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "c3a622fcc968347321f4ba28ff6df7f5007f536a"
+                "reference": "bb8d0169ba515acc587d287d5bfef4f4d9d48bfd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/c3a622fcc968347321f4ba28ff6df7f5007f536a",
-                "reference": "c3a622fcc968347321f4ba28ff6df7f5007f536a",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/bb8d0169ba515acc587d287d5bfef4f4d9d48bfd",
+                "reference": "bb8d0169ba515acc587d287d5bfef4f4d9d48bfd",
                 "shasum": ""
             },
             "require": {
@@ -3459,7 +3459,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2015-02-05 08:11:12"
+            "time": "2015-02-05 17:11:23"
         },
         {
             "name": "doctrine/dbal",
