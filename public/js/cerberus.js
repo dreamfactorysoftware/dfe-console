@@ -57,4 +57,20 @@ jQuery(function($) {
 	if ($_nano.length) {
 		$_nano.nanoScroller();
 	}
+
+	$('button.btn-page-header').on('click', function(e) {
+		e.preventDefault();
+		var _rel = $(this).attr('rel'), _id = $('.table-datatable tr.selected').attr('id');
+
+		if (_rel && _rel.length) {
+			if (_id.length) {
+				_rel = _rel.replace('{:id}', _id);
+			}
+
+			window.top.location.href = _rel;
+		}
+	});
+
+	//	Turn on page header tooltips
+	$('[data-toggle="tooltip"]').tooltip();
 });

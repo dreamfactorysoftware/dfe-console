@@ -4,10 +4,24 @@ namespace DreamFactory\Enterprise\Console\Controllers;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class InstanceController extends DataController
+class InstanceController extends ResourceController
 {
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type string
+     */
+    protected $_tableName = 'instance_t';
+    /**
+     * @type string
+     */
+    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\Instance';
+    /** @type string */
+    protected $_resource = 'instance';
+
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -17,7 +31,7 @@ class InstanceController extends DataController
      *
      * @return Response
      */
-    public function index()
+    protected function _loadData()
     {
         $_columns =
             array(
@@ -37,22 +51,4 @@ class InstanceController extends DataController
         return $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     *
-     * @return Response
-     */
-    public function show( $id )
-    {
-        try
-        {
-            return Response::json( Instance::findOrFail( $id ), \Symfony\Component\HttpFoundation\Response::HTTP_OK );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new NotFoundHttpException();
-        }
-    }
 }

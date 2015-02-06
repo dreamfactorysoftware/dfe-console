@@ -29,6 +29,22 @@ class DataController extends FactoryController
      * @type array These columns will be forced to search on the base table
      */
     protected $_forcedColumns = array('id', 'create_date', 'lmod_date', 'user_id');
+    /**
+     * @type string The resource type
+     */
+    protected $_resource = null;
+    /**
+     * @type string The name of the table
+     */
+    protected $_tableName = null;
+    /**
+     * @type int The number of rows
+     */
+    protected $_rowCount = null;
+    /**
+     * @type string The name of the model
+     */
+    protected $_model = null;
 
     //******************************************************************************
     //* Methods
@@ -44,11 +60,11 @@ class DataController extends FactoryController
      *
      * @return \Illuminate\Database\Query\Builder|mixed
      */
-    public function _processDataRequest( $table, $count, array $columns = array('*'), $builder = null )
+    public function _processDataRequest( $table, $count, array $columns = null, $builder = null )
     {
         try
         {
-            $this->_parseDataRequest( $table );
+            $this->_parseDataRequest( $table, $columns );
 
             /** @type Builder $_table */
             $_table = $builder ?: DB::table( $table );
@@ -118,19 +134,40 @@ class DataController extends FactoryController
      * Parses inbound data request for limits and sort and search
      *
      * @param int|string $defaultSort Default sort column name or number
+     * @param array      $columns
      */
-    protected function _parseDataRequest( $defaultSort = null )
+    protected function _parseDataRequest( $defaultSort = null, array &$columns = null )
     {
         $this->_dtRequest = isset( $_REQUEST, $_REQUEST['length'] );
         $this->_skip = IfSet::get( $_REQUEST, 'start', 0 );
         $this->_limit = IfSet::get( $_REQUEST, 'length', static::DEFAULT_PER_PAGE );
         $this->_order = $defaultSort;
         $this->_search = trim( str_replace( '\'', null, IfSet::getDeep( $_REQUEST, 'search', 'value' ) ) );
-        $this->_columns = IfSet::get( $_REQUEST, 'columns', array() );
 
         if ( null === ( $_sortOrder = IfSet::get( $_REQUEST, 'order' ) ) )
         {
             return;
+        }
+
+        //  Parse the columns
+        if ( empty( $this->_columns ) && empty( $columns ) )
+        {
+            $_dataColumns = IfSet::get( $_REQUEST, 'columns', array() );
+
+            $_columns = array();
+
+            foreach ( $_dataColumns as $_column )
+            {
+                if ( null !== ( $_name = IfSet::get( $_column, 'data', IfSet::get( $_column, 'name' ) ) ) )
+                {
+                    $_columns[] = $_name;
+                }
+            }
+
+            if ( !empty( $_columns ) )
+            {
+                $this->_columns = $columns = $_columns;
+            }
         }
 
         $_sort = array();
@@ -205,7 +242,7 @@ class DataController extends FactoryController
 
             if ( null !== ( $_id = IfSet::get( $_values, 'id' ) ) )
             {
-                $_values['DT_RowId'] = 'row_' . $this->_hashValue( $_id );
+                $_values['DT_RowId'] = $_id;
             }
 
             $_cleaned[] = $_values;

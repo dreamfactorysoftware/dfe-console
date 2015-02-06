@@ -15,6 +15,7 @@ if ( !isset( $_user ) || !is_array( $_user ) )
     <title>{{ "DreamFactory Enterprise&trade;" }} | @yield('page-title','Welcome!')</title>
     <!-- Bootstrap Core CSS -->
     <link href="/static/bootstrap-3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.css" rel="stylesheet">
     {{--<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.2/paper/bootstrap.min.css" rel="stylesheet">--}}
     <link href="/static/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/css/ripples.min.css" rel="stylesheet">
@@ -31,6 +32,8 @@ if ( !isset( $_user ) || !is_array( $_user ) )
 </head>
 <body class="@yield('body-class')">
 @include('layouts.main.body')
+<div id="loading-overlay" style="display: none;">Loading...</div>
+<div class="loading-content"><img src="/img/img-loading.gif" class="loading-image" alt="Loading..." /></div>
 @include('layouts.main.body-scripts')
 </body>
 </html>
