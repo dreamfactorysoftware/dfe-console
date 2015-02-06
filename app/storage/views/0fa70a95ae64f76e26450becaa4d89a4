@@ -1,0 +1,22 @@
+<?php $__env->startSection('content'); ?>
+    <?php echo $__env->make('app._page-header',array('pageName' => 'Servers', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) , array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-striped table-hover table-heading table-datatable nowrap"
+                    data-resource="server"
+                    id="dt-server">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Host</th>
+                        <th>Last Modified</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
