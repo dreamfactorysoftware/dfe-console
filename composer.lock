@@ -1630,12 +1630,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "8865d2276be94f0a3497ba3bd26c906ae9e91e1c"
+                "reference": "7132cf233204dda7f8dfa3635901e1d7c260768e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/8865d2276be94f0a3497ba3bd26c906ae9e91e1c",
-                "reference": "8865d2276be94f0a3497ba3bd26c906ae9e91e1c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/7132cf233204dda7f8dfa3635901e1d7c260768e",
+                "reference": "7132cf233204dda7f8dfa3635901e1d7c260768e",
                 "shasum": ""
             },
             "require": {
@@ -1747,7 +1747,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-04 14:00:11"
+            "time": "2015-02-06 19:57:48"
         },
         {
             "name": "league/flysystem",
@@ -2202,12 +2202,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "3644cec36623e63a8c358c3c74db5e1c7b167fb4"
+                "reference": "0db1e7e0536dcc9f88259e63b92ac0e44b62c9c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/3644cec36623e63a8c358c3c74db5e1c7b167fb4",
-                "reference": "3644cec36623e63a8c358c3c74db5e1c7b167fb4",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/0db1e7e0536dcc9f88259e63b92ac0e44b62c9c0",
+                "reference": "0db1e7e0536dcc9f88259e63b92ac0e44b62c9c0",
                 "shasum": ""
             },
             "require": {
@@ -2254,7 +2254,7 @@
                 "client",
                 "search"
             ],
-            "time": "2015-02-02 12:19:01"
+            "time": "2015-02-06 21:30:20"
         },
         {
             "name": "swiftmailer/swiftmailer",
