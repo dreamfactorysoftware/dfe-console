@@ -25,30 +25,7 @@
     <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32e706f8-56d7-4f28-ba60-6faf243823d8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ResourceController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/app/forms/role.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/ClusterController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ClusterController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/DataController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/DataController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/EnterpriseServer.js" afterPath="$PROJECT_DIR$/public/js/EnterpriseServer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/InstanceController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/InstanceController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/RoleController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/RoleController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/ServerController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ServerController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/ServiceUserController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ServiceUserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/UserController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/_page-header.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/_page-header.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/layouts/main/body-scripts.blade.php" afterPath="$PROJECT_DIR$/resources/views/layouts/main/body-scripts.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/cerberus.js" afterPath="$PROJECT_DIR$/public/js/cerberus.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dfe-console.iml" afterPath="$PROJECT_DIR$/.idea/dfe-console.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/grid-style.css" afterPath="$PROJECT_DIR$/public/css/grid-style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/layouts/main.blade.php" afterPath="$PROJECT_DIR$/resources/views/layouts/main.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/roles.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/roles.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/style.css" afterPath="$PROJECT_DIR$/public/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="32e706f8-56d7-4f28-ba60-6faf243823d8" name="Default" comment="" />
     <ignored path="dfe-console.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/app/storage/" />
@@ -96,8 +73,8 @@
       <file leaf-file-name="cerberus.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/cerberus.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.69131833" vertical-offset="450" max-vertical-offset="1136">
-              <caret line="66" column="23" selection-start-line="66" selection-start-column="23" selection-end-line="66" selection-end-column="23" />
+            <state vertical-scroll-proportion="0.38263667" vertical-offset="450" max-vertical-offset="1136">
+              <caret line="54" column="16" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -694,13 +671,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1599" y="1" width="1922" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32796207" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32326284" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20512821" sideWeight="0.6115312" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2852423" sideWeight="0.5539305" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2852423" sideWeight="0.5539305" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TeamCity" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.66156465" sideWeight="0.44606948" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.71088433" sideWeight="0.6937033" order="18" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1860817" sideWeight="0.4829932" order="0" side_tool="true" content_ui="tabs" />
@@ -1152,8 +1129,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/cerberus.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.69131833" vertical-offset="450" max-vertical-offset="1136">
-          <caret line="66" column="23" selection-start-line="66" selection-start-column="23" selection-end-line="66" selection-end-column="23" />
+        <state vertical-scroll-proportion="0.38263667" vertical-offset="450" max-vertical-offset="1136">
+          <caret line="54" column="16" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
           <folding />
         </state>
       </provider>
