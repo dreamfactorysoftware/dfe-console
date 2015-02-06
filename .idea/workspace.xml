@@ -25,40 +25,7 @@
     <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a208a83a-ebdb-4f9c-9c70-1fccc2d61ea4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/static/bootstrap-3.3.2/css/bootstrap.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/static/bootstrap-3.3.2/js/bootstrap.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/static/font-awesome-4.3.0/css/font-awesome.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/AppController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/AppController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/ClusterController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ClusterController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/DashboardController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/DashboardController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/DataController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/DataController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/FabricController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/FabricController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/FactoryController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/FactoryController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/InstanceController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/InstanceController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/RoleController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/RoleController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/ServerController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ServerController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/ServiceUserController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ServiceUserController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/SettingsController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/SettingsController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/UserController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/EnterpriseServer.js" afterPath="$PROJECT_DIR$/public/js/EnterpriseServer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" afterPath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/layouts/main/body-scripts.blade.php" afterPath="$PROJECT_DIR$/resources/views/layouts/main/body-scripts.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/clusters.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/clusters.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dfe-console.iml" afterPath="$PROJECT_DIR$/.idea/dfe-console.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/groups.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/groups.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/instances.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/instances.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/layouts/main.blade.php" afterPath="$PROJECT_DIR$/resources/views/layouts/main.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/roles.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/roles.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/routes.php" afterPath="$PROJECT_DIR$/app/Http/routes.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/servers.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/servers.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/style.css" afterPath="$PROJECT_DIR$/public/css/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/app/users.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/users.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="a208a83a-ebdb-4f9c-9c70-1fccc2d61ea4" name="Default" comment="" />
     <ignored path="dfe-console.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path=".idea/dataSources.local.xml" />
@@ -742,13 +709,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1599" y="1" width="1922" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3975771" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3975771" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TeamCity" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
