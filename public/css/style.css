@@ -32,7 +32,6 @@ body {
 	margin-bottom: 0;
 	min-height:    40px;
 	height:        40px;
-	overflow:      hidden;
 }
 
 /*	navbar height to 50px */
@@ -238,45 +237,45 @@ body.body-404 .main {
 /*------------------------------------------------------------------------------*/
 
 /*.dataTables_length label {*/
-	/*text-indent: 4px;*/
-	/*margin-top:  0;*/
-	/*line-height: 23px;*/
-	/*font-weight: normal;*/
-	/*color:       #444444;*/
-	/*text-shadow: 0 1px 1px #ffffff;*/
+/*text-indent: 4px;*/
+/*margin-top:  0;*/
+/*line-height: 23px;*/
+/*font-weight: normal;*/
+/*color:       #444444;*/
+/*text-shadow: 0 1px 1px #ffffff;*/
 /*}*/
 
 /*.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {*/
-	/*margin-bottom: 8px;*/
+/*margin-bottom: 8px;*/
 /*}*/
 
 /*.dataTables_wrapper .dataTables_length .help-block {*/
-	/*display:   inline-block;*/
-	/*float:     left;*/
-	/*margin:    0 0 0 4px;*/
-	/*padding:   6px 0 0;*/
-	/*font-size: 11px;*/
+/*display:   inline-block;*/
+/*float:     left;*/
+/*margin:    0 0 0 4px;*/
+/*padding:   6px 0 0;*/
+/*font-size: 11px;*/
 /*}*/
 
 /*.dataTables_wrapper .dataTables_length select,*/
 /*.dataTables_wrapper .dataTables_length .help-block {*/
-	/*display: inline-block;*/
-	/*float:   left;*/
+/*display: inline-block;*/
+/*float:   left;*/
 /*}*/
 
 /*.dataTables_wrapper .dataTables_length select {*/
-	/*height: 28px;*/
-	/*width:  auto;*/
-	/*margin:      0;*/
+/*height: 28px;*/
+/*width:  auto;*/
+/*margin:      0;*/
 /*}*/
 
 /*.dataTables_wrapper .dataTables_filter input {*/
-	/*height: 28px;*/
-	/*float:  left;*/
+/*height: 28px;*/
+/*float:  left;*/
 /*}*/
 
 /*.dataTables_wrapper .dataTables_filter i.form-control-feedback {*/
-	/*top: 7px;*/
+/*top: 7px;*/
 /*}*/
 
 table.dataTable thead th {
