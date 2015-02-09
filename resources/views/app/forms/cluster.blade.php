@@ -3,6 +3,9 @@
 @extends('layouts.main')
 
 @section('content')
+    <div class="form-header">
+        <h3>Cluster</h3>
+    </div>
     <div role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Details</a></li>

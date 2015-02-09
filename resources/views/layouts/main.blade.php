@@ -33,7 +33,7 @@ if ( !isset( $_user ) || !is_array( $_user ) )
 <body class="@yield('body-class')">
 @include('layouts.main.body')
 <div id="loading-overlay" style="display: none;">Loading...</div>
-<div class="loading-content"><img src="/img/img-loading.gif" class="loading-image" alt="Loading..." /></div>
+<div class="loading-content" style="display: none;"><img src="/img/img-loading.gif" class="loading-image" alt="Loading..." /></div>
 @include('layouts.main.body-scripts')
 </body>
 </html>

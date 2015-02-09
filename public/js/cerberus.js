@@ -52,9 +52,7 @@ jQuery(function($) {
 		$_avatar.html('<img class="gravatar-image" src="' + 'http://www.gravatar.com/avatar/' + $_avatar.data('hash') + '" alt="avatar" />');
 	}
 
-	_loadData();
-
-	if ($_nano.length) {
+	if ($_nano && $_nano.length) {
 		$_nano.nanoScroller();
 	}
 
@@ -64,10 +62,10 @@ jQuery(function($) {
 
 		if (_rel && _rel.length) {
 			if ('header-bar-new' != _id) {
-				_id = $('.table-datatable tr.selected').attr('id');
+				var _rowId = $('.table-datatable tr.selected').attr('id');
 
-				if (_id.length) {
-					_rel = _rel.replace('{:id}', _id);
+				if (_rowId.length) {
+					_rel = _rel.replace('{:id}', _rowId);
 				}
 			}
 
@@ -77,4 +75,7 @@ jQuery(function($) {
 
 	//	Turn on page header tooltips
 	$('[data-toggle="tooltip"]').tooltip();
+
+	//	Load page data...
+	_loadData();
 });
