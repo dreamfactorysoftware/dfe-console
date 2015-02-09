@@ -60,11 +60,15 @@ jQuery(function($) {
 
 	$('button.btn-page-header').on('click', function(e) {
 		e.preventDefault();
-		var _rel = $(this).attr('rel'), _id = $('.table-datatable tr.selected').attr('id');
+		var _rel = $(this).attr('rel'), _id = $(this).attr('id');
 
 		if (_rel && _rel.length) {
-			if (_id.length) {
-				_rel = _rel.replace('{:id}', _id);
+			if ('header-bar-new' != _id) {
+				_id = $('.table-datatable tr.selected').attr('id');
+
+				if (_id.length) {
+					_rel = _rel.replace('{:id}', _id);
+				}
 			}
 
 			window.top.location.href = _rel;
