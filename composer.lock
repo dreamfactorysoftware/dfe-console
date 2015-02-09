@@ -1227,12 +1227,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "475b29ccd411f2fa8a408e64576418728c032cfa"
+                "reference": "646ca5302b10a69be0c2278463217e1774492eff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/475b29ccd411f2fa8a408e64576418728c032cfa",
-                "reference": "475b29ccd411f2fa8a408e64576418728c032cfa",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/646ca5302b10a69be0c2278463217e1774492eff",
+                "reference": "646ca5302b10a69be0c2278463217e1774492eff",
                 "shasum": ""
             },
             "require": {
@@ -1277,7 +1277,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-01-28 01:03:29"
+            "time": "2015-02-08 23:01:30"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -1285,12 +1285,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/RingPHP.git",
-                "reference": "0b13b4f0d595c4e886ae8eecdfe27e049ba38375"
+                "reference": "a1da305d1c5c0175abf7bc912cb065e906de9500"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/0b13b4f0d595c4e886ae8eecdfe27e049ba38375",
-                "reference": "0b13b4f0d595c4e886ae8eecdfe27e049ba38375",
+                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/a1da305d1c5c0175abf7bc912cb065e906de9500",
+                "reference": "a1da305d1c5c0175abf7bc912cb065e906de9500",
                 "shasum": ""
             },
             "require": {
@@ -1328,7 +1328,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-01-20 22:24:03"
+            "time": "2015-02-08 23:29:08"
         },
         {
             "name": "guzzlehttp/streams",
@@ -1630,12 +1630,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7132cf233204dda7f8dfa3635901e1d7c260768e"
+                "reference": "385cb45bd1009ddd6a4c3868ef68eb681bc53e6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7132cf233204dda7f8dfa3635901e1d7c260768e",
-                "reference": "7132cf233204dda7f8dfa3635901e1d7c260768e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/385cb45bd1009ddd6a4c3868ef68eb681bc53e6c",
+                "reference": "385cb45bd1009ddd6a4c3868ef68eb681bc53e6c",
                 "shasum": ""
             },
             "require": {
@@ -1747,7 +1747,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-06 19:57:48"
+            "time": "2015-02-08 13:59:23"
         },
         {
             "name": "league/flysystem",
@@ -1755,12 +1755,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "4929157803d55a7ee93b6e8168c11bae42bffec9"
+                "reference": "f31699eafc5299f93ae55f9ca48cfe4f4695b8b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/4929157803d55a7ee93b6e8168c11bae42bffec9",
-                "reference": "4929157803d55a7ee93b6e8168c11bae42bffec9",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/f31699eafc5299f93ae55f9ca48cfe4f4695b8b7",
+                "reference": "f31699eafc5299f93ae55f9ca48cfe4f4695b8b7",
                 "shasum": ""
             },
             "require": {
@@ -1830,7 +1830,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-02-06 16:19:49"
+            "time": "2015-02-07 09:24:21"
         },
         {
             "name": "monolog/monolog",
@@ -2363,12 +2363,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "53475e2ab90fce1c199b344658b2691954f72e2c"
+                "reference": "07944837f789bc284206bec1121911ca4bd9008c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/53475e2ab90fce1c199b344658b2691954f72e2c",
-                "reference": "53475e2ab90fce1c199b344658b2691954f72e2c",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/07944837f789bc284206bec1121911ca4bd9008c",
+                "reference": "07944837f789bc284206bec1121911ca4bd9008c",
                 "shasum": ""
             },
             "require": {
@@ -2411,7 +2411,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2015-02-05 06:36:51"
+            "time": "2015-02-08 07:19:48"
         },
         {
             "name": "symfony/debug",
@@ -3404,12 +3404,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "bb8d0169ba515acc587d287d5bfef4f4d9d48bfd"
+                "reference": "800ac05377ab427fe1b53408f632257eed59d0f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/bb8d0169ba515acc587d287d5bfef4f4d9d48bfd",
-                "reference": "bb8d0169ba515acc587d287d5bfef4f4d9d48bfd",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/800ac05377ab427fe1b53408f632257eed59d0f1",
+                "reference": "800ac05377ab427fe1b53408f632257eed59d0f1",
                 "shasum": ""
             },
             "require": {
@@ -3459,7 +3459,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2015-02-05 17:11:23"
+            "time": "2015-02-07 22:18:26"
         },
         {
             "name": "doctrine/dbal",
@@ -3754,12 +3754,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "d647e27524f9f7edc37baf63a114b52f5975808f"
+                "reference": "99520429fa1f499cc41c9112bd139f2b2761338b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/d647e27524f9f7edc37baf63a114b52f5975808f",
-                "reference": "d647e27524f9f7edc37baf63a114b52f5975808f",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/99520429fa1f499cc41c9112bd139f2b2761338b",
+                "reference": "99520429fa1f499cc41c9112bd139f2b2761338b",
                 "shasum": ""
             },
             "require": {
@@ -3806,7 +3806,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-01-26 10:50:16"
+            "time": "2015-02-08 14:59:51"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4058,12 +4058,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "2b1e1e267d0286538b1762aa2c79a96ae1e583c8"
+                "reference": "7c1de6a854a36ba330b352a005a4f5f928619f53"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/2b1e1e267d0286538b1762aa2c79a96ae1e583c8",
-                "reference": "2b1e1e267d0286538b1762aa2c79a96ae1e583c8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7c1de6a854a36ba330b352a005a4f5f928619f53",
+                "reference": "7c1de6a854a36ba330b352a005a4f5f928619f53",
                 "shasum": ""
             },
             "require": {
@@ -4122,7 +4122,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-02-06 05:41:08"
+            "time": "2015-02-09 06:38:12"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
