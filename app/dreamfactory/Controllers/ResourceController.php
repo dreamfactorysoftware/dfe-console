@@ -9,6 +9,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class ResourceController extends DataController
 {
     //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type string The view name to render
+     */
+    protected $_resourceView;
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
@@ -45,7 +54,7 @@ class ResourceController extends DataController
     /** {@InheritDoc} */
     public function create()
     {
-        return View::make( 'app.forms.' . $this->_resource, array('model' => false) );
+        return View::make( $this->_getResourceView(), array('model' => false) );
     }
 
     /** {@InheritDoc} */
@@ -71,7 +80,7 @@ class ResourceController extends DataController
         {
             $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
 
-            return View::make( 'app.forms.' . $this->_resource, array('model' => $_model) );
+            return View::make( $this->_getResourceView(), array('model' => $_model) );
         }
         catch ( \Exception $_ex )
         {
@@ -87,5 +96,13 @@ class ResourceController extends DataController
     /** {@InheritDoc} */
     public function destroy( $id )
     {
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getResourceView()
+    {
+        return $this->_resourceView ?: 'app.forms.' . $this->_resource;
     }
 }

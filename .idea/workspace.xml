@@ -25,7 +25,14 @@
     <option name="FILTER_BY_CURRENT_PROJECT" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32e706f8-56d7-4f28-ba60-6faf243823d8" name="Default" comment="" />
+    <list default="true" id="32e706f8-56d7-4f28-ba60-6faf243823d8" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/app/forms/cluster.blade.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/app/forms/instance.blade.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/resources/views/app/forms/server.blade.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/resources/views/app/forms/user.blade.php" afterPath="$PROJECT_DIR$/resources/views/app/forms/service-user.blade.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/dreamfactory/Controllers/ResourceController.php" afterPath="$PROJECT_DIR$/app/dreamfactory/Controllers/ResourceController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="dfe-console.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/app/storage/" />
@@ -52,35 +59,7 @@
     <favorites_list name="dfe-console" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="_page-header.blade.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/views/app/_page-header.blade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.84" vertical-offset="288" max-vertical-offset="1376">
-              <caret line="24" column="36" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
-              <folding>
-                <element signature="e#6#45#0#PHP" expanded="true" />
-                <marker date="1423258116833" expanded="true" signature="2020:2358" placeholder="..." />
-                <marker date="1423258116833" expanded="true" signature="2048:2351" placeholder="..." />
-                <marker date="1423258116833" expanded="true" signature="2080:2286" placeholder="..." />
-                <marker date="1423258116833" expanded="true" signature="2117:2271" placeholder="..." />
-                <marker date="1423258116833" expanded="true" signature="2180:2194" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cerberus.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/js/cerberus.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38263667" vertical-offset="450" max-vertical-offset="1136">
-              <caret line="54" column="16" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -88,9 +67,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/Http/Controllers/BaseDataController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/FabricController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/SettingsController.php" />
         <option value="$PROJECT_DIR$/vendor/symfony/framework-bundle/Symfony/Bundle/FrameworkBundle/Controller/ControllerResolver.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/FactoryController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/DataController.php" />
@@ -129,16 +105,19 @@
         <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/DataController.php" />
         <option value="$PROJECT_DIR$/public/css/grid-style.css" />
         <option value="$PROJECT_DIR$/resources/views/app/roles.blade.php" />
-        <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/ResourceController.php" />
         <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/RoleController.php" />
         <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/InstanceController.php" />
-        <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/ServerController.php" />
         <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/UserController.php" />
         <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/ServiceUserController.php" />
         <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/ClusterController.php" />
         <option value="$PROJECT_DIR$/resources/views/app/_page-header.blade.php" />
         <option value="$PROJECT_DIR$/public/js/EnterpriseServer.js" />
         <option value="$PROJECT_DIR$/public/js/cerberus.js" />
+        <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/ResourceController.php" />
+        <option value="$PROJECT_DIR$/app/dreamfactory/Controllers/ServerController.php" />
+        <option value="$PROJECT_DIR$/resources/views/app/forms/server.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/app/forms/cluster.blade.php" />
+        <option value="$PROJECT_DIR$/resources/views/app/forms/instance.blade.php" />
       </list>
     </option>
   </component>
@@ -456,56 +435,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dfe-console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dfe-console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dfe-console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dfe-console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="css" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dfe-console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dfe-console" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -586,8 +515,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/dreamfactory/Controllers" />
       <recent name="$PROJECT_DIR$/resources/views/app/forms" />
+      <recent name="$PROJECT_DIR$/app/dreamfactory/Controllers" />
       <recent name="$PROJECT_DIR$/resources/views" />
       <recent name="$PROJECT_DIR$/app/Http/Controllers" />
       <recent name="$PROJECT_DIR$/public" />
@@ -603,13 +532,6 @@
       <TestRunner />
       <method />
     </configuration>
-    <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
-      <setting name="configLocationType" value="CONFIG_FILE" />
-      <setting name="settingsFile" value="" />
-      <setting name="serverType" value="INTERNAL" />
-      <setting name="preferredDebugBrowser" value="Chrome" />
-      <method />
-    </configuration>
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="INTERPRETER_PATH" value="/bin/bash" />
@@ -621,13 +543,17 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
+      <setting name="configLocationType" value="CONFIG_FILE" />
+      <setting name="settingsFile" value="" />
+      <setting name="serverType" value="INTERNAL" />
+      <setting name="preferredDebugBrowser" value="Chrome" />
+      <method />
+    </configuration>
     <configuration default="true" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application">
       <method />
     </configuration>
     <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
-      <method />
-    </configuration>
-    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
       <method />
     </configuration>
     <configuration default="true" type="com.intellij.database.run.ConsoleRunConfigurationType" factoryName="Query Language Console">
@@ -636,11 +562,11 @@
       <option name="CONTEXT_PROVIDER" />
       <method />
     </configuration>
-    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
-      <BehatRunner />
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
       <method />
     </configuration>
-    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server" server_id="5a18e29c-dcdc-4c2b-8694-b94a46e55b02" server_name="dfe-east-1.fabric.dreamfactory.com">
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
@@ -650,6 +576,9 @@
       <arguments />
       <pass-parent-envs>true</pass-parent-envs>
       <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server" server_id="5a18e29c-dcdc-4c2b-8694-b94a46e55b02" server_name="dfe-east-1.fabric.dreamfactory.com">
       <method />
     </configuration>
     <list size="1">
@@ -677,7 +606,6 @@
       <window_info id="Terminal" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32326284" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20512821" sideWeight="0.6115312" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2852423" sideWeight="0.5539305" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TeamCity" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.66156465" sideWeight="0.44606948" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.71088433" sideWeight="0.6937033" order="18" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1860817" sideWeight="0.4829932" order="0" side_tool="true" content_ui="tabs" />
@@ -687,24 +615,25 @@
       <window_info id="TODO" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.32930514" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19335347" sideWeight="0.47959185" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18530351" sideWeight="0.52040815" order="2" side_tool="false" content_ui="combo" x="1574" y="87" width="491" height="650" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18690096" sideWeight="0.52040815" order="2" side_tool="false" content_ui="combo" x="1574" y="87" width="491" height="650" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32980332" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.8484525" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="20" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="true" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" x="99" y="101" width="487" height="160" />
       <window_info id="Assets" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3271665" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="REST Client" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32986766" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="CSS-X-Fire" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32903227" sideWeight="0.7812166" order="19" side_tool="true" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973376" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.8484525" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32715008" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32648402" sideWeight="0.85005337" order="6" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4382151" sideWeight="0.6627273" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Framework" active="false" anchor="right" auto_hide="true" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.32980332" sideWeight="0.5" order="6" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2852423" sideWeight="0.5539305" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Runner" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32985783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Code Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -736,32 +665,28 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/resources/views/app/_page-header.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="368" max-vertical-offset="1360">
+          <caret line="24" column="36" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#h3#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/cerberus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1136">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/EnterpriseServer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3216">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#40#202#0" expanded="true" />
-            <element signature="e#423#468#0" expanded="true" />
-            <element signature="e#1022#1047#0" expanded="true" />
-            <element signature="e#1073#1098#0" expanded="true" />
-            <element signature="e#1124#1149#0" expanded="true" />
-            <element signature="e#1175#1201#0" expanded="true" />
-            <element signature="e#1228#1248#0" expanded="true" />
-            <element signature="e#1274#1302#0" expanded="true" />
-            <element signature="e#1328#1350#0" expanded="true" />
-            <element signature="e#1376#1396#0" expanded="true" />
-            <element signature="e#1422#1442#0" expanded="true" />
-            <element signature="e#1468#1488#0" expanded="true" />
-            <element signature="e#1514#1536#0" expanded="true" />
-            <element signature="e#1562#1577#0" expanded="true" />
-            <element signature="e#1784#1967#0" expanded="true" />
-            <element signature="e#2271#2413#0" expanded="true" />
-            <element signature="e#2719#2813#0" expanded="true" />
-            <element signature="e#4458#4516#0" expanded="true" />
-            <element signature="e#4669#4745#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -800,12 +725,12 @@
             <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_janitor_t</node>
             <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_server_asgn_t</node>
             <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_t</node>
-            <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.route_hash_t</node>
             <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.cluster_arch_t</node>
+            <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.route_hash_t</node>
             <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_t</node>
-            <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.environment_t</node>
-            <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.owner_hash_t</node>
             <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.user_role_asgn_t</node>
+            <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.owner_hash_t</node>
+            <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.environment_t</node>
             <node x="" y="">82afe1ee-e4b5-47b4-a507-87b4bb99b7c3.table:dfe_local.instance_server_asgn_arch_t</node>
           </nodes>
           <notes />
@@ -861,7 +786,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.71100163" vertical-offset="74943" max-vertical-offset="111072">
           <caret line="4711" column="10" selection-start-line="4711" selection-start-column="10" selection-end-line="4711" selection-end-column="10" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -869,9 +793,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.7588425" vertical-offset="2338" max-vertical-offset="2960">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -879,7 +800,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.08040201" vertical-offset="0" max-vertical-offset="597">
           <caret line="3" column="87" selection-start-line="3" selection-start-column="87" selection-end-line="3" selection-end-column="87" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -887,7 +807,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="622">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -895,7 +814,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.32998326" vertical-offset="91" max-vertical-offset="720">
           <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -903,7 +821,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.3316582" vertical-offset="795" max-vertical-offset="1392">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -911,7 +828,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1876047" vertical-offset="0" max-vertical-offset="597">
           <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -919,7 +835,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="622">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -935,7 +850,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.43842363" vertical-offset="1509" max-vertical-offset="7056">
           <caret line="111" column="117" selection-start-line="111" selection-start-column="109" selection-end-line="111" selection-end-column="117" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -943,7 +857,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.36334404" vertical-offset="3934" max-vertical-offset="5232">
           <caret line="260" column="47" selection-start-line="260" selection-start-column="47" selection-end-line="260" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -951,7 +864,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.08040201" vertical-offset="0" max-vertical-offset="597">
           <caret line="3" column="59" selection-start-line="3" selection-start-column="59" selection-end-line="3" selection-end-column="59" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -959,7 +871,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7236181" vertical-offset="288" max-vertical-offset="1168">
           <caret line="55" column="29" selection-start-line="55" selection-start-column="29" selection-end-line="55" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -967,7 +878,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.40536013" vertical-offset="242" max-vertical-offset="864">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -995,29 +905,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/ServerController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9463987" vertical-offset="59" max-vertical-offset="720">
-          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding>
-            <element signature="e#62#124#0#PHP" expanded="true" />
-            <element signature="e#449#480#0#PHP" expanded="true" />
-            <element signature="e#525#556#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/ResourceController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21440536" vertical-offset="0" max-vertical-offset="1488">
-          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
-          <folding>
-            <element signature="e#62#102#0#PHP" expanded="true" />
-            <element signature="e#516#583#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/InstanceController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5360134" vertical-offset="32" max-vertical-offset="896">
@@ -1042,19 +929,27 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2288">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1423166312833" expanded="true" signature="-1:-1" placeholder="SELECT s.id,..server_t..." />
-            <marker date="1423166312833" expanded="true" signature="-1:-1" placeholder="SELECT * FRO..server_t..." />
-            <marker date="1423166312833" expanded="true" signature="-1:-1" placeholder="SELECT i.id,..instance_t..." />
-            <marker date="1423166312833" expanded="true" signature="-1:-1" placeholder="SELECT u.id,..user_t..." />
-            <marker date="1423166312833" expanded="true" signature="-1:-1" placeholder="SELECT c.id,..cluster_t..." />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/ClusterController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3752094" vertical-offset="0" max-vertical-offset="597">
+          <caret line="14" column="35" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/EnterpriseServer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5643087" vertical-offset="1857" max-vertical-offset="3504">
+          <caret line="138" column="54" selection-start-line="138" selection-start-column="47" selection-end-line="138" selection-end-column="54" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/DataController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.055276383" vertical-offset="241" max-vertical-offset="4432">
+        <state vertical-scroll-proportion="0.018648019" vertical-offset="192" max-vertical-offset="4432">
           <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
           <folding>
             <element signature="e#62#101#0#PHP" expanded="true" />
@@ -1075,63 +970,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/ClusterController.php">
+    <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/ResourceController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3752094" vertical-offset="0" max-vertical-offset="597">
-          <caret line="14" column="35" selection-start-line="14" selection-start-column="35" selection-end-line="14" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/resources/views/app/_page-header.blade.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.84" vertical-offset="288" max-vertical-offset="1376">
-          <caret line="24" column="36" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.26508877" vertical-offset="48" max-vertical-offset="1760">
+          <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
           <folding>
-            <element signature="e#6#45#0#PHP" expanded="true" />
-            <marker date="1423258116833" expanded="true" signature="2020:2358" placeholder="..." />
-            <marker date="1423258116833" expanded="true" signature="2048:2351" placeholder="..." />
-            <marker date="1423258116833" expanded="true" signature="2080:2286" placeholder="..." />
-            <marker date="1423258116833" expanded="true" signature="2117:2271" placeholder="..." />
-            <marker date="1423258116833" expanded="true" signature="2180:2194" placeholder="..." />
+            <element signature="e#62#102#0#PHP" expanded="true" />
+            <element signature="e#516#571#0#PHP" expanded="true" />
+            <element signature="e#794#861#0#PHP" expanded="true" />
+            <element signature="e#2478#2511#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/EnterpriseServer.js">
+    <entry file="file://$PROJECT_DIR$/resources/views/app/forms/server.blade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5643087" vertical-offset="1857" max-vertical-offset="3504">
-          <caret line="138" column="54" selection-start-line="138" selection-start-column="47" selection-end-line="138" selection-end-column="54" />
+        <state vertical-scroll-proportion="0.76456875" vertical-offset="0" max-vertical-offset="960">
+          <caret line="41" column="40" selection-start-line="41" selection-start-column="40" selection-end-line="41" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/app/forms/cluster.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8881119" vertical-offset="102" max-vertical-offset="960">
+          <caret line="54" column="5" selection-start-line="54" selection-start-column="5" selection-end-line="54" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/app/forms/instance.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5407925" vertical-offset="0" max-vertical-offset="960">
+          <caret line="29" column="89" selection-start-line="29" selection-start-column="89" selection-end-line="29" selection-end-column="89" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/app/forms/service-user.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1840">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/dreamfactory/Controllers/ServerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4289044" vertical-offset="0" max-vertical-offset="858">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#40#202#0" expanded="true" />
-            <element signature="e#423#468#0" expanded="true" />
-            <element signature="e#1022#1047#0" expanded="true" />
-            <element signature="e#1073#1098#0" expanded="true" />
-            <element signature="e#1124#1149#0" expanded="true" />
-            <element signature="e#1175#1201#0" expanded="true" />
-            <element signature="e#1228#1248#0" expanded="true" />
-            <element signature="e#1274#1302#0" expanded="true" />
-            <element signature="e#1328#1350#0" expanded="true" />
-            <element signature="e#1376#1396#0" expanded="true" />
-            <element signature="e#1422#1442#0" expanded="true" />
-            <element signature="e#1468#1488#0" expanded="true" />
-            <element signature="e#1514#1536#0" expanded="true" />
-            <element signature="e#1562#1577#0" expanded="true" />
-            <element signature="e#1784#1967#0" expanded="true" />
-            <element signature="e#2271#2413#0" expanded="true" />
-            <element signature="e#2719#2813#0" expanded="true" />
-            <element signature="e#4458#4516#0" expanded="true" />
-            <element signature="e#4669#4745#0" expanded="true" />
+            <element signature="e#62#124#0#PHP" expanded="true" />
+            <element signature="e#449#480#0#PHP" expanded="true" />
+            <element signature="e#525#556#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/cerberus.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38263667" vertical-offset="450" max-vertical-offset="1136">
+        <state vertical-scroll-proportion="0.5164213" vertical-offset="232" max-vertical-offset="1136">
           <caret line="54" column="16" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/views/app/_page-header.blade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0" vertical-offset="368" max-vertical-offset="1360">
+          <caret line="24" column="36" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#h3#0;n#div#0;n#div#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
