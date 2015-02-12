@@ -1,0 +1,10 @@
+<?php $__env->startSection('title-section'); ?>
+    <title>DreamFactory Enterprise&trade; - Login</title>
+<?php $__env->stopSection(true); ?>
+
+<?php $__env->startSection('head-section'); ?>
+    <link href="/css/login.css" rel="stylesheet">
+    <link href="/css/metro.css" rel="stylesheet">
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
