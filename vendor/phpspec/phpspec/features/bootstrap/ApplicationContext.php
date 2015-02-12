@@ -4,14 +4,21 @@ use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+<<<<<<< HEAD
 use Fake\Prompter;
+=======
+use Fake\DialogHelper;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 use Fake\ReRunner;
 use Matcher\ApplicationOutputMatcher;
 use Matcher\ExitStatusMatcher;
 use Matcher\ValidJUnitXmlMatcher;
 use PhpSpec\Console\Application;
 use PhpSpec\Matcher\MatchersProviderInterface;
+<<<<<<< HEAD
 use Symfony\Component\Console\Helper\HelperSet;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 /**
@@ -35,9 +42,15 @@ class ApplicationContext implements Context, MatchersProviderInterface
     private $tester;
 
     /**
+<<<<<<< HEAD
      * @var Prompter
      */
     private $prompter;
+=======
+     * @var DialogHelper
+     */
+    private $dialogHelper;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
     /**
      * @var ReRunner
@@ -54,6 +67,7 @@ class ApplicationContext implements Context, MatchersProviderInterface
 
         $this->tester = new ApplicationTester($this->application);
 
+<<<<<<< HEAD
         $this->setupReRunner();
         $this->setupPrompter();
     }
@@ -63,6 +77,18 @@ class ApplicationContext implements Context, MatchersProviderInterface
         $this->prompter = new Prompter();
 
         $this->application->getContainer()->set('console.prompter', $this->prompter);
+=======
+        $this->setupDialogHelper();
+        $this->setupReRunner();
+    }
+
+    private function setupDialogHelper()
+    {
+        $this->dialogHelper = new DialogHelper();
+
+        $helperSet = $this->application->getHelperSet();
+        $helperSet->set($this->dialogHelper);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     private function setupReRunner()
@@ -120,7 +146,11 @@ class ApplicationContext implements Context, MatchersProviderInterface
 
         $this->addOptionToArguments($option, $arguments);
 
+<<<<<<< HEAD
         $this->prompter->setAnswer($answer=='y');
+=======
+        $this->dialogHelper->setAnswer($answer=='y');
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
         $this->lastExitCode = $this->tester->run($arguments, array('interactive' => true));
     }
@@ -154,7 +184,11 @@ class ApplicationContext implements Context, MatchersProviderInterface
      */
     public function iShouldBePromptedForCodeGeneration()
     {
+<<<<<<< HEAD
         expect($this->prompter)->toHaveBeenAsked();
+=======
+        expect($this->dialogHelper)->toHaveBeenAsked();
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -162,7 +196,11 @@ class ApplicationContext implements Context, MatchersProviderInterface
      */
     public function iShouldNotBePromptedForCodeGeneration()
     {
+<<<<<<< HEAD
         expect($this->prompter)->toNotHaveBeenAsked();
+=======
+        expect($this->dialogHelper)->toNotHaveBeenAsked();
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**

@@ -1,6 +1,10 @@
 # Prophecy
 
+<<<<<<< HEAD
 [![Build Status](https://travis-ci.org/phpspec/prophecy.svg?branch=master)](https://travis-ci.org/phpspec/prophecy)
+=======
+[![Build Status](https://travis-ci.org/phpspec/prophecy.png?branch=master)](https://travis-ci.org/phpspec/prophecy)
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
 Prophecy is a highly opinionated yet very powerful and flexible PHP object mocking
 framework. Though initially it was created to fulfil phpspec2 needs, it is flexible
@@ -187,17 +191,29 @@ you'll use promises for that:
 $user->getName()->willReturn(null);
 
 // For PHP 5.4
+<<<<<<< HEAD
 $user->setName('everzet')->will(function () {
+=======
+$user->setName('everzet')->will(function() {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $this->getName()->willReturn('everzet');
 });
 
 // For PHP 5.3
+<<<<<<< HEAD
 $user->setName('everzet')->will(function ($args, $user) {
+=======
+$user->setName('everzet')->will(function($args, $user) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $user->getName()->willReturn('everzet');
 });
 
 // Or
+<<<<<<< HEAD
 $user->setName('everzet')->will(function ($args) use ($user) {
+=======
+$user->setName('everzet')->will(function($args) use ($user) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $user->getName()->willReturn('everzet');
 });
 ```
@@ -238,7 +254,11 @@ That's why Prophecy comes bundled with a bunch of other tokens:
 - `IdenticalValueToken` or `Argument::is($value)` - checks that the argument is identical to a specific value
 - `ExactValueToken` or `Argument::exact($value)` - checks that the argument matches a specific value
 - `TypeToken` or `Argument::type($typeOrClass)` - checks that the argument matches a specific type or
+<<<<<<< HEAD
   classname
+=======
+  classname.
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 - `ObjectStateToken` or `Argument::which($method, $value)` - checks that the argument method returns
   a specific value
 - `CallbackToken` or `Argument::that(callback)` - checks that the argument matches a custom callback
@@ -255,17 +275,29 @@ use Prophecy\Argument;
 $user->getName()->willReturn(null);
 
 // For PHP 5.4
+<<<<<<< HEAD
 $user->setName(Argument::type('string'))->will(function ($args) {
+=======
+$user->setName(Argument::type('string'))->will(function($args) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $this->getName()->willReturn($args[0]);
 });
 
 // For PHP 5.3
+<<<<<<< HEAD
 $user->setName(Argument::type('string'))->will(function ($args, $user) {
+=======
+$user->setName(Argument::type('string'))->will(function($args, $user) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $user->getName()->willReturn($args[0]);
 });
 
 // Or
+<<<<<<< HEAD
 $user->setName(Argument::type('string'))->will(function ($args) use ($user) {
+=======
+$user->setName(Argument::type('string'))->will(function($args) use ($user) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $user->getName()->willReturn($args[0]);
 });
 ```
@@ -282,22 +314,38 @@ use Prophecy\Argument;
 $user->getName()->willReturn(null);
 
 // For PHP 5.4
+<<<<<<< HEAD
 $user->setName(Argument::type('string'))->will(function ($args) {
+=======
+$user->setName(Argument::type('string'))->will(function($args) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $this->getName()->willReturn($args[0]);
 });
 
 // For PHP 5.3
+<<<<<<< HEAD
 $user->setName(Argument::type('string'))->will(function ($args, $user) {
+=======
+$user->setName(Argument::type('string'))->will(function($args, $user) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     $user->getName()->willReturn($args[0]);
 });
 
 // Or
+<<<<<<< HEAD
 $user->setName(Argument::type('string'))->will(function ($args) use ($user) {
     $user->getName()->willReturn($args[0]);
 });
 
 $user->setName(Argument::any())->will(function () {
 });
+=======
+$user->setName(Argument::type('string'))->will(function($args) use ($user) {
+    $user->getName()->willReturn($args[0]);
+});
+
+$user->setName(Argument::any())->will(function(){});
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 ```
 
 Nothing. Your stub will continue behaving the way it did before. That's because of how
@@ -326,7 +374,11 @@ calling it on a stub.
 
 ### Mocks
 
+<<<<<<< HEAD
 Now we know how to define doubles without behavior (dummies) and doubles with behavior, but
+=======
+Now we know how to define doubles without behavior (dummies) and doubles with behavior but
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 no expectations (stubs). What's left is doubles for which we have some expectations. These
 are called mocks and in Prophecy they look almost exactly the same as stubs, except that
 they define *predictions* instead of *promises* on method prophecies:

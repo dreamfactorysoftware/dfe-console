@@ -52,7 +52,11 @@ class KeywordPatch implements ClassPatchInterface
      * @return int Priority number (higher - earlier)
      */
     public function getPriority() {
+<<<<<<< HEAD
         return 49;
+=======
+        return 50;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**

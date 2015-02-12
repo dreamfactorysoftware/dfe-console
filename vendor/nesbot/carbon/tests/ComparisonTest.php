@@ -189,6 +189,7 @@ class ComparisonTest extends TestFixture
         $dt2 = Carbon::create(2099, 12, 31, 23, 59, 59)->max($dt1);
         $this->assertCarbon($dt2, 2099, 12, 31, 23, 59, 59);
     }
+<<<<<<< HEAD
     public function testIsBirthday()
     {
         $dt1 = Carbon::createFromDate(1987, 4, 23);
@@ -197,4 +198,6 @@ class ComparisonTest extends TestFixture
         $this->assertFalse($dt2->isBirthday($dt1));
         $this->assertTrue($dt3->isBirthday($dt1));
     }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 }

@@ -11,8 +11,11 @@
 
 namespace Prophecy\Prophecy;
 
+<<<<<<< HEAD
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 use SebastianBergmann\Comparator\ComparisonFailure;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 use Prophecy\Call\Call;
 use Prophecy\Doubler\LazyDouble;
 use Prophecy\Argument\ArgumentsWildcard;
@@ -32,7 +35,10 @@ class ObjectProphecy implements ProphecyInterface
     private $lazyDouble;
     private $callCenter;
     private $revealer;
+<<<<<<< HEAD
     private $comparatorFactory;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
     /**
      * @var MethodProphecy[][]
@@ -45,6 +51,7 @@ class ObjectProphecy implements ProphecyInterface
      * @param LazyDouble        $lazyDouble
      * @param CallCenter        $callCenter
      * @param RevealerInterface $revealer
+<<<<<<< HEAD
      * @param ComparatorFactory $comparatorFactory
      */
     public function __construct(
@@ -58,6 +65,15 @@ class ObjectProphecy implements ProphecyInterface
         $this->revealer   = $revealer ?: new Revealer;
 
         $this->comparatorFactory = $comparatorFactory ?: ComparatorFactory::getInstance();
+=======
+     */
+    public function __construct(LazyDouble $lazyDouble, CallCenter $callCenter = null,
+                                RevealerInterface $revealer = null)
+    {
+        $this->lazyDouble = $lazyDouble;
+        $this->callCenter = $callCenter ?: new CallCenter;
+        $this->revealer   = $revealer ?: new Revealer;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -242,6 +258,7 @@ class ObjectProphecy implements ProphecyInterface
         $arguments = new ArgumentsWildcard($this->revealer->reveal($arguments));
 
         foreach ($this->getMethodProphecies($methodName) as $prophecy) {
+<<<<<<< HEAD
             $argumentsWildcard = $prophecy->getArgumentsWildcard();
             $comparator = $this->comparatorFactory->getComparatorFor(
                 $argumentsWildcard, $arguments
@@ -251,6 +268,12 @@ class ObjectProphecy implements ProphecyInterface
                 $comparator->assertEquals($argumentsWildcard, $arguments);
                 return $prophecy;
             } catch (ComparisonFailure $failure) {}
+=======
+            // Use the silence operator to suppress any notice about object to integer casting
+            if (@($prophecy->getArgumentsWildcard() == $arguments)) {
+                return $prophecy;
+            }
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
 
         return new MethodProphecy($this, $methodName, $arguments);

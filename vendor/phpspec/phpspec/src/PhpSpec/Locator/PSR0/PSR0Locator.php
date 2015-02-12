@@ -312,8 +312,13 @@ class PSR0Locator implements ResourceLocatorInterface
 
         if (0 !== strpos($classname, $specNamespace)) {
             throw new \RuntimeException(sprintf(
+<<<<<<< HEAD
                 'Spec class `%s` must be in the base spec namespace `%s`.',
                 $classname, $this->getSpecNamespace()
+=======
+                'Spec class must be in the base spec namespace `%s`.',
+                $this->getSpecNamespace()
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             ));
         }
 

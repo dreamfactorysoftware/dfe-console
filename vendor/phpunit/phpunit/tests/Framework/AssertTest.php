@@ -717,9 +717,15 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
         $book4 = new stdClass;
         $book4->author = 'Terry Pratchett';
 
+<<<<<<< HEAD
         $object1 = new SampleClass(4, 8, 15);
         $object2 = new SampleClass(16, 23, 42);
         $object3 = new SampleClass(4, 8, 15);
+=======
+        $object1 = new SampleClass( 4, 8, 15);
+        $object2 = new SampleClass(16, 23, 42);
+        $object3 = new SampleClass( 4, 8, 15);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         $storage1 = new SplObjectStorage;
         $storage1->attach($object1);
         $storage2 = new SplObjectStorage;
@@ -3479,10 +3485,17 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertCount()
     {
+<<<<<<< HEAD
         $this->assertCount(2, array(1, 2));
 
         try {
             $this->assertCount(2, array(1, 2, 3));
+=======
+        $this->assertCount(2, array(1,2));
+
+        try {
+            $this->assertCount(2, array(1,2,3));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             return;
         }
@@ -3495,10 +3508,17 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertCountTraversable()
     {
+<<<<<<< HEAD
         $this->assertCount(2, new ArrayIterator(array(1, 2)));
 
         try {
             $this->assertCount(2, new ArrayIterator(array(1, 2, 3)));
+=======
+        $this->assertCount(2, new ArrayIterator(array(1,2)));
+
+        try {
+            $this->assertCount(2, new ArrayIterator(array(1,2,3)));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             return;
         }
@@ -3527,6 +3547,10 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertCountThrowsExceptionIfElementIsNotCountable()
     {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         try {
             $this->assertCount(2, '');
         } catch (PHPUnit_Framework_Exception $e) {
@@ -3554,10 +3578,17 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertNotCount()
     {
+<<<<<<< HEAD
         $this->assertNotCount(2, array(1, 2, 3));
 
         try {
             $this->assertNotCount(2, array(1, 2));
+=======
+        $this->assertNotCount(2, array(1,2,3));
+
+        try {
+            $this->assertNotCount(2, array(1,2));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             return;
         }
@@ -3599,10 +3630,17 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertSameSize()
     {
+<<<<<<< HEAD
         $this->assertSameSize(array(1, 2), array(3, 4));
 
         try {
             $this->assertSameSize(array(1, 2), array(1, 2, 3));
+=======
+        $this->assertSameSize(array(1,2), array(3,4));
+
+        try {
+            $this->assertSameSize(array(1,2), array(1,2,3));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             return;
         }
@@ -3647,10 +3685,17 @@ class Framework_AssertTest extends PHPUnit_Framework_TestCase
      */
     public function testAssertNotSameSize()
     {
+<<<<<<< HEAD
         $this->assertNotSameSize(array(1, 2), array(1, 2, 3));
 
         try {
             $this->assertNotSameSize(array(1, 2), array(3, 4));
+=======
+        $this->assertNotSameSize(array(1,2), array(1,2,3));
+
+        try {
+            $this->assertNotSameSize(array(1,2), array(3,4));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
             return;
         }

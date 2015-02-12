@@ -32,6 +32,7 @@ class MethodNodeSpec extends ObjectBehavior
         $this->shouldNotBeStatic();
     }
 
+<<<<<<< HEAD
     function it_does_not_return_a_reference_by_default()
     {
         $this->returnsReference()->shouldReturn(false);
@@ -43,6 +44,8 @@ class MethodNodeSpec extends ObjectBehavior
         $this->returnsReference()->shouldReturn(true);
     } 
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     function it_should_be_settable_as_static_through_setter()
     {
         $this->setStatic();
@@ -85,6 +88,7 @@ class MethodNodeSpec extends ObjectBehavior
         $this->getCode()->shouldReturn('echo "code";');
     }
 
+<<<<<<< HEAD
     function its_reference_returning_methods_will_generate_exceptions()
     {
         $this->setCode('echo "code";');
@@ -92,6 +96,8 @@ class MethodNodeSpec extends ObjectBehavior
         $this->getCode()->shouldReturn("throw new \Prophecy\Exception\Doubler\ReturnByReferenceException('Returning by reference not supported', get_class(\$this), 'getTitle');");
     }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     function its_setCode_provided_with_null_cleans_method_body()
     {
         $this->setCode(null);

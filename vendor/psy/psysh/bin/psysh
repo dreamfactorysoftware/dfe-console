@@ -33,7 +33,11 @@ use Symfony\Component\Console\Input\InputOption;
 
 // If the psysh binary was included directly, assume they just wanted an
 // autoloader and bail early.
+<<<<<<< HEAD
 if (Shell::isIncluded(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1))) {
+=======
+if (Shell::isIncluded(debug_backtrace())) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     return;
 }
 

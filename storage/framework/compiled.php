@@ -3223,7 +3223,11 @@ class Request
             return false;
         }
         $len = strlen($prefix);
+<<<<<<< HEAD
         if (preg_match(sprintf('#^(%%[[:xdigit:]]{2}|.){%d}#', $len), $string, $match)) {
+=======
+        if (preg_match("#^(%[[:xdigit:]]{2}|.){{$len}}#", $string, $match)) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             return $match[0];
         }
         return false;
@@ -4599,7 +4603,11 @@ class FormRequest extends Request implements ValidatesWhenResolved
     }
     public function response(array $errors)
     {
+<<<<<<< HEAD
         if ($this->ajax() || $this->wantsJson()) {
+=======
+        if ($this->ajax()) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             return new JsonResponse($errors, 422);
         }
         return $this->redirector->to($this->getRedirectUrl())->withInput($this->except($this->dontFlash))->withErrors($errors, $this->errorBag);
@@ -7764,7 +7772,11 @@ class RouteCompiler implements RouteCompilerInterface
         if ('' !== ($host = $route->getHost())) {
             $result = self::compilePattern($route, $host, true);
             $hostVariables = $result['variables'];
+<<<<<<< HEAD
             $variables = $hostVariables;
+=======
+            $variables = array_merge($variables, $hostVariables);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $hostTokens = $result['tokens'];
             $hostRegex = $result['regex'];
         }
@@ -7832,7 +7844,11 @@ class RouteCompiler implements RouteCompilerInterface
         for ($i = 0, $nbToken = count($tokens); $i < $nbToken; $i++) {
             $regexp .= self::computeRegexp($tokens, $i, $firstOptional);
         }
+<<<<<<< HEAD
         return array('staticPrefix' => 'text' === $tokens[0][0] ? $tokens[0][1] : '', 'regex' => self::REGEX_DELIMITER . '^' . $regexp . '$' . self::REGEX_DELIMITER . 's' . ($isHost ? 'i' : ''), 'tokens' => array_reverse($tokens), 'variables' => $variables);
+=======
+        return array('staticPrefix' => 'text' === $tokens[0][0] ? $tokens[0][1] : '', 'regex' => self::REGEX_DELIMITER . '^' . $regexp . '$' . self::REGEX_DELIMITER . 's', 'tokens' => array_reverse($tokens), 'variables' => $variables);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
     private static function findNextSeparator($pattern)
     {
@@ -10677,7 +10693,12 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Illuminate\Session\CookieSessionHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Routing\TerminableMiddleware;
+<<<<<<< HEAD
 class StartSession implements TerminableMiddleware
+=======
+use Illuminate\Contracts\Routing\Middleware as MiddlewareContract;
+class StartSession implements MiddlewareContract, TerminableMiddleware
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 {
     protected $manager;
     protected $sessionHandled = false;
@@ -16272,6 +16293,7 @@ class Carbon extends DateTime
     }
     public function __get($name)
     {
+<<<<<<< HEAD
         switch (true) {
             case array_key_exists($name, $formats = array('year' => 'Y', 'month' => 'n', 'day' => 'j', 'hour' => 'G', 'minute' => 'i', 'second' => 's', 'micro' => 'u', 'dayOfWeek' => 'w', 'dayOfYear' => 'z', 'weekOfYear' => 'W', 'daysInMonth' => 't', 'timestamp' => 'U')):
                 return (int) $this->format($formats[$name]);
@@ -16294,6 +16316,44 @@ class Carbon extends DateTime
             case $name === 'timezone' || $name === 'tz':
                 return $this->getTimezone();
             case $name === 'timezoneName' || $name === 'tzName':
+=======
+        switch ($name) {
+            case 'year':
+            case 'month':
+            case 'day':
+            case 'hour':
+            case 'minute':
+            case 'second':
+            case 'micro':
+            case 'dayOfWeek':
+            case 'dayOfYear':
+            case 'weekOfYear':
+            case 'daysInMonth':
+            case 'timestamp':
+                $formats = array('year' => 'Y', 'month' => 'n', 'day' => 'j', 'hour' => 'G', 'minute' => 'i', 'second' => 's', 'micro' => 'u', 'dayOfWeek' => 'w', 'dayOfYear' => 'z', 'weekOfYear' => 'W', 'daysInMonth' => 't', 'timestamp' => 'U');
+                return (int) $this->format($formats[$name]);
+            case 'weekOfMonth':
+                return (int) ceil($this->day / self::DAYS_PER_WEEK);
+            case 'age':
+                return (int) $this->diffInYears();
+            case 'quarter':
+                return (int) ceil($this->month / 3);
+            case 'offset':
+                return $this->getOffset();
+            case 'offsetHours':
+                return $this->getOffset() / self::SECONDS_PER_MINUTE / self::MINUTES_PER_HOUR;
+            case 'dst':
+                return $this->format('I') == '1';
+            case 'local':
+                return $this->offset == $this->copy()->setTimezone(date_default_timezone_get())->offset;
+            case 'utc':
+                return $this->offset == 0;
+            case 'timezone':
+            case 'tz':
+                return $this->getTimezone();
+            case 'timezoneName':
+            case 'tzName':
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 return $this->getTimezone()->getName();
             default:
                 throw new InvalidArgumentException(sprintf('Unknown getter \'%s\'', $name));
@@ -16430,7 +16490,11 @@ class Carbon extends DateTime
         if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
             $format = preg_replace('#(?<!%)((?:%%)*)%e#', '\\1%#d', $format);
         }
+<<<<<<< HEAD
         return strftime($format, strtotime($this));
+=======
+        return strftime($format, $this->timestamp);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
     public static function resetToStringFormat()
     {
@@ -16623,6 +16687,7 @@ class Carbon extends DateTime
     {
         return $this->addMonths(-1 * $value);
     }
+<<<<<<< HEAD
     public function addMonthsNoOverflow($value)
     {
         $newYear = $this->year + floor(($this->month + $value) / 12);
@@ -16646,6 +16711,8 @@ class Carbon extends DateTime
     {
         return $this->addMonthsNoOverflow(-1 * $value);
     }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     public function addDays($value)
     {
         return $this->modify((int) $value . ' day');
@@ -16803,6 +16870,7 @@ class Carbon extends DateTime
         $value = ($dt === null ? time() : $dt->getTimestamp()) - $this->getTimestamp();
         return $abs ? abs($value) : $value;
     }
+<<<<<<< HEAD
     public function secondsSinceMidnight()
     {
         return $this->diffInSeconds($this->copy()->startOfDay());
@@ -16812,6 +16880,9 @@ class Carbon extends DateTime
         return $this->diffInSeconds($this->copy()->endOfDay());
     }
     public function diffForHumans(Carbon $other = null, $absolute = false)
+=======
+    public function diffForHumans(Carbon $other = null)
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     {
         $isNow = $other === null;
         if ($isNow) {
@@ -16834,9 +16905,12 @@ class Carbon extends DateTime
         }
         $txt = $delta . ' ' . $unit;
         $txt .= $delta == 1 ? '' : 's';
+<<<<<<< HEAD
         if ($absolute) {
             return $txt;
         }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         if ($isNow) {
             if ($isFuture) {
                 return $txt . ' from now';
@@ -16973,10 +17047,13 @@ class Carbon extends DateTime
         $dt = $dt === null ? static::now($this->tz) : $dt;
         return $this->addSeconds((int) ($this->diffInSeconds($dt, false) / 2));
     }
+<<<<<<< HEAD
     public function isBirthday(Carbon $dt)
     {
         return $this->month === $dt->month && $this->day === $dt->day;
     }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 }
 namespace App\Providers;
 
@@ -17031,11 +17108,19 @@ class EventServiceProvider extends ServiceProvider
 }
 namespace App\Providers;
 
+<<<<<<< HEAD
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
 class RouteServiceProvider extends ServiceProvider
 {
     protected $namespace = null;
+=======
+use Illuminate\Routing\Router;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+class RouteServiceProvider extends ServiceProvider
+{
+    protected $namespace = 'App\\Http\\Controllers';
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     public function boot(Router $router)
     {
         parent::boot($router);

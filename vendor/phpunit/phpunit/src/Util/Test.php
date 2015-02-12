@@ -40,6 +40,13 @@ class PHPUnit_Util_Test
 
     private static $annotationCache = array();
 
+<<<<<<< HEAD
+=======
+    private static $templateMethods = array(
+      'setUp', 'assertPreConditions', 'assertPostConditions', 'tearDown'
+    );
+
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     private static $hookMethods = array();
 
     /**
@@ -362,7 +369,11 @@ class PHPUnit_Util_Test
             $dataProviderMethodName          = array_pop($leaf);
 
             if (!empty($dataProviderMethodNameNamespace)) {
+<<<<<<< HEAD
                 $dataProviderMethodNameNamespace = implode('\\', $dataProviderMethodNameNamespace) . '\\';
+=======
+                $dataProviderMethodNameNamespace = join('\\', $dataProviderMethodNameNamespace) . '\\';
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             } else {
                 $dataProviderMethodNameNamespace = '';
             }

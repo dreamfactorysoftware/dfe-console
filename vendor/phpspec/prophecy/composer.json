@@ -2,7 +2,11 @@
     "name":         "phpspec/prophecy",
     "description":  "Highly opinionated mocking framework for PHP 5.3+",
     "keywords":     ["Mock", "Stub", "Dummy", "Double", "Fake", "Spy"],
+<<<<<<< HEAD
     "homepage":     "https://github.com/phpspec/prophecy",
+=======
+    "homepage":     "http://phpspec.org",
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     "type":         "library",
     "license":      "MIT",
     "authors":      [
@@ -18,8 +22,12 @@
     ],
     "require": {
         "phpdocumentor/reflection-docblock": "~2.0",
+<<<<<<< HEAD
         "sebastian/comparator":              "~1.1",
         "doctrine/instantiator":             "^1.0.2"
+=======
+        "doctrine/instantiator":             "~1.0,>=1.0.2"
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     },
 
     "require-dev": {
@@ -34,7 +42,11 @@
 
     "extra": {
         "branch-alias": {
+<<<<<<< HEAD
             "dev-master": "1.3.x-dev"
+=======
+            "dev-master": "1.2.x-dev"
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
     }
 }

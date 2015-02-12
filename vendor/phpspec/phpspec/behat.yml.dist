@@ -4,6 +4,7 @@ default:
       contexts: [ ApplicationContext, FilesystemContext ]
   formatters:
     progress: ~
+<<<<<<< HEAD
 
 smoke:
   suites:
@@ -11,3 +12,5 @@ smoke:
       contexts: [ IsolatedProcessContext, FilesystemContext ]
       filters: { tags: @smoke }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4

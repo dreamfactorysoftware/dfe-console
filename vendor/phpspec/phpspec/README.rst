@@ -1,7 +1,11 @@
 phpspec
 =======
 
+<<<<<<< HEAD
 The main website with documentation is at `http://www.phpspec.net <http://www.phpspec.net>`_.
+=======
+The main website with documentation is at `http://phpspec.net <http://phpspec.net>`_.
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
 .. image:: https://travis-ci.org/phpspec/phpspec.svg?branch=master
    :target: http://travis-ci.org/phpspec/phpspec

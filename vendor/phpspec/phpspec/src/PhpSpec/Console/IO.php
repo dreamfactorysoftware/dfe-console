@@ -15,11 +15,17 @@ namespace PhpSpec\Console;
 
 use PhpSpec\IO\IOInterface;
 use Symfony\Component\Console\Helper\DialogHelper;
+<<<<<<< HEAD
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PhpSpec\Config\OptionsConfig;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+=======
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use PhpSpec\Config\OptionsConfig;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
 /**
  * Class IO deals with input and output from command line interaction
@@ -41,6 +47,14 @@ class IO implements IOInterface
     private $output;
 
     /**
+<<<<<<< HEAD
+=======
+     * @var \Symfony\Component\Console\Helper\DialogHelper
+     */
+    private $dialogHelper;
+
+    /**
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * @var string
      */
     private $lastMessage;
@@ -61,6 +75,7 @@ class IO implements IOInterface
     private $consoleWidth;
 
     /**
+<<<<<<< HEAD
      * @var Prompter
      */
     private $prompter;
@@ -77,6 +92,19 @@ class IO implements IOInterface
         $this->output  = $output;
         $this->config  = $config;
         $this->prompter = $prompter;
+=======
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param DialogHelper    $dialogHelper
+     * @param OptionsConfig   $config
+     */
+    public function __construct(InputInterface $input, OutputInterface $output, DialogHelper $dialogHelper, OptionsConfig $config)
+    {
+        $this->input   = $input;
+        $this->output  = $output;
+        $this->dialogHelper = $dialogHelper;
+        $this->config  = $config;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -261,6 +289,20 @@ class IO implements IOInterface
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * @param string      $question
+     * @param string|null $default
+     *
+     * @return string
+     */
+    public function ask($question, $default = null)
+    {
+        return $this->dialogHelper->ask($this->output, $question, $default);
+    }
+
+    /**
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * @param string $question
      * @param bool   $default
      *
@@ -276,9 +318,28 @@ class IO implements IOInterface
         $lines[] = '<question>'.str_repeat(' ', $this->getBlockWidth() - 8).'</question> <value>'.
             ($default ? '[Y/n]' : '[y/N]').'</value> ';
 
+<<<<<<< HEAD
         $formattedQuestion = implode("\n", $lines) . "\n";
 
         return $this->prompter->askConfirmation($formattedQuestion, $default);
+=======
+        return $this->dialogHelper->askConfirmation(
+            $this->output, implode("\n", $lines). "\n", $default
+        );
+    }
+
+    /**
+     * @param string      $question
+     * @param callable    $validator
+     * @param int|false   $attempts
+     * @param string|null $default
+     *
+     * @return string
+     */
+    public function askAndValidate($question, $validator, $attempts = false, $default = null)
+    {
+        return $this->dialogHelper->askAndValidate($this->output, $question, $validator, $attempts, $default);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**

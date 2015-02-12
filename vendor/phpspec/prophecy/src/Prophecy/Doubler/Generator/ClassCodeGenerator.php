@@ -54,10 +54,16 @@ class ClassCodeGenerator
 
     private function generateMethod(Node\MethodNode $method)
     {
+<<<<<<< HEAD
         $php = sprintf("%s %s function %s%s(%s) {\n",
             $method->getVisibility(),
             $method->isStatic() ? 'static' : '',
             $method->returnsReference() ? '&':'',
+=======
+        $php = sprintf("%s %s function %s(%s) {\n",
+            $method->getVisibility(),
+            $method->isStatic() ? 'static' : '',
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $method->getName(),
             implode(', ', $this->generateArguments($method->getArguments()))
         );

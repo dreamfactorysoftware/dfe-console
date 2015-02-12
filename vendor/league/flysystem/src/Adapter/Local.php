@@ -216,7 +216,11 @@ class Local extends AbstractAdapter
 
         foreach ($iterator as $file) {
             $path = $this->getFilePath($file);
+<<<<<<< HEAD
             if (preg_match('#(^|/|\\\\)\.{1,2}$#', $path)) {
+=======
+            if (preg_match('#(^|/)\.{1,2}$#', $path)) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 continue;
             }
             $result[] = $this->normalizeFileInfo($file);

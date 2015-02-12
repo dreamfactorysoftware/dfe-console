@@ -5,6 +5,7 @@ imports:
 tools:
   php_code_sniffer:
     filter:
+<<<<<<< HEAD
       excluded-paths: [ spec/*, integration/* ]
 
   php_analyzer:
@@ -14,6 +15,17 @@ tools:
   php_sim:
     filter:
       excluded-paths: [ spec/*, integration/* ]
+=======
+      excluded-paths: [ spec/* ]
+
+  php_analyzer:
+    filter:
+      excluded-paths: [ spec/* ]
+
+  php_sim:
+    filter:
+      excluded-paths: [ spec/* ]
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
 filter:
   excluded_paths:

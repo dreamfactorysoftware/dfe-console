@@ -49,9 +49,17 @@ class ValidFunctionNamePass extends NamespaceAwarePass
             if (!$name instanceof Expression && !$name instanceof Variable) {
                 $shortName = implode('\\', $name->parts);
                 $fullName  = $this->getFullyQualifiedName($name);
+<<<<<<< HEAD
 
                 $inScope = isset($this->currentScope[strtolower($fullName)]);
                 if (!$inScope && !function_exists($shortName) && !function_exists($fullName)) {
+=======
+                if (
+                    !isset($this->currentScope[strtolower($fullName)]) &&
+                    !function_exists($shortName) &&
+                    !function_exists($fullName)
+                ) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                     $message = sprintf('Call to undefined function %s()', $name);
                     throw new FatalErrorException($message, 0, 1, null, $node->getLine());
                 }

@@ -71,7 +71,11 @@ abstract class PHPUnit_Runner_BaseTestRunner
         } catch (PHPUnit_Framework_Exception $e) {
             $this->runFailed($e->getMessage());
 
+<<<<<<< HEAD
             return;
+=======
+            return null;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
 
         try {
@@ -82,7 +86,11 @@ abstract class PHPUnit_Runner_BaseTestRunner
                     'suite() method must be static.'
                 );
 
+<<<<<<< HEAD
                 return;
+=======
+                return null;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             }
 
             try {
@@ -95,7 +103,11 @@ abstract class PHPUnit_Runner_BaseTestRunner
                     )
                 );
 
+<<<<<<< HEAD
                 return;
+=======
+                return null;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             }
         } catch (ReflectionException $e) {
             try {

@@ -9,7 +9,11 @@ class SynologyFtp extends Ftp
      */
     public function getMetadata($path)
     {
+<<<<<<< HEAD
         if (empty($path) || ! ($object = ftp_raw($this->getConnection(), 'STAT '.$path)) || count($object) < 3) {
+=======
+        if (empty($path) ||  ! ($object = ftp_raw($this->getConnection(), 'STAT '.$path)) || count($object) < 3) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             return false;
         }
 

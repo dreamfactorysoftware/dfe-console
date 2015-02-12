@@ -13,7 +13,10 @@
 
 namespace PhpSpec\Console;
 
+<<<<<<< HEAD
 use PhpSpec\Console\Prompter\Factory;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -58,6 +61,7 @@ class Application extends BaseApplication
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
+<<<<<<< HEAD
         $helperSet = $this->getHelperSet();
         $this->container->set('console.input', $input);
         $this->container->set('console.output', $output);
@@ -68,6 +72,11 @@ class Application extends BaseApplication
                 $helperSet
             );
         });
+=======
+        $this->container->set('console.input', $input);
+        $this->container->set('console.output', $output);
+        $this->container->set('console.helper.dialog', $this->getHelperSet()->get('dialog'));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
         $assembler = new ContainerAssembler();
         $assembler->build($this->container);

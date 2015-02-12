@@ -278,15 +278,21 @@ class ObjectProphecySpec extends ObjectBehavior
     {
         $doubler->double(Argument::any())->willReturn($reflection);
 
+<<<<<<< HEAD
         $value = new ObjectProphecySpecFixtureB('ABC');
         $value2 = new ObjectProphecySpecFixtureB('CBA');
 
         $this->addMethodProphecy($methodProphecy1 = $this->getProphecy(1, 2, 3, $value));
         $methodProphecy2 = $this->getProphecy(1, 2, 3, $value2);
+=======
+        $this->addMethodProphecy($methodProphecy1 = $this->getProphecy(3, 2, 1));
+        $methodProphecy2 = $this->getProphecy(1, 2, 3);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
         $methodProphecy2->shouldNotBe($methodProphecy1);
     }
 }
+<<<<<<< HEAD
 
 class ObjectProphecySpecFixtureA
 {
@@ -303,3 +309,5 @@ class ObjectProphecySpecFixtureB extends ObjectProphecySpecFixtureA
         $this->value = $value;
     }
 }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4

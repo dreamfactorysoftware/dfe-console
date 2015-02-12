@@ -77,6 +77,7 @@ class DotFormatter extends ConsoleFormatter
      */
     public function afterSuite(SuiteEvent $event)
     {
+<<<<<<< HEAD
         $this->getIO()->writeln("\n");
 
         $this->outputExceptions();
@@ -87,10 +88,19 @@ class DotFormatter extends ConsoleFormatter
     {
         $stats = $this->getStatisticsCollector();
         $notPassed = array_filter(array(
+=======
+        $io = $this->getIO();
+        $stats = $this->getStatisticsCollector();
+
+        $io->writeln("\n");
+
+        foreach (array(
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             'failed' => $stats->getFailedEvents(),
             'broken' => $stats->getBrokenEvents(),
             'pending' => $stats->getPendingEvents(),
             'skipped' => $stats->getSkippedEvents(),
+<<<<<<< HEAD
         ));
 
         foreach ($notPassed as $events) {
@@ -136,5 +146,35 @@ class DotFormatter extends ConsoleFormatter
         if (count($counts)) {
             $this->getIO()->write(sprintf("(%s)", implode(', ', $counts)));
         }
+=======
+        ) as $status => $events) {
+            if (!count($events)) {
+                continue;
+            }
+
+            foreach ($events as $failEvent) {
+                $this->printException($failEvent);
+            }
+        }
+
+        $plural = $stats->getTotalSpecs() !== 1 ? 's' : '';
+        $io->writeln(sprintf("%d spec%s", $stats->getTotalSpecs(), $plural));
+
+        $counts = array();
+        foreach ($stats->getCountsHash() as $type => $count) {
+            if ($count) {
+                $counts[] = sprintf('<%s>%d %s</%s>', $type, $count, $type, $type);
+            }
+        }
+
+        $count = $stats->getEventsCount();
+        $plural = $count !== 1 ? 's' : '';
+        $io->write(sprintf("%d example%s ", $count, $plural));
+        if (count($counts)) {
+            $io->write(sprintf("(%s)", implode(', ', $counts)));
+        }
+
+        $io->writeln(sprintf("\n%sms", round($event->getTime() * 1000)));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 }

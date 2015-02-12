@@ -11,8 +11,11 @@
 
 namespace Prophecy\Argument\Token;
 
+<<<<<<< HEAD
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
 use SebastianBergmann\Comparator\ComparisonFailure;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 use Prophecy\Util\StringUtil;
 
 /**
@@ -25,11 +28,15 @@ class ExactValueToken implements TokenInterface
     private $value;
     private $string;
     private $util;
+<<<<<<< HEAD
     private $comparatorFactory;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
     /**
      * Initializes token.
      *
+<<<<<<< HEAD
      * @param mixed             $value
      * @param StringUtil        $util
      * @param ComparatorFactory $comparatorFactory
@@ -40,6 +47,15 @@ class ExactValueToken implements TokenInterface
         $this->util  = $util ?: new StringUtil();
 
         $this->comparatorFactory = $comparatorFactory ?: ComparatorFactory::getInstance();
+=======
+     * @param mixed      $value
+     * @param StringUtil $util
+     */
+    public function __construct($value, StringUtil $util = null)
+    {
+        $this->value = $value;
+        $this->util  = $util ?: new StringUtil();
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -51,6 +67,7 @@ class ExactValueToken implements TokenInterface
      */
     public function scoreArgument($argument)
     {
+<<<<<<< HEAD
         if (is_object($argument) && is_object($this->value)) {
             $comparator = $this->comparatorFactory->getComparatorFor(
                 $argument, $this->value
@@ -60,6 +77,10 @@ class ExactValueToken implements TokenInterface
                 $comparator->assertEquals($argument, $this->value);
                 return 10;
             } catch (ComparisonFailure $failure) {}
+=======
+        if (is_object($argument) && is_object($this->value) && $argument == $this->value) {
+            return 10;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
 
         // If either one is an object it should castable to a string

@@ -38,6 +38,14 @@ class Util_GlobalStateTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             "require_once '" . $dir . "/ConfigurationTest.php';\n" .
             "require_once '" . $dir . "/GlobalStateTest.php';\n" .
+<<<<<<< HEAD
             "require_once 'file://" . $dir . "/XMLTest.php';\n", PHPUnit_Util_GlobalState::processIncludedFilesAsString($files));
     }
 }
+=======
+            "require_once 'file://" . $dir . "/XMLTest.php';\n"
+        , PHPUnit_Util_GlobalState::processIncludedFilesAsString($files));
+    }
+
+}
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4

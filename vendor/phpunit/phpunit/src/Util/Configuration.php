@@ -19,7 +19,10 @@
  *          backupStaticAttributes="false"
  *          bootstrap="/path/to/bootstrap.php"
  *          cacheTokens="false"
+<<<<<<< HEAD
  *          columns="80"
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
  *          colors="false"
  *          stderr="false"
  *          convertErrorsToExceptions="true"
@@ -544,6 +547,7 @@ class PHPUnit_Util_Configuration
             );
         }
 
+<<<<<<< HEAD
         if ($root->hasAttribute('columns')) {
             $columns = (string) $root->getAttribute('columns');
 
@@ -562,6 +566,12 @@ class PHPUnit_Util_Configuration
             } else {
                 $result['colors'] = PHPUnit_TextUI_ResultPrinter::COLOR_NEVER;
             }
+=======
+        if ($root->hasAttribute('colors')) {
+            $result['colors'] = $this->getBoolean(
+                (string) $root->getAttribute('colors'), false
+            );
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
 
         /**
@@ -735,12 +745,20 @@ class PHPUnit_Util_Configuration
                 (string) $root->getAttribute('strict'), false
             );
 
+<<<<<<< HEAD
             $result['reportUselessTests']          = $flag;
             $result['strictCoverage']              = $flag;
             $result['disallowTestOutput']          = $flag;
             $result['enforceTimeLimit']            = $flag;
             $result['disallowTodoAnnotatedTests']  = $flag;
             $result['deprecatedStrictModeSetting'] = true;
+=======
+            $result['reportUselessTests']         = $flag;
+            $result['strictCoverage']             = $flag;
+            $result['disallowTestOutput']         = $flag;
+            $result['enforceTimeLimit']           = $flag;
+            $result['disallowTodoAnnotatedTests'] = $flag;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
 
         if ($root->hasAttribute('verbose')) {

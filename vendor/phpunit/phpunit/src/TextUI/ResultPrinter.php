@@ -28,11 +28,14 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
     const EVENT_TESTSUITE_START = 2;
     const EVENT_TESTSUITE_END   = 3;
 
+<<<<<<< HEAD
     const COLOR_NEVER   = 'never';
     const COLOR_AUTO    = 'auto';
     const COLOR_ALWAYS  = 'always';
     const COLOR_DEFAULT = self::COLOR_NEVER;
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     /**
      * @var array
      */
@@ -99,15 +102,19 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
     protected $verbose = false;
 
     /**
+<<<<<<< HEAD
      * @var integer
      */
     private $numberOfColumns;
 
     /**
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * Constructor.
      *
      * @param  mixed                       $out
      * @param  boolean                     $verbose
+<<<<<<< HEAD
      * @param  string                      $colors
      * @param  boolean                     $debug
      * @param  integer|string              $numberOfColumns
@@ -154,6 +161,35 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
             $this->colors = true;
         } else {
             $this->colors = (self::COLOR_ALWAYS === $colors);
+=======
+     * @param  boolean                     $colors
+     * @param  boolean                     $debug
+     * @throws PHPUnit_Framework_Exception
+     * @since  Method available since Release 3.0.0
+     */
+    public function __construct($out = null, $verbose = false, $colors = false, $debug = false)
+    {
+        parent::__construct($out);
+
+        if (is_bool($verbose)) {
+            $this->verbose = $verbose;
+        } else {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(2, 'boolean');
+        }
+
+        if (is_bool($colors)) {
+            $console = new Console;
+
+            $this->colors = $colors && $console->hasColorSupport();
+        } else {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(3, 'boolean');
+        }
+
+        if (is_bool($debug)) {
+            $this->debug = $debug;
+        } else {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(4, 'boolean');
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
     }
 
@@ -489,7 +525,11 @@ class PHPUnit_TextUI_ResultPrinter extends PHPUnit_Util_Printer implements PHPUn
         if ($this->numTests == -1) {
             $this->numTests      = count($suite);
             $this->numTestsWidth = strlen((string) $this->numTests);
+<<<<<<< HEAD
             $this->maxColumn     = $this->numberOfColumns - strlen('  /  (XXX%)') - (2 * $this->numTestsWidth);
+=======
+            $this->maxColumn     = 69 - (2 * $this->numTestsWidth);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
     }
 

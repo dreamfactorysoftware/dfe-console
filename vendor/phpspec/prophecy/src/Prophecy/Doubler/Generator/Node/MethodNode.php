@@ -24,7 +24,10 @@ class MethodNode
     private $code;
     private $visibility = 'public';
     private $static = false;
+<<<<<<< HEAD
     private $returnsReference = false;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
     /**
      * @var ArgumentNode[]
@@ -72,6 +75,7 @@ class MethodNode
         $this->static = (bool) $static;
     }
 
+<<<<<<< HEAD
     public function returnsReference()
     {
         return $this->returnsReference;
@@ -82,6 +86,8 @@ class MethodNode
         $this->returnsReference = true;
     }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     public function getName()
     {
         return $this->name;
@@ -110,11 +116,14 @@ class MethodNode
 
     public function getCode()
     {
+<<<<<<< HEAD
         if ($this->returnsReference)
         {
             return "throw new \Prophecy\Exception\Doubler\ReturnByReferenceException('Returning by reference not supported', get_class(\$this), '{$this->name}');";
         }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         return (string) $this->code;
     }
 

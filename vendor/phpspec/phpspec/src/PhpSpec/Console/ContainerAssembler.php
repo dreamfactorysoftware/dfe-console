@@ -54,23 +54,34 @@ class ContainerAssembler
 
     private function setupIO(ServiceContainer $container)
     {
+<<<<<<< HEAD
         if (!$container->isDefined('console.prompter')) {
             $container->setShared('console.prompter', function($c) {
                 return $c->get('console.prompter.factory')->getPrompter();
             });
         }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         $container->setShared('console.io', function (ServiceContainer $c) {
             return new IO(
                 $c->get('console.input'),
                 $c->get('console.output'),
+<<<<<<< HEAD
+=======
+                $c->get('console.helper.dialog'),
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 new OptionsConfig(
                     $c->getParam('stop_on_failure', false),
                     $c->getParam('code_generation', true),
                     $c->getParam('rerun', true),
                     $c->getParam('fake', false),
                     $c->getParam('bootstrap', false)
+<<<<<<< HEAD
                 ),
                 $c->get('console.prompter')
+=======
+                )
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             );
         });
     }
@@ -300,6 +311,7 @@ class ContainerAssembler
 
             foreach ($suites as $name => $suite) {
                 $suite      = is_array($suite) ? $suite : array('namespace' => $suite);
+<<<<<<< HEAD
                 $defaults = array(
                     'namespace'     => '',
                     'spec_prefix'   => 'spec',
@@ -327,6 +339,24 @@ class ContainerAssembler
                             null,
                             $config['psr4_prefix']
                         );
+=======
+                $srcNS      = isset($suite['namespace']) ? $suite['namespace'] : '';
+                $specPrefix = isset($suite['spec_prefix']) ? $suite['spec_prefix'] : 'spec';
+                $srcPath    = isset($suite['src_path']) ? $suite['src_path'] : 'src';
+                $specPath   = isset($suite['spec_path']) ? $suite['spec_path'] : '.';
+                $psr4prefix   = isset($suite['psr4_prefix']) ? $suite['psr4_prefix'] : null;
+
+                if (!is_dir($srcPath)) {
+                    mkdir($srcPath, 0777, true);
+                }
+                if (!is_dir($specPath)) {
+                    mkdir($specPath, 0777, true);
+                }
+
+                $c->set(sprintf('locator.locators.%s_suite', $name),
+                    function () use ($srcNS, $specPrefix, $srcPath, $specPath, $psr4prefix) {
+                        return new Locator\PSR0\PSR0Locator($srcNS, $specPrefix, $srcPath, $specPath, null, $psr4prefix);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                     }
                 );
             }
@@ -362,9 +392,12 @@ class ContainerAssembler
         $container->set('formatter.formatters.dot', function (ServiceContainer $c) {
             return new SpecFormatter\DotFormatter($c->get('formatter.presenter'), $c->get('console.io'), $c->get('event_dispatcher.listeners.stats'));
         });
+<<<<<<< HEAD
         $container->set('formatter.formatters.tap', function (ServiceContainer $c) {
             return new SpecFormatter\TapFormatter($c->get('formatter.presenter'), $c->get('console.io'), $c->get('event_dispatcher.listeners.stats'));
         });
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         $container->set('formatter.formatters.html', function (ServiceContainer $c) {
             $io = new SpecFormatter\Html\IO();
             $template = new SpecFormatter\Html\Template($io);

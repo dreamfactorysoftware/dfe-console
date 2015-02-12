@@ -231,5 +231,9 @@ class Framework_SuiteTest extends PHPUnit_Framework_TestCase
         $suite->addTestFile($dir.'InheritanceB.php');
         $result = $suite->run();
         $this->assertEquals(2, count($result));
+<<<<<<< HEAD
+=======
+
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 }

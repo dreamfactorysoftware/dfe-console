@@ -47,7 +47,11 @@ class PHPUnit_Framework_Constraint_ExceptionMessageRegExp extends PHPUnit_Framew
         $match = PHPUnit_Util_Regex::pregMatchSafe($this->expectedMessageRegExp, $other->getMessage());
 
         if (false === $match) {
+<<<<<<< HEAD
             throw new PHPUnit_Framework_Exception(
+=======
+            throw new PHPUnit_Framework_Exception (
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 "Invalid expected exception message regex given: '{$this->expectedMessageRegExp}'"
             );
         }

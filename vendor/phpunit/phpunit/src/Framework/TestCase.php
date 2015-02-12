@@ -11,9 +11,14 @@
 use SebastianBergmann\GlobalState\Snapshot;
 use SebastianBergmann\GlobalState\Restorer;
 use SebastianBergmann\GlobalState\Blacklist;
+<<<<<<< HEAD
 use SebastianBergmann\Exporter\Exporter;
 use Prophecy\Exception\Prediction\PredictionException;
 use Prophecy\Prophet;
+=======
+use SebastianBergmann\RecursionContext\Context;
+use SebastianBergmann\Exporter\Exporter;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
 /**
  * A TestCase defines the fixture to run multiple tests.
@@ -260,11 +265,14 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     private $snapshot;
 
     /**
+<<<<<<< HEAD
      * @var Prophecy\Prophet
      */
     private $prophet;
 
     /**
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * Constructs a test case with the given name.
      *
      * @param string $name
@@ -746,9 +754,12 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED;
             $this->statusMessage = $e->getMessage();
         } catch (PHPUnit_Framework_AssertionFailedError $e) {
+<<<<<<< HEAD
             $this->status = PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE;
             $this->statusMessage = $e->getMessage();
         } catch (PredictionException $e) {
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->status        = PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE;
             $this->statusMessage = $e->getMessage();
         } catch (Exception $e) {
@@ -758,7 +769,10 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         // Clean up the mock objects.
         $this->mockObjects = array();
+<<<<<<< HEAD
         $this->prophet     = null;
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
         // Tear down the fixture. An exception raised in tearDown() will be
         // caught and passed on when no exception was raised before.
@@ -823,10 +837,13 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         // Workaround for missing "finally".
         if (isset($e)) {
+<<<<<<< HEAD
             if ($e instanceof PredictionException) {
                 $e = new PHPUnit_Framework_AssertionFailedError($e->getMessage());
             }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->onNotSuccessfulTest($e);
         }
     }
@@ -945,6 +962,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
             $mockObject->__phpunit_verify();
         }
+<<<<<<< HEAD
 
         if ($this->prophet !== null) {
             try {
@@ -965,6 +983,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 throw $e;
             }
         }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -1209,7 +1229,11 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         $this->locale[$category] = setlocale($category, null);
 
+<<<<<<< HEAD
         $result = call_user_func_array('setlocale', $args);
+=======
+        $result = call_user_func_array( 'setlocale', $args );
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
         if ($result === false) {
             throw new PHPUnit_Framework_Exception(
@@ -1439,6 +1463,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
+<<<<<<< HEAD
      * @param string|null $classOrInterface
      * @return \Prophecy\Prophecy\ObjectProphecy
      * @throws \LogicException
@@ -1450,6 +1475,8 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * Adds a value to the assertion counter.
      *
      * @param integer $count
@@ -1663,6 +1690,48 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * @param  mixed                                      $data       The data to export as a string
+     * @param  SebastianBergmann\RecursionContext\Context $processed  Contains all objects and arrays that have previously been processed
+     * @return string
+     * @since  Method available since Release 3.2.1
+     */
+    protected function dataToString(&$data, $processed = null)
+    {
+        $result = array();
+        $exporter = new Exporter();
+
+        if (!$processed) {
+            $processed = new Context;
+        }
+
+        $processed->add($data);
+
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                if ($processed->contains($data[$key]) !== false) {
+                    $result[] = '*RECURSION*';
+                }
+
+                else {
+                    $result[] = sprintf(
+                        'array(%s)',
+                        $this->dataToString($data[$key], $processed)
+                    );
+                }
+            }
+
+            else {
+                $result[] = $exporter->shortenedExport($value);
+            }
+        }
+
+        return join(', ', $result);
+    }
+
+    /**
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * Gets the data set description of a TestCase.
      *
      * @param  boolean $includeData
@@ -1680,10 +1749,15 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
                 $buffer .= sprintf(' with data set "%s"', $this->dataName);
             }
 
+<<<<<<< HEAD
             $exporter = new Exporter;
 
             if ($includeData) {
                 $buffer .= sprintf(' (%s)', $exporter->shortenedRecursiveExport($this->data));
+=======
+            if ($includeData) {
+                $buffer .= sprintf(' (%s)', $this->dataToString($this->data));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             }
         }
 
@@ -1974,6 +2048,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         $this->snapshot = null;
     }
+<<<<<<< HEAD
 
     /**
      * @return Prophecy\Prophet
@@ -1987,4 +2062,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
 
         return $this->prophet;
     }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 }

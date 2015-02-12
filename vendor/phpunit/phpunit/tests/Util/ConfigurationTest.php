@@ -39,6 +39,7 @@ class Util_ConfigurationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+<<<<<<< HEAD
      * @covers PHPUnit_Util_Configuration::getPHPUnitConfiguration
      */
     public function testShouldReadColorsWhenTrueInConfigurationfile()
@@ -87,6 +88,8 @@ class Util_ConfigurationTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * @covers PHPUnit_Util_Configuration::getFilterConfiguration
      */
     public function testFilterConfigurationIsReadCorrectly()
@@ -355,8 +358,12 @@ class Util_ConfigurationTest extends PHPUnit_Framework_TestCase
             'backupStaticAttributes' => false,
             'bootstrap' => '/path/to/bootstrap.php',
             'cacheTokens' => false,
+<<<<<<< HEAD
             'columns' => 80,
             'colors' => 'never',
+=======
+            'colors' => false,
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             'stderr' => false,
             'convertErrorsToExceptions' => true,
             'convertNoticesToExceptions' => true,

@@ -12,7 +12,11 @@ require __DIR__ . '/../bootstrap.php';
 PHPUnit_TextUI_Command::main();
 ?>
 --EXPECTF--
+<<<<<<< HEAD
 PHPUnit %s by Sebastian Bergmann and contributors.
+=======
+PHPUnit %s by Sebastian Bergmann.
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
 <html><body><h2 id="BankAccountTest">BankAccount</h2><ul>...<li>Balance is initially zero</li><li>Balance cannot become negative</li></ul></body></html>
 

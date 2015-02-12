@@ -4,6 +4,13 @@ namespace spec\Prophecy\Argument\Token;
 
 use PhpSpec\ObjectBehavior;
 
+<<<<<<< HEAD
+=======
+class MyClass
+{
+}
+
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 class ObjectStateTokenSpec extends ObjectBehavior
 {
     function let()
@@ -41,6 +48,7 @@ class ObjectStateTokenSpec extends ObjectBehavior
         $this->scoreArgument($class)->shouldReturn(8);
     }
 
+<<<<<<< HEAD
     function it_does_not_score_if_argument_method_state_does_not_match()
     {
         $value = new ObjectStateTokenFixtureB('ABC');
@@ -48,6 +56,16 @@ class ObjectStateTokenSpec extends ObjectBehavior
 
         $this->beConstructedWith('getSelf', $value);
         $this->scoreArgument($value2)->shouldReturn(false);
+=======
+    /**
+     * @param \ReflectionClass $reflection
+     */
+    function it_does_not_score_if_argument_method_state_does_not_match($reflection)
+    {
+        $reflection->getName()->willReturn('SplFileInfo');
+
+        $this->scoreArgument($reflection)->shouldReturn(false);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -61,7 +79,11 @@ class ObjectStateTokenSpec extends ObjectBehavior
     }
 
     /**
+<<<<<<< HEAD
      * @param \spec\Prophecy\Argument\Token\ObjectStateTokenFixtureA $class
+=======
+     * @param \spec\Prophecy\Argument\Token\MyClass $class
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      */
     function it_does_not_score_if_argument_object_does_not_have_method_or_property($class)
     {
@@ -78,6 +100,7 @@ class ObjectStateTokenSpec extends ObjectBehavior
         $this->__toString()->shouldReturn('state(getName(), "stdClass")');
     }
 }
+<<<<<<< HEAD
 
 class ObjectStateTokenFixtureA
 {
@@ -99,3 +122,5 @@ class ObjectStateTokenFixtureB extends ObjectStateTokenFixtureA
         return $this;
     }
 }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4

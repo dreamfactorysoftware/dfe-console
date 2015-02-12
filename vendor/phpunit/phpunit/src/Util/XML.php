@@ -404,7 +404,11 @@ class PHPUnit_Util_XML
                 }
 
                 if ($classes) {
+<<<<<<< HEAD
                     $tag['class'] = implode(' ', $classes);
+=======
+                    $tag['class'] = join(' ', $classes);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 }
 
                 if ($attrs) {

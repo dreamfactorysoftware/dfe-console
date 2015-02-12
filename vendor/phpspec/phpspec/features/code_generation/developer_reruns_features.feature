@@ -3,7 +3,10 @@ Feature: Developer generates a class
   I want the tests to automatically rerun after code generation events
   In order to avoid repetitive tasks and interruptions in development flow
 
+<<<<<<< HEAD
   @smoke
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
   Scenario: Rerun after class generation
     Given I have started describing the "CodeGeneration/RerunExample1/Markdown" class
     When I run phpspec and answer "y" when asked if I want to generate the code

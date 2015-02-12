@@ -347,6 +347,7 @@
     <exclude name="**/Autoload.*" />
    </fileset>
   </copy>
+<<<<<<< HEAD
 
   <copy file="${basedir}/vendor/phpdocumentor/reflection-docblock/LICENSE" tofile="${basedir}/build/phar/phpdocumentor-reflection-docblock/LICENSE"/>
   <copy todir="${basedir}/build/phar/phpdocumentor-reflection-docblock">
@@ -361,6 +362,8 @@
     <include name="**/*.php" />
    </fileset>
   </copy>
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
  </target>
 
  <target name="phar-build">
@@ -377,12 +380,20 @@
 
   <exec executable="phpab">
    <arg value="--all" />
+<<<<<<< HEAD
    <arg value="--static" />
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
    <arg value="--phar" />
    <arg value="--output" />
    <arg path="${basedir}/build/phpunit-${_version}.phar" />
    <arg value="--template" />
    <arg path="${basedir}/build/phar-autoload.php.in" />
+<<<<<<< HEAD
+=======
+   <arg value="--indent" />
+   <arg value="            " />
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
    <arg path="${basedir}/build/phar" />
   </exec>
 

@@ -49,8 +49,14 @@ class ExactValueTokenSpec extends ObjectBehavior
 
     function it_does_not_scores_if_value_an_object_and_is_not_equal_to_argument()
     {
+<<<<<<< HEAD
         $value = new ExactValueTokenFixtureB('ABC');
         $value2 = new ExactValueTokenFixtureB('CBA');
+=======
+        $value = new \stdClass();
+        $value2 = new \stdClass();
+        $value2->foo = 'bar';
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 
         $this->beConstructedWith($value);
         $this->scoreArgument($value2)->shouldReturn(false);
@@ -137,6 +143,7 @@ class ExactValueTokenSpec extends ObjectBehavior
         $this->__toString()->shouldReturn("exact($objHash Object (\n    'objectProphecy' => Prophecy\Prophecy\ObjectProphecy Object (*Prophecy*)\n))");
     }
 }
+<<<<<<< HEAD
 
 class ExactValueTokenFixtureA
 {
@@ -153,3 +160,5 @@ class ExactValueTokenFixtureB extends ExactValueTokenFixtureA
         $this->value = $value;
     }
 }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4

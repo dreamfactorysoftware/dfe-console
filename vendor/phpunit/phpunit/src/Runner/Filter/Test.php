@@ -103,7 +103,11 @@ class PHPUnit_Runner_Filter_Test extends RecursiveFilterIterator
         $tmp = PHPUnit_Util_Test::describe($test, false);
 
         if ($tmp[0] != '') {
+<<<<<<< HEAD
             $name = implode('::', $tmp);
+=======
+            $name = join('::', $tmp);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         } else {
             $name = $tmp[1];
         }

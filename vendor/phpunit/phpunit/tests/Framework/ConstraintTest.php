@@ -37,7 +37,13 @@ class Framework_ConstraintTest extends PHPUnit_Framework_TestCase
 
         try {
             $constraint->evaluate(array());
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 Failed asserting that an array has the key 0.
 
@@ -63,7 +69,13 @@ EOF
 
         try {
             $constraint->evaluate(array(), 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message\nFailed asserting that an array has the key 0.
@@ -98,7 +110,13 @@ EOF
 
         try {
             $constraint->evaluate(array(0 => 1));
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that an array does not have the key 0.
@@ -129,7 +147,13 @@ EOF
 
         try {
             $constraint->evaluate(array(0), 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -162,7 +186,13 @@ EOF
 
         try {
             $constraint->evaluate('foo');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that file "foo" exists.
@@ -189,7 +219,13 @@ EOF
 
         try {
             $constraint->evaluate('foo', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that file "foo" exists.
@@ -226,7 +262,13 @@ EOF
 
         try {
             $constraint->evaluate($file);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that file "$file" does not exist.
@@ -259,7 +301,13 @@ EOF
 
         try {
             $constraint->evaluate($file, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that file "$file" does not exist.
@@ -292,7 +340,13 @@ EOF
 
         try {
             $constraint->evaluate(0);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 0 is greater than 1.
@@ -319,7 +373,13 @@ EOF
 
         try {
             $constraint->evaluate(0, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -355,7 +415,13 @@ EOF
 
         try {
             $constraint->evaluate(2);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 2 is not greater than 1.
@@ -386,7 +452,13 @@ EOF
 
         try {
             $constraint->evaluate(2, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -421,7 +493,13 @@ EOF
 
         try {
             $constraint->evaluate(0);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 0 is equal to 1 or is greater than 1.
@@ -450,7 +528,13 @@ EOF
 
         try {
             $constraint->evaluate(0, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -488,7 +572,13 @@ EOF
 
         try {
             $constraint->evaluate(1);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that not( 1 is equal to 1 or is greater than 1 ).
@@ -521,7 +611,13 @@ EOF
 
         try {
             $constraint->evaluate(1, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -573,7 +669,13 @@ EOF
 
         try {
             $constraint->evaluate(null);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that null is not anything.
@@ -606,7 +708,13 @@ EOF
 
         try {
             $constraint->evaluate(0);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 0 matches expected 1.
@@ -865,7 +973,13 @@ EOF
 
         try {
             $constraint->evaluate($actual, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               "custom message\n$message",
               $this->trimnl(PHPUnit_Framework_TestFailure::exceptionToString($e))
@@ -897,7 +1011,13 @@ EOF
 
         try {
             $constraint->evaluate(1);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 1 is not equal to 1.
@@ -928,7 +1048,13 @@ EOF
 
         try {
             $constraint->evaluate(1, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -965,7 +1091,13 @@ EOF
 
         try {
             $constraint->evaluate($b);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 Failed asserting that two variables reference the same object.
 
@@ -994,7 +1126,13 @@ EOF
 
         try {
             $constraint->evaluate($b, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that two variables reference the same object.
@@ -1021,7 +1159,13 @@ EOF
 
         try {
             $constraint->evaluate('b', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that two strings are identical.
@@ -1065,7 +1209,13 @@ EOF
 
         try {
             $constraint->evaluate($a);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 Failed asserting that two variables don't reference the same object.
 
@@ -1097,7 +1247,13 @@ EOF
 
         try {
             $constraint->evaluate($a, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that two variables don't reference the same object.
@@ -1128,7 +1284,13 @@ EOF
 
         try {
             $constraint->evaluate('a', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that two strings are not identical.
@@ -1166,7 +1328,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that stdClass Object () is an instance of class "Exception".
@@ -1193,7 +1361,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that stdClass Object () is an instance of class "Exception".
@@ -1229,7 +1403,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that stdClass Object () is not an instance of class "stdClass".
@@ -1260,7 +1440,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that stdClass Object () is not an instance of class "stdClass".
@@ -1293,7 +1479,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertStringMatchesFormat(<<<EOF
 Failed asserting that stdClass Object &%x () is of type "string".
 
@@ -1319,7 +1511,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertStringMatchesFormat(<<<EOF
 custom message
 Failed asserting that stdClass Object &%x () is of type "string".
@@ -1335,6 +1533,7 @@ EOF
         $this->fail();
     }
 
+<<<<<<< HEAD
     public function resources()
     {
         $fh = fopen(__FILE__, 'r');
@@ -1360,6 +1559,8 @@ EOF
         @fclose($resource);
     }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     /**
      * @covers PHPUnit_Framework_Constraint_IsType
      * @covers PHPUnit_Framework_Constraint_Not
@@ -1380,7 +1581,13 @@ EOF
 
         try {
             $constraint->evaluate('');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that '' is not of type "string".
@@ -1411,7 +1618,13 @@ EOF
 
         try {
             $constraint->evaluate('', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that '' is not of type "string".
@@ -1444,7 +1657,13 @@ EOF
 
         try {
             $constraint->evaluate(0);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 Failed asserting that 0 is null.
 
@@ -1470,7 +1689,13 @@ EOF
 
         try {
             $constraint->evaluate(0, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that 0 is null.
@@ -1507,7 +1732,13 @@ EOF
 
         try {
             $constraint->evaluate(null);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 Failed asserting that null is not null.
 
@@ -1537,7 +1768,13 @@ EOF
 
         try {
             $constraint->evaluate(null, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that null is not null.
@@ -1570,7 +1807,13 @@ EOF
 
         try {
             $constraint->evaluate(1);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 1 is less than 1.
@@ -1597,7 +1840,13 @@ EOF
 
         try {
             $constraint->evaluate(1, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -1634,7 +1883,13 @@ EOF
 
         try {
             $constraint->evaluate(0);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 0 is not less than 1.
@@ -1665,7 +1920,13 @@ EOF
 
         try {
             $constraint->evaluate(0, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -1700,7 +1961,13 @@ EOF
 
         try {
             $constraint->evaluate(2);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 2 is equal to 1 or is less than 1.
@@ -1721,11 +1988,19 @@ EOF
      */
     public function testConstraintCallback()
     {
+<<<<<<< HEAD
         $closureReflect = function ($parameter) {
             return $parameter;
         };
 
         $closureWithoutParameter = function () {
+=======
+        $closureReflect = function($parameter) {
+            return $parameter;
+        };
+
+        $closureWithoutParameter = function() {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             return true;
         };
 
@@ -1754,7 +2029,11 @@ EOF
      */
     public function testConstraintCallbackFailure()
     {
+<<<<<<< HEAD
         $constraint = PHPUnit_Framework_Assert::callback(function () {
+=======
+        $constraint = PHPUnit_Framework_Assert::callback(function() {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             return false;
         });
         $constraint->evaluate('This fails');
@@ -1783,7 +2062,13 @@ EOF
 
         try {
             $constraint->evaluate(2, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -1822,7 +2107,13 @@ EOF
 
         try {
             $constraint->evaluate(1);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that not( 1 is equal to 1 or is less than 1 ).
@@ -1855,7 +2146,13 @@ EOF
 
         try {
             $constraint->evaluate(1, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -1889,7 +2186,13 @@ EOF
 
         try {
             $constraint->evaluate('stdClass');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that class "stdClass" has attribute "privateAttribute".
@@ -1916,7 +2219,13 @@ EOF
 
         try {
             $constraint->evaluate('stdClass', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that class "stdClass" has attribute "privateAttribute".
@@ -1952,7 +2261,13 @@ EOF
 
         try {
             $constraint->evaluate('ClassWithNonPublicAttributes');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that class "ClassWithNonPublicAttributes" does not have attribute "privateAttribute".
@@ -1983,7 +2298,13 @@ EOF
 
         try {
             $constraint->evaluate('ClassWithNonPublicAttributes', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that class "ClassWithNonPublicAttributes" does not have attribute "privateAttribute".
@@ -2016,7 +2337,13 @@ EOF
 
         try {
             $constraint->evaluate('stdClass');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that class "stdClass" has static attribute "privateStaticAttribute".
@@ -2043,7 +2370,13 @@ EOF
 
         try {
             $constraint->evaluate('stdClass', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that class "stdClass" has static attribute "foo".
@@ -2079,7 +2412,13 @@ EOF
 
         try {
             $constraint->evaluate('ClassWithNonPublicAttributes');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that class "ClassWithNonPublicAttributes" does not have static attribute "privateStaticAttribute".
@@ -2110,7 +2449,13 @@ EOF
 
         try {
             $constraint->evaluate('ClassWithNonPublicAttributes', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that class "ClassWithNonPublicAttributes" does not have static attribute "privateStaticAttribute".
@@ -2143,7 +2488,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that object of class "stdClass" has attribute "privateAttribute".
@@ -2170,7 +2521,13 @@ EOF
 
         try {
             $constraint->evaluate(new stdClass, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that object of class "stdClass" has attribute "privateAttribute".
@@ -2206,7 +2563,13 @@ EOF
 
         try {
             $constraint->evaluate(new ClassWithNonPublicAttributes);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that object of class "ClassWithNonPublicAttributes" does not have attribute "privateAttribute".
@@ -2237,7 +2600,13 @@ EOF
 
         try {
             $constraint->evaluate(new ClassWithNonPublicAttributes, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that object of class "ClassWithNonPublicAttributes" does not have attribute "privateAttribute".
@@ -2270,7 +2639,13 @@ EOF
 
         try {
             $constraint->evaluate('barbazbar');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'barbazbar' matches PCRE pattern "/foo/".
@@ -2297,7 +2672,13 @@ EOF
 
         try {
             $constraint->evaluate('barbazbar', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that 'barbazbar' matches PCRE pattern "/foo/".
@@ -2333,7 +2714,13 @@ EOF
 
         try {
             $constraint->evaluate('barfoobar');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'barfoobar' does not match PCRE pattern "/foo/".
@@ -2364,7 +2751,13 @@ EOF
 
         try {
             $constraint->evaluate('barfoobar', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(<<<EOF
 custom message
 Failed asserting that 'barfoobar' does not match PCRE pattern "/foo/".
@@ -2481,7 +2874,13 @@ EOF
 
         try {
             $constraint->evaluate('foo');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'foo' starts with "prefix".
@@ -2508,7 +2907,13 @@ EOF
 
         try {
             $constraint->evaluate('foo', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message\nFailed asserting that 'foo' starts with "prefix".
@@ -2544,7 +2949,13 @@ EOF
 
         try {
             $constraint->evaluate('prefixfoo');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'prefixfoo' starts not with "prefix".
@@ -2573,7 +2984,13 @@ EOF
 
         try {
             $constraint->evaluate('prefixfoo', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -2607,7 +3024,13 @@ EOF
 
         try {
             $constraint->evaluate('barbazbar');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'barbazbar' contains "foo".
@@ -2634,7 +3057,13 @@ EOF
 
         try {
             $constraint->evaluate('barbazbar', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -2671,7 +3100,13 @@ EOF
 
         try {
             $constraint->evaluate('barfoobar');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'barfoobar' does not contain "foo".
@@ -2702,7 +3137,13 @@ EOF
 
         try {
             $constraint->evaluate('barfoobar', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -2736,7 +3177,13 @@ EOF
 
         try {
             $constraint->evaluate('foo');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'foo' ends with "suffix".
@@ -2763,7 +3210,13 @@ EOF
 
         try {
             $constraint->evaluate('foo', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -2800,7 +3253,13 @@ EOF
 
         try {
             $constraint->evaluate('foosuffix');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that 'foosuffix' ends not with "suffix".
@@ -2829,7 +3288,13 @@ EOF
 
         try {
             $constraint->evaluate('foosuffix', 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -2880,7 +3345,13 @@ EOF
 
         try {
             $constraint->evaluate(array('bar'));
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that an array contains 'foo'.
@@ -2906,7 +3377,13 @@ EOF
 
         try {
             $constraint->evaluate(array('bar'), 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -2942,7 +3419,13 @@ EOF
 
         try {
             $constraint->evaluate(array('foo'));
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that an array does not contain 'foo'.
@@ -2972,7 +3455,13 @@ EOF
 
         try {
             $constraint->evaluate(array('foo'), 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message
@@ -3008,7 +3497,13 @@ EOF
 
         try {
             $constraint->evaluate(new SplObjectStorage);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertStringMatchesFormat(
               <<<EOF
 Failed asserting that a traversable contains stdClass Object &%x ().
@@ -3035,7 +3530,13 @@ EOF
 
         try {
             $constraint->evaluate(new SplObjectStorage, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertStringMatchesFormat(
               <<<EOF
 custom message
@@ -3072,7 +3573,13 @@ EOF
 
         try {
             $constraint->evaluate($object);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that attribute "foo" is equal to 2.
@@ -3100,7 +3607,13 @@ EOF
 
         try {
             $constraint->evaluate($object, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message\nFailed asserting that attribute "foo" is equal to 2.
@@ -3142,7 +3655,13 @@ EOF
 
         try {
             $constraint->evaluate($object);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that attribute "foo" is not equal to 1.
@@ -3174,7 +3693,13 @@ EOF
 
         try {
             $constraint->evaluate($object, 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message\nFailed asserting that attribute "foo" is not equal to 1.
@@ -3208,7 +3733,13 @@ EOF
 
         try {
             $constraint->evaluate(array('foo'));
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that an array is empty.
@@ -3234,7 +3765,13 @@ EOF
 
         try {
             $constraint->evaluate(array('foo'), 'custom message');
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 custom message\nFailed asserting that an array is empty.
@@ -3257,8 +3794,13 @@ EOF
     {
         $constraint = new PHPUnit_Framework_Constraint_Count(5);
 
+<<<<<<< HEAD
         $this->assertTrue($constraint->evaluate(array(1, 2, 3, 4, 5), '', true));
         $this->assertFalse($constraint->evaluate(array(1, 2, 3, 4), '', true));
+=======
+        $this->assertTrue($constraint->evaluate(array(1,2,3,4,5), '', true));
+        $this->assertFalse($constraint->evaluate(array(1,2,3,4), '', true));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -3268,8 +3810,13 @@ EOF
     {
         $constraint = new PHPUnit_Framework_Constraint_Count(5);
 
+<<<<<<< HEAD
         $this->assertTrue($constraint->evaluate(new TestIterator(array(1, 2, 3, 4, 5)), '', true));
         $this->assertFalse($constraint->evaluate(new TestIterator(array(1, 2, 3, 4)), '', true));
+=======
+        $this->assertTrue($constraint->evaluate(new TestIterator(array(1,2,3,4,5)), '', true));
+        $this->assertFalse($constraint->evaluate(new TestIterator(array(1,2,3,4)), '', true));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -3279,8 +3826,13 @@ EOF
     {
         $constraint = new PHPUnit_Framework_Constraint_Count(5);
 
+<<<<<<< HEAD
         $this->assertTrue($constraint->evaluate(new ArrayObject(array(1, 2, 3, 4, 5)), '', true));
         $this->assertFalse($constraint->evaluate(new ArrayObject(array(1, 2, 3, 4)), '', true));
+=======
+        $this->assertTrue($constraint->evaluate(new ArrayObject(array(1,2,3,4,5)), '', true));
+        $this->assertFalse($constraint->evaluate(new ArrayObject(array(1,2,3,4)), '', true));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -3292,8 +3844,15 @@ EOF
         $constraint = new PHPUnit_Framework_Constraint_Count(5);
 
         try {
+<<<<<<< HEAD
             $constraint->evaluate(array(1, 2));
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+            $constraint->evaluate(array(1,2));
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that actual size 2 matches expected size 5.
@@ -3322,8 +3881,15 @@ EOF
         );
 
         try {
+<<<<<<< HEAD
             $constraint->evaluate(array(1, 2));
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+            $constraint->evaluate(array(1,2));
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that actual size 2 does not match expected size 2.
@@ -3344,10 +3910,17 @@ EOF
      */
     public function testConstraintSameSizeWithAnArray()
     {
+<<<<<<< HEAD
         $constraint = new PHPUnit_Framework_Constraint_SameSize(array(1, 2, 3, 4, 5));
 
         $this->assertTrue($constraint->evaluate(array(6, 7, 8, 9, 10), '', true));
         $this->assertFalse($constraint->evaluate(array(1, 2, 3, 4), '', true));
+=======
+        $constraint = new PHPUnit_Framework_Constraint_SameSize(array(1,2,3,4,5));
+
+        $this->assertTrue($constraint->evaluate(array(6,7,8,9,10), '', true));
+        $this->assertFalse($constraint->evaluate(array(1,2,3,4), '', true));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -3355,10 +3928,17 @@ EOF
      */
     public function testConstraintSameSizeWithAnIteratorWhichDoesNotImplementCountable()
     {
+<<<<<<< HEAD
         $constraint = new PHPUnit_Framework_Constraint_SameSize(new TestIterator(array(1, 2, 3, 4, 5)));
 
         $this->assertTrue($constraint->evaluate(new TestIterator(array(6, 7, 8, 9, 10)), '', true));
         $this->assertFalse($constraint->evaluate(new TestIterator(array(1, 2, 3, 4)), '', true));
+=======
+        $constraint = new PHPUnit_Framework_Constraint_SameSize(new TestIterator(array(1,2,3,4,5)));
+
+        $this->assertTrue($constraint->evaluate(new TestIterator(array(6,7,8,9,10)), '', true));
+        $this->assertFalse($constraint->evaluate(new TestIterator(array(1,2,3,4)), '', true));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -3366,10 +3946,17 @@ EOF
      */
     public function testConstraintSameSizeWithAnObjectImplementingCountable()
     {
+<<<<<<< HEAD
         $constraint = new PHPUnit_Framework_Constraint_SameSize(new ArrayObject(array(1, 2, 3, 4, 5)));
 
         $this->assertTrue($constraint->evaluate(new ArrayObject(array(6, 7, 8, 9, 10)), '', true));
         $this->assertFalse($constraint->evaluate(new ArrayObject(array(1, 2, 3, 4)), '', true));
+=======
+        $constraint = new PHPUnit_Framework_Constraint_SameSize(new ArrayObject(array(1,2,3,4,5)));
+
+        $this->assertTrue($constraint->evaluate(new ArrayObject(array(6,7,8,9,10)), '', true));
+        $this->assertFalse($constraint->evaluate(new ArrayObject(array(1,2,3,4)), '', true));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -3378,11 +3965,21 @@ EOF
      */
     public function testConstraintSameSizeFailing()
     {
+<<<<<<< HEAD
         $constraint = new PHPUnit_Framework_Constraint_SameSize(array(1, 2, 3, 4, 5));
 
         try {
             $constraint->evaluate(array(1, 2));
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        $constraint = new PHPUnit_Framework_Constraint_SameSize(array(1,2,3,4,5));
+
+        try {
+            $constraint->evaluate(array(1,2));
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that actual size 2 matches expected size 5.
@@ -3407,12 +4004,23 @@ EOF
     public function testConstraintNotSameSizeFailing()
     {
         $constraint = PHPUnit_Framework_Assert::logicalNot(
+<<<<<<< HEAD
           new PHPUnit_Framework_Constraint_SameSize(array(1, 2))
         );
 
         try {
             $constraint->evaluate(array(3, 4));
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+          new PHPUnit_Framework_Constraint_SameSize(array(1,2))
+        );
+
+        try {
+            $constraint->evaluate(array(3,4));
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that actual size 2 does not match expected size 2.
@@ -3440,7 +4048,13 @@ EOF
 
         try {
             $constraint->evaluate($exception);
+<<<<<<< HEAD
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+=======
+        }
+
+        catch (PHPUnit_Framework_ExpectationFailedException $e) {
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             $this->assertEquals(
               <<<EOF
 Failed asserting that exception of type "DummyException" matches expected exception "FoobarException". Message was: "Test" at

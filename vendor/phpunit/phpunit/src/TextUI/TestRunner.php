@@ -217,7 +217,10 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                 $this->printer = $arguments['printer'];
             } else {
                 $printerClass = 'PHPUnit_TextUI_ResultPrinter';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 if (isset($arguments['printer']) &&
                     is_string($arguments['printer']) &&
                     class_exists($arguments['printer'], false)) {
@@ -232,8 +235,12 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                   isset($arguments['stderr']) ? 'php://stderr' : null,
                   $arguments['verbose'],
                   $arguments['colors'],
+<<<<<<< HEAD
                   $arguments['debug'],
                   $arguments['columns']
+=======
+                  $arguments['debug']
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 );
             }
         }
@@ -253,6 +260,7 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
                     )
                 );
             }
+<<<<<<< HEAD
 
             if (isset($arguments['deprecatedStrictModeOption'])) {
                 print "Deprecated option \"--strict\" used\n\n";
@@ -261,6 +269,8 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
             if (isset($arguments['deprecatedStrictModeSetting'])) {
                 print "Deprecated configuration setting \"strict\" used\n\n";
             }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         }
 
         foreach ($arguments['listeners'] as $listener) {
@@ -464,7 +474,11 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
             if (isset($arguments['coverageText'])) {
                 if ($arguments['coverageText'] == 'php://stdout') {
                     $outputStream = $this->printer;
+<<<<<<< HEAD
                     $colors       = $arguments['colors'];
+=======
+                    $colors       = (bool) $arguments['colors'];
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 } else {
                     $outputStream = new PHPUnit_Util_Printer($arguments['coverageText']);
                     $colors       = false;
@@ -572,10 +586,13 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
 
             $phpunitConfiguration = $arguments['configuration']->getPHPUnitConfiguration();
 
+<<<<<<< HEAD
             if (isset($phpunitConfiguration['deprecatedStrictModeSetting'])) {
                 $arguments['deprecatedStrictModeSetting'] = true;
             }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             if (isset($phpunitConfiguration['backupGlobals']) &&
                 !isset($arguments['backupGlobals'])) {
                 $arguments['backupGlobals'] = $phpunitConfiguration['backupGlobals'];
@@ -881,8 +898,12 @@ class PHPUnit_TextUI_TestRunner extends PHPUnit_Runner_BaseTestRunner
         $arguments['backupGlobals']                      = isset($arguments['backupGlobals'])                      ? $arguments['backupGlobals']                      : null;
         $arguments['backupStaticAttributes']             = isset($arguments['backupStaticAttributes'])             ? $arguments['backupStaticAttributes']             : null;
         $arguments['cacheTokens']                        = isset($arguments['cacheTokens'])                        ? $arguments['cacheTokens']                        : false;
+<<<<<<< HEAD
         $arguments['columns']                            = isset($arguments['columns'])                            ? $arguments['columns']                            : 80;
         $arguments['colors']                             = isset($arguments['colors'])                             ? $arguments['colors']                             : PHPUnit_TextUI_ResultPrinter::COLOR_DEFAULT;
+=======
+        $arguments['colors']                             = isset($arguments['colors'])                             ? $arguments['colors']                             : false;
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         $arguments['convertErrorsToExceptions']          = isset($arguments['convertErrorsToExceptions'])          ? $arguments['convertErrorsToExceptions']          : true;
         $arguments['convertNoticesToExceptions']         = isset($arguments['convertNoticesToExceptions'])         ? $arguments['convertNoticesToExceptions']         : true;
         $arguments['convertWarningsToExceptions']        = isset($arguments['convertWarningsToExceptions'])        ? $arguments['convertWarningsToExceptions']        : true;

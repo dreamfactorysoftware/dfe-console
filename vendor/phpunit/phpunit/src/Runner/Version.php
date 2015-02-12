@@ -36,7 +36,11 @@ class PHPUnit_Runner_Version
         }
 
         if (self::$version === null) {
+<<<<<<< HEAD
             $version = new SebastianBergmann\Version('4.7', dirname(dirname(__DIR__)));
+=======
+            $version = new SebastianBergmann\Version('4.4.5', dirname(dirname(__DIR__)));
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
             self::$version = $version->getVersion();
         }
 
@@ -48,7 +52,11 @@ class PHPUnit_Runner_Version
      */
     public static function getVersionString()
     {
+<<<<<<< HEAD
         return 'PHPUnit ' . self::id() . ' by Sebastian Bergmann and contributors.';
+=======
+        return 'PHPUnit ' . self::id() . ' by Sebastian Bergmann.';
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**

@@ -13,9 +13,15 @@ class KeywordPatchSpec extends ObjectBehavior
         $this->shouldBeAnInstanceOf('Prophecy\Doubler\ClassPatch\ClassPatchInterface');
     }
 
+<<<<<<< HEAD
     function its_priority_is_49()
     {
         $this->getPriority()->shouldReturn(49);
+=======
+    function its_priority_is_50()
+    {
+        $this->getPriority()->shouldReturn(50);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -41,4 +47,8 @@ class KeywordPatchSpec extends ObjectBehavior
 
         $this->apply($node);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4

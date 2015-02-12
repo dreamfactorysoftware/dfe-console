@@ -4,7 +4,10 @@
          backupStaticAttributes="false"
          bootstrap="/path/to/bootstrap.php"
          cacheTokens="false"
+<<<<<<< HEAD
          columns="80"
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
          colors="false"
          stderr="false"
          convertErrorsToExceptions="true"
@@ -18,11 +21,15 @@
          timeoutForSmallTests="1"
          timeoutForMediumTests="10"
          timeoutForLargeTests="60"
+<<<<<<< HEAD
          beStrictAboutTestsThatDoNotTestAnything="false"
          beStrictAboutOutputDuringTests="false"
          beStrictAboutTestSize="false"
          beStrictAboutTodoAnnotatedTests="false"
          checkForUnintentionallyCoveredCode="false"
+=======
+         strict="false"
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
          verbose="false">
          <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
              href="configuration.xml"

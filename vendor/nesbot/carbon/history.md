@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 1.14.0 / 2015-02-06
 ===================
 * Added isBirthday()
@@ -9,6 +10,8 @@
 * timezone support for method formatLocalized
 * Added helpers secondsSinceMidnight() / secondsUntilEndOfDay()
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 1.13.0 / 2014-09-25
 ===================
 * Fixed diffInDaysFiltered() bug.

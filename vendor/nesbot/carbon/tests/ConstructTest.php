@@ -18,7 +18,11 @@ class ConstructTest extends TestFixture
         $c = new Carbon();
         $now = Carbon::now();
         $this->assertEquals('Carbon\Carbon', get_class($c));
+<<<<<<< HEAD
         $this->assertSame($now->tzName, $c->tzName);
+=======
+        $this->assertEquals($now->tzName, $c->tzName);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         $this->assertCarbon($c, $now->year, $now->month, $now->day, $now->hour, $now->minute, $now->second);
     }
 
@@ -27,7 +31,11 @@ class ConstructTest extends TestFixture
         $c = Carbon::parse();
         $now = Carbon::now();
         $this->assertEquals('Carbon\Carbon', get_class($c));
+<<<<<<< HEAD
         $this->assertSame($now->tzName, $c->tzName);
+=======
+        $this->assertEquals($now->tzName, $c->tzName);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         $this->assertCarbon($c, $now->year, $now->month, $now->day, $now->hour, $now->minute, $now->second);
     }
 

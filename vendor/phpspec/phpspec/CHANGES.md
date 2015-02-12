@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2.2.x-dev
 =========
 
@@ -11,6 +12,8 @@ Backward Compatibility
 
  * The unused `ask` and `askAndValidate` methods on `Console\IO` have been removed
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 2.1.1 / 2015-01-09
 ==================
 

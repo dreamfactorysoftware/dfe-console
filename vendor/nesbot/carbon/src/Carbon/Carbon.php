@@ -31,7 +31,11 @@ use InvalidArgumentException;
  * @property-read integer $micro
  * @property-read integer $dayOfWeek 0 (for Sunday) through 6 (for Saturday)
  * @property-read integer $dayOfYear 0 through 365
+<<<<<<< HEAD
  * @property-read integer $weekOfMonth 1 through 5
+=======
+ * @property-read integer $weekOfMonth 1 through 6
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
  * @property-read integer $weekOfYear ISO-8601 week number of year, weeks starting on Monday
  * @property-read integer $daysInMonth number of days in the given month
  * @property-read integer $age does a diffInYears() with default parameters
@@ -435,6 +439,7 @@ class Carbon extends DateTime
      */
     public function __get($name)
     {
+<<<<<<< HEAD
         switch(true)
         {
             case array_key_exists($name, $formats = array(
@@ -481,6 +486,68 @@ class Carbon extends DateTime
                 return $this->getTimezone();
 
             case $name === 'timezoneName' || $name === 'tzName':
+=======
+        switch ($name) {
+            case 'year':
+            case 'month':
+            case 'day':
+            case 'hour':
+            case 'minute':
+            case 'second':
+            case 'micro':
+            case 'dayOfWeek':
+            case 'dayOfYear':
+            case 'weekOfYear':
+            case 'daysInMonth':
+            case 'timestamp':
+                $formats = array(
+                    'year' => 'Y',
+                    'month' => 'n',
+                    'day' => 'j',
+                    'hour' => 'G',
+                    'minute' => 'i',
+                    'second' => 's',
+                    'micro' => 'u',
+                    'dayOfWeek' => 'w',
+                    'dayOfYear' => 'z',
+                    'weekOfYear' => 'W',
+                    'daysInMonth' => 't',
+                    'timestamp' => 'U',
+                );
+
+                return (int) $this->format($formats[$name]);
+
+            case 'weekOfMonth':
+                return (int) ceil($this->day / self::DAYS_PER_WEEK);
+
+            case 'age':
+                return (int) $this->diffInYears();
+
+            case 'quarter':
+                return (int) ceil($this->month / 3);
+
+            case 'offset':
+                return $this->getOffset();
+
+            case 'offsetHours':
+                return $this->getOffset() / self::SECONDS_PER_MINUTE / self::MINUTES_PER_HOUR;
+
+            case 'dst':
+                return $this->format('I') == '1';
+
+            case 'local':
+                return $this->offset == $this->copy()->setTimezone(date_default_timezone_get())->offset;
+
+            case 'utc':
+                return $this->offset == 0;
+
+            case 'timezone':
+            case 'tz':
+                return $this->getTimezone();
+
+            case 'timezoneName':
+            case 'tzName':
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
                 return $this->getTimezone()->getName();
 
             default:
@@ -829,7 +896,11 @@ class Carbon extends DateTime
              $format = preg_replace('#(?<!%)((?:%%)*)%e#', '\1%#d', $format);
         }
 
+<<<<<<< HEAD
         return strftime($format, strtotime($this));
+=======
+        return strftime($format, $this->timestamp);
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 
     /**
@@ -1335,6 +1406,7 @@ class Carbon extends DateTime
     }
 
     /**
+<<<<<<< HEAD
      * Add months without overflowing to the instance. Positive $value 
      * travels forward while negative $value travels into the past.
      *
@@ -1393,6 +1465,8 @@ class Carbon extends DateTime
     }
 
     /**
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * Add days to the instance. Positive $value travels forward while
      * negative $value travels into the past.
      *
@@ -1827,6 +1901,7 @@ class Carbon extends DateTime
     }
 
     /**
+<<<<<<< HEAD
      * The number of seconds since midnight.
      *
      * @return integer
@@ -1847,6 +1922,8 @@ class Carbon extends DateTime
     }
 
     /**
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
      * Get the difference in a human readable format.
      *
      * When comparing a value in the past to default now:
@@ -1866,11 +1943,18 @@ class Carbon extends DateTime
      * 5 months after
      *
      * @param Carbon $other
+<<<<<<< HEAD
      * @param bool   $absolute removes time difference modifiers ago, after, etc
      *
      * @return string
      */
     public function diffForHumans(Carbon $other = null, $absolute = false)
+=======
+     *
+     * @return string
+     */
+    public function diffForHumans(Carbon $other = null)
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     {
         $isNow = $other === null;
 
@@ -1912,10 +1996,13 @@ class Carbon extends DateTime
         $txt = $delta . ' ' . $unit;
         $txt .= $delta == 1 ? '' : 's';
 
+<<<<<<< HEAD
         if ($absolute) {
             return $txt;
         }
 
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
         if ($isNow) {
             if ($isFuture) {
                 return $txt . ' from now';
@@ -2269,6 +2356,7 @@ class Carbon extends DateTime
 
         return $this->addSeconds((int) ($this->diffInSeconds($dt, false) / 2));
     }
+<<<<<<< HEAD
 
     /**
      * Check if its the birthday. Compares the date/month values of the two dates.
@@ -2279,4 +2367,6 @@ class Carbon extends DateTime
     {
         return $this->month === $dt->month && $this->day === $dt->day;
     }
+=======
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
 }

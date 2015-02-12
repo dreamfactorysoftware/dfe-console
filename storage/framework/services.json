@@ -26,10 +26,14 @@
         "App\\Providers\\BusServiceProvider",
         "App\\Providers\\ConfigServiceProvider",
         "App\\Providers\\EventServiceProvider",
+<<<<<<< HEAD
         "App\\Providers\\RouteServiceProvider",
         "DreamFactory\\Enterprise\\Console\\Services\\ElkServiceProvider",
         "DreamFactory\\Library\\Fabric\\Api\\Common\\Providers\\PacketServiceProvider",
         "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider"
+=======
+        "App\\Providers\\RouteServiceProvider"
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     ],
     "eager": [
         "Illuminate\\Auth\\AuthServiceProvider",
@@ -47,9 +51,13 @@
         "App\\Providers\\BusServiceProvider",
         "App\\Providers\\ConfigServiceProvider",
         "App\\Providers\\EventServiceProvider",
+<<<<<<< HEAD
         "App\\Providers\\RouteServiceProvider",
         "DreamFactory\\Enterprise\\Console\\Services\\ElkServiceProvider",
         "DreamFactory\\Library\\Fabric\\Api\\Common\\Providers\\PacketServiceProvider"
+=======
+        "App\\Providers\\RouteServiceProvider"
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     ],
     "deferred": {
         "command.app.name": "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider",
@@ -126,9 +134,13 @@
         "auth.password": "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider",
         "auth.password.tokens": "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider",
         "translator": "Illuminate\\Translation\\TranslationServiceProvider",
+<<<<<<< HEAD
         "translation.loader": "Illuminate\\Translation\\TranslationServiceProvider",
         "command.ide-helper.generate": "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider",
         "command.ide-helper.models": "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider"
+=======
+        "translation.loader": "Illuminate\\Translation\\TranslationServiceProvider"
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     },
     "when": {
         "Illuminate\\Foundation\\Providers\\ArtisanServiceProvider": [],
@@ -141,7 +153,11 @@
         "Illuminate\\Queue\\QueueServiceProvider": [],
         "Illuminate\\Redis\\RedisServiceProvider": [],
         "Illuminate\\Auth\\Passwords\\PasswordResetServiceProvider": [],
+<<<<<<< HEAD
         "Illuminate\\Translation\\TranslationServiceProvider": [],
         "Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider": []
+=======
+        "Illuminate\\Translation\\TranslationServiceProvider": []
+>>>>>>> 72fb08a0172f98796ac5af1b91ec18f1c5421cc4
     }
 }
