@@ -1,0 +1,373 @@
+@import url(http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700|Open+Sans+Condensed:700,300|Open+Sans:400italic,700italic,700,400);
+
+html, body, #page-wrapper, #wrapper {
+	height:     100%;
+	width:      100%;
+	background: rgba(34, 34, 34, 1);
+}
+
+body {
+	font-family: "Open Sans", Arial, sans-serif;
+	font-weight: 300;
+	font-size:   14px;
+	overflow:    hidden;
+}
+
+i.fa {
+	width:          24px;
+	text-align:     center;
+	vertical-align: text-bottom;
+	margin-bottom:  2px;
+}
+
+.page-header {
+	margin-top:     0;
+	padding-bottom: 0;
+	border-bottom:  1px solid #efefef;
+	margin-right:   15px;
+	margin-left:    15px;
+}
+
+/** page wrapper **/
+#page-wrapper.container-fluid {
+	color:    #2c3e50;
+	margin:   0;
+	padding:  0;
+	overflow: hidden;
+}
+
+#page-wrapper > .row.breadcrumb-content {
+	margin: 0 -15px 0 0;
+}
+
+.page-content {
+	padding: 10px;
+}
+
+.nano > .nano-content {
+	padding: 10px 15px 10px 10px;
+}
+
+/** navbar **/
+.top-nav > .open > .dropdown-menu {
+	/*box-shadow:              -1px 1px 4px rgba(0, 0, 0, .75);*/
+	border-top-left-radius:  0;
+	border-top-right-radius: 0;
+	margin:                  0;
+	right:                   15px;
+}
+
+.navbar {
+	min-height:    50px;
+	margin-bottom: 0;
+}
+
+.navbar.navbar-default {
+	border-bottom: 1px solid #666666;
+}
+
+.navbar-brand {
+	height:  50px;
+	padding: 10px 15px 0;
+}
+
+.navbar-inverse > .top-nav > li > a {
+	color: #2c3e50;
+}
+
+.navbar-inverse .navbar-nav > li > a,
+.navbar-inverse .navbar-nav > li > a {
+	color:            rgba(255, 255, 255, .8);
+	background-color: transparent;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+	color:            rgba(255, 255, 255, 1);
+	background-color: transparent;
+}
+
+/** user stuff **/
+.user-mini span:first-child {
+	font-size: 11px;
+}
+
+.user-info {
+	height:       50px;
+	line-height:  50px;
+	margin-right: 15px;
+}
+
+.user-info-name {
+	display:       block;
+	font-size:     12px;
+	/*color:         #AA8383;*/
+	margin-bottom: -4px;
+}
+
+.user-info-welcome {
+	font-weight: bold;
+	margin-top:  2px;
+}
+
+/** sidebar **/
+.side-nav {
+	font-size:   17px;
+	height:      100%;
+	min-height:  100%;
+	font-family: "Open Sans", Arial, sans-serif;
+}
+
+/** breadcrumbs **/
+.breadcrumb-wrapper {
+	color:      #ebebeb;
+	background: rgba(34, 34, 34, 1);
+	margin:     0;
+	padding:    0;
+	height:     40px;
+}
+
+.breadcrumb-wrapper .row {
+	margin-left:  0;
+	margin-right: 0;
+	height:       40px;
+	line-height:  32px;
+}
+
+.breadcrumb-menu-icon {
+	margin-left: 5px;
+}
+
+.breadcrumb-title {
+	margin-top:   0;
+	font-size:    19px;
+	font-weight:  bold;
+	padding-top:  2px;
+	padding-left: 0;
+}
+
+.breadcrumb-activity {
+	padding-top: 2px;
+}
+
+.breadcrumb-activity div {
+	display:        inline-block;
+	text-align:     center;
+	vertical-align: middle;
+	font-family:    "Open Sans Condensed", Arial, sans-serif;
+	font-size:      13px;
+}
+
+.breadcrumb-loader {
+	display: inline-block;
+}
+
+/** breadcrumb controls **/
+.bc-controls {
+	padding: 0;
+	margin:  0;
+	float:   right;
+}
+
+.bc-controls > .btn.btn-sm {
+	padding:       3px;
+	font-size:     11px;
+	line-height:   initial;
+	border-radius: 0;
+	margin-top:    -5px;
+}
+
+/** dashboard **/
+.dashboard-content {
+	color: #2c3e50;
+}
+
+#dashboard-header {
+	height:  40px !important;
+	margin:  0;
+	padding: 0;
+}
+
+#dashboard-header h3 {
+	line-height: 1;
+	margin-top:  8px;
+}
+
+.dashboard-content > .tab-content {
+	visibility: hidden;
+	position:   absolute;
+}
+
+.dashboard-content > .tab-content.active {
+	visibility: visible;
+	position:   relative;
+}
+
+/** avatar **/
+.avatar {
+	height:   32px;
+	width:    32px;
+	margin:   -5px 5px 0 -5px;
+	overflow: hidden;
+	display:  inline-block;
+}
+
+.avatar-image .gravatar-image {
+	margin-top:  -16px;
+	margin-left: -16px;
+}
+
+.avatar > img {
+	width:  48px;
+	height: 48px;
+}
+
+/** panels **/
+.panel {
+	/*background-color: #4e5d6c;*/
+	/*color:            #ebebeb;*/
+}
+
+.panel.panel-inverse {
+	/*background-color: rgba(255, 255, 255, .8);*/
+	/*color:            #2c3e50;*/
+}
+
+.panel-row {
+	margin-left:  0;
+	margin-right: 0;
+}
+
+.panel-heading, .panel-heading h3 {
+	cursor:    pointer;
+	font-size: 14px;
+}
+
+/** forms **/
+.form-control {
+	font-size: 11px;
+	display:   inherit;
+	width:     inherit;
+	height:    inherit;
+	padding:   5px 10px;
+}
+
+.dataTables_length label select {
+	height:    inherit;
+	padding:   inherit;
+	font-size: inherit;
+	display:   inline-block;
+}
+
+/** media-specific **/
+@media (min-width: 768px ) {
+	.page-header {
+		margin-top: 0;
+	}
+
+	.navbar-nav > li > a {
+		padding-top:    10px;
+		padding-bottom: 10px;
+	}
+}
+
+@media (max-width: 768px) {
+	.page-header {
+		margin-top: 22px;
+	}
+}
+
+/** Generic classes **/
+.no-padding-left {
+	padding-left: 0;
+}
+
+.no-padding-right {
+	padding-right: 0;
+}
+
+.no-padding {
+	padding-right: 0;
+	padding-left:  0;
+}
+
+.tab-content {
+	display: none;
+}
+
+.tab-content.active {
+	display: block;
+}
+
+.scrollable-content {
+	overflow: auto;
+}
+
+.site-stats {
+	font-size: 10px;
+}
+
+/* Error wrapper */
+.error-wrapper {
+	background:  #000000 url(/img/bg-stars.png) center;
+	font-family: "Roboto Condensed", "Droid Sans", "Helvetica Neue", Arial, Helvetica, sans-serif;
+	margin:      -10px -15px -10px -10px;
+	text-align:  center;
+	height:      100%;
+	position:    relative;
+	min-height:  100%;
+}
+
+.error-wrapper h1 {
+	color:         #ffffff;
+	font-size:     48px;
+	font-weight:   normal;
+	padding:       0 20px 5px;
+	border-bottom: 2px solid #222222;
+	display:       inline-block;
+	margin:        0 0 15px 0;
+}
+
+.error-wrapper h2 {
+	font-size:      14px;
+	font-weight:    normal;
+	margin:         0 0 30px 0;
+	text-transform: uppercase;
+	color:          #ffffff;
+}
+
+.error-wrapper p, .error-wrapper p a {
+	color: #444444;
+}
+
+.error-wrapper p a:active,
+.error-wrapper p a:visited,
+.error-wrapper p a:focus {
+	text-decoration: none;
+	color:           #3f6039;
+}
+
+/** error pages **/
+#page-500 h1, .page-404 h1 {
+	font-size: 5em;
+}
+
+.page-404 .form-inline {
+	margin:                40px auto;
+	width:                 60%;
+	padding:               15px;
+	background:            #fafafa;
+	-webkit-border-radius: 4px;
+	-moz-border-radius:    4px;
+	border-radius:         4px;
+}
+
+.page-404 .input-group-btn:last-child > .btn, .page-404 .input-group-btn:last-child > .btn-group {
+	margin-left:   -1px;
+	margin-bottom: 0;
+	height:        39px;
+}
+
+#page-500 h3, .page-404 h3 {
+	margin: 5px 0 20px;
+}
