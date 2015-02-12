@@ -19,13 +19,14 @@ var EnterpriseServer = {
 	 * DataTable defaults
 	 * @type {*}
 	 */
-	defaults:      {
+	defaults:        {
 		//	"<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md6'i><'col-md-6'p>>"
 		//'<"wrapper"<"row"<"col-md-1"l><"col-md-offset-4 col-md-2"r><"col-md-5"f>><"row"<"col-md-12"t>><"row"<ip>>', //		deferRender: true,
-		dom:      '<"wrapper"<"row"<"col-md-12"Clf>><"row"<"col-md-12"rt>><"row"<"col-md-12"ip>>>',
+//		dom:      '<"wrapper"<"row"<"col-md-12"Clf>><"row"<"col-md-12"rt>><"row"<"col-md-12"ip>>>',
 		language: {
 			sLengthMenu: '_MENU_ per page',
-			sSearch:     '<i class="fa fa-search"></i>'
+			sSearch:     '<i class="fa fa-search"></i>',
+			sEmptyTable: 'No entries found'
 		},
 		classes:  {
 			sLengthSelect: 'form-control',
@@ -35,43 +36,47 @@ var EnterpriseServer = {
 	/**
 	 * @type string
 	 */
-	dataType:      null,
+	dataType:        null,
 	/**
 	 * @type string
 	 */
-	dataUrl:       null,
+	dataUrl:         null,
 	/**
 	 * @type string
 	 */
-	tableId:       null,
+	tableId:         null,
 	/**
 	 * @type boolean
 	 */
-	initialized:   false,
+	initialized:     false,
+	/** @type string **/
+	lastTitle:       null,
 	/**
 	 * @type DataTable
 	 */
-	dt:            null,
+	dt:              null,
 	/**
 	 * @type {*}
 	 */
-	cv:            null,
+	cv:              null,
 	/**
 	 * @type $
 	 */
-	$_searchBoxes: null,
+	$_searchBoxes:   null,
 	/**
 	 * @type $
 	 */
-	$_loader:      null,
+	$_loader:        null,
 	/**
 	 * @type $
 	 */
-	$_dataLoader:  null,
+	$_dataLoader:    null,
 	/**
 	 * @type int
 	 */
-	minimumHeight: null,
+	minimumHeight:   null,
+	/** @type $ **/
+	$_headerToolbar: null,
 
 	//******************************************************************************
 	//* Functions
@@ -133,18 +138,34 @@ var EnterpriseServer = {
 		if (this.initialized) {
 			var _this = this, $_table = $(this.tableId);
 
+			this.$_headerToolbar = $('.page-header-toolbar');
+
 			this.dt = $_table.DataTable($.extend(this.defaults, {
 				ajax:       this.dataUrl,
 				serverSide: true,
-				processing: true,
+				processing: false,
+				pagingType: 'full_numbers',
 				columns:    this.columns.columns
 			})).on('init', function(e) {
 				_this.$_loader = $('#loading-content');
-				_this.$_dataLoader = $('#loading-overlay')
+				_this.$_dataLoader = $('#loading-data')
 			}).on('processing.dt', function(e, settings, processing) {
 				_this.dataLoading(processing);
 			}).on('click', 'tr', function(e) {
+				$('tr.selected', $_table).removeClass('selected');
 				$(this).toggleClass('selected');
+
+				var $_edit = $('#header-bar-edit, #header-bar-delete', _this.$_headerToolbar);
+
+				if ($_edit.length && $(this).hasClass('selected')) {
+					$_edit.show();
+				} else {
+					$_edit.hide();
+				}
+			}).on('dblclick', 'tbody tr', function(e) {
+				e.preventDefault();
+				var _id = $(this).attr('id');
+				window.top.location.href = _this.dataUrl + '/' + _id + '/edit';
 			});
 
 			var _ac, _name, $_search = $('.wrapper .dataTables_filter');
@@ -181,13 +202,10 @@ var EnterpriseServer = {
 	 */
 	dataLoading: function(showHide, text) {
 		if (this.$_dataLoader) {
-
-			text = '<h1><i class="fa fa-cog fa-spin"></i>&nbsp;' + (text || 'Loading...') + '</h1>';
-
 			if (showHide) {
-				this.$_dataLoader.html(text).show();
+				this.$_dataLoader.show();
 			} else {
-				this.$_dataLoader.hide().empty();
+				this.$_dataLoader.hide();
 			}
 		}
 	}

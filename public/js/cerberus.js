@@ -52,9 +52,30 @@ jQuery(function($) {
 		$_avatar.html('<img class="gravatar-image" src="' + 'http://www.gravatar.com/avatar/' + $_avatar.data('hash') + '" alt="avatar" />');
 	}
 
-	_loadData();
-
-	if ($_nano.length) {
+	if ($_nano && $_nano.length) {
 		$_nano.nanoScroller();
 	}
+
+	$('button.btn-page-header').on('click', function(e) {
+		e.preventDefault();
+		var _rel = $(this).attr('rel'), _id = $(this).attr('id');
+
+		if (_rel && _rel.length) {
+			if ('header-bar-new' != _id) {
+				var _rowId = $('.table-datatable tr.selected').attr('id');
+
+				if (_rowId.length) {
+					_rel = _rel.replace('{:id}', _rowId);
+				}
+			}
+
+			window.top.location.href = _rel;
+		}
+	});
+
+	//	Turn on page header tooltips
+	$('[data-toggle="tooltip"]').tooltip();
+
+	//	Load page data...
+	_loadData();
 });

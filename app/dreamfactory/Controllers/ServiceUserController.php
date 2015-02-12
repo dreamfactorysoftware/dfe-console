@@ -1,48 +1,20 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Controllers;
 
-use DreamFactory\Library\Fabric\Database\Models\Auth\User;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
-use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-class ServiceUserController extends DataController
+class ServiceUserController extends ResourceController
 {
     //******************************************************************************
-    //* Methods
+    //* Members
     //******************************************************************************
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @type string
      */
-    public function index()
-    {
-        return
-            $this->_processDataRequest(
-                'service_user_t',
-                ServiceUser::count(),
-                array('id', 'first_name_text', 'last_name_text', 'email_addr_text', 'lmod_date')
-            );
-    }
-
+    protected $_tableName = 'service_user_t';
     /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     *
-     * @return Response
+     * @type string
      */
-    public function show( $id )
-    {
-        try
-        {
-            return Response::json( User::findOrFail( $id ), \Symfony\Component\HttpFoundation\Response::HTTP_OK );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new NotFoundHttpException();
-        }
-    }
+    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\ServiceUser';
+    /** @type string */
+    protected $_resource = 'service-user';
 }
