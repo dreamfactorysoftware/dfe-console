@@ -879,12 +879,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "f10ef031b641e11698e29361b4755c53df406e0a"
+                "reference": "bb206880e46a09dbc871258cbb0da36659271288"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/f10ef031b641e11698e29361b4755c53df406e0a",
-                "reference": "f10ef031b641e11698e29361b4755c53df406e0a",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/bb206880e46a09dbc871258cbb0da36659271288",
+                "reference": "bb206880e46a09dbc871258cbb0da36659271288",
                 "shasum": ""
             },
             "require": {
@@ -926,7 +926,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-02-10 16:59:22"
+            "time": "2015-02-12 17:32:14"
         },
         {
             "name": "dreamfactory/fabric-queue",
@@ -2031,12 +2031,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "be93c2fcac1d7091bc0fb5d37fc2fe5e149087c1"
+                "reference": "ff51bb68576eee03245a965cf1805a9573d79919"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/be93c2fcac1d7091bc0fb5d37fc2fe5e149087c1",
-                "reference": "be93c2fcac1d7091bc0fb5d37fc2fe5e149087c1",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/ff51bb68576eee03245a965cf1805a9573d79919",
+                "reference": "ff51bb68576eee03245a965cf1805a9573d79919",
                 "shasum": ""
             },
             "require": {
@@ -2093,7 +2093,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-02-12 06:57:47"
+            "time": "2015-02-12 19:36:02"
         },
         {
             "name": "react/promise",
@@ -2423,12 +2423,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DependencyInjection.git",
-                "reference": "20e65ffbea998036e38df8fabaf067ecd366619f"
+                "reference": "83d0af88cb3dfce95a763396c58f385824cc0907"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/20e65ffbea998036e38df8fabaf067ecd366619f",
-                "reference": "20e65ffbea998036e38df8fabaf067ecd366619f",
+                "url": "https://api.github.com/repos/symfony/DependencyInjection/zipball/83d0af88cb3dfce95a763396c58f385824cc0907",
+                "reference": "83d0af88cb3dfce95a763396c58f385824cc0907",
                 "shasum": ""
             },
             "require": {
@@ -2474,7 +2474,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "http://symfony.com",
-            "time": "2015-02-11 07:17:51"
+            "time": "2015-02-12 17:47:12"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -3697,12 +3697,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "3a9204c44667c302049ab4eadb02daab789e19ed"
+                "reference": "ae2cfa7a8a3ca2cdff63803bd2515d60e76dc9b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/3a9204c44667c302049ab4eadb02daab789e19ed",
-                "reference": "3a9204c44667c302049ab4eadb02daab789e19ed",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/ae2cfa7a8a3ca2cdff63803bd2515d60e76dc9b0",
+                "reference": "ae2cfa7a8a3ca2cdff63803bd2515d60e76dc9b0",
                 "shasum": ""
             },
             "require": {
@@ -3749,7 +3749,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-02-09 17:43:38"
+            "time": "2015-02-12 16:44:48"
         },
         {
             "name": "phpunit/php-code-coverage",
