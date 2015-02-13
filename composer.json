@@ -38,7 +38,6 @@
         "doctrine/couchdb-odm":           "*",
         "guzzlehttp/guzzle":              "*",
         "ruflin/elastica":                "*",
-        "dreamfactory/dfe-services":      "*",
         "dreamfactory/php-utils":         "*",
         "dreamfactory/rave-common":       "dev-develop as dev-master",
         "dreamfactory/fabric-api-common": "dev-develop as dev-master",
