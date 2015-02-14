@@ -14,6 +14,9 @@
     "repositories":      [
         {
             "type": "vcs",
+            "url":  "git@github.com:dreamfactorysoftware/dfe-services.git"
+        }, {
+            "type": "vcs",
             "url":  "git@github.com:dreamfactorysoftware/rave-common.git"
         }, {
             "type": "vcs",
@@ -38,6 +41,7 @@
         "doctrine/couchdb-odm":           "*",
         "guzzlehttp/guzzle":              "*",
         "ruflin/elastica":                "*",
+        "dreamfactory/dfe-services":      "dev-develop as dev-master",
         "dreamfactory/php-utils":         "*",
         "dreamfactory/rave-common":       "dev-develop as dev-master",
         "dreamfactory/fabric-api-common": "dev-develop as dev-master",

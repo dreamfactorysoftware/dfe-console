@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "62b1bd2307140abf3e0efda1e4b27630",
+    "hash": "92bf199eae7a5eed800a9dc6d1970a39",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -714,6 +714,87 @@
             "time": "2015-02-05 16:35:43"
         },
         {
+            "name": "dreamfactory/dfe-services",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
+                "reference": "2e9dc6bb8ca6abbffe0e884d1aac890e94c3b5a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/2e9dc6bb8ca6abbffe0e884d1aac890e94c3b5a0",
+                "reference": "2e9dc6bb8ca6abbffe0e884d1aac890e94c3b5a0",
+                "shasum": ""
+            },
+            "require": {
+                "dreamfactory/fabric-db": "dev-develop as dev-master",
+                "league/flysystem-dropbox": "*",
+                "league/flysystem-sftp": "*",
+                "league/flysystem-ziparchive": "*",
+                "wpb/string-blade-compiler": "2.*@dev"
+            },
+            "require-dev": {
+                "dreamfactory/fabric-audit": "dev-develop as dev-master",
+                "dreamfactory/fabric-common": "dev-develop as dev-master",
+                "laravel/framework": "5.0.*",
+                "phpspec/phpspec": "~2.1",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DreamFactory\\Enterprise\\Services\\": "app/"
+                }
+            },
+            "autoload-dev": {
+                "classmap": [
+                    "tests/TestCase.php"
+                ]
+            },
+            "scripts": {
+                "post-install-cmd": [
+                    "php artisan clear-compiled",
+                    "php artisan optimize"
+                ],
+                "post-update-cmd": [
+                    "php artisan clear-compiled",
+                    "php artisan optimize"
+                ],
+                "post-create-project-cmd": [
+                    "php -r \"copy('.env.example', '.env');\"",
+                    "php artisan key:generate"
+                ]
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Jerry Ablan",
+                    "email": "jerryablan@dreamfactory.com"
+                }
+            ],
+            "description": "DreamFactory Enterprise(tm) Core Services",
+            "homepage": "https://www.dreamfactory.com/",
+            "keywords": [
+                "dreamfactory",
+                "fabric",
+                "queue",
+                "utility"
+            ],
+            "support": {
+                "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
+                "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
+            },
+            "time": "2015-02-14 19:15:58"
+        },
+        {
             "name": "dreamfactory/fabric-api-common",
             "version": "dev-develop",
             "source": {
@@ -1165,6 +1246,45 @@
             "time": "2015-02-02 19:32:32"
         },
         {
+            "name": "dropbox/dropbox-sdk",
+            "version": "v1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dropbox/dropbox-sdk-php.git",
+                "reference": "73e5add2f6d5d0355fa04e758f895e10c08d240a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dropbox/dropbox-sdk-php/zipball/73e5add2f6d5d0355fa04e758f895e10c08d240a",
+                "reference": "73e5add2f6d5d0355fa04e758f895e10c08d240a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">= 5.3"
+            },
+            "require-dev": {
+                "apigen/apigen": "2.8.2",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "2.0.0RC3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Dropbox": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Dropbox SDK for PHP",
+            "keywords": [
+                "dropbox"
+            ],
+            "time": "2014-10-21 21:09:01"
+        },
+        {
             "name": "guzzlehttp/guzzle",
             "version": "dev-master",
             "source": {
@@ -1573,12 +1693,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "b1aea041cbc0cd54563e2d3709a54a71eed57653"
+                "reference": "388aa6a1c3aa16a4e7f6fa850fa6f08bd3143ccd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/b1aea041cbc0cd54563e2d3709a54a71eed57653",
-                "reference": "b1aea041cbc0cd54563e2d3709a54a71eed57653",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/388aa6a1c3aa16a4e7f6fa850fa6f08bd3143ccd",
+                "reference": "388aa6a1c3aa16a4e7f6fa850fa6f08bd3143ccd",
                 "shasum": ""
             },
             "require": {
@@ -1690,7 +1810,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-13 19:10:59"
+            "time": "2015-02-13 23:23:27"
         },
         {
             "name": "league/flysystem",
@@ -1774,6 +1894,146 @@
                 "storage"
             ],
             "time": "2015-02-13 10:05:18"
+        },
+        {
+            "name": "league/flysystem-dropbox",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-dropbox.git",
+                "reference": "2f464a6a80c0dcc2113a8cc636ca9d4a0fc26617"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-dropbox/zipball/2f464a6a80c0dcc2113a8cc636ca9d4a0fc26617",
+                "reference": "2f464a6a80c0dcc2113a8cc636ca9d4a0fc26617",
+                "shasum": ""
+            },
+            "require": {
+                "dropbox/dropbox-sdk": "~1.1",
+                "league/flysystem": "~1.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\Dropbox\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for Dropbox",
+            "time": "2015-01-21 22:19:57"
+        },
+        {
+            "name": "league/flysystem-sftp",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-sftp.git",
+                "reference": "7094b5ddea6262f5e29596609dccae041ed108df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/7094b5ddea6262f5e29596609dccae041ed108df",
+                "reference": "7094b5ddea6262f5e29596609dccae041ed108df",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0",
+                "php": ">=5.4.0",
+                "phpseclib/phpseclib": "~0.3.8"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\Sftp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for SFTP",
+            "time": "2015-02-01 16:15:51"
+        },
+        {
+            "name": "league/flysystem-ziparchive",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-ziparchive.git",
+                "reference": "e60c233c34af99995d18c57f9e02004466bb16f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-ziparchive/zipball/e60c233c34af99995d18c57f9e02004466bb16f4",
+                "reference": "e60c233c34af99995d18c57f9e02004466bb16f4",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0@alpha",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\ZipArchive\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for ZipArchive's",
+            "time": "2015-01-19 08:17:38"
         },
         {
             "name": "monolog/monolog",
@@ -1983,6 +2243,104 @@
             "time": "2015-02-13 17:03:18"
         },
         {
+            "name": "phpseclib/phpseclib",
+            "version": "0.3.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpseclib/phpseclib.git",
+                "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
+                "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "~4.0",
+                "sami/sami": "~2.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "suggest": {
+                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",
+                "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 4.3.3."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Crypt": "phpseclib/",
+                    "File": "phpseclib/",
+                    "Math": "phpseclib/",
+                    "Net": "phpseclib/",
+                    "System": "phpseclib/"
+                },
+                "files": [
+                    "phpseclib/Crypt/Random.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "phpseclib/"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Wigginton",
+                    "email": "terrafrost@php.net",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Patrick Monnerat",
+                    "email": "pm@datasphere.ch",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andreas Fischer",
+                    "email": "bantu@phpbb.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Hans-Jürgen Petrich",
+                    "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
+            "homepage": "http://phpseclib.sourceforge.net",
+            "keywords": [
+                "BigInteger",
+                "aes",
+                "asn.1",
+                "asn1",
+                "blowfish",
+                "crypto",
+                "cryptography",
+                "encryption",
+                "rsa",
+                "security",
+                "sftp",
+                "signature",
+                "signing",
+                "ssh",
+                "twofish",
+                "x.509",
+                "x509"
+            ],
+            "time": "2015-01-28 21:50:33"
+        },
+        {
             "name": "psr/log",
             "version": "dev-master",
             "source": {
@@ -2031,12 +2389,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "ff51bb68576eee03245a965cf1805a9573d79919"
+                "reference": "01c97330157a1f0269ae794412d556efdc1fe2e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/ff51bb68576eee03245a965cf1805a9573d79919",
-                "reference": "ff51bb68576eee03245a965cf1805a9573d79919",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/01c97330157a1f0269ae794412d556efdc1fe2e0",
+                "reference": "01c97330157a1f0269ae794412d556efdc1fe2e0",
                 "shasum": ""
             },
             "require": {
@@ -2093,7 +2451,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-02-12 19:36:02"
+            "time": "2015-02-14 18:19:50"
         },
         {
             "name": "react/promise",
@@ -3338,6 +3696,47 @@
                 "environment"
             ],
             "time": "2015-01-30 14:58:26"
+        },
+        {
+            "name": "wpb/string-blade-compiler",
+            "version": "2.0.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/igormatkovic/StringBladeCompiler.git",
+                "reference": "1dc5083557bba931f179070a7ab5d3f4ce3462a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/igormatkovic/StringBladeCompiler/zipball/1dc5083557bba931f179070a7ab5d3f4ce3462a5",
+                "reference": "1dc5083557bba931f179070a7ab5d3f4ce3462a5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Wpb\\StringBladeCompiler\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Terre Porter",
+                    "email": "tporter@webpage-builders.com"
+                }
+            ],
+            "description": "Render Blade templates from string",
+            "keywords": [
+                "blade",
+                "compiler",
+                "laravel"
+            ],
+            "time": "2015-01-24 00:55:58"
         }
     ],
     "packages-dev": [
@@ -4642,6 +5041,12 @@
             "alias": "dev-master",
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
+            "package": "dreamfactory/dfe-services"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
             "package": "dreamfactory/rave-common"
         },
         {
@@ -4671,6 +5076,7 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "dreamfactory/dfe-services": 20,
         "dreamfactory/rave-common": 20,
         "dreamfactory/fabric-api-common": 20,
         "dreamfactory/fabric-audit": 20,
