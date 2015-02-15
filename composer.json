@@ -3,10 +3,7 @@
 	"description":       "DreamFactory Enterprise(tm) Administrative Console",
 	"homepage":          "https://www.dreamfactory.com/",
 	"keywords":          [
-		"dreamfactory",
-		"fabric",
-		"utility",
-		"cli"
+		"dreamfactory", "fabric", "utility", "cli"
 	],
 	"license":           ["proprietary"],
 	"authors":           [
@@ -18,6 +15,9 @@
 	"minimum-stability": "dev",
 	"repositories":      [
 		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/dfe-common.git"
+		}, {
 			"type": "vcs",
 			"url":  "git@github.com:dreamfactorysoftware/dfe-services.git"
 		}, {
