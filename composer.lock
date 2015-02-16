@@ -229,12 +229,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "15334410a781da60f861df536b460f24c8f01eeb"
+                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/15334410a781da60f861df536b460f24c8f01eeb",
-                "reference": "15334410a781da60f861df536b460f24c8f01eeb",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
+                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
                 "shasum": ""
             },
             "require": {
@@ -291,7 +291,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-02-01 04:40:53"
+            "time": "2015-02-16 12:24:01"
         },
         {
             "name": "doctrine/collections",
@@ -365,12 +365,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "56360cc13bfd13893731c6c4d1d82005a61d7694"
+                "reference": "f1004b8b336465fafd498ee6539cc2502d16f98f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/56360cc13bfd13893731c6c4d1d82005a61d7694",
-                "reference": "56360cc13bfd13893731c6c4d1d82005a61d7694",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/f1004b8b336465fafd498ee6539cc2502d16f98f",
+                "reference": "f1004b8b336465fafd498ee6539cc2502d16f98f",
                 "shasum": ""
             },
             "require": {
@@ -430,7 +430,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2015-01-23 18:43:22"
+            "time": "2015-02-16 02:14:17"
         },
         {
             "name": "doctrine/couchdb",
@@ -800,12 +800,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "00b871be623de0d81c0ae1873bae5ffedd84ac8b"
+                "reference": "55a3675abeae46e6d9e1a841e42026106a6a560d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/00b871be623de0d81c0ae1873bae5ffedd84ac8b",
-                "reference": "00b871be623de0d81c0ae1873bae5ffedd84ac8b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/55a3675abeae46e6d9e1a841e42026106a6a560d",
+                "reference": "55a3675abeae46e6d9e1a841e42026106a6a560d",
                 "shasum": ""
             },
             "require": {
@@ -875,7 +875,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-02-15 23:28:30"
+            "time": "2015-02-16 17:06:33"
         },
         {
             "name": "dreamfactory/fabric-api-common",
@@ -1776,12 +1776,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "388aa6a1c3aa16a4e7f6fa850fa6f08bd3143ccd"
+                "reference": "48fee812cb6eab324e79826b6fe5127b7e5c77e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/388aa6a1c3aa16a4e7f6fa850fa6f08bd3143ccd",
-                "reference": "388aa6a1c3aa16a4e7f6fa850fa6f08bd3143ccd",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/48fee812cb6eab324e79826b6fe5127b7e5c77e7",
+                "reference": "48fee812cb6eab324e79826b6fe5127b7e5c77e7",
                 "shasum": ""
             },
             "require": {
@@ -1893,7 +1893,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-13 23:23:27"
+            "time": "2015-02-16 15:05:47"
         },
         {
             "name": "league/flysystem",
@@ -2586,12 +2586,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "241d707e1409419ff527bf005268376c226b2a83"
+                "reference": "d9e60747a2666e65a6ec454c3cdef0a3d81e12c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/241d707e1409419ff527bf005268376c226b2a83",
-                "reference": "241d707e1409419ff527bf005268376c226b2a83",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/d9e60747a2666e65a6ec454c3cdef0a3d81e12c4",
+                "reference": "d9e60747a2666e65a6ec454c3cdef0a3d81e12c4",
                 "shasum": ""
             },
             "require": {
@@ -2638,7 +2638,7 @@
                 "client",
                 "search"
             ],
-            "time": "2015-02-15 00:08:59"
+            "time": "2015-02-16 09:54:40"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2982,12 +2982,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "177e0a8e29fab3f0556f7a973b5a42935e42a4d7"
+                "reference": "cb5db1cf2440ceb68760ef0e70f9d1d4ba135444"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/177e0a8e29fab3f0556f7a973b5a42935e42a4d7",
-                "reference": "177e0a8e29fab3f0556f7a973b5a42935e42a4d7",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/cb5db1cf2440ceb68760ef0e70f9d1d4ba135444",
+                "reference": "cb5db1cf2440ceb68760ef0e70f9d1d4ba135444",
                 "shasum": ""
             },
             "require": {
@@ -3020,7 +3020,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2015-02-11 07:17:51"
+            "time": "2015-02-16 09:13:25"
         },
         {
             "name": "symfony/finder",
@@ -4179,12 +4179,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "ae2cfa7a8a3ca2cdff63803bd2515d60e76dc9b0"
+                "reference": "9ed07757cd5c46fe33d28826327d274bd142a143"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/ae2cfa7a8a3ca2cdff63803bd2515d60e76dc9b0",
-                "reference": "ae2cfa7a8a3ca2cdff63803bd2515d60e76dc9b0",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/9ed07757cd5c46fe33d28826327d274bd142a143",
+                "reference": "9ed07757cd5c46fe33d28826327d274bd142a143",
                 "shasum": ""
             },
             "require": {
@@ -4231,7 +4231,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-02-12 16:44:48"
+            "time": "2015-02-16 14:11:36"
         },
         {
             "name": "phpunit/php-code-coverage",
