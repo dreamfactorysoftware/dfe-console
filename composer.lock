@@ -719,19 +719,20 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "d541a45cd54c30136173fae472af748abb0e3746"
+                "reference": "caf165290cec596a618132ea9bbd445279d1cc4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/d541a45cd54c30136173fae472af748abb0e3746",
-                "reference": "d541a45cd54c30136173fae472af748abb0e3746",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/caf165290cec596a618132ea9bbd445279d1cc4b",
+                "reference": "caf165290cec596a618132ea9bbd445279d1cc4b",
                 "shasum": ""
             },
             "require": {
                 "dreamfactory/fabric-db": "dev-develop as dev-master",
                 "league/flysystem-dropbox": "*",
                 "league/flysystem-sftp": "*",
-                "league/flysystem-ziparchive": "*"
+                "league/flysystem-ziparchive": "*",
+                "wpb/string-blade-compiler": "2.*@dev"
             },
             "require-dev": {
                 "dreamfactory/fabric-audit": "dev-develop as dev-master",
@@ -792,7 +793,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-02-15 22:54:09"
+            "time": "2015-02-16 22:13:56"
         },
         {
             "name": "dreamfactory/dfe-services",
@@ -800,12 +801,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "55a3675abeae46e6d9e1a841e42026106a6a560d"
+                "reference": "6901c83e70038081900ea54872c358572effc9a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/55a3675abeae46e6d9e1a841e42026106a6a560d",
-                "reference": "55a3675abeae46e6d9e1a841e42026106a6a560d",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/6901c83e70038081900ea54872c358572effc9a1",
+                "reference": "6901c83e70038081900ea54872c358572effc9a1",
                 "shasum": ""
             },
             "require": {
@@ -814,8 +815,7 @@
                 "dreamfactory/fabric-db": "dev-develop as dev-master",
                 "league/flysystem-dropbox": "*",
                 "league/flysystem-sftp": "*",
-                "league/flysystem-ziparchive": "*",
-                "wpb/string-blade-compiler": "2.*@dev"
+                "league/flysystem-ziparchive": "*"
             },
             "require-dev": {
                 "dreamfactory/fabric-audit": "dev-develop as dev-master",
@@ -875,7 +875,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-02-16 17:06:33"
+            "time": "2015-02-16 22:14:30"
         },
         {
             "name": "dreamfactory/fabric-api-common",
@@ -1776,12 +1776,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "48fee812cb6eab324e79826b6fe5127b7e5c77e7"
+                "reference": "17d5fe80df1d29ea2773f9cafa0068e5a159986e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/48fee812cb6eab324e79826b6fe5127b7e5c77e7",
-                "reference": "48fee812cb6eab324e79826b6fe5127b7e5c77e7",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/17d5fe80df1d29ea2773f9cafa0068e5a159986e",
+                "reference": "17d5fe80df1d29ea2773f9cafa0068e5a159986e",
                 "shasum": ""
             },
             "require": {
@@ -1893,7 +1893,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-16 15:05:47"
+            "time": "2015-02-16 19:49:47"
         },
         {
             "name": "league/flysystem",
