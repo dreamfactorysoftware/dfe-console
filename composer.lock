@@ -719,12 +719,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "c164fb5b8e97a2aaa7ba402a3d79cb7268b25013"
+                "reference": "0118a6809f3e7c5477d7f41001b9cbbd621d59bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/c164fb5b8e97a2aaa7ba402a3d79cb7268b25013",
-                "reference": "c164fb5b8e97a2aaa7ba402a3d79cb7268b25013",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/0118a6809f3e7c5477d7f41001b9cbbd621d59bb",
+                "reference": "0118a6809f3e7c5477d7f41001b9cbbd621d59bb",
                 "shasum": ""
             },
             "require": {
@@ -793,7 +793,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-02-19 00:52:42"
+            "time": "2015-02-19 01:41:35"
         },
         {
             "name": "dreamfactory/dfe-services",
@@ -801,12 +801,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "08e0097456413be41ea630a125369e0baa3c08f9"
+                "reference": "47d1c856ab0fa2f1da8bbc734bf32dabc890ff56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/08e0097456413be41ea630a125369e0baa3c08f9",
-                "reference": "08e0097456413be41ea630a125369e0baa3c08f9",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/47d1c856ab0fa2f1da8bbc734bf32dabc890ff56",
+                "reference": "47d1c856ab0fa2f1da8bbc734bf32dabc890ff56",
                 "shasum": ""
             },
             "require": {
@@ -875,7 +875,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-02-19 00:53:37"
+            "time": "2015-02-19 01:42:44"
         },
         {
             "name": "dreamfactory/fabric-api-common",
