@@ -719,12 +719,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "caf165290cec596a618132ea9bbd445279d1cc4b"
+                "reference": "c164fb5b8e97a2aaa7ba402a3d79cb7268b25013"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/caf165290cec596a618132ea9bbd445279d1cc4b",
-                "reference": "caf165290cec596a618132ea9bbd445279d1cc4b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/c164fb5b8e97a2aaa7ba402a3d79cb7268b25013",
+                "reference": "c164fb5b8e97a2aaa7ba402a3d79cb7268b25013",
                 "shasum": ""
             },
             "require": {
@@ -793,7 +793,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-02-16 22:13:56"
+            "time": "2015-02-19 00:52:42"
         },
         {
             "name": "dreamfactory/dfe-services",
@@ -801,12 +801,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "d39593c2b1fe3b689732e05a2c6df2a79ca79b2f"
+                "reference": "08e0097456413be41ea630a125369e0baa3c08f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/d39593c2b1fe3b689732e05a2c6df2a79ca79b2f",
-                "reference": "d39593c2b1fe3b689732e05a2c6df2a79ca79b2f",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/08e0097456413be41ea630a125369e0baa3c08f9",
+                "reference": "08e0097456413be41ea630a125369e0baa3c08f9",
                 "shasum": ""
             },
             "require": {
@@ -875,7 +875,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-02-17 02:12:07"
+            "time": "2015-02-19 00:53:37"
         },
         {
             "name": "dreamfactory/fabric-api-common",
@@ -936,12 +936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/fabric-audit.git",
-                "reference": "647456b71106e3a2412472d90e8733eb4b4d057e"
+                "reference": "bee4c33db6e9578019abbff5be48e7672738ef08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-audit/zipball/647456b71106e3a2412472d90e8733eb4b4d057e",
-                "reference": "647456b71106e3a2412472d90e8733eb4b4d057e",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-audit/zipball/bee4c33db6e9578019abbff5be48e7672738ef08",
+                "reference": "bee4c33db6e9578019abbff5be48e7672738ef08",
                 "shasum": ""
             },
             "require": {
@@ -981,7 +981,7 @@
                 "queue",
                 "utility"
             ],
-            "time": "2015-01-26 21:05:10"
+            "time": "2015-02-18 18:10:21"
         },
         {
             "name": "dreamfactory/fabric-common",
@@ -1776,12 +1776,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "17d5fe80df1d29ea2773f9cafa0068e5a159986e"
+                "reference": "1b205ae8ac897470f501b7d781057701eeb01ac1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/17d5fe80df1d29ea2773f9cafa0068e5a159986e",
-                "reference": "17d5fe80df1d29ea2773f9cafa0068e5a159986e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/1b205ae8ac897470f501b7d781057701eeb01ac1",
+                "reference": "1b205ae8ac897470f501b7d781057701eeb01ac1",
                 "shasum": ""
             },
             "require": {
@@ -1893,7 +1893,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-16 19:49:47"
+            "time": "2015-02-18 23:12:24"
         },
         {
             "name": "league/flysystem",
@@ -1901,12 +1901,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "853a71ad0d6c87ebf2ada3ab28e799a9640f9f91"
+                "reference": "d3887257d8f1944525c334f19da3c2841a7a9194"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/853a71ad0d6c87ebf2ada3ab28e799a9640f9f91",
-                "reference": "853a71ad0d6c87ebf2ada3ab28e799a9640f9f91",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d3887257d8f1944525c334f19da3c2841a7a9194",
+                "reference": "d3887257d8f1944525c334f19da3c2841a7a9194",
                 "shasum": ""
             },
             "require": {
@@ -1976,7 +1976,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-02-15 18:02:18"
+            "time": "2015-02-18 09:40:42"
         },
         {
             "name": "league/flysystem-dropbox",
@@ -2472,12 +2472,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "7fd995d8b781efb7ff2d10a7ccb1c6cd8f9d6d5f"
+                "reference": "f23815bb7e5a7166947f3a0388b3ad0f4127714f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/7fd995d8b781efb7ff2d10a7ccb1c6cd8f9d6d5f",
-                "reference": "7fd995d8b781efb7ff2d10a7ccb1c6cd8f9d6d5f",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/f23815bb7e5a7166947f3a0388b3ad0f4127714f",
+                "reference": "f23815bb7e5a7166947f3a0388b3ad0f4127714f",
                 "shasum": ""
             },
             "require": {
@@ -2534,7 +2534,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-02-15 18:50:21"
+            "time": "2015-02-18 17:29:24"
         },
         {
             "name": "react/promise",
@@ -2586,27 +2586,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "d9e60747a2666e65a6ec454c3cdef0a3d81e12c4"
+                "reference": "bfa9363bf2aa62af5907135863661c6c78a68ee4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/d9e60747a2666e65a6ec454c3cdef0a3d81e12c4",
-                "reference": "d9e60747a2666e65a6ec454c3cdef0a3d81e12c4",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/bfa9363bf2aa62af5907135863661c6c78a68ee4",
+                "reference": "bfa9363bf2aa62af5907135863661c6c78a68ee4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "php": ">=5.3.3",
                 "psr/log": "~1.0"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.4",
-                "guzzlehttp/guzzle": "4.2.*",
                 "munkie/elasticsearch-thrift-php": "1.4.*",
                 "phpunit/phpunit": "4.1.*"
             },
             "suggest": {
                 "egeloen/http-adapter": "Allow using httpadapter transport",
-                "guzzlehttp/guzzle": "Allow using guzzle 4.x as the http transport",
+                "guzzlehttp/guzzle": "Allow using guzzle 4.x as the http transport (Requires php 5.4)",
                 "monolog/monolog": "Logging request",
                 "munkie/elasticsearch-thrift-php": "Allow using thrift transport"
             },
@@ -2638,7 +2637,7 @@
                 "client",
                 "search"
             ],
-            "time": "2015-02-16 09:54:40"
+            "time": "2015-02-17 19:57:36"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3212,12 +3211,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel.git",
-                "reference": "c17f240642f54f207bf5cdbb0d21cf6b7cfbfa16"
+                "reference": "6ec9c1ac244d789aec71f674dc0ee295392718dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/c17f240642f54f207bf5cdbb0d21cf6b7cfbfa16",
-                "reference": "c17f240642f54f207bf5cdbb0d21cf6b7cfbfa16",
+                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/6ec9c1ac244d789aec71f674dc0ee295392718dd",
+                "reference": "6ec9c1ac244d789aec71f674dc0ee295392718dd",
                 "shasum": ""
             },
             "require": {
@@ -3280,7 +3279,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
-            "time": "2015-02-11 07:12:14"
+            "time": "2015-02-14 22:44:52"
         },
         {
             "name": "symfony/process",
@@ -3679,12 +3678,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "c3d5a36c3e3298bd8b070488fba5537174647353"
+                "reference": "9532aaaadf346b2ab79357661e3299b92092d914"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/c3d5a36c3e3298bd8b070488fba5537174647353",
-                "reference": "c3d5a36c3e3298bd8b070488fba5537174647353",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/9532aaaadf346b2ab79357661e3299b92092d914",
+                "reference": "9532aaaadf346b2ab79357661e3299b92092d914",
                 "shasum": ""
             },
             "require": {
@@ -3727,7 +3726,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2015-02-02 16:32:08"
+            "time": "2015-02-17 16:54:47"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -3829,12 +3828,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "1f5e436d0078ca6abbcb07e5e08bcef126a8a14f"
+                "reference": "4cd891eadca838e2bced4c71f4e3a769d5de3594"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/1f5e436d0078ca6abbcb07e5e08bcef126a8a14f",
-                "reference": "1f5e436d0078ca6abbcb07e5e08bcef126a8a14f",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/4cd891eadca838e2bced4c71f4e3a769d5de3594",
+                "reference": "4cd891eadca838e2bced4c71f4e3a769d5de3594",
                 "shasum": ""
             },
             "require": {
@@ -3884,7 +3883,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2015-02-12 09:50:01"
+            "time": "2015-02-17 12:55:39"
         },
         {
             "name": "doctrine/dbal",
