@@ -1,7 +1,6 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;

@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'model' => 'App\User',
+	'model' => 'DreamFactory\Enterprise\Console\User',
 
 	/*
 	|--------------------------------------------------------------------------

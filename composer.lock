@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4f58d494acf252d134caf26cea6fb0ac",
+    "hash": "dd66d66eba38ef4914f4823f1cd8ff15",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1216,12 +1216,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/php-utils.git",
-                "reference": "0621fdadd4f78f259ff5ce5c88b4dee8ff7c3d3c"
+                "reference": "8fe9ba7be49010c8c605b97e42e753a5438f8603"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/0621fdadd4f78f259ff5ce5c88b4dee8ff7c3d3c",
-                "reference": "0621fdadd4f78f259ff5ce5c88b4dee8ff7c3d3c",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/8fe9ba7be49010c8c605b97e42e753a5438f8603",
+                "reference": "8fe9ba7be49010c8c605b97e42e753a5438f8603",
                 "shasum": ""
             },
             "require": {
@@ -1259,7 +1259,7 @@
                 "dreamfactory",
                 "utility"
             ],
-            "time": "2015-02-26 03:08:14"
+            "time": "2015-03-02 21:48:10"
         },
         {
             "name": "dreamfactory/rave-common",
@@ -3718,12 +3718,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "cc7e4fefb98b90cef783daf73afcc0d8b6a05653"
+                "reference": "a5e885afa5892140b46507571fca35dd5ce7aa9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/cc7e4fefb98b90cef783daf73afcc0d8b6a05653",
-                "reference": "cc7e4fefb98b90cef783daf73afcc0d8b6a05653",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/a5e885afa5892140b46507571fca35dd5ce7aa9c",
+                "reference": "a5e885afa5892140b46507571fca35dd5ce7aa9c",
                 "shasum": ""
             },
             "require": {
@@ -3782,7 +3782,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-02-26 10:47:54"
+            "time": "2015-03-02 21:30:58"
         },
         {
             "name": "doctrine/instantiator",
@@ -3928,12 +3928,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "974f648141c3a3a4363b31c24f16d521d623d701"
+                "reference": "b2eb24b8bf89dabaab867e22cc39cccbe14d4e5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/974f648141c3a3a4363b31c24f16d521d623d701",
-                "reference": "974f648141c3a3a4363b31c24f16d521d623d701",
+                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/b2eb24b8bf89dabaab867e22cc39cccbe14d4e5e",
+                "reference": "b2eb24b8bf89dabaab867e22cc39cccbe14d4e5e",
                 "shasum": ""
             },
             "require": {
@@ -3998,7 +3998,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2015-02-09 21:37:03"
+            "time": "2015-03-02 20:19:44"
         },
         {
             "name": "phpspec/prophecy",

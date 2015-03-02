@@ -1,6 +1,7 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;

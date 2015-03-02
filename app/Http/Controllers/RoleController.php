@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 class RoleController extends ResourceController
 {

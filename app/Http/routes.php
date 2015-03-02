@@ -1,51 +1,17 @@
 <?php
-
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
-
 //******************************************************************************
-//* Implicit Controllers
+//* Console Routes
 //******************************************************************************
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
-/** @noinspection PhpUndefinedMethodInspection */
-Route::controller( 'app', '\\DreamFactory\\Enterprise\\Console\\Controllers\\AppController' );
-/** @noinspection PhpUndefinedMethodInspection */
-Route::controller( 'dashboard', '\\DreamFactory\\Enterprise\\Console\\Controllers\\DashboardController' );
-/** @noinspection PhpUndefinedMethodInspection */
-Route::controller( 'settings', '\\DreamFactory\\Enterprise\\Console\\Controllers\\SettingsController' );
-/** @noinspection PhpUndefinedMethodInspection */
-Route::get(
-    'form',
-    function ()
-    {
-        return View::make( 'app.forms.user' );
-    }
-);
-/** @noinspection PhpUndefinedMethodInspection */
-Route::post(
-    'form-submit',
-    [
-        'before' => 'csrf',
-        function ()
-        {
-            //  validation;
-        }
-    ]
-);
-/** @noinspection PhpUndefinedMethodInspection */
+//******************************************************************************
+//* Resource Controllers
+//******************************************************************************
+
 Route::group(
-    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Controllers'],
+    ['prefix' => 'api/v1'],
     function ()
     {
         Route::resource( 'servers', 'ServerController' );
@@ -56,7 +22,12 @@ Route::group(
         Route::resource( 'users', 'UserController' );
     }
 );
-/** @noinspection PhpUndefinedMethodInspection */
+
+//******************************************************************************
+//* Implicit Controllers
+//******************************************************************************
+
+//  Main page
 Route::get(
     '/',
     function ()
@@ -69,9 +40,36 @@ Route::get(
     }
 );
 
+//  Other controllers
 Route::controllers(
     [
-        'auth'     => 'App\\Http\\Controllers\\Auth\AuthController',
-        'password' => 'App\\Http\\Controllers\\Auth\PasswordController',
+        'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',
+        'dashboard' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\DashboardController',
+        'settings'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\SettingsController',
+        'auth'      => 'DreamFactory\Enterprise\Console\\Http\\Controllers\\Auth\AuthController',
+        'password'  => 'DreamFactory\Enterprise\Console\\Http\\Controllers\\Auth\PasswordController',
+    ]
+);
+
+//******************************************************************************
+//* Testing
+//******************************************************************************
+
+Route::get(
+    'form',
+    function ()
+    {
+        return View::make( 'app.forms.user' );
+    }
+);
+
+Route::post(
+    'form-submit',
+    [
+        'before' => 'csrf',
+        function ()
+        {
+            //  validation;
+        }
     ]
 );

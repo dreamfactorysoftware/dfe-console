@@ -1,8 +1,9 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
-use DreamFactory\Enterprise\Console\Providers\Elk;
+use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
+use DreamFactory\Enterprise\Console\Services\Elk;
 use DreamFactory\Library\Fabric\Api\Common\Facades\Packet;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
@@ -11,7 +12,6 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 
@@ -59,19 +59,19 @@ class DashboardController extends FactoryController
 
         if ( empty( $_stats ) )
         {
-            $_stats = array(
+            $_stats = [
                 'cluster_count' => number_format( Cluster::count(), 0 ),
                 'server_count'  => number_format( Server::count(), 0 ),
                 'user_count'    => number_format( User::count(), 0 ),
-                'dsp_count'     => array(
+                'dsp_count'     => [
                     'live' => number_format( Instance::count(), 0 ),
                     'dead' => number_format( InstanceArchive::count(), 0 ),
-                ),
-                'disk_usage'    => array(
+                ],
+                'disk_usage'    => [
                     'available' => @\disk_total_space( static::BASE_STORAGE_PATH ),
                     'storage'   => $this->_diskUsage( static::BASE_STORAGE_PATH ),
-                )
-            );
+                ]
+            ];
 
             Cache::put( 'stats.overall', $_stats, static::STATS_CACHE_TTL );
         }
@@ -136,21 +136,21 @@ class DashboardController extends FactoryController
 
         if ( !$_raw )
         {
-            $_response = array('data' => array('time' => array(), 'facilities' => array()), 'label' => 'Time');
+            $_response = ['data' => ['time' => [], 'facilities' => []], 'label' => 'Time'];
             $_facets = $_results->getAggregations();
 
             if ( !empty( $_facets ) )
             {
                 /** @var $_datapoint array */
-                foreach ( IfSet::getDeep( $_facets, 'published_on', 'buckets', array() ) as $_datapoint )
+                foreach ( IfSet::getDeep( $_facets, 'published_on', 'buckets', [] ) as $_datapoint )
                 {
-                    array_push( $_response['data']['time'], array($_datapoint['time'], $_datapoint['count']) );
+                    array_push( $_response['data']['time'], [$_datapoint['time'], $_datapoint['count']] );
                 }
 
                 /** @var $_datapoint array */
-                foreach ( IfSet::getDeep( $_facets, 'facilities', 'buckets', array() ) as $_datapoint )
+                foreach ( IfSet::getDeep( $_facets, 'facilities', 'buckets', [] ) as $_datapoint )
                 {
-                    array_push( $_response['data']['facilities'], array($_datapoint['term'], $_datapoint['count']) );
+                    array_push( $_response['data']['facilities'], [$_datapoint['term'], $_datapoint['count']] );
                 }
             }
 
@@ -174,7 +174,7 @@ class DashboardController extends FactoryController
 
             if ( false === ( $_stats = $_source->globalStats() ) )
             {
-                $_stats = array();
+                $_stats = [];
             }
 
             Cache::put( 'stats.global-stats', $_stats, static::STATS_CACHE_TTL );
@@ -229,6 +229,6 @@ class DashboardController extends FactoryController
     {
         static $_service;
 
-        return $_service ?: $_service = App::make( 'elk.service' );
+        return $_service ?: $_service = app( ElkServiceProvider::IOC_NAME );
     }
 }

@@ -5,6 +5,16 @@
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/tests" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/vendor" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/tests" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/vendor" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

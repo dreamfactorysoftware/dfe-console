@@ -1,6 +1,7 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Providers;
+namespace DreamFactory\Enterprise\Console\Services;
 
+use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Console\Enums\ElasticSearchIntervals;
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use Elastica\Client;
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Gets data from the ELK system
  */
-class Elk
+class Elk extends BaseService
 {
     //******************************************************************************
     //* Constants
@@ -48,7 +49,7 @@ class Elk
     /**
      * @param array $settings
      */
-    public function __construct( array $settings = array() )
+    public function __construct( array $settings = [] )
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $_config = Config::get( 'elk' );
@@ -70,7 +71,7 @@ class Elk
     {
         if ( null === static::$_indices )
         {
-            $_indices = array();
+            $_indices = [];
 
             try
             {
@@ -151,50 +152,50 @@ class Elk
     {
         $facility = str_replace( '/', '?', $facility );
 
-        $_query = array(
+        $_query = [
             'size' => $size,
             'from' => $from,
-            'aggs' => array(
-                'facilities'   => array(
-                    'terms' => array(
+            'aggs' => [
+                'facilities'   => [
+                    'terms' => [
                         'field' => 'fabric.facility.raw',
                         'size'  => 10,
-                    )
-                ),
-                'published_on' => array(
-                    'date_histogram' => array(
+                    ]
+                ],
+                'published_on' => [
+                    'date_histogram' => [
                         'field'    => '@timestamp',
                         'interval' => $interval,
-                    )
-                )
-            )
-        );
+                    ]
+                ]
+            ]
+        ];
 
         if ( empty( $term ) )
         {
-            $_query['aggs']['paths'] = array(
-                'terms' => array(
+            $_query['aggs']['paths'] = [
+                'terms' => [
                     'field' => 'fabric.path.raw',
                     'size'  => 10,
-                )
-            );
+                ]
+            ];
 
             if ( !empty( $facility ) )
             {
-                $_query['query'] = array(
-                    'bool' => array(
-                        'must' => array(
-                            'wildcard' => array(
+                $_query['query'] = [
+                    'bool' => [
+                        'must' => [
+                            'wildcard' => [
                                 'fabric.facility.raw' => $facility,
-                            ),
-                        ),
-                    ),
-                );
+                            ],
+                        ],
+                    ],
+                ];
             }
         }
         else
         {
-            $_query['query'] = array('term' => array());
+            $_query['query'] = ['term' => []];
 
             if ( is_array( $term ) )
             {
@@ -232,7 +233,7 @@ class Elk
         {
             if ( !is_array( $indices ) )
             {
-                $indices = array($indices);
+                $indices = [$indices];
             }
 
             $_search->addIndices( $indices );
@@ -265,18 +266,18 @@ class Elk
      */
     public function globalStats( $from = 0, $size = 1 )
     {
-        $_query = array(
-            'query' => array(
-                'term' => array('fabric.facility.raw' => 'cloud/cli/global/metrics'),
-            ),
+        $_query = [
+            'query' => [
+                'term' => ['fabric.facility.raw' => 'cloud/cli/global/metrics'],
+            ],
             'size'  => $size,
             'from'  => $from,
-            'sort'  => array(
-                '@timestamp' => array(
+            'sort'  => [
+                '@timestamp' => [
                     'order' => 'desc'
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $_query = new Query( $_query );
         $_search = new Search( $this->_client );
@@ -314,24 +315,24 @@ class Elk
      */
     public function allStats( $from = 0, $size = 1 )
     {
-        $_query = array(
-            'query' => array(
-                'term' => array('fabric.facility.raw' => 'cloud/cli/metrics'),
-            ),
+        $_query = [
+            'query' => [
+                'term' => ['fabric.facility.raw' => 'cloud/cli/metrics'],
+            ],
             'size'  => 99999999,
             'from'  => 0,
-            'sort'  => array(
-                '@timestamp' => array(
+            'sort'  => [
+                '@timestamp' => [
                     'order' => 'desc'
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
 
         $_query = new Query( $_query );
         $_search = new Search( $this->_client );
         $_result = $_search->search( $_query )->getResults();
 
-        $_data = array();
+        $_data = [];
 
         foreach ( $_result as $_hit )
         {
@@ -359,7 +360,7 @@ class Elk
 
         $_query = new Query();
         $_query->setSize( $size );
-        $_query->setSort( array('@timestamp') );
+        $_query->setSort( ['@timestamp'] );
 
         //	Filter for term
         $_filter = new Prefix( $term, $value );

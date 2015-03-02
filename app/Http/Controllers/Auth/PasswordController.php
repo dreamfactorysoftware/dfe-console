@@ -1,6 +1,6 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use DreamFactory\Enterprise\Console\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;

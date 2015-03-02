@@ -130,15 +130,15 @@ return [
         /*
          * Application Service Providers...
          */
-        'App\Providers\AppServiceProvider',
-        'App\Providers\BusServiceProvider',
-        'App\Providers\ConfigServiceProvider',
-        'App\Providers\EventServiceProvider',
-        'App\Providers\RouteServiceProvider',
+        'DreamFactory\Enterprise\Console\Providers\AppServiceProvider',
+        'DreamFactory\Enterprise\Console\Providers\BusServiceProvider',
+        'DreamFactory\Enterprise\Console\Providers\ConfigServiceProvider',
+        'DreamFactory\Enterprise\Console\Providers\EventServiceProvider',
+        'DreamFactory\Enterprise\Console\Providers\RouteServiceProvider',
         /*
          * DreamFactory Service Providers...
          */
-        'DreamFactory\Enterprise\Console\Services\ElkServiceProvider',
+        'DreamFactory\Enterprise\Console\Providers\ElkServiceProvider',
         'DreamFactory\Library\Fabric\Api\Common\Providers\PacketServiceProvider',
         /*
          * 3rd-party Service Providers
