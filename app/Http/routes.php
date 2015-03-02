@@ -35,25 +35,25 @@ Route::get(
 /** @noinspection PhpUndefinedMethodInspection */
 Route::post(
     'form-submit',
-    array(
+    [
         'before' => 'csrf',
         function ()
         {
             //  validation;
         }
-    )
+    ]
 );
 /** @noinspection PhpUndefinedMethodInspection */
 Route::group(
-    array('prefix' => 'api/v1'),
+    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Controllers'],
     function ()
     {
-        Route::resource( 'servers', 'DreamFactory\\Enterprise\\Console\\Controllers\\ServerController' );
-        Route::resource( 'clusters', 'DreamFactory\\Enterprise\\Console\\Controllers\\ClusterController' );
-        Route::resource( 'instances', 'DreamFactory\\Enterprise\\Console\\Controllers\\InstanceController' );
-        Route::resource( 'roles', 'DreamFactory\\Enterprise\\Console\\Controllers\\RoleController' );
-        Route::resource( 'service-users', 'DreamFactory\\Enterprise\\Console\\Controllers\\ServiceUserController' );
-        Route::resource( 'users', 'DreamFactory\\Enterprise\\Console\\Controllers\\UserController' );
+        Route::resource( 'servers', 'ServerController' );
+        Route::resource( 'clusters', 'ClusterController' );
+        Route::resource( 'instances', 'InstanceController' );
+        Route::resource( 'roles', 'RoleController' );
+        Route::resource( 'service-users', 'ServiceUserController' );
+        Route::resource( 'users', 'UserController' );
     }
 );
 /** @noinspection PhpUndefinedMethodInspection */
@@ -64,7 +64,7 @@ Route::get(
         /** @noinspection PhpUndefinedMethodInspection */
         return View::make(
             'app.dashboard',
-            array('_trail' => null, '_active' => array('instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0))
+            ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0]]
         );
     }
 );
