@@ -42,16 +42,15 @@
     ],
     "type":              "project",
     "require":           {
-        "laravel/framework":              "5.0.*",
-        "doctrine/couchdb-odm":           "*",
-        "ruflin/elastica":                "*",
-        "dreamfactory/dfe-services":      "dev-develop as dev-master",
-        "dreamfactory/php-utils":         "*",
-        "dreamfactory/rave-common":       "dev-develop as dev-master",
-        "dreamfactory/fabric-api-common": "dev-develop as dev-master",
-        "dreamfactory/fabric-audit":      "dev-develop as dev-master",
-        "dreamfactory/console-tools":     "dev-develop as dev-master",
-        "dreamfactory/fabric-queue":      "dev-develop as dev-master"
+        "laravel/framework":          "5.0.*",
+        "doctrine/couchdb-odm":       "*",
+        "ruflin/elastica":            "*",
+        "dreamfactory/dfe-services":  "dev-develop as dev-master",
+        "dreamfactory/php-utils":     "*",
+        "dreamfactory/rave-common":   "dev-develop as dev-master",
+        "dreamfactory/fabric-audit":  "dev-develop as dev-master",
+        "dreamfactory/console-tools": "dev-develop as dev-master",
+        "dreamfactory/fabric-queue":  "dev-develop as dev-master"
     },
     "require-dev":       {
         "phpunit/phpunit":             "~4.0",

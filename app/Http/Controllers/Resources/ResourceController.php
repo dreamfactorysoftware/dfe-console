@@ -1,7 +1,8 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Facades\Packet;
+use DreamFactory\Enterprise\Console\Http\Controllers\DataController;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;

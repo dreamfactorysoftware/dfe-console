@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
 use DreamFactory\Enterprise\Console\Services\Elk;
 use DreamFactory\Library\Fabric\Api\Common\Facades\Packet;
+use DreamFactory\Library\Fabric\Auditing\Services\AuditingService;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -12,6 +13,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 
@@ -32,7 +34,7 @@ class DashboardController extends FactoryController
     /**
      * @var string
      */
-    const DEFAULT_FACILITY = 'platform/api';
+    const DEFAULT_FACILITY = AuditingService::DEFAULT_FACILITY;
     /**
      * @var string
      */
@@ -229,6 +231,6 @@ class DashboardController extends FactoryController
     {
         static $_service;
 
-        return $_service ?: $_service = app( ElkServiceProvider::IOC_NAME );
+        return $_service ?: $_service = App::make( ElkServiceProvider::IOC_NAME );
     }
 }

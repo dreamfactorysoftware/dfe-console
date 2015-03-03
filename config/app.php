@@ -46,7 +46,7 @@ return [
         'DreamFactory\Enterprise\Console\Providers\RouteServiceProvider',
         /** DreamFactory Service Providers... */
         'DreamFactory\Enterprise\Console\Providers\ElkServiceProvider',
-        'DreamFactory\Library\Fabric\Api\Common\Providers\PacketServiceProvider',
+        'DreamFactory\Enterprise\Common\Providers\PacketServiceProvider',
         /** 3rd-party Service Providers */
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
     ],

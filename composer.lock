@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dd66d66eba38ef4914f4823f1cd8ff15",
+    "hash": "5008bfe94e5fb6a595aa4be774f1d3a2",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -875,59 +875,6 @@
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
             "time": "2015-03-02 22:15:43"
-        },
-        {
-            "name": "dreamfactory/fabric-api-common",
-            "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dreamfactorysoftware/fabric-api-common.git",
-                "reference": "00434ad20c5278cefdaa399959b5504df963f125"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-api-common/zipball/00434ad20c5278cefdaa399959b5504df963f125",
-                "reference": "00434ad20c5278cefdaa399959b5504df963f125",
-                "shasum": ""
-            },
-            "require": {
-                "dreamfactory/php-utils": "~1.0",
-                "psr/log": "~1.0"
-            },
-            "require-dev": {
-                "laravel/laravel": "4.2.*",
-                "phpunit/phpunit": "@stable"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-develop": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "DreamFactory\\Library\\Fabric\\Api\\Common\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Jerry Ablan",
-                    "email": "jerryablan@dreamfactory.com"
-                }
-            ],
-            "description": "DreamFactory Enterprise(tm) Common API Components Library",
-            "homepage": "https://www.dreamfactory.com/",
-            "keywords": [
-                "dreamfactory",
-                "fabric",
-                "queue",
-                "utility"
-            ],
-            "time": "2015-02-26 16:23:35"
         },
         {
             "name": "dreamfactory/fabric-audit",
@@ -4970,12 +4917,6 @@
             "alias": "dev-master",
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
-            "package": "dreamfactory/fabric-api-common"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
             "package": "dreamfactory/fabric-audit"
         },
         {
@@ -4995,7 +4936,6 @@
     "stability-flags": {
         "dreamfactory/dfe-services": 20,
         "dreamfactory/rave-common": 20,
-        "dreamfactory/fabric-api-common": 20,
         "dreamfactory/fabric-audit": 20,
         "dreamfactory/console-tools": 20,
         "dreamfactory/fabric-queue": 20

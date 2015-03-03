@@ -11,16 +11,15 @@ use Illuminate\Support\Facades\View;
 //******************************************************************************
 
 Route::group(
-    ['prefix' => 'api/v1'],
+    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources'],
     function ()
     {
-        Route::resource( 'clusters', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ClusterController' );
-        Route::resource( 'instances', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\InstanceController' );
-        Route::resource( 'roles', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\RoleController' );
-        Route::resource( 'servers', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ServerController' );
-        Route::resource( 'service-users', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ServiceUserController' );
-        Route::resource( 'service-users', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ServiceUserController' );
-        Route::resource( 'users', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\UserController' );
+        Route::resource( 'clusters', 'ClusterController' );
+        Route::resource( 'instances', 'InstanceController' );
+        Route::resource( 'roles', 'RoleController' );
+        Route::resource( 'servers', 'ServerController' );
+        Route::resource( 'service-users', 'ServiceUserController' );
+        Route::resource( 'users', 'UserController' );
     }
 );
 

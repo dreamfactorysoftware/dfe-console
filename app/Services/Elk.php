@@ -2,7 +2,6 @@
 namespace DreamFactory\Enterprise\Console\Services;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Console\Enums\ElasticSearchIntervals;
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use Elastica\Client;
 use Elastica\Exception\PartialShardFailureException;
