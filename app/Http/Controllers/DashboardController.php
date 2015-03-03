@@ -1,10 +1,10 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Facades\Packet;
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
 use DreamFactory\Enterprise\Console\Services\Elk;
-use DreamFactory\Library\Fabric\Api\Common\Facades\Packet;
 use DreamFactory\Library\Fabric\Auditing\Services\AuditingService;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
@@ -78,7 +78,7 @@ class DashboardController extends FactoryController
             Cache::put( 'stats.overall', $_stats, static::STATS_CACHE_TTL );
         }
 
-        return $envelope ? Packet::success( Response::HTTP_OK, $_stats ) : $_stats;
+        return $envelope ? Packet::success( $_stats ) : $_stats;
     }
 
     /**
@@ -159,7 +159,7 @@ class DashboardController extends FactoryController
             return $_response;
         }
 
-        return Packet::success( Response::HTTP_OK, $_results->getResponse()->getData() );
+        return Packet::success( $_results->getResponse()->getData() );
     }
 
     /**
@@ -183,7 +183,6 @@ class DashboardController extends FactoryController
         }
 
         return Packet::success(
-            Response::HTTP_OK,
             array_merge(
                 $_stats,
                 $this->anyStats( false )
@@ -203,7 +202,7 @@ class DashboardController extends FactoryController
             Cache::put( 'stats.all-stats', $_stats = $this->_elk()->allStats(), static::STATS_CACHE_TTL );
         }
 
-        return Packet::success( Response::HTTP_OK, $_stats );
+        return Packet::success( $_stats );
     }
 
     /**
