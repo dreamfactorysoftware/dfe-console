@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Facades\Packet;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -62,7 +63,7 @@ class ResourceController extends DataController
     {
         try
         {
-            return Response::json(
+            return Packet::success(
                 call_user_func( array($this->_model, 'findOrFail'), $id ),
                 \Symfony\Component\HttpFoundation\Response::HTTP_OK
             );

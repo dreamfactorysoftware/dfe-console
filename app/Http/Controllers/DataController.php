@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Facades\Packet;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -207,7 +208,7 @@ class DataController extends FactoryController
         //  Don't wrap if there are no totals
         if ( !$this->_dtRequest || ( null === $totalRows && null === $totalFiltered ) )
         {
-            return app('dfe.packet')->Response::json( $data );
+            return Packet::success( $data );
         }
 
         $totalRows = (integer)( $totalRows ?: 0 );

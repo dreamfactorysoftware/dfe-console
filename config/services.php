@@ -46,65 +46,46 @@ return [
         'secret' => env( 'MAILGUN_SECRET_KEY' ),
     ],
     //******************************************************************************
-    //* SMTP mail service settings
+    //* Mail template service
     //******************************************************************************
-    'smtp-mail'     => [
+    'mail-template' => [
         'web-url'               => 'http://cerberus.fabric.dreamfactory.com/',
         'public-url'            => 'http://cerberus.fabric.dreamfactory.com/',
         'support-email-address' => 'support@dreamfactory.com',
         'confirmation-url'      => 'http://cerberus.fabric.dreamfactory.com/app/confirmation/',
         'smtp-service'          => 'localhost',
         //.........................................................................
-        //. Services/Keys
-        //.........................................................................
-        //	Amazon SES keys
-        'services'              => [
-            'ses'      => [
-                'server-name' => 'email-smtp.us-east-1.amazonaws.com',
-                'server-port' => '465',
-                'access-key'  => 'AKIAJDPTBX2Q5SOGRE7Q',
-                'secret-key'  => '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',
-            ],
-            //	SendGrid.com credentials
-            'sendgrid' => [
-                'server-name' => 'smtp.sendgrid.net',
-                'server-port' => 587,
-                'access-key'  => 'dreamfactory',
-                'secret-key'  => 'Dreamer123!',
-            ],
-        ],
-        //.........................................................................
         //. Templates
         //.........................................................................
         'templates'             => [
-            MailTemplates::WELCOME              => [
+            MailTemplates::WELCOME              => array(
                 'subject'  => 'Welcome to DreamFactory Developer Central!',
                 'template' => 'welcome-confirmation.html',
-            ],
-            MailTemplates::PASSWORD_RESET       => [
+            ),
+            MailTemplates::PASSWORD_RESET       => array(
                 'subject'  => 'Recover your DreamFactory password',
                 'template' => 'recover-password.html',
-            ],
-            MailTemplates::PASSWORD_CHANGED     => [
+            ),
+            MailTemplates::PASSWORD_CHANGED     => array(
                 'subject'  => 'Your Password Has Been Changed',
                 'template' => 'password-changed.html',
-            ],
-            MailTemplates::NOTIFICATION         => [
+            ),
+            MailTemplates::NOTIFICATION         => array(
                 'subject'  => null,
                 'template' => 'notification.html',
-            ],
-            MailTemplates::SYSTEM_NOTIFICATION  => [
+            ),
+            MailTemplates::SYSTEM_NOTIFICATION  => array(
                 'subject'  => null,
                 'template' => 'system-notification.html',
-            ],
-            MailTemplates::PROVISION_COMPLETE   => [
+            ),
+            MailTemplates::PROVISION_COMPLETE   => array(
                 'subject'  => 'Your DSP is ready!',
                 'template' => 'provisioning-complete.html',
-            ],
-            MailTemplates::DEPROVISION_COMPLETE => [
+            ),
+            MailTemplates::DEPROVISION_COMPLETE => array(
                 'subject'  => 'Your DSP was removed!',
                 'template' => 'deprovisioning-complete.html',
-            ],
+            ),
         ],
     ],
     //******************************************************************************
