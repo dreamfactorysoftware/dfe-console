@@ -1,7 +1,6 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -61,11 +60,11 @@ class DataController extends FactoryController
      *
      * @return \Illuminate\Database\Query\Builder|mixed
      */
-    public function _processDataRequest( $table, $count, array $columns = null, $builder = null )
+    public function _processDataRequest( $table, $count, array $columns = array('*'), $builder = null )
     {
         try
         {
-            $this->_parseDataRequest( $table, $columns );
+            $this->_parseDataRequest( null, $columns );
 
             /** @type Builder $_table */
             $_table = $builder ?: DB::table( $table );
@@ -208,7 +207,7 @@ class DataController extends FactoryController
         //  Don't wrap if there are no totals
         if ( !$this->_dtRequest || ( null === $totalRows && null === $totalFiltered ) )
         {
-            return Response::json( $data );
+            return app('dfe.packet')->Response::json( $data );
         }
 
         $totalRows = (integer)( $totalRows ?: 0 );

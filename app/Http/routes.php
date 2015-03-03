@@ -14,12 +14,13 @@ Route::group(
     ['prefix' => 'api/v1'],
     function ()
     {
-        Route::resource( 'servers', 'ServerController' );
-        Route::resource( 'clusters', 'ClusterController' );
-        Route::resource( 'instances', 'InstanceController' );
-        Route::resource( 'roles', 'RoleController' );
-        Route::resource( 'service-users', 'ServiceUserController' );
-        Route::resource( 'users', 'UserController' );
+        Route::resource( 'clusters', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ClusterController' );
+        Route::resource( 'instances', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\InstanceController' );
+        Route::resource( 'roles', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\RoleController' );
+        Route::resource( 'servers', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ServerController' );
+        Route::resource( 'service-users', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ServiceUserController' );
+        Route::resource( 'service-users', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\ServiceUserController' );
+        Route::resource( 'users', 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources\\UserController' );
     }
 );
 
@@ -46,8 +47,8 @@ Route::controllers(
         'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',
         'dashboard' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\DashboardController',
         'settings'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\SettingsController',
-        'auth'      => 'DreamFactory\Enterprise\Console\\Http\\Controllers\\Auth\AuthController',
-        'password'  => 'DreamFactory\Enterprise\Console\\Http\\Controllers\\Auth\PasswordController',
+        'auth'      => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\AuthController',
+        'password'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\PasswordController',
     ]
 );
 
@@ -59,7 +60,7 @@ Route::get(
     'form',
     function ()
     {
-        return View::make( 'app.forms.user' );
+        return View::make( 'app.forms.service-user' );
     }
 );
 

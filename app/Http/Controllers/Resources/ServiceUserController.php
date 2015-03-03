@@ -1,5 +1,7 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+
+use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 
 class ServiceUserController extends ResourceController
 {
