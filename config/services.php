@@ -10,12 +10,14 @@ return [
     //******************************************************************************
     'auto-register' => [
         /** DreamFactory Common service providers */
-        'scalpel'       => 'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
-        'route-hashing' => 'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
-        'mailer'        => 'DreamFactory\\Enterprise\\Common\\Providers\\SmtpMailServiceProvider',
+        'scalpel'              => 'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
+        'route-hashing'        => 'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
+        'packet'               => 'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
         /** DreamFactory Services service providers */
-        'dreamfactory'  => 'DreamFactory\\Enterprise\\Services\\Provisioners\\DreamFactory\\ProvisioningServiceProvider',
-        'snapshot'      => 'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
+        'dfe.instance-manager' => 'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
+        'dfe.provisioning'     => 'DreamFactory\\Enterprise\\Services\\Provisioners\\DreamFactory\\ProvisioningServiceProvider',
+        'dfe.snapshot'         => 'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
+        'dfe.elk'              => 'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
     ],
     //******************************************************************************
     //* Provisioning service settings
@@ -58,34 +60,34 @@ return [
         //. Templates
         //.........................................................................
         'templates'             => [
-            MailTemplates::WELCOME              => array(
+            MailTemplates::WELCOME              => [
                 'subject'  => 'Welcome to DreamFactory Developer Central!',
                 'template' => 'welcome-confirmation.html',
-            ),
-            MailTemplates::PASSWORD_RESET       => array(
+            ],
+            MailTemplates::PASSWORD_RESET       => [
                 'subject'  => 'Recover your DreamFactory password',
                 'template' => 'recover-password.html',
-            ),
-            MailTemplates::PASSWORD_CHANGED     => array(
+            ],
+            MailTemplates::PASSWORD_CHANGED     => [
                 'subject'  => 'Your Password Has Been Changed',
                 'template' => 'password-changed.html',
-            ),
-            MailTemplates::NOTIFICATION         => array(
+            ],
+            MailTemplates::NOTIFICATION         => [
                 'subject'  => null,
                 'template' => 'notification.html',
-            ),
-            MailTemplates::SYSTEM_NOTIFICATION  => array(
+            ],
+            MailTemplates::SYSTEM_NOTIFICATION  => [
                 'subject'  => null,
                 'template' => 'system-notification.html',
-            ),
-            MailTemplates::PROVISION_COMPLETE   => array(
+            ],
+            MailTemplates::PROVISION_COMPLETE   => [
                 'subject'  => 'Your DSP is ready!',
                 'template' => 'provisioning-complete.html',
-            ),
-            MailTemplates::DEPROVISION_COMPLETE => array(
+            ],
+            MailTemplates::DEPROVISION_COMPLETE => [
                 'subject'  => 'Your DSP was removed!',
                 'template' => 'deprovisioning-complete.html',
-            ),
+            ],
         ],
     ],
     //******************************************************************************

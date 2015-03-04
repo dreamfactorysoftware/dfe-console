@@ -782,12 +782,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "6ea2c059e360af08243cabeea263452d81e90c85"
+                "reference": "d47bc6802c7e25d2a922a1922dd430de5432ca0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/6ea2c059e360af08243cabeea263452d81e90c85",
-                "reference": "6ea2c059e360af08243cabeea263452d81e90c85",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/d47bc6802c7e25d2a922a1922dd430de5432ca0b",
+                "reference": "d47bc6802c7e25d2a922a1922dd430de5432ca0b",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +836,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-03-04 17:52:09"
+            "time": "2015-03-04 18:40:24"
         },
         {
             "name": "dreamfactory/fabric-audit",
@@ -1873,12 +1873,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "6469e290207e5846e859bd69618c67e1650f2d76"
+                "reference": "4b6c798f9ccabc4e0225644fa4e5ae94828aeab0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/6469e290207e5846e859bd69618c67e1650f2d76",
-                "reference": "6469e290207e5846e859bd69618c67e1650f2d76",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/4b6c798f9ccabc4e0225644fa4e5ae94828aeab0",
+                "reference": "4b6c798f9ccabc4e0225644fa4e5ae94828aeab0",
                 "shasum": ""
             },
             "require": {
@@ -1937,7 +1937,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-03-04 11:37:13"
+            "time": "2015-03-04 17:56:10"
         },
         {
             "name": "mtdowling/cron-expression",

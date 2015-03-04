@@ -33,7 +33,6 @@ class ClusterState extends Command
      */
     public function fire()
     {
-
     }
 
     /**

@@ -3,6 +3,7 @@
     <words>
       <w>authenticatable</w>
       <w>csrf</w>
+      <w>queueable</w>
       <w>rackspacecloud</w>
     </words>
   </dictionary>

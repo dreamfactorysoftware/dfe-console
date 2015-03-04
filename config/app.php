@@ -45,8 +45,7 @@ return [
         'DreamFactory\Enterprise\Console\Providers\EventServiceProvider',
         'DreamFactory\Enterprise\Console\Providers\RouteServiceProvider',
         /** DreamFactory Service Providers... */
-        'DreamFactory\Enterprise\Console\Providers\ElkServiceProvider',
-        'DreamFactory\Enterprise\Common\Providers\PacketServiceProvider',
+        'DreamFactory\Enterprise\Common\Providers\SideloadServiceProvider',
         /** 3rd-party Service Providers */
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
     ],
