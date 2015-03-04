@@ -719,12 +719,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "00992c4b667737972a939017ea9b830f5abf56dc"
+                "reference": "04d97a0172d50d46b954e6fd7ba0c255cd30cdf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/00992c4b667737972a939017ea9b830f5abf56dc",
-                "reference": "00992c4b667737972a939017ea9b830f5abf56dc",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/04d97a0172d50d46b954e6fd7ba0c255cd30cdf7",
+                "reference": "04d97a0172d50d46b954e6fd7ba0c255cd30cdf7",
                 "shasum": ""
             },
             "require": {
@@ -749,27 +749,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "DreamFactory\\Enterprise\\Common\\": "app/"
+                    "DreamFactory\\Enterprise\\Common\\": "src/"
                 }
-            },
-            "autoload-dev": {
-                "classmap": [
-                    "tests/TestCase.php"
-                ]
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "php artisan clear-compiled",
-                    "php artisan optimize"
-                ],
-                "post-update-cmd": [
-                    "php artisan clear-compiled",
-                    "php artisan optimize"
-                ],
-                "post-create-project-cmd": [
-                    "php -r \"copy('.env.example', '.env');\"",
-                    "php artisan key:generate"
-                ]
             },
             "license": [
                 "proprietary"
@@ -793,7 +774,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-03-03 22:00:09"
+            "time": "2015-03-04 01:18:40"
         },
         {
             "name": "dreamfactory/dfe-services",
@@ -801,12 +782,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "8c608e902f089d8320e97f73ae870c333d6e1968"
+                "reference": "81c87b1dc21ee6095e1fc17b3f62105a8122e6a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/8c608e902f089d8320e97f73ae870c333d6e1968",
-                "reference": "8c608e902f089d8320e97f73ae870c333d6e1968",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/81c87b1dc21ee6095e1fc17b3f62105a8122e6a2",
+                "reference": "81c87b1dc21ee6095e1fc17b3f62105a8122e6a2",
                 "shasum": ""
             },
             "require": {
@@ -816,14 +797,12 @@
                 "league/flysystem-ziparchive": "*"
             },
             "require-dev": {
-                "barryvdh/laravel-ide-helper": "~2.0",
                 "dreamfactory/fabric-audit": "dev-develop as dev-master",
                 "dreamfactory/fabric-common": "dev-develop as dev-master",
                 "guzzlehttp/guzzle": "~4.0",
                 "laravel/framework": "5.0.*",
                 "phpspec/phpspec": "~2.1",
-                "phpunit/phpunit": "~4.0",
-                "way/generators": "~3.0"
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
             "extra": {
@@ -833,25 +812,8 @@
             },
             "autoload": {
                 "psr-4": {
-                    "DreamFactory\\Enterprise\\Services\\": "app/"
+                    "DreamFactory\\Enterprise\\Services\\": "src/"
                 }
-            },
-            "autoload-dev": {
-                "classmap": [
-                    "tests/TestCase.php"
-                ]
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "php artisan clear-compiled",
-                    "php artisan ide-helper:generate",
-                    "php artisan optimize"
-                ],
-                "post-update-cmd": [
-                    "php artisan clear-compiled",
-                    "php artisan ide-helper:generate",
-                    "php artisan optimize"
-                ]
             },
             "license": [
                 "proprietary"
@@ -874,7 +836,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-03-02 22:15:43"
+            "time": "2015-03-04 14:03:16"
         },
         {
             "name": "dreamfactory/fabric-api-common",
@@ -2123,12 +2085,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bd611713edef62f431db0f18685c8aab4082938f"
+                "reference": "6469e290207e5846e859bd69618c67e1650f2d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bd611713edef62f431db0f18685c8aab4082938f",
-                "reference": "bd611713edef62f431db0f18685c8aab4082938f",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/6469e290207e5846e859bd69618c67e1650f2d76",
+                "reference": "6469e290207e5846e859bd69618c67e1650f2d76",
                 "shasum": ""
             },
             "require": {
@@ -2187,7 +2149,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-03-03 19:26:21"
+            "time": "2015-03-04 11:37:13"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -2235,16 +2197,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.15.0",
+            "version": "1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "48cb9ae6d9436e156316a59d198cb1ca797f8cd8"
+                "reference": "9b7665041754eaa9bb2622349bc9adbc1cf61cb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/48cb9ae6d9436e156316a59d198cb1ca797f8cd8",
-                "reference": "48cb9ae6d9436e156316a59d198cb1ca797f8cd8",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/9b7665041754eaa9bb2622349bc9adbc1cf61cb8",
+                "reference": "9b7665041754eaa9bb2622349bc9adbc1cf61cb8",
                 "shasum": ""
             },
             "require": {
@@ -2277,7 +2239,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2015-03-03 03:24:43"
+            "time": "2015-03-04 04:50:11"
         },
         {
             "name": "nikic/php-parser",
