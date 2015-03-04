@@ -74,7 +74,12 @@ jQuery(function($) {
 	});
 
 	//	Turn on page header tooltips
-	$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="tooltip"]').tooltip({
+		delay: {
+			show: 500,
+			hide: 100
+		}
+	});
 
 	//	Load page data...
 	_loadData();

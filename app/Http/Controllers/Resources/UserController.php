@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 class UserController extends ResourceController
 {

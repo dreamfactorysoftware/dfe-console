@@ -1,5 +1,5 @@
 <?php
-use DreamFactory\Enterprise\Console\Controllers\FactoryController;
+use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
 
 if ( !isset( $_user ) || !is_array( $_user ) )
 {

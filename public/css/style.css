@@ -86,6 +86,21 @@ body {
 	background-color: #428bca;
 }
 
+.nav-pills > li.active {
+	background-color: #009587;
+}
+
+.nav-tabs > li:hover, .nav-tabs > .active {
+	background-color: rgba(255, 255, 255, .1);
+}
+
+.tab-header {
+	font-weight:    bold;
+	font-size:      21px;
+	border-bottom:  1px solid #cccccc;
+	padding-bottom: 0;
+}
+
 /*
  * Main content
  */
@@ -196,6 +211,13 @@ body.body-404 .main {
 	margin-top:    -10px;
 	margin-bottom: 0;
 	margin-left:   2px;
+}
+
+.btn-page-header {
+	margin-top:    -10px;
+	margin-bottom: 0;
+	padding-left:  10px;
+	padding-right: 10px;
 }
 
 /*------------------------------------------------------------------------------*/

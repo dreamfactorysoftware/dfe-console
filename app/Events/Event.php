@@ -1,4 +1,4 @@
-<?php namespace App\Events;
+<?php namespace DreamFactory\Enterprise\Console\Events;
 
 abstract class Event {
 

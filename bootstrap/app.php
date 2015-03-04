@@ -1,55 +1,27 @@
 <?php
+//******************************************************************************
+//* Application Bootstrap
+//******************************************************************************
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
+//  Create the main application controller
+$_path = realpath( dirname( __DIR__ ) );
+$_app = new Illuminate\Foundation\Application( $_path );
 
-$app = new Illuminate\Foundation\Application(
-    realpath( __DIR__ . '/../' )
-);
-
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-|
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
-|
-*/
-
-$app->singleton(
+//  Bind our default services
+$_app->singleton(
     'Illuminate\Contracts\Http\Kernel',
-    'App\Http\Kernel'
+    'DreamFactory\Enterprise\Console\Http\Kernel'
 );
 
-$app->singleton(
+$_app->singleton(
     'Illuminate\Contracts\Console\Kernel',
-    'App\Console\Kernel'
+    'DreamFactory\Enterprise\Console\Console\Kernel'
 );
 
-$app->singleton(
+$_app->singleton(
     'Illuminate\Contracts\Debug\ExceptionHandler',
-    'App\Exceptions\Handler'
+    'DreamFactory\Enterprise\Console\Exceptions\Handler'
 );
 
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
-
-return $app;
+//  Return the application object
+return $_app;

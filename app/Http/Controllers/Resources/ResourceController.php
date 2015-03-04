@@ -1,6 +1,8 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Common\Facades\Packet;
+use DreamFactory\Enterprise\Console\Http\Controllers\DataController;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -54,7 +56,7 @@ class ResourceController extends DataController
     /** {@InheritDoc} */
     public function create()
     {
-        return View::make( $this->_getResourceView(), array('model' => false) );
+        return View::make( $this->_getResourceView(), array('model' => false, 'pageHeader' => 'New ' . ucwords( $this->_resource )) );
     }
 
     /** {@InheritDoc} */
@@ -62,10 +64,7 @@ class ResourceController extends DataController
     {
         try
         {
-            return Response::json(
-                call_user_func( array($this->_model, 'findOrFail'), $id ),
-                \Symfony\Component\HttpFoundation\Response::HTTP_OK
-            );
+            return Packet::success( call_user_func( array($this->_model, 'findOrFail'), $id ) );
         }
         catch ( \Exception $_ex )
         {
@@ -80,7 +79,7 @@ class ResourceController extends DataController
         {
             $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
 
-            return View::make( $this->_getResourceView(), array('model' => $_model) );
+            return View::make( $this->_getResourceView(), array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords( $this->_resource )) );
         }
         catch ( \Exception $_ex )
         {

@@ -1,4 +1,4 @@
-<?php namespace App\Providers;
+<?php namespace DreamFactory\Enterprise\Console\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
@@ -13,21 +13,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = null;//'App\Http\Controllers';
-
-    /**
-     * Define your route model bindings, pattern filters, etc.
-     *
-     * @param  \Illuminate\Routing\Router $router
-     *
-     * @return void
-     */
-    public function boot( Router $router )
-    {
-        parent::boot( $router );
-
-        //
-    }
+//    protected $namespace = 'DreamFactory\\Enterprise\\Console\\Http\\Controllers';
 
     /**
      * Define the routes for the application.

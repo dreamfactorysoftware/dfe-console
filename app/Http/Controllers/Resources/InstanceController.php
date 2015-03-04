@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Controllers;
+namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Database\Query\Builder;
@@ -34,14 +34,14 @@ class InstanceController extends ResourceController
     protected function _loadData()
     {
         $_columns =
-            array(
+            [
                 'instance_t.id',
                 'instance_t.instance_id_text',
                 'cluster_t.cluster_id_text',
                 'instance_t.create_date',
                 'user_t.email_addr_text',
                 'user_t.lmod_date',
-            );
+            ];
 
         /** @type Builder $_query */
         $_query = Instance::join( 'user_t', 'instance_t.user_id', '=', 'user_t.id' )

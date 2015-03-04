@@ -1,4 +1,4 @@
-<?php namespace App\Providers;
+<?php namespace DreamFactory\Enterprise\Console\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
