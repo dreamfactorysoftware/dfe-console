@@ -8,10 +8,11 @@ return [
             'driver' => 'sync',
         ],
         'database' => [
-            'driver' => 'database',
-            'table'  => 'job_t',
-            'queue'  => 'default',
-            'expire' => 60,
+            'driver'   => 'database',
+            'table'    => 'job_t',
+            'queue'    => 'default',
+            'expire'   => 60,
+            'database' => 'dfe-local',
         ],
         'iron'     => [
             'driver'  => 'iron',
@@ -24,7 +25,7 @@ return [
     ],
     //  Failed Queue Jobs
     'failed'      => [
-        'database' => 'mysql',
+        'database' => 'dfe-local',
         'table'    => 'job_fail_t',
     ],
 ];
