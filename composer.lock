@@ -782,12 +782,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "cb0a6b69433968a582b916b3feaae261ab0d0ae9"
+                "reference": "daf7d28ed8bf8dd5679c86c98c9eef277f626552"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/cb0a6b69433968a582b916b3feaae261ab0d0ae9",
-                "reference": "cb0a6b69433968a582b916b3feaae261ab0d0ae9",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/daf7d28ed8bf8dd5679c86c98c9eef277f626552",
+                "reference": "daf7d28ed8bf8dd5679c86c98c9eef277f626552",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +836,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-03-05 17:58:00"
+            "time": "2015-03-05 21:12:37"
         },
         {
             "name": "dreamfactory/fabric-audit",
@@ -3628,12 +3628,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "a5e885afa5892140b46507571fca35dd5ce7aa9c"
+                "reference": "6b6143ba16e5f17242835910173c033a8f73f845"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/a5e885afa5892140b46507571fca35dd5ce7aa9c",
-                "reference": "a5e885afa5892140b46507571fca35dd5ce7aa9c",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/6b6143ba16e5f17242835910173c033a8f73f845",
+                "reference": "6b6143ba16e5f17242835910173c033a8f73f845",
                 "shasum": ""
             },
             "require": {
@@ -3692,7 +3692,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-03-02 21:30:58"
+            "time": "2015-03-05 18:32:56"
         },
         {
             "name": "doctrine/instantiator",

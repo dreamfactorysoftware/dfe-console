@@ -14,7 +14,11 @@ return [
         'private-path-base'           => '.private',        //  relative to storage path (hosted or non)
         'public-paths'                => ['applications', 'plugins', '.private',],
         'private-paths'               => ['.cache', 'config', 'scripts', 'scripts.user',],
-        'default-cluster-id'          => 'cluster-east-1',
+        //  Instance provisioning defaults
+        'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
+        'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', 1 ),
+        'default-ram-size'            => env( 'DFE_DEFAULT_RAM_SIZE', 1 ),
+        'default-disk-size'           => env( 'DFE_DEFAULT_DISK_SIZE', 8 ),
         //  Instance defaults
         //@todo update image to 14.* LTS x64
         'default-vendor-image-id'     => 4647,              //	Ubuntu server 12.04.1 i386
