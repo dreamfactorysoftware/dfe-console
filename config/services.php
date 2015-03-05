@@ -33,7 +33,6 @@ return [
         'public-paths'                => ['applications', 'plugins', '.private',],
         'private-paths'               => ['.cache', 'config', 'scripts', 'scripts.user',],
         //  Instance defaults
-        'default-cluster-id'          => 2,                 //  Default to cluster 2
         //@todo update image to 14.* LTS x64
         'default-vendor-image-id'     => 4647,              //	Ubuntu server 12.04.1 i386
         'default-vendor-image-flavor' => 0,                 //	i386

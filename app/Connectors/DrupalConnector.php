@@ -1,4 +1,4 @@
-<?php namespace DreamFactory\Enterprise\Console\Connectors;
+lar<?php namespace DreamFactory\Enterprise\Console\Connectors;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;

@@ -1650,12 +1650,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "a2f5629fb0e6a85b749b3f49bd790b61381c14a9"
+                "reference": "36c6081e1c7101b44861a36519bd98117e74188d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a2f5629fb0e6a85b749b3f49bd790b61381c14a9",
-                "reference": "a2f5629fb0e6a85b749b3f49bd790b61381c14a9",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/36c6081e1c7101b44861a36519bd98117e74188d",
+                "reference": "36c6081e1c7101b44861a36519bd98117e74188d",
                 "shasum": ""
             },
             "require": {
@@ -1667,7 +1667,7 @@
                 "mockery/mockery": "~0.9",
                 "phpspec/phpspec": "~2.0.0",
                 "phpspec/prophecy-phpunit": "~1.0",
-                "phpunit/phpunit": "~4.0",
+                "phpunit/phpunit": "~4.1",
                 "predis/predis": "~1.0",
                 "tedivm/stash": "~0.12.0"
             },
@@ -1725,7 +1725,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-02-22 18:36:34"
+            "time": "2015-03-05 12:28:53"
         },
         {
             "name": "league/flysystem-dropbox",
@@ -2293,12 +2293,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "637b70675d1fd401902a28e5ef29c31475405a82"
+                "reference": "36165fbac7264c279db5b6d09792382846eb1879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/637b70675d1fd401902a28e5ef29c31475405a82",
-                "reference": "637b70675d1fd401902a28e5ef29c31475405a82",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/36165fbac7264c279db5b6d09792382846eb1879",
+                "reference": "36165fbac7264c279db5b6d09792382846eb1879",
                 "shasum": ""
             },
             "require": {
@@ -2344,7 +2344,7 @@
                 "client",
                 "search"
             ],
-            "time": "2015-02-23 18:07:50"
+            "time": "2015-03-05 09:53:23"
         },
         {
             "name": "swiftmailer/swiftmailer",
