@@ -17,13 +17,17 @@ class BusServiceProvider extends ServiceProvider
     {
         //  The namespaces from which we use commands
         static $_mappings = [
-            'DreamFactory\\Enterprise\\Console\\Console\\Commands' => 'DreamFactory\\Enterprise\\Console\\Handlers\\Commands',
-            'DreamFactory\\Enterprise\\Services\\Commands'         => 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands'
+            'DreamFactory\\Enterprise\\Services\\Console\\Commands' => 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands'
         ];
 
         $dispatcher->mapUsing(
             function ( $command ) use ( $_mappings )
             {
+                if ( method_exists( $command, 'getHandler' ) )
+                {
+                    return $command->getHandler() . '@handle';
+                }
+
                 $_class = get_class( $command );
                 $_classNamespace = trim( substr( $_class, 0, strrpos( $_class, '\\' ) ), '\\' );
                 $_cleaned = trim( str_replace( $_classNamespace, null, $_class ), '\\' );

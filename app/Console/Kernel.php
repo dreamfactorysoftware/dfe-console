@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
      * @var array The artisan commands provided by your application.
      */
     protected $commands = [
-        'DreamFactory\\Enterprise\\Console\\Console\\Commands\\Provision',
+        'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Provision',
+        'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Deprovision',
+        'DreamFactory\\Enterprise\\Services\\Console\\Commands\\ClusterState',
     ];
 
     //******************************************************************************
