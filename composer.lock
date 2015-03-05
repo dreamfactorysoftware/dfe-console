@@ -719,12 +719,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "7458e59d1f3a83699cd24dfa766c43de9cd2abd7"
+                "reference": "d7d425841f5659dfba4a7a84358bf158335b575c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/7458e59d1f3a83699cd24dfa766c43de9cd2abd7",
-                "reference": "7458e59d1f3a83699cd24dfa766c43de9cd2abd7",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/d7d425841f5659dfba4a7a84358bf158335b575c",
+                "reference": "d7d425841f5659dfba4a7a84358bf158335b575c",
                 "shasum": ""
             },
             "require": {
@@ -774,7 +774,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-03-04 17:51:48"
+            "time": "2015-03-05 05:53:28"
         },
         {
             "name": "dreamfactory/dfe-services",
@@ -782,12 +782,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "d47bc6802c7e25d2a922a1922dd430de5432ca0b"
+                "reference": "b0248e0ac11f2e80c50ca29bd4bd8c934cf0b603"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/d47bc6802c7e25d2a922a1922dd430de5432ca0b",
-                "reference": "d47bc6802c7e25d2a922a1922dd430de5432ca0b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/b0248e0ac11f2e80c50ca29bd4bd8c934cf0b603",
+                "reference": "b0248e0ac11f2e80c50ca29bd4bd8c934cf0b603",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +836,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-03-04 18:40:24"
+            "time": "2015-03-05 05:54:40"
         },
         {
             "name": "dreamfactory/fabric-audit",
@@ -1525,12 +1525,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "e8275221fbfac06487a7f7f0ca369c8cf706a8d5"
+                "reference": "ad051183ba9eb979e48bc4e983fb8da03c9f601d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/e8275221fbfac06487a7f7f0ca369c8cf706a8d5",
-                "reference": "e8275221fbfac06487a7f7f0ca369c8cf706a8d5",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/ad051183ba9eb979e48bc4e983fb8da03c9f601d",
+                "reference": "ad051183ba9eb979e48bc4e983fb8da03c9f601d",
                 "shasum": ""
             },
             "require": {
@@ -1642,7 +1642,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-04 16:02:39"
+            "time": "2015-03-05 00:36:30"
         },
         {
             "name": "league/flysystem",
@@ -1873,12 +1873,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "4b6c798f9ccabc4e0225644fa4e5ae94828aeab0"
+                "reference": "caa3145a141ba3294ffdd2f6906805f301c04cf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/4b6c798f9ccabc4e0225644fa4e5ae94828aeab0",
-                "reference": "4b6c798f9ccabc4e0225644fa4e5ae94828aeab0",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/caa3145a141ba3294ffdd2f6906805f301c04cf1",
+                "reference": "caa3145a141ba3294ffdd2f6906805f301c04cf1",
                 "shasum": ""
             },
             "require": {
@@ -1895,6 +1895,7 @@
                 "phpunit/phpunit": "~4.0",
                 "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*",
+                "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
             },
             "suggest": {
@@ -1911,7 +1912,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12.x-dev"
+                    "dev-master": "1.13.x-dev"
                 }
             },
             "autoload": {
@@ -1937,7 +1938,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-03-04 17:56:10"
+            "time": "2015-03-05 01:23:59"
         },
         {
             "name": "mtdowling/cron-expression",
