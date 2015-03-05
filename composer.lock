@@ -782,12 +782,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-services.git",
-                "reference": "b0248e0ac11f2e80c50ca29bd4bd8c934cf0b603"
+                "reference": "cb0a6b69433968a582b916b3feaae261ab0d0ae9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/b0248e0ac11f2e80c50ca29bd4bd8c934cf0b603",
-                "reference": "b0248e0ac11f2e80c50ca29bd4bd8c934cf0b603",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-services/zipball/cb0a6b69433968a582b916b3feaae261ab0d0ae9",
+                "reference": "cb0a6b69433968a582b916b3feaae261ab0d0ae9",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +836,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-services/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-services/issues"
             },
-            "time": "2015-03-05 05:54:40"
+            "time": "2015-03-05 17:58:00"
         },
         {
             "name": "dreamfactory/fabric-audit",
@@ -1525,12 +1525,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "ad051183ba9eb979e48bc4e983fb8da03c9f601d"
+                "reference": "a2bded158c202731f2aaf5ad8e48cc01fcd6e0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/ad051183ba9eb979e48bc4e983fb8da03c9f601d",
-                "reference": "ad051183ba9eb979e48bc4e983fb8da03c9f601d",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/a2bded158c202731f2aaf5ad8e48cc01fcd6e0f5",
+                "reference": "a2bded158c202731f2aaf5ad8e48cc01fcd6e0f5",
                 "shasum": ""
             },
             "require": {
@@ -1642,7 +1642,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-05 00:36:30"
+            "time": "2015-03-05 17:33:35"
         },
         {
             "name": "league/flysystem",
