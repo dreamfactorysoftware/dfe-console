@@ -23,7 +23,7 @@
 @stop
 
 @section('contentBody')
-    <div>
+    <div style="padding: 10px;">
         <p>
             {{ $firstName }},
         </p>
@@ -33,7 +33,7 @@
         </div>
 
         <p>
-            If you've got any questions, feel free to shoot us an email at <a
+            If you have any questions or feedback, feel free to shoot us an email at <a
                     href="mailto:{{ $supportEmail or "support@dreamfactory.com" }}">{{ $supportEmail or "support@dreamfactory.com" }}</a>
         </p>
 
