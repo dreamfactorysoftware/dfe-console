@@ -30,6 +30,7 @@ class SettingsController extends FactoryController
     public function getClusters()
     {
         return View::make( 'app.clusters' );
+
     }
 
     public function getInstances()

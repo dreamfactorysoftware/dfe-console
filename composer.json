@@ -16,12 +16,6 @@
     "repositories":      [
         {
             "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/dfe-common.git"
-        }, {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/dfe-services.git"
-        }, {
-            "type": "vcs",
             "url":  "git@github.com:dreamfactorysoftware/rave-common.git"
         }, {
             "type": "vcs",
@@ -45,7 +39,6 @@
         "laravel/framework":          "5.0.*",
         "doctrine/couchdb-odm":       "*",
         "ruflin/elastica":            "*",
-        "dreamfactory/dfe-services":  "dev-develop as dev-master",
         "dreamfactory/php-utils":     "*",
         "dreamfactory/rave-common":   "dev-develop as dev-master",
         "dreamfactory/fabric-audit":  "dev-develop as dev-master",
@@ -63,7 +56,9 @@
         "classmap": [
             "database"
         ], "psr-4": {
-            "DreamFactory\\Enterprise\\Console\\": "app/"
+            "DreamFactory\\Enterprise\\Console\\":  "app/",
+            "DreamFactory\\Enterprise\\Common\\":   "lib/Common/",
+            "DreamFactory\\Enterprise\\Services\\": "lib/Services/"
         }
     },
     "autoload-dev":      {
