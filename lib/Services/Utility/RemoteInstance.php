@@ -206,15 +206,15 @@ class RemoteInstance implements Control
 <?php
 /**
  * **** DO NOT MODIFY THIS FILE ****
- * **** CHANGES WILL BREAK YOUR DSP AND COULD BE OVERWRITTEN AT ANY TIME ****
- * @(#)\$Id: database.config.php; v1.8.2-{$_dbName} {$_date} \$
+ * **** CHANGES WILL BREAK YOUR INSTANCE AND MAY BE OVERWRITTEN AT ANY TIME ****
+ * @(#)\$Id: database.config.php; v2.0.0-{$_dbName} {$_date} \$
  */
 return array(
-	'connectionString' => 'mysql:host={$_dbConfig['host']};port={$_dbConfig['port']};dbname={$_dbName}',
-	'username'         => '{$_dbUser}',
-	'password'         => '{$_dbPassword}',
-	'emulatePrepare'   => true,
-	'charset'          => 'utf8',
+	'connectionString'      => 'mysql:host={$_dbConfig['host']};port={$_dbConfig['port']};dbname={$_dbName}',
+	'username'              => '{$_dbUser}',
+	'password'              => '{$_dbPassword}',
+	'emulatePrepare'        => true,
+	'charset'               => 'utf8',
 	'schemaCachingDuration' => 3600,
 );
 PHP;
@@ -269,14 +269,7 @@ PHP;
 
             $this->save();
 
-            $_md = [
-                'cluster-id'    => $this->cluster_id,
-                'app-server-id' => $this->appServer ? $this->appServer->server_id_text : null,
-                'db-server-id'  => $this->dbServer ? $this->dbServer->server_id_text : null,
-                'web-server-id' => $this->webServer ? $this->webServer->server_id_text : null,
-                'owner-id'      => $this->user->id,
-                'owner-email'   => $this->user->email_addr_text,
-            ];
+            $_md = $this->getMetadata( $_instance );
 
             if ( !$_storage->put( $_instanceMetadata, Json::encode( $_md ) ) )
             {
@@ -289,7 +282,7 @@ PHP;
         }
 
         //  Fire off a "launch" event...
-        Event::fire( 'fabric.launch', [$this] );
+        Event::fire( 'dfe.launch', [$this, $_md] );
 
         return [
             'host'                => $_host,
@@ -304,6 +297,7 @@ PHP;
             'db_user'             => $_dbUser,
             'db_password'         => $_dbPassword,
             'db_config_file_name' => $_dbConfigFile,
+            'metadata'            => $_md,
         ];
     }
 
@@ -606,6 +600,35 @@ MYSQL;
     public function getInstance()
     {
         return $this->_instance;
+    }
+
+    /**
+     * Retrieves an instances' metadata
+     *
+     * @param Instance|int|string $instanceId
+     *
+     * @return array
+     */
+    public function getMetadata( $instanceId )
+    {
+        $_instance = ( $instanceId instanceof Instance ) ? $instanceId : $this->_validateInstance( $instanceId );
+
+        if ( !$_instance->user )
+        {
+            throw new \RuntimeException( 'The user for instance "' . $instanceId . '" was not found.' );
+        }
+
+        $_response = [
+            'instance-id'         => $_instance->id,
+            'cluster-id'          => $_instance->cluster_id,
+            'db-server-id'        => $_instance->db_server_id,
+            'app-server-id'       => $_instance->app_server_id,
+            'web-server-id'       => $_instance->web_server_id,
+            'owner-id'            => $_instance->user_id,
+            'owner-email-address' => $_instance->user->email_addr_text,
+        ];
+
+        return $_response;
     }
 
 }

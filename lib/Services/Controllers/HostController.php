@@ -1,13 +1,19 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Controllers;
 
-use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
-use DreamFactory\Enterprise\Services\Exceptions\ResourceNotFoundException;
+use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
+use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 
-class InstanceController extends BaseController
+class HostController extends FactoryController
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use InstanceValidation;
+
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -41,33 +47,31 @@ class InstanceController extends BaseController
     }
 
     /**
-     * @param int|string $clusterId
+     * @param int|string $instanceId
      *
      * @return array
      * @throws \DreamFactory\Enterprise\Services\Exceptions\ResourceNotFoundException
+     *
      */
-    public function getEnvironment( $clusterId = null )
+    public function getEnvironment( $instanceId )
     {
-        $_clusterId = $clusterId ?: config( 'dfe.provisioning.default-cluster-id' );
+        $_instance = $this->_validateInstance( $instanceId );
 
-        /** @var Cluster $_cluster */
-        if ( null === ( $_cluster = Cluster::byNameOrId( $_clusterId )->first() ) )
+        if ( !$_instance->user )
         {
-            throw new ResourceNotFoundException( 'The cluster id specified was not found.' );
+            throw new \RuntimeException( 'The user for instance "' . $instanceId . '" was not found.' );
         }
 
-        $_result = $_cluster->toArray();
-        $_servers = $_cluster->servers();
+        $_response = [
+            'cluster_id'          => $_instance->cluster_id,
+            'db_server_id'        => $_instance->db_server_id,
+            'app_server_id'       => $_instance->app_server_id,
+            'web_server_id'       => $_instance->web_server_id,
+            'owner_id'            => $_instance->user_id,
+            'owner_email_address' => $_instance->user->email_addr_text,
+            'instance_id'         => $_instance->user->id,
+        ];
 
-        if ( $_servers->count() )
-        {
-            /** @type Server $_server */
-            foreach ( $_servers as $_server )
-            {
-                $_result['servers'][$_server->server_id_text] = $_server->toArray();
-            }
-        }
-
-        return $_result;
+        return $_response;
     }
 }
