@@ -6,7 +6,7 @@ use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 
-class HostController extends FactoryController
+class InstanceController extends FactoryController
 {
     //******************************************************************************
     //* Traits
@@ -53,7 +53,7 @@ class HostController extends FactoryController
      * @throws \DreamFactory\Enterprise\Services\Exceptions\ResourceNotFoundException
      *
      */
-    public function getEnvironment( $instanceId )
+    public function getMetadata( $instanceId )
     {
         $_instance = $this->_validateInstance( $instanceId );
 

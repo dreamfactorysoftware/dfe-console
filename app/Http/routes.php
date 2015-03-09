@@ -48,7 +48,7 @@ Route::controllers(
         'settings'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\SettingsController',
         'auth'      => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\AuthController',
         'password'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\PasswordController',
-        'host'      => 'DreamFactory\\Enterprise\\Services\\Controllers\\HostController',
+        'instance'  => 'DreamFactory\\Enterprise\\Services\\Controllers\\InstanceController',
     ]
 );
 
