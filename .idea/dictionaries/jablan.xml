@@ -6,9 +6,11 @@
       <w>dfac</w>
       <w>dfdsp</w>
       <w>gzips</w>
+      <w>longopts</w>
       <w>misconfigured</w>
       <w>queueable</w>
       <w>rackspacecloud</w>
+      <w>shortopts</w>
     </words>
   </dictionary>
 </component>

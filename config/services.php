@@ -4,8 +4,8 @@ use DreamFactory\Enterprise\Common\Providers\PacketServiceProvider;
 use DreamFactory\Enterprise\Common\Providers\RouteHashingServiceProvider;
 use DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
-use DreamFactory\Enterprise\Services\Providers\DreamFactory\ProvisioningServiceProvider;
 use DreamFactory\Enterprise\Services\Providers\InstanceManagerProvider;
+use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider;
 
 /**
@@ -16,6 +16,8 @@ return [
     //* Services to be auto-registered
     //******************************************************************************
     'auto-register' => [
+        /** DreamFactory Console (local app) service providers */
+        ElkServiceProvider::IOC_NAME          => 'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
         /** DreamFactory Common service providers */
         ScalpelServiceProvider::IOC_NAME      => 'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
         RouteHashingServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
@@ -24,7 +26,6 @@ return [
         InstanceManagerProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
         ProvisioningServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
         SnapshotServiceProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
-        ElkServiceProvider::IOC_NAME          => 'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
     ],
     //******************************************************************************
     //* Mailgun

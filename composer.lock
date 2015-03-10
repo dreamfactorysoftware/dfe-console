@@ -826,12 +826,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "c2286d0a9c31fecfc4c9eb97e5011a0eaa0aa8cd"
+                "reference": "a09f3b4679040eb2028c466328633acdd22c4d1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/c2286d0a9c31fecfc4c9eb97e5011a0eaa0aa8cd",
-                "reference": "c2286d0a9c31fecfc4c9eb97e5011a0eaa0aa8cd",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/a09f3b4679040eb2028c466328633acdd22c4d1a",
+                "reference": "a09f3b4679040eb2028c466328633acdd22c4d1a",
                 "shasum": ""
             },
             "require": {
@@ -873,7 +873,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-03-10 20:03:51"
+            "time": "2015-03-10 23:27:28"
         },
         {
             "name": "dreamfactory/fabric-queue",
