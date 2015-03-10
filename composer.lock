@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1cc5c9ebc38a7b4bec720cfdad0a7e17",
+    "hash": "7a0968c223471d7ef02482e3f4eee7ac",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -719,12 +719,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/fabric-audit.git",
-                "reference": "7f7441258cc875dc1969d63e9871665bb7ffb053"
+                "reference": "48659b17d7dc418d7bb0e669410afb71bb26ccd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-audit/zipball/7f7441258cc875dc1969d63e9871665bb7ffb053",
-                "reference": "7f7441258cc875dc1969d63e9871665bb7ffb053",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-audit/zipball/48659b17d7dc418d7bb0e669410afb71bb26ccd4",
+                "reference": "48659b17d7dc418d7bb0e669410afb71bb26ccd4",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "queue",
                 "utility"
             ],
-            "time": "2015-02-26 16:21:08"
+            "time": "2015-03-09 18:53:17"
         },
         {
             "name": "dreamfactory/fabric-common",
@@ -1361,12 +1361,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "560fd0b4687b997c78fa03c27dbdcd347daa7bfc"
+                "reference": "5636ed383b4d07587b3343942c1363e4ab607f28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/560fd0b4687b997c78fa03c27dbdcd347daa7bfc",
-                "reference": "560fd0b4687b997c78fa03c27dbdcd347daa7bfc",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5636ed383b4d07587b3343942c1363e4ab607f28",
+                "reference": "5636ed383b4d07587b3343942c1363e4ab607f28",
                 "shasum": ""
             },
             "require": {
@@ -1479,7 +1479,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-08 23:22:57"
+            "time": "2015-03-09 21:22:40"
         },
         {
             "name": "league/flysystem",
@@ -3396,12 +3396,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "122c0d90d627a7464e383d87ce89e347d3fee29d"
+                "reference": "d5b6a07a2279b2baa4b27728691e106f4949d49e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/122c0d90d627a7464e383d87ce89e347d3fee29d",
-                "reference": "122c0d90d627a7464e383d87ce89e347d3fee29d",
+                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/d5b6a07a2279b2baa4b27728691e106f4949d49e",
+                "reference": "d5b6a07a2279b2baa4b27728691e106f4949d49e",
                 "shasum": ""
             },
             "require": {
@@ -3466,7 +3466,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2015-03-08 12:35:28"
+            "time": "2015-03-09 21:05:04"
         },
         {
             "name": "phpspec/prophecy",
@@ -4432,6 +4432,12 @@
             "alias": "dev-master",
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
+            "package": "dreamfactory/fabric-db"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
             "package": "dreamfactory/fabric-audit"
         },
         {
@@ -4450,6 +4456,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "dreamfactory/rave-common": 20,
+        "dreamfactory/fabric-db": 20,
         "dreamfactory/fabric-audit": 20,
         "dreamfactory/console-tools": 20,
         "dreamfactory/fabric-queue": 20
