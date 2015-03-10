@@ -74,37 +74,10 @@ trait ObjectManager
     }
 
     /**
-     * Extend the magic methods out to the thing
-     *
-     * @param string $method
-     * @param array  $arguments
-     *
-     * @return mixed
+     * @return \IteratorIterator
      */
-    public function __call( $method, $arguments )
+    public function getIterator()
     {
-        list( $_tag, $_arguments ) = $this->_parseArguments( $arguments );
-        $_thing = $this->resolve( $_tag );
-
-        return call_user_func_array( [$_thing, $method], $_arguments );
-    }
-
-    /**
-     * Shifts the tag off the front of the request
-     *
-     * @param array $arguments
-     *
-     * @return array
-     */
-    protected function _parseArguments( $arguments )
-    {
-        $_tag = array_shift( $arguments );
-
-        if ( !is_string( $_tag ) )
-        {
-            throw new \InvalidArgumentException( 'The "tag" argument must be a string.' );
-        }
-
-        return [$_tag, $arguments];
+        return new \IteratorIterator( new \ArrayObject( $this->_things ) );
     }
 }

@@ -1,5 +1,12 @@
 <?php
 use DreamFactory\Enterprise\Common\Enums\MailTemplates;
+use DreamFactory\Enterprise\Common\Providers\PacketServiceProvider;
+use DreamFactory\Enterprise\Common\Providers\RouteHashingServiceProvider;
+use DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider;
+use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
+use DreamFactory\Enterprise\Services\Providers\DreamFactory\ProvisioningServiceProvider;
+use DreamFactory\Enterprise\Services\Providers\InstanceManagerProvider;
+use DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider;
 
 /**
  * DFE core services configuration
@@ -10,14 +17,14 @@ return [
     //******************************************************************************
     'auto-register' => [
         /** DreamFactory Common service providers */
-        'scalpel'              => 'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
-        'route-hashing'        => 'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
-        'packet'               => 'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
+        ScalpelServiceProvider::IOC_NAME      => 'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
+        RouteHashingServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
+        PacketServiceProvider::IOC_NAME       => 'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
         /** DreamFactory Services service providers */
-        'dfe.instance-manager' => 'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
-        'dfe.provisioning'     => 'DreamFactory\\Enterprise\\Services\\Provisioners\\DreamFactory\\ProvisioningServiceProvider',
-        'dfe.snapshot'         => 'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
-        'dfe.elk'              => 'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
+        InstanceManagerProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
+        ProvisioningServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
+        SnapshotServiceProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
+        ElkServiceProvider::IOC_NAME          => 'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
     ],
     //******************************************************************************
     //* Mailgun

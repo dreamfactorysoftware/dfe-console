@@ -772,12 +772,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-common.git",
-                "reference": "efcdba09221b9af2637aed30b897dfcfb096f9c4"
+                "reference": "3c82c745056d8a9ee71f541f5e06bff4d283fb81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-common/zipball/efcdba09221b9af2637aed30b897dfcfb096f9c4",
-                "reference": "efcdba09221b9af2637aed30b897dfcfb096f9c4",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-common/zipball/3c82c745056d8a9ee71f541f5e06bff4d283fb81",
+                "reference": "3c82c745056d8a9ee71f541f5e06bff4d283fb81",
                 "shasum": ""
             },
             "require": {
@@ -818,7 +818,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-common/issues"
             },
-            "time": "2015-03-01 20:58:06"
+            "time": "2015-03-10 20:05:02"
         },
         {
             "name": "dreamfactory/fabric-db",
@@ -826,12 +826,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "285b3d5868d184f88bf318246eb7fd6751167f28"
+                "reference": "c2286d0a9c31fecfc4c9eb97e5011a0eaa0aa8cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/285b3d5868d184f88bf318246eb7fd6751167f28",
-                "reference": "285b3d5868d184f88bf318246eb7fd6751167f28",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/c2286d0a9c31fecfc4c9eb97e5011a0eaa0aa8cd",
+                "reference": "c2286d0a9c31fecfc4c9eb97e5011a0eaa0aa8cd",
                 "shasum": ""
             },
             "require": {
@@ -873,7 +873,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-03-04 17:47:54"
+            "time": "2015-03-10 20:03:51"
         },
         {
             "name": "dreamfactory/fabric-queue",
@@ -1361,12 +1361,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "5636ed383b4d07587b3343942c1363e4ab607f28"
+                "reference": "7bf50d876e62c35ae86235c28b76acb49fb7184b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/5636ed383b4d07587b3343942c1363e4ab607f28",
-                "reference": "5636ed383b4d07587b3343942c1363e4ab607f28",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/7bf50d876e62c35ae86235c28b76acb49fb7184b",
+                "reference": "7bf50d876e62c35ae86235c28b76acb49fb7184b",
                 "shasum": ""
             },
             "require": {
@@ -1479,7 +1479,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-09 21:22:40"
+            "time": "2015-03-10 19:23:45"
         },
         {
             "name": "league/flysystem",
@@ -1779,12 +1779,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "0c34706799d298864a8e0cd4b1cb3eff710540bc"
+                "reference": "5567f0ab3b2c51979af6d8c0a899bf6e493b6062"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/0c34706799d298864a8e0cd4b1cb3eff710540bc",
-                "reference": "0c34706799d298864a8e0cd4b1cb3eff710540bc",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/5567f0ab3b2c51979af6d8c0a899bf6e493b6062",
+                "reference": "5567f0ab3b2c51979af6d8c0a899bf6e493b6062",
                 "shasum": ""
             },
             "require": {
@@ -1816,7 +1816,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-03-10 15:05:55"
+            "time": "2015-03-10 20:32:21"
         },
         {
             "name": "psr/log",

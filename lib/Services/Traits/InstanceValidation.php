@@ -1,7 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Traits;
 
-use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
+use DreamFactory\Enterprise\Common\Contracts\InstanceContainer;
 use DreamFactory\Library\Fabric\Common\Exceptions\InstanceNotFoundException;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 
@@ -21,14 +21,26 @@ trait InstanceValidation
      */
     protected function _validateInstance( $instanceId )
     {
+        if ( $instanceId instanceof Instance )
+        {
+            return $instanceId;
+        }
+
+        if ( $instanceId instanceOf InstanceContainer )
+        {
+            return $instanceId->getInstance();
+        }
+
+        if ( !is_string( $instanceId ) )
+        {
+            throw new InstanceNotFoundException( $instanceId );
+        }
+
         try
         {
-            if ( $instanceId instanceof Instance || $instanceId instanceof RemoteInstance )
-            {
-                return $instanceId;
-            }
+            $instanceId = Instance::sanitizeName( $instanceId );
 
-            return Instance::byNameOrId( $instanceId )->first();
+            return Instance::byNameOrId( $instanceId )->firstOrFail();
         }
         catch ( \Exception $_ex )
         {

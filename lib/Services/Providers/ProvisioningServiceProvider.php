@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Provisioners\DreamFactory;
+namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 
@@ -28,7 +28,7 @@ class ProvisioningServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\\Enterprise\\Services\\Provisioners\\DreamFactory\\InstanceProvisioner';
+        $this->_serviceClass = 'DreamFactory\\Enterprise\\Services\\Provisioners\\DreamFactoryRave';
 
         $this->singleton(
             static::IOC_NAME,
