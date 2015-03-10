@@ -1,10 +1,10 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Contracts\Instance;
+namespace DreamFactory\Enterprise\Common\Contracts;
 
 /**
  * Describes a service that can create instance rows
  */
-interface Factory
+interface InstanceFactory
 {
     //******************************************************************************
     //* Methods

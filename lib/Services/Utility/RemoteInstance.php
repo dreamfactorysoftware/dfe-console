@@ -1,11 +1,11 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Utility;
 
-use DreamFactory\Enterprise\Services\Contracts\Instance\Provisioner;
-use DreamFactory\Enterprise\Services\Enums\Provisioners;
+use DreamFactory\Enterprise\Services\Contracts\InstanceProvisioner;
+use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * An instance manipulation Wrapper
  */
-class RemoteInstance extends Instance implements Provisioner
+class RemoteInstance extends Instance implements InstanceProvisioner
 {
     //******************************************************************************
     //* Constants
@@ -166,7 +166,7 @@ PHP;
         {
             $this->fill(
                 [
-                    'guest_location_nbr' => Provisioners::DREAMFACTORY_ENTERPRISE,
+                    'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
                     'instance_id_text'   => $_name,
                     'instance_name_text' => $_name,
                     'db_host_text'       => $_dbConfig['host'],
@@ -367,7 +367,6 @@ PHP;
     protected function _getDatabaseConfig( $dbName )
     {
         $_dbServer = $_dbHost = $_dbPort = $_dbConfig = null;
-        $_clusterId = $this->cluster_id;
 
         if ( $this->dbServer )
         {

@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Queue;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -62,7 +61,7 @@ class Provision extends Command
                 'guest-location',
                 InputArgument::OPTIONAL,
                 'The location of the new instance. Values: 1 = DFE, 2 = AWS, or 3 = Azure.',
-                Config::get( 'dfe.provisioning.default-guest-location' )
+                config( 'dfe.provisioning.default-guest-location' )
             ],
         ];
     }
@@ -80,7 +79,7 @@ class Provision extends Command
                 'c',
                 InputOption::VALUE_OPTIONAL,
                 'The cluster-id where this instance should be placed.',
-                Config::get( 'dfe.provisioning.default-cluster-id' )
+                config( 'dfe.provisioning.default-cluster-id' )
             ],
             ['restart', 'r', InputOption::VALUE_NONE, 'If specified, an existing stopped instance will be restarted.'],
             ['trial', 't', InputOption::VALUE_NONE, 'If specified, sets the trial flag to TRUE on the provisioned instance.'],

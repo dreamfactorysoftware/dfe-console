@@ -1,19 +1,20 @@
 <?php
 namespace DreamFactory\Enterprise\Common\Services;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use Doctrine\ODM\CouchDB\Event;
+use DreamFactory\Enterprise\Common\Traits\Lumberjack;
+use Psr\Log\LoggerInterface;
 
 /**
  * A base class for services that are logger-aware
  */
-class BaseService implements LoggerAwareInterface
+class BaseService implements LoggerInterface
 {
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use LoggerAwareTrait;
+    use Lumberjack;
 
     //******************************************************************************
     //* Methods
@@ -24,14 +25,15 @@ class BaseService implements LoggerAwareInterface
      */
     public function __construct()
     {
-        $this->logger = app( 'log' );
+        $this->boot();
     }
 
     /**
-     * @return \Psr\Log\LoggerInterface
+     * Perform any service initialization
      */
-    public function getLogger()
+    public function boot()
     {
-        return $this->logger;
+        $this->logger = app( 'log' );
     }
+
 }

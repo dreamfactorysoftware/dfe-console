@@ -1,7 +1,7 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Contracts;
+namespace DreamFactory\Enterprise\Common\Contracts;
 
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 
 /**
  * Something that looks like it can provision resources

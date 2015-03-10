@@ -1,12 +1,12 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Contracts\Instance;
+namespace DreamFactory\Enterprise\Common\Contracts;
 
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Describes a service that can communicate with a hosted DSP
+ * Describes a service that can communicate with a cluster-hosted DSP
  */
-interface Broker
+interface ClusterBroker
 {
     //******************************************************************************
     //* Methods

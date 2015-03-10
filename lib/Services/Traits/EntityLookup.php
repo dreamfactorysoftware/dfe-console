@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Traits;
 
+use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\ClusterServer;
@@ -68,10 +69,31 @@ trait EntityLookup
      */
     protected function _clusterServers( $clusterId )
     {
-        return ClusterServer::join( 'server_t', 'id', '=', 'server_id' )
+        $_rows = ClusterServer::join( 'server_t', 'id', '=', 'server_id' )
             ->where( 'cluster_id', '=', $clusterId )
-            ->orderBy( 'server_t.server_id_text' )
-            ->get( ['server_t.*'] );
+            ->orderBy( 'server_t.server_type_id, server_t.server_id_text' )
+            ->get(
+                [
+                    'server_t.id',
+                    'server_t.server_id_text',
+                    'server_t.server_type_id',
+                    'cluster_server_asgn_t.cluster_id'
+                ]
+            );
+
+        //  Organize by type
+        $_servers = [
+            ServerTypes::APP => [],
+            ServerTypes::DB  => [],
+            ServerTypes::WEB => [],
+        ];
+
+        foreach ( $_rows as $_server )
+        {
+            $_servers[$_server->server_type_id][$_server->server_id_text] = $_server;
+        }
+
+        return $_servers;
     }
 
     /**

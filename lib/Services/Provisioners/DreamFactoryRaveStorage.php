@@ -2,8 +2,8 @@
 namespace DreamFactory\Enterprise\Services\Storage\DreamFactory;
 
 use DreamFactory\Enterprise\Common\Enums\Provisioners;
-use DreamFactory\Enterprise\Services\Contracts\ProvisionerContract;
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
+use DreamFactory\Enterprise\Services\Contracts\Instance\StorageProvisioner;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -48,7 +48,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
  * install_root/storage/.private/scripts
  * install_root/storage/.private/scripts.user
  */
-class StorageProvisioner implements ProvisionerContract
+class DreamFactoryRaveStorage implements StorageProvisioner
 {
     //******************************************************************************
     //* Traits
@@ -73,35 +73,37 @@ class StorageProvisioner implements ProvisionerContract
     public function provision( ProvisioningRequest $request )
     {
         //  Get the provisioning pieces
-        $_filesystem = $request->getStorage();
+        $_filesystem = $request->get( 'storage' );
 
         list( $_instance, $_zone, $_partition, $_rootHash ) =
-            $this->_resolveProvisioning( $request->getInstanceId(), $_filesystem, $request->isPartitioned() );
+            $this->_resolveStructure( $request->get( 'instance-id' ), $request->get( 'partitioned' ) );
 
         //  Make structure
-        $this->_createInstanceStorage( $_instance->storage_id_text, $_filesystem, $_zone, $_partition, $_rootHash, $request->isPartitioned() );
+        $this->_createInstanceStorage( $_instance->storage_id_text, $_filesystem, $_zone, $_partition, $_rootHash, $request->get( 'partitioned' ) );
     }
 
     /** @inheritdoc */
     public function deprovision( ProvisioningRequest $request )
     {
         //  Get the provisioning pieces
-        $_filesystem = $request->getStorage();
+        $_filesystem = $request->get( 'storage' );;
 
         list( $_instance, $_zone, $_partition, $_rootHash ) =
-            $this->_resolveProvisioning( $request->getInstanceId(), $_filesystem, $request->isPartitioned() );
+            $this->_resolveStructure( $request->get( 'instance-id' ), $request->get( 'partitioned' ) );
 
         //  Make structure
-        $this->_removeInstanceStorage( $_instance->storage_id_text, $_filesystem, $_zone, $_partition, $_rootHash, $request->isPartitioned() );
+        $this->_removeInstanceStorage( $_instance->storage_id_text, $_filesystem, $_zone, $_partition, $_rootHash, $request->get( 'partitioned' ) );
     }
 
     /**
+     * Based on the requirements, resolve the base components of the storage area
+     *
      * @param string|Instance $instanceId
      * @param bool            $partitioned
      *
      * @return array
      */
-    protected function _resolveProvisioning( $instanceId, $partitioned = false )
+    protected function _resolveStructure( $instanceId, $partitioned = false )
     {
         $_instance = $this->_validateInstance( $instanceId );
         $_rootHash = hash( $this->_algorithm, $_instance->user->storage_id_text );

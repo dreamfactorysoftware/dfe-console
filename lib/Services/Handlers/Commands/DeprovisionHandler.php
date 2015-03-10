@@ -3,8 +3,8 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Enums\Provisioners;
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
-use DreamFactory\Enterprise\Services\Provisioners\DreamFactory\InstanceProvisioner;
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
+use DreamFactory\Enterprise\Services\Provisioners\DreamFactoryRave;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 
 /**
@@ -38,7 +38,7 @@ class DeprovisionHandler
         switch ( $_instance->guest_location_nbr )
         {
             case Provisioners::DREAMFACTORY_ENTERPRISE:
-                $_provisioner = new InstanceProvisioner();
+                $_provisioner = new DreamFactoryRave();
                 break;
 
             case Provisioners::AMAZON_EC2:

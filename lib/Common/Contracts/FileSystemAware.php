@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Contracts;
+namespace DreamFactory\Enterprise\Common\Contracts;
 
 use League\Flysystem\FilesystemInterface;
 

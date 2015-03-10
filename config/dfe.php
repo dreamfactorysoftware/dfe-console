@@ -25,5 +25,25 @@ return [
         'default-vendor-image-flavor' => 0,                 //	i386
         'default-dns-zone'            => env( 'DFE_DEFAULT_ZONE', 'cloud' ),
         'default-dns-domain'          => env( 'DFE_DEFAULT_DOMAIN', 'dreamfactory.com' ),
+        //  Disallowed instance names
+        'forbidden-names'             => [
+            'dreamfactory',
+            'dream',
+            'factory',
+            'developer',
+            'wiki',
+            'cloud',
+            'www',
+            'fabric',
+            'api',
+            'db',
+            'database',
+            'dsp',
+            'dfe',
+            'dfac',
+            'df',
+            'dfab',
+            'dfdsp',
+        ],
     ],
 ];

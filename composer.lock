@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7a0968c223471d7ef02482e3f4eee7ac",
+    "hash": "a8a3e423c36446b2eeba5fc481a7e6a7",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1565,6 +1565,52 @@
             "time": "2015-03-10 11:04:14"
         },
         {
+            "name": "league/flysystem-ziparchive",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-ziparchive.git",
+                "reference": "e60c233c34af99995d18c57f9e02004466bb16f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-ziparchive/zipball/e60c233c34af99995d18c57f9e02004466bb16f4",
+                "reference": "e60c233c34af99995d18c57f9e02004466bb16f4",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0@alpha",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\ZipArchive\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for ZipArchive's",
+            "time": "2015-01-19 08:17:38"
+        },
+        {
             "name": "monolog/monolog",
             "version": "dev-master",
             "source": {
@@ -1733,12 +1779,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "a2d7e8977a406232b3a3396cae5925d8f26eadbe"
+                "reference": "0c34706799d298864a8e0cd4b1cb3eff710540bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/a2d7e8977a406232b3a3396cae5925d8f26eadbe",
-                "reference": "a2d7e8977a406232b3a3396cae5925d8f26eadbe",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/0c34706799d298864a8e0cd4b1cb3eff710540bc",
+                "reference": "0c34706799d298864a8e0cd4b1cb3eff710540bc",
                 "shasum": ""
             },
             "require": {
@@ -1770,7 +1816,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-03-09 07:54:20"
+            "time": "2015-03-10 15:05:55"
         },
         {
             "name": "psr/log",

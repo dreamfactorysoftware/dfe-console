@@ -1,21 +1,20 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
+use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Services\Contracts\ProvisionerContract;
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Traits\LockingService;
 use DreamFactory\Enterprise\Services\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Auditing\Enums\AuditLevels;
-use DreamFactory\Library\Fabric\Auditing\Services\AuditingService;
-use Illuminate\Contracts\Foundation\Application;
+use DreamFactory\Library\Fabric\Auditing\Facades\Audit;
 use Illuminate\Support\Facades\Mail;
 
 /**
  * A base class for all provisioners
  */
-abstract class BaseProvisioner implements ProvisionerContract
+abstract class BaseProvisioner extends BaseService implements ProvisionerContract
 {
     //******************************************************************************
     //* Constants
@@ -33,28 +32,11 @@ abstract class BaseProvisioner implements ProvisionerContract
     use InstanceValidation, LockingService, TemplateEmailQueueing;
 
     //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /**
-     * @type \Illuminate\Contracts\Foundation\Application
-     */
-    protected $_app;
-
-    //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
-     * @param Application $app
-     */
-    public function __construct( $app = null )
-    {
-        $this->_app = $app;
-    }
-
-    /**
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
+     * @param ProvisioningRequest $request
      *
      * @return bool|mixed
      */
@@ -92,7 +74,8 @@ abstract class BaseProvisioner implements ProvisionerContract
             $_data,
             function ( $message ) use ( $_instance, $_subject )
             {
-                $message->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
+                $message
+                    ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
                     ->subject( $_subject );
             }
         );
@@ -101,7 +84,7 @@ abstract class BaseProvisioner implements ProvisionerContract
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
+     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
      *
      * @return bool|mixed
      */
@@ -138,7 +121,8 @@ abstract class BaseProvisioner implements ProvisionerContract
             $_data,
             function ( $message ) use ( $_instance, $_subject )
             {
-                $message->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
+                $message
+                    ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
                     ->subject( $_subject );
             }
         );
@@ -147,8 +131,8 @@ abstract class BaseProvisioner implements ProvisionerContract
     }
 
     /**
-     * @param RemoteInstance                                                 $instance
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
+     * @param RemoteInstance                                                     $instance
+     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
      *
      * @return mixed
      *
@@ -156,8 +140,8 @@ abstract class BaseProvisioner implements ProvisionerContract
     abstract protected function _doProvision( $instance, ProvisioningRequest $request );
 
     /**
-     * @param RemoteInstance                                                 $instance
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
+     * @param RemoteInstance                                                     $instance
+     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
      *
      * @return mixed
      */
@@ -173,14 +157,6 @@ abstract class BaseProvisioner implements ProvisionerContract
         //  Put instance ID into the correct place
         $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        AuditingService::log( $data, $level, $facility, app( 'request' ) );
-    }
-
-    /**
-     * @return Application
-     */
-    public function getApp()
-    {
-        return $this->_app;
+        Audit::log( $data, $level, $facility, app( 'request' ) );
     }
 }

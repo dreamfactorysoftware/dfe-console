@@ -1,12 +1,12 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Contracts\Instance;
+namespace DreamFactory\Enterprise\Common\Contracts;
 
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 
 /**
  * Describes a service that controls hosted instances
  */
-interface Provisioner
+interface InstanceProvisioner
 {
     //******************************************************************************
     //* Methods

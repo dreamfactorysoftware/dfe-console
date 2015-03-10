@@ -4,7 +4,7 @@ namespace DreamFactory\Enterprise\Services\Enums;
 use DreamFactory\Library\Utility\Enums\FactoryEnum;
 
 /**
- * Where DFE instances may reside
+ * Where DFE instances may reside. These values correspond to dfe-deploy:vendor_t.id
  */
 class GuestLocations extends FactoryEnum
 {
@@ -16,6 +16,10 @@ class GuestLocations extends FactoryEnum
      * @var int DreamFactory Enterprise(tm) cluster
      */
     const DFE_CLUSTER = 1;
+    /**
+     * @var int DreamFactory Enterprise(tm) cluster
+     */
+    const RAVE_CLUSTER = 1;
     /**
      * @var int Amazon EC2
      */

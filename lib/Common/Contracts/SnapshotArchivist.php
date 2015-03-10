@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Contracts\Instance;
+namespace DreamFactory\Enterprise\Common\Contracts;
 
 /**
  * Describes a service that can import and export snapshots

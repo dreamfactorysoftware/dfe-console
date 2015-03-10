@@ -1,12 +1,11 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
+use DreamFactory\Enterprise\Common\Containers\RaveBox;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
-use DreamFactory\Enterprise\Services\Facades\InstanceManager;
-use DreamFactory\Enterprise\Services\Provisioners\DreamFactory\InstanceProvisioner;
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 
 /**
  * Processes queued provision requests
@@ -35,7 +34,7 @@ class ProvisionHandler
         $_provisioner = null;
 
         //  Create the instance record
-        $_instance = InstanceManager::make( $command->getInstanceId(), $command->getOptions() );
+        $_instance = RaveBox::( $command->getInstanceId(), $command->getOptions() );
 
         switch ( $_instance->guest_location_nbr )
         {

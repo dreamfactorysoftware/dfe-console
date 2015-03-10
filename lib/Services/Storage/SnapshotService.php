@@ -3,13 +3,12 @@ namespace DreamFactory\Enterprise\Services\Storage;
 
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Facades\Scalpel;
-use DreamFactory\Enterprise\Services\Enums\Provisioners;
-use DreamFactory\Enterprise\Services\InstanceValidation;
+use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Services\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\Inflector;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
@@ -18,7 +17,7 @@ use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 /**
  * Snapshot services
  */
-class SnapshotService
+class SnapshotService extends BaseService
 {
     //******************************************************************************
     //* Constants
@@ -78,7 +77,7 @@ class SnapshotService
                 preg_replace(
                     '/[^A-Za-z0-9-]+/',
                     null,
-                    Config::get( 'services.snapshot.id-prefix', static::SNAPSHOT_ID_PREFIX )
+                    config( 'services.snapshot.id-prefix', static::SNAPSHOT_ID_PREFIX )
                 ),
                 ' -'
             ) . '-';
@@ -88,7 +87,7 @@ class SnapshotService
         //  Start building our metadata array
         $_metadata = [
             'id'                         => $_id,
-            'type'                       => Config::get( 'services.snapshot.metadata-type', 'dfe.snapshot' ),
+            'type'                       => config( 'services.snapshot.metadata-type', 'dfe.snapshot' ),
             'source_cluster_id'          => (int)$_instance->cluster_id,
             'source_instance_id'         => $_instance->instance_id_text,
             'source_database_id'         => $_instance->dbServer->server_id_text,
@@ -107,7 +106,7 @@ class SnapshotService
 
         $_metadata['hash'] = $_hash = RouteHashing::create( $_zipFileName, $keepDays );
         $_metadata['link'] = rtrim(
-                Config::get( 'services.snapshot.hash_link_base' ),
+                config( 'services.snapshot.hash_link_base' ),
                 ' /'
             ) . '/' . $_hash;
 
@@ -185,7 +184,7 @@ class SnapshotService
         //        }
         //        catch ( \Exception $_ex )
         //        {
-        //            Log::error( 'Error extracting snapshot tarball: ' . $_ex->getMessage() );
+        //            $this->error( 'Error extracting snapshot tarball: ' . $_ex->getMessage() );
         //
         //            $this->_killTempDirectory( $_tempPath );
         //
@@ -348,13 +347,13 @@ class SnapshotService
         {
             switch ( $instance->guest_location_nbr )
             {
-                case Provisioners::DREAMFACTORY_ENTERPRISE:
+                case GuestLocations::DFE_CLUSTER:
                     //  This script automatically gzips the resultant file...
                     $_command =
                         sprintf(
                             "sudo -u %s %s %s %s",
-                            Config::get( 'services.snapshot.script.user', 'dfadmin' ),
-                            Config::get( 'services.snapshot.script.location' ),
+                            config( 'services.snapshot.script.user', 'dfadmin' ),
+                            config( 'services.snapshot.script.location' ),
                             $instance->db_name_text,
                             $dumpFile
                         );
@@ -383,7 +382,7 @@ class SnapshotService
             //  Try and delete...
             if ( false === @unlink( $dumpFile ) )
             {
-                Log::warning( 'Failed to remove work file "' . $dumpFile . '" after database dump.' );
+                $this->warning( 'Failed to remove work file "' . $dumpFile . '" after database dump.' );
             }
 
             return true;

@@ -1,9 +1,7 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Provisioners\DreamFactory;
+namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
-use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
-use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Storage\DreamFactory\StorageProvisioner;
 use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -12,7 +10,7 @@ use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
-class InstanceProvisioner extends BaseProvisioner
+class DreamFactoryRave extends BaseProvisioner
 {
     //******************************************************************************
     //* Methods
@@ -37,8 +35,8 @@ class InstanceProvisioner extends BaseProvisioner
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Services\Utility\RemoteInstance       $instance
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
+     * @param \DreamFactory\Enterprise\Services\Utility\RemoteInstance           $instance
+     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
      *
      * @return array
      */
@@ -112,8 +110,8 @@ class InstanceProvisioner extends BaseProvisioner
     }
 
     /**
-     * @param RemoteInstance                                                 $instance
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
+     * @param RemoteInstance                                                     $instance
+     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
      *
      * @return mixed|void
      */

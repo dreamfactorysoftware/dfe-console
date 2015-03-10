@@ -4,7 +4,7 @@ namespace DreamFactory\Enterprise\Common\Contracts;
 /**
  * Describes a contract that hashes routes
  */
-interface RouteHashingContract
+interface RouteHasher
 {
     //******************************************************************************
     //* Methods
