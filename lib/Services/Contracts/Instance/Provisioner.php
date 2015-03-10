@@ -6,32 +6,32 @@ use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
 /**
  * Describes a service that controls hosted instances
  */
-interface Control
+interface Provisioner
 {
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
-     * Creates a fabric-hosted instance
+     * Creates an instance
      *
      * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
      *
      * @return array
      */
-    public function launch( ProvisioningRequest $request );
+    public function up( ProvisioningRequest $request );
 
     /**
-     * Destroys a DSP
+     * Destroys an instance
      *
      * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
      *
      * @return mixed
      */
-    public function destroy( ProvisioningRequest $request );
+    public function down( ProvisioningRequest $request );
 
     /**
-     * Replaces a DSP with an existing snapshot
+     * Replaces an instance
      *
      * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
      *
@@ -40,13 +40,12 @@ interface Control
     public function replace( ProvisioningRequest $request );
 
     /**
-     * Performs a complete wipe of a DSP. The DSP is not destroyed, but the database is completely wiped and recreated as if this were a brand new
-     * DSP. Files in the storage area are NOT touched.
+     * Performs a complete wipe of an instance. The instance is not destroyed, but the database is completely wiped and recreated as if this were a
+     * brand new instance. Files in the storage area are NOT touched.
      *
      * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
      *
      * @return mixed
      */
     public function wipe( ProvisioningRequest $request );
-
 }

@@ -56,7 +56,7 @@ class InstanceProvisioner extends BaseProvisioner
             $this->_provisionStorage( $request );
 
             //  And the instance
-            if ( false === ( $_launchResult = $instance->launch( $request ) ) )
+            if ( false === ( $_launchResult = $instance->up( $request ) ) )
             {
                 throw new \RuntimeException( 'Exception during launch.' );
             }
@@ -127,7 +127,7 @@ class InstanceProvisioner extends BaseProvisioner
         try
         {
             //  And the instance
-            if ( 0 != ( $_returnValue = $instance->destroy( $request ) ) )
+            if ( 0 != ( $_returnValue = $instance->down( $request ) ) )
             {
                 throw new \RuntimeException( 'Exception during deprovisioning.' );
             }

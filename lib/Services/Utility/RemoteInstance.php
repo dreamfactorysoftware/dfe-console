@@ -1,82 +1,23 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Utility;
 
-use DreamFactory\Enterprise\Services\Contracts\Instance\Control;
+use DreamFactory\Enterprise\Services\Contracts\Instance\Provisioner;
 use DreamFactory\Enterprise\Services\Enums\Provisioners;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Requests\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
-use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\FileSystem;
 use DreamFactory\Library\Utility\IfSet;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
 /**
- * An instance manipulation class
- *
- * @property integer            $user_id
- * @property integer            $cluster_id
- * @property integer            $vendor_id
- * @property integer            $vendor_image_id
- * @property integer            $vendor_credentials_id
- * @property integer            $guest_location_nbr
- * @property string             $instance_id_text
- * @property int                $app_server_id
- * @property int                $db_server_id
- * @property int                $web_server_id
- * @property string             $db_host_text
- * @property int                $db_port_nbr
- * @property string             $db_name_text
- * @property string             $db_user_text
- * @property string             $db_password_text
- * @property string             $storage_id_text
- * @property integer            $flavor_nbr
- * @property string             $base_image_text
- * @property string             $instance_name_text
- * @property string             $region_text
- * @property string             $availability_zone_text
- * @property string             $security_group_text
- * @property string             $ssh_key_text
- * @property integer            $root_device_type_nbr
- * @property string             $public_host_text
- * @property string             $public_ip_text
- * @property string             $private_host_text
- * @property string             $private_ip_text
- * @property string             $request_id_text
- * @property string             $request_date
- * @property integer            $deprovision_ind
- * @property integer            $provision_ind
- * @property integer            $trial_instance_ind
- * @property integer            $state_nbr
- * @property integer            $platform_state_nbr
- * @property integer            $ready_state_nbr
- * @property integer            $vendor_state_nbr
- * @property string             $vendor_state_text
- * @property integer            $environment_id
- * @property integer            $activate_ind
- * @property string             $start_date
- * @property string             $end_date
- * @property string             $terminate_date
- *
- * Relations:
- *
- * @property User               $user
- * @property Server             $appServer
- * @property Server             $dbServer
- * @property Server             $webServer
- *
- * @method static Builder instanceName( string $instanceName )
- * @method static Builder byNameOrId( string $instanceNameOrId )
- * @method static Builder withDbName( string $dbName )
- * @method static Builder onDbServer( int $dbServerId )
+ * An instance manipulation Wrapper
  */
-class RemoteInstance implements Control
+class RemoteInstance extends Instance implements Provisioner
 {
     //******************************************************************************
     //* Constants
@@ -98,25 +39,8 @@ class RemoteInstance implements Control
     use InstanceValidation;
 
     //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /**
-     * @type Instance
-     */
-    protected $_instance;
-
-    //******************************************************************************
     //* Methods
     //******************************************************************************
-
-    /**
-     * @param Instance $instance
-     */
-    public function __construct( Instance $instance )
-    {
-        $this->_instance = $instance;
-    }
 
     /**
      * Update the operational state of this instance
@@ -127,20 +51,20 @@ class RemoteInstance implements Control
      */
     public function updateState( $state )
     {
-        $this->_instance->state_nbr = $state;
+        $this->state_nbr = $state;
 
-        return $this->_instance->update( ['state_nbr' => $state] );
+        return $this->update( ['state_nbr' => $state] );
     }
 
     /**
-     * Creates a snapshot of a fabric-hosted instance
+     * Given a provisioning request with a storage area, provision a new instance
      *
      * @param ProvisioningRequest $request
      *
      * @return array|bool
      * @throws ProvisioningException
      */
-    public function launch( ProvisioningRequest $request )
+    public function up( ProvisioningRequest $request )
     {
         //	Clean up that nasty name...
         $_instance = $request->getInstance();
@@ -230,7 +154,7 @@ PHP;
         {
             Log::error( 'Exception prepping storage: ' . $_ex->getMessage() );
             $this->_dropDatabase( $_dbConfig['server'], $_dbName );
-            FileSystem::rmdir( $_storagePath );
+            FileSystem::rmdir( $_storagePath, true );
 
             return false;
         }
@@ -262,13 +186,21 @@ PHP;
                     'terminate_date'     => null,
                     'provision_ind'      => 1,
                     'deprovision_ind'    => 0,
-                    'cluster_id'         => $_dbConfig['cluster'],
-                ],
-                false
+                    'cluster_id'         => $_instance->cluster_id,
+                ]
             );
 
             $this->save();
+        }
+        catch ( \Exception $_ex )
+        {
+            throw new \RuntimeException( 'Exception while storing new instance data: ' . $_ex->getMessage() );
+        }
 
+        $_md = [];
+
+        try
+        {
             $_md = $this->getMetadata( $_instance );
 
             if ( !$_storage->put( $_instanceMetadata, Json::encode( $_md ) ) )
@@ -278,7 +210,7 @@ PHP;
         }
         catch ( \Exception $_ex )
         {
-            throw new \RuntimeException( 'Exception while storing new instance data: ' . $_ex->getMessage() );
+            //  Don't stop for me...
         }
 
         //  Fire off a "launch" event...
@@ -297,23 +229,42 @@ PHP;
             'db_user'             => $_dbUser,
             'db_password'         => $_dbPassword,
             'db_config_file_name' => $_dbConfigFile,
+            'cluster'             => $this->cluster_id,
             'metadata'            => $_md,
         ];
     }
 
     /**
-     * Destroys a DSP
+     * Destroys an instance
      *
      * @param ProvisioningRequest $request
      *
      * @return mixed
      */
-    public function destroy( ProvisioningRequest $request )
+    public function down( ProvisioningRequest $request )
     {
+        $_instance = $request->getInstance();
+
+        //  Snapshot
+        //$this->_export($instanceId,$options=[])
+
+        //  Drop database...
+        //$this->_dropDatabase()
+
+        //  Drop storage
+        //$this->_deprovisionStorage($request)
+
+        //	Update the current instance state
+        $_instance->provision_ind = 0;
+        $_instance->deprovision_ind = 1;
+        $_instance->terminate_date = $_instance->end_date = date( 'c' );
+        $_instance->state_nbr = ProvisionStates::DEPROVISIONED;
+
+        return $_instance->save();
     }
 
     /**
-     * Replaces a DSP with an existing snapshot
+     * Replaces an instance with an existing snapshot
      *
      * @param ProvisioningRequest $request
      *
@@ -324,8 +275,8 @@ PHP;
     }
 
     /**
-     * Performs a complete wipe of a DSP. The DSP is not destroyed, but the database is completely wiped and recreated as if this were a brand new
-     * DSP. Files in the storage area are NOT touched.
+     * Performs a complete wipe of an instance. It is not destroyed, but the database is completely wiped and recreated as if this were brand new.
+     * Files in /storage are NOT touched.
      *
      * @param ProvisioningRequest $request
      *
@@ -365,12 +316,12 @@ PHP;
         //	Check host name
         if ( preg_match( static::HOST_NAME_PATTERN, $_clean ) )
         {
-            Log::notice( 'Non-standard DSP name "' . $_clean . '" being provisioned' );
+            Log::notice( 'Non-standard instance name "' . $_clean . '" being provisioned' );
         }
 
         if ( in_array( $_clean, $_unavailableNames ) )
         {
-            Log::error( 'Attempt to register banned DSP name: ' . $name . ' => ' . $_clean );
+            Log::error( 'Attempt to register banned instance name: ' . $name . ' => ' . $_clean );
 
             throw new \InvalidArgumentException( 'The name "' . $name . '" is not available.' );
         }
@@ -409,6 +360,8 @@ PHP;
     }
 
     /**
+     * @param string $dbName
+     *
      * @return array
      */
     protected function _getDatabaseConfig( $dbName )
@@ -458,7 +411,6 @@ PHP;
                 'charset'   => 'utf8',
                 'collation' => 'utf8_unicode_ci',
                 'server'    => $_dbServer,
-                'cluster'   => $_clusterId,
             ],
             $_dbConfig
         );
@@ -481,7 +433,7 @@ PHP;
         {
             return \DB::connection( $db )->statement(
                 <<<MYSQL
-    CREATE DATABASE IF NOT EXISTS `{$name}`
+CREATE DATABASE IF NOT EXISTS `{$name}`
 MYSQL
             );
         }
@@ -505,7 +457,7 @@ MYSQL
         {
             return \DB::connection( $db )->statement(
                 <<<MYSQL
-    SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$name};
+SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$name};
 MYSQL
             );
         }
@@ -534,72 +486,13 @@ MYSQL;
 
         try
         {
-            //	Grants for DSP database
+            //	Grants for instance database
             return \DB::connection( $db )->statement( $_sql );
         }
         catch ( \Exception $_ex )
         {
             return false;
         }
-    }
-
-    /**
-     * @param string $name
-     * @param bool   $deleteRecord
-     * @param string $originalHost
-     * @param string $zone
-     * @param string $domain
-     * @param string $recordType
-     * @param int    $ttl
-     * @param string $comment
-     *
-     * @return bool
-     */
-    protected function _addRemoveDnsEntry( $name, $deleteRecord = false, $originalHost = null, $zone = null, $domain = null, $recordType = 'CNAME', $ttl = 3600, $comment = null )
-    {
-        $_zone = $zone ?: (string)config( 'dfe.provisioning.default-dns-zone' );
-        $_domain = $domain ?: (string)config( 'dfe.provisioning.default-dns-domain' );
-
-        return rtrim( $name, '. ' ) . '.' . $_zone . '.' . $_domain;
-    }
-
-    /**
-     * Pass any unrecognized calls through to the instance record
-     *
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return mixed
-     */
-    public function __call( $name, $arguments )
-    {
-        return call_user_func_array( [$this->_instance, $name], $arguments );
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     *
-     * @return $this
-     */
-    public function __set( $name, $value )
-    {
-        $this->_instance->{$name} = $value;
-
-        return $this;
-    }
-
-    public function __get( $name )
-    {
-        return $this->_instance->{$name};
-    }
-
-    /**
-     * @return Instance
-     */
-    public function getInstance()
-    {
-        return $this->_instance;
     }
 
     /**
@@ -615,7 +508,7 @@ MYSQL;
 
         if ( !$_instance->user )
         {
-            throw new \RuntimeException( 'The user for instance "' . $instanceId . '" was not found.' );
+            throw new \RuntimeException( 'The user for instance "' . $_instance->instance_id_text . '" was not found.' );
         }
 
         $_response = [
@@ -630,5 +523,4 @@ MYSQL;
 
         return $_response;
     }
-
 }
