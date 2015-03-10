@@ -1,7 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Utility;
 
-use DreamFactory\Enterprise\Services\Contracts\InstanceProvisioner;
+use DreamFactory\Enterprise\Common\Contracts\InstanceProvisioner;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
@@ -11,7 +11,6 @@ use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\FileSystem;
 use DreamFactory\Library\Utility\IfSet;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -78,8 +77,8 @@ class RemoteInstance extends Instance implements InstanceProvisioner
         $_storageKey = $_instance->storage_id_text;
 
         $_storage = $request->getStorage();
-        $_storagePath = $request->getStoragePath();
-        $_privatePath = $request->getPrivatePath();
+        $_storagePath = $request->get( 'storage-path' );
+        $_privatePath = $request->get( 'private-path' );
         $_relativePrivatePath = str_replace( $_storagePath, null, $_privatePath );
         $_dbConfigFile = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
         $_instanceMetadata = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.json';
@@ -94,7 +93,7 @@ class RemoteInstance extends Instance implements InstanceProvisioner
             //	1. Create database
             if ( !$this->_createDatabase( $_dbConfig['server'], $_dbName ) )
             {
-                Log::error( 'Unable to create database "' . $_dbName . '"' );
+                \Log::error( 'Unable to create database "' . $_dbName . '"' );
 
                 return false;
             }
@@ -109,7 +108,7 @@ class RemoteInstance extends Instance implements InstanceProvisioner
                 }
                 catch ( \Exception $_ex )
                 {
-                    Log::error( 'Exception dropping database: ' . $_ex->getMessage() );
+                    \Log::error( 'Exception dropping database: ' . $_ex->getMessage() );
                 }
 
                 return false;
@@ -145,14 +144,14 @@ PHP;
 
             if ( !$_storage->put( $_dbConfigFile, $_php ) )
             {
-                Log::error( 'Error writing database configuration file: ' . $_dbConfigFile );
+                \Log::error( 'Error writing database configuration file: ' . $_dbConfigFile );
 
                 return false;
             }
         }
         catch ( \Exception $_ex )
         {
-            Log::error( 'Exception prepping storage: ' . $_ex->getMessage() );
+            \Log::error( 'Exception prepping storage: ' . $_ex->getMessage() );
             $this->_dropDatabase( $_dbConfig['server'], $_dbName );
             FileSystem::rmdir( $_storagePath, true );
 
@@ -205,7 +204,7 @@ PHP;
 
             if ( !$_storage->put( $_instanceMetadata, Json::encode( $_md ) ) )
             {
-                Log::error( 'Error writing instance metadata file: ' . $_dbConfigFile );
+                \Log::error( 'Error writing instance metadata file: ' . $_dbConfigFile );
             }
         }
         catch ( \Exception $_ex )
@@ -214,7 +213,7 @@ PHP;
         }
 
         //  Fire off a "launch" event...
-        Event::fire( 'dfe.launch', [$this, $_md] );
+        \Event::fire( 'dfe.launch', [$this, $_md] );
 
         return [
             'host'                => $_host,

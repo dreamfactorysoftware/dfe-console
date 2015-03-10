@@ -6,6 +6,9 @@
       <option name="myIgnoreUnusedFunctionParameters" value="true" />
     </inspection_tool>
     <inspection_tool class="PhpMethodParametersCountMismatchInspection" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="PhpUndefinedClassInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="DONT_REPORT_MULTI_RESOLVE" value="true" />
+    </inspection_tool>
     <inspection_tool class="PhpUndefinedMethodInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="DOWNGRADE_SEVERITY" value="true" />
     </inspection_tool>

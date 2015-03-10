@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Common\Services;
 
+use DreamFactory\Enterprise\Common\Contracts\RouteHasher;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\RouteHash;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -9,7 +10,7 @@ use League\Flysystem\Filesystem;
 /**
  * Provides route hashing services
  */
-class RouteHashingService extends BaseService implements Hasher
+class RouteHashingService extends BaseService implements RouteHasher
 {
     //*************************************************************************
     //* Methods

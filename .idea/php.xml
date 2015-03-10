@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PhpStepFilterConfiguration">
+  <component name="PhpStepFilterConfiguration" skip_magic_methods="true">
     <option name="skippedFunctions">
       <list>
         <option value="Illuminate\Pipeline\Pipeline-&gt;then" />

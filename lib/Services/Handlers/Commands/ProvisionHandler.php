@@ -34,7 +34,7 @@ class ProvisionHandler
         $_provisioner = null;
 
         //  Create the instance record
-        $_instance = RaveBox::( $command->getInstanceId(), $command->getOptions() );
+        $_instance = Instance::make( $command->getInstanceId(), $command->getOptions() );
 
         switch ( $_instance->guest_location_nbr )
         {
