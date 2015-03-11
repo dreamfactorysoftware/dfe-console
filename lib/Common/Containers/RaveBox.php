@@ -2,16 +2,16 @@
 namespace DreamFactory\Enterprise\Common\Containers;
 
 use DreamFactory\Enterprise\Common\Contracts\InstanceContainer;
-use DreamFactory\Enterprise\Common\Contracts\InstanceFactory;
 use DreamFactory\Enterprise\Common\Contracts\ProvisionerContract;
+use DreamFactory\Enterprise\Common\Contracts\StaticInstanceFactory;
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Services\Traits\EntityLookup;
-use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
@@ -23,13 +23,13 @@ use Illuminate\Support\Facades\Log;
 /**
  * A basic container for a RAVE instance
  */
-class RaveBox implements InstanceContainer, InstanceFactory
+class RaveBox implements InstanceContainer, StaticInstanceFactory
 {
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use EntityLookup, InstanceValidation;
+    use StaticComponentLookup, InstanceValidation;
 
     //******************************************************************************
     //* Members
@@ -57,7 +57,7 @@ class RaveBox implements InstanceContainer, InstanceFactory
      * @return array
      * @throws \DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException
      */
-    public function make( $instanceName, $options = [] )
+    public static function make( $instanceName, $options = [] )
     {
         if ( false === ( $_sanitized = Instance::isNameAvailable( $instanceName ) ) )
         {
@@ -74,7 +74,7 @@ class RaveBox implements InstanceContainer, InstanceFactory
 
             try
             {
-                $_owner = $this->_findUser( $_ownerId );
+                $_owner = static::_lookupUser( $_ownerId );
             }
             catch ( \Exception $_ex )
             {
@@ -85,8 +85,8 @@ class RaveBox implements InstanceContainer, InstanceFactory
 
             try
             {
-                $_cluster = $this->_findCluster( $_clusterId );
-                $_servers = $this->_clusterServers( $_cluster->id );
+                $_cluster = static::_lookupCluster( $_clusterId );
+                $_servers = static::_lookupClusterServers( $_cluster->id );
             }
             catch ( ModelNotFoundException $_ex )
             {
@@ -196,12 +196,14 @@ class RaveBox implements InstanceContainer, InstanceFactory
     public function up( ProvisioningRequest $request )
     {
         //	Clean up that nasty name...
-        $_instance = $request->get( 'instance' );
+        $_instance = $request->getInstance();
         $_dbName = str_replace( '-', '_', $_instance->instance_name_text );
         $_storageKey = $_instance->storage_id_text;
+
         $_storage = $request->getStorage();
-        $_storagePath = $request->getStoragePath();
-        $_privatePath = $request->getPrivatePath();
+        $_storagePath = $_storage->getStoragePath();
+        $_privatePath = $_storage->getPrivateInstancePath();
+
         $_relativePrivatePath = str_replace( $_storagePath, null, $_privatePath );
         $_dbConfigFile = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_instance->instance_name_text . '.database.config.php';
         $_instanceMetadata = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_instance->instance_name_text . '.json';

@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Traits;
+namespace DreamFactory\Enterprise\Common\Traits;
 
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 /**
  * A trait for looking up various enterprise components
  */
-trait EntityLookup
+trait ComponentLookup
 {
     //*************************************************************************
     //* Methods
@@ -25,7 +25,7 @@ trait EntityLookup
      *
      * @return Cluster
      */
-    protected function _findCluster( $clusterId )
+    protected function _lookupCluster( $clusterId )
     {
         return Cluster::byNameOrId( $clusterId )->firstOrFail();
     }
@@ -35,7 +35,7 @@ trait EntityLookup
      *
      * @return Server
      */
-    protected function _findServer( $serverId )
+    protected function _lookupServer( $serverId )
     {
         return Server::byNameOrId( $serverId )->firstOrFail();
     }
@@ -45,7 +45,7 @@ trait EntityLookup
      *
      * @return Instance
      */
-    protected function _findInstance( $instanceId )
+    protected function _lookupInstance( $instanceId )
     {
         return Instance::byNameOrId( $instanceId )->firstOrFail();
     }
@@ -55,7 +55,7 @@ trait EntityLookup
      *
      * @return User
      */
-    protected function _findUser( $userId )
+    protected function _lookupUser( $userId )
     {
         return User::where( 'id', '=', $userId )->findOrfail( $userId );
     }
@@ -67,7 +67,7 @@ trait EntityLookup
      *
      * @return Collection
      */
-    protected function _clusterServers( $clusterId )
+    protected function _lookupClusterServers( $clusterId )
     {
         $_rows = ClusterServer::join( 'server_t', 'id', '=', 'server_id' )
             ->where( 'cluster_id', '=', $clusterId )
@@ -103,7 +103,7 @@ trait EntityLookup
      *
      * @return Collection
      */
-    protected function _serverInstances( $serverId )
+    protected function _lookupServerInstances( $serverId )
     {
         return InstanceServer::join( 'instance_t', 'id', '=', 'instance_id' )
             ->where( 'server_id', '=', $serverId )
@@ -118,7 +118,7 @@ trait EntityLookup
      *
      * @return Collection
      */
-    protected function _userRoles( $userId )
+    protected function _lookupUserRoles( $userId )
     {
         return UserRole::join( 'role_t', 'id', '=', 'role_id' )
             ->where( 'user_id', '=', $userId )

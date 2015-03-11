@@ -1,12 +1,12 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Storage\DreamFactory;
 
-use DreamFactory\Enterprise\Common\Enums\Provisioners;
-use DreamFactory\Enterprise\Services\Contracts\Instance\StorageProvisioner;
+use DreamFactory\Enterprise\Common\Contracts\StorageProvisioner;
+use DreamFactory\Enterprise\Common\Filesystems\InstanceFilesystem;
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use Illuminate\Contracts\Filesystem\Filesystem;
 
 /**
  * DreamFactory Enterprise(tm) and Services Platform File System
@@ -72,93 +72,36 @@ class DreamFactoryRaveStorage implements StorageProvisioner
     /** @inheritdoc */
     public function provision( ProvisioningRequest $request )
     {
-        //  Get the provisioning pieces
-        $_filesystem = $request->get( 'storage' );
-
-        list( $_instance, $_zone, $_partition, $_rootHash ) =
-            $this->_resolveStructure( $request->get( 'instance-id' ), $request->get( 'partitioned' ) );
-
         //  Make structure
-        $this->_createInstanceStorage( $_instance->storage_id_text, $_filesystem, $_zone, $_partition, $_rootHash, $request->get( 'partitioned' ) );
+        $this->_createInstanceStorage( $request->getInstance(), $request->getStorage() );
     }
 
     /** @inheritdoc */
     public function deprovision( ProvisioningRequest $request )
     {
-        //  Get the provisioning pieces
-        $_filesystem = $request->get( 'storage' );;
-
-        list( $_instance, $_zone, $_partition, $_rootHash ) =
-            $this->_resolveStructure( $request->get( 'instance-id' ), $request->get( 'partitioned' ) );
-
-        //  Make structure
-        $this->_removeInstanceStorage( $_instance->storage_id_text, $_filesystem, $_zone, $_partition, $_rootHash, $request->get( 'partitioned' ) );
-    }
-
-    /**
-     * Based on the requirements, resolve the base components of the storage area
-     *
-     * @param string|Instance $instanceId
-     * @param bool            $partitioned
-     *
-     * @return array
-     */
-    protected function _resolveStructure( $instanceId, $partitioned = false )
-    {
-        $_instance = $this->_validateInstance( $instanceId );
-        $_rootHash = hash( $this->_algorithm, $_instance->user->storage_id_text );
-        $_partition = substr( $_rootHash, 0, 2 );
-
-        $_zone = null;
-
-        switch ( config( 'dfe.provisioning.storage-zone-type' ) )
-        {
-            case 'dynamic':
-                switch ( $_instance->guest_location_nbr )
-                {
-                    case Provisioners::AMAZON_EC2:
-                    case Provisioners::DREAMFACTORY_ENTERPRISE:
-                        if ( file_exists( '/usr/bin/ec2metadata' ) )
-                        {
-                            $_zone = str_replace( 'availability-zone: ', null, `/usr/bin/ec2metadata | grep zone` );
-                        }
-                        break;
-                }
-                break;
-
-            case 'static':
-                $_zone = config( 'dfe.provisioning.static-zone-name' );
-                break;
-        }
-
-        if ( $partitioned && ( empty( $_zone ) || empty( $_partition ) ) )
-        {
-            throw new \RuntimeException( 'Zone and/or partition unknown. Cannot provision storage.' );
-        }
-
-        return [$_instance, $_zone, $_partition, $_rootHash];
+        //  '86 structure
+        $this->_removeInstanceStorage( $request->getInstance(), $request->getStorage() );
     }
 
     /**
      * Create storage structure in $filesystem
      *
-     * @param string     $instanceId
-     * @param Filesystem $filesystem
-     * @param string     $zone
-     * @param string     $partition
-     * @param string     $rootHash
-     * @param bool       $partitioned
+     * @param Instance           $instance
+     * @param InstanceFilesystem $filesystem
      */
-    protected function _createInstanceStorage( $instanceId, $filesystem, $zone, $partition, $rootHash, $partitioned = false )
+    protected function _createInstanceStorage( $instance, $filesystem )
     {
+        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance, $filesystem->isPartitioned() );
+
         $_privateName = config( 'dfe.provisioning.private-base-path', '.private' );
 
         $_rootPath =
-            $partitioned ? DIRECTORY_SEPARATOR . $zone . DIRECTORY_SEPARATOR . $partition . DIRECTORY_SEPARATOR . $rootHash
+            $filesystem->isPartitioned()
+                ? DIRECTORY_SEPARATOR . $_zone . DIRECTORY_SEPARATOR . $_partition . DIRECTORY_SEPARATOR . $_rootHash
                 : DIRECTORY_SEPARATOR;
 
         $_userPrivatePath = $_rootPath . DIRECTORY_SEPARATOR . $_privateName;
-        $_storageBasePath = $_rootPath . ( $partitioned ? DIRECTORY_SEPARATOR . $instanceId : null );
+        $_storageBasePath = $_rootPath . ( $filesystem->isPartitioned() ? DIRECTORY_SEPARATOR . $instance->instance_id_text : null );
         $_privatePath = $_storageBasePath . DIRECTORY_SEPARATOR . $_privateName;
 
         !$filesystem->exists( $_userPrivatePath ) && $filesystem->makeDirectory( $_userPrivatePath, 0777, true );
@@ -184,17 +127,57 @@ class DreamFactoryRaveStorage implements StorageProvisioner
     /**
      * Delete storage of an instance
      *
-     * @param string     $instanceId
-     * @param Filesystem $filesystem
-     * @param string     $zone
-     * @param string     $partition
-     * @param string     $rootHash
-     * @param bool       $partitioned
+     * @param Instance           $instance
+     * @param InstanceFilesystem $filesystem
      */
-    protected function _removeInstanceStorage( $instanceId, $filesystem, $zone, $partition, $rootHash, $partitioned = false )
+    protected function _removeInstanceStorage( $instance, $filesystem )
     {
-        $_storagePath = $this->_makeRootPath( $partitioned, $zone, $partition, $rootHash, $instanceId );
+        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance, $filesystem->isPartitioned() );
+        $_storagePath = $this->_makeRootPath( $filesystem->isPartitioned(), $_zone, $_partition, $_rootHash, $instance->instance_id_text );
         $filesystem->exists( $_storagePath ) && $filesystem->deleteDirectory( $_storagePath );
+    }
+
+    /**
+     * Based on the requirements, resolve the base components of the storage area
+     *
+     * @param Instance $instance
+     * @param bool     $partitioned
+     *
+     * @return array
+     */
+    protected function _resolveStructure( Instance $instance, $partitioned = false )
+    {
+        $_rootHash = hash( $this->_algorithm, $instance->user->storage_id_text );
+        $_partition = substr( $_rootHash, 0, 2 );
+
+        $_zone = null;
+
+        switch ( config( 'dfe.provisioning.storage-zone-type' ) )
+        {
+            case 'dynamic':
+                switch ( $instance->guest_location_nbr )
+                {
+                    case GuestLocations::AMAZON_EC2:
+                    case GuestLocations::DFE_CLUSTER:
+                        if ( file_exists( '/usr/bin/ec2metadata' ) )
+                        {
+                            $_zone = str_replace( 'availability-zone: ', null, `/usr/bin/ec2metadata | grep zone` );
+                        }
+                        break;
+                }
+                break;
+
+            case 'static':
+                $_zone = config( 'dfe.provisioning.static-zone-name' );
+                break;
+        }
+
+        if ( $partitioned && ( empty( $_zone ) || empty( $_partition ) ) )
+        {
+            throw new \RuntimeException( 'Zone and/or partition unknown. Cannot provision storage.' );
+        }
+
+        return [$_zone, $_partition, $_rootHash];
     }
 
     /**

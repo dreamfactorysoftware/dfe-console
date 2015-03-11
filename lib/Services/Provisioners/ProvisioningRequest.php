@@ -1,8 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
+use DreamFactory\Enterprise\Common\Filesystems\InstanceFilesystem;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use Illuminate\Filesystem\Filesystem;
 
 class ProvisioningRequest
 {
@@ -15,7 +15,7 @@ class ProvisioningRequest
      */
     protected $_instance;
     /**
-     * @type Filesystem
+     * @type InstanceFilesystem
      */
     protected $_storage;
     /**
@@ -29,10 +29,10 @@ class ProvisioningRequest
 
     /**
      * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
-     * @param \Illuminate\Filesystem\Filesystem                            $storage
+     * @param InstanceFilesystem                                           $storage
      * @param bool                                                         $deprovision
      */
-    public function __construct( Instance $instance, Filesystem $storage = null, $deprovision = false )
+    public function __construct( Instance $instance, InstanceFilesystem $storage = null, $deprovision = false )
     {
         $this->_instance = $instance;
         $this->_storage = $storage;
@@ -48,7 +48,7 @@ class ProvisioningRequest
     }
 
     /**
-     * @return Filesystem
+     * @return InstanceFilesystem
      */
     public function getStorage()
     {
@@ -64,11 +64,11 @@ class ProvisioningRequest
     }
 
     /**
-     * @param Filesystem $storage
+     * @param InstanceFilesystem $storage
      *
      * @return ProvisioningRequest
      */
-    public function setStorage( Filesystem $storage )
+    public function setStorage( InstanceFilesystem $storage )
     {
         $this->_storage = $storage;
 

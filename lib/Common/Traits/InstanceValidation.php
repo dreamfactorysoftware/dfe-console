@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Traits;
+namespace DreamFactory\Enterprise\Common\Traits;
 
 use DreamFactory\Enterprise\Common\Contracts\InstanceContainer;
 use DreamFactory\Library\Fabric\Common\Exceptions\InstanceNotFoundException;

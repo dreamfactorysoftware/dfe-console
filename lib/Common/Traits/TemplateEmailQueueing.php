@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Traits;
+namespace DreamFactory\Enterprise\Common\Traits;
 
 use DreamFactory\Enterprise\Common\Enums\MailTemplates;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;

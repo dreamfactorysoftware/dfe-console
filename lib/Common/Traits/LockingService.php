@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Traits;
+namespace DreamFactory\Enterprise\Common\Traits;
 
 /**
  * A trait for services that require run locks
