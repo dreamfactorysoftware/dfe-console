@@ -4,11 +4,11 @@ namespace DreamFactory\Enterprise\Services\Managers;
 use DreamFactory\Enterprise\Common\Contracts\InstanceFactory;
 use DreamFactory\Enterprise\Common\Contracts\InstanceProvisioner;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
+use DreamFactory\Enterprise\Common\Traits\ComponentLookup;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Services\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
@@ -23,7 +23,7 @@ class InstanceManager extends BaseManager implements InstanceFactory, InstancePr
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use ComponentLookup;
 
     //******************************************************************************
     //* Constants
@@ -255,8 +255,7 @@ class InstanceManager extends BaseManager implements InstanceFactory, InstancePr
      */
     protected function _checkInstance( $instanceName )
     {
-        $_name = Instance::sanitizeNgcup
-        ame( $instanceName );
+        $_name = Instance::sanitizeName( $instanceName );
 
         //  Not unique? Bail
         if ( 0 !== Instance::byNameOrId( $_name )->count() )

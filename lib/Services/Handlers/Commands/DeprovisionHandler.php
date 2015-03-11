@@ -2,10 +2,10 @@
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Enums\Provisioners;
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Provisioners\DreamFactoryRave;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 
 /**
  * Processes queued deprovision requests

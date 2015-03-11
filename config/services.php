@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
 use DreamFactory\Enterprise\Services\Providers\InstanceManagerProvider;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
+use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
 use DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider;
 
 /**
@@ -26,6 +27,7 @@ return [
         InstanceManagerProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
         ProvisioningServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
         SnapshotServiceProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
+        RaveDatabaseServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Services\\Providers\\RaveDatabaseServiceProvider',
     ],
     //******************************************************************************
     //* Mailgun

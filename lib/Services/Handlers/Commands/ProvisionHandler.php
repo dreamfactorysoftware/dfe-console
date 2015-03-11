@@ -4,7 +4,7 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 use DreamFactory\Enterprise\Common\Containers\RaveBox;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
-use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 
 /**

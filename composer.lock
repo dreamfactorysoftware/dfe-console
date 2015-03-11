@@ -1245,12 +1245,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/jeremeamia/super_closure.git",
-                "reference": "ac4394c7e21777ac48543190fb0872b2fc7f17af"
+                "reference": "b712f39c671e5ead60c7ebfe662545456aade833"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/ac4394c7e21777ac48543190fb0872b2fc7f17af",
-                "reference": "ac4394c7e21777ac48543190fb0872b2fc7f17af",
+                "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/b712f39c671e5ead60c7ebfe662545456aade833",
+                "reference": "b712f39c671e5ead60c7ebfe662545456aade833",
                 "shasum": ""
             },
             "require": {
@@ -1264,7 +1264,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "2.1-dev"
                 }
             },
             "autoload": {
@@ -1295,7 +1295,7 @@
                 "serialize",
                 "tokenizer"
             ],
-            "time": "2015-01-26 23:07:39"
+            "time": "2015-03-11 20:06:43"
         },
         {
             "name": "kisma/kisma",
@@ -1361,12 +1361,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7bf50d876e62c35ae86235c28b76acb49fb7184b"
+                "reference": "bc8fdeb41a10975e3cb337ca8c734cf22989447f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7bf50d876e62c35ae86235c28b76acb49fb7184b",
-                "reference": "7bf50d876e62c35ae86235c28b76acb49fb7184b",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/bc8fdeb41a10975e3cb337ca8c734cf22989447f",
+                "reference": "bc8fdeb41a10975e3cb337ca8c734cf22989447f",
                 "shasum": ""
             },
             "require": {
@@ -1479,7 +1479,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-10 19:23:45"
+            "time": "2015-03-11 01:28:49"
         },
         {
             "name": "league/flysystem",
@@ -1779,12 +1779,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "5567f0ab3b2c51979af6d8c0a899bf6e493b6062"
+                "reference": "4dbf067b4b898026b96d0c8a57ad153314613b39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/5567f0ab3b2c51979af6d8c0a899bf6e493b6062",
-                "reference": "5567f0ab3b2c51979af6d8c0a899bf6e493b6062",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4dbf067b4b898026b96d0c8a57ad153314613b39",
+                "reference": "4dbf067b4b898026b96d0c8a57ad153314613b39",
                 "shasum": ""
             },
             "require": {
@@ -1816,7 +1816,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-03-10 20:32:21"
+            "time": "2015-03-11 19:01:26"
         },
         {
             "name": "psr/log",

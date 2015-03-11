@@ -1,17 +1,10 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
-use DreamFactory\Enterprise\Services\Traits\EntityLookup;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
 class ClusterState extends Command
 {
-    //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-    use EntityLookup;
-
     //******************************************************************************
     //* Members
     //******************************************************************************

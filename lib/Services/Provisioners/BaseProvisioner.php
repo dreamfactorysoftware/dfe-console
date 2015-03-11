@@ -1,15 +1,15 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
+use DreamFactory\Enterprise\Common\Contracts\ProvisionerContract;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Services\Contracts\ProvisionerContract;
-use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Traits\LockingService;
-use DreamFactory\Enterprise\Services\Traits\TemplateEmailQueueing;
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Common\Traits\LockingService;
+use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Auditing\Enums\AuditLevels;
 use DreamFactory\Library\Fabric\Auditing\Facades\Audit;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Message;
 
 /**
  * A base class for all provisioners
@@ -69,10 +69,10 @@ abstract class BaseProvisioner extends BaseService implements ProvisionerContrac
 
         $_subject = $_result ? '[DFE] Your DSP is ready!' : '[DFE] DSP Launch Failure';
 
-        Mail::send(
+        \Mail::send(
             'email.generic',
             $_data,
-            function ( $message ) use ( $_instance, $_subject )
+            function ( Message $message ) use ( $_instance, $_subject )
             {
                 $message
                     ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
@@ -116,10 +116,10 @@ abstract class BaseProvisioner extends BaseService implements ProvisionerContrac
 
         $_subject = $_result ? '[DFE] Your DSP is ready!' : '[DFE] DSP Launch Failure';
 
-        Mail::send(
+        \Mail::send(
             'email.generic',
             $_data,
-            function ( $message ) use ( $_instance, $_subject )
+            function ( Message $message ) use ( $_instance, $_subject )
             {
                 $message
                     ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )

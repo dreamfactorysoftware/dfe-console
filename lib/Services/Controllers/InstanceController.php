@@ -1,8 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Controllers;
 
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
-use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 

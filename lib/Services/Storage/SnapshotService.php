@@ -5,7 +5,7 @@ use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Facades\Scalpel;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
-use DreamFactory\Enterprise\Services\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\Inflector;
