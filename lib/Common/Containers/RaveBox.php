@@ -52,9 +52,13 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
      * Create a new instance record
      *
      * @param string $instanceName
-     * @param array  $options Array of options for creation
+     * @param array  $options Array of options for creation. Options are:
      *
-     * @return array
+     *                        owner-id      The id of the instance owner
+     *                        cluster-id    The cluster that owns this instance
+     *                        trial         If true, the "trial" flagged is set for the instance
+     *
+     * @return Instance
      * @throws \DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException
      */
     public static function make( $instanceName, $options = [] )
@@ -67,6 +71,8 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
         try
         {
             //  Basic checks...
+            $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
+
             if ( null === ( $_ownerId = IfSet::get( $options, 'owner-id' ) ) )
             {
                 throw new \InvalidArgumentException( 'No "owner-id" given. Cannot create instance.' );
@@ -81,12 +87,19 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
                 throw new \InvalidArgumentException( 'The "owner-id" specified is invalid.' );
             }
 
+            /*------------------------------------------------------------------------------*/
+            /* Validate the cluster and pull components                                     */
+            /*------------------------------------------------------------------------------*/
+
             $_clusterId = IfSet::get( $options, 'cluster-id', config( 'dfe.provisioning.default-cluster-id' ) );
 
             try
             {
                 $_cluster = static::_lookupCluster( $_clusterId );
-                $_servers = static::_lookupClusterServers( $_cluster->id );
+                $_cachePrefix = 'dfe.rave-box.clusters.' . $_cluster->cluster_id_text;
+
+                //  Try cache first
+                $_servers = \Cache::get( $_cachePrefix . '.servers', [] ) ?: static::_lookupClusterServers( $_cluster->id );
             }
             catch ( ModelNotFoundException $_ex )
             {
@@ -94,14 +107,17 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
             }
 
             //  Find the database server
-            $_dbServer = null;
+            $_dbServer = \Cache::get( $_cachePrefix . '.lru.db-server-id' );
 
             if ( !empty( $_servers ) )
             {
+                $_ignored = $_dbServer && 1 > count( $_servers[ServerTypes::DB] ) ? [$_dbServer] : [];
+
                 /** @type Server $_server */
                 foreach ( $_servers[ServerTypes::DB] as $_server )
                 {
                     $_dbServer = $_server;
+                    \Cache::put( $_cachePrefix . '.lru.db-server', $_dbServer, 60 );
                     break;
                 }
             }
@@ -113,30 +129,26 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
             }
 
             //  Where is this going?
-            $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
+            \Cache::put( $_cachePrefix . '.servers', $_servers, 60 );
 
-            /** @type Instance $_model */
-            $_model = new static();
-            $_model->user_id = $_owner->id;
-            $_model->cluster_id = $_cluster->id;
-            $_model->db_server_id = $_dbServer->id;
-            $_model->vendor_id = $_guestLocation;
-            $_model->vendor_image_id = config( 'dfe.provisioning.default-vendor-image-id' );
-            $_model->vendor_credentials_id = 0; //	DreamFactory account
-            $_model->platform_state_nbr = 0; // Not Activated
-            $_model->ready_state_nbr = 0; // Admin Required
-            $_model->state_nbr = ProvisionStates::CREATED;
-            $_model->flavor_nbr = config( 'dfe.provisioning.default-vendor-image-flavor' );
-            $_model->trial_instance_ind = IfSet::get( $options, 'trial', false ) ? 1 : 0;
-            $_model->guest_location_nbr = $_guestLocation;
-            $_model->instance_name_text = $_sanitized;
-
-            if ( !$_model->save() )
-            {
-                throw new \RuntimeException( 'Failed to save instance to database.' );
-            }
-
-            return $_model;
+            return Instance::create(
+                [
+                    'user_id'               => $_owner->id,
+                    'cluster_id'            => $_cluster->id,
+                    'db_server_id'          => $_dbServer->id,
+                    'vendor_id'             => $_guestLocation,
+                    'vendor_image_id'       => config( 'dfe.provisioning.default-vendor-image-id' ),
+                    'vendor_credentials_id' => config( 'dfe.provisioning.default-vendor-credentials-id', 0 ),
+                    'flavor_nbr'            => config( 'dfe.provisioning.default-vendor-image-flavor' ),
+                    'platform_state_nbr'    => 0, // Not Activated
+                    'ready_state_nbr'       => 0, // Admin Required
+                    'state_nbr'             => ProvisionStates::CREATED,
+                    'trial_instance_ind'    => IfSet::get( $options, 'trial', false ) ? 1 : 0,
+                    'guest_location_nbr'    => $_guestLocation,
+                    'instance_name_text'    => $_sanitized,
+                    'instance_id_text'      => $_sanitized,
+                ]
+            );
         }
         catch ( \Exception $_ex )
         {
@@ -180,10 +192,6 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
 
         return $_response;
     }
-
-    //******************************************************************************
-    //* Methods
-    //******************************************************************************
 
     /**
      * Given a provisioning request with a storage area, provision a new instance
