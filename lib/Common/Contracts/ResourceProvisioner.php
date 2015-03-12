@@ -6,23 +6,23 @@ use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 /**
  * Something that looks like it can provision resources
  */
-interface ProvisionerContract
+interface ResourceProvisioner
 {
     //*************************************************************************
     //* Methods
     //*************************************************************************
 
     /**
-     * @param ProvisioningRequest $request
+     * @param ProvisioningRequest|mixed $request
      *
-     * @return bool
+     * @return mixed
      */
-    public function provision( ProvisioningRequest $request );
+    public function provision( $request );
 
     /**
-     * @param ProvisioningRequest $request
+     * @param ProvisioningRequest|mixed $request
      *
-     * @return bool
+     * @return mixed
      */
-    public function deprovision( ProvisioningRequest $request );
+    public function deprovision( $request );
 }

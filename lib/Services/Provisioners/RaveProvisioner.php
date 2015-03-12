@@ -2,15 +2,12 @@
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
-use DreamFactory\Enterprise\Services\Storage\DreamFactory\StorageProvisioner;
-use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
-class DreamFactoryRave extends BaseProvisioner
+class RaveProvisioner extends BaseResourceProvisioner
 {
     //******************************************************************************
     //* Methods
@@ -35,18 +32,18 @@ class DreamFactoryRave extends BaseProvisioner
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Services\Utility\RemoteInstance           $instance
      * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
      *
      * @return array
      */
-    protected function _doProvision( $instance, ProvisioningRequest $request )
+    protected function _doProvision( ProvisioningRequest $request )
     {
         $_output = [];
-        $_launchResult = false;
+        $_result = false;
+        $_instance = $request->getInstance();
 
         //	Update the current instance state
-        $instance->updateState( ProvisionStates::PROVISIONING );
+        $_instance->updateState( ProvisionStates::PROVISIONING );
 
         try
         {
@@ -54,7 +51,7 @@ class DreamFactoryRave extends BaseProvisioner
             $this->_provisionStorage( $request );
 
             //  And the instance
-            if ( false === ( $_launchResult = $instance->up( $request ) ) )
+            if ( false === ( $_result = $this->_provisionInstance( $request ) ) )
             {
                 throw new \RuntimeException( 'Exception during launch.' );
             }
@@ -62,112 +59,119 @@ class DreamFactoryRave extends BaseProvisioner
             Mail::send(
                 'email.generic',
                 [
-                    'firstName'     => $instance->user->first_name_text,
+                    'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Launch Complete',
                     'contentHeader' => 'Your DSP has been launched',
                     'emailBody'     =>
                         '<p>Your instance <strong>' .
-                        $instance->instance_name_text .
+                        $_instance->instance_name_text .
                         '</strong> has been successfully created. You can reach it by going to <a href="//' .
-                        $instance->public_host_text .
+                        $_instance->public_host_text .
                         '">' .
-                        $instance->public_host_text .
+                        $_instance->public_host_text .
                         '</a> from any browser.</p>',
                 ],
-                function ( $message ) use ( $instance )
+                function ( $message ) use ( $_instance )
                 {
-                    $message->to( $instance->user->email_addr_text, $instance->user->first_name_text . ' ' . $instance->user->last_name_text )
+                    /** @var Message $message */
+                    $message
+                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
                         ->subject( '[DFE] Your DSP is ready!' );
                 }
             );
         }
         catch ( \Exception $_ex )
         {
-            $instance->updateState( ProvisionStates::PROVISIONING_ERROR );
+            $_instance->updateState( ProvisionStates::PROVISIONING_ERROR );
 
             Mail::send(
                 'email.generic',
                 [
-                    'firstName'     => $instance->user->first_name_text,
+                    'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Launch Failure',
                     'contentHeader' => 'Your DSP has failed to launch',
                     'emailBody'     =>
                         '<p>Your instance <strong>' .
-                        $instance->instance_name_text .
+                        $_instance->instance_name_text .
                         '</strong> was not successfully created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
                 ],
-                function ( $message ) use ( $instance )
+                function ( $message ) use ( $_instance )
                 {
-                    $message->to( $instance->user->email_addr_text, $instance->user->first_name_text . ' ' . $instance->user->last_name_text )
+                    /** @var Message $message */
+                    $message
+                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
                         ->subject( '[DFE] DSP Launch Failure' );
                 }
             );
 
-            return ['success' => false, 'instance' => false, 'log' => $_output, 'result' => $_launchResult];
+            return ['success' => false, 'instance' => false, 'log' => $_output, 'result' => $_result];
         }
 
-        return ['success' => true, 'instance' => $instance->toArray(), 'log' => $_output, 'result' => $_launchResult];
+        return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
     }
 
     /**
-     * @param RemoteInstance                                                     $instance
      * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
      *
-     * @return mixed|void
+     * @return array
      */
-    protected function _doDeprovision( $instance, ProvisioningRequest $request )
+    protected function _doDeprovision( ProvisioningRequest $request )
     {
         $_output = [];
+        $_result = false;
+        $_instance = $request->getInstance();
 
         //	Update the current instance state
-        $instance->updateState( ProvisionStates::DEPROVISIONING );
+        $_instance->updateState( ProvisionStates::DEPROVISIONING );
 
         try
         {
             //  And the instance
-            if ( 0 != ( $_returnValue = $instance->down( $request ) ) )
+            if ( 0 != ( $_result = $this->_deprovisionInstance( $request ) ) )
             {
                 throw new \RuntimeException( 'Exception during deprovisioning.' );
             }
 
-            Mail::send(
+            \Mail::send(
                 'email.generic',
                 [
-                    'firstName'     => $instance->user->first_name_text,
+                    'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Shutdown Complete',
                     'contentHeader' => 'Your DSP has been shut down',
                     'emailBody'     =>
                         '<p>Your instance <strong>' .
-                        $instance->instance_name_text .
+                        $_instance->instance_name_text .
                         '</strong> has been successfully shut down. A snapshot may be available in the dashboard under <strong>Snapshots</strong>.</p>',
                 ],
-                function ( $message ) use ( $instance )
+                function ( $message ) use ( $_instance )
                 {
-                    $message->to( $instance->user->email_addr_text, $instance->user->first_name_text . ' ' . $instance->user->last_name_text )
+                    /** @var Message $message */
+                    $message
+                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
                         ->subject( '[DFE] Your DSP was shut down' );
                 }
             );
         }
         catch ( \Exception $_ex )
         {
-            $instance->updateState( ProvisionStates::DEPROVISIONING_ERROR );
+            $_instance->updateState( ProvisionStates::DEPROVISIONING_ERROR );
 
-            Mail::send(
+            \Mail::send(
                 'email.generic',
                 [
-                    'firstName'     => $instance->user->first_name_text,
+                    'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Shutdown Complete',
                     'contentHeader' => 'Your DSP has been shut down',
                     'emailBody'     =>
                         '<p>Your instance <strong>' .
-                        $instance->instance_name_text .
+                        $_instance->instance_name_text .
                         '</strong> shut down was not successful. Our engineers will examine the issue and notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.'
                 ],
-                function ( $message ) use ( $instance )
+                function ( $message ) use ( $_instance )
                 {
                     /** @var Message $message */
                     $message
-                        ->to( $instance->user->email_addr_text, $instance->user->first_name_text . ' ' . $instance->user->last_name_text )
+                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
                         ->bcc( 'ops@dreamfactory.com', 'DreamFactory Operations' )
                         ->subject( '[DFE] DSP Shutdown Failure' );
                 }
@@ -176,7 +180,7 @@ class DreamFactoryRave extends BaseProvisioner
             return ['instance' => false, 'log' => $_output];
         }
 
-        return ['instance' => $instance->toArray(), 'log' => $_output];
+        return ['instance' => $_instance->toArray(), 'log' => $_output];
     }
 
     /**
@@ -197,11 +201,11 @@ class DreamFactoryRave extends BaseProvisioner
         if ( null === ( $_filesystem = $request->getStorage() ) )
         {
             /** @type Filesystem $_filesystem */
-            $_filesystem = Storage::disk( 'hosted' );
+            $_filesystem = \Storage::disk( 'hosted' );
             $request->setStorage( $_filesystem );
         }
 
-        $_storage = new StorageProvisioner();
+        $_storage = new DreamFactoryRaveStorage();
         $_storage->provision( $request );
 
         return $_filesystem;

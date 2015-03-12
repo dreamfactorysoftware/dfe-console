@@ -1,7 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services;
 
-use DreamFactory\Enterprise\Common\Contracts\ProvisionerContract;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\ComponentLookup;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
@@ -10,7 +10,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class RaveDatabaseService extends BaseService implements ProvisionerContract
+class RaveDatabaseService extends BaseService implements ResourceProvisioner
 {
     //******************************************************************************
     //* Traits

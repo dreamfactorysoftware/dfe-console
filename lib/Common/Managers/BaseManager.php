@@ -3,6 +3,7 @@ namespace DreamFactory\Enterprise\Common\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\ManagerContract;
 use DreamFactory\Enterprise\Common\Traits\ObjectManager;
+use Illuminate\Contracts\Foundation\Application;
 
 /**
  * A base class for DFE service providers
@@ -16,8 +17,25 @@ abstract class BaseManager implements ManagerContract
     use ObjectManager;
 
     //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type Application
+     */
+    protected $_app;
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
+
+    /**
+     * @param Application $app
+     */
+    public function __construct( $app )
+    {
+        $this->_app = $app;
+    }
 
     /**
      * Call forwarder

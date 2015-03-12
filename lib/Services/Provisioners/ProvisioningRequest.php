@@ -1,8 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
-use DreamFactory\Enterprise\Common\Filesystems\InstanceFilesystem;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class ProvisioningRequest
 {
@@ -15,11 +15,11 @@ class ProvisioningRequest
      */
     protected $_instance;
     /**
-     * @type InstanceFilesystem The instance's local file system
+     * @type Filesystem The instance's local file system
      */
     protected $_storage;
     /**
-     * @type bool True if this is a DEprovision
+     * @type bool True if this is a DE-provision
      */
     protected $_deprovision = false;
     /**
@@ -33,11 +33,11 @@ class ProvisioningRequest
 
     /**
      * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
-     * @param InstanceFilesystem                                           $storage
+     * @param Filesystem                                                   $storage
      * @param bool                                                         $deprovision
      * @param bool                                                         $force
      */
-    public function __construct( Instance $instance, InstanceFilesystem $storage = null, $deprovision = false, $force = false )
+    public function __construct( Instance $instance, Filesystem $storage = null, $deprovision = false, $force = false )
     {
         $this->_instance = $instance;
         $this->_storage = $storage;
@@ -54,7 +54,7 @@ class ProvisioningRequest
     }
 
     /**
-     * @return InstanceFilesystem
+     * @return Filesystem
      */
     public function getStorage()
     {
@@ -70,11 +70,11 @@ class ProvisioningRequest
     }
 
     /**
-     * @param InstanceFilesystem $storage
+     * @param Filesystem $storage
      *
      * @return ProvisioningRequest
      */
-    public function setStorage( InstanceFilesystem $storage )
+    public function setStorage( Filesystem $storage )
     {
         $this->_storage = $storage;
 

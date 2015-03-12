@@ -1,27 +1,29 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
-use DreamFactory\Enterprise\Common\Contracts\ProvisionerContract;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
-use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Auditing\Enums\AuditLevels;
 use DreamFactory\Library\Fabric\Auditing\Facades\Audit;
 use Illuminate\Mail\Message;
 
 /**
  * A base class for all provisioners
+ *
+ * This class provides a foundation upon which to build other PaaS provisioners for the DFE ecosystem. Merely extend the class and add the
+ * _doProvision and _doDeprovision methods.
  */
-abstract class BaseProvisioner extends BaseService implements ProvisionerContract
+abstract class BaseResourceProvisioner extends BaseService implements ResourceProvisioner
 {
     //******************************************************************************
     //* Constants
     //******************************************************************************
 
     /**
-     * @type string
+     * @type string This is the "facility" passed along to the auditing system for reporting
      */
     const DEFAULT_FACILITY = 'dfe-provision';
 
@@ -35,19 +37,14 @@ abstract class BaseProvisioner extends BaseService implements ProvisionerContrac
     //* Methods
     //******************************************************************************
 
-    /**
-     * @param ProvisioningRequest $request
-     *
-     * @return bool|mixed
-     */
-    public function provision( ProvisioningRequest $request )
+    /** @inheritdoc */
+    public function provision( $request )
     {
         $_elapsed = null;
         $_timestamp = microtime( true );
-        $_instance = new RemoteInstance( $request->getInstance() );
-
-        $_result = $this->_doProvision( $_instance, $request );
+        $_result = $this->_doProvision( $request );
         $_elapsed = microtime( true ) - $_timestamp;
+        $_instance = $request->getInstance();
 
         $this->_logProvision( ['instance' => $_instance, 'elapsed' => $_elapsed, 'result' => $_result, 'deprovision' => false, 'provision' => true] );
 
@@ -83,19 +80,14 @@ abstract class BaseProvisioner extends BaseService implements ProvisionerContrac
         return $_result;
     }
 
-    /**
-     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
-     *
-     * @return bool|mixed
-     */
-    public function deprovision( ProvisioningRequest $request )
+    /** @inheritdoc */
+    public function deprovision( $request )
     {
         $_elapsed = null;
         $_timestamp = microtime( true );
-        $_instance = new RemoteInstance( $request->getInstance() );
-
-        $_result = $this->_doDeprovision( $_instance, $request );
+        $_result = $this->_doDeprovision( $request );
         $_elapsed = microtime( true ) - $_timestamp;
+        $_instance = $request->getInstance();
 
         $this->_logProvision( ['instance' => $_instance, 'elapsed' => $_elapsed, 'result' => $_result, 'deprovision' => true, 'provision' => false] );
 
@@ -131,23 +123,6 @@ abstract class BaseProvisioner extends BaseService implements ProvisionerContrac
     }
 
     /**
-     * @param RemoteInstance                                                     $instance
-     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
-     *
-     * @return mixed
-     *
-     */
-    abstract protected function _doProvision( $instance, ProvisioningRequest $request );
-
-    /**
-     * @param RemoteInstance                                                     $instance
-     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
-     *
-     * @return mixed
-     */
-    abstract protected function _doDeprovision( $instance, ProvisioningRequest $request );
-
-    /**
      * @param array  $data
      * @param int    $level
      * @param string $facility
@@ -159,4 +134,19 @@ abstract class BaseProvisioner extends BaseService implements ProvisionerContrac
 
         Audit::log( $data, $level, $facility, app( 'request' ) );
     }
+
+    /**
+     * @param ProvisioningRequest|mixed $request
+     *
+     * @return mixed
+     */
+    abstract protected function _doProvision( $request );
+
+    /**
+     * @param ProvisioningRequest|mixed $request
+     *
+     * @return mixed
+     */
+    abstract protected function _doDeprovision( $request );
+
 }

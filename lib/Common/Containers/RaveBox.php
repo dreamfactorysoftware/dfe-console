@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Common\Containers;
 
 use DreamFactory\Enterprise\Common\Contracts\InstanceContainer;
-use DreamFactory\Enterprise\Common\Contracts\ProvisionerContract;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\StaticInstanceFactory;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
@@ -11,6 +11,7 @@ use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -26,6 +27,15 @@ use Illuminate\Support\Facades\Log;
 class RaveBox implements InstanceContainer, StaticInstanceFactory
 {
     //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string
+     */
+    const DEFAULT_CACHE_PREFIX = 'dfe.rave-box';
+
+    //******************************************************************************
     //* Traits
     //******************************************************************************
 
@@ -40,7 +50,7 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
      */
     protected $_instance;
     /**
-     * @type ProvisionerContract
+     * @type ResourceProvisioner
      */
     protected $_provisioner;
 
@@ -71,8 +81,6 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
         try
         {
             //  Basic checks...
-            $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
-
             if ( null === ( $_ownerId = IfSet::get( $options, 'owner-id' ) ) )
             {
                 throw new \InvalidArgumentException( 'No "owner-id" given. Cannot create instance.' );
@@ -91,12 +99,13 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
             /* Validate the cluster and pull components                                     */
             /*------------------------------------------------------------------------------*/
 
+            $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
             $_clusterId = IfSet::get( $options, 'cluster-id', config( 'dfe.provisioning.default-cluster-id' ) );
 
             try
             {
                 $_cluster = static::_lookupCluster( $_clusterId );
-                $_cachePrefix = 'dfe.rave-box.clusters.' . $_cluster->cluster_id_text;
+                $_cachePrefix = static::DEFAULT_CACHE_PREFIX . '.clusters.' . $_cluster->cluster_id_text;
 
                 //  Try cache first
                 $_servers = \Cache::get( $_cachePrefix . '.servers', [] ) ?: static::_lookupClusterServers( $_cluster->id );
@@ -111,14 +120,21 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
 
             if ( !empty( $_servers ) )
             {
+                //  Cache it
+                \Cache::put( $_cachePrefix . '.servers', $_servers, 60 );
+
+                //@todo re-examine round-robin approach to assigning cluster database servers
                 $_ignored = $_dbServer && 1 > count( $_servers[ServerTypes::DB] ) ? [$_dbServer] : [];
 
                 /** @type Server $_server */
                 foreach ( $_servers[ServerTypes::DB] as $_server )
                 {
-                    $_dbServer = $_server;
-                    \Cache::put( $_cachePrefix . '.lru.db-server', $_dbServer, 60 );
-                    break;
+                    if ( !in_array( $_server->server_id_text, $_ignored ) )
+                    {
+                        $_dbServer = $_server;
+                        \Cache::put( $_cachePrefix . '.lru.db-server', $_dbServer, 60 );
+                        break;
+                    }
                 }
             }
 
@@ -129,8 +145,6 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
             }
 
             //  Where is this going?
-            \Cache::put( $_cachePrefix . '.servers', $_servers, 60 );
-
             return Instance::create(
                 [
                     'user_id'               => $_owner->id,
@@ -203,6 +217,8 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
      */
     public function up( ProvisioningRequest $request )
     {
+        return \App::make( ProvisioningServiceProvider::IOC_NAME )->provision( $request );
+
         //	Clean up that nasty name...
         $_instance = $request->getInstance();
         $_dbName = str_replace( '-', '_', $_instance->instance_name_text );
@@ -380,7 +396,7 @@ PHP;
      */
     public function down( ProvisioningRequest $request )
     {
-        $_instance = $request->getInstance();
+        return \App::make( ProvisioningServiceProvider::IOC_NAME )->deprovision( $request );
 
         //  Snapshot
         //$this->_export($instanceId,$options=[])

@@ -1,12 +1,11 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Storage\DreamFactory;
 
-use DreamFactory\Enterprise\Common\Contracts\StorageProvisioner;
-use DreamFactory\Enterprise\Common\Filesystems\InstanceFilesystem;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
-use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 /**
  * DreamFactory Enterprise(tm) and Services Platform File System
@@ -14,12 +13,12 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
  * The default functionality (static::$partitioned is set to TRUE) of this resolver is to provide partitioned
  * layout paths for the hosted storage area. The structure generated is as follows:
  *
- * /mount_point                             <----- Mount point/absolute path of storage area
- *      /storage                            <----- Root directory of hosted storage
+ * /mount_point                             <----- Mount point/absolute path of storage area (i.e. "/")
+ *      /storage                            <----- Root directory of hosted storage (i.e. "/data/storage")
  *          /zone                           <----- The storage zones (ec2.us-east-1a, ec2.us-west-1b, local, etc.)
  *              /[00-ff]                    <----- The first two bytes of hashes within (the partition)
- *                  /user-hash
- *                      /.private           <----- User private storage root
+ *                  /owner-hash
+ *                      /.private           <----- owner private storage root
  *                      /instance-hash      <----- Instance storage root
  *                          /.private       <----- Instance private storage root
  *
@@ -33,22 +32,8 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/config
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
- *
- * This class also provides path mapping for non-hosted DSPs as well. Set the $partitioned property to FALSE
- * for this functionality. The structure will use the installation path as a mount point.
- *
- * The structure is as follows:
- *
- * install_root/storage/
- * install_root/storage/applications
- * install_root/storage/plugins
- * install_root/storage/.private
- * install_root/storage/.private/config
- * install_root/storage/.private/.cache
- * install_root/storage/.private/scripts
- * install_root/storage/.private/scripts.user
  */
-class DreamFactoryRaveStorage implements StorageProvisioner
+class RaveStorageProvisioner implements ResourceProvisioner
 {
     //******************************************************************************
     //* Traits
@@ -64,20 +49,32 @@ class DreamFactoryRaveStorage implements StorageProvisioner
      * @type string Partitioning hash type
      */
     protected $_algorithm = 'sha256';
+    /**
+     * @type string The instances's private path
+     */
+    protected $_privatePath = null;
+    /**
+     * @type string The user's private path
+     */
+    protected $_ownerPrivatePath = null;
+    /**
+     * @type bool Indicates if the storage I govern is hosted or standalone
+     */
+    protected $_hostedStorage = true;
 
     //*************************************************************************
     //* Methods
     //*************************************************************************
 
     /** @inheritdoc */
-    public function provision( ProvisioningRequest $request )
+    public function provision( $request )
     {
         //  Make structure
         $this->_createInstanceStorage( $request->getInstance(), $request->getStorage() );
     }
 
     /** @inheritdoc */
-    public function deprovision( ProvisioningRequest $request )
+    public function deprovision( $request )
     {
         //  '86 structure
         $this->_removeInstanceStorage( $request->getInstance(), $request->getStorage() );
@@ -86,32 +83,43 @@ class DreamFactoryRaveStorage implements StorageProvisioner
     /**
      * Create storage structure in $filesystem
      *
-     * @param Instance           $instance
-     * @param InstanceFilesystem $filesystem
+     * @param Instance   $instance
+     * @param Filesystem $filesystem
      */
     protected function _createInstanceStorage( $instance, $filesystem )
     {
-        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance, $filesystem->isPartitioned() );
+        //  Wipe existing stuff
+        $this->_privatePath = $this->_ownerPrivatePath = null;
 
-        $_privateName = config( 'dfe.provisioning.private-base-path', '.private' );
+        //  Based on the instance, determine the root, partition and hash
+        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance );
 
-        $_rootPath =
-            $filesystem->isPartitioned()
-                ? DIRECTORY_SEPARATOR . $_zone . DIRECTORY_SEPARATOR . $_partition . DIRECTORY_SEPARATOR . $_rootHash
-                : DIRECTORY_SEPARATOR;
+        //  Storage root path
+        $_rootPath = $this->_makeRootPath( $_zone, $_partition, $_rootHash );
 
-        $_userPrivatePath = $_rootPath . DIRECTORY_SEPARATOR . $_privateName;
-        $_storageBasePath = $_rootPath . ( $filesystem->isPartitioned() ? DIRECTORY_SEPARATOR . $instance->instance_id_text : null );
-        $_privatePath = $_storageBasePath . DIRECTORY_SEPARATOR . $_privateName;
+        //  The instance's base storage path
+        $_instanceRootPath = $this->_makeRootPath( $_zone, $_partition, $_rootHash, $instance->instance_id_text );
 
-        !$filesystem->exists( $_userPrivatePath ) && $filesystem->makeDirectory( $_userPrivatePath, 0777, true );
-        !$filesystem->exists( $_privatePath ) && $filesystem->makeDirectory( $_privatePath, 0777, true );
+        //  Build privates....
+        $_privateName = trim( config( 'dfe.provisioning.private-base-path', '.private' ), DIRECTORY_SEPARATOR . ' ' );
 
+        //  The user's private path
+        $_ownerPrivatePath = $_rootPath . DIRECTORY_SEPARATOR . $_privateName;
+
+        //  The instance's private path
+        $_privatePath = $this->_hostedStorage ? $_instanceRootPath . DIRECTORY_SEPARATOR . $_privateName : $_ownerPrivatePath;
+
+        //  Make sure everything exists
+        !$filesystem->exists( $_rootPath ) && $filesystem->makeDirectory( $_rootPath );
+        !$filesystem->exists( $_ownerPrivatePath ) && $filesystem->makeDirectory( $_ownerPrivatePath );
+        $this->_hostedStorage && !$filesystem->exists( $_privatePath ) && $filesystem->makeDirectory( $_privatePath );
+
+        //  Now ancillary sub-directories
         foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
         {
-            if ( !$filesystem->exists( $_check = $_storageBasePath . DIRECTORY_SEPARATOR . $_path ) )
+            if ( !$filesystem->exists( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) )
             {
-                $filesystem->makeDirectory( $_check, 0777, true );
+                $filesystem->exists( $_check ) && $filesystem->makeDirectory( $_check );
             }
         }
 
@@ -119,21 +127,26 @@ class DreamFactoryRaveStorage implements StorageProvisioner
         {
             if ( !$filesystem->exists( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) )
             {
-                $filesystem->makeDirectory( $_check, 0777, true );
+                $filesystem->exists( $_check ) && $filesystem->makeDirectory( $_check );
             }
         }
+
+        $this->_privatePath = $_privatePath;
+        $this->_ownerPrivatePath = $_ownerPrivatePath;
     }
 
     /**
      * Delete storage of an instance
      *
-     * @param Instance           $instance
-     * @param InstanceFilesystem $filesystem
+     * @param Instance   $instance
+     * @param Filesystem $filesystem
      */
     protected function _removeInstanceStorage( $instance, $filesystem )
     {
-        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance, $filesystem->isPartitioned() );
-        $_storagePath = $this->_makeRootPath( $filesystem->isPartitioned(), $_zone, $_partition, $_rootHash, $instance->instance_id_text );
+        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance );
+        $_storagePath = $this->_makeRootPath( $_zone, $_partition, $_rootHash, $instance->instance_id_text );
+
+        //  I'm not sure how hard this tries to delete the directory
         $filesystem->exists( $_storagePath ) && $filesystem->deleteDirectory( $_storagePath );
     }
 
@@ -141,12 +154,17 @@ class DreamFactoryRaveStorage implements StorageProvisioner
      * Based on the requirements, resolve the base components of the storage area
      *
      * @param Instance $instance
-     * @param bool     $partitioned
      *
      * @return array
      */
-    protected function _resolveStructure( Instance $instance, $partitioned = false )
+    protected function _resolveStructure( Instance $instance )
     {
+        //  Hosted has no structure, just storage
+        if ( $this->_hostedStorage )
+        {
+            return array(null, null, null);
+        }
+
         $_rootHash = hash( $this->_algorithm, $instance->user->storage_id_text );
         $_partition = substr( $_rootHash, 0, 2 );
 
@@ -172,7 +190,7 @@ class DreamFactoryRaveStorage implements StorageProvisioner
                 break;
         }
 
-        if ( $partitioned && ( empty( $_zone ) || empty( $_partition ) ) )
+        if ( empty( $_zone ) || empty( $_partition ) )
         {
             throw new \RuntimeException( 'Zone and/or partition unknown. Cannot provision storage.' );
         }
@@ -181,7 +199,6 @@ class DreamFactoryRaveStorage implements StorageProvisioner
     }
 
     /**
-     * @param bool   $partitioned
      * @param string $zone
      * @param string $partition
      * @param string $rootHash
@@ -189,12 +206,11 @@ class DreamFactoryRaveStorage implements StorageProvisioner
      *
      * @return string
      */
-    protected function _makeRootPath( $partitioned, $zone, $partition, $rootHash, $instanceId = null )
+    protected function _makeRootPath( $zone, $partition, $rootHash, $instanceId = null )
     {
         return
-            $partitioned
-                ?
-                DIRECTORY_SEPARATOR .
+            $this->_hostedStorage
+                ? DIRECTORY_SEPARATOR .
                 $zone .
                 DIRECTORY_SEPARATOR .
                 $partition .
@@ -203,4 +219,62 @@ class DreamFactoryRaveStorage implements StorageProvisioner
                 ( $instanceId ? DIRECTORY_SEPARATOR . $instanceId : null )
                 : null;
     }
+
+    /**
+     * @return string
+     */
+    public function getPrivatePath()
+    {
+        return $this->_privatePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOwnerPrivatePath()
+    {
+        //  I hate doing this, but it will make this service more streamlined...
+        return $this->_hostedStorage ? $this->_ownerPrivatePath : $this->getPrivatePath();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isHostedStorage()
+    {
+        return $this->_hostedStorage;
+    }
+
+    /**
+     * @param boolean $hostedStorage
+     *
+     * @return DreamFactoryRaveStorage
+     */
+    public function setHostedStorage( $hostedStorage )
+    {
+        $this->_hostedStorage = $hostedStorage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAlgorithm()
+    {
+        return $this->_algorithm;
+    }
+
+    /**
+     * @param string $algorithm
+     *
+     * @return DreamFactoryRaveStorage
+     */
+    public function setAlgorithm( $algorithm )
+    {
+        $this->_algorithm = $algorithm;
+
+        return $this;
+    }
+
 }
