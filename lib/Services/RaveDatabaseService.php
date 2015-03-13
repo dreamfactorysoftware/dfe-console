@@ -28,7 +28,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      * @return bool
      * @throws ProvisioningException
      */
-    public function provision( ProvisioningRequest $request )
+    public function provision( $request )
     {
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
@@ -91,9 +91,9 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      *
      * @return bool
      */
-    public function deprovision( ProvisioningRequest $request, $force = false )
+    public function deprovision( $request )
     {
-        // TODO: Implement deprovision() method.
+        $_forced = $request->isForced();
     }
 
     /**

@@ -2,13 +2,11 @@
 namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\InstanceFactory;
-use DreamFactory\Enterprise\Common\Contracts\InstanceProvisioner;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Traits\ComponentLookup;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
-use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
@@ -17,7 +15,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
-class InstanceManager extends BaseManager implements InstanceFactory, InstanceProvisioner, \ArrayAccess, \IteratorAggregate
+/**
+ * InstanceManager
+ *
+ * @deprecated DO NOT USE
+ */
+class InstanceManager extends BaseManager implements InstanceFactory
 {
     //******************************************************************************
     //* Traits
@@ -153,7 +156,7 @@ class InstanceManager extends BaseManager implements InstanceFactory, InstancePr
 
             try
             {
-                $_owner = $this->_findUser( $_ownerId );
+                $_owner = $this->_lookupUser( $_ownerId );
             }
             catch ( \Exception $_ex )
             {
@@ -170,8 +173,8 @@ class InstanceManager extends BaseManager implements InstanceFactory, InstancePr
 
             try
             {
-                $_cluster = $this->_findCluster( $_clusterId );
-                $_servers = $this->_clusterServers( $_cluster->id );
+                $_cluster = $this->_lookupCluster( $_clusterId );
+                $_servers = $this->_lookupClusterServers( $_cluster->id );
             }
             catch ( ModelNotFoundException $_ex )
             {
@@ -264,128 +267,5 @@ class InstanceManager extends BaseManager implements InstanceFactory, InstancePr
         }
 
         return $_name;
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Whether a offset exists
-     *
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     *
-     * @param mixed $offset <p>
-     *                      An offset to check for.
-     *                      </p>
-     *
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     */
-    public function offsetExists( $offset )
-    {
-        // TODO: Implement offsetExists() method.
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to retrieve
-     *
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to retrieve.
-     *                      </p>
-     *
-     * @return mixed Can return all value types.
-     */
-    public function offsetGet( $offset )
-    {
-        // TODO: Implement offsetGet() method.
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to set
-     *
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to assign the value to.
-     *                      </p>
-     * @param mixed $value  <p>
-     *                      The value to set.
-     *                      </p>
-     *
-     * @return void
-     */
-    public function offsetSet( $offset, $value )
-    {
-        // TODO: Implement offsetSet() method.
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.0.0)<br/>
-     * Offset to unset
-     *
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to unset.
-     *                      </p>
-     *
-     * @return void
-     */
-    public function offsetUnset( $offset )
-    {
-        // TODO: Implement offsetUnset() method.
-    }
-
-    /**
-     * Creates an instance
-     *
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
-     *
-     * @return array
-     */
-    public function up( ProvisioningRequest $request )
-    {
-        // TODO: Implement up() method.
-    }
-
-    /**
-     * Destroys an instance
-     *
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
-     *
-     * @return mixed
-     */
-    public function down( ProvisioningRequest $request )
-    {
-        // TODO: Implement down() method.
-    }
-
-    /**
-     * Replaces an instance
-     *
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
-     *
-     * @return mixed
-     */
-    public function replace( ProvisioningRequest $request )
-    {
-        // TODO: Implement replace() method.
-    }
-
-    /**
-     * Performs a complete wipe of an instance. The instance is not destroyed, but the database is completely wiped and recreated as if this were a
-     * brand new instance. Files in the storage area are NOT touched.
-     *
-     * @param \DreamFactory\Enterprise\Services\Requests\ProvisioningRequest $request
-     *
-     * @return mixed
-     */
-    public function wipe( ProvisioningRequest $request )
-    {
-        // TODO: Implement wipe() method.
     }
 }

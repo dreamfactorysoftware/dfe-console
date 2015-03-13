@@ -2,6 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
+use DreamFactory\Enterprise\Services\RaveDatabaseService;
 
 /**
  * Register the RAVE database service
@@ -13,7 +14,7 @@ class RaveDatabaseServiceProvider extends BaseServiceProvider
     //******************************************************************************
 
     /** @inheritdoc */
-    const IOC_NAME = 'dfe.rave-database';
+    const IOC_NAME = 'dfe.db.rave';
     /** @inheritdoc */
     const ALIAS_NAME = false;
 
@@ -28,14 +29,12 @@ class RaveDatabaseServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\\Enterprise\\Services\\RaveDatabaseService';
-
         //  Register object into instance container
         $this->singleton(
             static::IOC_NAME,
             function ( $app )
             {
-                return new $this->_serviceClass( $app );
+                return new RaveDatabaseService( $app );
             }
         );
     }

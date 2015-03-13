@@ -43,7 +43,11 @@ abstract class BaseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->alias();
+        //  Automatically adds an alias for the IoC name if available
+        if ( static::IOC_NAME && $this->_serviceClass )
+        {
+            $this->alias( static::IOC_NAME, $this->_serviceClass );
+        }
     }
 
     /**
@@ -84,17 +88,6 @@ abstract class BaseServiceProvider extends ServiceProvider
     }
 
     /**
-     * Call the $app's alias method
-     *
-     * @param string $class
-     * @param string $alias
-     */
-    public function alias( $class = null, $alias = null )
-    {
-        $this->_serviceClass && $this->app->alias( $class ?: $this->_serviceClass, $alias ?: static::ALIAS_NAME );
-    }
-
-    /**
      * @return string
      */
     protected function _getClass()
@@ -116,4 +109,23 @@ abstract class BaseServiceProvider extends ServiceProvider
     {
         return static::IOC_NAME ?: null;
     }
+
+    /**
+     * Redirect unknown methods to $app
+     *
+     * @param string $method
+     * @param array  $parameters
+     *
+     * @return mixed
+     */
+    public function __call( $method, $parameters )
+    {
+        if ( method_exists( $this->app, $method ) )
+        {
+            return call_user_func_array( [$this->app, $method], $parameters );
+        }
+
+        return parent::__call( $method, $parameters );
+    }
+
 }

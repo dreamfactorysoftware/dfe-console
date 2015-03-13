@@ -23,6 +23,6 @@ class Provision extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return ProvisioningServiceProvider::MANAGER_IOC_NAME;
+        return ProvisioningServiceProvider::IOC_NAME;
     }
 }

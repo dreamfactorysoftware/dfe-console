@@ -23,7 +23,7 @@ abstract class BaseManager implements ManagerContract
     /**
      * @type Application
      */
-    protected $_app;
+    protected $app;
 
     //******************************************************************************
     //* Methods
@@ -34,7 +34,7 @@ abstract class BaseManager implements ManagerContract
      */
     public function __construct( $app )
     {
-        $this->_app = $app;
+        $this->app = $app;
     }
 
     /**

@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Storage\DreamFactory;
+namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;

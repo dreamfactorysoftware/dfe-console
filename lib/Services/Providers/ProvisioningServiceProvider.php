@@ -31,6 +31,8 @@ class ProvisioningServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
+        $this->_serviceClass = 'DreamFactory\Enterprise\Services\RaveProvisioningService';
+
         //  Register the manager
         $this->singleton(
             static::IOC_NAME,

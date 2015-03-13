@@ -4,6 +4,7 @@ namespace DreamFactory\Enterprise\Common\Services;
 use Doctrine\ODM\CouchDB\Event;
 use DreamFactory\Enterprise\Common\Traits\Lumberjack;
 use DreamFactory\Library\Fabric\Common\Components\JsonFile;
+use Illuminate\Contracts\Foundation\Application;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -18,14 +19,27 @@ class BaseService implements LoggerInterface
     use Lumberjack;
 
     //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type Application No underscore so it matches ServiceProvider class...
+     */
+    protected $app;
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
      * Constructor
+     *
+     * @param Application $app
      */
-    public function __construct()
+    public function __construct( $app = null )
     {
+        $this->app = $app;
+
         $this->boot();
     }
 
@@ -34,7 +48,7 @@ class BaseService implements LoggerInterface
      */
     public function boot()
     {
-        $this->logger = app( 'log' );
+        $this->logger = \App::make( 'log' );
     }
 
     /**
@@ -58,4 +72,13 @@ class BaseService implements LoggerInterface
     {
         return JsonFile::decode( $json, $asArray, $depth, $options );
     }
+
+    /**
+     * @return Application
+     */
+    public function getApplication()
+    {
+        return $this->app;
+    }
+
 }

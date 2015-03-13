@@ -144,7 +144,7 @@ class RaveBox implements InstanceContainer, StaticInstanceFactory
                 throw new \RuntimeException( 'No database server is configured for cluster "' . $_cluster->cluster_id_text . '".' );
             }
 
-            //  Where is this going?
+            //  Write it out
             return Instance::create(
                 [
                     'user_id'               => $_owner->id,
