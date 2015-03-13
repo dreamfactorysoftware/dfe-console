@@ -2,6 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
+use DreamFactory\Enterprise\Services\Managers\ProvisioningManager;
 
 /**
  * Register the hosting service
@@ -15,7 +16,9 @@ class ProvisioningServiceProvider extends BaseServiceProvider
     /**
      * @type string The name of the service in the IoC
      */
-    const IOC_NAME = 'dfe.provisioning';
+    const IOC_NAME = 'provision';
+    /** @type string */
+    const ALIAS_NAME = 'Provision';
 
     //********************************************************************************
     //* Public Methods
@@ -28,13 +31,12 @@ class ProvisioningServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\\Enterprise\\Services\\Provisioners\\DreamFactoryRave';
-
+        //  Register the manager
         $this->singleton(
             static::IOC_NAME,
             function ( $app )
             {
-                return new $this->_serviceClass( $app );
+                return new ProvisioningManager( $app );
             }
         );
     }

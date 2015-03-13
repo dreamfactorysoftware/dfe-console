@@ -1,34 +1,10 @@
 <?php
 use DreamFactory\Enterprise\Common\Enums\MailTemplates;
-use DreamFactory\Enterprise\Common\Providers\PacketServiceProvider;
-use DreamFactory\Enterprise\Common\Providers\RouteHashingServiceProvider;
-use DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider;
-use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
-use DreamFactory\Enterprise\Services\Providers\InstanceManagerProvider;
-use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
-use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
-use DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider;
 
 /**
  * DFE core services configuration
  */
 return [
-    //******************************************************************************
-    //* Services to be auto-registered
-    //******************************************************************************
-    'auto-register' => [
-        /** DreamFactory Console (local app) service providers */
-        ElkServiceProvider::IOC_NAME          => 'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
-        /** DreamFactory Common service providers */
-        ScalpelServiceProvider::IOC_NAME      => 'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
-        RouteHashingServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
-        PacketServiceProvider::IOC_NAME       => 'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
-        /** DreamFactory Services service providers */
-        InstanceManagerProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
-        ProvisioningServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
-        SnapshotServiceProvider::IOC_NAME     => 'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
-        RaveDatabaseServiceProvider::IOC_NAME => 'DreamFactory\\Enterprise\\Services\\Providers\\RaveDatabaseServiceProvider',
-    ],
     //******************************************************************************
     //* Mailgun
     //******************************************************************************

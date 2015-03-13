@@ -2,6 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
+use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
@@ -36,7 +37,7 @@ class RaveProvisioner extends BaseResourceProvisioner
      *
      * @return array
      */
-    protected function _doProvision( ProvisioningRequest $request )
+    protected function _doProvision( $request )
     {
         $_output = [];
         $_result = false;
@@ -115,7 +116,7 @@ class RaveProvisioner extends BaseResourceProvisioner
      *
      * @return array
      */
-    protected function _doDeprovision( ProvisioningRequest $request )
+    protected function _doDeprovision( $request )
     {
         $_output = [];
         $_result = false;
@@ -205,8 +206,8 @@ class RaveProvisioner extends BaseResourceProvisioner
             $request->setStorage( $_filesystem );
         }
 
-        $_storage = new DreamFactoryRaveStorage();
-        $_storage->provision( $request );
+        //  Do it!
+        Provision::resolveStorage( 'rave' )->provision( $request );
 
         return $_filesystem;
     }

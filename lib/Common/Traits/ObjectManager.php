@@ -14,7 +14,11 @@ trait ObjectManager
     /**
      * @type array The things I'm managing
      */
-    protected $_things = [];
+    private $_things = [];
+    /**
+     * @type \Closure[] User-defined custom extensions
+     */
+    private $_extensions = [];
 
     //********************************************************************************
     //* Methods
@@ -22,7 +26,7 @@ trait ObjectManager
 
     /**
      * @param string $tag       The identifier of this thing
-     * @param mixed  $thing     The thing to manage
+     * @param object $thing     The thing to manage
      * @param bool   $overwrite If $tag already exists, and $overwrite is FALSE, an exception will be thrown.
      *
      * @return ManagerContract
@@ -74,10 +78,44 @@ trait ObjectManager
     }
 
     /**
+     * Register a custom extension for a tag
+     *
+     * @param  string   $tag
+     * @param  \Closure $callback
+     *
+     * @return $this
+     */
+    public function extend( $tag, \Closure $callback )
+    {
+        $this->_extensions[$tag] = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Call a custom extension
+     *
+     * @param  string $tag
+     * @param  array  $config
+     *
+     * @return $this
+     */
+    protected function _callExtension( $tag, array $config = [] )
+    {
+        if ( !isset( $this->_things[$tag] ) )
+        {
+            throw new \InvalidArgumentException( 'There is no extension defined for "' . $tag . '".' );
+        }
+
+        return $this->_extensions[$tag]( $config );
+    }
+
+    /**
      * @return \IteratorIterator
      */
     public function getIterator()
     {
         return new \IteratorIterator( new \ArrayObject( $this->_things ) );
     }
+
 }

@@ -44,8 +44,16 @@ return [
         'DreamFactory\Enterprise\Console\Providers\ConfigServiceProvider',
         'DreamFactory\Enterprise\Console\Providers\EventServiceProvider',
         'DreamFactory\Enterprise\Console\Providers\RouteServiceProvider',
-        /** DreamFactory Service Providers... */
-        'DreamFactory\Enterprise\Common\Providers\SideloadServiceProvider',
+        /** DreamFactory Common service providers */
+        'DreamFactory\Enterprise\Common\Providers\PacketServiceProvider',
+        'DreamFactory\Enterprise\Common\Providers\RouteHashingServiceProvider',
+        'DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider',
+        /** DreamFactory Console (local app) service providers */
+        'DreamFactory\Enterprise\Console\Providers\ElkServiceProvider',
+        /** DreamFactory Services service providers */
+        'DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider',
+        'DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider',
+        'DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider',
         /** 3rd-party Service Providers */
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
     ],
@@ -63,7 +71,6 @@ return [
         'Cookie'    => 'Illuminate\Support\Facades\Cookie',
         'Crypt'     => 'Illuminate\Support\Facades\Crypt',
         'DB'        => 'Illuminate\Support\Facades\DB',
-        'Elk'       => 'DreamFactory\Enterprise\Console\Services\ElkServiceProvider',
         'Eloquent'  => 'Illuminate\Database\Eloquent\Model',
         'Event'     => 'Illuminate\Support\Facades\Event',
         'File'      => 'Illuminate\Support\Facades\File',
@@ -86,6 +93,9 @@ return [
         'URL'       => 'Illuminate\Support\Facades\URL',
         'Validator' => 'Illuminate\Support\Facades\Validator',
         'View'      => 'Illuminate\Support\Facades\View',
+        /** DreamFactory Aliases */
+        'Elk'       => 'DreamFactory\Enterprise\Console\Services\ElkServiceProvider',
+        'Provision' => 'DreamFactory\Enterprise\Services\Facades\Provision',
     ],
 
 ];

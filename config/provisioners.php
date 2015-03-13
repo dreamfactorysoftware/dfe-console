@@ -4,8 +4,13 @@
 //******************************************************************************
 
 return [
-    'rave' => [
-        'instance' => 'DreamFactory\\Enterprise\\Services\\Provisioners\\RaveProvisioner',
-        'storage'  => 'DreamFactory\\Enterprise\\Services\\Provisioners\\RaveStorageProvisioner',
+    //  The default provisioner
+    'default' => 'rave',
+    //  The supported provisioners/hosts
+    'hosts'   => [
+        'rave' => [
+            'instance' => 'DreamFactory\\Enterprise\\Services\\Provisioners\\RaveProvisioner',
+            'storage'  => 'DreamFactory\\Enterprise\\Services\\Provisioners\\RaveStorageProvisioner',
+        ],
     ],
 ];

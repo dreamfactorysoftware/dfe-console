@@ -20,6 +20,10 @@ abstract class BaseServiceProvider extends ServiceProvider
      * @type string The name of the service in the IoC
      */
     const IOC_NAME = false;
+    /**
+     * @type string The name of the manager service in the IoC
+     */
+    const MANAGER_IOC_NAME = false;
 
     //******************************************************************************
     //* Members
