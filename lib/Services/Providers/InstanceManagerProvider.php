@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-use DreamFactory\Enterprise\Services\Storage\SnapshotService;
+use DreamFactory\Enterprise\Services\Managers\InstanceManager;
 
 /**
  * Registers the instance manager as a service
@@ -23,14 +23,17 @@ class InstanceManagerProvider extends BaseServiceProvider
     //* Constants
     //******************************************************************************
 
-    /**
-     * @type string The name of the alias to create
-     */
+    /** @inheritdoc */
     const ALIAS_NAME = 'InstanceManager';
-    /**
-     * @type string The name of the service in the IoC
-     */
-    const IOC_NAME = 'dfe.instance-manager';
+    /** @inheritdoc */
+    const IOC_NAME = 'instance-manager';
+
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /** @inheritdoc */
+    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\Managers\\InstanceManager';
 
     //********************************************************************************
     //* Public Methods
@@ -43,13 +46,12 @@ class InstanceManagerProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\\Enterprise\\Services\\Managers\\InstanceManager';
-
+        //  Register the manager
         $this->singleton(
             static::IOC_NAME,
             function ( $app )
             {
-                return new $this->_serviceClass;
+                return new InstanceManager( $app );
             }
         );
     }

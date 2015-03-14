@@ -10,6 +10,5 @@ return [
     ],
     //  Compiled File Providers
     'providers' => [
-        realpath( __DIR__ . '/../lib/Services/Providers/ProvisioningServiceProvider.php' ),
     ],
 ];

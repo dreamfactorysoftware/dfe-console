@@ -20,6 +20,15 @@ class ProvisioningServiceProvider extends BaseServiceProvider
     /** @type string */
     const ALIAS_NAME = 'Provision';
 
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
+
+    /**
+     * @type string The actual provisioning service
+     */
+    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\ProvisioningService';
+
     //********************************************************************************
     //* Public Methods
     //********************************************************************************
@@ -31,8 +40,6 @@ class ProvisioningServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\Enterprise\Services\RaveProvisioningService';
-
         //  Register the manager
         $this->singleton(
             static::IOC_NAME,

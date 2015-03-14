@@ -1,45 +1,28 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Managers;
 
-use DreamFactory\Enterprise\Common\Contracts\InstanceFactory;
+use DreamFactory\Enterprise\Common\Contracts\StaticFactory;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
-use DreamFactory\Enterprise\Common\Traits\ComponentLookup;
+use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
-use DreamFactory\Enterprise\Services\Utility\RemoteInstance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 
 /**
- * InstanceManager
- *
- * @deprecated DO NOT USE
+ * Creates and manages instances
  */
-class InstanceManager extends BaseManager implements InstanceFactory
+class InstanceManager extends BaseManager implements StaticFactory
 {
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use ComponentLookup;
-
-    //******************************************************************************
-    //* Constants
-    //******************************************************************************
-
-    /**
-     * @type string
-     */
-    const CHARACTER_PATTERN = '/[^a-zA-Z0-9]/';
-    /**
-     * @type string
-     */
-    const HOST_NAME_PATTERN = "/^([a-zA-Z0-9])+$/";
+    use StaticComponentLookup, InstanceValidation;
 
     //******************************************************************************
     //* Members
@@ -57,10 +40,13 @@ class InstanceManager extends BaseManager implements InstanceFactory
     /**
      * Constructor
      *
-     * @param Instance[] $instances
+     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param Instance[]                                   $instances
      */
-    public function __construct( array $instances = [] )
+    public function __construct( $app, array $instances = [] )
     {
+        parent::__construct( $app );
+
         !empty( $instances ) && $this->registerInstances( $instances );
     }
 
@@ -122,59 +108,53 @@ class InstanceManager extends BaseManager implements InstanceFactory
      * Create a new instance record
      *
      * @param string $instanceName
-     * @param array  $options Array of options for creation
+     * @param array  $options Array of options for creation. Options are:
      *
-     *                        Required Options:
-     *                        ================= ==================================================
-     *                        owner_id          The id of the owner/user of this instance
-     *
-     *                        Optional Options
-     *                        ================= ==================================================
-     *                        cluster_id        The cluster upon which to deploy this instance if DFE-hosted. If not specified, the default cluster
-     *                                          id set in the provisioning service's config file will be used.
-     *
-     *                        instance          An instance model that has already been created
-     *                        restart           [REQUIRES "instance" to be specified] If set to TRUE, the instance provided will be restarted.
-     *                        guest_location    Where this instance will be provisioned. Defaults to DFE
-     *
-     *                        tag               If specified, created instance will be registered with this manager as $tag. Name will be used
-     *                                          otherwise.
-     *
-     *                        trial             If set to TRUE, this instance will be marked to be provisioned as a "free trial".
+     *                        owner-id      The id of the instance owner
+     *                        cluster-id    The cluster that owns this instance
+     *                        trial         If true, the "trial" flagged is set for the instance
      *
      * @return Instance
+     * @throws \DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException
      */
-    public function make( $instanceName, $options = [] )
+    public static function make( $instanceName, $options = [] )
     {
+        if ( false === ( $_sanitized = Instance::isNameAvailable( $instanceName ) ) )
+        {
+            throw new DuplicateInstanceException( 'The instance name "' . $instanceName . '" is not available.' );
+        }
+
         try
         {
             //  Basic checks...
             if ( null === ( $_ownerId = IfSet::get( $options, 'owner-id' ) ) )
             {
-                throw new \InvalidArgumentException( 'No owner_id in $options. Cannot create instance.' );
+                throw new \InvalidArgumentException( 'No "owner-id" given. Cannot create instance.' );
             }
 
             try
             {
-                $_owner = $this->_lookupUser( $_ownerId );
+                $_owner = static::_lookupUser( $_ownerId );
             }
             catch ( \Exception $_ex )
             {
-                throw new \InvalidArgumentException( 'The owner_id specified is invalid.' );
+                throw new \InvalidArgumentException( 'The "owner-id" specified is invalid.' );
             }
 
-            //  Check the instance name
-            if ( false === ( $_name = $this->_checkInstance( $instanceName ) ) )
-            {
-                throw new DuplicateInstanceException( 'The instance "' . $instanceName . '" is already taken.' );
-            }
+            /*------------------------------------------------------------------------------*/
+            /* Validate the cluster and pull components                                     */
+            /*------------------------------------------------------------------------------*/
 
-            $_clusterId = IfSet::get( $options, 'cluster-id' ) ?: Config::get( 'dfe.provisioning.default-cluster-id' );
+            $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
+            $_clusterId = IfSet::get( $options, 'cluster-id', config( 'dfe.provisioning.default-cluster-id' ) );
 
             try
             {
-                $_cluster = $this->_lookupCluster( $_clusterId );
-                $_servers = $this->_lookupClusterServers( $_cluster->id );
+                $_cluster = static::_lookupCluster( $_clusterId );
+                $_cachePrefix = __CLASS__ . '.clusters.' . $_cluster->cluster_id_text;
+
+                //  Try cache first
+                $_servers = \Cache::get( $_cachePrefix . '.servers', [] ) ?: static::_lookupClusterServers( $_cluster->id );
             }
             catch ( ModelNotFoundException $_ex )
             {
@@ -182,68 +162,48 @@ class InstanceManager extends BaseManager implements InstanceFactory
             }
 
             //  Find the database server
-            if ( $_servers && $_servers->count() )
+            $_dbServer = \Cache::get( $_cachePrefix . '.lru.db-server-id' );
+
+            if ( !empty( $_servers ) )
             {
+                //  Cache it
+                \Cache::put( $_cachePrefix . '.servers', $_servers, 60 );
+
+                //@todo re-examine round-robin approach to assigning cluster database servers
+                $_ignored = $_dbServer && 1 > count( $_servers[ServerTypes::DB] ) ? [$_dbServer] : [];
+
                 /** @type Server $_server */
-                foreach ( $_servers as $_server )
+                foreach ( $_servers[ServerTypes::DB] as $_server )
                 {
-                    if ( $_server->server_type_id == ServerTypes::DB )
+                    if ( !in_array( $_server->server_id_text, $_ignored ) )
                     {
                         $_dbServer = $_server;
+                        \Cache::put( $_cachePrefix . '.lru.db-server', $_dbServer, 60 );
                         break;
                     }
                 }
             }
 
-            //  Where is this going?
-            $_guestLocation = IfSet::get( $options, 'guest-location', Config::get( 'dfe.provisioning.default-guest-location' ) );
-
-            //  If an instance was given, verify it is correct
-            if ( null !== ( $_model = IfSet::get( $options, 'instance' ) ) )
+            //  Misconfigured cluster?
+            if ( empty( $_dbServer ) )
             {
-                if ( !( $_model instanceof Instance ) && !( $_model instanceof RemoteInstance ) )
-                {
-                    throw new \InvalidArgumentException( 'The "instance" option must contain an object of type "Instance" or "RemoteInstance".' );
-                }
+                throw new \RuntimeException( 'No database server is configured for cluster "' . $_cluster->cluster_id_text . '".' );
             }
 
-            /** @type Server $_dbServer */
-            Log::info( 'BEGIN > Launch Request > ' . $_name . ' on database-server-id ' . $_dbServer->server_id_text . ' of cluster ' . $_clusterId );
-
-            if ( $_model && true === ( $_restart = IfSet::get( $options, 'restart', false ) ) )
-            {
-                $_model->state_nbr = ProvisionStates::CREATED;
-                $_model->provision_ind = 1;
-                $_model->deprovision_ind = 0;
-                $_model->instance_name_text = $_name;
-            }
-            else
-            {
-                $_model = new Instance();
-                $_model->user_id = $_owner->id;
-                $_model->cluster_id = $_cluster->id;
-                $_model->db_server_id = $_dbServer->id;
-                $_model->vendor_id = $_guestLocation;
-                $_model->vendor_image_id = Config::get( 'dfe.provisioning.default-vendor-image-id' );
-                $_model->vendor_credentials_id = 0; //	DreamFactory account
-                $_model->platform_state_nbr = 0; // Not Activated
-                $_model->ready_state_nbr = 0; // Admin Required
-                $_model->state_nbr = ProvisionStates::CREATED;
-                $_model->flavor_nbr = Config::get( 'dfe.provisioning.default-vendor-image-flavor' );
-                $_model->trial_instance_ind = IfSet::get( $options, 'trial', false ) ? 1 : 0;
-                $_model->guest_location_nbr = $_guestLocation;
-                $_model->instance_name_text = $_name;
-            }
-
-            if ( !$_model->save() )
-            {
-                throw new \Exception( 'Failed to save instance to database.' );
-            }
-
-            //  Register instance with tag if provided, otherwise the name. Access via InstanceManager::instance($tag)...
-            $this->registerInstance( IfSet::get( $options, 'tag', $_name ), new RemoteInstance( $_model ) );
-
-            return $_model;
+            //  Write it out
+            return Instance::create(
+                [
+                    'user_id'            => $_owner->id,
+                    'cluster_id'         => $_cluster->id,
+                    'db_server_id'       => $_dbServer->id,
+                    'vendor_id'          => $_guestLocation,
+                    'state_nbr'          => ProvisionStates::CREATED,
+                    'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
+                    'guest_location_nbr' => $_guestLocation,
+                    'instance_name_text' => $_sanitized,
+                    'instance_id_text'   => $_sanitized,
+                ]
+            );
         }
         catch ( \Exception $_ex )
         {
@@ -252,20 +212,30 @@ class InstanceManager extends BaseManager implements InstanceFactory
     }
 
     /**
-     * @param string $instanceName
+     * Retrieves an instance's metadata
      *
-     * @return bool|string
+     * @param Instance $instance
+     *
+     * @return array
      */
-    protected function _checkInstance( $instanceName )
+    public function getInstanceMetadata( Instance $instance )
     {
-        $_name = Instance::sanitizeName( $instanceName );
-
-        //  Not unique? Bail
-        if ( 0 !== Instance::byNameOrId( $_name )->count() )
+        if ( !$instance->user )
         {
-            return false;
+            throw new \RuntimeException( 'The user for instance "' . $instance->instance_id_text . '" was not found.' );
         }
 
-        return $_name;
+        $_response = [
+            'instance-id'         => $instance->id,
+            'cluster-id'          => $instance->cluster_id,
+            'db-server-id'        => $instance->db_server_id,
+            'app-server-id'       => $instance->app_server_id,
+            'web-server-id'       => $instance->web_server_id,
+            'owner-id'            => $instance->user_id,
+            'owner-email-address' => $instance->user->email_addr_text,
+        ];
+
+        return $_response;
     }
+
 }

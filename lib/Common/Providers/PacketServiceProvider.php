@@ -21,14 +21,17 @@ class PacketServiceProvider extends BaseServiceProvider
     //* Constants
     //******************************************************************************
 
-    /**
-     * @type string
-     */
+    /** @inheritdoc */
     const IOC_NAME = 'dfe.packet';
-    /**
-     * @type string
-     */
+    /** @inheritdoc */
     const ALIAS_NAME = 'Packet';
+
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /** @inheritdoc */
+    protected $_serviceClass = 'DreamFactory\\Enterprise\\Common\\Services\\PacketService';
 
     //********************************************************************************
     //* Public Methods
@@ -41,14 +44,12 @@ class PacketServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\\Enterprise\\Common\\Services\\PacketService';
-
         //  Register object into instance container
         $this->singleton(
             static::IOC_NAME,
             function ( $app )
             {
-                return new PacketService();
+                return new PacketService( $app );
             }
         );
     }
