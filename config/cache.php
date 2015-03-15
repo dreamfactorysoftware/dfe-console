@@ -4,21 +4,16 @@
 //******************************************************************************
 return [
     'default' => env( 'CACHE_DRIVER', 'file' ),
+    'prefix'  => 'dfe',
     'stores'  => [
-        'apc'       => [
-            'driver' => 'apc'
-        ],
-        'array'     => [
-            'driver' => 'array'
-        ],
         'database'  => [
             'driver'     => 'database',
-            'table'      => 'cache',
-            'connection' => null,
+            'table'      => 'cache_t',
+            'connection' => 'dfe-local',
         ],
         'file'      => [
             'driver' => 'file',
-            'path'   => storage_path() . '/framework/cache',
+            'path'   => realpath( base_path( 'storage/framework/cache' ) ),
         ],
         'memcached' => [
             'driver'  => 'memcached',
@@ -35,5 +30,4 @@ return [
             'connection' => 'default',
         ],
     ],
-    'prefix'  => 'dfe',
 ];

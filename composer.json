@@ -1,102 +1,99 @@
 {
-    "name":              "dreamfactory/dfe-console",
-    "description":       "DreamFactory Enterprise(tm) Administrative Console",
-    "homepage":          "https://www.dreamfactory.com/",
-    "keywords":          [
-        "dreamfactory",
-        "fabric",
-        "utility",
-        "cli"
-    ],
-    "license":           ["proprietary"],
-    "authors":           [
-        {
-            "name":  "Jerry Ablan",
-            "email": "jerryablan@dreamfactory.com"
-        }
-    ],
-    "minimum-stability": "dev",
-    "repositories":      [
-        {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/rave-common.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/fabric-common.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/fabric-db.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/fabric-queue.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/fabric-queue-models.git"
-        },
-        {
-            "type": "vcs",
-            "url":  "git@github.com:dreamfactorysoftware/fabric-couchdb.git"
-        }
-    ],
-    "type":              "project",
-    "require":           {
-        "laravel/framework":           "5.0.*",
-        "doctrine/couchdb-odm":        "*",
-        "ruflin/elastica":             "*",
-        "league/flysystem-ziparchive": "*",
-        "dreamfactory/php-utils":      "*",
-        "dreamfactory/rave-common":    "dev-develop as dev-master",
-        "dreamfactory/fabric-db":      "dev-develop as dev-master",
-        "dreamfactory/fabric-audit":   "dev-develop as dev-master",
-        "dreamfactory/console-tools":  "dev-develop as dev-master",
-        "dreamfactory/fabric-queue":   "dev-develop as dev-master"
-    },
-    "require-dev":       {
-        "phpunit/phpunit":             "~4.0",
-        "phpspec/phpspec":             "~2.1",
-        "doctrine/dbal":               "~2.3",
-        "barryvdh/laravel-ide-helper": "~2.0",
-        "way/generators":              "~3.0"
-    },
-    "autoload":          {
-        "classmap": [
-            "database"
-        ],
-        "psr-4":    {
-            "DreamFactory\\Enterprise\\Console\\":  "app/",
-            "DreamFactory\\Enterprise\\Common\\":   "lib/Common/",
-            "DreamFactory\\Enterprise\\Services\\": "lib/Services/"
-        }
-    },
-    "autoload-dev":      {
-        "classmap": [
-            "tests/TestCase.php"
-        ]
-    },
-    "scripts":           {
-        "post-install-cmd":        [
-            "php artisan clear-compiled",
-            "php artisan optimize"
-        ],
-        "post-update-cmd":         [
-            "php artisan clear-compiled",
-            "php artisan optimize"
-        ],
-        "post-create-project-cmd": [
-            "php -r \"copy('.env.example', '.env');\"",
-            "php artisan key:generate"
-        ]
-    },
-    "config":            {
-        "preferred-install": "dist"
-    },
-    "extra":             {
-        "branch-alias": {
-            "dev-develop": "1.0.x-dev"
-        }
-    }
+	"name":              "dreamfactory/dfe-console",
+	"description":       "DreamFactory Enterprise(tm) Administrative Console",
+	"homepage":          "https://www.dreamfactory.com/",
+	"keywords":          [
+		"dreamfactory",
+		"fabric",
+		"utility",
+		"cli"
+	],
+	"license":           ["proprietary"],
+	"authors":           [
+		{
+			"name":  "Jerry Ablan",
+			"email": "jerryablan@dreamfactory.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"repositories":      [
+		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/rave-common.git"
+		},
+		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/fabric-common.git"
+		},
+		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/fabric-db.git"
+		},
+		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/fabric-queue.git"
+		},
+		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/fabric-queue-models.git"
+		},
+		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/fabric-couchdb.git"
+		}
+	],
+	"type":              "project",
+	"require":           {
+		"doctrine/couchdb-odm":        "*",
+		"dreamfactory/php-utils":      "*",
+		"dreamfactory/rave-common":    "dev-develop as dev-master",
+		"dreamfactory/fabric-common":  "dev-develop as dev-master",
+		"dreamfactory/fabric-db":      "dev-develop as dev-master",
+		"dreamfactory/fabric-audit":   "dev-develop as dev-master",
+		"dreamfactory/console-tools":  "dev-develop as dev-master",
+		"dreamfactory/fabric-queue":   "dev-develop as dev-master",
+		"laravel/framework":           "5.0.*",
+		"league/flysystem-sftp":       "*",
+		"league/flysystem-ziparchive": "*",
+		"ruflin/elastica":             "*",
+		"wpb/string-blade-compiler":   "2.*@dev"
+	},
+	"require-dev":       {
+		"phpunit/phpunit":             "~4.0",
+		"phpspec/phpspec":             "~2.1",
+		"doctrine/dbal":               "~2.3",
+		"barryvdh/laravel-ide-helper": "~2.0",
+		"way/generators":              "~3.0"
+	},
+	"autoload":          {
+		"psr-4": {
+			"DreamFactory\\Enterprise\\":          "lib/",
+			"DreamFactory\\Enterprise\\Console\\": "app/"
+		}
+	},
+	"autoload-dev":      {
+		"classmap": [
+			"tests/TestCase.php"
+		]
+	},
+	"scripts":           {
+		"post-install-cmd": [
+			"php artisan clear-compiled",
+			"php artisan ide-helper:generate",
+			"php artisan optimize"
+		],
+		"post-update-cmd":  [
+			"php artisan clear-compiled",
+			"php artisan ide-helper:generate",
+			"php artisan optimize"
+		]
+	},
+	"config":            {
+		"preferred-install": "dist"
+	},
+	"extra":             {
+		"branch-alias": {
+			"dev-develop": "1.0.x-dev"
+		}
+	}
 }

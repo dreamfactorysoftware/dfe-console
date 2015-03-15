@@ -32,6 +32,9 @@ class ProvisionTest extends TestCase
 
         $_provisioner = Provision::storageProvisioner( 'rave' );
         $this->assertTrue( $_provisioner instanceof RaveStorageProvisioner );
+
+        $_provisioner = Provision::storageProvisioner( 'rave' );
+        $this->assertTrue( $_provisioner instanceof RaveStorageProvisioner );
     }
 
 }

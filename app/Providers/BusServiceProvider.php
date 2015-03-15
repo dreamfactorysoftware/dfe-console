@@ -15,7 +15,7 @@ class BusServiceProvider extends ServiceProvider
      */
     public function boot( Dispatcher $dispatcher )
     {
-        //  The namespaces from which we use commands
+        //  A mapping of command namespaces to handler namespaces [:command-ns => :handlers-ns]
         static $_mappings = [
             'DreamFactory\\Enterprise\\Services\\Console\\Commands' => 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands'
         ];

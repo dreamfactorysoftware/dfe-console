@@ -12,7 +12,7 @@ return [
     //  Session Database Connection
     'connection'      => null,
     //  Session Database Table
-    'table'           => 'sessions',
+    'table'           => 'session_t',
     //  Session Sweeping Lottery
     'lottery'         => [2, 100],
     //  Session Cookie Name

@@ -9,5 +9,6 @@ $_compiledPath = __DIR__ . '/../storage/framework/compiled.php';
 
 if ( file_exists( $_compiledPath ) )
 {
+    /** @noinspection PhpIncludeInspection */
     require $_compiledPath;
 }

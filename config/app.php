@@ -41,9 +41,9 @@ return [
         /** Application Service Providers... */
         'DreamFactory\\Enterprise\\Console\\Providers\\AppServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\BusServiceProvider',
-        'DreamFactory\\Enterprise\\Console\\Providers\\ConfigServiceProvider',
-        'DreamFactory\\Enterprise\\Console\\Providers\\EventServiceProvider',
-        'DreamFactory\\Enterprise\\Console\\Providers\\RouteServiceProvider',
+        'DreamFactory\\Enterprise\\Common\\Providers\\ConfigServiceProvider',
+        'DreamFactory\\Enterprise\\Common\\Providers\\EventServiceProvider',
+        'DreamFactory\\Enterprise\\Common\\Providers\\RouteServiceProvider',
         /** DreamFactory Common service providers */
         'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
@@ -95,8 +95,8 @@ return [
         'Validator' => 'Illuminate\\Support\\Facades\\Validator',
         'View'      => 'Illuminate\\Support\\Facades\\View',
         /** DreamFactory Aliases */
-//        'Elk'       => 'DreamFactory\\Enterprise\\Console\\Services\\ElkServiceProvider',
-//        'Provision' => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
+        //        'Elk'       => 'DreamFactory\\Enterprise\\Console\\Services\\ElkServiceProvider',
+        //        'Provision' => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
     ],
 
 ];
