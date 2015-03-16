@@ -6,11 +6,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
-/**
- * Our base controller
- */
 class FactoryController extends Controller
 {
     //******************************************************************************
@@ -56,18 +52,21 @@ class FactoryController extends Controller
     {
         $_hash = md5( strtolower( Auth::user() ? Auth::user()->email : 'nobody@dreamfactory.com' ) );
 
-        return $asArray ? array('_userHash' => $_hash) : $_hash;
+        return $asArray ? ['_userHash' => $_hash] : $_hash;
     }
 
+    /**
+     * @return array
+     */
     public static function getUserInfo()
     {
-        $_name = Auth::user() ? Auth::user()->email : 'nobody@dreamfactory.com';
+        $_name = \Auth::user() ? Auth::user()->email : 'nobody@dreamfactory.com';
         $_hash = md5( strtolower( $_name ) );
 
-        return array(
+        return [
             'name' => $_name,
             'hash' => $_hash,
-        );
+        ];
     }
 
     /**
@@ -77,18 +76,18 @@ class FactoryController extends Controller
      */
     public static function getActiveCounts()
     {
-        $_counts = Cache::get( 'console.active_counts' );
+        $_counts = \Cache::get( 'console.active_counts' );
 
         if ( empty( $_counts ) )
         {
-            $_counts = array(
+            $_counts = [
                 'clusters'  => Cluster::count(),
                 'users'     => ServiceUser::count(),
                 'instances' => Instance::count(),
                 'servers'   => Server::count(),
-            );
+            ];
 
-            Cache::put( 'console.active_counts', $_counts, 1 );
+            \Cache::put( 'console.active_counts', $_counts, 1 );
         }
 
         return $_counts;

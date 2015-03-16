@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Common\Facades;
+<?php namespace DreamFactory\Enterprise\Common\Facades;
 
 use DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider;
 use Illuminate\Support\Facades\Facade;

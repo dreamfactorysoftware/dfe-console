@@ -48,13 +48,13 @@ return [
         'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
-        /** DreamFactory Console (local app) service providers */
-        'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
         /** DreamFactory Services service providers */
         'DreamFactory\\Enterprise\\Services\\Providers\\RaveDatabaseServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
+        /** DreamFactory Console (local app) service providers */
+        'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
         /** 3rd-party Service Providers */
         'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
     ],
@@ -95,8 +95,8 @@ return [
         'Validator' => 'Illuminate\\Support\\Facades\\Validator',
         'View'      => 'Illuminate\\Support\\Facades\\View',
         /** DreamFactory Aliases */
-        //        'Elk'       => 'DreamFactory\\Enterprise\\Console\\Services\\ElkServiceProvider',
-        //        'Provision' => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
+        'Elk'       => 'DreamFactory\\Enterprise\\Console\\Services\\ElkServiceProvider',
+        'Provision' => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
     ],
 
 ];

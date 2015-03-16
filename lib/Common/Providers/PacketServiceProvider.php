@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Common\Providers;
 
 use DreamFactory\Enterprise\Common\Services\PacketService;
+use Illuminate\Foundation\AliasLoader;
 
 /**
  * Register the packet service as a provider with Laravel.
@@ -22,7 +23,7 @@ class PacketServiceProvider extends BaseServiceProvider
     //******************************************************************************
 
     /** @inheritdoc */
-    const IOC_NAME = 'dfe.packet';
+    const IOC_NAME = 'packet';
     /** @inheritdoc */
     const ALIAS_NAME = 'Packet';
 
@@ -32,6 +33,10 @@ class PacketServiceProvider extends BaseServiceProvider
 
     /** @inheritdoc */
     protected $_serviceClass = 'DreamFactory\\Enterprise\\Common\\Services\\PacketService';
+    /**
+     * @type bool We want to be first
+     */
+    protected $defer = false;
 
     //********************************************************************************
     //* Public Methods
@@ -52,6 +57,8 @@ class PacketServiceProvider extends BaseServiceProvider
                 return new PacketService( $app );
             }
         );
+
+        AliasLoader::getInstance()->alias( static::ALIAS_NAME, $this->_serviceClass );
     }
 
 }

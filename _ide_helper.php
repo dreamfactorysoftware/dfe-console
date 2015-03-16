@@ -11518,5 +11518,291 @@ namespace {
     }
 
 
+    class Provision extends \DreamFactory\Enterprise\Services\Facades\Provision{
+        
+        /**
+         * 
+         *
+         * @param string $name
+         * @return \DreamFactory\Enterprise\Services\Managers\ResourceProvisioner 
+         * @static 
+         */
+        public static function getProvisioner($name = null){
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::getProvisioner($name);
+        }
+        
+        /**
+         * Returns an instance of the storage provisioner for the specified host
+         *
+         * @param string $name
+         * @return \DreamFactory\Enterprise\Services\Managers\ResourceProvisioner 
+         * @static 
+         */
+        public static function getStorageProvisioner($name = null){
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::getStorageProvisioner($name);
+        }
+        
+        /**
+         * Get the default provisioner
+         *
+         * @return string 
+         * @static 
+         */
+        public static function getDefaultProvisioner(){
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::getDefaultProvisioner();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $tag
+         * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner 
+         * @static 
+         */
+        public static function resolve($tag){
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolve($tag);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $tag
+         * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner 
+         * @static 
+         */
+        public static function resolveStorage($tag){
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolveStorage($tag);
+        }
+        
+        /**
+         * Perform any service initialization
+         *
+         * @static 
+         */
+        public static function boot(){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::boot();
+        }
+        
+        /**
+         * 
+         *
+         * @return \DreamFactory\Enterprise\Common\Services\Application 
+         * @static 
+         */
+        public static function getApplication(){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::getApplication();
+        }
+        
+        /**
+         * System is unusable.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function emergency($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::emergency($message, $context);
+        }
+        
+        /**
+         * Action must be taken immediately.
+         * 
+         * Example: Entire website down, database unavailable, etc. This should
+         * trigger the SMS alerts and wake you up.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function alert($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::alert($message, $context);
+        }
+        
+        /**
+         * Critical conditions.
+         * 
+         * Example: Application component unavailable, unexpected exception.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function critical($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::critical($message, $context);
+        }
+        
+        /**
+         * Runtime errors that do not require immediate action but should typically
+         * be logged and monitored.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function error($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::error($message, $context);
+        }
+        
+        /**
+         * Exceptional occurrences that are not errors.
+         * 
+         * Example: Use of deprecated APIs, poor use of an API, undesirable things
+         * that are not necessarily wrong.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function warning($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::warning($message, $context);
+        }
+        
+        /**
+         * Normal but significant events.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function notice($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::notice($message, $context);
+        }
+        
+        /**
+         * Interesting events.
+         * 
+         * Example: User logs in, SQL logs.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function info($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::info($message, $context);
+        }
+        
+        /**
+         * Detailed debug information.
+         *
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function debug($message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::debug($message, $context);
+        }
+        
+        /**
+         * Logs with an arbitrary level.
+         *
+         * @param mixed $level
+         * @param string $message
+         * @param array $context
+         * @return null 
+         * @static 
+         */
+        public static function log($level, $message, $context = array()){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::log($level, $message, $context);
+        }
+        
+        /**
+         * 
+         *
+         * @return \Psr\Log\LoggerInterface 
+         * @static 
+         */
+        public static function getLogger(){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::getLogger();
+        }
+        
+        /**
+         * Sets a logger.
+         *
+         * @param \DreamFactory\Enterprise\Common\Services\LoggerInterface $logger
+         * @static 
+         */
+        public static function setLogger($logger){
+            //Method inherited from \DreamFactory\Enterprise\Common\Services\BaseService            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::setLogger($logger);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $tag The identifier of this thing
+         * @param object $thing The thing to manage
+         * @param bool $overwrite If $tag already exists, and $overwrite is FALSE, an exception will be thrown.
+         * @return \DreamFactory\Enterprise\Common\Managers\ManagerContract 
+         * @static 
+         */
+        public static function manage($tag, $thing, $overwrite = false){
+            //Method inherited from \DreamFactory\Enterprise\Common\Managers\BaseManager            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::manage($tag, $thing, $overwrite);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $tag The tag to remove from the manager
+         * @return \DreamFactory\Enterprise\Common\Managers\ManagerContract 
+         * @static 
+         */
+        public static function unmanage($tag){
+            //Method inherited from \DreamFactory\Enterprise\Common\Managers\BaseManager            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::unmanage($tag);
+        }
+        
+        /**
+         * Register a custom extension for a tag
+         *
+         * @param string $tag
+         * @param \Closure $callback
+         * @return $this 
+         * @static 
+         */
+        public static function extend($tag, $callback){
+            //Method inherited from \DreamFactory\Enterprise\Common\Managers\BaseManager            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::extend($tag, $callback);
+        }
+        
+        /**
+         * 
+         *
+         * @return \IteratorIterator 
+         * @static 
+         */
+        public static function getIterator(){
+            //Method inherited from \DreamFactory\Enterprise\Common\Managers\BaseManager            
+            return \DreamFactory\Enterprise\Services\Managers\ProvisioningManager::getIterator();
+        }
+        
+    }
+
+
+    class Packet extends \DreamFactory\Enterprise\Common\Services\PacketService{
+        
+    }
+
+
 }
 

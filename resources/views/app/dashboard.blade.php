@@ -16,7 +16,7 @@
     all your instances are belong to you
 @stop
 
-@section('content')
+@section('layouts.main.body-content')
     <div class="row">
         <div class="col-md-12 dashboard-content">
             <div class="dashboard-heading">
@@ -63,4 +63,10 @@
             </div>
         </div>
     </div>
+@stop
+
+@section('before-local-body-scripts')
+    <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
+    <script src="/js/chart-theme.js"></script>
+    <script src="/js/cerberus.graphs.js"></script>
 @stop

@@ -11,5 +11,6 @@ return [
     //  Compiled File Providers
     'providers' => [
         realpath( __DIR__ . '/../app/Providers/ElkServiceProvider.php' ),
+        realpath( __DIR__ . '/../lib/Common/Providers/PacketServiceProvider.php' ),
     ],
 ];

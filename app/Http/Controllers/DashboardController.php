@@ -1,7 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use DreamFactory\Enterprise\Common\Facades\Packet;
+use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
 use DreamFactory\Enterprise\Console\Services\Elk;
@@ -12,19 +12,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Request;
 
-/**
- * DashboardController.php
- * Responds to dashboard AJAX requests
- *
- * @link       http:// www.dreamfactory.com DreamFactory Software, Inc.
- * @author     Jerry Ablan <jerryablan@dreamfactory.com>
- * @filesource
- */
 class DashboardController extends FactoryController
 {
     //*************************************************************************
@@ -57,7 +45,7 @@ class DashboardController extends FactoryController
      */
     public function anyStats( $envelope = true )
     {
-        $_stats = Cache::get( 'stats.overall' );
+        $_stats = \Cache::get( 'stats.overall' );
 
         if ( empty( $_stats ) )
         {
@@ -75,10 +63,10 @@ class DashboardController extends FactoryController
                 ]
             ];
 
-            Cache::put( 'stats.overall', $_stats, static::STATS_CACHE_TTL );
+            \Cache::put( 'stats.overall', $_stats, static::STATS_CACHE_TTL );
         }
 
-        return $envelope ? Packet::success( $_stats ) : $_stats;
+        return $envelope ? SuccessPacket::make( $_stats ) : $_stats;
     }
 
     /**
@@ -96,14 +84,14 @@ class DashboardController extends FactoryController
      */
     public function postLogs()
     {
-        $_results = Cache::get( 'stats.dashboard' );
+        $_results = \Cache::get( 'stats.dashboard' );
 
-        $_which = trim( strtolower( Request::get( 'which', null, FILTER_SANITIZE_STRING ) ) );
-        $_raw = ( 1 == Request::get( 'raw', 0, FILTER_SANITIZE_NUMBER_INT ) );
-        $_facility = Request::get( 'facility', static::DEFAULT_FACILITY );
-        $_interval = Request::get( 'interval', ElkIntervals::DAY );
-        $_from = Request::get( 'from', 0, FILTER_SANITIZE_NUMBER_INT );
-        $_size = Request::get( 'size', 30, FILTER_SANITIZE_NUMBER_INT );
+        $_which = trim( strtolower( \Request::get( 'which', null, FILTER_SANITIZE_STRING ) ) );
+        $_raw = ( 1 == \Request::get( 'raw', 0, FILTER_SANITIZE_NUMBER_INT ) );
+        $_facility = \Request::get( 'facility', static::DEFAULT_FACILITY );
+        $_interval = \Request::get( 'interval', ElkIntervals::DAY );
+        $_from = \Request::get( 'from', 0, FILTER_SANITIZE_NUMBER_INT );
+        $_size = \Request::get( 'size', 30, FILTER_SANITIZE_NUMBER_INT );
 
         if ( $_size < 1 || $_size > 120 )
         {
@@ -132,7 +120,7 @@ class DashboardController extends FactoryController
 
             if ( false !== ( $_results = $this->_elk()->callOverTime( $_facility, $_interval, $_size, $_from, $_which ) ) )
             {
-                Cache::put( 'stats.dashboard', $_results, static::STATS_CACHE_TTL );
+                \Cache::put( 'stats.dashboard', $_results, static::STATS_CACHE_TTL );
             }
         }
 
@@ -159,7 +147,7 @@ class DashboardController extends FactoryController
             return $_response;
         }
 
-        return Packet::success( $_results->getResponse()->getData() );
+        return SuccessPacket::make( $_results->getResponse()->getData() );
     }
 
     /**
@@ -167,7 +155,7 @@ class DashboardController extends FactoryController
      */
     public function getGlobalStats()
     {
-        $_stats = Cache::get( 'stats.global-stats' );
+        $_stats = \Cache::get( 'stats.global-stats' );
 
         if ( empty( $_stats ) )
         {
@@ -179,10 +167,10 @@ class DashboardController extends FactoryController
                 $_stats = [];
             }
 
-            Cache::put( 'stats.global-stats', $_stats, static::STATS_CACHE_TTL );
+            \Cache::put( 'stats.global-stats', $_stats, static::STATS_CACHE_TTL );
         }
 
-        return Packet::success(
+        return SuccessPacket::make(
             array_merge(
                 $_stats,
                 $this->anyStats( false )
@@ -195,14 +183,14 @@ class DashboardController extends FactoryController
      */
     public function anyAllStats()
     {
-        $_stats = Cache::get( 'stats.all-stats' );
+        $_stats = \Cache::get( 'stats.all-stats' );
 
         if ( empty( $_stats ) )
         {
-            Cache::put( 'stats.all-stats', $_stats = $this->_elk()->allStats(), static::STATS_CACHE_TTL );
+            \Cache::put( 'stats.all-stats', $_stats = $this->_elk()->allStats(), static::STATS_CACHE_TTL );
         }
 
-        return Packet::success( $_stats );
+        return SuccessPacket::make( $_stats );
     }
 
     /**
@@ -212,12 +200,12 @@ class DashboardController extends FactoryController
      */
     protected function _diskUsage( $path )
     {
-        $_kbs = Cache::get( 'stats.disk-usage' );
+        $_kbs = \Cache::get( 'stats.disk-usage' );
 
         if ( empty( $_kbs ) )
         {
             preg_match( '/\d+/', `du -sk $path`, $_kbs );
-            Cache::put( 'stats.disk-usage', $_kbs, static::STATS_CACHE_TTL );
+            \Cache::put( 'stats.disk-usage', $_kbs, static::STATS_CACHE_TTL );
         }
 
         return round( isset( $_kbs, $_kbs[0] ) ? $_kbs[0] / 1024 : 0, 1 );
@@ -230,6 +218,6 @@ class DashboardController extends FactoryController
     {
         static $_service;
 
-        return $_service ?: $_service = App::make( ElkServiceProvider::IOC_NAME );
+        return $_service ?: $_service = \App::make( ElkServiceProvider::IOC_NAME );
     }
 }

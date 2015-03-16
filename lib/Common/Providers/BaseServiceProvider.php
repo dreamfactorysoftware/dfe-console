@@ -30,10 +30,6 @@ abstract class BaseServiceProvider extends ServiceProvider
     //******************************************************************************
 
     /**
-     * @type bool
-     */
-    protected $_booted = false;
-    /**
      * @type string The class of this provider's service
      */
     protected $_serviceClass = null;
@@ -45,53 +41,6 @@ abstract class BaseServiceProvider extends ServiceProvider
     //********************************************************************************
     //* Public Methods
     //********************************************************************************
-
-    /**
-     * Boot the service
-     */
-    public function boot()
-    {
-        if ( !$this->_booted )
-        {
-            //  Automatically adds an alias for the IoC name if available
-            if ( static::IOC_NAME && $this->_serviceClass )
-            {
-//                if ( isset( $this->app[static::IOC_NAME] ) && $this->app[static::IOC_NAME] !== $this->_serviceClass )
-//                {
-//                    \Log::debug(
-//                        'IoC alias "' . static::IOC_NAME . '" overwritten:' . PHP_EOL . ( is_string( $this->app[static::IOC_NAME] )
-//                            ? $this->app[static::IOC_NAME]
-//                            : gettype(
-//                                $this->app[static::IOC_NAME]
-//                            ) ) . ' => ' . $this->_serviceClass
-//                    );
-//                }
-//
-//                $this->app->alias( static::IOC_NAME, $this->_serviceClass );
-
-                //  Automatically adds a class alias if available
-                if ( static::ALIAS_NAME )
-                {
-                    if ( isset( $this->app[static::ALIAS_NAME] ) && $this->app[static::ALIAS_NAME] !== $this->_serviceClass )
-                    {
-                        \Log::debug(
-                            'IoC alias "' .
-                            static::ALIAS_NAME .
-                            '" overwritten:' .
-                            PHP_EOL .
-                            $this->app[static::ALIAS_NAME] .
-                            ' => ' .
-                            $this->_serviceClass
-                        );
-                    }
-
-                    $this->app->alias( static::ALIAS_NAME, $this->_serviceClass );
-                }
-            }
-
-            $this->_booted = true;
-        }
-    }
 
     /**
      * Register a shared binding in the container.
