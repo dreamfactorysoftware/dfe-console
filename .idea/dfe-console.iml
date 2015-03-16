@@ -46,5 +46,7 @@
     <orderEntry type="library" name="material" level="application" />
     <orderEntry type="library" name="ripples" level="application" />
     <orderEntry type="library" name="dataTables.bootstrap" level="application" />
+    <orderEntry type="library" name="dataTables.bootstrap" level="application" />
+    <orderEntry type="library" name="jquery.validate" level="application" />
   </component>
 </module>

@@ -17,3 +17,5 @@ jQuery(function($) {
 <script src="/js/cerberus.js"></script>
 <script src="/js/cerberus.graphs.js"></script>
 {{--<script src="/js/nanoscroller.min.js" defer="defer"></script>--}}
+@section('body-scripts')
+@show

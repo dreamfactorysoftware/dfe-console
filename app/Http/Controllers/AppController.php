@@ -1,7 +1,6 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Request;
 
 class AppController extends FactoryController
@@ -29,15 +28,23 @@ class AppController extends FactoryController
     }
 
     /**
+     * @return \Illuminate\View\View
+     */
+    public function getLogin()
+    {
+        return \View::make( 'app.login' );
+    }
+
+    /**
      * @param array $parameters
      *
-     * @return mixed|void
+     * @return \Illuminate\View\View|mixed
      */
-    public function missingMethod( $parameters = array() )
+    public function missingMethod( $parameters = [] )
     {
         if ( !is_array( $parameters ) )
         {
-            $parameters = array($parameters);
+            $parameters = [$parameters];
         }
 
         $this->_action = array_shift( $parameters );
@@ -45,21 +52,21 @@ class AppController extends FactoryController
         $_viewName = 'app.' . $this->_action;
         $parameters['_trail'] = null;
 
-        if ( View::exists( $_viewName ) )
+        if ( \View::exists( $_viewName ) )
         {
             //@todo remove this
-            $parameters['_active'] = array(
+            $parameters['_active'] = [
                 'instances' => 0,
                 'clusters'  => 0,
                 'users'     => 0,
                 'user'      => null,
-            );
+            ];
 
-            return View::make( $_viewName, $parameters );
+            return \View::make( $_viewName, $parameters );
         }
 
         //  Show 404
-        return View::make( 'app.404', array('_trail' => null) );
+        return \View::make( 'app.404', ['_trail' => null] );
     }
 
 }
