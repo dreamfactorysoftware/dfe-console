@@ -64,6 +64,15 @@ Route::get(
     }
 );
 
+Route::get(
+    'app/login',
+    function ()
+    {
+        echo 'hi';
+        return \View::make( 'app.login' );
+    }
+);
+
 Route::post(
     'form-submit',
     [

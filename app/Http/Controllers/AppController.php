@@ -28,15 +28,6 @@ class AppController extends FactoryController
     }
 
     /**
-     * @return \Illuminate\View\View
-     */
-
-    public function getLogin()
-    {
-        return \View::make( 'app.login', ['errors' => []] );
-    }
-
-    /**
      * @param array $parameters
      *
      * @return \Illuminate\View\View|mixed

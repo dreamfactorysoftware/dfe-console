@@ -13,7 +13,7 @@ return [
         ],
         'file'      => [
             'driver' => 'file',
-            'path'   => realpath( base_path( 'storage/framework/cache' ) ),
+            'path'   => storage_path() . '/framework/cache',
         ],
         'memcached' => [
             'driver'  => 'memcached',

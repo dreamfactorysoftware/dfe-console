@@ -1,15 +1,3 @@
-@extends('layouts.main')
-
-@section('page-title')
-    Login
-@overwrite
-
-@section('head-links')
-    @parent
-    <link href="/css/login.css" rel="stylesheet">
-    <link href="/css/metro.css" rel="stylesheet">
-@stop
-
 <?php
 $_html = null;
 
@@ -25,6 +13,17 @@ if ( !empty( $messages ) )
     $_html .= '</div>';
 }
 ?>
+@extends('layouts.main')
+
+@section('page-title')
+    Login
+@overwrite
+
+@section('head-links')
+    @parent
+    <link href="/css/login.css" rel="stylesheet">
+    <link href="/css/metro.css" rel="stylesheet">
+@stop
 
 @section('body-content')
     <div class="container-fluid">
@@ -35,7 +34,7 @@ if ( !empty( $messages ) )
                     <form id="loginform" class="form-vertical" method="POST">
                         <input type="hidden" name="recover" value="0">
                         <div class="control-group normal_text logo-container"><h3><img src="/img/logo-cerberus-256x256.png" alt="" /></h3></div>
-                        {{ $_html }}
+                        {!! $_html !!}
                         <div class="control-group">
                             <div class="controls">
                                 <div class="main_input_box">
@@ -92,7 +91,7 @@ if ( !empty( $messages ) )
     </div>
 @overwrite
 
-@section('body-scripts')
+@section('after-body-scripts')
     @parent
     <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
     <script src="/js/validate.js"></script>
