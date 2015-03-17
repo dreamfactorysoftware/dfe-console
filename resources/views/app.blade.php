@@ -30,7 +30,7 @@ if ( !isset( $_user ) || !is_array( $_user ) )
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body class="@yield('body-class')">
-@include('layouts.main.body')
-@include('layouts.main.body-scripts')
+@include('layouts.partials.body-content')
+@include('layouts.partials.body-scripts')
 </body>
 </html>

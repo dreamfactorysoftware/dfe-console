@@ -40,70 +40,91 @@ if ( !isset( $_user ) || !is_array( $_user ) )
 </head>
 <body class="@yield('body-class')">
 
-<div class="container-fluid">
-    <div class="row">
-        <div id="content" class="col-sm-12 col-md-12 main">
-            <div id="loginbox">
+<div id="container-login" class="container">
+    <div class="container-logo">
+        <h3><img src="/img/logo-dfe.png" alt="" />
+            <small>DreamFactory Enterprise<span>v1.0.0</span></small>
+        </h3>
+    </div>
 
-                <form id="loginform" class="form-vertical" method="POST">
-                    <input type="hidden" name="recover" value="0">
-                    <div class="control-group normal_text logo-container"><h3><img src="/img/logo-cerberus-256x256.png" alt="" /></h3></div>
-                    {!! $_html !!}
-                    <div class="control-group">
-                        <div class="controls">
-                            <div class="main_input_box">
-                                <span class="add-on bg_lg"><i class="icon-user"></i></span>
-                                <input class="email required"
-                                        autofocus
-                                        type="text"
-                                        id="email_addr_text"
-                                        name="email_addr_text"
-                                        placeholder="Email Address" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="controls">
-                            <div class="main_input_box">
-                                <span class="add-on bg_ly"><i class="icon-lock"></i></span>
-                                <input class="password required" id="password_text" placeholder="Password"
-                                        name="password_text" type="password" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Lost password?</a></span>
-                        <span class="pull-right"><button type="submit" class="btn btn-success"> Login</button></span>
-                    </div>
-                </form>
+    {!! $_html !!}
 
-                <form id="recoverform" class="form-vertical" action="/app/recover" method="POST">
-                    <input type="hidden" name="recover" value="1">
-                    <p class="normal_text">Enter your email address below and we will send you instructions how to recover a password.</p>
+    <form id="login-form" role="form" method="POST">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
 
-                    <div class="controls">
-                        <div class="main_input_box">
-                            <span class="add-on bg_lo"><i class="icon-envelope"></i></span>
-                            <input class="email required"
-                                    autofocus
-                                    type="text"
-                                    id="email_addr_text"
-                                    name="email_addr_text"
-                                    placeholder="Email Address" />
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <span class="pull-left"><a href="#" class="flip-link btn btn-success" id="to-login">&laquo; Back to login</a></span>
-                        <span class="pull-right"><button class="btn btn-info" type="submit">Recover</button></span>
-                    </div>
-                </form>
-
+                <input type="text" class="form-control email required" autofocus id="email_addr_text"
+                       name="email_addr_text" placeholder="email address">
             </div>
         </div>
-    </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon bg_ly"><i class="fa fa-lock"></i></span>
+
+                <input class="form-control password required" id="password_text" placeholder="password"
+                       name="password_text" type="password" />
+            </div>
+        </div>
+
+        <label class="control-label sr-only" for="_email_addr_text">Email Address</label>
+        <label class="control-label sr-only" for="_password_text">Password</label>
+
+        <div class="form-actions">
+            <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Lost password?</a></span>
+
+            <span class="pull-right"><button type="submit" class="btn btn-success">Login</button></span>
+        </div>
+
+        <input type="hidden" name="recover" value="0">
+    </form>
+
+    <form id="recover-form" role="form" action="/app/recover" method="POST">
+        <h4>Enter your email address and password reset instructions will be emailed to you.</h4>
+
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
+
+                <input type="text" class="form-control email required" autofocus id="email_addr_text" name="email_addr_text" placeholder="email address">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <span class="pull-left"><a href="#" class="flip-link btn btn-success" id="to-login">&laquo; Back to login</a></span> <span
+                    class="pull-right"><button class="btn btn-info" type="submit"> Recover</button></span>
+        </div>
+
+        <input type="hidden" name="recover" value="1">
+    </form>
 </div>
 
-@include('layouts.main.body-scripts')
+@section( 'before-body-scripts' )
+@show
+
+<script src="/static/bootstrap-3.3.2/js/bootstrap.min.js"></script>
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/js/material.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/js/ripples.min.js"></script>
+<script>
+jQuery(function($) {
+    //	Enable MD effects on doc-ready
+    $.material.init();
+});
+</script>
+
+@section( 'before-local-body-scripts' )
+@show
+
+<script src="/js/EnterpriseServer.js"></script>
+<script src="/js/cerberus.js"></script>
+
+@section( 'after-body-scripts' )
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+    <script src="/js/validate.js"></script>
+    <script src="/js/login.js"></script>
+@show
 </body>
 </html>

@@ -8,7 +8,7 @@
     Oops!
 @stop
 
-@section('layouts.main.body')
+@section('partials')
     <div id="wrapper">
         @include('layouts.main.navbar')
 

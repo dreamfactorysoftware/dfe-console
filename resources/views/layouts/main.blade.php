@@ -38,8 +38,48 @@ if ( !isset( $_user ) || !is_array( $_user ) )
 </head>
 <body class="@yield('body-class')">
 
-@include('layouts.main.body-content')
+@include('layouts.partials.navbar')
 
-@include('layouts.main.body-scripts')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            @include('layouts.partials.sidebar')
+        </div>
+
+        <div id="content" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            @yield('content')
+        </div>
+    </div>
+</div>
+
+<div id="loading-overlay" style="display: none;">Loading...</div>
+<div class="loading-content" style="display: none;"><img src="/img/img-loading.gif" class="loading-image" alt="Loading..." /></div>
+
+@section('before-body-scripts')
+@show
+
+<script src="/static/bootstrap-3.3.2/js/bootstrap.min.js"></script>
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/js/material.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.2/js/ripples.min.js"></script>
+<script>
+jQuery(function($) {
+    //	Enable MD effects on doc-ready
+    $.material.init();
+});
+</script>
+
+@section('before-local-body-scripts')
+    <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
+    <script src="/js/chart-theme.js"></script>
+    <script src="/js/cerberus.graphs.js"></script>
+@show
+
+<script src="/js/EnterpriseServer.js"></script>
+<script src="/js/cerberus.js"></script>
+
+@section('after-body-scripts')
+@show
 </body>
 </html>

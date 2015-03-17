@@ -22,7 +22,7 @@ body {
 .has-error .checkbox,
 .has-error .radio-inline,
 .has-error .checkbox-inline {
-	color: #FFC7C5;
+	color: #ffc7c5;
 }
 
 .has-error .input-group-addon {
@@ -76,8 +76,8 @@ body {
 }
 
 #container-login .form-actions {
-	border-top:  1px solid rgba(189, 183, 107, 0.4);
-	padding-top: 15px;
+	border-top:  1px solid rgba(255, 255, 255, 0.1);
+	margin-top:  30px;
 	font-family: "Roboto Condensed", "Droid Sans", "Open Sans", Arial, sans-serif;
 }
 
@@ -85,18 +85,18 @@ body {
 	margin-top: 0;
 }
 
-#container-login form#form-login {
+#container-login form#login-form {
 	/*z-index: 200;*/
 	display: block;
 }
 
-#container-login #form-recover {
+#container-login #recover-form {
 	/*z-index: 100;*/
 	display:       none;
 	margin-bottom: 20px;
 }
 
-#container-login #form-recover .form-actions {
+#container-login #recover-form .form-actions {
 	margin-top: 10px;
 }
 
@@ -106,7 +106,7 @@ body {
 	vertical-align: middle;
 	margin-bottom:  25px;
 	padding-bottom: 15px;
-	border-bottom:  1px solid rgba(189, 183, 107, 0.4);
+	border-bottom:  1px solid rgba(189, 183, 107, 0.1);
 	font-family:    "Open Sans", "Droid Sans", Arial, sans-serif;
 }
 

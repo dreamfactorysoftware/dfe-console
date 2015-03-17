@@ -31,9 +31,9 @@ jQuery(function($) {
 	})));
 
 	$('#to-recover').on('click', function() {
-		$('body').animate({"margin-top": "10%"});
-		$("#loginform").slideUp();
-		$("#recoverform").fadeIn();
+		$('body').animate({"margin-top": "25px"});
+		$("#login-form").slideUp();
+		$("#recover-form").fadeIn();
 	});
 
 	//	Recovery form
@@ -47,8 +47,8 @@ jQuery(function($) {
 	})));
 
 	$('#to-login').on('click', function() {
-		$("#recoverform").fadeOut();
-		$('body').animate({"margin-top": "20px"});
-		$("#loginform").slideDown();
+		$("#recover-form").fadeOut();
+		$('body').animate({"margin-top": "0px"});
+		$("#login-form").slideDown();
 	});
 });

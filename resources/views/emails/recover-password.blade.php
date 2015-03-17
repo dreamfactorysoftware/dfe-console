@@ -11,7 +11,7 @@
 </head>
 <body bgcolor="#ffffff"
 	style="background-color: #ffffff; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
-<!-- main container -->
+<!-- partials container -->
 <table width="100%"
 	bgcolor="#ffffff"
 	border="0"
@@ -56,7 +56,7 @@
 						valign="top"
 						style="width: 598px; overflow: hidden; border-style: solid; border-width: 1px; border-color: #d6d6d6;">
 						<div style="margin-right: 28px; margin-bottom: 40px; margin-left: 30px;">
-							<!-- main content -->
+							<!-- partials content -->
 							<table width="540"
 								border="0"
 								cellpadding="0"
@@ -129,6 +129,6 @@
 	</tr>
 	<!-- end: bottom spacing -->
 </table>
-<!-- end: main container -->
+<!-- end: partials container -->
 </body>
 </html>

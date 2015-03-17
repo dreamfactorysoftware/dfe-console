@@ -242,7 +242,7 @@ a.show-sidebar:hover {
 /*}*/
 
 /*
-.nav.main-menu, .nav.msg-menu {
+.nav.partials-menu, .nav.msg-menu {
 	margin: 0 -15px;
 }
 */
@@ -267,19 +267,19 @@ a.show-sidebar:hover {
 	/*color:      #f0f0f0;*/
 }
 
-/*.nav.main-menu a.active, .nav.msg-menu a.active {*/
+/*.nav.partials-menu a.active, .nav.msg-menu a.active {*/
 /*background: rgba(0, 0, 0, 0.2);*/
 /*}*/
 
-/*.nav.main-menu a.active:hover, .nav.msg-menu a.active:hover {*/
+/*.nav.partials-menu a.active:hover, .nav.msg-menu a.active:hover {*/
 /*background: rgba(0, 0, 0, 0.2);*/
 /*}*/
 
-/*.nav.main-menu a.active-parent, .nav.msg-menu a.active-parent {*/
+/*.nav.partials-menu a.active-parent, .nav.msg-menu a.active-parent {*/
 /*background: rgba(0, 0, 0, 0.3);*/
 /*}*/
 
-/*.nav.main-menu a.active-parent:hover, .nav.msg-menu a.active-parent:hover {*/
+/*.nav.partials-menu a.active-parent:hover, .nav.msg-menu a.active-parent:hover {*/
 /*background: rgba(0, 0, 0, 0.3);*/
 /*}*/
 

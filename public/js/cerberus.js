@@ -34,8 +34,8 @@ var _setActiveItem = function() {
 		_uri = '/app/dashboard';
 	}
 
-	$('.nav.main-menu li').removeClass('active');
-	$('.main-menu a[href="' + _uri + '"]').parent('li').addClass('active');
+	$('.nav.partials-menu li').removeClass('active');
+	$('.partials-menu a[href="' + _uri + '"]').parent('li').addClass('active');
 };
 
 //******************************************************************************
