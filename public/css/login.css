@@ -1,7 +1,7 @@
 body {
 	background-color: #353535; /*rgba(58, 44, 69, 1);*/
 	padding-top:      5%;
-	min-width:        420px;
+	color:            rgba(255, 255, 255, .5);
 }
 
 .fa {
@@ -26,21 +26,21 @@ body {
 }
 
 .has-error .input-group-addon {
-	/*color:            #a94442;*/
-	border-color:     #a94442;
-	background-color: #b95452;
+	color: #c96462;
+	/*border-color:     #a94442;*/
+	/*background-color: #b95452;*/
 }
 
 .has-success .input-group-addon {
-	/*color:            #a94442;*/
-	border-color:     #3c763d;
-	background-color: #4c864d;
+	color: #6ca66d;
+	/*border-color:     #3c763d;*/
+	/*background-color: #4c864d;*/
 }
 
 #container-login {
 	/*width:     35%;*/
-	min-width: 450px;
-	max-width: 520px;
+	/*min-width: 450px;*/
+	/*max-width: 520px;*/
 }
 
 #container-login form h4 {
@@ -68,7 +68,7 @@ body {
 }
 
 #container-login form {
-	width:    100%;
+	/*width:    100%;*/
 	/*background: #2E363F;*/
 	position: relative;
 	top:      0;
@@ -91,17 +91,16 @@ body {
 }
 
 #container-login #recover-form {
-	/*z-index: 100;*/
 	display:       none;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 }
 
 #container-login #recover-form .form-actions {
-	margin-top: 10px;
+	margin-top: 30px;
 }
 
 .container-logo {
-	width:          100%;
+	/*width:          100%;*/
 	text-align:     center;
 	vertical-align: middle;
 	margin-bottom:  25px;
@@ -131,27 +130,36 @@ body {
 	margin-top: 2px;
 }
 
-@media (max-width: 800px) {
-	#logo {
-		width: 60%;
-	}
-
-	#container-login {
-		width: 80%
-	}
+.checkbox label .check {
+	margin-right: 5px;
 }
 
-@media (max-width: 480px) {
-	#logo {
-		width: 40%;
-	}
+/*@media (max-width: 800px) {*/
+/*#logo {*/
+/*width: 60%;*/
+/*}*/
 
-	#container-login {
-		width: 90%
-	}
+/*#container-login {*/
+/*width: 80%*/
+/*}*/
+/*}*/
 
-	#container-login .control-group {
-		/*padding:       8px 0;*/
-		/*margin-bottom: 0;*/
-	}
+/*@media (max-width: 480px) {*/
+/*#logo {*/
+/*width: 40%;*/
+/*}*/
+
+/*#container-login {*/
+/*width: 90%*/
+/*}*/
+
+/*#container-login .control-group {*/
+/*/!*padding:       8px 0;*!/*/
+/*/!*margin-bottom: 0;*!/*/
+/*}*/
+/*}*/
+
+.help-inline {
+	margin-left: 40px;
+	font-size:   11px;
 }

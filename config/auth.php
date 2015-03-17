@@ -5,7 +5,7 @@
 
 return [
     'driver'   => 'eloquent',
-    'model'    => 'DreamFactory\Enterprise\Console\User',
+    'model'    => 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\ServiceUser',
     'table'    => 'service_user_t',
     'password' => [
         'email'  => 'emails.password',

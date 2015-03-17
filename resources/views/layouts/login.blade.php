@@ -1,11 +1,3 @@
-<?php
-use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
-
-if ( !isset( $_user ) || !is_array( $_user ) )
-{
-    $_user = FactoryController::getUserInfo();
-}
-?>
 <!DOCTYPE html >
 <html lang="en">
 <head>
@@ -40,64 +32,97 @@ if ( !isset( $_user ) || !is_array( $_user ) )
 </head>
 <body class="@yield('body-class')">
 
-<div id="container-login" class="container">
-    <div class="container-logo">
-        <h3><img src="/img/logo-dfe.png" alt="" />
-            <small>DreamFactory Enterprise<span>v1.0.0</span></small>
-        </h3>
+<div id="container-login" class="container-fluid">
+    <div class="row">
+        <div class="col-md-offset-3 col-md-6 col-md-offset-3">
+            <div class="container-logo">
+                <h3><img src="/img/logo-dfe.png" alt="" />
+                    <small>DreamFactory Enterprise<span>v1.0.x-alpha</span></small>
+                </h3>
+            </div>
+
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Nope!</strong> The email address and password combination are invalid.<br><br>
+
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form id="login-form" role="form" method="POST" action="/auth/login">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
+
+                        <input type="email"
+                               class="form-control email required"
+                               autofocus
+                               name="email_addr_text"
+                               placeholder="email address"
+                               value="{{ old('email_addr_text') }}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon bg_ly"><i class="fa fa-lock"></i></span>
+
+                        <input class="form-control password required" placeholder="password" name="password_text" type="password" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="remember">
+                            remember me
+                        </label>
+                    </div>
+                </div>
+
+                <label class="control-label sr-only" for="_email_addr_text">Email Address</label>
+                <label class="control-label sr-only" for="_password_text">Password</label>
+
+                <div class="form-actions">
+                    <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Lost password?</a></span>
+
+                    <span class="pull-right"><button type="submit" class="btn btn-success">Login</button></span>
+                </div>
+
+                <input type="hidden" name="recover" value="0">
+            </form>
+
+            <form id="recover-form" role="form" action="/password/email" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <h4 style="text-align: left;">We're sorry you have lost your password. Please enter your registered email address below and we will send you instructions on how to reset your password.</h4>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
+
+                        <input type="email"
+                               class="form-control email required"
+                               autofocus
+                               name="email_addr_text"
+                               placeholder="email address">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <span class="pull-left"><a href="#" class="flip-link btn btn-success" id="to-login">&laquo; Back to login</a></span>
+                    <span class="pull-right"><button class="btn btn-info" type="submit">Recover</button></span>
+                </div>
+
+                <input type="hidden" name="recover" value="1">
+            </form>
+        </div>
     </div>
-
-    {!! $_html !!}
-
-    <form id="login-form" role="form" method="POST">
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
-
-                <input type="text" class="form-control email required" autofocus id="email_addr_text"
-                       name="email_addr_text" placeholder="email address">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon bg_ly"><i class="fa fa-lock"></i></span>
-
-                <input class="form-control password required" id="password_text" placeholder="password"
-                       name="password_text" type="password" />
-            </div>
-        </div>
-
-        <label class="control-label sr-only" for="_email_addr_text">Email Address</label>
-        <label class="control-label sr-only" for="_password_text">Password</label>
-
-        <div class="form-actions">
-            <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Lost password?</a></span>
-
-            <span class="pull-right"><button type="submit" class="btn btn-success">Login</button></span>
-        </div>
-
-        <input type="hidden" name="recover" value="0">
-    </form>
-
-    <form id="recover-form" role="form" action="/app/recover" method="POST">
-        <h4>Enter your email address and password reset instructions will be emailed to you.</h4>
-
-        <div class="form-group">
-            <div class="input-group">
-                <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
-
-                <input type="text" class="form-control email required" autofocus id="email_addr_text" name="email_addr_text" placeholder="email address">
-            </div>
-        </div>
-
-        <div class="form-actions">
-            <span class="pull-left"><a href="#" class="flip-link btn btn-success" id="to-login">&laquo; Back to login</a></span> <span
-                    class="pull-right"><button class="btn btn-info" type="submit"> Recover</button></span>
-        </div>
-
-        <input type="hidden" name="recover" value="1">
-    </form>
 </div>
 
 @section( 'before-body-scripts' )

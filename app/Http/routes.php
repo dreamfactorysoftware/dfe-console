@@ -46,8 +46,8 @@ Route::controllers(
         'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',
         'dashboard' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\DashboardController',
         'settings'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\SettingsController',
-        'auth'      => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\AuthController',
-        'password'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\PasswordController',
+        'auth'      => 'DreamFactory\\Enterprise\\Common\\Http\\Controllers\\Auth\\AuthController',
+        'password'  => 'DreamFactory\\Enterprise\\Common\\Http\\Controllers\\Auth\\PasswordController',
         'instance'  => 'DreamFactory\\Enterprise\\Services\\Controllers\\InstanceController',
     ]
 );
@@ -69,6 +69,7 @@ Route::get(
     function ()
     {
         echo 'hi';
+
         return \View::make( 'app.login' );
     }
 );

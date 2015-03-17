@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
                 $table->integer( 'owner_type_nbr' );
                 $table->dateTime( 'last_login_date' );
                 $table->string( 'last_login_ip_text', 64 );
-                $table->rememberToken();
+                $table->string( 'remember_token', 128 );
                 $table->timestamps();
             }
         );
