@@ -143,50 +143,58 @@ var EnterpriseServer = {
 		if (this.initialized) {
 			var _this = this, $_table = $(this.tableId);
 
-			this.$_headerToolbar = $('.page-header-toolbar');
-
-			this.dt = $_table.DataTable($.extend(this.defaults, {
+			var _options = $.extend(this.defaults, {
 				ajax:       this.dataUrl,
 				serverSide: true,
 				processing: false,
 				pagingType: 'full_numbers',
 				columns:    this.columns.columns
-			})).on('init', function(e) {
-				_this.$_loader = $('#loading-content');
-				_this.$_dataLoader = $('#loading-data')
-			}).on('processing.dt', function(e, settings, processing) {
-				_this.dataLoading(processing);
-			}).on('draw.dt', function(e, settings, processing) {
-				if (!_this.searchFixed) {
-					var _ac, _name, $_search = $('.dataTables_filter');
-
-					if ($_search) {
-						_ac = $_search.find('input[type="search"]').attr('aria-controls');
-						$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
-									  _ac +
-									  '"/><i class="fa fa-fw fa-search form-control-feedback"></i></div>');
-
-						$_search.find('input').css({height: 'auto'});
-					}
-
-					_this.searchFixed = true;
-				}
-			}).on('click', 'tr', function(e) {
-				$('tr.selected', $_table).removeClass('selected');
-				$(this).toggleClass('selected');
-
-				var $_edit = $('#header-bar-edit, #header-bar-delete', _this.$_headerToolbar);
-
-				if ($_edit.length && $(this).hasClass('selected')) {
-					$_edit.show();
-				} else {
-					$_edit.hide();
-				}
-			}).on('dblclick', 'tbody tr', function(e) {
-				e.preventDefault();
-				var _id = $(this).attr('id');
-				window.top.location.href = _this.dataUrl + '/' + _id + '/edit';
 			});
+
+			this.$_headerToolbar = $('.page-header-toolbar');
+
+			if ($_table.length) {
+				this.dt = $_table.DataTable(_options);
+
+				if (this.dt) {
+					this.dt.on('init', function(e) {
+						_this.$_loader = $('#loading-content');
+						_this.$_dataLoader = $('#loading-data')
+					}).on('processing.dt', function(e, settings, processing) {
+						_this.dataLoading(processing);
+					}).on('draw.dt', function(e, settings, processing) {
+						if (!_this.searchFixed) {
+							var _ac, _name, $_search = $('.dataTables_filter');
+
+							if ($_search) {
+								_ac = $_search.find('input[type="search"]').attr('aria-controls');
+								$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
+											  _ac +
+											  '"/><i class="fa fa-fw fa-search form-control-feedback"></i></div>');
+
+								$_search.find('input').css({height: 'auto'});
+							}
+
+							_this.searchFixed = true;
+						}
+					}).on('click', 'tr', function(e) {
+						$('tr.selected', $_table).removeClass('selected');
+						$(this).toggleClass('selected');
+
+						var $_edit = $('#header-bar-edit, #header-bar-delete', _this.$_headerToolbar);
+
+						if ($_edit.length && $(this).hasClass('selected')) {
+							$_edit.show();
+						} else {
+							$_edit.hide();
+						}
+					}).on('dblclick', 'tbody tr', function(e) {
+						e.preventDefault();
+						var _id = $(this).attr('id');
+						window.top.location.href = _this.dataUrl + '/' + _id + '/edit';
+					});
+				}
+			}
 		}
 
 		return this;

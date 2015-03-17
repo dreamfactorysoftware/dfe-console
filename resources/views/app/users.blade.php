@@ -1,7 +1,7 @@
-@extends('layouts.main')
+@extends('layouts.dashboard-page')
 
 @section('content')
-    @include('app._page-header',array('pageName' => 'Users', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) )
+    @include('app._page-header',['pageName' => 'Users', 'buttons' => ['new'=>['icon'=>'plus','color'=>'success']] ] )
 
     <div class="row">
         <div class="col-md-12">

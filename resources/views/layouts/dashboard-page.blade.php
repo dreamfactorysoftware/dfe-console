@@ -18,7 +18,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-3 sidebar">
-            @include('layouts.partials.sidebar')
+            @include('layouts.partials.otf-sidebar')
         </div>
 
         <div id="content" class="col-sm-9 col-md-9 main">
@@ -28,6 +28,9 @@
 </div>
 
 <div class="loading-content" style="display: none;"><img src="/img/img-loading.gif" class="loading-image" alt="Loading..." /></div>
+
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 
 @section('before-body-scripts')
 @show

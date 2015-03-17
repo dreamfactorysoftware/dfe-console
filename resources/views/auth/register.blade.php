@@ -1,4 +1,4 @@
-@extends('app')
+@extends('layouts.dark-page')
 
 @section('content')
 <div class="container-fluid">

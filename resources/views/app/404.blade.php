@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.dark-page')
 
 @section('content')
     <div class="row">

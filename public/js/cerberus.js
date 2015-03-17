@@ -5,8 +5,6 @@
 
 "use strict";
 
-var _dashboardActive = true;
-
 //******************************************************************************
 //* Load plugins
 //******************************************************************************
@@ -21,31 +19,7 @@ function _loadData(url) {
 	if (_type && _type.length) {
 		EnterpriseServer.populateTable(_type);
 	}
-
-	_setActiveItem();
 }
-
-/**
- * Adds the active class to the active menu item...
- * @param [type]
- * @private
- */
-var _setActiveItem = function(type) {
-	var _uri = window.top.location.hash.replace(/^#/, '');
-
-	if (!_uri || !_uri.length) {
-		_uri = '/app/dashboard';
-	}
-
-	$('.nav.partials-menu li').removeClass('active');
-	$('.partials-menu a[href="' + _uri + '"]').parent('li').addClass('active');
-
-	_dashboardActive = ('/' == $('.nav-sidebar > li.active a').attr('href'));
-
-	if (_dashboardActive) {
-		alert('active');
-	}
-};
 
 //******************************************************************************
 //* DocReady
@@ -92,4 +66,8 @@ jQuery(function($) {
 
 	//	Load page data...
 	_loadData();
+
+	$('.sidebar').on('click', 'a', function(e) {
+	});
+
 });

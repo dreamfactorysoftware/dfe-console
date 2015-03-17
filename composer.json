@@ -46,7 +46,6 @@
 	"require":           {
 		"doctrine/couchdb-odm":        "*",
 		"dreamfactory/php-utils":      "*",
-		"dreamfactory/rave-common":    "dev-develop as dev-master",
 		"dreamfactory/fabric-common":  "dev-develop as dev-master",
 		"dreamfactory/fabric-db":      "dev-develop as dev-master",
 		"dreamfactory/fabric-audit":   "dev-develop as dev-master",

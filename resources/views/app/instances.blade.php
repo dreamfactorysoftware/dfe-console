@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.dashboard-page')
 
 @section('content')
     @include('app._page-header',array('pageName' => 'Instances', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) )

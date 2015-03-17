@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.dashboard-page')
 
 @section('breadcrumb-title')
     Clusters

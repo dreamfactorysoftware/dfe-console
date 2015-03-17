@@ -11,7 +11,6 @@
 //*************************************************************************
 
 var _dashboardOptions = {
-
 	timelineSize:    30,
 	facility_filter: null,
 	updateInterval:  3000000,

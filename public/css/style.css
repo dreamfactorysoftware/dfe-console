@@ -64,8 +64,6 @@ body {
 /*
  * Sidebar
  */
-
-/* Hide for mobile, show later */
 .sidebar {
 	/*display: none;*/
 	background-color: #f5f5f5;
@@ -76,15 +74,24 @@ body {
 }
 
 /* Sidebar navigation */
-.nav-sidebar {
+#sidebar-collapse .nav-sidebar {
 	margin-right:  -21px; /* 20px padding + 1px border */
 	margin-bottom: 20px;
 	margin-left:   -20px;
 }
 
-.nav-sidebar > li > a {
+#sidebar-collapse > ul > li > a > i {
+	margin-right: 5px;
+}
+
+#sidebar-collapse > ul > li > a {
 	padding-right: 20px;
 	padding-left:  20px;
+}
+
+#sidebar-collapse > ul > li.active > a {
+	background-color: rgba(0, 0, 0, .1);
+	border-radius:     4px
 }
 
 .tab-header {
@@ -320,6 +327,15 @@ table.dataTable thead th {
 	cursor:           default;
 	background-color: rgba(0, 149, 135, 0.8);
 	border-color:     rgba(0, 149, 135, 0.8);
+}
+
+.pagination > .disabled > a,
+.pagination > .disabled > a:focus,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > span,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > span:hover {
+	color: rgba(0, 0, 0, .30);
 }
 
 /*------------------------------------------------------------------------------*/

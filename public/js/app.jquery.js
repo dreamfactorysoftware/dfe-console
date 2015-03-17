@@ -15,8 +15,7 @@ var _options = {
 	detailsTitle:        'h3#details-table-title',
 	detailsCallback:     function(data, status, xhr, element) {
 	},
-	ajaxMessageFadeTime: 6000,
-	dashboardActive:     false
+	ajaxMessageFadeTime: 6000
 };
 
 /**

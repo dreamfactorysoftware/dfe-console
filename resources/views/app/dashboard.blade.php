@@ -1,20 +1,20 @@
-@extends('layouts.main')
+@extends('layouts.dashboard-page')
 
 @section('page-title')
     Dashboard
 @overwrite
 
-@section('page-header')
-    Dashboard
+@section('before-app-scripts')
+    @parent
+    <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
 @stop
 
-@section('breadcrumb-title')
-    Dashboard
-@stop
+@section('after-app-scripts')
+    @parent
+    <script src="/js/chart-theme.js"></script>
+    <script src="/js/cerberus.graphs.js"></script>
+@show
 
-@section('page-subheader')
-    all your instances are belong to you
-@stop
 
 @section('content')
     <div class="row">
