@@ -20,9 +20,10 @@ var EnterpriseServer = {
 	 * @type {*}
 	 */
 	defaults:        {
-		//	"<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md6'i><'col-md-6'p>>"
+
 		//'<"wrapper"<"row"<"col-md-1"l><"col-md-offset-4 col-md-2"r><"col-md-5"f>><"row"<"col-md-12"t>><"row"<ip>>', //		deferRender: true,
-//		dom:      '<"wrapper"<"row"<"col-md-12"Clf>><"row"<"col-md-12"rt>><"row"<"col-md-12"ip>>>',
+		//'<"wrapper"<"row"<"col-md-12"Clf>><"row"<"col-md-12"rt>><"row"<"col-md-12"ip>>>',
+		dom:      "<'row'<'col-md-4 col-sm-3'l><'col-md-offset-4 col-md-4 col-sm-offset-6 col-sm-3'f>r><'row'<'col-sm-12 col-md-12't>><'row'<'col-sm-4 col-md-4'i><'col-sm-8 col-md-8'p>>",
 		language: {
 			sLengthMenu: '_MENU_ per page',
 			sSearch:     '<i class="fa fa-search"></i>',
@@ -77,6 +78,10 @@ var EnterpriseServer = {
 	minimumHeight:   null,
 	/** @type $ **/
 	$_headerToolbar: null,
+	/**
+	 * @type bool
+	 */
+	searchFixed:     false,
 
 	//******************************************************************************
 	//* Functions
@@ -151,6 +156,21 @@ var EnterpriseServer = {
 				_this.$_dataLoader = $('#loading-data')
 			}).on('processing.dt', function(e, settings, processing) {
 				_this.dataLoading(processing);
+			}).on('draw.dt', function(e, settings, processing) {
+				if (!_this.searchFixed) {
+					var _ac, _name, $_search = $('.dataTables_filter');
+
+					if ($_search) {
+						_ac = $_search.find('input[type="search"]').attr('aria-controls');
+						$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
+									  _ac +
+									  '"/><i class="fa fa-fw fa-search form-control-feedback"></i></div>');
+
+						$_search.find('input').css({height: 'auto'});
+					}
+
+					_this.searchFixed = true;
+				}
 			}).on('click', 'tr', function(e) {
 				$('tr.selected', $_table).removeClass('selected');
 				$(this).toggleClass('selected');
@@ -167,15 +187,6 @@ var EnterpriseServer = {
 				var _id = $(this).attr('id');
 				window.top.location.href = _this.dataUrl + '/' + _id + '/edit';
 			});
-
-			var _ac, _name, $_search = $('.wrapper .dataTables_filter');
-
-			if ($_search && $_search.length) {
-				_ac = $_search.find('input[type="search"]').attr('aria-controls');
-				$_search.html('<div class="form-group has-feedback"><input type="search" class="form-control" placeholder="filter" aria-controls="' +
-							  _ac +
-							  '"/><i class="fa fa-search form-control-feedback"></i></div>');
-			}
 		}
 
 		return this;
