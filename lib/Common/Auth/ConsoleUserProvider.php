@@ -19,7 +19,7 @@ class ConsoleUserProvider extends DatabaseUserProvider
      */
     public function retrieveByCredentials( array $credentials )
     {
-        $query = $this->conn->table( $this->table );
+        $query = ServiceUser::();
 
         foreach ( $credentials as $key => $value )
         {

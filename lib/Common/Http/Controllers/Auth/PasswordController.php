@@ -61,6 +61,56 @@ class PasswordController extends BaseController
             case PasswordBroker::INVALID_USER:
                 return redirect()->back()->withErrors( ['email' => trans( $response )] );
         }
+
+        return null;
     }
 
+    /**
+     * Reset the given user's password.
+     *
+     * @param  Request $request
+     *
+     * @return Response
+     */
+    public function postReset( Request $request )
+    {
+        $this->validate(
+            $request,
+            [
+                'token'    => 'required',
+                'email'    => 'required|email',
+                'password' => 'required|confirmed',
+            ]
+        );
+
+        $credentials = $request->only(
+            'email',
+            'password',
+            'password_confirmation',
+            'token'
+        );
+
+        $response = $this->passwords->reset(
+            $credentials,
+            function ( $user, $password )
+            {
+                $user->password_text = bcrypt( $password );
+
+                $user->save();
+
+                $this->auth->login( $user );
+            }
+        );
+
+        switch ( $response )
+        {
+            case PasswordBroker::PASSWORD_RESET:
+                return redirect( $this->redirectPath() );
+
+            default:
+                return redirect()->back()
+                    ->withInput( $request->only( 'email' ) )
+                    ->withErrors( ['email' => trans( $response )] );
+        }
+    }
 }
