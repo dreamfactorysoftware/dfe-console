@@ -6,6 +6,9 @@ use Validator;
 
 class Registrar implements RegistrarContract
 {
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
 
     /**
      * Get a validator for an incoming registration request.
@@ -19,9 +22,10 @@ class Registrar implements RegistrarContract
         return Validator::make(
             $data,
             [
-                'name'     => 'required|max:255',
-                'email'    => 'required|email|max:255|unique:users',
-                'password' => 'required|confirmed|min:6',
+                'first_name_text' => 'required|max:64',
+                'last_name_text'  => 'required|max:64',
+                'email_addr_text' => 'required|email|max:320|unique:service_user_t',
+                'password_text'   => 'required|confirmed|min:6',
             ]
         );
     }
@@ -37,9 +41,10 @@ class Registrar implements RegistrarContract
     {
         return User::create(
             [
-                'name'     => $data['name'],
-                'email'    => $data['email'],
-                'password' => bcrypt( $data['password'] ),
+                'first_name_text' => $data['first_name_text'],
+                'last_name_text'  => $data['last_name_text'],
+                'email_addr_text' => $data['email_addr_text'],
+                'password_text'   => bcrypt( $data['password_text'] ),
             ]
         );
     }

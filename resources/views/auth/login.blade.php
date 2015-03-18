@@ -1,21 +1,14 @@
 @extends('layouts.dark-page')
 
+@section('page-title')
+    Login
+@overwrite
+
 @section('head-links')
     @parent
     <link href="/css/login.css" rel="stylesheet">
     <link href="/css/metro.css" rel="stylesheet">
 @stop
-
-@section( 'after-app-scripts' )
-    @parent
-    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
-    <script src="/js/validate.js"></script>
-    <script src="/js/login.js"></script>
-@show
-
-@section('page-title')
-    Login
-@overwrite
 
 @section('content')
     <div id="container-login" class="container-fluid">
@@ -30,10 +23,13 @@
                 </div>
 
                 @if (count($errors) > 0)
-                    <div class="alert alert-danger">
-                        <h4>Rut-roh!</h4>
+                    <div class="alert alert-warning alert-dismissible alert-rounded fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4>Rut-roh...</h4>
 
-                        <ul>
+                        <ul style="list-style: none">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -116,3 +112,11 @@
         </div>
     </div>
 @stop
+
+@section( 'after-app-scripts' )
+    @parent
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.min.js"></script>
+    <script src="/js/validate.js"></script>
+    <script src="/js/login.js"></script>
+@stop
+

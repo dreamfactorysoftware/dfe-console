@@ -33,11 +33,13 @@ jQuery(function($) {
 	var $_body = $('body'), _of = $_body.css('overflow');
 
 	$('#to-recover').on('click', function() {
-		$_body.animate({overflow: 'hidden'}, function() {
+		$('.alert-dismissible').hide();
+		$_body.animate({overflow: 'hidden'}, 1, function() {
 			$('#login-form').slideUp();
 			$('#recover-form').fadeIn();
 		}).done(function() {
 			$_body.css({overflow: _of});
+			$('.alert-dismissable').show();
 		});
 	});
 
@@ -52,11 +54,13 @@ jQuery(function($) {
 	})));
 
 	$('#to-login').on('click', function() {
-		$_body.animate({overflow: 'hidden'}, function() {
+		$('.alert-dismissible').hide();
+		$_body.animate({overflow: 'hidden'}, 1, function() {
 			$('#recover-form').fadeOut();
 			$('#login-form').slideDown();
 		}).done(function() {
 			$_body.css({overflow: _of});
+			$('.alert-dismissable').show();
 		});
 	});
 });

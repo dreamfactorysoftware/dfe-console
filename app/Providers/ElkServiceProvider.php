@@ -22,6 +22,13 @@ class ElkServiceProvider extends BaseServiceProvider
      */
     const ALIAS_NAME = 'Elk';
 
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /** @inheritdoc */
+    protected $_serviceClass = 'DreamFactory\\Enterprise\\Console\\Services\\Elk';
+
     //*************************************************************************
     //* Methods
     //*************************************************************************
@@ -33,13 +40,11 @@ class ElkServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\\Enterprise\\Console\\Services\\Elk';
-
         $this->singleton(
             static::IOC_NAME,
             function ( $app )
             {
-                return new Elk();
+                return new Elk( $app );
             }
         );
     }

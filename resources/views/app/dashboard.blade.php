@@ -13,7 +13,7 @@
     @parent
     <script src="/js/chart-theme.js"></script>
     <script src="/js/cerberus.graphs.js"></script>
-@show
+@stop
 
 
 @section('content')

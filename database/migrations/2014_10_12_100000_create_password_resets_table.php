@@ -19,9 +19,9 @@ class CreatePasswordResetsTable extends Migration
             'auth_reset_t',
             function ( Blueprint $table )
             {
-                $table->string( 'email_addr_text' )->index();
-                $table->string( 'token_text' )->index();
-                $table->timestamp( 'create_date' );
+                $table->string( 'email' )->index();
+                $table->string( 'token' )->index();
+                $table->timestamp( 'created_at' );
             }
         );
     }

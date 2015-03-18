@@ -46,9 +46,12 @@ class Elk extends BaseService
     //*************************************************************************
 
     /**
-     * @param array $settings
+     * @param \Illuminate\Contracts\Foundation\Application $app
+     * @param array                                        $settings
+     *
+     * @throws \Exception
      */
-    public function __construct( array $settings = [] )
+    public function __construct( $app = null, array $settings = [] )
     {
         /** @noinspection PhpUndefinedMethodInspection */
         $_config = Config::get( 'elk' );
