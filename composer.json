@@ -44,13 +44,13 @@
 	],
 	"type":              "project",
 	"require":           {
-		"doctrine/couchdb-odm":        "*",
 		"dreamfactory/php-utils":      "*",
 		"dreamfactory/fabric-common":  "dev-develop as dev-master",
 		"dreamfactory/fabric-db":      "dev-develop as dev-master",
 		"dreamfactory/fabric-audit":   "dev-develop as dev-master",
 		"dreamfactory/console-tools":  "dev-develop as dev-master",
 		"dreamfactory/fabric-queue":   "dev-develop as dev-master",
+		"guzzlehttp/guzzle":           "~4.0",
 		"laravel/framework":           "5.0.*",
 		"league/flysystem-sftp":       "*",
 		"league/flysystem-ziparchive": "*",
@@ -58,10 +58,10 @@
 		"wpb/string-blade-compiler":   "2.*@dev"
 	},
 	"require-dev":       {
-		"phpunit/phpunit":             "~4.0",
-		"phpspec/phpspec":             "~2.1",
-		"doctrine/dbal":               "~2.3",
 		"barryvdh/laravel-ide-helper": "~2.0",
+		"doctrine/dbal":               "~2.3",
+		"phpspec/phpspec":             "~2.1",
+		"phpunit/phpunit":             "~4.0",
 		"way/generators":              "~3.0"
 	},
 	"autoload":          {
