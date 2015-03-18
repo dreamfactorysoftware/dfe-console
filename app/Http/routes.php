@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\View;
 //******************************************************************************
 
 Route::group(
-    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources'],
+    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources', 'middleware' => 'auth'],
     function ()
     {
         Route::resource( 'clusters', 'ClusterController' );
@@ -30,18 +30,22 @@ Route::group(
 //  Main page
 Route::get(
     '/',
-    function ()
-    {
-        /** @noinspection PhpUndefinedMethodInspection */
-        return View::make(
-            'app.dashboard',
-            ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0]]
-        );
-    }
+    [
+        'as'         => 'home',
+        'middleware' => 'auth',
+        function ()
+        {
+            /** @noinspection PhpUndefinedMethodInspection */
+            return View::make(
+                'app.dashboard',
+                ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0]]
+            );
+        }
+    ]
 );
 
 //  Other controllers
-Route::controllers(
+\Route::controllers(
     [
         'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',
         'dashboard' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\DashboardController',
@@ -56,25 +60,7 @@ Route::controllers(
 //* Testing
 //******************************************************************************
 
-Route::get(
-    'form',
-    function ()
-    {
-        return View::make( 'app.forms.service-user' );
-    }
-);
-
-Route::get(
-    'app/login',
-    function ()
-    {
-        echo 'hi';
-
-        return \View::make( 'app.login' );
-    }
-);
-
-Route::post(
+\Route::post(
     'form-submit',
     [
         'before' => 'csrf',

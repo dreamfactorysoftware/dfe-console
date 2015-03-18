@@ -19,24 +19,24 @@
                             <div class="avatar-image" data-hash="{{ '$_user["hash"]' }}"></div>
                         </div>
                         <div class="user-mini pull-right">
-                            <span>{!! 'sandman@dreamfactory.com' !!}}</span>
+                            <span>{!! \Auth::user()->name !!}</span>
                             <span class="caret"></span>
                         </div>
                     </a>
 
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                            <a href="/user/profile"><i class="fa fa-fw fa-user"></i> Profile</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
+                            <a href="/console/inbox"><i class="fa fa-fw fa-envelope"></i> Inbox</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-gear"></i> Settings</a>
+                            <a href="/console/settings"><i class="fa fa-fw fa-gear"></i> Settings</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="#"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                            <a href="/auth/logout"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
                         </li>
                     </ul>
                 </li>

@@ -44,6 +44,14 @@ class FactoryController extends Controller
     //******************************************************************************
 
     /**
+     * ctor
+     */
+    public function __construct()
+    {
+        $this->middleware( 'auth' );
+    }
+
+    /**
      * @param bool $asArray
      *
      * @return array|string The hashed email address

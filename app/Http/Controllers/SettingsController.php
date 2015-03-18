@@ -1,8 +1,6 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use Illuminate\Support\Facades\View;
-
 /**
  * Provides settings items
  */
@@ -14,38 +12,38 @@ class SettingsController extends FactoryController
 
     public function __construct()
     {
-        $this->_active = array();
+        $this->_active = [];
     }
 
     public function getUsers()
     {
-        return View::make( 'app.users' );
+        return \View::make( 'app.users' );
     }
 
     public function getServers()
     {
-        return View::make( 'app.servers' );
+        return \View::make( 'app.servers' );
     }
 
     public function getClusters()
     {
-        return View::make( 'app.clusters' );
+        return \View::make( 'app.clusters' );
 
     }
 
     public function getInstances()
     {
-        return View::make( 'app.instances' );
+        return \View::make( 'app.instances' );
     }
 
     public function getRoles()
     {
-        return View::make( 'app.roles' );
+        return \View::make( 'app.roles' );
     }
 
     public function getQuotas()
     {
-        return View::make( 'app.quotas' );
+        return \View::make( 'app.quotas' );
     }
 
 }
