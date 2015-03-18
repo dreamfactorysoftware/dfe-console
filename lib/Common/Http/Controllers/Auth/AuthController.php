@@ -30,5 +30,4 @@ class AuthController extends BaseController
 
         $this->middleware( 'guest', ['except' => 'getLogout'] );
     }
-
 }

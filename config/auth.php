@@ -4,7 +4,7 @@
 //******************************************************************************
 
 return [
-    'driver'   => 'eloquent',
+    'driver'   => 'console',
     'model'    => 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\ServiceUser',
     'table'    => 'service_user_t',
     'password' => [

@@ -30,13 +30,15 @@ jQuery(function($) {
 		}
 	})));
 
-	var $_body = $('body');
+	var $_body = $('body'), _of = $_body.css('overflow');
 
 	$('#to-recover').on('click', function() {
-		$_body.css({overflow: 'hidden'});
-		$('#login-form').slideUp();
-		$('#recover-form').fadeIn();
-		$_body.css({overflow: 'auto'});
+		$_body.animate({overflow: 'hidden'}, function() {
+			$('#login-form').slideUp();
+			$('#recover-form').fadeIn();
+		}).done(function() {
+			$_body.css({overflow: _of});
+		});
 	});
 
 	//	Recovery form
@@ -50,9 +52,11 @@ jQuery(function($) {
 	})));
 
 	$('#to-login').on('click', function() {
-		$_body.css({overflow: 'hidden'});
-		$('#recover-form').fadeOut();
-		$('#login-form').slideDown();
-		$_body.css({overflow: 'visible'});
+		$_body.animate({overflow: 'hidden'}, function() {
+			$('#recover-form').fadeOut();
+			$('#login-form').slideDown();
+		}).done(function() {
+			$_body.css({overflow: _of});
+		});
 	});
 });

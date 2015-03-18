@@ -31,7 +31,7 @@
 
                 @if (count($errors) > 0)
                     <div class="alert alert-danger">
-                        <strong>Nope!</strong> The email address and password combination are invalid.<br><br>
+                        <h4>Rut-roh!</h4>
 
                         <ul>
                             @foreach ($errors->all() as $error)
@@ -51,9 +51,9 @@
                             <input type="email"
                                     class="form-control email required"
                                     autofocus
-                                    name="email_addr_text"
+                                    name="email"
                                     placeholder="email address"
-                                    value="{{ old('email_addr_text') }}">
+                                    value="{{ old('email') }}">
                         </div>
                     </div>
 
@@ -61,21 +61,21 @@
                         <div class="input-group">
                             <span class="input-group-addon bg_ly"><i class="fa fa-lock"></i></span>
 
-                            <input class="form-control password required" placeholder="password" name="password_text" type="password" />
+                            <input class="form-control password required" placeholder="password" name="password" type="password" />
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="checkbox">
                             <label>
-                                <input type="checkbox" name="remember">
+                                <input type="checkbox" name="remember_token">
                                 remember me
                             </label>
                         </div>
                     </div>
 
-                    <label class="control-label sr-only" for="_email_addr_text">Email Address</label>
-                    <label class="control-label sr-only" for="_password_text">Password</label>
+                    <label class="control-label sr-only" for="email">Email Address</label>
+                    <label class="control-label sr-only" for="password">Password</label>
 
                     <div class="form-actions">
                         <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Lost password?</a></span>
@@ -100,7 +100,7 @@
                             <input type="email"
                                     class="form-control email required"
                                     autofocus
-                                    name="email_addr_text"
+                                    name="email"
                                     placeholder="email address">
                         </div>
                     </div>

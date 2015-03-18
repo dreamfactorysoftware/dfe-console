@@ -23,6 +23,22 @@ class AppServiceProvider extends ServiceProvider
             'Illuminate\Contracts\Auth\Registrar',
             'DreamFactory\Enterprise\Common\Registrar'
         );
+
+        /**
+         * Add the enterprise provider
+         */
+        $this->app['auth']->extend(
+            'enterprise',
+            function ()
+            {
+                return new EnterpriseUserProvider(
+                    $this->app['config']['db']->connection(),
+                    $this->app['config']['hash'],
+                    $this->app['config']['auth.table']
+                );
+            }
+        );
+
     }
 
 }

@@ -4,6 +4,7 @@
 //******************************************************************************
 
 //  Create the partials application controller
+
 $_path = realpath( dirname( __DIR__ ) );
 $_app = new Illuminate\Foundation\Application( $_path );
 
