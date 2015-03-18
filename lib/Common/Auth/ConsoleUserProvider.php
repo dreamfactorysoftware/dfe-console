@@ -19,19 +19,19 @@ class ConsoleUserProvider extends DatabaseUserProvider
      */
     public function retrieveByCredentials( array $credentials )
     {
-        $query = ServiceUser::();
+        $_query = $this->conn->table( $this->table );
 
         foreach ( $credentials as $key => $value )
         {
             if ( !str_contains( $key, 'password' ) )
             {
-                $query->where( $this->_mapKey( $key ), $value );
+                $_query->where( $this->_mapKey( $key ), $value );
             }
         }
 
-        $_model = $query->first();
+        $_model = $_query->first();
 
-        return $_model ? new ServiceUser( (array)$_model ) : $_model;
+        return $_model ? ServiceUser::find( $_model->id ) : $_model;
     }
 
     /**
@@ -85,7 +85,7 @@ class ConsoleUserProvider extends DatabaseUserProvider
     {
         $_model = $this->conn->table( $this->table )->find( $identifier );
 
-        return $_model ? new ServiceUser( (array)$_model ) : $_model;
+        return $_model ? ServiceUser::find( $_model->id ) : $_model;
     }
 
     /**
@@ -103,7 +103,7 @@ class ConsoleUserProvider extends DatabaseUserProvider
             ->where( 'remember_token', $token )
             ->first();
 
-        return $_model ? new ServiceUser( (array)$_model ) : $_model;
+        return $_model ? ServiceUser::find( $_model->id ) : $_model;
     }
 
 }
