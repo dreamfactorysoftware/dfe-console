@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c4920378218897be7df81c6bf3057cdb",
+    "hash": "eaa20ff4e213f4e350b6f8eb633cd896",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -826,17 +826,17 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "a09f3b4679040eb2028c466328633acdd22c4d1a"
+                "reference": "c1ef2fe4b0c33edc0297e64ee26490634e29d89c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/a09f3b4679040eb2028c466328633acdd22c4d1a",
-                "reference": "a09f3b4679040eb2028c466328633acdd22c4d1a",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/c1ef2fe4b0c33edc0297e64ee26490634e29d89c",
+                "reference": "c1ef2fe4b0c33edc0297e64ee26490634e29d89c",
                 "shasum": ""
             },
             "require": {
                 "dreamfactory/fabric-common": "dev-develop as dev-master",
-                "illuminate/database": "~5.0"
+                "laravel/framework": "~5.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "@stable"
@@ -873,7 +873,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-03-10 23:27:28"
+            "time": "2015-03-18 15:55:11"
         },
         {
             "name": "dreamfactory/fabric-queue",
@@ -1044,72 +1044,6 @@
                 "utility"
             ],
             "time": "2015-03-10 13:55:13"
-        },
-        {
-            "name": "dreamfactory/rave-common",
-            "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:dreamfactorysoftware/rave-common.git",
-                "reference": "076b79d063eba3c8f236ba1a63043f84010e0739"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/rave-common/zipball/076b79d063eba3c8f236ba1a63043f84010e0739",
-                "reference": "076b79d063eba3c8f236ba1a63043f84010e0739",
-                "shasum": ""
-            },
-            "require": {
-                "dreamfactory/php-utils": "dev-develop as dev-master",
-                "php": "~5.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "@stable"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-develop": "0.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "DreamFactory\\Rave\\Common\\": "src/"
-                }
-            },
-            "license": [
-                "Apache-2.0"
-            ],
-            "authors": [
-                {
-                    "name": "Arif Islam",
-                    "email": "arifislam@dreamfactory.com"
-                },
-                {
-                    "name": "Lee Hicks",
-                    "email": "leehicks@dreamfactory.com"
-                },
-                {
-                    "name": "Jerry Ablan",
-                    "email": "jerryablan@dreamfactory.com"
-                }
-            ],
-            "description": "DreamFactory RAVE(tm) Common Components",
-            "homepage": "https://www.dreamfactory.com/",
-            "keywords": [
-                "api",
-                "baas",
-                "dsp",
-                "mbaas",
-                "paas",
-                "rave",
-                "rest"
-            ],
-            "support": {
-                "source": "https://github.com/dreamfactorysoftware/rave-common/tree/develop",
-                "issues": "https://github.com/dreamfactorysoftware/rave-common/issues"
-            },
-            "time": "2015-02-02 19:32:32"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -1361,12 +1295,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "b4abcbc98885e1b339acc7e993d2758d47f01ecc"
+                "reference": "7bfe49415c59aa8b5ccc74697d501b5fe15d100c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/b4abcbc98885e1b339acc7e993d2758d47f01ecc",
-                "reference": "b4abcbc98885e1b339acc7e993d2758d47f01ecc",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/7bfe49415c59aa8b5ccc74697d501b5fe15d100c",
+                "reference": "7bfe49415c59aa8b5ccc74697d501b5fe15d100c",
                 "shasum": ""
             },
             "require": {
@@ -1479,7 +1413,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-17 21:45:31"
+            "time": "2015-03-18 15:18:25"
         },
         {
             "name": "league/flysystem",
@@ -4010,12 +3944,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "0af3326435e98143c808ab73b8e96d016987bbfb"
+                "reference": "ab0bd2250002bcaeed9407a362eeeaf2a78fe060"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/0af3326435e98143c808ab73b8e96d016987bbfb",
-                "reference": "0af3326435e98143c808ab73b8e96d016987bbfb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ab0bd2250002bcaeed9407a362eeeaf2a78fe060",
+                "reference": "ab0bd2250002bcaeed9407a362eeeaf2a78fe060",
                 "shasum": ""
             },
             "require": {
@@ -4077,7 +4011,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-03-16 14:58:13"
+            "time": "2015-03-18 05:42:02"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -4085,12 +4019,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "37e984c0d004800c456658cb08580fdfd26d9c1d"
+                "reference": "55484334fb4c306ed24bfc3bdb0874685c29036f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/37e984c0d004800c456658cb08580fdfd26d9c1d",
-                "reference": "37e984c0d004800c456658cb08580fdfd26d9c1d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/55484334fb4c306ed24bfc3bdb0874685c29036f",
+                "reference": "55484334fb4c306ed24bfc3bdb0874685c29036f",
                 "shasum": ""
             },
             "require": {
@@ -4132,7 +4066,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-03-02 06:02:35"
+            "time": "2015-03-18 09:04:51"
         },
         {
             "name": "sebastian/comparator",
@@ -4658,12 +4592,6 @@
             "alias": "dev-master",
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
-            "package": "dreamfactory/rave-common"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
             "package": "dreamfactory/fabric-common"
         },
         {
@@ -4693,7 +4621,6 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "dreamfactory/rave-common": 20,
         "dreamfactory/fabric-common": 20,
         "dreamfactory/fabric-db": 20,
         "dreamfactory/fabric-audit": 20,

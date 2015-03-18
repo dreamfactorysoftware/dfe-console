@@ -1,7 +1,9 @@
-@extends('layouts.dark-page')
+@extends('layouts.light-page')
 
 @section('page-title')
-    | Nada
+    Nada
 @overwrite
 
-@yield('content')
+@section('content')
+    Content goes here
+@stop

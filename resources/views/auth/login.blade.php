@@ -20,7 +20,7 @@
 @section('content')
     <div id="container-login" class="container-fluid">
         <div class="row">
-            <div class="col-md-offset-3 col-md-6 col-md-offset-3">
+            <div class="col-md-offset-4 col-md-4 col-md-offset-4">
                 <div class="container-logo">
                     <h3><img src="/img/logo-dfe.png" alt="" />
                         <small>DreamFactory Enterprise
@@ -88,7 +88,10 @@
 
                 <form id="recover-form" role="form" action="/password/email" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <h4 style="text-align: left;">We're sorry you have lost your password. Please enter your registered email address below and we will send you instructions on how to reset your password.</h4>
+
+                    <div class="alert alert-info" role="alert">
+                        <p>We're sorry you have lost your password. Please enter your registered email address below and we will send you reset instructions.</p>
+                    </div>
 
                     <div class="form-group">
                         <div class="input-group">

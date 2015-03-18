@@ -11,8 +11,6 @@
 </head>
 <body class="@yield('body-class')">
 
-<div id="loading-overlay" style="display: none;">Loading...</div>
-
 @include('layouts.partials.navbar')
 
 <div class="container-fluid">

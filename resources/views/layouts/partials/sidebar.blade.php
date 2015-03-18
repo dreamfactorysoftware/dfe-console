@@ -5,7 +5,7 @@ $_uri = URL::getRequest()->getRequestUri();
     <ul class="nav nav-sidebar">
         <li role="presentation" class="dropdown-header">Operations</li>
         <li role="presentation" {{ '/' == $_uri ? ' class="active"' : null }}>
-            <a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+            <a href="/app/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
         </li>
         <li role="presentation" {{ '/app/support' == $_uri ? ' class="active"' : null }}>
             <a href="/app/alerts"><i class="fa fa-bell fa-fw"></i> Alerts</a>

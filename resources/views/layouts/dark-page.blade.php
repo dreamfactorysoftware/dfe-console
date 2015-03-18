@@ -11,7 +11,7 @@
 </head>
 <body class="@yield('body-class')">
 
-@yield('body-content')
+@yield('content')
 
 @section('before-body-scripts')
 @show

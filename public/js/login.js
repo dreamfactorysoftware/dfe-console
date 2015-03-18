@@ -30,10 +30,13 @@ jQuery(function($) {
 		}
 	})));
 
+	var $_body = $('body');
+
 	$('#to-recover').on('click', function() {
-		$('body').css({overflow: 'hidden'}).animate({marginTop: '25px'});
+		$_body.css({overflow: 'hidden'});
 		$('#login-form').slideUp();
 		$('#recover-form').fadeIn();
+		$_body.css({overflow: 'auto'});
 	});
 
 	//	Recovery form
@@ -47,11 +50,9 @@ jQuery(function($) {
 	})));
 
 	$('#to-login').on('click', function() {
+		$_body.css({overflow: 'hidden'});
 		$('#recover-form').fadeOut();
-		$('body').animate({
-			marginTop: 0,
-			overflow:  'visible'
-		});
 		$('#login-form').slideDown();
+		$_body.css({overflow: 'visible'});
 	});
 });

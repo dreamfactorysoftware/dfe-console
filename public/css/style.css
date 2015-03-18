@@ -87,11 +87,19 @@ body {
 #sidebar-collapse > ul > li > a {
 	padding-right: 20px;
 	padding-left:  20px;
+	border-radius: 4px
+}
+
+#sidebar-collapse > ul > li > a:hover,
+#sidebar-collapse > ul > li > a:focus,
+#sidebar-collapse > ul > li > a:active {
+	background-color: rgba(0, 149, 135, 0.1);
+	color:            #007567;
 }
 
 #sidebar-collapse > ul > li.active > a {
-	background-color: rgba(0, 0, 0, .1);
-	border-radius:     4px
+	background-color: rgba(32, 149, 135, 0.1);
+	color:            #006557;
 }
 
 .tab-header {
@@ -238,22 +246,6 @@ body.body-404 .main {
 	color:    #ebebeb;
 }
 
-#loading-overlay {
-	display:          block;
-	position:         absolute;
-	top:              0;
-	left:             0;
-	background-color: rgba(0, 0, 0, .75);
-	text-align:       center;
-	color:            rgba(255, 255, 255, 1);
-	font-size:        33px;
-	width:            100%;
-	height:           100%;
-	cursor:           wait;
-	padding-top:      25%;
-	z-index:          1000;
-}
-
 /*------------------------------------------------------------------------------*/
 /* filter && search                                                             */
 /*------------------------------------------------------------------------------*/
@@ -366,3 +358,4 @@ table.dataTable thead th {
 		/* padding: 10px 15px; */
 	}
 }
+

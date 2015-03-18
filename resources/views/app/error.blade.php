@@ -1,4 +1,4 @@
-@extends('layouts.dark-page')
+@extends('layouts.dashboard-page')
 
 @section('body-class')
     error-wrapper
