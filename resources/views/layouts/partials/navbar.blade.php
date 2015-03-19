@@ -3,10 +3,7 @@
 
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+                <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/"><img src="/img/logo-dreamfactory-inverse.png" alt=""></a>
         </div>
@@ -16,11 +13,10 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle user-info" data-toggle="dropdown">
                         <div class="dropdown avatar img-circle ">
-                            <div class="avatar-image" data-hash="{{ '$_user["hash"]' }}"></div>
+                            <div class="avatar-image" data-hash="{!! md5(\Auth::user()->email_addr_text) !!}"></div>
                         </div>
                         <div class="user-mini pull-right">
-                            <span>{!! \Auth::user()->name !!}</span>
-                            <span class="caret"></span>
+                            <span>{!! \Auth::user()->email_addr_text !!}</span> <span class="caret"></span>
                         </div>
                     </a>
 

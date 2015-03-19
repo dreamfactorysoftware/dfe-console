@@ -1413,12 +1413,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7bfe49415c59aa8b5ccc74697d501b5fe15d100c"
+                "reference": "8e7adc7fc2047a666c6c344b23e2613bd3708d15"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7bfe49415c59aa8b5ccc74697d501b5fe15d100c",
-                "reference": "7bfe49415c59aa8b5ccc74697d501b5fe15d100c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/8e7adc7fc2047a666c6c344b23e2613bd3708d15",
+                "reference": "8e7adc7fc2047a666c6c344b23e2613bd3708d15",
                 "shasum": ""
             },
             "require": {
@@ -1531,7 +1531,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-18 15:18:25"
+            "time": "2015-03-19 14:06:46"
         },
         {
             "name": "league/flysystem",
@@ -3818,12 +3818,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "74cf128bd0f643957c076cc67121dbff445755fe"
+                "reference": "4676604b851bfc6fc02bf3394bf350c727bcebf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/74cf128bd0f643957c076cc67121dbff445755fe",
-                "reference": "74cf128bd0f643957c076cc67121dbff445755fe",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/4676604b851bfc6fc02bf3394bf350c727bcebf4",
+                "reference": "4676604b851bfc6fc02bf3394bf350c727bcebf4",
                 "shasum": ""
             },
             "require": {
@@ -3872,7 +3872,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-03-06 11:27:25"
+            "time": "2015-03-19 05:49:08"
         },
         {
             "name": "phpunit/php-file-iterator",
