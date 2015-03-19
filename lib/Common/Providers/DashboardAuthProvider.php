@@ -1,9 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Common\Providers;
 
-use DreamFactory\Enterprise\Common\Auth\ConsoleUserProvider;
+use DreamFactory\Enterprise\Common\Auth\DashboardUserProvider;
 use Illuminate\Support\ServiceProvider;
 
-class ConsoleAuthProvider extends ServiceProvider
+class DashboardAuthProvider extends ServiceProvider
 {
     //******************************************************************************
     //* Methods
@@ -13,10 +13,10 @@ class ConsoleAuthProvider extends ServiceProvider
     public function boot()
     {
         $this->app['auth']->extend(
-            'console',
+            'end-user',
             function ()
             {
-                return new ConsoleUserProvider( $this->app['db']->connection(), $this->app['hash'], config( 'auth.table', 'service_user_t' ) );
+                return new DashboardUserProvider( $this->app['db']->connection(), $this->app['hash'], 'user_t' );
             }
         );
     }

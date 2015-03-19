@@ -122,4 +122,5 @@ class PasswordController extends BaseController
                     ->withErrors( ['email' => trans( $response )] );
         }
     }
+
 }

@@ -13,7 +13,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle user-info" data-toggle="dropdown">
                         <div class="dropdown avatar img-circle ">
-                            <div class="avatar-image" data-hash="{!! md5(\Auth::user()->email_addr_text) !!}"></div>
+                            <div class="avatar-image" data-hash="{{ md5(\Auth::user()->email_addr_text) }}"></div>
                         </div>
                         <div class="user-mini pull-right">
                             <span>{!! \Auth::user()->email_addr_text !!}</span> <span class="caret"></span>

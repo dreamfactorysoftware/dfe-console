@@ -4,6 +4,7 @@
 //******************************************************************************
 
 return [
+    'version'      => 'v1.0.0-alpha',
     'provisioning' => [
         //  Storage & storage layout options/settings
         'storage-zone-type'           => 'static',          //  Either "static" or "dynamic"

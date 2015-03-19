@@ -87,7 +87,7 @@ body {
 #sidebar-collapse > ul > li > a {
 	padding-right: 20px;
 	padding-left:  20px;
-	/*border-radius: 4px*/
+	border-radius: 2px
 }
 
 #sidebar-collapse > ul > li > a:hover {
@@ -98,8 +98,8 @@ body {
 #sidebar-collapse > ul > li > a:focus,
 #sidebar-collapse > ul > li > a:active {
 	background-color: rgba(0, 149, 135, 0.05);
-	color:            #005547;
 	box-shadow:       0 1px 4px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
+	color:            #005547;
 }
 
 #sidebar-collapse > ul > li.active > a {
@@ -341,7 +341,13 @@ table.dataTable thead th {
 }
 
 .alert-rounded {
-	border-radius: 4px;
+	border-radius: 2px;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+	background-color: rgba(0, 149, 135, 0.05);
+	box-shadow:       0 1px 4px rgba(0, 0, 0, .12), 0 1px 4px rgba(0, 0, 0, .12);
+	color:            #005547;
 }
 
 /*------------------------------------------------------------------------------*/

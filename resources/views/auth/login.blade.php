@@ -16,8 +16,7 @@
             <div class="col-md-offset-4 col-md-4 col-md-offset-4">
                 <div class="container-logo">
                     <h3><img src="/img/logo-dfe.png" alt="" />
-                        <small>DreamFactory Enterprise
-                            <span>v1.0.x-alpha</span>
+                        <small>DreamFactory Enterprise <span>{{ \Config::get('dfe.version') }}</span>
                         </small>
                     </h3>
                 </div>
@@ -45,11 +44,11 @@
                             <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
 
                             <input type="email"
-                                    class="form-control email required"
-                                    autofocus
-                                    name="email"
-                                    placeholder="email address"
-                                    value="{{ old('email') }}">
+                                   class="form-control email required"
+                                   autofocus
+                                   name="email"
+                                   placeholder="email address"
+                                   value="{{ old('email') }}">
                         </div>
                     </div>
 
@@ -74,39 +73,12 @@
                     <label class="control-label sr-only" for="password">Password</label>
 
                     <div class="form-actions">
-                        <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Lost password?</a></span>
+                        <span class="pull-left"><a href="/password/email" class="btn btn-info">Lost password?</a></span>
 
                         <span class="pull-right"><button type="submit" class="btn btn-success">Login</button></span>
                     </div>
 
                     <input type="hidden" name="recover" value="0">
-                </form>
-
-                <form id="recover-form" role="form" action="/password/email" method="POST">
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                    <div class="alert alert-info" role="alert">
-                        <p>We're sorry you have lost your password. Please enter your registered email address below and we will send you reset instructions.</p>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="input-group">
-                            <span class="input-group-addon bg_lg"><i class="fa fa-user"></i></span>
-
-                            <input type="email"
-                                    class="form-control email required"
-                                    autofocus
-                                    name="email"
-                                    placeholder="email address">
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <span class="pull-left"><a href="#" class="flip-link btn btn-success" id="to-login">&laquo; Back to login</a></span>
-                        <span class="pull-right"><button class="btn btn-info" type="submit">Recover</button></span>
-                    </div>
-
-                    <input type="hidden" name="recover" value="1">
                 </form>
             </div>
         </div>
