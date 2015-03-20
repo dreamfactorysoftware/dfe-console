@@ -68,7 +68,7 @@ return [
             //  Where the cluster MySQL snapshot script is located
             'location' => base_path() . '/app/scripts/snapshot_mysql.sh',
             //  Which user to impersonate when running script
-            'user'     => env( 'OS_SCRIPT_USER', 'jablan' ),
+            'user'     => env( 'DFE_SCRIPT_USER', 'jablan' ),
         ],
         //  The value to place in the meta data's "type" field
         'metadata-type'  => 'dfe.snapshot',
