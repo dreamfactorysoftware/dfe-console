@@ -9,24 +9,11 @@
       <excludeFolder url="file://$MODULE_DIR$/storage" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/storage" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/config" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/database" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/resources" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/storage" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/tests" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-services/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/tests" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
