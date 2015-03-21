@@ -27,7 +27,7 @@
 		},
 		{
 			"type": "vcs",
-			"url":  "git@github.com:dreamfactorysoftware/fabric-queue.git"
+			"url":  "git@github.com:dreamfactorysoftware/dfe-common.git"
 		}
 	],
 	"type":              "project",
@@ -39,6 +39,7 @@
 		"ruflin/elastica":             "*",
 		"wpb/string-blade-compiler":   "2.*@dev",
 		"dreamfactory/php-utils":      "*",
+		"dreamfactory/dfe-common":     "dev-develop as dev-master",
 		"dreamfactory/fabric-common":  "dev-develop as dev-master",
 		"dreamfactory/fabric-db":      "dev-develop as dev-master",
 		"dreamfactory/fabric-audit":   "dev-develop as dev-master",
@@ -53,8 +54,8 @@
 	},
 	"autoload":          {
 		"psr-4": {
-			"DreamFactory\\Enterprise\\":          "lib/",
-			"DreamFactory\\Enterprise\\Console\\": "app/"
+			"DreamFactory\\Enterprise\\Console\\":  "app/",
+			"DreamFactory\\Enterprise\\Services\\": "lib/Services/"
 		}
 	},
 	"autoload-dev":      {

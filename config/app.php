@@ -41,11 +41,11 @@ return [
         /** Application Service Providers... */
         'DreamFactory\\Enterprise\\Console\\Providers\\AppServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\BusServiceProvider',
-        'DreamFactory\\Enterprise\\Common\\Providers\\ConfigServiceProvider',
-        'DreamFactory\\Enterprise\\Common\\Providers\\EventServiceProvider',
-        'DreamFactory\\Enterprise\\Common\\Providers\\RouteServiceProvider',
+        'DreamFactory\\Enterprise\\Console\\Providers\\ConfigServiceProvider',
+        'DreamFactory\\Enterprise\\Console\\Providers\\EventServiceProvider',
+        'DreamFactory\\Enterprise\\Console\\Providers\\RouteServiceProvider',
         /** DreamFactory Common service providers */
-        'DreamFactory\\Enterprise\\Common\\Providers\\ConsoleAuthProvider',
+        'DreamFactory\\Enterprise\\Common\\Providers\\Auth\\ConsoleAuthProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',

@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Console;
+<?php namespace DreamFactory\Enterprise\Console\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;

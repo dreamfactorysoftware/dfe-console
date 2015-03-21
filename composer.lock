@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3892c689f52fd0f8a91889cfad27f0b7",
+    "hash": "2298b794e35c1bc376234fb8ed9647a6",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -224,321 +224,6 @@
             "time": "2014-12-23 22:40:37"
         },
         {
-            "name": "doctrine/cache",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/cache.git",
-                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
-                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "conflict": {
-                "doctrine/common": ">2.2,<2.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": ">=3.7",
-                "predis/predis": "~1.0",
-                "satooshi/php-coveralls": "~0.6"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.5.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Cache\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Caching library offering an object-oriented API for many cache backends",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "cache",
-                "caching"
-            ],
-            "time": "2015-02-16 12:24:01"
-        },
-        {
-            "name": "doctrine/collections",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/collections.git",
-                "reference": "c63f2e637c6ac759d83002906c30e6c96d91e5f3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/collections/zipball/c63f2e637c6ac759d83002906c30e6c96d91e5f3",
-                "reference": "c63f2e637c6ac759d83002906c30e6c96d91e5f3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Collections\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Collections Abstraction library",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "array",
-                "collections",
-                "iterator"
-            ],
-            "time": "2015-01-21 05:12:54"
-        },
-        {
-            "name": "doctrine/common",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/common.git",
-                "reference": "23cdbfae8d673d79bb06790a126c96f8b648a052"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/23cdbfae8d673d79bb06790a126c96f8b648a052",
-                "reference": "23cdbfae8d673d79bb06790a126c96f8b648a052",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/annotations": "1.*",
-                "doctrine/cache": "1.*",
-                "doctrine/collections": "1.*",
-                "doctrine/inflector": "1.*",
-                "doctrine/lexer": "1.*",
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.7"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.5.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
-                }
-            ],
-            "description": "Common Library for Doctrine projects",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "annotations",
-                "collections",
-                "eventmanager",
-                "persistence",
-                "spl"
-            ],
-            "time": "2015-03-15 09:03:43"
-        },
-        {
-            "name": "doctrine/couchdb",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/couchdb-client.git",
-                "reference": "9f92d8e5a2d400fd98542e8a70ecf85be1df4fe2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/couchdb-client/zipball/9f92d8e5a2d400fd98542e8a70ecf85be1df4fe2",
-                "reference": "9f92d8e5a2d400fd98542e8a70ecf85be1df4fe2",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/common": "@stable",
-                "php": ">=5.3.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\CouchDB": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Lukas Kahwe Smith",
-                    "email": "smith@pooteeweet.org"
-                }
-            ],
-            "description": "CouchDB Client",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "couchdb",
-                "persistence"
-            ],
-            "time": "2015-02-25 17:30:36"
-        },
-        {
-            "name": "doctrine/couchdb-odm",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/couchdb-odm.git",
-                "reference": "827024181ca9d531911e343ef296e05c103b4b37"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/couchdb-odm/zipball/827024181ca9d531911e343ef296e05c103b4b37",
-                "reference": "827024181ca9d531911e343ef296e05c103b4b37",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/common": "~2.2",
-                "doctrine/couchdb": "dev-master",
-                "php": ">=5.3.2",
-                "symfony/console": ">=2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "@stable",
-                "symfony/yaml": "~2.0"
-            },
-            "suggest": {
-                "symfony/yaml": "If you want to use YAML Mappings"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\ODM\\CouchDB": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Lukas Kahwe Smith",
-                    "email": "smith@pooteeweet.org"
-                }
-            ],
-            "description": "CouchDB Document Object Mapper",
-            "homepage": "http://www.doctrine-project.org",
-            "keywords": [
-                "couchdb",
-                "persistence"
-            ],
-            "time": "2014-05-14 09:31:38"
-        },
-        {
             "name": "doctrine/inflector",
             "version": "dev-master",
             "source": {
@@ -714,6 +399,68 @@
             "time": "2015-02-05 16:35:43"
         },
         {
+            "name": "dreamfactory/dfe-common",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
+                "reference": "96a83dec68d19b6224f4e19de7dacd69f920ea2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/96a83dec68d19b6224f4e19de7dacd69f920ea2f",
+                "reference": "96a83dec68d19b6224f4e19de7dacd69f920ea2f",
+                "shasum": ""
+            },
+            "require": {
+                "dreamfactory/fabric-db": "dev-develop as dev-master",
+                "league/flysystem-sftp": "*",
+                "league/flysystem-ziparchive": "*",
+                "wpb/string-blade-compiler": "2.*@dev"
+            },
+            "require-dev": {
+                "dreamfactory/fabric-audit": "dev-develop as dev-master",
+                "dreamfactory/fabric-common": "dev-develop as dev-master",
+                "laravel/framework": "5.0.*",
+                "phpspec/phpspec": "~2.1",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DreamFactory\\Enterprise\\Common\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Jerry Ablan",
+                    "email": "jerryablan@dreamfactory.com"
+                }
+            ],
+            "description": "DreamFactory Enterprise(tm) Common Components",
+            "homepage": "https://www.dreamfactory.com/",
+            "keywords": [
+                "common",
+                "dreamfactory",
+                "fabric",
+                "queue",
+                "utility"
+            ],
+            "support": {
+                "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
+                "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
+            },
+            "time": "2015-03-21 20:50:36"
+        },
+        {
             "name": "dreamfactory/fabric-audit",
             "version": "dev-develop",
             "source": {
@@ -874,125 +621,6 @@
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
             "time": "2015-03-18 22:40:43"
-        },
-        {
-            "name": "dreamfactory/fabric-queue",
-            "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:dreamfactorysoftware/fabric-queue.git",
-                "reference": "172fa36e3de3f005c2bbcd5585f91c20d1f158eb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-queue/zipball/172fa36e3de3f005c2bbcd5585f91c20d1f158eb",
-                "reference": "172fa36e3de3f005c2bbcd5585f91c20d1f158eb",
-                "shasum": ""
-            },
-            "require": {
-                "dreamfactory/fabric-audit": "dev-develop as dev-master",
-                "dreamfactory/fabric-common": "dev-develop as dev-master",
-                "dreamfactory/fabric-db": "dev-develop as dev-master",
-                "dreamfactory/fabric-queue-models": "dev-develop as dev-master"
-            },
-            "require-dev": {
-                "doctrine/couchdb": "*",
-                "doctrine/couchdb-odm": "*",
-                "dreamfactory/fabric-couchdb": "dev-develop as dev-master",
-                "phpunit/phpunit": "@stable"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-develop": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "DreamFactory\\Library\\Fabric\\Queue\\": "src/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Jerry Ablan",
-                    "email": "jerryablan@dreamfactory.com"
-                }
-            ],
-            "description": "DreamFactory Enterprise(tm) Queue Utility Library",
-            "homepage": "https://www.dreamfactory.com/",
-            "keywords": [
-                "dreamfactory",
-                "fabric",
-                "queue",
-                "utility"
-            ],
-            "support": {
-                "source": "https://github.com/dreamfactorysoftware/fabric-queue/tree/develop",
-                "issues": "https://github.com/dreamfactorysoftware/fabric-queue/issues"
-            },
-            "time": "2015-02-09 18:36:20"
-        },
-        {
-            "name": "dreamfactory/fabric-queue-models",
-            "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:dreamfactorysoftware/fabric-queue-models.git",
-                "reference": "a4e8c3c725237fb95b84973390a6140e799b805d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-queue-models/zipball/a4e8c3c725237fb95b84973390a6140e799b805d",
-                "reference": "a4e8c3c725237fb95b84973390a6140e799b805d",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/couchdb-odm": "*",
-                "kisma/kisma": "~0.2",
-                "php": "~5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~3.7"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-develop": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "DreamFactory\\Library\\Fabric\\Queue\\Models\\": "src/",
-                    "DreamFactory\\Documents\\": "src/Documents/"
-                }
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Jerry Ablan",
-                    "email": "jerryablan@dreamfactory.com"
-                }
-            ],
-            "description": "DreamFactory Enterprise(tm) Queue Document Models",
-            "homepage": "https://www.dreamfactory.com/",
-            "keywords": [
-                "couchdb",
-                "dreamfactory",
-                "fabric",
-                "model",
-                "queue",
-                "utility"
-            ],
-            "support": {
-                "source": "https://github.com/dreamfactorysoftware/fabric-queue-models/tree/develop",
-                "issues": "https://github.com/dreamfactorysoftware/fabric-queue-models/issues"
-            },
-            "time": "2014-12-11 01:48:52"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -1348,64 +976,6 @@
                 "tokenizer"
             ],
             "time": "2015-03-11 20:06:43"
-        },
-        {
-            "name": "kisma/kisma",
-            "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lucifurious/kisma.git",
-                "reference": "b402c1b29363cba8af14398fc784b0088f491ee9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lucifurious/kisma/zipball/b402c1b29363cba8af14398fc784b0088f491ee9",
-                "reference": "b402c1b29363cba8af14398fc784b0088f491ee9",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/cache": "*",
-                "monolog/monolog": "*",
-                "php": "~5.3",
-                "symfony/event-dispatcher": "~2.4",
-                "symfony/http-foundation": "~2.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "@stable"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-develop": "0.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Kisma\\": "src/Kisma"
-                },
-                "files": [
-                    "src/autoload.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jerry Ablan",
-                    "email": "getkisma@gmail.com"
-                }
-            ],
-            "description": "PHP Utility Belt",
-            "homepage": "https://github.com/kisma/kisma",
-            "keywords": [
-                "library",
-                "php",
-                "php5",
-                "utility"
-            ],
-            "time": "2015-01-29 16:17:45"
         },
         {
             "name": "laravel/framework",
@@ -3465,6 +3035,215 @@
             "time": "2015-03-17 09:13:32"
         },
         {
+            "name": "doctrine/cache",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/cache.git",
+                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
+                "reference": "6c5c32eb6c596993d04e13b95d0c1e8153783d7a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "conflict": {
+                "doctrine/common": ">2.2,<2.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.7",
+                "predis/predis": "~1.0",
+                "satooshi/php-coveralls": "~0.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Cache\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Caching library offering an object-oriented API for many cache backends",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "cache",
+                "caching"
+            ],
+            "time": "2015-02-16 12:24:01"
+        },
+        {
+            "name": "doctrine/collections",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/collections.git",
+                "reference": "c63f2e637c6ac759d83002906c30e6c96d91e5f3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/collections/zipball/c63f2e637c6ac759d83002906c30e6c96d91e5f3",
+                "reference": "c63f2e637c6ac759d83002906c30e6c96d91e5f3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\Collections\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Collections Abstraction library",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "array",
+                "collections",
+                "iterator"
+            ],
+            "time": "2015-01-21 05:12:54"
+        },
+        {
+            "name": "doctrine/common",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/common.git",
+                "reference": "23cdbfae8d673d79bb06790a126c96f8b648a052"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/23cdbfae8d673d79bb06790a126c96f8b648a052",
+                "reference": "23cdbfae8d673d79bb06790a126c96f8b648a052",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "1.*",
+                "doctrine/cache": "1.*",
+                "doctrine/collections": "1.*",
+                "doctrine/inflector": "1.*",
+                "doctrine/lexer": "1.*",
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~3.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Doctrine\\Common\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                }
+            ],
+            "description": "Common Library for Doctrine projects",
+            "homepage": "http://www.doctrine-project.org",
+            "keywords": [
+                "annotations",
+                "collections",
+                "eventmanager",
+                "persistence",
+                "spl"
+            ],
+            "time": "2015-03-15 09:03:43"
+        },
+        {
             "name": "doctrine/dbal",
             "version": "dev-master",
             "source": {
@@ -4710,6 +4489,12 @@
             "alias": "dev-master",
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
+            "package": "dreamfactory/dfe-common"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
             "package": "dreamfactory/fabric-common"
         },
         {
@@ -4729,22 +4514,16 @@
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
             "package": "dreamfactory/console-tools"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/fabric-queue"
         }
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "wpb/string-blade-compiler": 20,
+        "dreamfactory/dfe-common": 20,
         "dreamfactory/fabric-common": 20,
         "dreamfactory/fabric-db": 20,
         "dreamfactory/fabric-audit": 20,
-        "dreamfactory/console-tools": 20,
-        "dreamfactory/fabric-queue": 20,
-        "wpb/string-blade-compiler": 20
+        "dreamfactory/console-tools": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
