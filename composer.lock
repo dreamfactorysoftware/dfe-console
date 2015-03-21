@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3066089278fd16b907177fa3f41a7100",
+    "hash": "3892c689f52fd0f8a91889cfad27f0b7",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1000,12 +1000,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/php-utils.git",
-                "reference": "8f3acc8d23b84d00ce52a6346bb74d6dc13dbc3c"
+                "reference": "7040462f92922b8cf2ed689656f1c69cfb432391"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/8f3acc8d23b84d00ce52a6346bb74d6dc13dbc3c",
-                "reference": "8f3acc8d23b84d00ce52a6346bb74d6dc13dbc3c",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/7040462f92922b8cf2ed689656f1c69cfb432391",
+                "reference": "7040462f92922b8cf2ed689656f1c69cfb432391",
                 "shasum": ""
             },
             "require": {
@@ -1043,7 +1043,7 @@
                 "dreamfactory",
                 "utility"
             ],
-            "time": "2015-03-10 13:55:13"
+            "time": "2015-03-20 21:20:31"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1413,12 +1413,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "662021f52144c2142631b4f35b5cfefada13c26c"
+                "reference": "b21be29a1fb12c84ab4e0b723e9c11492d0b25fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/662021f52144c2142631b4f35b5cfefada13c26c",
-                "reference": "662021f52144c2142631b4f35b5cfefada13c26c",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/b21be29a1fb12c84ab4e0b723e9c11492d0b25fe",
+                "reference": "b21be29a1fb12c84ab4e0b723e9c11492d0b25fe",
                 "shasum": ""
             },
             "require": {
@@ -1531,7 +1531,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-20 13:36:32"
+            "time": "2015-03-21 16:10:01"
         },
         {
             "name": "league/flysystem",
@@ -1539,12 +1539,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "51cd7cd7ee0defbaafc6ec0d3620110a5d71e11a"
+                "reference": "df47acdaefcff755cb6f15abd2e4735a2a9fad5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/51cd7cd7ee0defbaafc6ec0d3620110a5d71e11a",
-                "reference": "51cd7cd7ee0defbaafc6ec0d3620110a5d71e11a",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/df47acdaefcff755cb6f15abd2e4735a2a9fad5c",
+                "reference": "df47acdaefcff755cb6f15abd2e4735a2a9fad5c",
                 "shasum": ""
             },
             "require": {
@@ -1614,7 +1614,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-03-10 11:04:14"
+            "time": "2015-03-21 13:33:54"
         },
         {
             "name": "league/flysystem-sftp",
@@ -1878,12 +1878,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "592836c4dc9ca96e8843ed96fd1cac82a74c4df1"
+                "reference": "8982315b4e1fb19397c888223b43fa341c36dd0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/592836c4dc9ca96e8843ed96fd1cac82a74c4df1",
-                "reference": "592836c4dc9ca96e8843ed96fd1cac82a74c4df1",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8982315b4e1fb19397c888223b43fa341c36dd0b",
+                "reference": "8982315b4e1fb19397c888223b43fa341c36dd0b",
                 "shasum": ""
             },
             "require": {
@@ -1915,7 +1915,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-03-14 18:53:08"
+            "time": "2015-03-21 17:57:55"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -2064,12 +2064,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "5e4b588609607d8d7bc60c28ae1cbc6eb6b08daa"
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/5e4b588609607d8d7bc60c28ae1cbc6eb6b08daa",
-                "reference": "5e4b588609607d8d7bc60c28ae1cbc6eb6b08daa",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/19976b103ffe7db82c1d1e923626b1589ac4ef7d",
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d",
                 "shasum": ""
             },
             "require": {
@@ -2127,7 +2127,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-03-17 15:18:22"
+            "time": "2015-03-21 09:21:46"
         },
         {
             "name": "ruflin/elastica",
@@ -2135,12 +2135,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "a163767b78052647a74afc187afb38e9fb60db60"
+                "reference": "12f7fdda14da27f0f15a379da5267d514a9e2b77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/a163767b78052647a74afc187afb38e9fb60db60",
-                "reference": "a163767b78052647a74afc187afb38e9fb60db60",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/12f7fdda14da27f0f15a379da5267d514a9e2b77",
+                "reference": "12f7fdda14da27f0f15a379da5267d514a9e2b77",
                 "shasum": ""
             },
             "require": {
@@ -2186,7 +2186,7 @@
                 "client",
                 "search"
             ],
-            "time": "2015-03-18 21:28:56"
+            "time": "2015-03-21 10:34:02"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3758,12 +3758,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "26530c5a425c6f67c9fe4fa10a3773adc96c418d"
+                "reference": "07606749da971eda75434814a313ed0ce6790f6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/26530c5a425c6f67c9fe4fa10a3773adc96c418d",
-                "reference": "26530c5a425c6f67c9fe4fa10a3773adc96c418d",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/07606749da971eda75434814a313ed0ce6790f6a",
+                "reference": "07606749da971eda75434814a313ed0ce6790f6a",
                 "shasum": ""
             },
             "require": {
@@ -3810,7 +3810,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-03-13 14:15:05"
+            "time": "2015-03-20 17:41:29"
         },
         {
             "name": "phpunit/php-code-coverage",

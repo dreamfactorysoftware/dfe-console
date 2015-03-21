@@ -19,10 +19,6 @@
 	"repositories":      [
 		{
 			"type": "vcs",
-			"url":  "git@github.com:dreamfactorysoftware/rave-common.git"
-		},
-		{
-			"type": "vcs",
 			"url":  "git@github.com:dreamfactorysoftware/fabric-common.git"
 		},
 		{
@@ -32,30 +28,21 @@
 		{
 			"type": "vcs",
 			"url":  "git@github.com:dreamfactorysoftware/fabric-queue.git"
-		},
-		{
-			"type": "vcs",
-			"url":  "git@github.com:dreamfactorysoftware/fabric-queue-models.git"
-		},
-		{
-			"type": "vcs",
-			"url":  "git@github.com:dreamfactorysoftware/fabric-couchdb.git"
 		}
 	],
 	"type":              "project",
 	"require":           {
+		"laravel/framework":           "5.0.*",
+		"guzzlehttp/guzzle":           "~4.0",
+		"league/flysystem-sftp":       "*",
+		"league/flysystem-ziparchive": "*",
+		"ruflin/elastica":             "*",
+		"wpb/string-blade-compiler":   "2.*@dev",
 		"dreamfactory/php-utils":      "*",
 		"dreamfactory/fabric-common":  "dev-develop as dev-master",
 		"dreamfactory/fabric-db":      "dev-develop as dev-master",
 		"dreamfactory/fabric-audit":   "dev-develop as dev-master",
-		"dreamfactory/console-tools":  "dev-develop as dev-master",
-		"dreamfactory/fabric-queue":   "dev-develop as dev-master",
-		"guzzlehttp/guzzle":           "~4.0",
-		"laravel/framework":           "5.0.*",
-		"league/flysystem-sftp":       "*",
-		"league/flysystem-ziparchive": "*",
-		"ruflin/elastica":             "*",
-		"wpb/string-blade-compiler":   "2.*@dev"
+		"dreamfactory/console-tools":  "dev-develop as dev-master"
 	},
 	"require-dev":       {
 		"barryvdh/laravel-ide-helper": "~2.0",
