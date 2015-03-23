@@ -1,4 +1,4 @@
-@extends('layouts.dashboard-page')
+@extends('layouts.main')
 
 @section('body-class')
     error-wrapper

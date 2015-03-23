@@ -15,11 +15,11 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-md-3 sidebar">
-            @include('layouts.partials.sidebar')
+		<div class="col-sm-3 col-md-2 sidebar">
+			@include('layouts.partials.otf-sidebar')
         </div>
 
-        <div id="content" class="col-sm-9 col-md-9 main">
+		<div id="content" class="col-sm-9 col-md-10 main">
             @yield('content')
         </div>
     </div>
@@ -30,7 +30,7 @@
 @section('before-body-scripts')
 @show
 
-@include('layouts.partials.body-scripts-main')
+@include('layouts.partials.body-scripts')
 
 @section('before-app-scripts')
 @show

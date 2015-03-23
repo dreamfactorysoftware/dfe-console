@@ -25,7 +25,7 @@ $_html = null;
 // Build the sidebars
 foreach ( $_sidebar as $_sectionTitle => $_section )
 {
-    $_html .= '<ul class="nav nav-sidebar"><li class="dropdown-header">' . $_sectionTitle . '</li>';
+    $_html .= '<ul class="nav nav-sidebar nav-tabs nav-stacked"><li class="dropdown-header">' . $_sectionTitle . '</li>';
 
     foreach ( $_section as $_itemTitle => $_item )
     {

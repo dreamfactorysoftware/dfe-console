@@ -1,4 +1,4 @@
-@extends('layouts.dashboard-page')
+@extends('layouts.main')
 
 @section('page-title')
 	Nada

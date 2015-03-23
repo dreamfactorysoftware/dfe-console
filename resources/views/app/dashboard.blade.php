@@ -1,4 +1,4 @@
-@extends('layouts.dashboard-page')
+@extends('layouts.main')
 
 @section('page-title')
     Dashboard
@@ -7,6 +7,8 @@
 @section('before-app-scripts')
     @parent
     <script src="/static/highcharts/4.0.4/highcharts.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 @stop
 
 @section('after-app-scripts')
