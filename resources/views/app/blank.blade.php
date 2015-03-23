@@ -1,9 +1,9 @@
-@extends('layouts.light-page')
+@extends('layouts.dashboard-page')
 
 @section('page-title')
-    Nada
+	Nada
 @overwrite
 
 @section('content')
-    Content goes here
+	Content goes here
 @stop

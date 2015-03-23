@@ -67,12 +67,14 @@
 		"post-install-cmd": [
 			"php artisan clear-compiled",
 			"php artisan ide-helper:generate",
-			"php artisan optimize"
+			"php artisan optimize",
+			"php artisan vendor:publish"
 		],
 		"post-update-cmd":  [
 			"php artisan clear-compiled",
 			"php artisan ide-helper:generate",
-			"php artisan optimize"
+			"php artisan optimize",
+			"php artisan vendor:publish"
 		]
 	},
 	"config":            {
