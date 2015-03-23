@@ -1,28 +1,25 @@
 <?php
 /**
  * Configuration file for the dfe-common library
- * Access via config key "dfe.common"
  */
 use DreamFactory\Enterprise\Common\Enums\MailTemplates;
 
 return [
-    //******************************************************************************
-    //* General
-    //******************************************************************************
+    /** Global options */
     'display-name'    => 'Admin Console',
     'display-version' => 'v1.0.x-alpha',
-    //******************************************************************************
-    //* Mail template service
-    //******************************************************************************
+    /** auth options */
+    'auth'            => [
+        'theme' => 'darkly',
+    ],
+    /** mail template options */
     'mail-template'   => [
         'web-url'               => 'http://cerberus.fabric.dreamfactory.com/',
         'public-url'            => 'http://cerberus.fabric.dreamfactory.com/',
         'support-email-address' => 'support@dreamfactory.com',
         'confirmation-url'      => 'http://cerberus.fabric.dreamfactory.com/app/confirmation/',
         'smtp-service'          => 'localhost',
-        //.........................................................................
-        //. Templates
-        //.........................................................................
+        //  Templates
         'templates'             => [
             MailTemplates::WELCOME              => array(
                 'subject'  => 'Welcome to DreamFactory Developer Central!',
