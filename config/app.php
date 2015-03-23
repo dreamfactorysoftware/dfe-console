@@ -97,7 +97,6 @@ return [
         'Validator' => 'Illuminate\\Support\\Facades\\Validator',
         'View'      => 'Illuminate\\Support\\Facades\\View',
         /** DreamFactory Aliases */
-        'Elk'       => 'DreamFactory\\Enterprise\\Console\\Services\\ElkServiceProvider',
         'Provision' => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
     ],
 

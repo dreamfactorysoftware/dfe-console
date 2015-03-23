@@ -9,7 +9,5 @@ return [
         realpath( __DIR__ . '/../app/Providers/RouteServiceProvider.php' ),
     ],
     //  Compiled File Providers
-    'providers' => [
-        realpath( __DIR__ . '/../app/Providers/ElkServiceProvider.php' ),
-    ],
+    'providers' => [],
 ];
