@@ -6,7 +6,7 @@ $_uri = URL::getRequest()->getRequestUri();
  */
 $_sidebar = [
     'Operations'    => [
-        'Dashboard' => ['href' => '/app/dashboard', 'icon' => 'fa-dashboard'],
+        'Dashboard' => ['href' => '/app/dashboard', 'icon' => 'fa-dashboard', 'active' => true],
         'Alerts'    => ['href' => '/app/alerts', 'icon' => 'fa-bell'],
         'Reports'   => ['href' => '/app/reports', 'icon' => 'fa-th-list'],
         'Profile'   => ['href' => '/app/profile', 'icon' => 'fa-user'],
@@ -34,6 +34,11 @@ foreach ( $_sidebar as $_sectionTitle => $_section )
                 ? ' class=active '
                 : null;
 
+        if ( isset( $_item['active'] ) )
+        {
+            $_active .= ' default_active';
+        }
+
         $_html .= '<li ' .
             $_active .
             ' role="presentation"><a href="' .
@@ -43,11 +48,14 @@ foreach ( $_sidebar as $_sectionTitle => $_section )
             '"></i> ' .
             $_itemTitle .
             '</a>';
+
+        unset( $_active, $_item );
     }
 
     $_html .= '</ul>';
 }
 
+$_html = str_replace( 'default_active', ( false === strpos( $_html, 'class=active' ) ) ? 'class=active' : null, $_html );
 ?>
 <div id="sidebar-collapse" class="collapse navbar-collapse">
     {!! $_html !!}

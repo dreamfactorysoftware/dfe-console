@@ -1,9 +1,16 @@
 @extends('layouts.main')
 
+{{-- @formatter:off --}}
 @section('page-title')
-	Nada
+The title
 @overwrite
+{{-- @formatter:on --}}
 
 @section('content')
-	Content goes here
+    The content
+@stop
+
+@section( 'after-body-scripts' )
+    @parent
+    any scripts to add
 @stop

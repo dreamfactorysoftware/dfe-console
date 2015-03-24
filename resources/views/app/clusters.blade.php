@@ -1,8 +1,10 @@
 @extends('layouts.main')
 
-@section('breadcrumb-title')
-    Clusters
-@stop
+{{-- @formatter:off --}}
+@section('page-title')
+Clusters
+@overwrite
+{{-- @formatter:on --}}
 
 @section('content')
     @include('app._page-header',array('pageName' => 'Clusters', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) )
@@ -10,8 +12,8 @@
     <div class="row">
         <div class="col-md-12">
             <table class="table table-compact table-bordered table-striped table-hover table-heading table-datatable nowrap"
-                   data-resource="cluster"
-                   id="dt-cluster">
+                data-resource="cluster"
+                id="dt-cluster">
                 <thead>
                     <tr>
                         <th data-column-name="id">ID</th>

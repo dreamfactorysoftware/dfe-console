@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('page-title', 'Welcome!') | DreamFactory Enterprise&trade;</title>
-    <link href="/vendor/dfe-common/static/bootswatch-3.3.4/{{ config('dfe.common.themes.page', 'flatly') }}.min.css" rel="stylesheet">
+    @section('page-theme')
+        <link href="/vendor/dfe-common/static/bootswatch-3.3.4/flatly.min.css" rel="stylesheet">
+    @show
     <link href="/static/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <!--[if lt IE 9]>

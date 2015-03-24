@@ -1,5 +1,11 @@
 @extends('layouts.main')
 
+{{-- @formatter:off --}}
+@section('page-title')
+Instance Users
+@overwrite
+{{-- @formatter:on --}}
+
 @section('content')
     @include('app._page-header',['pageName' => 'Users', 'buttons' => ['new'=>['icon'=>'plus','color'=>'success']] ] )
 

@@ -1,5 +1,11 @@
 @extends('layouts.main')
 
+{{-- @formatter:off --}}
+@section('page-title')
+Support
+@overwrite
+{{-- @formatter:on --}}
+
 @section('content')
     <div class="row">
         <div class="col-md-12">

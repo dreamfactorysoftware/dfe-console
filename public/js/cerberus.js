@@ -66,8 +66,4 @@ jQuery(function($) {
 
 	//	Load page data...
 	_loadData();
-
-	$('.sidebar').on('click', 'a', function(e) {
-	});
-
 });
