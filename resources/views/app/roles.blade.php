@@ -1,13 +1,20 @@
 @extends('layouts.main')
 
+{{-- @formatter:off --}}
+@section('page-title')
+Roles & Limits
+@overwrite
+{{-- @formatter:on --}}
+
 @section('content')
     @include('app._page-header',array('pageName' => 'Roles'))
 
+    <!-- roles -->
     <div class="row">
         <div class="col-md-12">
             <table class="table table-compact table-bordered table-striped table-hover table-heading table-datatable nowrap"
-                   data-resource="role"
-                   id="dt-role">
+                data-resource="role"
+                id="dt-role">
                 <thead>
                     <tr>
                         <th data-column-name="id">ID</th>

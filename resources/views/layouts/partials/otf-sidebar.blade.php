@@ -5,13 +5,13 @@ $_uri = URL::getRequest()->getRequestUri();
  * This is the basic definition of the sidebar. The code below renders
  */
 $_sidebar = [
-    'Operations' => [
+    'Operations'    => [
         'Dashboard' => ['href' => '/app/dashboard', 'icon' => 'fa-dashboard'],
         'Alerts'    => ['href' => '/app/alerts', 'icon' => 'fa-bell'],
         'Reports'   => ['href' => '/app/reports', 'icon' => 'fa-th-list'],
         'Profile'   => ['href' => '/app/profile', 'icon' => 'fa-user'],
     ],
-    'Settings'   => [
+    'Configuration' => [
         'Roles & Limits' => ['href' => '/settings/roles', 'icon' => 'fa-users'],
         'Servers'        => ['href' => '/settings/servers', 'icon' => 'fa-desktop'],
         'Clusters'       => ['href' => '/settings/clusters', 'icon' => 'fa-sitemap'],
@@ -25,7 +25,7 @@ $_html = null;
 // Build the sidebars
 foreach ( $_sidebar as $_sectionTitle => $_section )
 {
-    $_html .= '<ul class="nav nav-sidebar nav-tabs nav-stacked"><li class="dropdown-header">' . $_sectionTitle . '</li>';
+    $_html .= '<ul class="nav nav-sidebar nav-pills nav-stacked"><li class="dropdown-header">' . $_sectionTitle . '</li>';
 
     foreach ( $_section as $_itemTitle => $_item )
     {

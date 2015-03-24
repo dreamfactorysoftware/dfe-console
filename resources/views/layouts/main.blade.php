@@ -42,6 +42,8 @@
 
 <script src="/static/jquery-2.1.3/jquery.min.js"></script>
 <script src="/static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+<script src="//cdn.datatables.net/plug-ins/3cfcc339e89/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script src="/js/EnterpriseServer.js"></script>
 <script src="/js/cerberus.js"></script>
 
