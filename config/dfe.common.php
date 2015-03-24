@@ -8,10 +8,12 @@ return [
     /** Global options */
     'display-name'    => 'Admin Console',
     'display-version' => 'v1.0.x-alpha',
-    /** auth options */
-    'auth'            => [
-        'theme' => 'darkly',
-    ],
+    /**
+     * Theme selection -- a bootswatch theme name
+     * Included are cerulean, darkly, flatly, paper, and superhero.
+     * You may also install other compatible themes and use them as well.
+     */
+    'themes'          => ['auth' => 'darkly', 'page' => 'flatly'],
     /** mail template options */
     'mail-template'   => [
         'web-url'               => 'http://cerberus.fabric.dreamfactory.com/',

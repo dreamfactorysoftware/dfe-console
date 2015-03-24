@@ -1,7 +1,19 @@
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('layouts.partials.head-master')
+    @section('head-master')
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>@yield('page-title', 'Welcome!') | DreamFactory Enterprise&trade;</title>
+        <link href="/vendor/dfe-common/static/bootswatch-3.3.4/{{ config('dfe.common.themes.page', 'darkly') }}.min.css" rel="stylesheet">
+        <link href="/static/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/css/style.css" rel="stylesheet">
+        <!--[if lt IE 9]>
+        <script src="//oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+        <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    @show
 
     @section('head-links')
     @show
@@ -13,33 +25,27 @@
 
 @include('layouts.partials.navbar')
 
-<div class="container-fluid">
+<div id="page-content" class="container-fluid container-content">
     <div class="row">
-		<div class="col-sm-3 col-md-2 sidebar">
-			@include('layouts.partials.otf-sidebar')
+        <div class="col-sm-3 col-md-2 sidebar">
+            @include('layouts.partials.otf-sidebar')
         </div>
 
-		<div id="content" class="col-sm-9 col-md-10 main">
+        <div id="content" class="col-sm-9 col-md-10 main">
             @yield('content')
         </div>
     </div>
 </div>
 
-<div class="loading-content" style="display: none;"><img src="/img/img-loading.gif" class="loading-image" alt="Loading..." /></div>
-
 @section('before-body-scripts')
 @show
 
-@include('layouts.partials.body-scripts')
-
-@section('before-app-scripts')
-@show
-
+<script src="/static/jquery-2.1.3/jquery.min.js"></script>
+<script src="/static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
 <script src="/js/EnterpriseServer.js"></script>
 <script src="/js/cerberus.js"></script>
 
-@section('after-app-scripts')
+@section('after-body-scripts')
 @show
-
 </body>
 </html>

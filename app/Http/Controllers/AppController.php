@@ -23,7 +23,7 @@ class AppController extends FactoryController
      */
     public function __construct()
     {
-        $this->layout = 'layouts.partials';
+        $this->layout = 'layouts.main';
         $this->_request = Request::createFromGlobals();
     }
 
