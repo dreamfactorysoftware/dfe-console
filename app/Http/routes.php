@@ -20,6 +20,7 @@ Route::group(
         Route::resource( 'servers', 'ServerController' );
         Route::resource( 'service-users', 'ServiceUserController' );
         Route::resource( 'users', 'UserController' );
+        Route::controller( 'ops', 'OpsController' );
     }
 );
 
