@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
+use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
