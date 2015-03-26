@@ -4,7 +4,9 @@
 //******************************************************************************
 
 return [
-    'provisioning' => [
+    /** This key needs to match the key configured in the dashboard */
+    'client-hash-key' => '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy',
+    'provisioning'    => [
         //  Storage & storage layout options/settings
         'storage-zone-type'           => 'static',          //  Either "static" or "dynamic"
         'static-zone-name'            => 'ec2.us-east-1a',  //  The "static" storage zone

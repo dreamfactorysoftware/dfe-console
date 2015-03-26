@@ -1,26 +1,32 @@
 <?php
 //******************************************************************************
-//* Console Routes
-//******************************************************************************
-
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\View;
-
-//******************************************************************************
 //* Resource Controllers
 //******************************************************************************
 
-Route::group(
+/**
+ * resource controllers
+ */
+\Route::group(
     ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources', 'middleware' => 'auth'],
     function ()
     {
-        Route::resource( 'clusters', 'ClusterController' );
-        Route::resource( 'instances', 'InstanceController' );
-        Route::resource( 'roles', 'RoleController' );
-        Route::resource( 'servers', 'ServerController' );
-        Route::resource( 'service-users', 'ServiceUserController' );
-        Route::resource( 'users', 'UserController' );
-        Route::controller( 'ops', 'OpsController' );
+        \Route::resource( 'clusters', 'ClusterController' );
+        \Route::resource( 'instances', 'InstanceController' );
+        \Route::resource( 'roles', 'RoleController' );
+        \Route::resource( 'servers', 'ServerController' );
+        \Route::resource( 'service-users', 'ServiceUserController' );
+        \Route::resource( 'users', 'UserController' );
+    }
+);
+
+/**
+ * Ops controller for operational api
+ */
+\Route::group(
+    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers'],
+    function ()
+    {
+        \Route::controller( 'ops', 'OpsController' );
     }
 );
 
@@ -29,7 +35,7 @@ Route::group(
 //******************************************************************************
 
 //  Main page
-Route::get(
+\Route::get(
     '/',
     [
         'as'         => 'home',
@@ -37,7 +43,7 @@ Route::get(
         function ()
         {
             /** @noinspection PhpUndefinedMethodInspection */
-            return View::make(
+            return \View::make(
                 'app.dashboard',
                 ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0]]
             );

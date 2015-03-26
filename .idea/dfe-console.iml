@@ -12,8 +12,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/tests" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
