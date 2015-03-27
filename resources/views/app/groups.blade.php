@@ -1,9 +1,7 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 {{-- @formatter:off --}}
-@section('page-title')
-Groups
-@overwrite
+@section('page-title'){{"Groups"}}@overwrite
 {{-- @formatter:on --}}
 
 @section('content')

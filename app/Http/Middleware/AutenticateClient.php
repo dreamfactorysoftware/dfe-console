@@ -30,7 +30,7 @@ class AuthenticateClient
 
         if ( empty( $_key ) )
         {
-            \Log::error( 'auth.client fail: no "client-id"', ['token' => $_token, 'client-id' => $_clientId, 'user-id' => $_userId] );
+            \Log::error( 'auth.client fail: invalid "client-id"', ['token' => $_token, 'client-id' => $_clientId, 'user-id' => $_userId] );
             abort( Response::HTTP_BAD_REQUEST, 'The "client-id" is invalid.' );
         }
 

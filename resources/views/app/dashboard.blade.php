@@ -1,9 +1,7 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 {{-- @formatter:off --}}
-@section('page-title')
-Dashboard
-@overwrite
+@section('page-title'){{"Dashboard"}}@overwrite
 {{-- @formatter:on --}}
 
 @section('content')

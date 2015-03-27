@@ -1,9 +1,7 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 {{-- @formatter:off --}}
-@section('page-title')
-Instance Users
-@overwrite
+@section('page-title'){{ "Instance Users" }}@overwrite
 {{-- @formatter:on --}}
 
 @section('content')
@@ -12,8 +10,8 @@ Instance Users
     <div class="row">
         <div class="col-md-12">
             <table class="table table-compact table-bordered table-striped table-hover table-heading table-datatable nowrap"
-                   data-resource="user"
-                   id="dt-user">
+                data-resource="user"
+                id="dt-user">
                 <thead>
                     <tr>
                         <th data-column-name="id">ID</th>

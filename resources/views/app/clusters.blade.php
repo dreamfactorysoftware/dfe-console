@@ -1,9 +1,7 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 {{-- @formatter:off --}}
-@section('page-title')
-Clusters
-@overwrite
+@section('page-title'){{"Clusters"}}@overwrite
 {{-- @formatter:on --}}
 
 @section('content')

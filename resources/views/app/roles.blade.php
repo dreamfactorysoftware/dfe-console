@@ -1,9 +1,7 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 {{-- @formatter:off --}}
-@section('page-title')
-Roles & Limits
-@overwrite
+@section('page-title'){{"Roles & Limits"}}@overwrite
 {{-- @formatter:on --}}
 
 @section('content')

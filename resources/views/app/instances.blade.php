@@ -1,9 +1,7 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 {{-- @formatter:off --}}
-@section('page-title')
-Instances
-@overwrite
+@section('page-title'){{"Instances"}}@overwrite
 {{-- @formatter:on --}}
 
 @section('content')

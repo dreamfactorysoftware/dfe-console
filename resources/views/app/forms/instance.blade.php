@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.app')
 
 @section('content')
     <form class="form-horizontal" action="/api/v1/instances" method="POST">
