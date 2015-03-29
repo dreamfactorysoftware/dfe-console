@@ -2,6 +2,7 @@
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Library\Fabric\Auditing\Services\AuditingService;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -18,6 +19,12 @@ class OpsController extends Controller
      * @var string
      */
     const DEFAULT_FACILITY = AuditingService::DEFAULT_FACILITY;
+
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
 
     //*************************************************************************
     //* Members
@@ -77,5 +84,27 @@ class OpsController extends Controller
         }
 
         return SuccessPacket::make( $_response );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function postStatus( Request $request )
+    {
+        $_instance = $this->_findInstance( $request->input( 'id' ) );
+
+        return array(
+            'instanceName'     => $_instance->instance_name_text,
+            'instanceId'       => $_instance->id,
+            'vendorInstanceId' => $_instance->instance_id_text,
+            'instanceState'    => $_instance->state_nbr,
+            'vendorState'      => $_instance->vendor_state_nbr,
+            'vendorStateName'  => $_instance->vendor_state_text,
+            'provisioned'      => ( 1 == $_instance->provision_ind ),
+            'trial'            => ( 1 == $_instance->trial_instance_ind ),
+            'deprovisioned'    => ( 1 == $_instance->deprovision_ind ),
+        );
     }
 }
