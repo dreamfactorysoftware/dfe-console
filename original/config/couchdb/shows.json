@@ -1,0 +1,3 @@
+{
+	"as_csv": "function(doc, req) {return {body: '\"' + doc.queue + '\",\"' + doc.created_at + '\"\\n',headers:{\"Content-Type\":\"text/csv\"}}}"
+}

@@ -1,0 +1,35 @@
+{
+	"pending_jobs":          {
+		"map": "function( doc ) {\n\tif ( doc.type == 'DreamFactory.Documents.WorkUnit' ) {\n\t\tvar _now = new Date().getTime(), _then = new Date(doc.process_at).getTime();\n\t\tif ( !_then ) {\n\t\t\t_then = _now;\n\t\t}\n\t\tif ( _then <= _now && false == doc.processed && false == doc.in_flight && 'defer' != doc.response ) {\n\t\t\temit([doc.queue, doc.created_at], {\"_id\":doc._id,\"process_lag\":(_now-_then)});\n\t\t}\n\t}\n} "
+	},
+	"deferred_jobs":         {
+		"map": "function( doc ) {  \n\tif ( doc.type == 'DreamFactory.Documents.WorkUnit' ) {\n\t\tif ( !doc.processed && !doc.in_flight  && 'defer' == doc.response ) {\n\t\t\temit([doc.queue, doc.created_at], doc._id);\n\t\t}\n\t}\n} "
+	},
+	"delayed_jobs":          {
+		"map": "function( doc ) {  \n\tif ( doc.type == 'DreamFactory.Documents.WorkUnit' ) { \n\t\tvar _now = new Date().getTime(), _then = new Date(doc.process_at).getTime();\n\t\tif ( !_then ) {\n\t\t\t_then = _now;\n\t\t}\n\t\tif ( !doc.processed && !doc.in_flight && _then <= _now ) {\n\t\t\temit([doc.queue, doc.created_at], {\"_id\":doc._id,\"then\":_then,\"process_at\":doc.process_at});\n\t\t}\n\t}\n} "
+	},
+	"in_flight":             {
+		"map": "function( doc ) {  if ( doc.type == 'DreamFactory.Documents.WorkUnit' ) {   if ( false == doc.processed && true == doc.in_flight ) {    emit([doc.queue, doc.created_at], doc._id);   }  } } "
+	},
+	"by_queue":              {
+		"map": "function(doc) {  if ( doc.type == 'DreamFactory.Documents.WorkUnit' ) {   emit(doc.queue, doc._id);  } } "
+	},
+	"error_jobs":            {
+		"map": "function( doc ) {  if ( doc.type == 'DreamFactory.Documents.WorkUnit' ) {   if ( true == doc.processed && 3 == doc.state && false === doc.in_flight ) {    emit([doc.queue, doc.created_at], doc._id);   }  } } "
+	},
+	"deprovisioned_dsps":    {
+		"map": "function(doc) {  if ( doc.type == 'DreamFactory.Documents.WorkUnit' && doc.queue == 'deprovision' ) {   emit(doc.payload.instance_name_text, doc.queue, doc._id);  } } "
+	},
+	"provisioned_dsps":      {
+		"map": "function(doc) {  if ( doc.type == 'DreamFactory.Documents.WorkUnit' && doc.queue == 'provision' ) {   emit(doc.payload.instance_name_text, doc.queue, doc._id);  } } "
+	},
+	"by_dsp_name":           {
+		"map": "function(doc) {  if ( doc.type == 'DreamFactory.Documents.WorkUnit' && doc.payload.instance_name_text == 'dsp-octasian' ) {   emit([doc.queue, doc._rev],doc._id);  } } "
+	},
+	"skipped_registrations": {
+		"map": "function( doc ) {  \n\tif ( doc.type == 'DreamFactory.Documents.WorkUnit' && doc.queue == 'register' ) {\n\t\temit([doc.queue, doc.created_at], doc.payload.email);\n\t}\n}"
+	},
+	"by_queue_time":         {
+		"map": "function(doc) {  if ( doc.type == 'DreamFactory.Documents.WorkUnit' ) {\n    emit(doc._id, { \"queue\": doc.queue, \"timestamp\": doc.created_at });\n}\n}"
+	}
+}
