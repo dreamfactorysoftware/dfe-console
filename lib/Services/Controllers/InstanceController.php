@@ -62,16 +62,6 @@ class InstanceController extends FactoryController
             throw new \RuntimeException( 'The user for instance "' . $instanceId . '" was not found.' );
         }
 
-        $_response = [
-            'instance-id'         => $_instance->instance_id_text,
-            'cluster-id'          => $_instance->cluster_id,
-            'db-server-id'        => $_instance->db_server_id,
-            'app-server-id'       => $_instance->app_server_id,
-            'web-server-id'       => $_instance->web_server_id,
-            'owner-id'            => $_instance->user_id,
-            'owner-email-address' => $_instance->user->email_addr_text,
-        ];
-
-        return $_response;
+        return $_instance->getMetadata();
     }
 }

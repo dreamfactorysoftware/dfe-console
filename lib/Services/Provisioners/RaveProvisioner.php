@@ -4,6 +4,9 @@ namespace DreamFactory\Enterprise\Services\Provisioners;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
+use DreamFactory\Enterprise\Services\RaveDatabaseService;
+use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
@@ -256,98 +259,33 @@ class RaveProvisioner extends BaseResourceProvisioner
      */
     protected function _provisionInstance( $request )
     {
-        //	Clean up that nasty name...
+        $_storagePath = null;
+
+        //	Pull the request apart
         $_instance = $request->getInstance();
-        $_dbName = $_instance->db_name_text ?: str_replace( '-', '_', $_instance->instance_name_text );
+        $_name = $_instance->instance_name_text;
         $_storageKey = $_instance->storage_id_text;
         $_storage = $request->getStorage();
-        $_storagePath = null;
         $_privatePath = $request->get( 'private-path' );
         $_relativePrivatePath = str_replace( $_storagePath, null, $_privatePath );
         $_dbConfigFile = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
         $_instanceMetadata = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.json';
 
-        //	Make sure the user name is kosher
-        list( $_dbUser, $_dbPassword ) = $this->_generateDbUser( $_name );
+        //	1. Provision the database
+        /** @type RaveDatabaseService $_dbService */
+        $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
+        $_dbConfig = $_dbService->provision( $request );
+        $_dbUser = $_dbConfig['username'];
+        $_dbPassword = $_dbConfig['password'];
+        $_dbName = $_dbConfig['database'];
 
-        try
-        {
-            $_dbConfig = $this->_getDatabaseConfig( $_dbName );
-
-            //	1. Create database
-            if ( !$this->_createDatabase( $_dbConfig['server'], $_dbName ) )
-            {
-                \Log::error( 'Unable to create database "' . $_dbName . '"' );
-
-                return false;
-            }
-
-            //	2. Grant privileges
-            if ( !$this->_grantPrivileges( $_dbConfig['server'], $_dbName, $_dbUser, $_dbPassword ) )
-            {
-                try
-                {
-                    //	Try and get rid of the database we created
-                    $this->_dropDatabase( $_dbConfig['server'], $_dbName );
-                }
-                catch ( \Exception $_ex )
-                {
-                    \Log::error( 'Exception dropping database: ' . $_ex->getMessage() );
-                }
-
-                return false;
-            }
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new ProvisioningException( $_ex->getMessage(), $_ex->getCode() );
-        }
-
-        //	3. Create files in storage
-        try
-        {
-            //	Create database config file...
-            $_date = date( 'c' );
-
-            $_php = <<<PHP
-<?php
-/**
- * **** DO NOT MODIFY THIS FILE ****
- * **** CHANGES WILL BREAK YOUR INSTANCE AND MAY BE OVERWRITTEN AT ANY TIME ****
- * @(#)\$Id: database.config.php; v2.0.0-{$_dbName} {$_date} \$
- */
-return array(
-	'connectionString'      => 'mysql:host={$_dbConfig['host']};port={$_dbConfig['port']};dbname={$_dbName}',
-	'username'              => '{$_dbUser}',
-	'password'              => '{$_dbPassword}',
-	'emulatePrepare'        => true,
-	'charset'               => 'utf8',
-	'schemaCachingDuration' => 3600,
-);
-PHP;
-
-            if ( !$_storage->put( $_dbConfigFile, $_php ) )
-            {
-                \Log::error( 'Error writing database configuration file: ' . $_dbConfigFile );
-
-                return false;
-            }
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'Exception prepping storage: ' . $_ex->getMessage() );
-            $this->_dropDatabase( $_dbConfig['server'], $_dbName );
-            FileSystem::rmdir( $_storagePath, true );
-
-            return false;
-        }
-
+        //  2. Update the instance...
         $_host = $_name . '.' . config( 'dfe.provisioning.default-dns-zone' ) . '.' . config( 'dfe.provisioning.default-dns-domain' );
 
         //	Update instance with new provision info
         try
         {
-            $this->fill(
+            $_instance->fill(
                 [
                     'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
                     'instance_id_text'   => $_name,
@@ -373,7 +311,7 @@ PHP;
                 ]
             );
 
-            $this->save();
+            $_instance->save();
         }
         catch ( \Exception $_ex )
         {
@@ -384,7 +322,7 @@ PHP;
 
         try
         {
-            $_md = $this->getMetadata( $_instance );
+            $_md = $_instance->getMetadata();
 
             if ( !$_storage->put( $_instanceMetadata, Json::encode( $_md ) ) )
             {
@@ -412,10 +350,9 @@ PHP;
             'db_user'             => $_dbUser,
             'db_password'         => $_dbPassword,
             'db_config_file_name' => $_dbConfigFile,
-            'cluster'             => $this->cluster_id,
+            'cluster'             => $_instance->cluster_id,
             'metadata'            => $_md,
         ];
-
     }
 
     /**

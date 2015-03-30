@@ -10,6 +10,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 class OpsController extends Controller
@@ -56,6 +57,31 @@ class OpsController extends Controller
     public function __construct()
     {
         $this->middleware( 'auth.client' );
+    }
+
+    /**
+     * Provision an instance...
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function postProvision( Request $request )
+    {
+        try
+        {
+            $_payload = $request->input();
+
+            \Log::debug( 'Queuing provisioning request: ' . print_r( $_payload, true ) );
+
+            \Artisan::queue( 'dfe:provision', $_payload );
+        }
+        catch ( \Exception $_ex )
+        {
+            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+        }
+
+        return SuccessPacket::make();
     }
 
     /**

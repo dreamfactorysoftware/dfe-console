@@ -39,7 +39,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         }
 
         //  Get a connection to the instance's database server 
-        $_db = $this->_getRootDatabaseConnection( $_instance );
+        list( $_db, $_dbConfig, $_dbServer ) = $this->_getRootDatabaseConnection( $_instance );
 
         //  1. Create a random user and password for the instance
         $_creds = $this->_generateSchemaCredentials( $_instance );
@@ -84,6 +84,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
             throw new ProvisioningException( $_ex->getMessage(), $_ex->getCode() );
         }
 
+        return $_dbConfig;
     }
 
     /**
@@ -160,7 +161,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         );
 
         //  Create a connection and return. It's in Joe Pesce's hands now...
-        return \DB::connection( $_dbServer );
+        return [\DB::connection( $_dbServer ), $_config, $_server];
     }
 
     /**
