@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
 use DreamFactory\Enterprise\Services\RaveDatabaseService;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
 
@@ -37,10 +38,11 @@ class RaveProvisioner extends BaseResourceProvisioner
 
     /**
      * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
+     * @param array                                                              $options
      *
      * @return array
      */
-    protected function _doProvision( $request )
+    protected function _doProvision( $request, $options = [] )
     {
         $_output = [];
         $_result = false;
@@ -52,10 +54,10 @@ class RaveProvisioner extends BaseResourceProvisioner
         try
         {
             //  Provision storage and fill in the request
-            $this->_provisionStorage( $request );
+            $this->_provisionStorage( $request, $options );
 
             //  And the instance
-            if ( false === ( $_result = $this->_provisionInstance( $request ) ) )
+            if ( false === ( $_result = $this->_provisionInstance( $request, $options ) ) )
             {
                 throw new \RuntimeException( 'Exception during launch.' );
             }
@@ -121,13 +123,14 @@ class RaveProvisioner extends BaseResourceProvisioner
 
     /**
      * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
+     * @param array                                                              $options
      *
      * @return array
      */
-    protected function _doDeprovision( $request )
+    protected function _doDeprovision( $request, $options = [] )
     {
         $_output = [];
-        $_success = $_result = false;
+        $_result = false;
         $_instance = $request->getInstance();
 
         //	Update the current instance state
@@ -136,7 +139,7 @@ class RaveProvisioner extends BaseResourceProvisioner
         try
         {
             //  And the instance
-            if ( 0 != ( $_result = $this->_deprovisionInstance( $request ) ) )
+            if ( 0 != ( $_result = $this->_deprovisionInstance( $request, $options ) ) )
             {
                 throw new \RuntimeException( 'Exception during deprovisioning.' );
             }
@@ -198,11 +201,14 @@ class RaveProvisioner extends BaseResourceProvisioner
 
     /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return Filesystem
      */
-    protected function _provisionStorage( $request )
+    protected function _provisionStorage( $request, $options = [] )
     {
+        \Log::debug( 'rave-provisioner: provisionStorage' );
+
         $_config = config( 'filesystems.disks.hosted' );
 
         if ( empty( $_config ) )
@@ -219,17 +225,21 @@ class RaveProvisioner extends BaseResourceProvisioner
         }
 
         //  Do it!
-        Provision::resolveStorage( 'rave' )->provision( $request );
+        $request->setStorageProvisioner( $_provisioner = Provision::resolveStorage( IfSet::get( $options, 'guest-location-nbr', 'rave' ) ) );
+        $_provisioner->provision( $request );
+
+        \Log::debug( 'rave-provisioner: provisionStorage complete' );
 
         return $_filesystem;
     }
 
     /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return bool
      */
-    protected function _deprovisionStorage( $request )
+    protected function _deprovisionStorage( $request, $options = [] )
     {
         $_config = config( 'filesystems.disks.hosted' );
 
@@ -254,11 +264,14 @@ class RaveProvisioner extends BaseResourceProvisioner
 
     /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return array
      */
-    protected function _provisionInstance( $request )
+    protected function _provisionInstance( $request, $options = [] )
     {
+        \Log::debug( 'rave-provisioner: provisionInstance' );
+
         $_storagePath = null;
 
         //	Pull the request apart
@@ -266,10 +279,12 @@ class RaveProvisioner extends BaseResourceProvisioner
         $_name = $_instance->instance_name_text;
         $_storageKey = $_instance->storage_id_text;
         $_storage = $request->getStorage();
-        $_privatePath = $request->get( 'private-path' );
+        $_privatePath = $request->getStorageProvisioner()->getPrivatePath();;
         $_relativePrivatePath = str_replace( $_storagePath, null, $_privatePath );
         $_dbConfigFile = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
         $_instanceMetadata = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.json';
+
+        \Log::debug( 'rave-provisioner: provisionInstance > database' );
 
         //	1. Provision the database
         /** @type RaveDatabaseService $_dbService */
@@ -278,6 +293,10 @@ class RaveProvisioner extends BaseResourceProvisioner
         $_dbUser = $_dbConfig['username'];
         $_dbPassword = $_dbConfig['password'];
         $_dbName = $_dbConfig['database'];
+
+        \Log::debug( 'rave-provisioner: provisionInstance > database complete' );
+
+        \Log::debug( 'rave-provisioner: provisionInstance > update' );
 
         //  2. Update the instance...
         $_host = $_name . '.' . config( 'dfe.provisioning.default-dns-zone' ) . '.' . config( 'dfe.provisioning.default-dns-domain' );
@@ -312,6 +331,8 @@ class RaveProvisioner extends BaseResourceProvisioner
             );
 
             $_instance->save();
+
+            \Log::debug( 'rave-provisioner: provisionInstance > update complete' );
         }
         catch ( \Exception $_ex )
         {
@@ -357,10 +378,11 @@ class RaveProvisioner extends BaseResourceProvisioner
 
     /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return bool
      */
-    protected function _deprovisionInstance( $request )
+    protected function _deprovisionInstance( $request, $options = [] )
     {
 
     }

@@ -6,8 +6,8 @@ use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static ResourceProvisioner provisioner( string $name = null )
- * @method static ResourceProvisioner storageProvisioner( string $name = null )
+ * @method static ResourceProvisioner getProvisioner( string $name = null )
+ * @method static ResourceProvisioner getStorageProvisioner( string $name = null )
  * @method static string getDefaultProvisioner()
  * @method static ResourceProvisioner resolve( string $name )
  * @method static ResourceProvisioner resolveStorage( string $name )

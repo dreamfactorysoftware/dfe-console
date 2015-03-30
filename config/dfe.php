@@ -18,6 +18,7 @@ return [
         'private-paths'               => ['.cache', 'config', 'scripts', 'scripts.user',],
         //  Instance provisioning defaults
         'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
+        'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE', 'db-east-1' ),
         'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', 1 ),
         'default-ram-size'            => env( 'DFE_DEFAULT_RAM_SIZE', 1 ),
         'default-disk-size'           => env( 'DFE_DEFAULT_DISK_SIZE', 8 ),

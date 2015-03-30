@@ -36,4 +36,40 @@ class GuestLocations extends FactoryEnum
      * @var int Generic OpenStack
      */
     const OPENSTACK = 5;
+
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    protected static $_tags = [
+        self::DFE_CLUSTER     => 'rave',
+        self::AMAZON_EC2      => 'amazon',
+        self::MICROSOFT_AZURE => 'azure',
+        self::RACKSPACE_CLOUD => 'rackspace',
+        self::OPENSTACK       => 'openstack',
+    ];
+
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
+
+    /**
+     * @param int $constant
+     *
+     * @return mixed
+     */
+    public static function resolve( $constant )
+    {
+        if ( is_numeric( $constant ) && isset( static::$_tags[$constant] ) )
+        {
+            return static::$_tags[$constant];
+        }
+
+        if ( !is_numeric( $constant ) && is_string( $constant ) )
+        {
+            return $constant;
+        }
+
+        throw new \InvalidArgumentException( 'The $constant "' . $constant . '" is invalid.' );
+    }
 }

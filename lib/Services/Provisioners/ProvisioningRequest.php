@@ -1,6 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
+use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
@@ -26,6 +28,10 @@ class ProvisioningRequest
      * @type bool True if the $request should be forced
      */
     protected $_forced = false;
+    /**
+     * @type ResourceProvisioner|PrivatePathAware
+     */
+    protected $_storageProvisioner;
 
     //******************************************************************************
     //* Methods
@@ -101,4 +107,23 @@ class ProvisioningRequest
         return $this;
     }
 
+    /**
+     * @return ResourceProvisioner|PrivatePathAware
+     */
+    public function getStorageProvisioner()
+    {
+        return $this->_storageProvisioner;
+    }
+
+    /**
+     * @param ResourceProvisioner $storageProvisioner
+     *
+     * @return ProvisioningRequest
+     */
+    public function setStorageProvisioner( $storageProvisioner )
+    {
+        $this->_storageProvisioner = $storageProvisioner;
+
+        return $this;
+    }
 }

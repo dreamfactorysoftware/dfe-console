@@ -27,7 +27,7 @@ class ProvisioningServiceProvider extends BaseServiceProvider
     /**
      * @type string The actual provisioning service
      */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\ProvisioningService';
+    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\Managers\\ProvisioningManager';
 
     //********************************************************************************
     //* Public Methods

@@ -38,7 +38,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
     //******************************************************************************
 
     /** @inheritdoc */
-    public function provision( $request )
+    public function provision( $request, $options = [] )
     {
         $_elapsed = null;
         $_timestamp = microtime( true );
@@ -81,7 +81,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
     }
 
     /** @inheritdoc */
-    public function deprovision( $request )
+    public function deprovision( $request, $options = [] )
     {
         $_elapsed = null;
         $_timestamp = microtime( true );

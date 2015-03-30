@@ -5,15 +5,14 @@ use Illuminate\Console\Command;
 use Illuminate\Http\Response;
 use Symfony\Component\Console\Input\InputArgument;
 
-class RegisterClient extends Command
+class Register extends Command
 {
     //******************************************************************************
     //* Members
     //******************************************************************************
 
     /** @var string The console command name */
-    protected $name = 'dfe:register-client';
-
+    protected $name = 'dfe:register';
     /**  @var string The console command description */
     protected $description = 'Creates a client ID and secret for a user';
 
@@ -64,7 +63,7 @@ class RegisterClient extends Command
     protected function getArguments()
     {
         return [
-            ['user-id', InputArgument::REQUIRED, 'The user id'],
+            ['owner-id', InputArgument::REQUIRED, 'The owner id'],
         ];
     }
 

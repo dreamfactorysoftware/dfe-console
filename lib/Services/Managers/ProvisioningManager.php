@@ -4,6 +4,7 @@ namespace DreamFactory\Enterprise\Services\Managers;
 use DreamFactory\Enterprise\Common\Contracts\ProvisionerAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
+use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 
 class ProvisioningManager extends BaseManager implements ProvisionerAware
 {
@@ -18,7 +19,7 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
      */
     public function getProvisioner( $name = null )
     {
-        return $this->resolve( $name ?: $this->getDefaultProvisioner() );
+        return $this->resolve( GuestLocations::resolve( $name ?: $this->getDefaultProvisioner() ) );
     }
 
     /**
@@ -30,7 +31,7 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
      */
     public function getStorageProvisioner( $name = null )
     {
-        return $this->resolveStorage( $name ?: $this->getDefaultProvisioner() );
+        return $this->resolveStorage( GuestLocations::resolve( $name ?: $this->getDefaultProvisioner() ) );
     }
 
     /**
@@ -40,7 +41,7 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
      */
     public function getDefaultProvisioner()
     {
-        return $this->app['config']['provisioners.default'];
+        return config( 'provisioners.default' );
     }
 
     /**
@@ -71,7 +72,8 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
      */
     protected function _doResolve( $tag, $subkey = null )
     {
-        $_key = null !== $subkey ? $tag . '.' . trim( $subkey, '. ' ) : $tag;
+        $subkey = $subkey ?: 'instance';
+        $_key = $tag . '.' . $subkey;
 
         try
         {
@@ -81,9 +83,11 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
         {
         }
 
-        $_host = $this->app['config']['provisioners.hosts.' . $tag];
-        $_provisioner = new $_host[$subkey ?: 'instance']( $this->app );
+        $_class = config( 'provisioners.hosts.' . $_key );
 
+        \Log::debug( 'Configs ' . print_r( $_class, true ) . ' key:' . $_key . ' tag:' . $tag );
+
+        $_provisioner = new $_class( $this->app );
         $this->manage( $_key, $_provisioner );
 
         return $_provisioner;

@@ -32,7 +32,7 @@ class Provision extends Command
      */
     public function fire()
     {
-        return Queue::push(
+        return \Queue::push(
             new ProvisionJob(
                 $this->argument( 'instance-id' ),
                 [

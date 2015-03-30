@@ -4,7 +4,7 @@ namespace DreamFactory\Enterprise\Services;
 use DreamFactory\Enterprise\Common\Contracts\ProvisionerFactory;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Common\Traits\ComponentLookup;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -18,7 +18,7 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
     //* Traits
     //******************************************************************************
 
-    use ComponentLookup;
+    use EntityLookup;
 
     //******************************************************************************
     //* Methods
@@ -146,7 +146,7 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
 
         try
         {
-            $_server = $this->_lookupServer( $_dbServerId );
+            $_server = $this->_findServer( $_dbServerId );
         }
         catch ( ModelNotFoundException $_ex )
         {
@@ -389,4 +389,5 @@ MYSQL;
     public function pop( $queue = null )
     {
         // TODO: Implement pop() method.
-}}
+    }
+}

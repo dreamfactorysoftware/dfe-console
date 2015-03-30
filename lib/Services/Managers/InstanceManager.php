@@ -197,6 +197,7 @@ class InstanceManager extends BaseManager implements StaticFactory
                     'cluster_id'         => $_cluster->id,
                     'db_server_id'       => $_dbServer->id,
                     'vendor_id'          => $_guestLocation,
+                    'vendor_image_id'    => IfSet::get( $options, 'vendor-image-id', 4764 ),
                     'state_nbr'          => ProvisionStates::CREATED,
                     'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
                     'guest_location_nbr' => $_guestLocation,

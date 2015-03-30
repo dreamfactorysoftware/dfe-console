@@ -1,9 +1,11 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Contracts\InstanceProvisioner;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Library\Fabric\Auditing\Services\AuditingService;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -74,10 +76,14 @@ class OpsController extends Controller
 
             \Log::debug( 'Queuing provisioning request: ' . print_r( $_payload, true ) );
 
-            \Artisan::queue( 'dfe:provision', $_payload );
+            $_result = \Queue::push( new ProvisionJob( $request->input( 'instance-id' ), $_payload ) );
+
+            \Log::debug( 'Queuing returned result: ' . print_r( $_result, true ) );
         }
         catch ( \Exception $_ex )
         {
+            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+
             return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
         }
 

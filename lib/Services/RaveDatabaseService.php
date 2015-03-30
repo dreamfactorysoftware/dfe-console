@@ -3,7 +3,7 @@ namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Common\Traits\ComponentLookup;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -16,7 +16,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
     //* Traits
     //******************************************************************************
 
-    use ComponentLookup;
+    use EntityLookup;
 
     //******************************************************************************
     //* Methods
@@ -24,11 +24,12 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
 
     /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return bool
      * @throws ProvisioningException
      */
-    public function provision( $request )
+    public function provision( $request, $options = [] )
     {
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
@@ -47,7 +48,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         try
         {
             //	1. Create database
-            if ( !$this->_createDatabase( $_db, $_creds ) )
+            if ( false === $this->_createDatabase( $_db, $_creds ) )
             {
                 try
                 {
@@ -89,10 +90,11 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
 
     /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return bool
      */
-    public function deprovision( $request )
+    public function deprovision( $request, $options = [] )
     {
         $_forced = $request->isForced();
     }
@@ -126,7 +128,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
 
         try
         {
-            $_server = $this->_lookupServer( $_dbServerId );
+            $_server = $this->_findServer( $_dbServerId );
         }
         catch ( ModelNotFoundException $_ex )
         {
@@ -217,7 +219,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         {
             return $db->statement(
                 <<<MYSQL
-        CREATE DATABASE IF NOT EXISTS `{$creds['database']}`
+CREATE DATABASE IF NOT EXISTS `{$creds['database']}`
 MYSQL
             );
         }
@@ -239,7 +241,7 @@ MYSQL
         {
             return $db->statement(
                 <<<MYSQL
-        SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']};
+SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']};
 MYSQL
             );
         }

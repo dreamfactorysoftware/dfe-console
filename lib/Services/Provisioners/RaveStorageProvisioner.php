@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Provisioners;
 
+use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
@@ -33,7 +34,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
  */
-class RaveStorageProvisioner implements ResourceProvisioner
+class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
 {
     //******************************************************************************
     //* Traits
@@ -67,17 +68,17 @@ class RaveStorageProvisioner implements ResourceProvisioner
     //*************************************************************************
 
     /** @inheritdoc */
-    public function provision( $request )
+    public function provision( $request, $options = [] )
     {
         //  Make structure
-        $this->_createInstanceStorage( $request->getInstance(), $request->getStorage() );
+        $this->_createInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
     }
 
     /** @inheritdoc */
-    public function deprovision( $request )
+    public function deprovision( $request, $options = [] )
     {
         //  '86 structure
-        $this->_removeInstanceStorage( $request->getInstance(), $request->getStorage() );
+        $this->_removeInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
     }
 
     /**
@@ -85,8 +86,9 @@ class RaveStorageProvisioner implements ResourceProvisioner
      *
      * @param Instance   $instance
      * @param Filesystem $filesystem
+     * @param array      $options
      */
-    protected function _createInstanceStorage( $instance, $filesystem )
+    protected function _createInstanceStorage( $instance, $filesystem, $options = [] )
     {
         //  Wipe existing stuff
         $this->_privatePath = $this->_ownerPrivatePath = null;
@@ -140,8 +142,9 @@ class RaveStorageProvisioner implements ResourceProvisioner
      *
      * @param Instance   $instance
      * @param Filesystem $filesystem
+     * @param array      $options
      */
-    protected function _removeInstanceStorage( $instance, $filesystem )
+    protected function _removeInstanceStorage( $instance, $filesystem, $options = [] )
     {
         list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance );
         $_storagePath = $this->_makeRootPath( $_zone, $_partition, $_rootHash, $instance->instance_id_text );
@@ -220,18 +223,14 @@ class RaveStorageProvisioner implements ResourceProvisioner
                 : null;
     }
 
-    /**
-     * @return string
-     */
-    public function getPrivatePath()
+    /** @inheritdoc */
+    public function getPrivatePath( $append = null )
     {
         return $this->_privatePath;
     }
 
-    /**
-     * @return string
-     */
-    public function getOwnerPrivatePath()
+    /** @inheritdoc */
+    public function getOwnerPrivatePath( $append = null )
     {
         //  I hate doing this, but it will make this service more streamlined...
         return $this->_hostedStorage ? $this->_ownerPrivatePath : $this->getPrivatePath();
@@ -248,7 +247,7 @@ class RaveStorageProvisioner implements ResourceProvisioner
     /**
      * @param boolean $hostedStorage
      *
-     * @return DreamFactoryRaveStorage
+     * @return $this
      */
     public function setHostedStorage( $hostedStorage )
     {
@@ -268,7 +267,7 @@ class RaveStorageProvisioner implements ResourceProvisioner
     /**
      * @param string $algorithm
      *
-     * @return DreamFactoryRaveStorage
+     * @return $this
      */
     public function setAlgorithm( $algorithm )
     {
