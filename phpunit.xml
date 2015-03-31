@@ -18,7 +18,7 @@
 		<env name="APP_ENV" value="testing" />
 		<env name="CACHE_DRIVER" value="array" />
 		<env name="SESSION_DRIVER" value="array" />
-		<env name="DFE_HOSTED_BASE_PATH" value="./tests/storage" />
+		<env name="DFE_HOSTED_BASE_PATH" value="/opt/dreamfactory/dfe-dfe-console/tests/storage" />
 		"
 	</php>
 </phpunit>
