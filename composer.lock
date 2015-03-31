@@ -404,12 +404,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-audit.git",
-                "reference": "4bfcb8f4fcba4a1105fe038b5ad89a9ac7c08cae"
+                "reference": "7aeb67d490fae5121ec6ab7102c2bae715472d26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/4bfcb8f4fcba4a1105fe038b5ad89a9ac7c08cae",
-                "reference": "4bfcb8f4fcba4a1105fe038b5ad89a9ac7c08cae",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/7aeb67d490fae5121ec6ab7102c2bae715472d26",
+                "reference": "7aeb67d490fae5121ec6ab7102c2bae715472d26",
                 "shasum": ""
             },
             "require": {
@@ -451,7 +451,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-audit/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-audit/issues"
             },
-            "time": "2015-03-31 21:14:57"
+            "time": "2015-03-31 23:11:41"
         },
         {
             "name": "dreamfactory/dfe-common",
@@ -574,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "9ae4e8db5c0f054a763569bde19755f00ab74bd9"
+                "reference": "b27d1f83af49c0988e826068598b398b09fefb7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/9ae4e8db5c0f054a763569bde19755f00ab74bd9",
-                "reference": "9ae4e8db5c0f054a763569bde19755f00ab74bd9",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/b27d1f83af49c0988e826068598b398b09fefb7c",
+                "reference": "b27d1f83af49c0988e826068598b398b09fefb7c",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-03-27 19:11:44"
+            "time": "2015-03-31 21:25:16"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -1286,12 +1286,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "df7da8a5550eb94cb885df6be7ffebe2768c10fd"
+                "reference": "875cfb91e1ffb9a7fda4dddfdbc7ed529e52164a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/df7da8a5550eb94cb885df6be7ffebe2768c10fd",
-                "reference": "df7da8a5550eb94cb885df6be7ffebe2768c10fd",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/875cfb91e1ffb9a7fda4dddfdbc7ed529e52164a",
+                "reference": "875cfb91e1ffb9a7fda4dddfdbc7ed529e52164a",
                 "shasum": ""
             },
             "require": {
@@ -1351,7 +1351,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-03-26 18:30:54"
+            "time": "2015-03-31 21:43:29"
         },
         {
             "name": "mtdowling/cron-expression",
