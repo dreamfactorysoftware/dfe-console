@@ -36,21 +36,39 @@ class ProvisionHandler
     public function handle( ProvisionJob $command )
     {
         $_options = $command->getOptions();
+        \Log::debug( 'handling provision request: ' . print_r( $_options, true ) );
 
-        //  Create the instance record
-        $_instance = InstanceManager::make( $command->getInstanceId(), $_options );
-
-        $_guest = IfSet::get( $_options, 'guest-location-nbr' );
-        \Log::debug( '  * handling request: ' . print_r( $_options, true ) );
-
-        $_provisioner = Provision::getProvisioner( $_guest );
-
-        if ( empty( $_provisioner ) )
+        try
         {
-            throw new \RuntimeException( 'The provisioner of the request is not valid.' );
+            //  Create the instance record
+            $_instance = InstanceManager::make( $command->getInstanceId(), $_options );
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::error( 'exception creating instance: ' . $_ex->getMessage() );
+
+            return;
         }
 
-        return $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
+        try
+        {
+            $_guest = IfSet::get( $_options, 'guest-location-nbr', config( 'dfe.provisioning.default-guest-location' ) );
+            $_provisioner = Provision::getProvisioner( $_guest );
+
+            if ( empty( $_provisioner ) )
+            {
+                throw new \RuntimeException( 'The provisioner of the request is not valid.' );
+            }
+
+            return $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::error( 'exception during provisioning: ' . $_ex->getMessage() );
+
+            //  Delete instance record...
+            $_instance->delete();
+        }
     }
 
 }
