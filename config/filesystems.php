@@ -13,7 +13,7 @@ return [
         //  hosted storage
         'hosted' => [
             'driver' => 'local',
-            'root'   => '/data/storage',
+            'root'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
         ]
     ],
 ];

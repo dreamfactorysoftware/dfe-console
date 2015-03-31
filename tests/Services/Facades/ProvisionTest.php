@@ -21,19 +21,16 @@ class ProvisionTest extends TestCase
      */
     public function testFacade()
     {
-        $_provisioner = Provision::provisioner();
+        $_provisioner = Provision::getProvisioner();
         $this->assertTrue( $_provisioner instanceof ResourceProvisioner );
 
-        $_provisioner = Provision::storageProvisioner();
+        $_provisioner = Provision::getStorageProvisioner();
         $this->assertTrue( $_provisioner instanceof ResourceProvisioner );
 
-        $_provisioner = Provision::provisioner( 'rave' );
+        $_provisioner = Provision::getProvisioner( 'rave' );
         $this->assertTrue( $_provisioner instanceof RaveProvisioner );
 
-        $_provisioner = Provision::storageProvisioner( 'rave' );
-        $this->assertTrue( $_provisioner instanceof RaveStorageProvisioner );
-
-        $_provisioner = Provision::storageProvisioner( 'rave' );
+        $_provisioner = Provision::getStorageProvisioner( 'rave' );
         $this->assertTrue( $_provisioner instanceof RaveStorageProvisioner );
     }
 

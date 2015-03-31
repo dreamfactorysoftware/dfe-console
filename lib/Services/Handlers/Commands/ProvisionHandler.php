@@ -36,7 +36,7 @@ class ProvisionHandler
     public function handle( ProvisionJob $command )
     {
         $_options = $command->getOptions();
-        \Log::debug( 'handling provision request: ' . print_r( $_options, true ) );
+        \Log::debug( 'rave: provision instance - begin' );
 
         try
         {
@@ -45,9 +45,9 @@ class ProvisionHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'exception creating instance: ' . $_ex->getMessage() );
+            \Log::error( 'rave: provision instance - failure, exception creating instance: ' . $_ex->getMessage() );
 
-            return;
+            return false;
         }
 
         try
@@ -60,15 +60,26 @@ class ProvisionHandler
                 throw new \RuntimeException( 'The provisioner of the request is not valid.' );
             }
 
-            return $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
+            $_result = $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
+
+            \Log::debug( 'rave: provision instance - complete: ' . print_r( $_result, true ) );
+
+            return $_result;
         }
         catch ( \Exception $_ex )
         {
             \Log::error( 'exception during provisioning: ' . $_ex->getMessage() );
 
             //  Delete instance record...
-            $_instance->delete();
+            if ( !$_instance->delete() )
+            {
+                throw new \LogicException( 'Unable to remove created instance "' . $_instance->instance_id_text . '".' );
+            }
         }
+
+        \Log::debug( 'rave: provision instance - fail' );
+
+        return false;
     }
 
 }

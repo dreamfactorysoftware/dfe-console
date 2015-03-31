@@ -3,6 +3,8 @@
 //* DFE Console Specific Settings
 //******************************************************************************
 
+use DreamFactory\Enterprise\Services\Enums\GuestLocations;
+
 return [
     /** This key needs to match the key configured in the dashboard */
     'client-hash-key' => '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy',
@@ -10,8 +12,6 @@ return [
         //  Storage & storage layout options/settings
         'storage-zone-type'           => 'static',          //  Either "static" or "dynamic"
         'static-zone-name'            => 'ec2.us-east-1a',  //  The "static" storage zone
-        'hosted-storage-base-path'    => '/data/storage',   //  absolute path to storage drive
-        'local-storage-base-path'     => 'storage',         //  relative to installation
         'public-path-base'            => '/',               //  relative to storage path (hosted or non)
         'private-path-base'           => '.private',        //  relative to storage path (hosted or non)
         'public-paths'                => ['applications', 'plugins', '.private',],
@@ -19,7 +19,7 @@ return [
         //  Instance provisioning defaults
         'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
         'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE', 'db-east-1' ),
-        'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', 1 ),
+        'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', GuestLocations::RAVE_CLUSTER ),
         'default-ram-size'            => env( 'DFE_DEFAULT_RAM_SIZE', 1 ),
         'default-disk-size'           => env( 'DFE_DEFAULT_DISK_SIZE', 8 ),
         //  Instance defaults

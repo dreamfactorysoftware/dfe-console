@@ -31,6 +31,8 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      */
     public function provision( $request, $options = [] )
     {
+        $this->debug( '  * rave: provision database' );
+
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
 
@@ -77,6 +79,8 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
                     $this->error( 'Exception dropping database: ' . $_ex->getMessage() );
                 }
 
+                $this->debug( '  * rave: provision database - incomplete/fail' );
+
                 return false;
             }
         }
@@ -84,6 +88,8 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         {
             throw new ProvisioningException( $_ex->getMessage(), $_ex->getCode() );
         }
+
+        $this->debug( '  * rave: provision database - complete' );
 
         return array_merge( $_rootConfig, $_creds );
     }
@@ -126,8 +132,6 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
             throw new \RuntimeException( 'Empty server id given during database resource provisioning for instance' );
         }
 
-        $this->debug( 'getRootDatabaseConnection: looking up server "' . $_dbServerId . '"' );
-
         try
         {
             $_server = $this->_findServer( $_dbServerId );
@@ -139,6 +143,8 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
 
         //  Get the REAL server name
         $_dbServer = $_server->server_id_text;
+
+        $this->debug( '  * rave: provision database > database found: ' . $_dbServer );
 
         //  Build the config
         $_config =
@@ -156,12 +162,13 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
             throw new \LogicException( 'Configuration invalid for database resource during provisioning.' );
         }
 
+        $this->debug( '  * rave: provision database > config built: ' . print_r( $_config, true ) );
+
         //  Add it to the connection list
         \Config::set( 'database.connections.' . $_server->server_id_text, $_config );
 
         $this->debug(
-            'Creating root database connection on server-id "' . $_dbServer . '" for instance "' . $instance->instance_name_text . '".',
-            ['service' => 'RAVE Database']
+            '  * rave: provision database > database connection to "' . $_dbServer . '" created for "' . $instance->instance_name_text . '"'
         );
 
         //  Create a connection and return. It's in Joe Pesce's hands now...
@@ -177,9 +184,11 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      */
     protected function _generateSchemaCredentials( Instance $instance )
     {
+        $this->debug( '  * rave: provision database > schema creds: ' );
+
         $_tries = 0;
 
-        $_dbUser = $_dbPassword = null;
+        $_dbUser = null;
         $_dbName = $this->_generateDatabaseName( $instance );
         $_seed = $_dbName . env( 'APP_KEY' ) . $instance->instance_name_text;
 
@@ -191,18 +200,21 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
 
             if ( 0 == Instance::where( 'db_user_text', '=', $_dbUser )->count() )
             {
+                $_sql = 'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :schema_name';
+
                 //  Make sure the database name is unique as well.
-                $_names = \DB::select( 'SHOW DATABASES LIKE :schema', [':schema' => $_dbName] );
+                $_names = \DB::select( $_sql, [':schema_name' => $_dbName] );
+                //$_names = \DB::select( 'SHOW DATABASES LIKE \'' . $_dbName . '\'' );
 
-                \Log::debug( 'generateSchemaCredentials: found ' . print_r( $_names, true ) );
-
-                if ( empty( $_names ) )
+                if ( !empty( $_names ) )
                 {
-                    break;
+                    throw new ProvisioningException( 'The schema "' . $_dbName . '" already exists.' );
                 }
+
+                break;
             }
 
-            \Log::debug( 'generateSchemaCredentials: non-unique ' . $_dbUser . ', looping' );
+            $this->debug( '  * rave: provision database > schema creds dupe, looping' );
 
             if ( ++$_tries > 10 )
             {
@@ -213,11 +225,15 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
             usleep( 500000 );
         }
 
-        return [
+        $_creds = [
             'database' => $_dbName,
             'username' => $_dbUser,
             'password' => sha1( microtime( true ) . $_seed . $_dbUser . microtime( true ) )
         ];
+
+        $this->debug( '  * rave: provision database > schema creds - complete: ' . print_r( $_creds, true ) );
+
+        return $_creds;
     }
 
     /**
@@ -232,7 +248,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         {
             $_dbName = $creds['database'];
 
-            $this->debug( '_createDatabase: creating database "' . $_dbName . '"' );
+            $this->debug( '  * rave: provision database > creating database "' . $_dbName . '"' );
 
             return $db->statement(
                 <<<MYSQL
@@ -242,6 +258,8 @@ MYSQL
         }
         catch ( \Exception $_ex )
         {
+            $this->error( '  * rave: provision database > creating database - failure: ' . $_ex->getMessage() );
+
             return false;
         }
     }
@@ -256,14 +274,18 @@ MYSQL
     {
         try
         {
+            $this->debug( '  * rave: provision database > dropping database "' . $creds['database'] . '"' );
+
             return $db->statement(
                 <<<MYSQL
-SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']}; SET_FOREIGN_KEY_CHECKS = 1;
+SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']} IF EXISTS
 MYSQL
             );
         }
         catch ( \Exception $_ex )
         {
+            $this->error( '  * rave: provision database > dropping - failure: ' . $_ex->getMessage() );
+
             return false;
         }
     }
@@ -276,6 +298,8 @@ MYSQL
      */
     protected function _grantPrivileges( $db, $creds )
     {
+        $this->debug( '  * rave: provision database > issuing grants for "' . $creds['database'] . '"' );
+
         //  Create user
         $db->statement( 'CREATE USER \'' . $creds['username'] . '\'@\'%\' IDENTIFIED BY \'' . $creds['password'] . '\'' );
 
@@ -290,6 +314,8 @@ MYSQL;
         }
         catch ( \Exception $_ex )
         {
+            $this->error( '  * rave: provision database > issuing grants - failure: ' . $_ex->getMessage() );
+
             return false;
         }
     }

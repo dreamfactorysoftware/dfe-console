@@ -3,6 +3,7 @@ namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
+use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
 use DreamFactory\Enterprise\Services\RaveDatabaseService;
@@ -11,7 +12,6 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
-use Illuminate\Support\Facades\Mail;
 
 class RaveProvisioner extends BaseResourceProvisioner
 {
@@ -63,7 +63,7 @@ class RaveProvisioner extends BaseResourceProvisioner
                 throw new \RuntimeException( 'Exception during launch.' );
             }
 
-            Mail::send(
+            \Mail::send(
                 'emails.generic',
                 [
                     'firstName'     => $_instance->user->first_name_text,
@@ -93,10 +93,15 @@ class RaveProvisioner extends BaseResourceProvisioner
 
             //  Force-kill anything we made before blowing up
             $request->setForced( true );
-//            $this->_deprovisionStorage( $request );
-//            $this->_deprovisionInstance( $request );
 
-            Mail::send(
+            $this->_deprovisionStorage( $request );
+
+            if ( !$this->_deprovisionInstance( $request ) )
+            {
+                $this->error( 'Unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.' );
+            }
+
+            \Mail::send(
                 'emails.generic',
                 [
                     'firstName'     => $_instance->user->first_name_text,
@@ -208,14 +213,7 @@ class RaveProvisioner extends BaseResourceProvisioner
      */
     protected function _provisionStorage( $request, $options = [] )
     {
-        \Log::debug( 'rave-provisioner: provisionStorage' );
-
-        $_config = config( 'filesystems.disks.hosted' );
-
-        if ( empty( $_config ) )
-        {
-            throw new \RuntimeException( 'No hosted storage configuration found.' );
-        }
+        \Log::debug( '  * rave: provision storage' );
 
         //  Use requested file system if one...
         if ( null === ( $_filesystem = $request->getStorage() ) )
@@ -229,7 +227,7 @@ class RaveProvisioner extends BaseResourceProvisioner
         $request->setStorageProvisioner( $_provisioner = Provision::resolveStorage( IfSet::get( $options, 'guest-location-nbr', 'rave' ) ) );
         $_provisioner->provision( $request );
 
-        \Log::debug( 'rave-provisioner: provisionStorage complete' );
+        \Log::debug( '  * rave: provision storage - complete' );
 
         return $_filesystem;
     }
@@ -242,12 +240,7 @@ class RaveProvisioner extends BaseResourceProvisioner
      */
     protected function _deprovisionStorage( $request, $options = [] )
     {
-        $_config = config( 'filesystems.disks.hosted' );
-
-        if ( empty( $_config ) )
-        {
-            throw new \RuntimeException( 'No hosted storage configuration found.' );
-        }
+        \Log::debug( '  * rave: deprovision storage' );
 
         //  Use requested file system if one...
         if ( null === ( $_filesystem = $request->getStorage() ) )
@@ -260,7 +253,24 @@ class RaveProvisioner extends BaseResourceProvisioner
         //  Do it!
         Provision::resolveStorage( 'rave' )->deprovision( $request );
 
+        \Log::debug( '  * rave: deprovision storage - complete' );
+
         return $_filesystem;
+    }
+
+    /**
+     * @return array
+     */
+    protected function _getStorageConfig()
+    {
+        $_config = config( 'filesystems.disks.hosted' );
+
+        if ( empty( $_config ) )
+        {
+            throw new \RuntimeException( 'No hosted storage configuration found.' );
+        }
+
+        return $_config;
     }
 
     /**
@@ -271,7 +281,7 @@ class RaveProvisioner extends BaseResourceProvisioner
      */
     protected function _provisionInstance( $request, $options = [] )
     {
-        \Log::debug( 'rave-provisioner: provisionInstance' );
+        \Log::debug( '  * rave: provision instance' );
 
         $_storagePath = null;
 
@@ -281,23 +291,27 @@ class RaveProvisioner extends BaseResourceProvisioner
         $_storageKey = $_instance->storage_id_text;
         $_storage = $request->getStorage();
         $_privatePath = $request->getStorageProvisioner()->getPrivatePath();;
-        $_relativePrivatePath = str_replace( $_storagePath, null, $_privatePath );
-        $_dbConfigFile = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
-        $_instanceMetadata = $_relativePrivatePath . DIRECTORY_SEPARATOR . $_name . '.json';
+        $_dbConfigFile = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
+        $_instanceMetadata = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.json';
 
-        \Log::debug( 'rave-provisioner: provisionInstance > database' );
+        \Log::debug( '  * rave: provision instance > database' );
 
         //	1. Provision the database
         /** @type RaveDatabaseService $_dbService */
         $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
-        $_dbConfig = $_dbService->provision( $request );
+
+        if ( false === ( $_dbConfig = $_dbService->provision( $request ) ) )
+        {
+            throw new ProvisioningException( 'Failed to provision database. Check logs for error.' );
+        }
+
         $_dbUser = $_dbConfig['username'];
         $_dbPassword = $_dbConfig['password'];
         $_dbName = $_dbConfig['database'];
 
-        \Log::debug( 'rave-provisioner: provisionInstance > database complete' );
+        \Log::debug( '  * rave: provision instance > database - complete' );
 
-        \Log::debug( 'rave-provisioner: provisionInstance > update' );
+        \Log::debug( '  * rave: provision instance > update' );
 
         //  2. Update the instance...
         $_host = $_name . '.' . config( 'dfe.provisioning.default-dns-zone' ) . '.' . config( 'dfe.provisioning.default-dns-domain' );
@@ -333,12 +347,14 @@ class RaveProvisioner extends BaseResourceProvisioner
 
             $_instance->save();
 
-            \Log::debug( 'rave-provisioner: provisionInstance > update complete' );
+            \Log::debug( '  * rave: provision instance > update - complete' );
         }
         catch ( \Exception $_ex )
         {
             throw new \RuntimeException( 'Exception while storing new instance data: ' . $_ex->getMessage() );
         }
+
+        \Log::debug( '  * rave: provision instance > write metadata' );
 
         $_md = [];
 
@@ -350,14 +366,20 @@ class RaveProvisioner extends BaseResourceProvisioner
             {
                 \Log::error( 'Error writing instance metadata file: ' . $_dbConfigFile );
             }
+
+            \Log::debug( '  * rave: provision instance > write metadata - complete (' . $_instanceMetadata . ')' );
         }
         catch ( \Exception $_ex )
         {
             //  Don't stop for me...
+            \Log::error( '  * rave: provision instance > write metadata - ERROR (' . $_instanceMetadata . ')' );
         }
 
         //  Fire off a "launch" event...
+        \Log::debug( '  * rave: provision instance > fire event' );
         \Event::fire( 'dfe.launch', [$this, $_md] );
+
+        \Log::debug( '  * rave: provision instance - complete' );
 
         return [
             'host'                => $_host,
@@ -385,7 +407,9 @@ class RaveProvisioner extends BaseResourceProvisioner
      */
     protected function _deprovisionInstance( $request, $options = [] )
     {
+        $_instance = $request->getInstance();
 
+        return $_instance ? $_instance->delete() : true;
     }
 
 }

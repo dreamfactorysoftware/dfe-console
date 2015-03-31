@@ -70,15 +70,23 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
     /** @inheritdoc */
     public function provision( $request, $options = [] )
     {
+        \Log::debug( '  * rave: provision storage' );
+
         //  Make structure
         $this->_createInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
+
+        \Log::debug( '  * rave: provision storage - complete' );
     }
 
     /** @inheritdoc */
     public function deprovision( $request, $options = [] )
     {
+        \Log::debug( '  * rave: deprovision storage' );
+
         //  '86 structure
         $this->_removeInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
+
+        \Log::debug( '  * rave: deprovision storage - complete' );
     }
 
     /**
@@ -133,6 +141,10 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
             }
         }
 
+        \Log::debug( '  * rave: provision storage > instance storage created' );
+        \Log::debug( '    * private path:       ' . $_privatePath );
+        \Log::debug( '    * owner private path: ' . $_ownerPrivatePath );
+
         $this->_privatePath = $_privatePath;
         $this->_ownerPrivatePath = $_ownerPrivatePath;
     }
@@ -162,9 +174,11 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
      */
     protected function _resolveStructure( Instance $instance )
     {
-        //  Hosted has no structure, just storage
-        if ( $this->_hostedStorage )
+        //  Non-hosted has no structure, just storage
+        if ( !$this->_hostedStorage )
         {
+            \Log::debug( '  * rave: provision storage > non-hosted structure resolved' );
+
             return array(null, null, null);
         }
 
@@ -198,7 +212,11 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
             throw new \RuntimeException( 'Zone and/or partition unknown. Cannot provision storage.' );
         }
 
-        return [$_zone, $_partition, $_rootHash];
+        $_structure = [$_zone, $_partition, $_rootHash];
+
+        \Log::debug( '  * rave: provision storage > structure resolved: ' . print_r( $_structure, true ) );
+
+        return $_structure;
     }
 
     /**
@@ -211,16 +229,19 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
      */
     protected function _makeRootPath( $zone, $partition, $rootHash, $instanceId = null )
     {
-        return
-            $this->_hostedStorage
-                ? DIRECTORY_SEPARATOR .
-                $zone .
-                DIRECTORY_SEPARATOR .
-                $partition .
-                DIRECTORY_SEPARATOR .
-                $rootHash .
-                ( $instanceId ? DIRECTORY_SEPARATOR . $instanceId : null )
-                : null;
+        $_rootPath = $this->_hostedStorage
+            ? DIRECTORY_SEPARATOR .
+            $zone .
+            DIRECTORY_SEPARATOR .
+            $partition .
+            DIRECTORY_SEPARATOR .
+            $rootHash .
+            ( $instanceId ? DIRECTORY_SEPARATOR . $instanceId : null )
+            : null;
+
+        \Log::debug( '  * rave: provision storage > root path: ' . $_rootPath );
+
+        return $_rootPath;
     }
 
     /** @inheritdoc */

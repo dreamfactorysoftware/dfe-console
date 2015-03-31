@@ -8,6 +8,9 @@
       <excludeFolder url="file://$MODULE_DIR$/app/storage" />
       <excludeFolder url="file://$MODULE_DIR$/original" />
       <excludeFolder url="file://$MODULE_DIR$/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/tests" />

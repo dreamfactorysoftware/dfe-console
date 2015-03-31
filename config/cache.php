@@ -6,6 +6,9 @@ return [
     'default' => env( 'CACHE_DRIVER', 'file' ),
     'prefix'  => 'dfe',
     'stores'  => [
+        'array'     => [
+            'driver' => 'array',
+        ],
         'database'  => [
             'driver'     => 'database',
             'table'      => 'cache_t',
