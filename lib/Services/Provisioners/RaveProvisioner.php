@@ -11,6 +11,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
+use Illuminate\Support\Facades\Mail;
 
 class RaveProvisioner extends BaseResourceProvisioner
 {
@@ -62,8 +63,8 @@ class RaveProvisioner extends BaseResourceProvisioner
                 throw new \RuntimeException( 'Exception during launch.' );
             }
 
-            \Mail::send(
-                'email.generic',
+            Mail::send(
+                'emails.generic',
                 [
                     'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Launch Complete',
@@ -95,8 +96,8 @@ class RaveProvisioner extends BaseResourceProvisioner
 //            $this->_deprovisionStorage( $request );
 //            $this->_deprovisionInstance( $request );
 
-            \Mail::send(
-                'email.generic',
+            Mail::send(
+                'emails.generic',
                 [
                     'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Launch Failure',
@@ -145,7 +146,7 @@ class RaveProvisioner extends BaseResourceProvisioner
             }
 
             \Mail::send(
-                'email.generic',
+                'emails.generic',
                 [
                     'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Shutdown Complete',
@@ -172,7 +173,7 @@ class RaveProvisioner extends BaseResourceProvisioner
             $_instance->updateState( ProvisionStates::DEPROVISIONING_ERROR );
 
             \Mail::send(
-                'email.generic',
+                'emails.generic',
                 [
                     'firstName'     => $_instance->user->first_name_text,
                     'headTitle'     => 'Shutdown Complete',

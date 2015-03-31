@@ -45,6 +45,7 @@ return [
         'DreamFactory\\Enterprise\\Console\\Providers\\EventServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\RouteServiceProvider',
         /** DreamFactory Common service providers */
+        'DreamFactory\\Library\\Fabric\\Auditing\\Services\\AuditServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\LibraryAssetsProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\Auth\\ConsoleAuthProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',

@@ -34,7 +34,7 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
      */
     public function make( $provisioner = 'rave', $options = [] )
     {
-        $_config = \Config::get( 'provisioners' );
+        $_config = config( 'provisioners' );
 
         if ( !array_key_exists( $provisioner, $_config['hosts'] ) )
         {

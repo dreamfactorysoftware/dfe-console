@@ -23,7 +23,7 @@
  * Ops controller for operational api
  */
 \Route::group(
-    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers'],
+    ['prefix' => 'api/v1', 'middleware' => 'dfe.api-logging', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers'],
     function ()
     {
         \Route::controller( 'ops', 'OpsController' );

@@ -7,7 +7,6 @@ use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Library\Fabric\Auditing\Enums\AuditLevels;
-use DreamFactory\Library\Fabric\Auditing\Facades\Audit;
 use Illuminate\Mail\Message;
 
 /**
@@ -67,7 +66,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         $_subject = $_result ? '[DFE] Your DSP is ready!' : '[DFE] DSP Launch Failure';
 
         \Mail::send(
-            'email.generic',
+            'emails.generic',
             $_data,
             function ( Message $message ) use ( $_instance, $_subject )
             {
@@ -109,7 +108,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         $_subject = $_result ? '[DFE] Your DSP is ready!' : '[DFE] DSP Launch Failure';
 
         \Mail::send(
-            'email.generic',
+            'emails.generic',
             $_data,
             function ( Message $message ) use ( $_instance, $_subject )
             {
@@ -132,7 +131,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         //  Put instance ID into the correct place
         $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        Audit::log( $data, $level, $facility, app( 'request' ) );
+        \App::make( 'dfe.audit' )->log( $data, $level, $facility, app( 'request' ) );
     }
 
     /**

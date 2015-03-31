@@ -40,7 +40,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         }
 
         //  Get a connection to the instance's database server 
-        list( $_db, $_dbConfig, $_dbServer ) = $this->_getRootDatabaseConnection( $_instance );
+        list( $_db, $_rootConfig, $_rootServer ) = $this->_getRootDatabaseConnection( $_instance );
 
         //  1. Create a random user and password for the instance
         $_creds = $this->_generateSchemaCredentials( $_instance );
@@ -85,7 +85,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
             throw new ProvisioningException( $_ex->getMessage(), $_ex->getCode() );
         }
 
-        return $_dbConfig;
+        return array_merge( $_rootConfig, $_creds );
     }
 
     /**
@@ -125,6 +125,8 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
         {
             throw new \RuntimeException( 'Empty server id given during database resource provisioning for instance' );
         }
+
+        $this->debug( 'getRootDatabaseConnection: looking up server "' . $_dbServerId . '"' );
 
         try
         {
@@ -175,6 +177,8 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      */
     protected function _generateSchemaCredentials( Instance $instance )
     {
+        $_tries = 0;
+
         $_dbUser = $_dbPassword = null;
         $_dbName = $this->_generateDatabaseName( $instance );
         $_seed = $_dbName . env( 'APP_KEY' ) . $instance->instance_name_text;
@@ -185,15 +189,24 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
             $_baseHash = sha1( microtime( true ) . $_seed );
             $_dbUser = substr( 'u' . $_baseHash, 0, 16 );
 
-            if ( Instance::where( 'db_user_text', '=', $_dbUser )->count() )
+            if ( 0 == Instance::where( 'db_user_text', '=', $_dbUser )->count() )
             {
                 //  Make sure the database name is unique as well.
                 $_names = \DB::select( 'SHOW DATABASES LIKE :schema', [':schema' => $_dbName] );
+
+                \Log::debug( 'generateSchemaCredentials: found ' . print_r( $_names, true ) );
 
                 if ( empty( $_names ) )
                 {
                     break;
                 }
+            }
+
+            \Log::debug( 'generateSchemaCredentials: non-unique ' . $_dbUser . ', looping' );
+
+            if ( ++$_tries > 10 )
+            {
+                throw new \LogicException( 'Unable to locate a non-unique database user name after ' . $_tries . ' attempts.' );
             }
 
             //  Quick snoozy and we try again
@@ -217,9 +230,13 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
     {
         try
         {
+            $_dbName = $creds['database'];
+
+            $this->debug( '_createDatabase: creating database "' . $_dbName . '"' );
+
             return $db->statement(
                 <<<MYSQL
-CREATE DATABASE IF NOT EXISTS `{$creds['database']}`
+CREATE DATABASE IF NOT EXISTS `{$_dbName}`
 MYSQL
             );
         }
@@ -241,7 +258,7 @@ MYSQL
         {
             return $db->statement(
                 <<<MYSQL
-SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']};
+SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']}; SET_FOREIGN_KEY_CHECKS = 1;
 MYSQL
             );
         }

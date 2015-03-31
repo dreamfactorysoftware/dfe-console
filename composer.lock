@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1a2c45136655897abc002d3bb9d3e3f3",
+    "hash": "f9e06b5261a1a65d0c74b17d68482bea",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -399,17 +399,73 @@
             "time": "2015-02-05 16:35:43"
         },
         {
+            "name": "dreamfactory/dfe-audit",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:dreamfactorysoftware/dfe-audit.git",
+                "reference": "68df0c1beae86dd2f7ec5ec975514ecf4b9ed714"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/68df0c1beae86dd2f7ec5ec975514ecf4b9ed714",
+                "reference": "68df0c1beae86dd2f7ec5ec975514ecf4b9ed714",
+                "shasum": ""
+            },
+            "require": {
+                "dreamfactory/php-utils": "~1.0"
+            },
+            "require-dev": {
+                "laravel/framework": "5.0.*",
+                "phpunit/phpunit": "@stable",
+                "psr/log": "~1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DreamFactory\\Enterprise\\Services\\Auditing\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Jerry Ablan",
+                    "email": "jerryablan@dreamfactory.com"
+                }
+            ],
+            "description": "DreamFactory Enterprise(tm) Auditing Library",
+            "homepage": "https://www.dreamfactory.com/",
+            "keywords": [
+                "dreamfactory",
+                "fabric",
+                "queue",
+                "utility"
+            ],
+            "support": {
+                "source": "https://github.com/dreamfactorysoftware/dfe-audit/tree/master",
+                "issues": "https://github.com/dreamfactorysoftware/dfe-audit/issues"
+            },
+            "time": "2015-03-31 17:09:49"
+        },
+        {
             "name": "dreamfactory/dfe-common",
             "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "d168da0d543fd47eb0dc87600f18787b1b9d9f82"
+                "reference": "5cdd6a94fd9a6fb69e3eb42d2e96ae53e50bbf8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/d168da0d543fd47eb0dc87600f18787b1b9d9f82",
-                "reference": "d168da0d543fd47eb0dc87600f18787b1b9d9f82",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/5cdd6a94fd9a6fb69e3eb42d2e96ae53e50bbf8e",
+                "reference": "5cdd6a94fd9a6fb69e3eb42d2e96ae53e50bbf8e",
                 "shasum": ""
             },
             "require": {
@@ -419,7 +475,6 @@
                 "wpb/string-blade-compiler": "2.*@dev"
             },
             "require-dev": {
-                "dreamfactory/fabric-audit": "dev-develop as dev-master",
                 "dreamfactory/fabric-common": "dev-develop as dev-master",
                 "laravel/framework": "5.0.*",
                 "phpspec/phpspec": "~2.1",
@@ -458,60 +513,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-03-30 21:30:49"
-        },
-        {
-            "name": "dreamfactory/fabric-audit",
-            "version": "dev-develop",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dreamfactorysoftware/fabric-audit.git",
-                "reference": "48659b17d7dc418d7bb0e669410afb71bb26ccd4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-audit/zipball/48659b17d7dc418d7bb0e669410afb71bb26ccd4",
-                "reference": "48659b17d7dc418d7bb0e669410afb71bb26ccd4",
-                "shasum": ""
-            },
-            "require": {
-                "dreamfactory/php-utils": "~1.0"
-            },
-            "require-dev": {
-                "laravel/framework": "5.0.*",
-                "phpunit/phpunit": "@stable",
-                "psr/log": "~1.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-develop": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "DreamFactory\\Library\\Fabric\\Auditing\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "Jerry Ablan",
-                    "email": "jerryablan@dreamfactory.com"
-                }
-            ],
-            "description": "DreamFactory Enterprise(tm) Auditing Library",
-            "homepage": "https://www.dreamfactory.com/",
-            "keywords": [
-                "dreamfactory",
-                "fabric",
-                "queue",
-                "utility"
-            ],
-            "time": "2015-03-09 18:53:17"
+            "time": "2015-03-31 17:36:17"
         },
         {
             "name": "dreamfactory/fabric-common",
@@ -4508,12 +4510,6 @@
             "alias": "dev-master",
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
-            "package": "dreamfactory/fabric-audit"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
             "package": "dreamfactory/console-tools"
         }
     ],
@@ -4521,9 +4517,9 @@
     "stability-flags": {
         "wpb/string-blade-compiler": 20,
         "dreamfactory/dfe-common": 20,
+        "dreamfactory/dfe-audit": 20,
         "dreamfactory/fabric-common": 20,
         "dreamfactory/fabric-db": 20,
-        "dreamfactory/fabric-audit": 20,
         "dreamfactory/console-tools": 20
     },
     "prefer-stable": false,

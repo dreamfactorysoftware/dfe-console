@@ -28,6 +28,10 @@
 		{
 			"type": "vcs",
 			"url":  "git@github.com:dreamfactorysoftware/dfe-common.git"
+		},
+		{
+			"type": "vcs",
+			"url":  "git@github.com:dreamfactorysoftware/dfe-audit.git"
 		}
 	],
 	"type":              "project",
@@ -40,9 +44,9 @@
 		"wpb/string-blade-compiler":   "2.*@dev",
 		"dreamfactory/php-utils":      "*",
 		"dreamfactory/dfe-common":     "dev-develop as dev-master",
+		"dreamfactory/dfe-audit":      "*@dev",
 		"dreamfactory/fabric-common":  "dev-develop as dev-master",
 		"dreamfactory/fabric-db":      "dev-develop as dev-master",
-		"dreamfactory/fabric-audit":   "dev-develop as dev-master",
 		"dreamfactory/console-tools":  "dev-develop as dev-master"
 	},
 	"require-dev":       {

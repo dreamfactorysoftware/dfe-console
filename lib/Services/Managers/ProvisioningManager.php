@@ -85,8 +85,6 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
 
         $_class = config( 'provisioners.hosts.' . $_key );
 
-        \Log::debug( 'Configs ' . print_r( $_class, true ) . ' key:' . $_key . ' tag:' . $tag );
-
         $_provisioner = new $_class( $this->app );
         $this->manage( $_key, $_provisioner );
 
