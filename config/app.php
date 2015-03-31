@@ -45,13 +45,13 @@ return [
         'DreamFactory\\Enterprise\\Console\\Providers\\EventServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\RouteServiceProvider',
         /** DreamFactory Common service providers */
-        'DreamFactory\\Library\\Fabric\\Auditing\\Services\\AuditServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\LibraryAssetsProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\Auth\\ConsoleAuthProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\PacketServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\RouteHashingServiceProvider',
         'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
         /** DreamFactory Services service providers */
+        'DreamFactory\\Enterprise\\Services\\Auditing\\Providers\\AuditServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\RaveDatabaseServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
