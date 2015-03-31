@@ -5,7 +5,7 @@ use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
 use DreamFactory\Enterprise\Console\Services\Elk;
-use DreamFactory\Library\Fabric\Auditing\Services\AuditingService;
+use DreamFactory\Enterprise\Services\Auditing\Services\AuditingService;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;

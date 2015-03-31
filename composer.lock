@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f9e06b5261a1a65d0c74b17d68482bea",
+    "hash": "a2306b7e838524ae96d8f55192196e40",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -400,25 +400,24 @@
         },
         {
             "name": "dreamfactory/dfe-audit",
-            "version": "dev-master",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-audit.git",
-                "reference": "68df0c1beae86dd2f7ec5ec975514ecf4b9ed714"
+                "reference": "3717a94e1e9792530ff333d2e47bf6a930532dc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/68df0c1beae86dd2f7ec5ec975514ecf4b9ed714",
-                "reference": "68df0c1beae86dd2f7ec5ec975514ecf4b9ed714",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/3717a94e1e9792530ff333d2e47bf6a930532dc9",
+                "reference": "3717a94e1e9792530ff333d2e47bf6a930532dc9",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/php-utils": "~1.0"
+                "dreamfactory/dfe-common": "dev-develop as dev-master"
             },
             "require-dev": {
-                "laravel/framework": "5.0.*",
-                "phpunit/phpunit": "@stable",
-                "psr/log": "~1.0"
+                "laravel/framework": "~5.0",
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "extra": {
@@ -449,10 +448,10 @@
                 "utility"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-audit/tree/master",
+                "source": "https://github.com/dreamfactorysoftware/dfe-audit/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-audit/issues"
             },
-            "time": "2015-03-31 17:09:49"
+            "time": "2015-03-31 18:59:38"
         },
         {
             "name": "dreamfactory/dfe-common",
@@ -4517,7 +4516,6 @@
     "stability-flags": {
         "wpb/string-blade-compiler": 20,
         "dreamfactory/dfe-common": 20,
-        "dreamfactory/dfe-audit": 20,
         "dreamfactory/fabric-common": 20,
         "dreamfactory/fabric-db": 20,
         "dreamfactory/console-tools": 20

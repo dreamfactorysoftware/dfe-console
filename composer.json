@@ -43,8 +43,8 @@
 		"ruflin/elastica":             "*",
 		"wpb/string-blade-compiler":   "2.*@dev",
 		"dreamfactory/php-utils":      "*",
+		"dreamfactory/dfe-audit":      "~1.0",
 		"dreamfactory/dfe-common":     "dev-develop as dev-master",
-		"dreamfactory/dfe-audit":      "*@dev",
 		"dreamfactory/fabric-common":  "dev-develop as dev-master",
 		"dreamfactory/fabric-db":      "dev-develop as dev-master",
 		"dreamfactory/console-tools":  "dev-develop as dev-master"
