@@ -13,6 +13,9 @@
         <option value="Composer\Autoload\ClassLoader-&gt;loadClass" />
         <option value="Composer\Autoload\ClassLoader-&gt;findFile" />
         <option value="Composer\Autoload\ClassLoader-&gt;findFileWithExtension" />
+        <option value="Composer\Autoload\includeFile" />
+        <option value="app" />
+        <option value="Illuminate\Database\Eloquent\Model-&gt;__get" />
       </list>
     </option>
   </component>

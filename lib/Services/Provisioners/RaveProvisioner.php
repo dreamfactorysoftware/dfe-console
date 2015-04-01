@@ -4,6 +4,7 @@ namespace DreamFactory\Enterprise\Services\Provisioners;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
 use DreamFactory\Enterprise\Services\RaveDatabaseService;
@@ -62,6 +63,8 @@ class RaveProvisioner extends BaseResourceProvisioner
         }
         catch ( \Exception $_ex )
         {
+            $this->error( '    * provisioner exception: ' . $_ex->getMessage() );
+
             $_instance->updateState( ProvisionStates::PROVISIONING_ERROR );
 
             //  Force-kill anything we made before blowing up
@@ -69,7 +72,7 @@ class RaveProvisioner extends BaseResourceProvisioner
 
             $this->_deprovisionStorage( $request );
 
-            if ( !$this->_deprovisionInstance( $request ) )
+            if ( !$this->_deprovisionInstance( $request, ['keep-database' => ( $_ex instanceof SchemaExistsException )] ) )
             {
                 $this->error( 'Unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.' );
             }
@@ -201,11 +204,7 @@ class RaveProvisioner extends BaseResourceProvisioner
         //	1. Provision the database
         /** @type RaveDatabaseService $_dbService */
         $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
-
-        if ( false === ( $_dbConfig = $_dbService->provision( $request ) ) )
-        {
-            throw new ProvisioningException( 'Failed to provision database. Check logs for error.' );
-        }
+        $_dbConfig = $_dbService->provision( $request );
 
         $_dbUser = $_dbConfig['username'];
         $_dbPassword = $_dbConfig['password'];
@@ -241,9 +240,33 @@ class RaveProvisioner extends BaseResourceProvisioner
                     'terminate_date'     => null,
                     'provision_ind'      => 1,
                     'deprovision_ind'    => 0,
-                    'cluster_id'         => $_instance->cluster_id,
                 ]
             );
+
+            //  Collect metadata
+            $_md = array_merge(
+                $_instance->getMetadata(),
+                [
+                    'private-path'       => $_privatePath,
+                    'owner-private-path' => $_ownerPrivatePath,
+                    'storage-path'       => $_storagePath,
+                    'db.' . $_name       => $_dbConfig,
+                ]
+            );
+
+            $_instanceData = $_instance->instance_data_text;
+
+            if ( empty( $_instanceData ) )
+            {
+                $_instanceData = [];
+            }
+
+            if ( !array_key_exists( 'metadata', $_instanceData ) )
+            {
+                $_instanceData['metadata'] = $_md;
+            }
+
+            $_instance->instance_data_text = $_instanceData;
 
             $_instance->save();
 
@@ -253,16 +276,6 @@ class RaveProvisioner extends BaseResourceProvisioner
         {
             throw new \RuntimeException( 'Error updating instance data: ' . $_ex->getMessage() );
         }
-
-        //  Collect metadata
-        $_md = array_merge(
-            $_instance->getMetadata(),
-            [
-                'private-path'       => $_privatePath,
-                'owner-private-path' => $_ownerPrivatePath,
-                'storage-path'       => $_storagePath,
-            ]
-        );
 
         //  Fire off a "launch" event...
         \Log::debug( '  * rave: provision instance > fire event' );
@@ -291,7 +304,7 @@ class RaveProvisioner extends BaseResourceProvisioner
 
     /**
      * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param array               $options ['keep-database'=>true|false]
      *
      * @return bool
      * @throws ProvisioningException
@@ -300,35 +313,28 @@ class RaveProvisioner extends BaseResourceProvisioner
     {
         \Log::debug( '  * rave: deprovision instance' );
 
-        $_storagePath = null;
-
-        //  1. Make a snapshot
-        //  2. Delete instance row
-        //  3. Drop database
-        //  4. Delete storage
-
-        //	Pull the request apart
         $_instance = $request->getInstance();
-        $_name = $_instance->instance_name_text;
-        $_storageKey = $_instance->storage_id_text;
-        $_storage = $request->getStorage();
-        $_privatePath = $request->getStorageProvisioner()->getPrivatePath();
-        $_ownerPrivatePath = $request->getStorageProvisioner()->getOwnerPrivatePath();
-        $_dbConfigFile = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
-        $_instanceMetadata = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.json';
+        $_keepDatabase = IfSet::get( $options, 'keep-database', false );
 
-        \Log::debug( '  * rave: deprovision instance > database' );
-
-        //	1. Provision the database
-        /** @type RaveDatabaseService $_dbService */
-        $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
-
-        if ( false === ( $_dbConfig = $_dbService->deprovision( $request ) ) )
+        if ( $_keepDatabase )
         {
-            throw new ProvisioningException( 'Failed to deprovision database. Check logs for error.' );
+            $this->info( '  * rave: not removing existing schema.' );
         }
+        else
+        {
+            \Log::debug( '  * rave: deprovision instance > database' );
 
-        \Log::debug( '  * rave: deprovision instance > database - complete' );
+            //	Deprovision the database
+            /** @type RaveDatabaseService $_dbService */
+            $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
+
+            if ( false === ( $_dbConfig = $_dbService->deprovision( $request ) ) )
+            {
+                throw new ProvisioningException( 'Failed to deprovision database. Check logs for error.' );
+            }
+
+            \Log::debug( '  * rave: deprovision instance > database - complete' );
+        }
 
         if ( !$_instance->delete() )
         {
@@ -342,6 +348,7 @@ class RaveProvisioner extends BaseResourceProvisioner
         \Event::fire( 'dfe.shutdown', [$this, $request] );
 
         \Log::debug( '  * rave: deprovision instance - complete' );
-    }
 
+        return true;
+    }
 }

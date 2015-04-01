@@ -64,11 +64,12 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         $_timestamp = microtime( true );
         $_result = $this->_doProvision( $request );
         $_elapsed = microtime( true ) - $_timestamp;
-        $_instance = $request->getInstance();
 
-        $this->_logProvision( ['instance' => $_instance, 'elapsed' => $_elapsed, 'result' => $_result, 'deprovision' => false, 'provision' => true] );
+        $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
 
         //  Send notification
+        $_instance = $request->getInstance();
+
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
             'headTitle'     => $_result ? 'Launch Complete' : 'Launch Failure',
@@ -84,7 +85,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
                     'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
         ];
 
-        $_subject = $_result ? 'Instance launch successful' : 'Instance launch failure';
+        $_subject = $_result['success'] ? 'Instance launch successful' : 'Instance launch failure';
 
         $this->_notify( $_instance, $_subject, $_data );
 
@@ -99,7 +100,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         $_elapsed = microtime( true ) - $_timestamp;
         $_instance = $request->getInstance();
 
-        $this->_logProvision( ['instance' => $_instance, 'elapsed' => $_elapsed, 'result' => $_result, 'deprovision' => true, 'provision' => false] );
+        $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
 
         //  Send notification
         $_data = [
@@ -116,7 +117,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
                 '</strong> shutdown was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
         ];
 
-        $_subject = $_result ? 'Instance shutdown successful' : 'Instance shutdown failure';
+        $_subject = $_result['success'] ? 'Instance shutdown successful' : 'Instance shutdown failure';
 
         $this->_notify( $_instance, $_subject, $_data );
 
@@ -126,15 +127,16 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
     /**
      * @param array $data
      * @param int   $level
+     * @param bool  $deprovisioning
      *
      * @return bool
      */
-    protected function _logProvision( $data = [], $level = AuditLevels::INFO )
+    protected function _logProvision( $data = [], $level = AuditLevels::INFO, $deprovisioning = false )
     {
         //  Put instance ID into the correct place
-        $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
+        isset( $data['instance'] ) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        return Audit::log( $data, $level, app( 'request' ), 'provisioning' );
+        return Audit::log( $data, $level, app( 'request' ), ( ( $deprovisioning ? 'de' : null ) . 'provision' ) );
     }
 
     /**

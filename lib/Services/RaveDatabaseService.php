@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Database\Connection;
@@ -72,7 +73,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
                 try
                 {
                     //	Try and get rid of the database we created
-                    $this->_dropDatabase( $_db, $_creds );
+                    $this->_dropDatabase( $_db, $_creds['database'] );
                 }
                 catch ( \Exception $_ex )
                 {
@@ -83,6 +84,10 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
 
                 return false;
             }
+        }
+        catch ( ProvisioningException $_ex )
+        {
+            throw $_ex;
         }
         catch ( \Exception $_ex )
         {
@@ -99,10 +104,34 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      * @param array               $options
      *
      * @return bool
+     * @throws ProvisioningException
+     * @throws SchemaExistsException
      */
     public function deprovision( $request, $options = [] )
     {
-        $_forced = $request->isForced();
+        $this->debug( '  * rave: deprovision database - begin' );
+
+        $_instance = $request->getInstance();
+
+        //  Get a connection to the instance's database server
+        list( $_db, $_rootConfig, $_rootServer ) = $this->_getRootDatabaseConnection( $_instance );
+
+        try
+        {
+            //	Try and get rid of the database we created
+            $this->_dropDatabase( $_db, $_instance->db_name_text );
+        }
+        catch ( \Exception $_ex )
+        {
+            $this->error( '    * provisioner: exception dropping database: ' . $_ex->getMessage() );
+            $this->debug( '  * rave: deprovision database - incomplete/fail' );
+
+            return false;
+        }
+
+        $this->debug( '  * rave: deprovision database - complete' );
+
+        return true;
     }
 
     /**
@@ -181,6 +210,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      * @param Instance $instance
      *
      * @return array
+     * @throws SchemaExistsException
      */
     protected function _generateSchemaCredentials( Instance $instance )
     {
@@ -208,7 +238,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
 
                 if ( !empty( $_names ) )
                 {
-                    throw new ProvisioningException( 'The schema "' . $_dbName . '" already exists.' );
+                    throw new SchemaExistsException( 'The schema "' . $_dbName . '" already exists.' );
                 }
 
                 break;
@@ -266,19 +296,20 @@ MYSQL
 
     /**
      * @param Connection $db
-     * @param array      $creds
+     * @param string     $databaseToDrop
      *
      * @return bool
+     *
      */
-    protected function _dropDatabase( $db, $creds )
+    protected function _dropDatabase( $db, $databaseToDrop )
     {
         try
         {
-            $this->debug( '  * rave: provision database > dropping database "' . $creds['database'] . '"' );
+            $this->debug( '  * rave: provision database > dropping database "' . $databaseToDrop . '"' );
 
             return $db->statement(
                 <<<MYSQL
-SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']} IF EXISTS
+SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$databaseToDrop}
 MYSQL
             );
         }
