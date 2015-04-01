@@ -184,7 +184,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
      */
     protected function _generateSchemaCredentials( Instance $instance )
     {
-        $this->debug( '  * rave: provision database > schema creds: ' );
+        $this->debug( '  * rave: provision database > schema creds' );
 
         $_tries = 0;
 
@@ -214,7 +214,7 @@ class RaveDatabaseService extends BaseService implements ResourceProvisioner
                 break;
             }
 
-            $this->debug( '  * rave: provision database > schema creds dupe, looping' );
+            $this->debug( '  * rave: provision database > schema creds - dupe looping' );
 
             if ( ++$_tries > 10 )
             {

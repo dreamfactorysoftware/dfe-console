@@ -70,23 +70,15 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
     /** @inheritdoc */
     public function provision( $request, $options = [] )
     {
-        \Log::debug( '  * rave: provision storage' );
-
         //  Make structure
         $this->_createInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
-
-        \Log::debug( '  * rave: provision storage - complete' );
     }
 
     /** @inheritdoc */
     public function deprovision( $request, $options = [] )
     {
-        \Log::debug( '  * rave: deprovision storage' );
-
         //  '86 structure
         $this->_removeInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
-
-        \Log::debug( '  * rave: deprovision storage - complete' );
     }
 
     /**
