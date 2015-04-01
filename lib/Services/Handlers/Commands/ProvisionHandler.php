@@ -1,13 +1,11 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
-use DreamFactory\Enterprise\Common\Contracts\ProvisionerFactory;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Managers\InstanceManager;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 
 /**

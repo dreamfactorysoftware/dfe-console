@@ -2,13 +2,13 @@
 namespace DreamFactory\Enterprise\Services\Storage;
 
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
-use DreamFactory\Enterprise\Common\Facades\Scalpel;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\Inflector;
+use DreamFactory\Library\Utility\JsonFile;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
@@ -70,7 +70,7 @@ class SnapshotService extends BaseService
         $_stamp = date( 'YmdHis' );
         $_instance = $this->_validateInstance( $instanceId );
         $_instanceName = $_instance->instance_name_text;
-        $_tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dreamfactory' . DIRECTORY_SEPARATOR . 'tmp.dfe';
+        $_tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . 'tmp';
 
         //  A-Z, 0-9, and inner dashes (i.e. "abc-xyz"), but not outer (i.e., "-abc-")
         $_idPrefix = trim(
@@ -88,22 +88,17 @@ class SnapshotService extends BaseService
         $_metadata = [
             'id'                         => $_id,
             'type'                       => config( 'services.snapshot.metadata-type', 'dfe.snapshot' ),
-            'source_cluster_id'          => (int)$_instance->cluster_id,
-            'source_instance_id'         => $_instance->instance_id_text,
-            'source_database_id'         => $_instance->dbServer->server_id_text,
-            'source_storage_key'         => $_instance->storage_id_text,
-            'source_private_key'         => $_instance->user->storage_id_text,
-            'snapshot_prefix'            => $_id,
-            'contents_storage_timestamp' => (int)time(),
-            'contents_db_timestamp'      => (int)time(),
+            'source'                     => $_instance->getMetadata(),
+            'snapshot-prefix'            => $_id,
+            'contents-storage-timestamp' => (int)time(),
+            'contents-db-timestamp'      => (int)time(),
         ];
 
-        $_zipFileName = Scalpel::make( 'services.snapshot.templates.snapshot-file-name', $_metadata );
-        $_metadata['contents_storage_zipball'] = $_storageZipName = Scalpel::make( 'services.snapshot.templates.storage-file-name', $_metadata );
-        $_sqlFileName = Scalpel::make( 'services.snapshot.templates.db-file-name', $_metadata );
-
-        $_metadata['contents_db_zipball'] = $_sqlFileName . '.gz';
-
+        $_zipFileName = $this->_getConfigValue( 'services.snapshot.templates.snapshot-file-name', $_metadata );
+        $_metadata['contents-storage-zipball'] = $_storageZipName =
+            $this->_getConfigValue( 'services.snapshot.templates.storage-file-name', $_metadata );
+        $_sqlFileName = $this->_getConfigValue( 'services.snapshot.templates.db-file-name', $_metadata );
+        $_metadata['contents-db-zipball'] = $_sqlFileName . '.gz';
         $_metadata['hash'] = $_hash = RouteHashing::create( $_zipFileName, $keepDays );
         $_metadata['link'] = rtrim(
                 config( 'services.snapshot.hash_link_base' ),
@@ -116,8 +111,7 @@ class SnapshotService extends BaseService
             throw new \RuntimeException( 'Cannot create temporary work space "' . $_tempPath . '". Aborting.' );
         }
 
-        //  Mount file systems
-        $_fsSnapshot = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName ) );
+        //  Mount storage file system and archive
         $_fsStorage = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_storageZipName ) );
 
         //  Archive storage
@@ -129,7 +123,8 @@ class SnapshotService extends BaseService
         //  Unset to close file
         unset( $_fsStorage );
 
-        //  Stuff it in the snapshot
+        //  Mount snapshot and stuff the new files in it
+        $_fsSnapshot = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName ) );
         $this->_moveWorkFileToArchive( $_fsSnapshot, $_tempPath . DIRECTORY_SEPARATOR . $_storageZipName );
 
         //  Pull a database backup...
@@ -138,7 +133,7 @@ class SnapshotService extends BaseService
             throw new \RuntimeException( 'Unable to dump source database. Aborting.' );
         }
 
-        $_md = Scalpel::make( 'services.snapshot.templates.metadata', $_metadata );
+        $_md = $this->_getConfigValue( 'services.snapshot.templates.metadata', $_metadata );
 
         //  Put it in the snapshot...
         $_fsSnapshot->put( 'snapshot.json', Json::encode( $_md ) );
@@ -412,6 +407,50 @@ class SnapshotService extends BaseService
         }
 
         return;
+    }
+
+    /**
+     * Pulls a config value and applies replacements with automatic json conversion of non-strings
+     *
+     * @param string $key
+     * @param array  $replacements
+     *
+     * @return string
+     */
+    protected function _getConfigValue( $key, $replacements )
+    {
+        $_stringified = false;
+        $_keys = [];
+
+        $_value = config( $key );
+
+        if ( !is_string( $_value ) )
+        {
+            if ( false === JsonFile::encode( $_value ) )
+            {
+                throw new \InvalidArgumentException( 'The value at key "' . $key . '" is not a string or a jsonable array.' );
+            }
+
+            $_stringified = true;
+        }
+
+        //  Surround keys with squiggles
+        if ( !empty( $replacements ) )
+        {
+            foreach ( $replacements as $_key => $_value )
+            {
+                $_keys[] = '{' . $_key . '}';
+            }
+        }
+
+        $_value = str_replace( $_keys, array_values( $replacements ), $_value );
+
+        if ( $_stringified )
+        {
+            $_value = JsonFile::decode( $_value );
+        }
+
+        return $_value;
     }
 
 }

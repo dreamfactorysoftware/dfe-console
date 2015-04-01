@@ -105,16 +105,16 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
         //  Build privates....
         $_privateName = trim( config( 'dfe.provisioning.private-base-path', '.private' ), DIRECTORY_SEPARATOR . ' ' );
 
-        //  The user's private path
-        $_ownerPrivatePath = $_rootPath . DIRECTORY_SEPARATOR . $_privateName;
-
         //  The instance's private path
-        $_privatePath = $this->_hostedStorage ? $_instanceRootPath . DIRECTORY_SEPARATOR . $_privateName : $_ownerPrivatePath;
+        $_privatePath = $_instanceRootPath . DIRECTORY_SEPARATOR . $_privateName;
+
+        //  The user's private path. Same as instance's when non-hosted
+        $_ownerPrivatePath = $_rootPath . DIRECTORY_SEPARATOR . $_privateName;
 
         //  Make sure everything exists
         !$filesystem->exists( $_rootPath ) && $filesystem->makeDirectory( $_rootPath );
-        !$filesystem->exists( $_ownerPrivatePath ) && $filesystem->makeDirectory( $_ownerPrivatePath );
-        $this->_hostedStorage && !$filesystem->exists( $_privatePath ) && $filesystem->makeDirectory( $_privatePath );
+        !$filesystem->exists( $_privatePath ) && $filesystem->makeDirectory( $_privatePath );
+        $this->_hostedStorage && !$filesystem->exists( $_ownerPrivatePath ) && $filesystem->makeDirectory( $_ownerPrivatePath );
 
         //  Now ancillary sub-directories
         foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
@@ -128,6 +128,14 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
         foreach ( config( 'dfe.provisioning.private-paths', [] ) as $_path )
         {
             if ( !$filesystem->exists( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) )
+            {
+                $filesystem->exists( $_check ) && $filesystem->makeDirectory( $_check );
+            }
+        }
+
+        foreach ( config( 'dfe.provisioning.owner-private-paths', [] ) as $_path )
+        {
+            if ( !$filesystem->exists( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) )
             {
                 $filesystem->exists( $_check ) && $filesystem->makeDirectory( $_check );
             }

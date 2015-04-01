@@ -50,9 +50,11 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
     /** @inheritdoc */
     public function boot()
     {
+        parent::boot();
+
         if ( empty( $this->_subjectPrefix ) )
         {
-            $this->_subjectPrefix = config( 'dfe.email-subject-prefix' );
+            $this->_subjectPrefix = config( 'dfe.email-subject-prefix', '[DFE]' );
         }
     }
 
