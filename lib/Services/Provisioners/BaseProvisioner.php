@@ -134,7 +134,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         //  Put instance ID into the correct place
         $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        return Audit::log( $data, $level, app( 'request' ) );
+        return Audit::log( $data, $level, app( 'request' ), 'provisioning' );
     }
 
     /**
