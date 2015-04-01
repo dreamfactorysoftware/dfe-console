@@ -6,8 +6,8 @@ use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
+use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
-use DreamFactory\Enterprise\Services\Auditing\Facades\Audit;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Mail\Message;
 

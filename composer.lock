@@ -404,12 +404,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-audit.git",
-                "reference": "38fc3e44fe01d9db8564c52a942e7fd85a1d089b"
+                "reference": "f5fde197e9587c7fda47d962ab1dc679028b5afe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/38fc3e44fe01d9db8564c52a942e7fd85a1d089b",
-                "reference": "38fc3e44fe01d9db8564c52a942e7fd85a1d089b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/f5fde197e9587c7fda47d962ab1dc679028b5afe",
+                "reference": "f5fde197e9587c7fda47d962ab1dc679028b5afe",
                 "shasum": ""
             },
             "require": {
@@ -451,7 +451,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-audit/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-audit/issues"
             },
-            "time": "2015-04-01 21:34:40"
+            "time": "2015-04-01 22:08:21"
         },
         {
             "name": "dreamfactory/dfe-common",

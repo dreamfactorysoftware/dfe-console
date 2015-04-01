@@ -98,6 +98,7 @@ return [
         'Validator' => 'Illuminate\\Support\\Facades\\Validator',
         'View'      => 'Illuminate\\Support\\Facades\\View',
         /** DreamFactory Aliases */
+        'Audit'     => 'DreamFactory\\Enterprise\\Services\\Auditing\\Audit',
         'Provision' => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
     ],
 

@@ -9,5 +9,8 @@ return [
         realpath( __DIR__ . '/../app/Providers/RouteServiceProvider.php' ),
     ],
     //  Compiled File Providers
-    'providers' => [],
+    'providers' => [
+        /** DreamFactory Services service providers */
+        'DreamFactory\\Enterprise\\Services\\Auditing\\AuditServiceProvider',
+    ],
 ];

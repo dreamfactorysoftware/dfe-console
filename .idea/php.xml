@@ -12,6 +12,7 @@
         <option value="Illuminate\Foundation\AliasLoader-&gt;load" />
         <option value="Composer\Autoload\ClassLoader-&gt;loadClass" />
         <option value="Composer\Autoload\ClassLoader-&gt;findFile" />
+        <option value="Composer\Autoload\ClassLoader-&gt;findFileWithExtension" />
       </list>
     </option>
   </component>
