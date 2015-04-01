@@ -2,8 +2,10 @@
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Enums\Provisioners;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
+use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\DreamFactoryRave;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 
@@ -16,7 +18,7 @@ class DeprovisionHandler
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation;
+    use EntityLookup;
 
     //******************************************************************************
     //* Methods
@@ -27,37 +29,48 @@ class DeprovisionHandler
      *
      * @param DeprovisionJob $command
      *
+     * @return bool|mixed
      */
     public function handle( DeprovisionJob $command )
     {
-        $_provisioner = null;
+        $_options = $command->getOptions();
+        \Log::debug( 'dfe: deprovision instance - begin' );
 
-        //  Get the instance record
-        $_instance = $this->_validateInstance( $command->getInstanceId() );
-
-        switch ( $_instance->guest_location_nbr )
+        try
         {
-            case Provisioners::DREAMFACTORY_ENTERPRISE:
-                $_provisioner = new DreamFactoryRave();
-                break;
+            //  Find the instance
+            $_instance = $this->_findInstance( $command->getInstanceId() );
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::error( 'dfe: deprovision instance - failure, exception creating instance: ' . $_ex->getMessage() );
 
-            case Provisioners::AMAZON_EC2:
-                //  Not supported at this time
-                //$_provisioner = new AmazonEc2();
-                break;
-
-            case Provisioners::MICROSOFT_AZURE:
-                //  Not supported at this time
-                //$_provisioner = new MicrosoftAzure();
-                break;
+            return false;
         }
 
-        if ( empty( $_provisioner ) )
+        try
         {
-            throw new \RuntimeException( 'The provisioner of the request is not valid.' );
+            $_provisioner = Provision::getProvisioner( $_instance->guest_location_nbr );
+
+            if ( empty( $_provisioner ) )
+            {
+                throw new \RuntimeException( 'The provisioner of the request is not valid.' );
+            }
+
+            $_result = $_provisioner->deprovision( new ProvisioningRequest( $_instance, null, true ), $_options );
+
+            \Log::debug( 'dfe: deprovision instance - complete' );
+
+            return $_result;
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::error( 'dfe: deprovision instance - failure, exception during deprovisioning: ' . $_ex->getMessage() );
         }
 
-        $_provisioner->deprovision( ProvisioningRequest::createFromInstance( $_instance ) );
+        \Log::debug( 'dfe: provision instance - fail' );
+
+        return false;
     }
 
 }

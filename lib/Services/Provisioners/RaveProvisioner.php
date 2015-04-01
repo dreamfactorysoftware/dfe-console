@@ -7,11 +7,9 @@ use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
 use DreamFactory\Enterprise\Services\RaveDatabaseService;
-use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Mail\Message;
 
 class RaveProvisioner extends BaseResourceProvisioner
 {
@@ -58,34 +56,9 @@ class RaveProvisioner extends BaseResourceProvisioner
             $this->_provisionStorage( $request, $options );
 
             //  And the instance
-            if ( false === ( $_result = $this->_provisionInstance( $request, $options ) ) )
-            {
-                throw new \RuntimeException( 'Exception during launch.' );
-            }
+            $_result = $this->_provisionInstance( $request, $options );
 
-            \Mail::send(
-                'emails.generic',
-                [
-                    'firstName'     => $_instance->user->first_name_text,
-                    'headTitle'     => 'Launch Complete',
-                    'contentHeader' => 'Your DSP has been launched',
-                    'emailBody'     =>
-                        '<p>Your instance <strong>' .
-                        $_instance->instance_name_text .
-                        '</strong> has been successfully created. You can reach it by going to <a href="//' .
-                        $_instance->public_host_text .
-                        '">' .
-                        $_instance->public_host_text .
-                        '</a> from any browser.</p>',
-                ],
-                function ( $message ) use ( $_instance )
-                {
-                    /** @var Message $message */
-                    $message
-                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
-                        ->subject( '[DFE] Your DSP is ready!' );
-                }
-            );
+            return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
         }
         catch ( \Exception $_ex )
         {
@@ -101,30 +74,8 @@ class RaveProvisioner extends BaseResourceProvisioner
                 $this->error( 'Unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.' );
             }
 
-            \Mail::send(
-                'emails.generic',
-                [
-                    'firstName'     => $_instance->user->first_name_text,
-                    'headTitle'     => 'Launch Failure',
-                    'contentHeader' => 'Your DSP has failed to launch',
-                    'emailBody'     =>
-                        '<p>Your instance <strong>' .
-                        $_instance->instance_name_text .
-                        '</strong> was not successfully created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
-                ],
-                function ( $message ) use ( $_instance )
-                {
-                    /** @var Message $message */
-                    $message
-                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
-                        ->subject( '[DFE] DSP Launch Failure' );
-                }
-            );
-
             return ['success' => false, 'instance' => false, 'log' => $_output, 'result' => $_result];
         }
-
-        return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
     }
 
     /**
@@ -144,65 +95,16 @@ class RaveProvisioner extends BaseResourceProvisioner
 
         try
         {
-            //  And the instance
-            if ( 0 != ( $_result = $this->_deprovisionInstance( $request, $options ) ) )
-            {
-                throw new \RuntimeException( 'Exception during deprovisioning.' );
-            }
+            $_result = $this->_deprovisionInstance( $request, $options );
 
-            \Mail::send(
-                'emails.generic',
-                [
-                    'firstName'     => $_instance->user->first_name_text,
-                    'headTitle'     => 'Shutdown Complete',
-                    'contentHeader' => 'Your DSP has been shut down',
-                    'emailBody'     =>
-                        '<p>Your instance <strong>' .
-                        $_instance->instance_name_text .
-                        '</strong> has been successfully shut down. A snapshot may be available in the dashboard under <strong>Snapshots</strong>.</p>',
-                ],
-                function ( $message ) use ( $_instance )
-                {
-                    /** @var Message $message */
-                    $message
-                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
-                        ->subject( '[DFE] Your DSP was shut down' );
-                }
-            );
-
-            //  It worked!
-            $_success = true;
+            return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
         }
         catch ( \Exception $_ex )
         {
             $_instance->updateState( ProvisionStates::DEPROVISIONING_ERROR );
 
-            \Mail::send(
-                'emails.generic',
-                [
-                    'firstName'     => $_instance->user->first_name_text,
-                    'headTitle'     => 'Shutdown Complete',
-                    'contentHeader' => 'Your DSP has been shut down',
-                    'emailBody'     =>
-                        '<p>Your instance <strong>' .
-                        $_instance->instance_name_text .
-                        '</strong> shut down was not successful. Our engineers will examine the issue and notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.'
-                ],
-                function ( $message ) use ( $_instance )
-                {
-                    /** @var Message $message */
-                    $message
-                        ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
-                        ->bcc( 'ops@dreamfactory.com', 'DreamFactory Operations' )
-                        ->subject( '[DFE] DSP Shutdown Failure' );
-                }
-            );
-
-            //  No worky
-            $_success = false;
+            return ['success' => false, 'instance' => false, 'log' => $_output, 'result' => $_result];
         }
-
-        return ['success' => $_success, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
     }
 
     /**
@@ -278,6 +180,7 @@ class RaveProvisioner extends BaseResourceProvisioner
      * @param array               $options
      *
      * @return array
+     * @throws ProvisioningException
      */
     protected function _provisionInstance( $request, $options = [] )
     {
@@ -289,10 +192,9 @@ class RaveProvisioner extends BaseResourceProvisioner
         $_instance = $request->getInstance();
         $_name = $_instance->instance_name_text;
         $_storageKey = $_instance->storage_id_text;
-        $_storage = $request->getStorage();
-        $_privatePath = $request->getStorageProvisioner()->getPrivatePath();;
+        $_privatePath = $request->getStorageProvisioner()->getPrivatePath();
+        $_ownerPrivatePath = $request->getStorageProvisioner()->getOwnerPrivatePath();
         $_dbConfigFile = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
-        $_instanceMetadata = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.json';
 
         \Log::debug( '  * rave: provision instance > database' );
 
@@ -310,8 +212,6 @@ class RaveProvisioner extends BaseResourceProvisioner
         $_dbName = $_dbConfig['database'];
 
         \Log::debug( '  * rave: provision instance > database - complete' );
-
-        \Log::debug( '  * rave: provision instance > update' );
 
         //  2. Update the instance...
         $_host = $_name . '.' . config( 'dfe.provisioning.default-dns-zone' ) . '.' . config( 'dfe.provisioning.default-dns-domain' );
@@ -351,33 +251,22 @@ class RaveProvisioner extends BaseResourceProvisioner
         }
         catch ( \Exception $_ex )
         {
-            throw new \RuntimeException( 'Exception while storing new instance data: ' . $_ex->getMessage() );
+            throw new \RuntimeException( 'Error updating instance data: ' . $_ex->getMessage() );
         }
 
-        \Log::debug( '  * rave: provision instance > write metadata' );
-
-        $_md = [];
-
-        try
-        {
-            $_md = $_instance->getMetadata();
-
-            if ( !$_storage->put( $_instanceMetadata, Json::encode( $_md ) ) )
-            {
-                \Log::error( 'Error writing instance metadata file: ' . $_dbConfigFile );
-            }
-
-            \Log::debug( '  * rave: provision instance > write metadata - complete (' . $_instanceMetadata . ')' );
-        }
-        catch ( \Exception $_ex )
-        {
-            //  Don't stop for me...
-            \Log::error( '  * rave: provision instance > write metadata - ERROR (' . $_instanceMetadata . ')' );
-        }
+        //  Collect metadata
+        $_md = array_merge(
+            $_instance->getMetadata(),
+            [
+                'private-path'       => $_privatePath,
+                'owner-private-path' => $_ownerPrivatePath,
+                'storage-path'       => $_storagePath,
+            ]
+        );
 
         //  Fire off a "launch" event...
         \Log::debug( '  * rave: provision instance > fire event' );
-        \Event::fire( 'dfe.launch', [$this, $_md] );
+        \Event::fire( 'dfe.launch', [$this, $request, $_md] );
 
         \Log::debug( '  * rave: provision instance - complete' );
 
@@ -387,6 +276,7 @@ class RaveProvisioner extends BaseResourceProvisioner
             'blob_path'           => $_storagePath,
             'storage_path'        => $_storagePath,
             'private_path'        => $_privatePath,
+            'owner_private_path'  => $_ownerPrivatePath,
             'snapshot_path'       => $_privatePath . DIRECTORY_SEPARATOR . 'snapshots',
             'db_host'             => $_dbConfig['host'],
             'db_port'             => $_dbConfig['port'],
@@ -404,12 +294,54 @@ class RaveProvisioner extends BaseResourceProvisioner
      * @param array               $options
      *
      * @return bool
+     * @throws ProvisioningException
      */
     protected function _deprovisionInstance( $request, $options = [] )
     {
-        $_instance = $request->getInstance();
+        \Log::debug( '  * rave: deprovision instance' );
 
-        return $_instance ? $_instance->delete() : true;
+        $_storagePath = null;
+
+        //  1. Make a snapshot
+        //  2. Delete instance row
+        //  3. Drop database
+        //  4. Delete storage
+
+        //	Pull the request apart
+        $_instance = $request->getInstance();
+        $_name = $_instance->instance_name_text;
+        $_storageKey = $_instance->storage_id_text;
+        $_storage = $request->getStorage();
+        $_privatePath = $request->getStorageProvisioner()->getPrivatePath();
+        $_ownerPrivatePath = $request->getStorageProvisioner()->getOwnerPrivatePath();
+        $_dbConfigFile = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
+        $_instanceMetadata = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.json';
+
+        \Log::debug( '  * rave: deprovision instance > database' );
+
+        //	1. Provision the database
+        /** @type RaveDatabaseService $_dbService */
+        $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
+
+        if ( false === ( $_dbConfig = $_dbService->deprovision( $request ) ) )
+        {
+            throw new ProvisioningException( 'Failed to deprovision database. Check logs for error.' );
+        }
+
+        \Log::debug( '  * rave: deprovision instance > database - complete' );
+
+        if ( !$_instance->delete() )
+        {
+            throw new \RuntimeException( 'Instance row deletion failed.' );
+        }
+
+        \Log::debug( '  * rave: deprovision instance > instance deleted' );
+
+        //  Fire off a "shutdown" event...
+        \Log::debug( '  * rave: deprovision instance > fire event' );
+        \Event::fire( 'dfe.shutdown', [$this, $request] );
+
+        \Log::debug( '  * rave: deprovision instance - complete' );
     }
 
 }

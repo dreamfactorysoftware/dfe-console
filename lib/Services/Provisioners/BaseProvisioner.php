@@ -7,6 +7,8 @@ use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
+use DreamFactory\Enterprise\Services\Auditing\Facades\Audit;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Mail\Message;
 
 /**
@@ -33,13 +35,30 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
     use InstanceValidation, LockingService, TemplateEmailQueueing;
 
     //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type string A prefix for notification subjects
+     */
+    protected $_subjectPrefix;
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /** @inheritdoc */
+    public function boot()
+    {
+        if ( empty( $this->_subjectPrefix ) )
+        {
+            $this->_subjectPrefix = config( 'dfe.email-subject-prefix' );
+        }
+    }
+
+    /** @inheritdoc */
     public function provision( $request, $options = [] )
     {
-        $_elapsed = null;
         $_timestamp = microtime( true );
         $_result = $this->_doProvision( $request );
         $_elapsed = microtime( true ) - $_timestamp;
@@ -51,7 +70,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
             'headTitle'     => $_result ? 'Launch Complete' : 'Launch Failure',
-            'contentHeader' => $_result ? 'Your DSP has been launched' : 'Your DSP was not launched',
+            'contentHeader' => $_result ? 'Your instance has been launched' : 'Your instance was not launched',
             'emailBody'     =>
                 $_result
                     ?
@@ -63,18 +82,9 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
                     'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
         ];
 
-        $_subject = $_result ? '[DFE] Your DSP is ready!' : '[DFE] DSP Launch Failure';
+        $_subject = $_result ? 'Instance launch successful' : 'Instance launch failure';
 
-        \Mail::send(
-            'emails.generic',
-            $_data,
-            function ( Message $message ) use ( $_instance, $_subject )
-            {
-                $message
-                    ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
-                    ->subject( $_subject );
-            }
-        );
+        $this->_notify( $_instance, $_subject, $_data );
 
         return $_result;
     }
@@ -82,7 +92,6 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
     /** @inheritdoc */
     public function deprovision( $request, $options = [] )
     {
-        $_elapsed = null;
         $_timestamp = microtime( true );
         $_result = $this->_doDeprovision( $request );
         $_elapsed = microtime( true ) - $_timestamp;
@@ -93,45 +102,65 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         //  Send notification
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
-            'headTitle'     => $_result ? 'Termination Complete' : 'Termination Failure',
-            'contentHeader' => $_result ? 'Your DSP has been terminated' : 'Your DSP was not terminated',
+            'headTitle'     => $_result ? 'Shutdown Complete' : 'Shutdown Failure',
+            'contentHeader' => $_result ? 'Your instance has retired' : 'Your instance was not retired',
             'emailBody'     => $_result
                 ?
                 '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' .
-                'has been terminated.  A snapshot may be available in the dashboard under <strong>Snapshots</strong>.</p>'
+                'has been retired.  A snapshot may be available in the dashboard under <strong>Snapshots</strong>.</p>'
                 :
                 '<p>Your instance <strong>' .
                 $_instance->instance_name_text .
-                '</strong> termination was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
+                '</strong> shutdown was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
         ];
 
-        $_subject = $_result ? '[DFE] Your DSP is ready!' : '[DFE] DSP Launch Failure';
+        $_subject = $_result ? 'Instance shutdown successful' : 'Instance shutdown failure';
 
-        \Mail::send(
-            'emails.generic',
-            $_data,
-            function ( Message $message ) use ( $_instance, $_subject )
-            {
-                $message
-                    ->to( $_instance->user->email_addr_text, $_instance->user->first_name_text . ' ' . $_instance->user->last_name_text )
-                    ->subject( $_subject );
-            }
-        );
+        $this->_notify( $_instance, $_subject, $_data );
 
         return $_result;
     }
 
     /**
-     * @param array  $data
-     * @param int    $level
-     * @param string $facility
+     * @param array $data
+     * @param int   $level
+     *
+     * @return bool
      */
-    protected function _logProvision( $data = [], $level = AuditLevels::INFO, $facility = self::DEFAULT_FACILITY )
+    protected function _logProvision( $data = [], $level = AuditLevels::INFO )
     {
         //  Put instance ID into the correct place
         $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        \App::make( 'dfe.audit' )->log( $data, $level, app( 'request' ) );
+        return Audit::log( $data, $level, app( 'request' ) );
+    }
+
+    /**
+     * @param Instance $instance
+     * @param string   $subject
+     * @param array    $data
+     *
+     * @return int The number of recipients mailed
+     */
+    protected function _notify( $instance, $subject, array $data )
+    {
+        if ( !empty( $this->_subjectPrefix ) )
+        {
+            $subject = $this->_subjectPrefix . ' ' . trim( str_replace( $this->_subjectPrefix, null, $subject ) );
+        }
+
+        return
+            \Mail::send(
+                'emails.generic',
+                $data,
+                function ( $message ) use ( $instance, $subject )
+                {
+                    /** @var Message $message */
+                    $message
+                        ->to( $instance->user->email_addr_text, $instance->user->first_name_text . ' ' . $instance->user->last_name_text )
+                        ->subject( $subject );
+                }
+            );
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
-use DreamFactory\Enterprise\Common\Containers\RaveBox;
 use DreamFactory\Enterprise\Common\Contracts\ProvisionerFactory;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
@@ -36,7 +35,7 @@ class ProvisionHandler
     public function handle( ProvisionJob $command )
     {
         $_options = $command->getOptions();
-        \Log::debug( 'rave: provision instance - begin' );
+        \Log::debug( 'dfe: provision instance - begin' );
 
         try
         {
@@ -45,7 +44,7 @@ class ProvisionHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'rave: provision instance - failure, exception creating instance: ' . $_ex->getMessage() );
+            \Log::error( 'dfe: provision instance - failure, exception creating instance: ' . $_ex->getMessage() );
 
             return false;
         }
@@ -62,7 +61,7 @@ class ProvisionHandler
 
             $_result = $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
 
-            \Log::debug( 'rave: provision instance - complete: ' . print_r( $_result, true ) );
+            \Log::debug( 'dfe: provision instance - complete: ' . print_r( $_result, true ) );
 
             return $_result;
         }
@@ -77,7 +76,7 @@ class ProvisionHandler
             }
         }
 
-        \Log::debug( 'rave: provision instance - fail' );
+        \Log::debug( 'dfe: provision instance - fail' );
 
         return false;
     }

@@ -22,6 +22,8 @@ return [
         'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', GuestLocations::RAVE_CLUSTER ),
         'default-ram-size'            => env( 'DFE_DEFAULT_RAM_SIZE', 1 ),
         'default-disk-size'           => env( 'DFE_DEFAULT_DISK_SIZE', 8 ),
+        //  Notification settings
+        'email-subject-prefix'        => '[DFE]',
         //  Instance defaults
         //@todo update image to 14.* LTS x64
         'default-vendor-image-id'     => 4647,              //	Ubuntu server 12.04.1 i386
