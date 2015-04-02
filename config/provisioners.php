@@ -11,6 +11,7 @@ return [
         'rave' => [
             'instance' => 'DreamFactory\\Enterprise\\Services\\Provisioners\\RaveProvisioner',
             'storage'  => 'DreamFactory\\Enterprise\\Services\\Provisioners\\RaveStorageProvisioner',
+            'db'       => 'DreamFactory\\Enterprise\\Services\\Provisioners\\RaveDatabaseProvisioner',
         ],
     ],
 ];

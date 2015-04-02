@@ -202,8 +202,7 @@ class RaveProvisioner extends BaseResourceProvisioner
         \Log::debug( '  * rave: provision instance > database' );
 
         //	1. Provision the database
-        /** @type RaveDatabaseService $_dbService */
-        $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
+        $_dbService = Provision::getDatabaseProvisioner( $_instance->guest_location_nbr );
         $_dbConfig = $_dbService->provision( $request );
 
         $_dbUser = $_dbConfig['username'];

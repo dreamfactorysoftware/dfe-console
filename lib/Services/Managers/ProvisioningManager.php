@@ -1,12 +1,12 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Managers;
 
-use DreamFactory\Enterprise\Common\Contracts\ProvisionerAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 
-class ProvisioningManager extends BaseManager implements ProvisionerAware
+class ProvisioningManager extends BaseManager implements ResourceProvisionerAware
 {
     //******************************************************************************
     //* Methods
@@ -32,6 +32,18 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
     public function getStorageProvisioner( $name = null )
     {
         return $this->resolveStorage( GuestLocations::resolve( $name ?: $this->getDefaultProvisioner() ) );
+    }
+
+    /**
+     * Returns an instance of the storage provisioner for the specified host
+     *
+     * @param string $name
+     *
+     * @return ResourceProvisioner
+     */
+    public function getDatabaseProvisioner( $name = null )
+    {
+        return $this->resolveDatabase( GuestLocations::resolve( $name ?: $this->getDefaultProvisioner() ) );
     }
 
     /**
@@ -62,6 +74,16 @@ class ProvisioningManager extends BaseManager implements ProvisionerAware
     public function resolveStorage( $tag )
     {
         return $this->_doResolve( $tag, 'storage' );
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
+     */
+    public function resolveDatabase( $tag )
+    {
+        return $this->_doResolve( $tag, 'db' );
     }
 
     /**
