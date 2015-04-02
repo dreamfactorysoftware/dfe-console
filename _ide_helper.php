@@ -1,7 +1,7 @@
 <?php
 /**
  * An helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.0.23 on 2015-04-01.
+ * Generated for Laravel 5.0.23 on 2015-04-02.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -11542,6 +11542,82 @@ namespace {
          */
         public static function getNames(){
             return \Illuminate\View\Factory::getNames();
+        }
+        
+    }
+
+
+    class Audit extends \DreamFactory\Enterprise\Services\Auditing\Audit{
+        
+        /**
+         * 
+         *
+         * @param string $host
+         * @static 
+         */
+        public static function setHost($host = 'lps-east-1.fabric.dreamfactory.com'){
+            return \DreamFactory\Enterprise\Services\Auditing\AuditingService::setHost($host);
+        }
+        
+        /**
+         * Logs API requests to logging system
+         *
+         * @param string $instanceId The id of the sending instance
+         * @param \DreamFactory\Enterprise\Services\Auditing\Request $request The request
+         * @param array $sessionData Any session data to log
+         * @param int $level The level, defaults to INFO
+         * @param string $facility The facility, used for sorting
+         * @return bool 
+         * @static 
+         */
+        public static function logRequest($instanceId, $request, $sessionData = array(), $level = 6, $facility = 'fabric-instance'){
+            return \DreamFactory\Enterprise\Services\Auditing\AuditingService::logRequest($instanceId, $request, $sessionData, $level, $facility);
+        }
+        
+        /**
+         * Logs API requests to logging system
+         *
+         * @param array $data The data to log
+         * @param int|string $level The level, defaults to INFO
+         * @param \DreamFactory\Enterprise\Services\Auditing\Request $request The request, if available
+         * @param string $type Optional type
+         * @return bool 
+         * @static 
+         */
+        public static function log($data = array(), $level = 6, $request = null, $type = null){
+            return \DreamFactory\Enterprise\Services\Auditing\AuditingService::log($data, $level, $request, $type);
+        }
+        
+        /**
+         * 
+         *
+         * @return \DreamFactory\Enterprise\Services\Auditing\GelfLogger 
+         * @static 
+         */
+        public static function getLogger(){
+            return \DreamFactory\Enterprise\Services\Auditing\AuditingService::getLogger();
+        }
+        
+        /**
+         * Sets a logger instance on the object
+         *
+         * @param \DreamFactory\Enterprise\Services\Auditing\GelfLogger $logger
+         * @return $this 
+         * @static 
+         */
+        public static function setLogger($logger){
+            return \DreamFactory\Enterprise\Services\Auditing\AuditingService::setLogger($logger);
+        }
+        
+        /**
+         * 
+         *
+         * @param array $metadata
+         * @return $this 
+         * @static 
+         */
+        public static function setMetadata($metadata){
+            return \DreamFactory\Enterprise\Services\Auditing\AuditingService::setMetadata($metadata);
         }
         
     }
