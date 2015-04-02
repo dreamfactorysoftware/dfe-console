@@ -25,7 +25,8 @@ class CreateAppKeysTable extends Migration
                 $table->string( 'client_secret', 128 );
                 $table->integer( 'owner_id' );
                 $table->integer( 'owner_type_nbr' );
-                $table->timestamps();
+                $table->dateTime( 'create_date' );
+                $table->timestamp( 'lmod_date' )->default( \DB::raw( 'CURRENT_TIMESTAMP' ) );
             }
         );
     }

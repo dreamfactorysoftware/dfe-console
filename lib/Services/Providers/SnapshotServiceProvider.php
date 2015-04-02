@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-use DreamFactory\Enterprise\Services\Storage\SnapshotService;
+use DreamFactory\Enterprise\Services\SnapshotService;
 
 /**
  * Register the snapshot service as a Laravel provider
@@ -24,13 +24,16 @@ class SnapshotServiceProvider extends BaseServiceProvider
     //******************************************************************************
 
     /**
-     * @type string The name of the alias to create
-     */
-    const ALIAS_NAME = 'Snapshot';
-    /**
      * @type string The name of the service in the IoC
      */
     const IOC_NAME = 'dfe.snapshot';
+
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /** @inheritdoc */
+    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\SnapshotService';
 
     //********************************************************************************
     //* Public Methods
@@ -43,13 +46,11 @@ class SnapshotServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->_serviceClass = 'DreamFactory\\Enterprise\\Services\\Storage\\SnapshotService';
-
         $this->singleton(
             static::IOC_NAME,
             function ( $app )
             {
-                return new $this->_serviceClass;
+                return new SnapshotService( $app );
             }
         );
     }

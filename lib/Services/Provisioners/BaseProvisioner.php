@@ -17,7 +17,7 @@ use Illuminate\Mail\Message;
  * This class provides a foundation upon which to build other PaaS provisioners for the DFE ecosystem. Merely extend the class and add the
  * _doProvision and _doDeprovision methods.
  */
-abstract class BaseResourceProvisioner extends BaseService implements ResourceProvisioner
+abstract class BaseProvisioner extends BaseService implements ResourceProvisioner
 {
     //******************************************************************************
     //* Constants
@@ -65,6 +65,11 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         $_result = $this->_doProvision( $request );
         $_elapsed = microtime( true ) - $_timestamp;
 
+        if ( is_array( $_result ) )
+        {
+            $_result['elapsed'] = $_elapsed;
+        }
+
         $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
 
         //  Send notification
@@ -99,6 +104,11 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
         $_result = $this->_doDeprovision( $request );
         $_elapsed = microtime( true ) - $_timestamp;
         $_instance = $request->getInstance();
+
+        if ( is_array( $_result ) )
+        {
+            $_result['elapsed'] = $_elapsed;
+        }
 
         $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
 
@@ -153,7 +163,7 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
             $subject = $this->_subjectPrefix . ' ' . trim( str_replace( $this->_subjectPrefix, null, $subject ) );
         }
 
-        return
+        $_result =
             \Mail::send(
                 'emails.generic',
                 $data,
@@ -165,6 +175,10 @@ abstract class BaseResourceProvisioner extends BaseService implements ResourcePr
                         ->subject( $subject );
                 }
             );
+
+        $this->debug( '    * provisioner: notification sent to ' . $instance->user->email_addr_text );
+
+        return $_result;
     }
 
     /**

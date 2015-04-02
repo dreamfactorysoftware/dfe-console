@@ -27,7 +27,8 @@ class CreateUsersTable extends Migration
                 $table->dateTime( 'last_login_date' );
                 $table->string( 'last_login_ip_text', 64 );
                 $table->string( 'remember_token', 128 );
-                $table->timestamps();
+                $table->dateTime( 'create_date' );
+                $table->timestamp( 'lmod_date' )->default( \DB::raw( 'CURRENT_TIMESTAMP' ) );
             }
         );
     }

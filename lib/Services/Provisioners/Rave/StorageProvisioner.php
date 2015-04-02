@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Provisioners;
+namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
@@ -34,7 +34,7 @@ use Illuminate\Contracts\Filesystem\Filesystem;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
  */
-class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
+class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
 {
     //******************************************************************************
     //* Traits
@@ -141,9 +141,9 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
             }
         }
 
-        \Log::debug( '  * rave: provision storage > instance storage created' );
-        \Log::debug( '    * private path:       ' . $_privatePath );
-        \Log::debug( '    * owner private path: ' . $_ownerPrivatePath );
+        \Log::debug( '    * provisioner: instance storage created' );
+        \Log::debug( '      * private path:       ' . $_privatePath );
+        \Log::debug( '      * owner private path: ' . $_ownerPrivatePath );
 
         $this->_privatePath = $_privatePath;
         $this->_ownerPrivatePath = $_ownerPrivatePath;
@@ -163,6 +163,8 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
 
         //  I'm not sure how hard this tries to delete the directory
         $filesystem->exists( $_storagePath ) && $filesystem->deleteDirectory( $_storagePath );
+
+        \Log::debug( '    * provisioner: instance storage removed' );
     }
 
     /**
@@ -177,8 +179,6 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
         //  Non-hosted has no structure, just storage
         if ( !$this->_hostedStorage )
         {
-            \Log::debug( '  * rave: provision storage > non-hosted structure resolved' );
-
             return array(null, null, null);
         }
 
@@ -214,8 +214,6 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
 
         $_structure = [$_zone, $_partition, $_rootHash];
 
-        \Log::debug( '  * rave: provision storage > structure resolved: ' . print_r( $_structure, true ) );
-
         return $_structure;
     }
 
@@ -238,8 +236,6 @@ class RaveStorageProvisioner implements ResourceProvisioner, PrivatePathAware
             $rootHash .
             ( $instanceId ? DIRECTORY_SEPARATOR . $instanceId : null )
             : null;
-
-        \Log::debug( '  * rave: provision storage > root path: ' . $_rootPath );
 
         return $_rootPath;
     }

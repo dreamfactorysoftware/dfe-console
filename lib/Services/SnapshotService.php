@@ -1,5 +1,5 @@
 <?php
-namespace DreamFactory\Enterprise\Services\Storage;
+namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;

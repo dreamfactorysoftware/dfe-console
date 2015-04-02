@@ -2,16 +2,17 @@
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
+use DreamFactory\Enterprise\Services\Commands\ImportJob;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Facades\Snapshot;
 use DreamFactory\Enterprise\Services\Managers\InstanceManager;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 
 /**
- * Processes queued provision requests
+ * Processes queued requests
  */
-class ProvisionHandler
+class ImportHandler
 {
     //******************************************************************************
     //* Traits
@@ -24,19 +25,20 @@ class ProvisionHandler
     //******************************************************************************
 
     /**
-     * Handle a provisioning request
+     * Handle a request
      *
-     * @param  ProvisionJob $command
+     * @param  ImportJob $command
      *
      * @return mixed
      */
-    public function handle( ProvisionJob $command )
+    public function handle( ImportJob $command )
     {
         $_options = $command->getOptions();
-        \Log::debug( 'dfe: provision instance - begin' );
+        \Log::debug( 'dfe: import - begin' );
 
         try
         {
+            Snapshot::create($command->getInstanceId());
             //  Create the instance record
             $_instance = InstanceManager::make( $command->getInstanceId(), $_options );
         }
@@ -58,11 +60,6 @@ class ProvisionHandler
             }
 
             $_result = $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
-
-            if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
-            {
-                \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
-            }
 
             \Log::debug( 'dfe: provision instance - complete: ' . print_r( $_result, true ) );
 

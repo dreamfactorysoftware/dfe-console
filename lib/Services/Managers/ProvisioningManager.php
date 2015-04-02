@@ -19,7 +19,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function getProvisioner( $name = null )
     {
-        return $this->resolve( GuestLocations::resolve( $name ?: $this->getDefaultProvisioner() ) );
+        return $this->resolve( $name );
     }
 
     /**
@@ -31,7 +31,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function getStorageProvisioner( $name = null )
     {
-        return $this->resolveStorage( GuestLocations::resolve( $name ?: $this->getDefaultProvisioner() ) );
+        return $this->resolveStorage( $name );
     }
 
     /**
@@ -94,6 +94,8 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     protected function _doResolve( $tag, $subkey = null )
     {
+        $tag = GuestLocations::resolve( $tag ?: $this->getDefaultProvisioner() );
+
         $subkey = $subkey ?: 'instance';
         $_key = $tag . '.' . $subkey;
 

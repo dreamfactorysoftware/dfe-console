@@ -1,9 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
-use DreamFactory\Enterprise\Common\Enums\Provisioners;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\DreamFactoryRave;
@@ -43,7 +41,7 @@ class DeprovisionHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'dfe: deprovision instance - failure, exception creating instance: ' . $_ex->getMessage() );
+            \Log::error( 'dfe: deprovision instance - failure, instance not found.' );
 
             return false;
         }
@@ -58,6 +56,11 @@ class DeprovisionHandler
             }
 
             $_result = $_provisioner->deprovision( new ProvisioningRequest( $_instance, null, true ), $_options );
+
+            if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
+            {
+                \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
+            }
 
             \Log::debug( 'dfe: deprovision instance - complete' );
 

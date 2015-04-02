@@ -1,18 +1,17 @@
 <?php
-namespace DreamFactory\Enterprise\Services;
+namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
-use DreamFactory\Enterprise\Common\Contracts\ProvisionerFactory;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use Illuminate\Contracts\Queue\Queue;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ProvisioningService extends BaseService implements ProvisionerFactory, Queue
+class DatabaseProvisioner extends BaseService implements ResourceProvisioner
 {
     //******************************************************************************
     //* Traits
@@ -25,42 +24,26 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
     //******************************************************************************
 
     /**
-     * Create a new provisioner
-     *
-     * @param string $provisioner
-     * @param array  $options Array of options for creation
-     *
-     * @return ResourceProvisioner
-     */
-    public function make( $provisioner = 'rave', $options = [] )
-    {
-        $_config = config( 'provisioners' );
-
-        if ( !array_key_exists( $provisioner, $_config['hosts'] ) )
-        {
-            throw new \InvalidArgumentException( 'The provisioner "' . $provisioner . '" is invalid.' );
-        }
-
-    }
-
-    /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return bool
      * @throws ProvisioningException
      */
-    public function provision( $request )
+    public function provision( $request, $options = [] )
     {
+        $this->debug( '  * rave: provision database - begin' );
+
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
 
         if ( empty( $_serverId ) )
         {
-            throw new \InvalidArgumentException( 'Please assign the instance to a database server before provisioning database resources . ' );
+            throw new \InvalidArgumentException( 'Please assign the instance to a database server before provisioning database resources.' );
         }
 
-        //  Get a connection to the instance's database server
-        $_db = $this->_getRootDatabaseConnection( $_instance );
+        //  Get a connection to the instance's database server 
+        list( $_db, $_rootConfig, $_rootServer ) = $this->_getRootDatabaseConnection( $_instance );
 
         //  1. Create a random user and password for the instance
         $_creds = $this->_generateSchemaCredentials( $_instance );
@@ -68,17 +51,15 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
         try
         {
             //	1. Create database
-            if ( !$this->_createDatabase( $_db, $_creds ) )
+            if ( false === $this->_createDatabase( $_db, $_creds ) )
             {
                 try
                 {
-                    $request->setForced( true );
                     $this->deprovision( $request );
-
                 }
                 catch ( \Exception $_ex )
                 {
-                    $this->alert( 'Unable to remove remnants of failed provisioning for instance "' . $_instance->instance_id_text );
+                    $this->notice( 'Unable to remove remnants of failed provisioning for instance "' . $_instance->instance_id_text );
                 }
 
                 return false;
@@ -90,31 +71,64 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
                 try
                 {
                     //	Try and get rid of the database we created
-                    $this->_dropDatabase( $_db, $_creds );
+                    $this->_dropDatabase( $_db, $_creds['database'] );
                 }
                 catch ( \Exception $_ex )
                 {
-                    $this->error( 'Exception dropping database: ' . $_ex->getMessage() );
                 }
+
+                $this->error( '  * rave: provision database - incomplete/fail' );
 
                 return false;
             }
+        }
+        catch ( ProvisioningException $_ex )
+        {
+            throw $_ex;
         }
         catch ( \Exception $_ex )
         {
             throw new ProvisioningException( $_ex->getMessage(), $_ex->getCode() );
         }
 
+        $this->debug( '  * rave: provision database - complete' );
+
+        return array_merge( $_rootConfig, $_creds );
     }
 
     /**
      * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return bool
+     * @throws ProvisioningException
+     * @throws SchemaExistsException
      */
-    public function deprovision( $request )
+    public function deprovision( $request, $options = [] )
     {
-        $_forced = $request->isForced();
+        $_instance = $request->getInstance();
+
+        //  Get a connection to the instance's database server
+        list( $_db, $_rootConfig, $_rootServer ) = $this->_getRootDatabaseConnection( $_instance );
+
+        try
+        {
+            //	Try and get rid of the database we created
+            if ( !$this->_dropDatabase( $_db, $_instance->db_name_text ) )
+            {
+                throw new ProvisioningException( 'Unable to delete database "' . $_instance->db_name_text . '".' );
+            }
+        }
+        catch ( \Exception $_ex )
+        {
+            $this->error( '  * rave: deprovision database > incomplete/fail: ' . $_ex->getMessage() );
+
+            return false;
+        }
+
+        $this->debug( '  * rave: deprovision database > dropped "' . $_instance->db_name_text . '".' );
+
+        return true;
     }
 
     /**
@@ -175,13 +189,8 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
         //  Add it to the connection list
         \Config::set( 'database.connections.' . $_server->server_id_text, $_config );
 
-        $this->debug(
-            'Creating root database connection on server-id "' . $_dbServer . '" for instance "' . $instance->instance_name_text . '".',
-            ['service' => 'RAVE Database']
-        );
-
         //  Create a connection and return. It's in Joe Pesce's hands now...
-        return \DB::connection( $_dbServer );
+        return [\DB::connection( $_dbServer ), $_config, $_server];
     }
 
     /**
@@ -190,10 +199,13 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
      * @param Instance $instance
      *
      * @return array
+     * @throws SchemaExistsException
      */
     protected function _generateSchemaCredentials( Instance $instance )
     {
-        $_dbUser = $_dbPassword = null;
+        $_tries = 0;
+
+        $_dbUser = null;
         $_dbName = $this->_generateDatabaseName( $instance );
         $_seed = $_dbName . env( 'APP_KEY' ) . $instance->instance_name_text;
 
@@ -203,26 +215,37 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
             $_baseHash = sha1( microtime( true ) . $_seed );
             $_dbUser = substr( 'u' . $_baseHash, 0, 16 );
 
-            if ( Instance::where( 'db_user_text', '=', $_dbUser )->count() )
+            if ( 0 == Instance::where( 'db_user_text', '=', $_dbUser )->count() )
             {
-                //  Make sure the database name is unique as well.
-                $_names = \DB::select( 'SHOW DATABASES LIKE :schema', [':schema' => $_dbName] );
+                $_sql = 'SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = :schema_name';
 
-                if ( empty( $_names ) )
+                //  Make sure the database name is unique as well.
+                $_names = \DB::select( $_sql, [':schema_name' => $_dbName] );
+
+                if ( !empty( $_names ) )
                 {
-                    break;
+                    throw new SchemaExistsException( 'The schema "' . $_dbName . '" already exists.' );
                 }
+
+                break;
+            }
+
+            if ( ++$_tries > 10 )
+            {
+                throw new \LogicException( 'Unable to locate a non-unique database user name after ' . $_tries . ' attempts.' );
             }
 
             //  Quick snoozy and we try again
             usleep( 500000 );
         }
 
-        return [
+        $_creds = [
             'database' => $_dbName,
             'username' => $_dbUser,
             'password' => sha1( microtime( true ) . $_seed . $_dbUser . microtime( true ) )
         ];
+
+        return $_creds;
     }
 
     /**
@@ -235,36 +258,48 @@ class ProvisioningService extends BaseService implements ProvisionerFactory, Que
     {
         try
         {
+            $_dbName = $creds['database'];
+
             return $db->statement(
                 <<<MYSQL
-        CREATE DATABASE IF NOT EXISTS `{$creds['database']}`
+CREATE DATABASE IF NOT EXISTS `{$_dbName}`
 MYSQL
             );
         }
         catch ( \Exception $_ex )
         {
+            $this->error( '    * provisioner: create database - failure: ' . $_ex->getMessage() );
+
             return false;
         }
     }
 
     /**
      * @param Connection $db
-     * @param array      $creds
+     * @param string     $databaseToDrop
      *
      * @return bool
+     *
      */
-    protected function _dropDatabase( $db, $creds )
+    protected function _dropDatabase( $db, $databaseToDrop )
     {
         try
         {
-            return $db->statement(
-                <<<MYSQL
-        SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE {$creds['database']};
-MYSQL
+            return $db->transaction(
+                function () use ( $db, $databaseToDrop )
+                {
+                    $_result = $db->statement( 'SET FOREIGN_KEY_CHECKS = 0' );
+                    $_result && $_result = $db->statement( 'DROP DATABASE `' . $databaseToDrop . '`' );
+                    $_result && $db->statement( 'SET FOREIGN_KEY_CHECKS = 1' );
+
+                    return $_result;
+                }
             );
         }
         catch ( \Exception $_ex )
         {
+            $this->error( '    * provisioner: drop database - failure: ' . $_ex->getMessage() );
+
             return false;
         }
     }
@@ -291,6 +326,8 @@ MYSQL;
         }
         catch ( \Exception $_ex )
         {
+            $this->error( '    * provisioner: issue grants - failure: ' . $_ex->getMessage() );
+
             return false;
         }
     }
@@ -305,89 +342,5 @@ MYSQL;
     protected function _generateDatabaseName( Instance $instance )
     {
         return str_replace( '-', '_', $instance->instance_name_text );
-    }
-
-    /**
-     * Push a new job onto the queue.
-     *
-     * @param  string $job
-     * @param  mixed  $data
-     * @param  string $queue
-     *
-     * @return mixed
-     */
-    public function push( $job, $data = '', $queue = null )
-    {
-        // TODO: Implement push() method.
-    }
-
-    /**
-     * Push a raw payload onto the queue.
-     *
-     * @param  string $payload
-     * @param  string $queue
-     * @param  array  $options
-     *
-     * @return mixed
-     */
-    public function pushRaw( $payload, $queue = null, array $options = [] )
-    {
-        // TODO: Implement pushRaw() method.
-    }
-
-    /**
-     * Push a new job onto the queue after a delay.
-     *
-     * @param  \DateTime|int $delay
-     * @param  string        $job
-     * @param  mixed         $data
-     * @param  string        $queue
-     *
-     * @return mixed
-     */
-    public function later( $delay, $job, $data = '', $queue = null )
-    {
-        // TODO: Implement later() method.
-    }
-
-    /**
-     * Push a new job onto the queue.
-     *
-     * @param  string $queue
-     * @param  string $job
-     * @param  mixed  $data
-     *
-     * @return mixed
-     */
-    public function pushOn( $queue, $job, $data = '' )
-    {
-        // TODO: Implement pushOn() method.
-    }
-
-    /**
-     * Push a new job onto the queue after a delay.
-     *
-     * @param  string        $queue
-     * @param  \DateTime|int $delay
-     * @param  string        $job
-     * @param  mixed         $data
-     *
-     * @return mixed
-     */
-    public function laterOn( $queue, $delay, $job, $data = '' )
-    {
-        // TODO: Implement laterOn() method.
-    }
-
-    /**
-     * Pop the next job off of the queue.
-     *
-     * @param  string $queue
-     *
-     * @return \Illuminate\Contracts\Queue\Job|null
-     */
-    public function pop( $queue = null )
-    {
-        // TODO: Implement pop() method.
     }
 }

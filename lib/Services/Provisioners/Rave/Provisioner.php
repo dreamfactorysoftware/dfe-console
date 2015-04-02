@@ -1,18 +1,17 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Provisioners;
+<?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Providers\RaveDatabaseServiceProvider;
-use DreamFactory\Enterprise\Services\RaveDatabaseService;
+use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class RaveProvisioner extends BaseResourceProvisioner
+class Provisioner extends BaseProvisioner
 {
     //******************************************************************************
     //* Methods
@@ -37,8 +36,8 @@ class RaveProvisioner extends BaseResourceProvisioner
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
-     * @param array                                                              $options
+     * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return array
      */
@@ -249,7 +248,7 @@ class RaveProvisioner extends BaseResourceProvisioner
                     'private-path'       => $_privatePath,
                     'owner-private-path' => $_ownerPrivatePath,
                     'storage-path'       => $_storagePath,
-                    'db.' . $_name       => $_dbConfig,
+                    'db'                 => [$_name => $_dbConfig],
                 ]
             );
 
@@ -310,8 +309,6 @@ class RaveProvisioner extends BaseResourceProvisioner
      */
     protected function _deprovisionInstance( $request, $options = [] )
     {
-        \Log::debug( '  * rave: deprovision instance' );
-
         $_instance = $request->getInstance();
         $_keepDatabase = IfSet::get( $options, 'keep-database', false );
 
@@ -321,18 +318,13 @@ class RaveProvisioner extends BaseResourceProvisioner
         }
         else
         {
-            \Log::debug( '  * rave: deprovision instance > database' );
-
             //	Deprovision the database
-            /** @type RaveDatabaseService $_dbService */
-            $_dbService = \App::make( RaveDatabaseServiceProvider::IOC_NAME );
+            $_dbService = Provision::getDatabaseProvisioner( $_instance->guest_location_nbr );
 
             if ( false === ( $_dbConfig = $_dbService->deprovision( $request ) ) )
             {
                 throw new ProvisioningException( 'Failed to deprovision database. Check logs for error.' );
             }
-
-            \Log::debug( '  * rave: deprovision instance > database - complete' );
         }
 
         if ( !$_instance->delete() )
@@ -343,10 +335,8 @@ class RaveProvisioner extends BaseResourceProvisioner
         \Log::debug( '  * rave: deprovision instance > instance deleted' );
 
         //  Fire off a "shutdown" event...
-        \Log::debug( '  * rave: deprovision instance > fire event' );
         \Event::fire( 'dfe.shutdown', [$this, $request] );
-
-        \Log::debug( '  * rave: deprovision instance - complete' );
+        \Log::debug( '  * rave: deprovision instance > shutdown event fired' );
 
         return true;
     }

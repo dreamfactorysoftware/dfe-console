@@ -52,7 +52,6 @@ return [
         'DreamFactory\\Enterprise\\Common\\Providers\\ScalpelServiceProvider',
         /** DreamFactory Services service providers */
         'DreamFactory\\Enterprise\\Services\\Auditing\\AuditServiceProvider',
-        'DreamFactory\\Enterprise\\Services\\Providers\\RaveDatabaseServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\InstanceManagerProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
@@ -100,6 +99,7 @@ return [
         /** DreamFactory Aliases */
         'Audit'     => 'DreamFactory\\Enterprise\\Services\\Auditing\\Audit',
         'Provision' => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
+        'Snapshot'  => 'DreamFactory\\Enterprise\\Services\\Facades\\Snapshot',
     ],
 
 ];
