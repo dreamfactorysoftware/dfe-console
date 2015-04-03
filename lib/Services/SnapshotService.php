@@ -70,14 +70,17 @@ class SnapshotService extends BaseService
         $_stamp = date( 'YmdHis' );
         $_instance = $this->_validateInstance( $instanceId );
         $_instanceName = $_instance->instance_name_text;
+
+        //  Make our temp path...
         $_tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . 'tmp';
+        !is_dir( $_tempPath ) && mkdir( $_tempPath, 0777, true );
 
         //  A-Z, 0-9, and inner dashes (i.e. "abc-xyz"), but not outer (i.e., "-abc-")
         $_idPrefix = trim(
                 preg_replace(
                     '/[^A-Za-z0-9-]+/',
                     null,
-                    config( 'services.snapshot.id-prefix', static::SNAPSHOT_ID_PREFIX )
+                    config( 'snapshot.id-prefix', static::SNAPSHOT_ID_PREFIX )
                 ),
                 ' -'
             ) . '-';
@@ -87,23 +90,23 @@ class SnapshotService extends BaseService
         //  Start building our metadata array
         $_metadata = [
             'id'                         => $_id,
-            'type'                       => config( 'services.snapshot.metadata-type', 'dfe.snapshot' ),
+            'type'                       => config( 'snapshot.metadata-type', 'dfe.snapshot' ),
             'source'                     => $_instance->getMetadata(),
             'snapshot-prefix'            => $_id,
             'contents-storage-timestamp' => (int)time(),
             'contents-db-timestamp'      => (int)time(),
         ];
 
-        $_zipFileName = $this->_getConfigValue( 'services.snapshot.templates.snapshot-file-name', $_metadata );
+        $_zipFileName = $this->_getConfigValue( 'snapshot.templates.snapshot-file-name', $_metadata );
         $_metadata['contents-storage-zipball'] = $_storageZipName =
-            $this->_getConfigValue( 'services.snapshot.templates.storage-file-name', $_metadata );
-        $_sqlFileName = $this->_getConfigValue( 'services.snapshot.templates.db-file-name', $_metadata );
+            $this->_getConfigValue( 'snapshot.templates.storage-file-name', $_metadata );
+        $_sqlFileName = $this->_getConfigValue( 'snapshot.templates.db-file-name', $_metadata );
         $_metadata['contents-db-zipball'] = $_sqlFileName . '.gz';
         $_metadata['hash'] = $_hash = RouteHashing::create( $_zipFileName, $keepDays );
         $_metadata['link'] = rtrim(
-                config( 'services.snapshot.hash_link_base' ),
-                ' /'
-            ) . '/' . $_hash;
+                config( 'snapshot.hash_link_base' ),
+                ' ' . DIRECTORY_SEPARATOR
+            ) . DIRECTORY_SEPARATOR . $_hash;
 
         //  Prep the temp space...
         if ( !is_dir( $_tempPath ) && !@mkdir( $_tempPath, 0777, true ) && !@chmod( $_tempPath, 0777 ) )
@@ -128,12 +131,12 @@ class SnapshotService extends BaseService
         $this->_moveWorkFileToArchive( $_fsSnapshot, $_tempPath . DIRECTORY_SEPARATOR . $_storageZipName );
 
         //  Pull a database backup...
-        if ( !$this->_dumpDatabase( $_instance, $_tempPath . '/' . $_sqlFileName, $_fsSnapshot ) )
+        if ( !$this->_dumpDatabase( $_instance, $_tempPath . DIRECTORY_SEPARATOR . $_sqlFileName, $_fsSnapshot ) )
         {
             throw new \RuntimeException( 'Unable to dump source database. Aborting.' );
         }
 
-        $_md = $this->_getConfigValue( 'services.snapshot.templates.metadata', $_metadata );
+        $_md = $this->_getConfigValue( 'snapshot.templates.metadata', $_metadata );
 
         //  Put it in the snapshot...
         $_fsSnapshot->put( 'snapshot.json', Json::encode( $_md ) );
@@ -161,7 +164,7 @@ class SnapshotService extends BaseService
         //
         //        //	1. Grab the tarball...
         //        $_tempPath = $this->_getTempFilesystem( $_workFile );
-        //        $_workPath = $_tempPath . '/' . $_workFile;
+        //        $_workPath = $_tempPath . DIRECTORY_SEPARATOR . $_workFile;
         //
         //        file_put_contents( $_workPath, file_get_contents( $this->download( $instanceId, $snapshot, true ) ) );
         //
@@ -190,7 +193,7 @@ class SnapshotService extends BaseService
         //        $_backup = static::create( $instanceId, true );
         //
         //        //	3. Install snapshot storage files
-        //        $_command = 'cd ' . $this->getStoragePath() . '; rm -rf ./*; /bin/tar zxf ' . $_tempPath . '/' . $_snapshot->storage->tarball . ' ./';
+        //        $_command = 'cd ' . $this->getStoragePath() . '; rm -rf ./*; /bin/tar zxf ' . $_tempPath . DIRECTORY_SEPARATOR . $_snapshot->storage->tarball . ' ./';
         //        $_result = exec( $_command, $_output, $_return );
         //
         //        if ( 0 != $_return )
@@ -347,8 +350,8 @@ class SnapshotService extends BaseService
                     $_command =
                         sprintf(
                             "sudo -u %s %s %s %s",
-                            config( 'services.snapshot.script.user', 'dfadmin' ),
-                            config( 'services.snapshot.script.location' ),
+                            config( 'snapshot.script.user', 'dfadmin' ),
+                            config( 'snapshot.script.location' ),
                             $instance->db_name_text,
                             $dumpFile
                         );

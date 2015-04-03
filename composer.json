@@ -63,6 +63,9 @@
 		}
 	},
 	"autoload-dev":      {
+		"psr-4":    {
+			"DreamFactory\\Enterprise\\Common\\": "/opt/dreamfactory/dfe/dfe-common/"
+		},
 		"classmap": [
 			"tests/TestCase.php"
 		]

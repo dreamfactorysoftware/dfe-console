@@ -1,12 +1,11 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
+<?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use Illuminate\Contracts\Filesystem\Filesystem;
 
 /**
  * DreamFactory Enterprise(tm) and Services Platform File System
@@ -51,7 +50,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      */
     protected $_algorithm = 'sha256';
     /**
-     * @type string The instances's private path
+     * @type string The instance's private path
      */
     protected $_privatePath = null;
     /**
@@ -62,6 +61,10 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      * @type bool Indicates if the storage I govern is hosted or standalone
      */
     protected $_hostedStorage = true;
+    /**
+     * @type array The map of storage segments
+     */
+    protected $_storageMap = [];
 
     //*************************************************************************
     //* Methods
@@ -71,36 +74,38 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     public function provision( $request, $options = [] )
     {
         //  Make structure
-        $this->_createInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
+        $this->_createInstanceStorage( $request, $options );
     }
 
     /** @inheritdoc */
     public function deprovision( $request, $options = [] )
     {
         //  '86 structure
-        $this->_removeInstanceStorage( $request->getInstance(), $request->getStorage(), $options );
+        $this->_removeInstanceStorage( $request, $options );
     }
 
     /**
      * Create storage structure in $filesystem
      *
-     * @param Instance   $instance
-     * @param Filesystem $filesystem
-     * @param array      $options
+     * @param ProvisioningRequest $request
+     * @param array               $options
      */
-    protected function _createInstanceStorage( $instance, $filesystem, $options = [] )
+    protected function _createInstanceStorage( $request, $options = [] )
     {
         //  Wipe existing stuff
         $this->_privatePath = $this->_ownerPrivatePath = null;
 
+        $_instance = $request->getInstance();
+        $_filesystem = $request->getStorage();
+
         //  Based on the instance, determine the root, partition and hash
-        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance );
+        list( $_zone, $_partition, $_rootHash ) = $this->_buildStorageMap( $_instance );
 
         //  Storage root path
         $_rootPath = $this->_makeRootPath( $_zone, $_partition, $_rootHash );
 
         //  The instance's base storage path
-        $_instanceRootPath = $this->_makeRootPath( $_zone, $_partition, $_rootHash, $instance->instance_id_text );
+        $_instanceRootPath = $this->_makeRootPath( $_zone, $_partition, $_rootHash, $_instance->instance_id_text );
 
         //  Build privates....
         $_privateName = trim( config( 'dfe.provisioning.private-base-path', '.private' ), DIRECTORY_SEPARATOR . ' ' );
@@ -112,57 +117,50 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $_ownerPrivatePath = $_rootPath . DIRECTORY_SEPARATOR . $_privateName;
 
         //  Make sure everything exists
-        !$filesystem->exists( $_rootPath ) && $filesystem->makeDirectory( $_rootPath );
-        !$filesystem->exists( $_privatePath ) && $filesystem->makeDirectory( $_privatePath );
-        $this->_hostedStorage && !$filesystem->exists( $_ownerPrivatePath ) && $filesystem->makeDirectory( $_ownerPrivatePath );
+        !$_filesystem->exists( $_rootPath ) && $_filesystem->makeDirectory( $_rootPath );
+        !$_filesystem->exists( $_privatePath ) && $_filesystem->makeDirectory( $_privatePath );
+        $this->_hostedStorage && !$_filesystem->exists( $_ownerPrivatePath ) && $_filesystem->makeDirectory( $_ownerPrivatePath );
 
         //  Now ancillary sub-directories
         foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
         {
-            if ( !$filesystem->exists( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) )
-            {
-                $filesystem->makeDirectory( $_check );
-            }
+            !$_filesystem->exists( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
         }
 
         foreach ( config( 'dfe.provisioning.private-paths', [] ) as $_path )
         {
-            if ( !$filesystem->exists( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) )
-            {
-                $filesystem->makeDirectory( $_check );
-            }
+            !$_filesystem->exists( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
         }
 
         foreach ( config( 'dfe.provisioning.owner-private-paths', [] ) as $_path )
         {
-            if ( !$filesystem->exists( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) )
-            {
-                $filesystem->makeDirectory( $_check );
-            }
+            !$_filesystem->exists( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
         }
 
         \Log::debug( '    * provisioner: instance storage created' );
         \Log::debug( '      * private path:       ' . $_privatePath );
         \Log::debug( '      * owner private path: ' . $_ownerPrivatePath );
 
-        $this->_privatePath = $_privatePath;
-        $this->_ownerPrivatePath = $_ownerPrivatePath;
+        $this->_storageMap['private-path'] = $this->_privatePath = $_privatePath;
+        $this->_storageMap['owner-private-path'] = $this->_ownerPrivatePath = $_ownerPrivatePath;
     }
 
     /**
      * Delete storage of an instance
      *
-     * @param Instance   $instance
-     * @param Filesystem $filesystem
-     * @param array      $options
+     * @param ProvisioningRequest $request
+     * @param array               $options
      */
-    protected function _removeInstanceStorage( $instance, $filesystem, $options = [] )
+    protected function _removeInstanceStorage( $request, $options = [] )
     {
-        list( $_zone, $_partition, $_rootHash ) = $this->_resolveStructure( $instance );
-        $_storagePath = $this->_makeRootPath( $_zone, $_partition, $_rootHash, $instance->instance_id_text );
+        $_instance = $request->getInstance();
+        $_filesystem = $request->getStorage();
+
+        list( $_zone, $_partition, $_rootHash ) = $this->_buildStorageMap( $_instance );
+        $_storagePath = $this->_makeRootPath( $_zone, $_partition, $_rootHash, $_instance->instance_id_text );
 
         //  I'm not sure how hard this tries to delete the directory
-        $filesystem->exists( $_storagePath ) && $filesystem->deleteDirectory( $_storagePath );
+        $_filesystem->exists( $_storagePath ) && $_filesystem->deleteDirectory( $_storagePath );
 
         \Log::debug( '    * provisioner: instance storage removed' );
     }
@@ -174,47 +172,57 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      *
      * @return array
      */
-    protected function _resolveStructure( Instance $instance )
+    protected function _buildStorageMap( Instance $instance )
     {
         //  Non-hosted has no structure, just storage
         if ( !$this->_hostedStorage )
         {
-            return array(null, null, null);
+            $this->_storageMap = [
+                'zone'      => null,
+                'partition' => null,
+                'root-hash' => null,
+            ];
         }
-
-        $_rootHash = hash( $this->_algorithm, $instance->user->storage_id_text );
-        $_partition = substr( $_rootHash, 0, 2 );
-
-        $_zone = null;
-
-        switch ( config( 'dfe.provisioning.storage-zone-type' ) )
+        else
         {
-            case 'dynamic':
-                switch ( $instance->guest_location_nbr )
-                {
-                    case GuestLocations::AMAZON_EC2:
-                    case GuestLocations::DFE_CLUSTER:
-                        if ( file_exists( '/usr/bin/ec2metadata' ) )
-                        {
-                            $_zone = str_replace( 'availability-zone: ', null, `/usr/bin/ec2metadata | grep zone` );
-                        }
-                        break;
-                }
-                break;
+            $_rootHash = $this->getOwnerHash( $instance );
+            $_partition = substr( $_rootHash, 0, 2 );
 
-            case 'static':
-                $_zone = config( 'dfe.provisioning.static-zone-name' );
-                break;
+            $_zone = null;
+
+            switch ( config( 'dfe.provisioning.storage-zone-type' ) )
+            {
+                case 'dynamic':
+                    switch ( $instance->guest_location_nbr )
+                    {
+                        case GuestLocations::AMAZON_EC2:
+                        case GuestLocations::DFE_CLUSTER:
+                            if ( file_exists( '/usr/bin/ec2metadata' ) )
+                            {
+                                $_zone = str_replace( 'availability-zone: ', null, `/usr/bin/ec2metadata | grep zone` );
+                            }
+                            break;
+                    }
+                    break;
+
+                case 'static':
+                    $_zone = config( 'dfe.provisioning.static-zone-name' );
+                    break;
+            }
+
+            if ( empty( $_zone ) || empty( $_partition ) )
+            {
+                throw new \RuntimeException( 'Zone and/or partition unknown. Cannot provision storage.' );
+            }
+
+            $this->_storageMap = [
+                'zone'      => $_zone,
+                'partition' => $_partition,
+                'root-hash' => $_rootHash,
+            ];
         }
 
-        if ( empty( $_zone ) || empty( $_partition ) )
-        {
-            throw new \RuntimeException( 'Zone and/or partition unknown. Cannot provision storage.' );
-        }
-
-        $_structure = [$_zone, $_partition, $_rootHash];
-
-        return $_structure;
+        return array_values( $this->_storageMap );
     }
 
     /**
@@ -243,14 +251,20 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     /** @inheritdoc */
     public function getPrivatePath( $append = null )
     {
-        return $this->_privatePath;
+        return $this->_privatePath . ( $append ? DIRECTORY_SEPARATOR . $append : $append );
     }
 
     /** @inheritdoc */
     public function getOwnerPrivatePath( $append = null )
     {
         //  I hate doing this, but it will make this service more streamlined...
-        return $this->_hostedStorage ? $this->_ownerPrivatePath : $this->getPrivatePath();
+        return ( $this->_hostedStorage ? $this->_ownerPrivatePath : $this->getPrivatePath() ) . ( $append ? DIRECTORY_SEPARATOR . $append : $append );
+    }
+
+    /** @inheritdoc */
+    public function getOwnerHash( Instance $instance )
+    {
+        return hash( $this->_algorithm, $instance->user->storage_id_text );
     }
 
     /**
@@ -291,6 +305,14 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $this->_algorithm = $algorithm;
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStorageMap()
+    {
+        return $this->_storageMap;
     }
 
 }

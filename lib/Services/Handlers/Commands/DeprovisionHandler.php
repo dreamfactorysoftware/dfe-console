@@ -4,7 +4,6 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Provisioners\DreamFactoryRave;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 
 /**
@@ -32,7 +31,7 @@ class DeprovisionHandler
     public function handle( DeprovisionJob $command )
     {
         $_options = $command->getOptions();
-        \Log::debug( 'dfe: deprovision instance - begin' );
+        \Log::debug( 'dfe: DeprovisionJob - begin' );
 
         try
         {
@@ -41,7 +40,7 @@ class DeprovisionHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'dfe: deprovision instance - failure, instance not found.' );
+            \Log::error( 'dfe: DeprovisionJob - failure, instance not found.' );
 
             return false;
         }
@@ -62,16 +61,16 @@ class DeprovisionHandler
                 \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
             }
 
-            \Log::debug( 'dfe: deprovision instance - complete' );
+            \Log::debug( 'dfe: DeprovisionJob - complete' );
 
             return $_result;
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'dfe: deprovision instance - failure, exception during deprovisioning: ' . $_ex->getMessage() );
+            \Log::error( 'dfe: DeprovisionJob - failure, exception during deprovisioning: ' . $_ex->getMessage() );
         }
 
-        \Log::debug( 'dfe: provision instance - fail' );
+        \Log::debug( 'dfe: DeprovisionJob - fail' );
 
         return false;
     }

@@ -32,7 +32,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
      */
     public function provision( $request, $options = [] )
     {
-        $this->debug( '  * rave: provision database - begin' );
+        $this->debug( '    * rave: provision database - begin' );
 
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
@@ -77,7 +77,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
                 {
                 }
 
-                $this->error( '  * rave: provision database - incomplete/fail' );
+                $this->error( '    * rave: provision database - incomplete/fail' );
 
                 return false;
             }
@@ -91,7 +91,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
             throw new ProvisioningException( $_ex->getMessage(), $_ex->getCode() );
         }
 
-        $this->debug( '  * rave: provision database - complete' );
+        $this->debug( '    * rave: provision database - complete' );
 
         return array_merge( $_rootConfig, $_creds );
     }
@@ -121,12 +121,12 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
         }
         catch ( \Exception $_ex )
         {
-            $this->error( '  * rave: deprovision database > incomplete/fail: ' . $_ex->getMessage() );
+            $this->error( '    * rave: deprovision database > incomplete/fail: ' . $_ex->getMessage() );
 
             return false;
         }
 
-        $this->debug( '  * rave: deprovision database > dropped "' . $_instance->db_name_text . '".' );
+        $this->debug( '    * rave: deprovision database > dropped "' . $_instance->db_name_text . '".' );
 
         return true;
     }
@@ -285,6 +285,11 @@ MYSQL
     {
         try
         {
+            if ( empty( $databaseToDrop ) )
+            {
+                return true;
+            }
+
             return $db->transaction(
                 function () use ( $db, $databaseToDrop )
                 {

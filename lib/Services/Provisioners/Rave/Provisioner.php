@@ -1,9 +1,11 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
+use DreamFactory\Enterprise\Services\Facades\Mount;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
@@ -14,6 +16,12 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 
 class Provisioner extends BaseProvisioner
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
+
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -123,13 +131,11 @@ class Provisioner extends BaseProvisioner
         //  Use requested file system if one...
         if ( null === ( $_filesystem = $request->getStorage() ) )
         {
-            /** @type Filesystem $_filesystem */
-            $_filesystem = \Storage::disk( 'hosted' );
-            $request->setStorage( $_filesystem );
+            $request->setStorage( $_filesystem = $this->_getClusterMount( $request, $options ) );
         }
 
         //  Do it!
-        $request->setStorageProvisioner( $_provisioner = Provision::resolveStorage( IfSet::get( $options, 'guest-location-nbr', 'rave' ) ) );
+        $request->setStorageProvisioner( $_provisioner = Provision::resolveStorage( $request->getInstance()->guest_location_nbr ) );
         $_provisioner->provision( $request );
 
         \Log::debug( '  * rave: provision storage - complete' );
@@ -150,32 +156,15 @@ class Provisioner extends BaseProvisioner
         //  Use requested file system if one...
         if ( null === ( $_filesystem = $request->getStorage() ) )
         {
-            /** @type Filesystem $_filesystem */
-            $_filesystem = \Storage::disk( 'hosted' );
-            $request->setStorage( $_filesystem );
+            $request->setStorage( $_filesystem = $this->_getClusterMount( $request, $options ) );
         }
 
         //  Do it!
-        Provision::resolveStorage( 'rave' )->deprovision( $request );
+        Provision::resolveStorage( $request->getInstance()->guest_location_nbr )->deprovision( $request );
 
         \Log::debug( '  * rave: deprovision storage - complete' );
 
         return $_filesystem;
-    }
-
-    /**
-     * @return array
-     */
-    protected function _getStorageConfig()
-    {
-        $_config = config( 'filesystems.disks.hosted' );
-
-        if ( empty( $_config ) )
-        {
-            throw new \RuntimeException( 'No hosted storage configuration found.' );
-        }
-
-        return $_config;
     }
 
     /**
@@ -187,19 +176,20 @@ class Provisioner extends BaseProvisioner
      */
     protected function _provisionInstance( $request, $options = [] )
     {
-        \Log::debug( '  * rave: provision instance' );
-
         $_storagePath = null;
 
         //	Pull the request apart
         $_instance = $request->getInstance();
         $_name = $_instance->instance_name_text;
         $_storageKey = $_instance->storage_id_text;
-        $_privatePath = $request->getStorageProvisioner()->getPrivatePath();
-        $_ownerPrivatePath = $request->getStorageProvisioner()->getOwnerPrivatePath();
-        $_dbConfigFile = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
 
-        \Log::debug( '  * rave: provision instance > database' );
+        \Log::debug( '  * rave: provision "' . $_name . '" - begin' );
+
+        $_storageProvisioner = $request->getStorageProvisioner();
+        $_privatePath = $_storageProvisioner->getPrivatePath();
+        $_ownerPrivatePath = $_storageProvisioner->getOwnerPrivatePath();
+
+        $_dbConfigFile = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
 
         //	1. Provision the database
         $_dbService = Provision::getDatabaseProvisioner( $_instance->guest_location_nbr );
@@ -208,8 +198,6 @@ class Provisioner extends BaseProvisioner
         $_dbUser = $_dbConfig['username'];
         $_dbPassword = $_dbConfig['password'];
         $_dbName = $_dbConfig['database'];
-
-        \Log::debug( '  * rave: provision instance > database - complete' );
 
         //  2. Update the instance...
         $_host = $_name . '.' . config( 'dfe.provisioning.default-dns-zone' ) . '.' . config( 'dfe.provisioning.default-dns-domain' );
@@ -246,6 +234,7 @@ class Provisioner extends BaseProvisioner
             $_md = array_merge(
                 $_instance->getMetadata(),
                 [
+                    'mount'              => $_storageProvisioner->getStorageMap(),
                     'private-path'       => $_privatePath,
                     'owner-private-path' => $_ownerPrivatePath,
                     'storage-path'       => $_storagePath,
@@ -271,14 +260,17 @@ class Provisioner extends BaseProvisioner
             //  Save the metadata
             try
             {
-                JsonFile::encodeFile( $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_instance->instance_name_text . '.json', $_md );
+                $request->getStorage()->put(
+                    $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_instance->instance_name_text . '.json',
+                    JsonFile::encode( $_md )
+                );
             }
             catch ( \Exception $_ex )
             {
                 \Log::error( 'Exception saving instance metadata: ' . $_ex->getMessage() );
             }
 
-            \Log::debug( '  * rave: provision instance > update - complete' );
+            \Log::debug( '    * rave: instance update - complete' );
         }
         catch ( \Exception $_ex )
         {
@@ -286,10 +278,10 @@ class Provisioner extends BaseProvisioner
         }
 
         //  Fire off a "launch" event...
-        \Log::debug( '  * rave: provision instance > fire event' );
+        \Log::debug( '    * rave: fire "dfe.launch" event' );
         \Event::fire( 'dfe.launch', [$this, $request, $_md] );
 
-        \Log::debug( '  * rave: provision instance - complete' );
+        \Log::debug( '  * rave: provision "' . $_name . '" - complete' );
 
         return [
             'host'                => $_host,
@@ -324,7 +316,7 @@ class Provisioner extends BaseProvisioner
 
         if ( $_keepDatabase )
         {
-            $this->info( '  * rave: not removing existing schema.' );
+            $this->notice( '    * rave: not removing existing schema.' );
         }
         else
         {
@@ -342,12 +334,38 @@ class Provisioner extends BaseProvisioner
             throw new \RuntimeException( 'Instance row deletion failed.' );
         }
 
-        \Log::debug( '  * rave: deprovision instance > instance deleted' );
+        \Log::debug( '    * rave: instance deleted' );
 
         //  Fire off a "shutdown" event...
         \Event::fire( 'dfe.shutdown', [$this, $request] );
-        \Log::debug( '  * rave: deprovision instance > shutdown event fired' );
+        \Log::debug( '    * rave: event "dfe.shutdown" fired' );
 
         return true;
+    }
+
+    /**
+     * @param ProvisioningRequest $request
+     * @param bool                $nameOnly If true, only the name is returned
+     *
+     * @return \Illuminate\Contracts\Filesystem\Filesystem|\Illuminate\Filesystem\Filesystem|string
+     * @throws \DreamFactory\Enterprise\Services\Exceptions\ProvisioningException
+     * @todo refactor to use mount_t table
+     */
+    protected function _getClusterMount( $request, $nameOnly = false )
+    {
+        $_cluster = $this->_findCluster( $request->getInstance()->cluster_id );
+        $_disk = config( 'dfe.provisioning.mounts.' . $_cluster->cluster_id_text . '.disk' );
+
+        if ( empty( $_disk ) )
+        {
+            throw new ProvisioningException( 'No disks configured for cluster "' . $_cluster->cluster_id_text . '".' );
+        }
+
+        if ( $nameOnly )
+        {
+            return $_disk;
+        }
+
+        return Mount::mount( $_disk );
     }
 }

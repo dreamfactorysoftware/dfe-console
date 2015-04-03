@@ -6,12 +6,12 @@ return [
     'cloud'   => 's3',
     //  Filesystem Disks
     'disks'   => [
-        'local'  => [
+        'local'          => [
             'driver' => 'local',
             'root'   => storage_path() . '/app',
         ],
-        //  hosted storage
-        'hosted' => [
+        //  cluster-east-1 hosted storage
+        'cluster-east-1' => [
             'driver' => 'local',
             'root'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
         ]

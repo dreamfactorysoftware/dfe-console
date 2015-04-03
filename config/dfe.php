@@ -14,9 +14,16 @@ return [
         'static-zone-name'            => 'ec2.us-east-1a',  //  The "static" storage zone
         'public-path-base'            => '/',               //  relative to storage path (hosted or non)
         'private-path-base'           => '.private',        //  relative to storage path (hosted or non)
-        'public-paths'                => ['applications', 'plugins', '.private',],
+        'public-paths'                => ['applications', 'plugins', 'vendor', '.private',],
         'private-paths'               => ['.cache', 'config', 'scripts', 'scripts.user',],
         'owner-private-paths'         => ['snapshots',],
+        //  Storage mounts
+        'mounts'                      => [
+            'cluster-east-1' => [
+                'disk' => 'cluster-east-1',
+                'root' => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+            ],
+        ],
         //  Instance provisioning defaults
         'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
         'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE', 'db-east-1' ),

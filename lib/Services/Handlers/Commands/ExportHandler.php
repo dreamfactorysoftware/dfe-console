@@ -2,16 +2,16 @@
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
+use DreamFactory\Enterprise\Services\Commands\ExportJob;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider;
+use DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 
 /**
- * Processes queued provision requests
+ * Processes queued snapshot requests
  */
-class ProvisionHandler
+class ExportHandler
 {
     //******************************************************************************
     //* Traits
@@ -26,23 +26,23 @@ class ProvisionHandler
     /**
      * Handle a provisioning request
      *
-     * @param  ProvisionJob $command
+     * @param  ExportJob $command
      *
      * @return mixed
      */
-    public function handle( ProvisionJob $command )
+    public function handle( ExportJob $command )
     {
         $_options = $command->getOptions();
-        \Log::debug( 'dfe: ProvisionJob - begin' );
+        \Log::debug( 'dfe: ExportJob - begin' );
 
         try
         {
             //  Create the instance record
-            $_instance = app( InstanceServiceProvider::IOC_NAME )->make( $command->getInstanceId(), $_options );
+            $_instance = app( SnapshotServiceProvider::IOC_NAME )->make( $command->getInstanceId(), $_options );
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'dfe: ProvisionJob - failure, exception creating instance: ' . $_ex->getMessage() );
+            \Log::error( 'dfe: ExportJob - failure, exception creating instance: ' . $_ex->getMessage() );
 
             return false;
         }
@@ -64,7 +64,7 @@ class ProvisionHandler
                 \Log::debug( 'dfe: completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
             }
 
-            \Log::debug( 'dfe: ProvisionJob - complete: ' . print_r( $_result, true ) );
+            \Log::debug( 'dfe: ExportJob - complete: ' . print_r( $_result, true ) );
 
             return $_result;
         }
@@ -79,7 +79,7 @@ class ProvisionHandler
             }
         }
 
-        \Log::debug( 'dfe: ProvisionJob - fail' );
+        \Log::debug( 'dfe: ExportJob - fail' );
 
         return false;
     }

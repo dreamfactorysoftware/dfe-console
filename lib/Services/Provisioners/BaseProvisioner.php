@@ -178,7 +178,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
                 }
             );
 
-        $this->debug( '    * provisioner: notification sent to ' . $instance->user->email_addr_text );
+        $this->debug( '  * provisioner: notification sent to ' . $instance->user->email_addr_text );
 
         return $_result;
     }
