@@ -6,5 +6,7 @@ node_modules/
 /.idea/tasks.xml
 /build
 /tests/storage
-/_ide_*.php
+_ide_*.php
 /original
+composer.lock
+
