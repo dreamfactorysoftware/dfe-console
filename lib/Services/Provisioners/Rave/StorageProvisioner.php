@@ -121,7 +121,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         {
             if ( !$filesystem->exists( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) )
             {
-                $filesystem->exists( $_check ) && $filesystem->makeDirectory( $_check );
+                $filesystem->makeDirectory( $_check );
             }
         }
 
@@ -129,7 +129,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         {
             if ( !$filesystem->exists( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) )
             {
-                $filesystem->exists( $_check ) && $filesystem->makeDirectory( $_check );
+                $filesystem->makeDirectory( $_check );
             }
         }
 
@@ -137,7 +137,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         {
             if ( !$filesystem->exists( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) )
             {
-                $filesystem->exists( $_check ) && $filesystem->makeDirectory( $_check );
+                $filesystem->makeDirectory( $_check );
             }
         }
 

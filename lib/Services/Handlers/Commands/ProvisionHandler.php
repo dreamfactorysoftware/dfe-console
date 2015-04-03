@@ -4,7 +4,7 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Managers\InstanceManager;
+use DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 
@@ -38,7 +38,7 @@ class ProvisionHandler
         try
         {
             //  Create the instance record
-            $_instance = InstanceManager::make( $command->getInstanceId(), $_options );
+            $_instance = app( InstanceServiceProvider::IOC_NAME )->make( $command->getInstanceId(), $_options );
         }
         catch ( \Exception $_ex )
         {

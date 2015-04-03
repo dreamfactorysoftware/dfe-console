@@ -43,7 +43,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function getDatabaseProvisioner( $name = null )
     {
-        return $this->resolveDatabase( GuestLocations::resolve( $name ?: $this->getDefaultProvisioner() ) );
+        return $this->resolveDatabase( $name );
     }
 
     /**

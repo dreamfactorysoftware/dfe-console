@@ -9,6 +9,7 @@ use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
+use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
 class Provisioner extends BaseProvisioner
@@ -265,8 +266,17 @@ class Provisioner extends BaseProvisioner
             }
 
             $_instance->instance_data_text = $_instanceData;
-
             $_instance->save();
+
+            //  Save the metadata
+            try
+            {
+                JsonFile::encodeFile( $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_instance->instance_name_text . '.json', $_md );
+            }
+            catch ( \Exception $_ex )
+            {
+                \Log::error( 'Exception saving instance metadata: ' . $_ex->getMessage() );
+            }
 
             \Log::debug( '  * rave: provision instance > update - complete' );
         }

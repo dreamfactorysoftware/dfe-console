@@ -13,20 +13,18 @@ use DreamFactory\Enterprise\Services\Managers\InstanceManager;
  *  'providers' => array(
  *
  *      ... Other Providers Above ...
- *      'DreamFactory\Enterprise\Services\Providers\InstanceManagerProvider',
+ *      'DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider',
  *
  *  ),
  */
-class InstanceManagerProvider extends BaseServiceProvider
+class InstanceServiceProvider extends BaseServiceProvider
 {
     //******************************************************************************
     //* Constants
     //******************************************************************************
 
     /** @inheritdoc */
-    const ALIAS_NAME = 'InstanceManager';
-    /** @inheritdoc */
-    const IOC_NAME = 'instance-manager';
+    const IOC_NAME = 'dfe.instance';
 
     //******************************************************************************
     //* Members

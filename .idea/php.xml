@@ -16,6 +16,7 @@
         <option value="Composer\Autoload\includeFile" />
         <option value="app" />
         <option value="Illuminate\Database\Eloquent\Model-&gt;__get" />
+        <option value="Illuminate\Support\Facades\Queue::getFacadeAccessor" />
       </list>
     </option>
   </component>

@@ -16,6 +16,8 @@ use Illuminate\Mail\Message;
  *
  * This class provides a foundation upon which to build other PaaS provisioners for the DFE ecosystem. Merely extend the class and add the
  * _doProvision and _doDeprovision methods.
+ *
+ * @todo Move all english text to templates
  */
 abstract class BaseProvisioner extends BaseService implements ResourceProvisioner
 {
