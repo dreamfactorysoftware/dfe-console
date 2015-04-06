@@ -303,7 +303,17 @@ MYSQL
         }
         catch ( \Exception $_ex )
         {
-            $this->error( '    * provisioner: drop database - failure: ' . $_ex->getMessage() );
+            $_message = $_ex->getMessage();
+
+            //  If the database is already gone, don't cause an error, but note it.
+            if ( false !== stripos( $_message, 'general error: 1008' ) )
+            {
+                $this->info( '    * provisioner: drop database - semi-successful: ' . $_message );
+
+                return true;
+            }
+
+            $this->error( '    * provisioner: drop database - failure: ' . $_message );
 
             return false;
         }

@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Providers;
+<?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 use DreamFactory\Enterprise\Services\Managers\MountManager;

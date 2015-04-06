@@ -17,17 +17,20 @@ class CreateFailedJobsTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'job_fail_t',
-            function ( Blueprint $table )
-            {
-                $table->increments( 'id' );
-                $table->text( 'connection' );
-                $table->text( 'queue' );
-                $table->text( 'payload' );
-                $table->timestamp( 'failed_at' );
-            }
-        );
+        if ( !\Schema::hasTable( 'job_fail_t' ) )
+        {
+            \Schema::create(
+                'job_fail_t',
+                function ( Blueprint $table )
+                {
+                    $table->increments( 'id' );
+                    $table->text( 'connection' );
+                    $table->text( 'queue' );
+                    $table->text( 'payload' );
+                    $table->timestamp( 'failed_at' );
+                }
+            );
+        }
     }
 
     /**

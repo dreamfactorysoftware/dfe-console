@@ -17,13 +17,6 @@ return [
         'public-paths'                => ['applications', 'plugins', 'vendor', '.private',],
         'private-paths'               => ['.cache', 'config', 'scripts', 'scripts.user',],
         'owner-private-paths'         => ['snapshots',],
-        //  Storage mounts
-        'mounts'                      => [
-            'cluster-east-1' => [
-                'disk' => 'cluster-east-1',
-                'root' => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
-            ],
-        ],
         //  Instance provisioning defaults
         'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
         'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE', 'db-east-1' ),

@@ -9,7 +9,7 @@ class ApiLogger
     //******************************************************************************
 
     /**
-     * Authenticate an incoming request.
+     * Log all api requests
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $next

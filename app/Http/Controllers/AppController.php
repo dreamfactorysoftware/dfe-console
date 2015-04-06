@@ -23,6 +23,8 @@ class AppController extends FactoryController
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->layout = 'layouts.main';
         $this->_request = Request::createFromGlobals();
     }

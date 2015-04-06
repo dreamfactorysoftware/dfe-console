@@ -53,9 +53,9 @@ return [
         /** DreamFactory Services service providers */
         'DreamFactory\\Enterprise\\Services\\Auditing\\AuditServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\InstanceServiceProvider',
+        'DreamFactory\\Enterprise\\Services\\Providers\\MountServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
-        'DreamFactory\\Enterprise\\Services\\Providers\\MountServiceProvider',
         /** DreamFactory Console (local app) service providers */
         'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
         /** 3rd-party Service Providers */

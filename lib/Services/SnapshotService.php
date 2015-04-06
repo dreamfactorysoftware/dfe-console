@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\Inflector;
@@ -64,12 +65,14 @@ class SnapshotService extends BaseService
      *
      * @return array
      */
-    public function create( $instanceId, Filesystem $fsSource, Filesystem $fsDestination, $keepDays = 30 )
+    public function create( $instanceId, Filesystem $fsDestination = null, $keepDays = 30 )
     {
         //  Build our "mise en place", as it were...
         $_stamp = date( 'YmdHis' );
         $_instance = $this->_validateInstance( $instanceId );
         $_instanceName = $_instance->instance_name_text;
+        $_fsSource = InstanceManager::getFilesystem( $_instance );
+        $_fsDestination = $fsDestination ?: $_fsSource->
 
         //  Make our temp path...
         $_tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . 'tmp';

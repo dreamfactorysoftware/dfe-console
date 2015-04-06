@@ -14,6 +14,15 @@ return [
         'cluster-east-1' => [
             'driver' => 'local',
             'root'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
-        ]
+        ],
+        //  mount-east-1 hosted storage
+        'mount-east-1'   => [
+            'driver' => 'local',
+            'root'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+        ],
+        'mount-local-1'  => [
+            'disk' => 'mount-local-1',
+            'root' => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+        ],
     ],
 ];

@@ -12,6 +12,7 @@ use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -254,4 +255,47 @@ class InstanceManager extends BaseManager implements Factory
         return null;
     }
 
+    /**
+     * @param Instance $instance
+     *
+     * @return Filesystem|\Illuminate\Filesystem\Filesystem
+     */
+    public function getFilesystem( $instance )
+    {
+        $_server = static::_lookupServer( $instance->web_server_id );
+
+        if ( !$_server->mount )
+        {
+            throw new \RuntimeException( 'No storage mount defined for server "' . $_server->server_id_text . '".' );
+        }
+
+        return $_server->mount->getFilesystem();
+    }
+
+    /**
+     * @param Instance $instance
+     *
+     * @return Filesystem|\Illuminate\Filesystem\Filesystem
+     */
+    public function getPrivateFilesystem( $instance )
+    {
+        $_fs = $this->getFilesystem( $instance );
+
+        $_md = IfSet::get( $instance->instance_data_text, 'metadata', [] );
+
+        if ( !isset( $_md['mount'] ) )
+        {
+            throw new \InvalidArgumentException( 'The specified instance has no "mount" information.' );
+        }
+
+        //  Change the prefix
+        $_privateName = trim( config( 'dfe.provisioning.private-base-path', '.private' ), DIRECTORY_SEPARATOR . ' ' );
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_prefix = $_fs->getAdapter()->getPathPrefix();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_fs->setPathPrefix( rtrim( $_prefix, ' ' . DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $_privateName );
+
+        return $_fs;
+    }
 }

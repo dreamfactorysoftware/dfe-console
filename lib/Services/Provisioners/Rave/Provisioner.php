@@ -5,7 +5,6 @@ use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
-use DreamFactory\Enterprise\Services\Facades\Mount;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
@@ -131,7 +130,8 @@ class Provisioner extends BaseProvisioner
         //  Use requested file system if one...
         if ( null === ( $_filesystem = $request->getStorage() ) )
         {
-            $request->setStorage( $_filesystem = $this->_getClusterMount( $request, $options ) );
+            $_filesystem = $request->getInstance()->webServer->mount->getFilesystem();
+            $request->setStorage( $_filesystem );
         }
 
         //  Do it!
@@ -156,7 +156,8 @@ class Provisioner extends BaseProvisioner
         //  Use requested file system if one...
         if ( null === ( $_filesystem = $request->getStorage() ) )
         {
-            $request->setStorage( $_filesystem = $this->_getClusterMount( $request, $options ) );
+            $_filesystem = $request->getInstance()->webServer->mount->getFilesystem();
+            $request->setStorage( $_filesystem );
         }
 
         //  Do it!
@@ -343,29 +344,4 @@ class Provisioner extends BaseProvisioner
         return true;
     }
 
-    /**
-     * @param ProvisioningRequest $request
-     * @param bool                $nameOnly If true, only the name is returned
-     *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem|\Illuminate\Filesystem\Filesystem|string
-     * @throws \DreamFactory\Enterprise\Services\Exceptions\ProvisioningException
-     * @todo refactor to use mount_t table
-     */
-    protected function _getClusterMount( $request, $nameOnly = false )
-    {
-        $_cluster = $this->_findCluster( $request->getInstance()->cluster_id );
-        $_disk = config( 'dfe.provisioning.mounts.' . $_cluster->cluster_id_text . '.disk' );
-
-        if ( empty( $_disk ) )
-        {
-            throw new ProvisioningException( 'No disks configured for cluster "' . $_cluster->cluster_id_text . '".' );
-        }
-
-        if ( $nameOnly )
-        {
-            return $_disk;
-        }
-
-        return Mount::mount( $_disk );
-    }
 }

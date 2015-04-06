@@ -6,7 +6,6 @@ use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
-use DreamFactory\Enterprise\Services\Auditing\Services\AuditingService;
 use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
@@ -17,15 +16,6 @@ use Illuminate\Routing\Controller;
 
 class OpsController extends Controller
 {
-    //*************************************************************************
-    //	Constants
-    //*************************************************************************
-
-    /**
-     * @var string
-     */
-    const DEFAULT_FACILITY = AuditingService::DEFAULT_FACILITY;
-
     //******************************************************************************
     //* Traits
     //******************************************************************************

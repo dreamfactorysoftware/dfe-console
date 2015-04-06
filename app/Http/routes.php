@@ -7,15 +7,15 @@
  * resource controllers
  */
 \Route::group(
-    ['prefix' => 'api/v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources', 'middleware' => 'auth'],
+    ['prefix' => 'api/v1', 'middleware' => 'auth'],
     function ()
     {
-        \Route::resource( 'clusters', 'ClusterController' );
-        \Route::resource( 'instances', 'InstanceController' );
-        \Route::resource( 'roles', 'RoleController' );
-        \Route::resource( 'servers', 'ServerController' );
-        \Route::resource( 'service-users', 'ServiceUserController' );
-        \Route::resource( 'users', 'UserController' );
+        \Route::resource( 'clusters', 'Resources\\ClusterController' );
+        \Route::resource( 'instances', 'Resources\\InstanceController' );
+        \Route::resource( 'roles', 'Resources\\RoleController' );
+        \Route::resource( 'servers', 'Resources\\ServerController' );
+        \Route::resource( 'service-users', 'Resources\\ServiceUserController' );
+        \Route::resource( 'users', 'Resources\\UserController' );
     }
 );
 
@@ -23,7 +23,7 @@
  * Ops controller for operational api
  */
 \Route::group(
-    ['prefix' => 'api/v1', 'middleware' => 'dfe.api-logging', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers'],
+    ['prefix' => 'api/v1', 'middleware' => 'dfe.api-logging',],
     function ()
     {
         \Route::controller( 'ops', 'OpsController' );
@@ -35,31 +35,17 @@
 //******************************************************************************
 
 //  Main page
-\Route::get(
-    '/',
-    [
-        'as'         => 'home',
-        'middleware' => 'auth',
-        function ()
-        {
-            /** @noinspection PhpUndefinedMethodInspection */
-            return \View::make(
-                'app.dashboard',
-                ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0]]
-            );
-        }
-    ]
-);
+\Route::any( '/', ['uses' => 'HomeController@index'] );
+\Route::any( 'home', ['uses' => 'HomeController@index'] );
 
 //  Other controllers
 \Route::controllers(
     [
-        'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',
-        'dashboard' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\DashboardController',
-        'settings'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\SettingsController',
-        'auth'      => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\AuthController',
-        'password'  => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Auth\\PasswordController',
-        'instance'  => 'DreamFactory\\Enterprise\\Services\\Controllers\\InstanceController',
+        'app'       => 'AppController',
+        'dashboard' => 'DashboardController',
+        'settings'  => 'SettingsController',
+        'auth'      => 'Auth\\AuthController',
+        'password'  => 'Auth\\PasswordController',
     ]
 );
 
