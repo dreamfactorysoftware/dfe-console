@@ -21,8 +21,8 @@ return [
             'root'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
         ],
         'mount-local-1'  => [
-            'disk' => 'mount-local-1',
-            'root' => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+            'driver' => 'local',
+            'root'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
         ],
     ],
 ];

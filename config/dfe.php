@@ -3,7 +3,7 @@
 //* DFE Console Specific Settings
 //******************************************************************************
 
-use DreamFactory\Enterprise\Services\Enums\GuestLocations;
+use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 
 return [
     /** This key needs to match the key configured in the dashboard */

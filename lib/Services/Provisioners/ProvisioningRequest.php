@@ -60,10 +60,19 @@ class ProvisioningRequest
     }
 
     /**
-     * @return Filesystem
+     * @param bool $createIfNull
+     *
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getStorage()
+    public function getStorage( $createIfNull = true )
     {
+        //  Use requested file system if one...
+        if ( null === $this->_storage && $createIfNull )
+        {
+            $_storage = $this->getInstance()->getStorageMount();
+            $this->setStorage( $_storage );
+        }
+
         return $this->_storage;
     }
 

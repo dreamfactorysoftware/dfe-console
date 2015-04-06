@@ -3,15 +3,14 @@ namespace DreamFactory\Enterprise\Services\Utility;
 
 use DreamFactory\Enterprise\Common\Contracts\InstanceProvisioner;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
+use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\FileSystem;
 use DreamFactory\Library\Utility\IfSet;
-use Illuminate\Support\Facades\Log;
 
 /**
  * An instance manipulation Wrapper
@@ -165,7 +164,7 @@ PHP;
         {
             $this->fill(
                 [
-                    'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
+                    'guest_location_nbr' => GuestLocations::RAVE_CLUSTER,
                     'instance_id_text'   => $_name,
                     'instance_name_text' => $_name,
                     'db_host_text'       => $_dbConfig['host'],
@@ -315,12 +314,12 @@ PHP;
         //	Check host name
         if ( preg_match( static::HOST_NAME_PATTERN, $_clean ) )
         {
-            Log::notice( 'Non-standard instance name "' . $_clean . '" being provisioned' );
+            \Log::notice( 'Non-standard instance name "' . $_clean . '" being provisioned' );
         }
 
         if ( in_array( $_clean, $_unavailableNames ) )
         {
-            Log::error( 'Attempt to register banned instance name: ' . $name . ' => ' . $_clean );
+            \Log::error( 'Attempt to register banned instance name: ' . $name . ' => ' . $_clean );
 
             throw new \InvalidArgumentException( 'The name "' . $name . '" is not available.' );
         }
@@ -396,7 +395,7 @@ PHP;
             $_dbPort = 3306;
         }
 
-        Log::debug( 'Using db-server-id "' . $_dbServer . '"' );
+        \Log::debug( 'Using db-server-id "' . $_dbServer . '"' );
 
         $_dbConfig = array_merge(
             [

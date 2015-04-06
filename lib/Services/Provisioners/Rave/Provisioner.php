@@ -128,11 +128,7 @@ class Provisioner extends BaseProvisioner
         \Log::debug( '  * rave: provision storage - begin' );
 
         //  Use requested file system if one...
-        if ( null === ( $_filesystem = $request->getStorage() ) )
-        {
-            $_filesystem = $request->getInstance()->webServer->mount->getFilesystem();
-            $request->setStorage( $_filesystem );
-        }
+        $_filesystem = $request->getStorage();
 
         //  Do it!
         $request->setStorageProvisioner( $_provisioner = Provision::resolveStorage( $request->getInstance()->guest_location_nbr ) );
@@ -154,11 +150,7 @@ class Provisioner extends BaseProvisioner
         \Log::debug( '  * rave: deprovision storage' );
 
         //  Use requested file system if one...
-        if ( null === ( $_filesystem = $request->getStorage() ) )
-        {
-            $_filesystem = $request->getInstance()->webServer->mount->getFilesystem();
-            $request->setStorage( $_filesystem );
-        }
+        $_filesystem = $request->getStorage();
 
         //  Do it!
         Provision::resolveStorage( $request->getInstance()->guest_location_nbr )->deprovision( $request );
