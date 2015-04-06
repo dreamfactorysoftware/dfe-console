@@ -76,6 +76,14 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
 
         //  Send notification
         $_instance = $request->getInstance();
+        $_guest = $_instance->guest;
+        $_host =
+            $_guest
+                ? $_guest->public_host_text
+                : $_instance->instance_id_text . '.' .
+                config( 'dfe.provisioning.default-dns-zone' ) .
+                '.' .
+                config( 'dfe.provisioning.default-dns-domain' );
 
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
@@ -85,8 +93,8 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
                 $_result
                     ?
                     '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' .
-                    'has been created. You can reach it by going to <a href="//' . $_instance->public_host_text . '">' .
-                    $_instance->public_host_text . '</a> from any browser.</p>'
+                    'has been created. You can reach it by going to <a href="//' . $_host . '">' .
+                    $_host . '</a> from any browser.</p>'
                     :
                     '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' .
                     'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',

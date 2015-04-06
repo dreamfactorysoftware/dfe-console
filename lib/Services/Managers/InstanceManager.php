@@ -10,6 +10,7 @@ use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceGuest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -142,21 +143,43 @@ class InstanceManager extends BaseManager implements Factory
             $_clusterConfig = $this->_getServersForCluster( $_clusterId );
 
             //  Write it out
-            return Instance::create(
-                [
-                    'user_id'            => $_owner->id,
-                    'instance_id_text'   => $_sanitized,
-                    'instance_name_text' => $_sanitized,
-                    'guest_location_nbr' => $_guestLocation,
-                    'cluster_id'         => $_clusterConfig['cluster-id'],
-                    'db_server_id'       => $_clusterConfig['db-server-id'],
-                    'app_server_id'      => $_clusterConfig['app-server-id'],
-                    'web_server_id'      => $_clusterConfig['web-server-id'],
-                    'vendor_id'          => $_guestLocation,
-                    'vendor_image_id'    => IfSet::get( $options, 'vendor-image-id', config( 'dfe.provisioning.default-vendor-image-id' ) ),
-                    'state_nbr'          => ProvisionStates::CREATED,
-                    'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
-                ]
+            return Instance::getConnectionResolver()->connection()->transaction(
+                function () use ( $_owner, $_sanitized, $_guestLocation, $_clusterConfig, $options )
+                {
+                    $_instance = Instance::create(
+                        [
+                            'user_id'            => $_owner->id,
+                            'instance_id_text'   => $_sanitized,
+                            'instance_name_text' => $_sanitized,
+                            'guest_location_nbr' => $_guestLocation,
+                            'cluster_id'         => $_clusterConfig['cluster-id'],
+                            'db_server_id'       => $_clusterConfig['db-server-id'],
+                            'app_server_id'      => $_clusterConfig['app-server-id'],
+                            'web_server_id'      => $_clusterConfig['web-server-id'],
+                            'state_nbr'          => ProvisionStates::CREATED,
+                            'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
+                        ]
+                    );
+
+                    InstanceGuest::create(
+                        [
+                            'instance_id'           => $_instance->id,
+                            'vendor_id'             => $_guestLocation,
+                            'vendor_image_id'       => IfSet::get(
+                                $options,
+                                'vendor-image-id',
+                                config( 'dfe.provisioning.default-vendor-image-id' )
+                            ),
+                            'vendor_credentials_id' => IfSet::get(
+                                $options,
+                                'vendor-credentials-id',
+                                config( 'dfe.provisioning.default-vendor-credentials-id' )
+                            ),
+                        ]
+                    );
+
+                    return $_instance;
+                }
             );
         }
         catch ( \Exception $_ex )
@@ -258,38 +281,10 @@ class InstanceManager extends BaseManager implements Factory
     /**
      * @param Instance $instance
      *
-     * @return Filesystem|\Illuminate\Filesystem\Filesystem
+     * @return Filesystem
      */
     public function getFilesystem( $instance )
     {
         return $instance->getStorageMount();
     }
-
-    /**
-     * @param Instance $instance
-     *
-     * @return Filesystem|\Illuminate\Filesystem\Filesystem
-     */
-    public function getOwnerFilesystem( $instance )
-    {
-        $_fs = $this->getFilesystem( $instance );
-
-        $_md = IfSet::get( $instance->instance_data_text, 'metadata', [] );
-
-        if ( !isset( $_md['mount'] ) )
-        {
-            throw new \InvalidArgumentException( 'The specified instance has no "mount" information.' );
-        }
-
-        //  Change the prefix
-        $_privateName = trim( config( 'dfe.provisioning.private-base-path', '.private' ), DIRECTORY_SEPARATOR . ' ' );
-
-        /** @noinspection PhpUndefinedMethodInspection */
-        $_prefix = $_fs->getAdapter()->getPathPrefix();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $_fs->setPathPrefix( rtrim( $_prefix, ' ' . DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $_privateName );
-
-        return $_fs;
-    }
-
 }

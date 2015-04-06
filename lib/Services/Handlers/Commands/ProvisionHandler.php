@@ -3,8 +3,9 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
+use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 
@@ -38,7 +39,12 @@ class ProvisionHandler
         try
         {
             //  Create the instance record
-            $_instance = app( InstanceServiceProvider::IOC_NAME )->make( $command->getInstanceId(), $_options );
+            $_instance = InstanceManager::make( $command->getInstanceId(), $_options );
+
+            if ( !$_instance )
+            {
+                throw new ProvisioningException( 'Failed to create instance row: .' );
+            }
         }
         catch ( \Exception $_ex )
         {

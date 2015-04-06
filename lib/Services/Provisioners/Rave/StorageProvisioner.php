@@ -96,6 +96,8 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $this->_privatePath = $this->_ownerPrivatePath = null;
 
         $_instance = $request->getInstance();
+        $this->_storageMap = $_instance->getStorageMap();
+
         $_filesystem = $request->getStorage();
 
         //  Storage root path
@@ -135,8 +137,8 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         \Log::debug( '      * private path:       ' . $_privatePath );
         \Log::debug( '      * owner private path: ' . $_ownerPrivatePath );
 
-        $this->_storageMap['private-path'] = $this->_privatePath = $_privatePath;
-        $this->_storageMap['owner-private-path'] = $this->_ownerPrivatePath = $_ownerPrivatePath;
+        $this->_privatePath = $_privatePath;
+        $this->_ownerPrivatePath = $_ownerPrivatePath;
     }
 
     /**

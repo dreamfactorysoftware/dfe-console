@@ -7,10 +7,10 @@ use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
+use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
-use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
 class Provisioner extends BaseProvisioner
@@ -208,13 +208,9 @@ class Provisioner extends BaseProvisioner
                     'db_name_text'       => $_dbName,
                     'db_user_text'       => $_dbUser,
                     'db_password_text'   => $_dbPassword,
-                    'base_image_text'    => 'fabric.standard',
-                    'public_host_text'   => $_host,
                     'ready_state_nbr'    => 0, //   Admin Required
                     'state_nbr'          => ProvisionStates::PROVISIONED,
                     'platform_state_nbr' => 0, //   Not Activated
-                    'vendor_state_nbr'   => ProvisionStates::PROVISIONED,
-                    'vendor_state_text'  => 'running',
                     'start_date'         => date( 'c' ),
                     'end_date'           => null,
                     'terminate_date'     => null,
@@ -223,15 +219,29 @@ class Provisioner extends BaseProvisioner
                 ]
             );
 
+            $_guest = $_instance->guest;
+
+            if ( $_guest )
+            {
+                $_guest->fill(
+                    [
+                        'base_image_text'   => 'fabric.standard',
+                        'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
+                        'vendor_state_text' => 'running',
+                        'public_host_text'  => $_host,
+                    ]
+                );
+            }
+
             //  Collect metadata
-            $_md = array_merge(
-                $_instance->getMetadata(),
+            $_md = new InstanceMetadata(
+                $_instance->instance_id_text,
                 [
-                    'mount'              => $_storageProvisioner->getStorageMap(),
-                    'private-path'       => $_privatePath,
-                    'owner-private-path' => $_ownerPrivatePath,
-                    'storage-path'       => $_storagePath,
-                    'db'                 => [$_name => $_dbConfig],
+                    'db'    => [$_name => $_dbConfig],
+                    'paths' => [
+                        'private-path'       => $_privatePath,
+                        'owner-private-path' => $_ownerPrivatePath,
+                    ],
                 ]
             );
 
@@ -242,21 +252,21 @@ class Provisioner extends BaseProvisioner
                 $_instanceData = [];
             }
 
-            if ( !array_key_exists( 'metadata', $_instanceData ) )
-            {
-                $_instanceData['metadata'] = $_md;
-            }
-
+            $_instanceData['metadata'] = $_md->toArray();
             $_instance->instance_data_text = $_instanceData;
-            $_instance->save();
 
-            //  Save the metadata
+            $_instance->getConnection()->transaction(
+                function () use ( $_instance, $_guest )
+                {
+                    $_guest && $_guest->save();
+                    $_instance->save();
+                }
+            );
+
+            //  Try 'n Save the metadata
             try
             {
-                $request->getStorage()->put(
-                    $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_instance->instance_name_text . '.json',
-                    JsonFile::encode( $_md )
-                );
+                $_md->save( $request->getStorage() );
             }
             catch ( \Exception $_ex )
             {

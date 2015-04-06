@@ -17,13 +17,6 @@ class MountServiceProvider extends BaseServiceProvider
      */
     const IOC_NAME = 'dfe.mount';
 
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /** @inheritdoc */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\Managers\\MountManager';
-
     //********************************************************************************
     //* Public Methods
     //********************************************************************************

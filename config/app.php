@@ -102,7 +102,7 @@ return [
         'Provision'       => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
         'Snapshot'        => 'DreamFactory\\Enterprise\\Services\\Facades\\Snapshot',
         'InstanceManager' => 'DreamFactory\\Enterprise\\Services\\Facades\\Snapshot',
-        'Mount'           => 'DreamFactory\\Enterprise\\Services\\Facades\\Mount',
+        'Mounter'         => 'DreamFactory\\Enterprise\\Services\\Facades\\Mounter',
     ],
 
 ];
