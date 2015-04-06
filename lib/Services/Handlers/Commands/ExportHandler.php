@@ -1,10 +1,9 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\ExportJob;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 
@@ -17,7 +16,7 @@ class ExportHandler
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation;
+    use EntityLookup;
 
     //******************************************************************************
     //* Methods
@@ -37,18 +36,22 @@ class ExportHandler
 
         try
         {
-            //  Create the instance record
-            $_instance = app( SnapshotServiceProvider::IOC_NAME )->make( $command->getInstanceId(), $_options );
+            //  Get the instance
+            $_instance = $this->_findInstance( $command->getInstanceId() );
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'dfe: ExportJob - failure, exception creating instance: ' . $_ex->getMessage() );
+            \Log::error( 'dfe: ExportJob - failure, invalid instance "' . $command->getInstanceId() . '".' );
 
             return false;
         }
 
         try
         {
+            //  Get instance storage
+            $_fsSource= $_instance->getStorageMount();
+            $_fsDestination = $_instance->user->getPrivatePath();
+
             $_guest = IfSet::get( $_options, 'guest-location-nbr', config( 'dfe.provisioning.default-guest-location' ) );
             $_provisioner = Provision::getProvisioner( $_guest );
 

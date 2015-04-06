@@ -26,11 +26,25 @@ class MountManager extends BaseManager implements StorageMounter
         }
         catch ( \InvalidArgumentException $_ex )
         {
-            $this->manage(
-                $name,
-                $_filesystem = \Storage::disk( $name )
-            );
         }
+
+        //  See if we have a disk
+        $_config = config( 'filesystems.disks.' . $name );
+
+        if ( empty( $_config ) )
+        {
+            if ( empty( $options ) )
+            {
+                throw new \InvalidArgumentException( 'No configuration found or specified for mount "' . $name . '".' );
+            }
+
+            \Config::set( 'filesystems.disks.' . $name, $options );
+        }
+
+        $this->manage(
+            $name,
+            $_filesystem = \Storage::disk( $name )
+        );
 
         return $_filesystem;
     }
@@ -47,4 +61,5 @@ class MountManager extends BaseManager implements StorageMounter
     {
         return $this->unmanage( $name );
     }
+
 }

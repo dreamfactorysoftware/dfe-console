@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Tests\Commands;
 
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
-use DreamFactory\Enterprise\Services\Enums\GuestLocations;
+use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 
 class ProvisionTest extends \TestCase

@@ -262,14 +262,7 @@ class InstanceManager extends BaseManager implements Factory
      */
     public function getFilesystem( $instance )
     {
-        $_server = static::_lookupServer( $instance->web_server_id );
-
-        if ( !$_server->mount )
-        {
-            throw new \RuntimeException( 'No storage mount defined for server "' . $_server->server_id_text . '".' );
-        }
-
-        return $_server->mount->getFilesystem();
+        return $instance->getStorageMount();
     }
 
     /**
@@ -277,7 +270,7 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return Filesystem|\Illuminate\Filesystem\Filesystem
      */
-    public function getPrivateFilesystem( $instance )
+    public function getOwnerFilesystem( $instance )
     {
         $_fs = $this->getFilesystem( $instance );
 
@@ -298,4 +291,5 @@ class InstanceManager extends BaseManager implements Factory
 
         return $_fs;
     }
+
 }

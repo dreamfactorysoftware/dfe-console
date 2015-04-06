@@ -1,9 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Commands;
 
-use DreamFactory\Enterprise\Common\Commands\JobCommand;
-
-class ExportJob extends JobCommand
+class ExportJob extends BaseInstanceJob
 {
     //******************************************************************************
     //* Constants
