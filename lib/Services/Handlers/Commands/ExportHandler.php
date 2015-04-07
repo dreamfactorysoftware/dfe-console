@@ -3,9 +3,8 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\ExportJob;
-use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Library\Utility\IfSet;
+use DreamFactory\Enterprise\Services\Facades\Snapshot;
+use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 
 /**
  * Processes queued snapshot requests
@@ -38,6 +37,7 @@ class ExportHandler
         {
             //  Get the instance
             $_instance = $this->_findInstance( $command->getInstanceId() );
+            $_md = InstanceMetadata::createFromInstance( $_instance );
         }
         catch ( \Exception $_ex )
         {
@@ -48,19 +48,7 @@ class ExportHandler
 
         try
         {
-            //  Get instance storage
-            $_fsSource= $_instance->getStorageMount();
-            $_fsDestination = $_instance->user->getPrivatePath();
-
-            $_guest = IfSet::get( $_options, 'guest-location-nbr', config( 'dfe.provisioning.default-guest-location' ) );
-            $_provisioner = Provision::getProvisioner( $_guest );
-
-            if ( empty( $_provisioner ) )
-            {
-                throw new \RuntimeException( 'The provisioner of the request is not valid.' );
-            }
-
-            $_result = $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
+            $_result = Snapshot::create( $_instance->instance_id_text );
 
             if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
             {
@@ -73,18 +61,11 @@ class ExportHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'exception during provisioning: ' . $_ex->getMessage() );
+            \Log::error( '  * exception: ' . $_ex->getMessage() );
+            \Log::debug( 'dfe: ExportJob - fail' );
 
-            //  Delete instance record...
-            if ( !$_instance->delete() )
-            {
-                throw new \LogicException( 'Unable to remove created instance "' . $_instance->instance_id_text . '".' );
-            }
+            return false;
         }
-
-        \Log::debug( 'dfe: ExportJob - fail' );
-
-        return false;
     }
 
 }

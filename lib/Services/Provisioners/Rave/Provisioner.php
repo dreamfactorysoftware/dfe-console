@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
@@ -131,7 +132,10 @@ class Provisioner extends BaseProvisioner
         $_filesystem = $request->getStorage();
 
         //  Do it!
-        $request->setStorageProvisioner( $_provisioner = Provision::resolveStorage( $request->getInstance()->guest_location_nbr ) );
+        $request->setStorageProvisioner(
+            $_provisioner = Provision::resolveStorage( $request->getInstance()->guest_location_nbr )
+        );
+
         $_provisioner->provision( $request );
 
         \Log::debug( '  * rave: provision storage - complete' );
@@ -241,6 +245,9 @@ class Provisioner extends BaseProvisioner
                     'paths' => [
                         'private-path'       => $_privatePath,
                         'owner-private-path' => $_ownerPrivatePath,
+                        'snapshot-path'      => $_ownerPrivatePath .
+                            DIRECTORY_SEPARATOR .
+                            config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
                     ],
                 ]
             );
@@ -293,7 +300,9 @@ class Provisioner extends BaseProvisioner
             'storage_path'        => $_storagePath,
             'private_path'        => $_privatePath,
             'owner_private_path'  => $_ownerPrivatePath,
-            'snapshot_path'       => $_privatePath . DIRECTORY_SEPARATOR . 'snapshots',
+            'snapshot_path'       => $_ownerPrivatePath .
+                DIRECTORY_SEPARATOR .
+                config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
             'db_host'             => $_dbConfig['host'],
             'db_port'             => $_dbConfig['port'],
             'db_name'             => $_dbName,

@@ -19,7 +19,7 @@ DB_HOST="cumulus.fabric.dreamfactory.com"
 DB_NAME="$1"
 DB_USER="cerberus"
 DB_PASS="KlL8ZF-E-rBFw_h9ygQZh3ZF"
-DESTINATION="$2"
+DESTINATION=
 NO_ZIP=0
 
 usage()
@@ -55,40 +55,75 @@ EO
 
 }
 
-ARGS=$(getopt -s bash --options ${SHORTOPTS} --longoptions ${LONGOPTS} --name ${SCRIPT_NAME} -- "$@")
-
-eval set -- "${ARGS}"
-
-while true; do
-    case $1 in
-    	-x|--no-zip)
-    		NO_ZIP=1; break;;
-    	-n|--db-host)
-    		DB_HOST=$2; shift; break;;
-    	-D|--db-name)
-    		DB_NAME=$2; shift; break;;
-    	-P|--port)
-    		DB_PORT=$2; shift; break;;
-    	-u|--db-user)
-    		DB_USER=$2; shift; break;;
-    	-p|--db-pass)
-    		DB_PASS=$2; shift; break;;
-    	-o|--output)
-    		DESTINATION=$2; shift; break;;
-        -h|--help)
-            usage; exit 0;;
-        -v|--version)
-            echo "${SCRIPT_VERSION}"; exit 0;;
+while :; do
+     case $1 in
         -q|--quiet)
-            VERBOSE=0; break;;
+            VERBOSE=0
+            ;;
+    	-x|--no-zip)
+    		NO_ZIP=1
+    		;;
+    	-n|--db-host=?*)
+    		DB_HOST=${1#*=}
+    		shift 2
+    		continue;
+    		;;
+    	-D|--db-name=?*)
+    		DB_NAME=${1#*=}
+    		shift 2
+    		continue;
+    		;;
+    	-P|--db-port=?*)
+    		DB_PORT=${1#*=}
+    		shift 2
+    		continue
+    		;;
+    	-u|--db-user=?*)
+    		DB_USER=${1#*=}
+    		shift 2
+    		continue
+    		;;
+    	-p|--db-pass=?*)
+    		DB_PASS=${1#*=}
+    		shift 2
+    		continue;
+    		;;
+    	-o|--output=?*)
+    		DESTINATION=${1#*=}
+    		shift 2
+    		continue
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        -v|--version)
+            echo "${SCRIPT_VERSION}"
+            exit 0
+            ;;
+        -?*)
+     	 	DB_NAME=$1
+       	 	DESTINATION=$2
+       	 	shift 2
+       	 	continue
+            ;;
         --)
-            shift; break;;
+            shift
+            break
+            ;;
+
         *)
-            usage; exit 1;;
+        	break
+        	;;
     esac
-    shift
+
+    command shift
 done
 
+echo "$1"
+echo "$2"
+echo "$3"
+echo "---"
 DB_NAME="$1"
 DESTINATION="$2"
 
@@ -109,6 +144,7 @@ if [ "${DESTINATION}" != "" ] ; then
 	OUTPUT="--result-file=${DESTINATION}"
 fi
 
+echo "/usr/bin/mysqldump --compress --delayed-insert -u ${DB_USER} -p${DB_PASS} -h ${DB_HOST} \"${OUTPUT}\" ${DB_NAME}"
 /usr/bin/mysqldump --compress --delayed-insert -u ${DB_USER} -p${DB_PASS} -h ${DB_HOST} "${OUTPUT}" ${DB_NAME}
 
 if [ 0 != $? ] ; then

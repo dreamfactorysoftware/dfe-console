@@ -1,15 +1,16 @@
-<?php
-namespace DreamFactory\Enterprise\Services;
+<?php namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Facades\InstanceManager;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
+use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
+use Illuminate\Filesystem\FilesystemAdapter;
 use League\Flysystem\Adapter\Local;
+use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
@@ -48,7 +49,7 @@ class SnapshotService extends BaseService
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation;
+    use EntityLookup;
 
     //*************************************************************************
     //* Methods
@@ -57,21 +58,19 @@ class SnapshotService extends BaseService
     /**
      * Creates a snapshot of a fabric-hosted instance
      *
-     * @param string     $instanceId
-     * @param Filesystem $fsSource
-     * @param Filesystem $fsDestination
-     * @param int        $keepDays The number of days to keep the snapshot
+     * @param string                                      $instanceId
+     * @param \Illuminate\Contracts\Filesystem\Filesystem $fsDestination
+     * @param int                                         $keepDays The number of days to keep the snapshot
      *
      * @return array
      */
-    public function create( $instanceId, Filesystem $fsDestination = null, $keepDays = 30 )
+    public function create( $instanceId, \Illuminate\Contracts\Filesystem\Filesystem $fsDestination = null, $keepDays = 30 )
     {
         //  Build our "mise en place", as it were...
         $_stamp = date( 'YmdHis' );
-        $_instance = $this->_validateInstance( $instanceId );
+        $_instance = $this->_findInstance( $instanceId );
         $_instanceName = $_instance->instance_name_text;
-        $_fsSource = InstanceManager::getFilesystem( $_instance );
-        $_fsDestination = $fsDestination ?: $_fsSource->
+        $_fsSource = $_instance->getStorageMount();
 
         //  Make our temp path...
         $_tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . 'tmp';
@@ -90,14 +89,16 @@ class SnapshotService extends BaseService
         $_id = implode( '.', [Inflector::neutralize( $_instanceName ), $_idPrefix . $_stamp] );
 
         //  Start building our metadata array
-        $_metadata = [
-            'id'                         => $_id,
-            'type'                       => config( 'snapshot.metadata-type', 'dfe.snapshot' ),
-            'source'                     => $_instance->getMetadata(),
-            'snapshot-prefix'            => $_id,
-            'contents-storage-timestamp' => (int)time(),
-            'contents-db-timestamp'      => (int)time(),
-        ];
+        $_metadata = array_merge(
+            [
+                'id'                         => $_id,
+                'type'                       => config( 'snapshot.metadata-type', 'dfe.snapshot' ),
+                'snapshot-prefix'            => $_id,
+                'contents-storage-timestamp' => (int)time(),
+                'contents-db-timestamp'      => (int)time(),
+            ],
+            $_instance->getMetadata()
+        );
 
         $_zipFileName = $this->_getConfigValue( 'snapshot.templates.snapshot-file-name', $_metadata );
         $_metadata['contents-storage-zipball'] = $_storageZipName =
@@ -120,7 +121,7 @@ class SnapshotService extends BaseService
         $_fsStorage = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_storageZipName ) );
 
         //  Archive storage
-        if ( !$this->_archivePath( $fsSource, $_fsStorage ) )
+        if ( !$this->_archivePath( $_fsSource, $_fsStorage ) )
         {
             throw new \RuntimeException( 'Unable to archive source file system. Aborting.' );
         }
@@ -147,7 +148,7 @@ class SnapshotService extends BaseService
         unset( $_fsSnapshot );
 
         //  Stuff it in the snapshot
-        $this->_moveWorkFileToArchive( $fsDestination, $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName );
+        $this->_moveWorkFileToArchive( $fsDestination ?: $_instance->getSnapshotMount(), $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName );
 
         return $_md;
     }
@@ -301,16 +302,20 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param FilesystemInterface $source The source file system to archive
+     * @param FilesystemAdapter   $source The source file system to archive
      * @param FilesystemInterface $zip    The full zip file name
      *
      * @return bool
      */
     protected function _archivePath( $source, $zip )
     {
+        /** @type AdapterInterface $_adapter */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_adapter = $source->getDriver()->getAdapter();
+
         try
         {
-            foreach ( $source->listContents( '', true ) as $_file )
+            foreach ( $_adapter->listContents( '', true ) as $_file )
             {
                 if ( $_file['type'] == 'dir' )
                 {
@@ -322,7 +327,8 @@ class SnapshotService extends BaseService
                 }
                 elseif ( $_file['type'] == 'file' )
                 {
-                    $zip->putStream( $_file['path'], $source->readStream( $_file['path'] ) );
+                    $_resource = $_adapter->readStream( $_file['path'] );
+                    $zip->putStream( $_file['path'], $_resource['stream'] );
                 }
             }
 
@@ -345,15 +351,39 @@ class SnapshotService extends BaseService
     {
         try
         {
+            $_script = config( 'snapshot.script.location' );
+
             switch ( $instance->guest_location_nbr )
             {
                 case GuestLocations::DFE_CLUSTER:
+                    $_script = config( 'snapshot.script.location' );
+                    if ( !file_exists( $_script ) )
+                    {
+                        throw new \RuntimeException( 'No snapshot script configured.' );
+                    }
+
+                    if ( !is_executable( $_script ) )
+                    {
+                        if ( false === chmod( $_script, 0750 ) )
+                        {
+                            throw new \RuntimeException( 'Script found, but not executable.' );
+                        }
+                    }
+
                     //  This script automatically gzips the resultant file...
+                    $_dbServer = $this->_findServer( $instance->db_server_id );
+                    $_args = [
+                        '--db-host=' . '"' . $_dbServer->config_text['host'] . '"',
+                        '--db-user=' . '"' . $_dbServer->config_text['username'] . '"',
+                        '--db-pass=' . '"' . $_dbServer->config_text['password'] . '"',
+                        '--db-port=' . $_dbServer->config_text['port'],
+                    ];
+
                     $_command =
                         sprintf(
                             "sudo -u %s %s %s %s",
                             config( 'snapshot.script.user', 'dfadmin' ),
-                            config( 'snapshot.script.location' ),
+                            $_script . ' ' . implode( ' ', $_args ),
                             $instance->db_name_text,
                             $dumpFile
                         );
@@ -394,14 +424,19 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param Filesystem $archive
-     * @param string     $workFile
+     * @param Filesystem|\Illuminate\Contracts\Filesystem\Filesystem $archive
+     * @param string                                                 $workFile
      */
-    protected function _moveWorkFileToArchive( $archive, $workFile )
+    protected function _moveWorkFileToArchive( $archive = null, $workFile = null )
     {
         if ( false === ( $_stream = fopen( $workFile, 'rb' ) ) )
         {
             throw new \InvalidArgumentException( 'Unable to read file "' . $workFile . '".' );
+        }
+
+        if ( empty( $archive ) )
+        {
+
         }
 
         $archive->putStream( basename( $workFile ), $_stream );
@@ -425,13 +460,11 @@ class SnapshotService extends BaseService
     protected function _getConfigValue( $key, $replacements )
     {
         $_stringified = false;
-        $_keys = [];
+        $_setting = config( $key );
 
-        $_value = config( $key );
-
-        if ( !is_string( $_value ) )
+        if ( !is_string( $_setting ) )
         {
-            if ( false === JsonFile::encode( $_value ) )
+            if ( false === JsonFile::encode( $_setting ) )
             {
                 throw new \InvalidArgumentException( 'The value at key "' . $key . '" is not a string or a jsonable array.' );
             }
@@ -442,20 +475,25 @@ class SnapshotService extends BaseService
         //  Surround keys with squiggles
         if ( !empty( $replacements ) )
         {
+            $_values = [];
             foreach ( $replacements as $_key => $_value )
             {
-                $_keys[] = '{' . $_key . '}';
+                if ( is_string( $_value ) )
+                {
+                    $_key = '{' . $_key . '}';
+                    $_values[$_key] = $_value;
+                }
             }
-        }
 
-        $_value = str_replace( $_keys, array_values( $replacements ), $_value );
+            $_setting = str_replace( array_keys( $_values ), array_values( $_values ), $_setting );
+        }
 
         if ( $_stringified )
         {
-            $_value = JsonFile::decode( $_value );
+            $_setting = JsonFile::decode( $_setting );
         }
 
-        return $_value;
+        return $_setting;
     }
 
 }

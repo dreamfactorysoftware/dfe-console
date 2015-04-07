@@ -2,7 +2,8 @@
 
 use DreamFactory\Enterprise\Common\Contracts\StorageMounter;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
-use Illuminate\Contracts\Filesystem\Filesystem;
+use DreamFactory\Library\Utility\IfSet;
+use Illuminate\Filesystem\FilesystemAdapter;
 
 class MountManager extends BaseManager implements StorageMounter
 {
@@ -16,13 +17,15 @@ class MountManager extends BaseManager implements StorageMounter
      * @param string $name
      * @param array  $options
      *
-     * @return Filesystem
+     * @return FilesystemAdapter
      */
     public function mount( $name, $options = [] )
     {
+        $_tag = IfSet::get( $options, 'tag', $name );
+
         try
         {
-            return $this->resolve( $name );
+            return $this->resolve( $_tag );
         }
         catch ( \InvalidArgumentException $_ex )
         {
@@ -42,7 +45,7 @@ class MountManager extends BaseManager implements StorageMounter
         }
 
         $this->manage(
-            $name,
+            $_tag,
             $_filesystem = \Storage::disk( $name )
         );
 

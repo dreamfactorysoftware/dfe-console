@@ -69,8 +69,9 @@ class ProvisioningRequest
         //  Use requested file system if one...
         if ( null === $this->_storage && $createIfNull )
         {
-            $_storage = $this->getInstance()->getStorageMount();
-            $this->setStorage( $_storage );
+            $this->setStorage(
+                $_storage = $this->getInstance()->getRootStorageMount()
+            );
         }
 
         return $this->_storage;

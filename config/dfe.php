@@ -14,6 +14,7 @@ return [
         'static-zone-name'            => 'ec2.us-east-1a',  //  The "static" storage zone
         'public-path-base'            => '/',               //  relative to storage path (hosted or non)
         'private-path-base'           => '.private',        //  relative to storage path (hosted or non)
+        'snapshot-path'               => 'snapshots',       // relative to owner-private-path
         'public-paths'                => ['applications', 'plugins', 'vendor', '.private',],
         'private-paths'               => ['.cache', 'config', 'scripts', 'scripts.user',],
         'owner-private-paths'         => ['snapshots',],

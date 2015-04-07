@@ -45,9 +45,6 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     //******************************************************************************
 
     /**
-     * @type string Partitioning hash type
-     */
-    /**
      * @type string The instance's private path
      */
     protected $_privatePath = null;
@@ -100,22 +97,26 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
 
         $_filesystem = $request->getStorage();
 
+        //******************************************************************************
+        //* Directories are all relative to the request's storage file system
+        //******************************************************************************
+
         //  Storage root path
-        $_rootPath = $_instance->getStorageBase();
+        $_rootPath = null;
 
         //  The instance's base storage path
-        $_instanceRootPath = $_rootPath . DIRECTORY_SEPARATOR . $_instance->instance_id_text;
-
-        //  The user's private path. Same as instance's when non-hosted
-        $_ownerPrivatePath = $_rootPath . DIRECTORY_SEPARATOR . $_privateName;
+        $_instanceRootPath = $_instance->instance_id_text;
 
         //  The instance's private path
         $_privatePath = $_instanceRootPath . DIRECTORY_SEPARATOR . $_privateName;
 
+        //  The user's private path. Same as instance's when non-hosted
+        $_ownerPrivatePath = $_privateName;
+
         //  Make sure everything exists
         !$_filesystem->exists( $_rootPath ) && $_filesystem->makeDirectory( $_rootPath );
         !$_filesystem->exists( $_privatePath ) && $_filesystem->makeDirectory( $_privatePath );
-        $this->_hostedStorage && !$_filesystem->exists( $_ownerPrivatePath ) && $_filesystem->makeDirectory( $_ownerPrivatePath );
+        !$_filesystem->exists( $_ownerPrivatePath ) && $_filesystem->makeDirectory( $_ownerPrivatePath );
 
         //  Now ancillary sub-directories
         foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
@@ -127,13 +128,13 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         {
             !$_filesystem->exists( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
         }
-
         foreach ( config( 'dfe.provisioning.owner-private-paths', [] ) as $_path )
         {
             !$_filesystem->exists( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
         }
 
         \Log::debug( '    * provisioner: instance storage created' );
+        \Log::debug( '      * root path:          ' . $_rootPath );
         \Log::debug( '      * private path:       ' . $_privatePath );
         \Log::debug( '      * owner private path: ' . $_ownerPrivatePath );
 
@@ -151,7 +152,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     {
         $_instance = $request->getInstance();
         $_filesystem = $request->getStorage();
-        $_storagePath = $_instance->getStorageBase( $_instance->instance_id_text );
+        $_storagePath = $_instance->instance_id_text;
 
         //  I'm not sure how hard this tries to delete the directory
         $_filesystem->exists( $_storagePath ) && $_filesystem->deleteDirectory( $_storagePath );

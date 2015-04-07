@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use DreamFactory\Library\Utility\Inflector;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -101,6 +102,17 @@ class InstanceMetadata implements Jsonable, Arrayable
         }
     }
 
+    /**
+     * @param Instance $instance
+     *
+     * @return static
+     */
+    public static function createFromInstance( Instance $instance )
+    {
+        return new static( $instance->instance_id_text, $instance->getMetadata( false ) );
+
+    }
+
     /** @inheritdoc */
     public function toArray()
     {
@@ -167,7 +179,12 @@ class InstanceMetadata implements Jsonable, Arrayable
         );
 
         $_md = new static( $_instance->instance_id_text, $_values );
-        $_file = IfSet::get( $_md->getPaths(), 'owner-private-path' ) . DIRECTORY_SEPARATOR . $_instance->instance_id_text . '.json';
+        $_file =
+            rtrim( config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME ), ' ' . DIRECTORY_SEPARATOR ) .
+            DIRECTORY_SEPARATOR .
+            $_instance->instance_id_text .
+            '.json';
+
         $filesystem->put( $_file, $_md->toJson() );
 
         return $_md->toArray();
