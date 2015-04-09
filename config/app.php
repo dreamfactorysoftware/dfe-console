@@ -53,6 +53,7 @@ return [
         /** DreamFactory Services service providers */
         'DreamFactory\\Enterprise\\Services\\Auditing\\AuditServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\InstanceServiceProvider',
+        'DreamFactory\\Enterprise\\Services\\Providers\\InstanceStorageServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\MountServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
@@ -102,6 +103,7 @@ return [
         'Provision'       => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
         'Snapshot'        => 'DreamFactory\\Enterprise\\Services\\Facades\\Snapshot',
         'InstanceManager' => 'DreamFactory\\Enterprise\\Services\\Facades\\Snapshot',
+        'InstanceStorage' => 'DreamFactory\\Enterprise\\Services\\Facades\\InstanceStorage',
         'Mounter'         => 'DreamFactory\\Enterprise\\Services\\Facades\\Mounter',
     ],
 

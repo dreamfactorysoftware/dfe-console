@@ -63,6 +63,6 @@ abstract class BaseInstanceJob extends JobCommand
      */
     public function getHandler()
     {
-        // TODO: Implement getHandler() method.
+        //
     }
 }

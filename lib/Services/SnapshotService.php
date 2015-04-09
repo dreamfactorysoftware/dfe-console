@@ -4,6 +4,7 @@ use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -149,7 +150,10 @@ class SnapshotService extends BaseService
         unset( $_fsSnapshot );
 
         //  Stuff it in the snapshot
-        $this->_moveWorkFileToArchive( $fsDestination ?: $_instance->getSnapshotMount(), $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName );
+        $this->_moveWorkFileToArchive(
+            $fsDestination ?: InstanceStorage::getSnapshotMount( $_instance ),
+            $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName
+        );
 
         return $_md;
     }
@@ -350,7 +354,7 @@ class SnapshotService extends BaseService
      */
     protected function _dumpDatabase( $instance, $dumpFile, $zip )
     {
-        if ( $instance->guest_location_nbr != GuestLocations::RAVE_CLUSTER )
+        if ( $instance->guest_location_nbr != GuestLocations::DFE_CLUSTER )
         {
             throw new NotImplementedException();
         }

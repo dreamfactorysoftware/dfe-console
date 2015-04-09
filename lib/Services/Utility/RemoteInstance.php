@@ -3,11 +3,11 @@ namespace DreamFactory\Enterprise\Services\Utility;
 
 use DreamFactory\Enterprise\Common\Contracts\InstanceProvisioner;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
+use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\FileSystem;
 use DreamFactory\Library\Utility\IfSet;
@@ -164,7 +164,7 @@ PHP;
         {
             $this->fill(
                 [
-                    'guest_location_nbr' => GuestLocations::RAVE_CLUSTER,
+                    'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
                     'instance_id_text'   => $_name,
                     'instance_name_text' => $_name,
                     'db_host_text'       => $_dbConfig['host'],

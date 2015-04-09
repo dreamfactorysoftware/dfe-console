@@ -21,7 +21,7 @@ return [
         //  Instance provisioning defaults
         'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
         'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE', 'db-east-1' ),
-        'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', GuestLocations::RAVE_CLUSTER ),
+        'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', GuestLocations::DFE_CLUSTER ),
         'default-ram-size'            => env( 'DFE_DEFAULT_RAM_SIZE', 1 ),
         'default-disk-size'           => env( 'DFE_DEFAULT_DISK_SIZE', 8 ),
         //  Notification settings

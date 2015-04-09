@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Enterprise\Services\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
@@ -10,6 +9,7 @@ use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
+use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;

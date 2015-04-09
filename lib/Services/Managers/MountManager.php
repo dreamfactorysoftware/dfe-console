@@ -2,8 +2,8 @@
 
 use DreamFactory\Enterprise\Common\Contracts\StorageMounter;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
+use DreamFactory\Library\Fabric\Database\Exceptions\MountException;
 use DreamFactory\Library\Utility\IfSet;
-use Illuminate\Filesystem\FilesystemAdapter;
 
 class MountManager extends BaseManager implements StorageMounter
 {
@@ -17,11 +17,13 @@ class MountManager extends BaseManager implements StorageMounter
      * @param string $name
      * @param array  $options
      *
-     * @return FilesystemAdapter
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     * @throws \DreamFactory\Library\Fabric\Database\Exceptions\MountException
      */
     public function mount( $name, $options = [] )
     {
-        $_tag = IfSet::get( $options, 'tag', $name );
+        $_tag = str_replace( '.', '-', IfSet::get( $options, 'tag', $name ) );
+        $_prefix = IfSet::get( $options, 'prefix' );
 
         try
         {
@@ -32,21 +34,48 @@ class MountManager extends BaseManager implements StorageMounter
         }
 
         //  See if we have a disk
-        $_config = config( 'filesystems.disks.' . $name );
-
-        if ( empty( $_config ) )
+        if ( null === ( $_config = config( 'filesystems.disks.' . $_tag ) ) )
         {
-            if ( empty( $options ) )
+            if ( null === ( $_config = config( 'filesystems.disks.' . $name ) ) )
             {
-                throw new \InvalidArgumentException( 'No configuration found or specified for mount "' . $name . '".' );
-            }
+                if ( empty( $options ) )
+                {
+                    throw new MountException( 'No configuration found or specified for mount "' . $name . '".' );
+                }
 
-            \Config::set( 'filesystems.disks.' . $name, $options );
+                \Config::set( 'filesystems.disks.' . $_tag, $options );
+            }
+            //  Start with a fresh config for this disk
+            else if ( $_tag != $name )
+            {
+                if ( !empty( $_prefix ) )
+                {
+                    $_prefix = trim( $_prefix, ' ' . DIRECTORY_SEPARATOR );
+
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    $_oldPrefix = $_config['root'];
+
+                    if ( false !== strpos( $_oldPrefix, dirname( $_prefix ) ) )
+                    {
+                        $_oldPrefix = rtrim( str_replace( dirname( $_prefix ), null, $_oldPrefix ), DIRECTORY_SEPARATOR );
+                    }
+
+                    $_newPrefix = rtrim( $_oldPrefix, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $_prefix;
+
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    if ( $_oldPrefix != $_newPrefix )
+                    {
+                        $_config['root'] = $_newPrefix;
+                    }
+                }
+
+                \Config::set( 'filesystems.disks.' . $_tag, $_config );
+            }
         }
 
         $this->manage(
             $_tag,
-            $_filesystem = \Storage::disk( $name )
+            $_filesystem = \Storage::disk( $_tag )
         );
 
         return $_filesystem;

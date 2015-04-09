@@ -1,12 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use DreamFactory\Library\Utility\IfSet;
-use DreamFactory\Library\Utility\Inflector;
 use Illuminate\Filesystem\FilesystemAdapter;
 
 /**
@@ -14,46 +10,6 @@ use Illuminate\Filesystem\FilesystemAdapter;
  */
 class InstanceStorageService extends BaseService
 {
-    //******************************************************************************
-    //* Constants
-    //******************************************************************************
-
-    /**
-     * @type string
-     */
-    const CHARACTER_PATTERN = '/[^a-zA-Z0-9]/';
-    /**
-     * @type string
-     */
-    const HOST_NAME_PATTERN = "/^([a-zA-Z0-9])+$/";
-
-    /**
-     * @type string
-     */
-    const SNAPSHOT_FILE_SUFFIX = '.snapshot.zip';
-    /**
-     * @type string
-     */
-    const STORAGE_FILE_SUFFIX = '.storage.zip';
-    /**
-     * @type string
-     */
-    const SQL_FILE_SUFFIX = '.sql';
-    /**
-     * @type string
-     */
-    const SQL_ZIP_SUFFIX = '.sql.gz';
-    /**
-     * @type string The snapshot ID prefix
-     */
-    const SNAPSHOT_ID_PREFIX = 'ess';
-
-    //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-    use EntityLookup;
-
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -72,17 +28,19 @@ class InstanceStorageService extends BaseService
      */
     public function boot()
     {
-        $this->_privatePathName = config( 'dfe.provisioning.private-path-base', ConsoleDefaults::PRIVATE_PATH_NAME );
+        $this->_privatePathName =
+            $this->_cleanPath( config( 'dfe.provisioning.private-path-base', ConsoleDefaults::PRIVATE_PATH_NAME ), false, true );
     }
 
     /**
      * @param Instance $instance
+     * @param string   $append
      *
      * @return string
      */
-    protected function _getStorageRoot( Instance $instance )
+    public function getRootStoragePath( Instance $instance, $append = null )
     {
-        return $this->buildStoragePath( $instance );
+        return $instance->getRootStoragePath( $append );
     }
 
     /**
@@ -92,18 +50,7 @@ class InstanceStorageService extends BaseService
      */
     public function getStoragePath( Instance $instance )
     {
-        return $this->_getStorageRoot( $instance ) . DIRECTORY_SEPARATOR . $instance->instance_id_text;
-    }
-
-    /**
-     * @param Instance $instance
-     *
-     * @return string
-     */
-    public function getSnapshotPath( Instance $instance )
-    {
-        return $this->_getStorageRoot( $instance ) . DIRECTORY_SEPARATOR . $this->_privatePathName .
-        DIRECTORY_SEPARATOR . config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME );
+        return $this->getRootStoragePath( $instance, $instance->instance_id_text );
     }
 
     /**
@@ -119,180 +66,119 @@ class InstanceStorageService extends BaseService
     }
 
     /**
+     * We want the private path of the instance to point to the user's area. Instances have no "private path" per se.
+     *
      * @param Instance $instance
      *
-     * @return array
+     * @return mixed
      */
-    public function getStorageMap( Instance $instance )
+    public function getOwnerPrivatePath( Instance $instance )
     {
-        if ( !isset( $instance->instance_data_text ) || null === ( $_map = IfSet::get( $instance->instance_data_text, 'storage-map' ) ) )
-        {
-            if ( empty( $instance->instance_data_text ) )
-            {
-                $instance->instance_data_text = [];
-            }
-
-            //  Non-hosted has no structure, just storage
-            if ( GuestLocations::LOCAL == $instance->guest_location_nbr || 'localhost' == $instance->db_host_text )
-            {
-                $_map = [
-                    'zone'      => null,
-                    'partition' => null,
-                    'root-hash' => null,
-                ];
-            }
-            else
-            {
-                $_rootHash = $instance->user->getHash();
-                $_partition = substr( $_rootHash, 0, 2 );
-
-                $_zone = null;
-
-                switch ( config( 'dfe.provisioning.storage-zone-type' ) )
-                {
-                    case 'dynamic':
-                        switch ( $instance->guest_location_nbr )
-                        {
-                            case GuestLocations::AMAZON_EC2:
-                            case GuestLocations::DFE_CLUSTER:
-                                if ( file_exists( '/usr/bin/ec2metadata' ) )
-                                {
-                                    $_zone = str_replace( 'availability-zone: ', null, `/usr/bin/ec2metadata | grep zone` );
-                                }
-                                break;
-
-                            default:
-                                //  All others get name of guest
-                                $_zone = Inflector::neutralize( GuestLocations::nameOf( $instance->guest_location_nbr ) );
-                                break;
-                        }
-                        break;
-
-                    case 'static':
-                        $_zone = config( 'dfe.provisioning.static-zone-name' );
-                        break;
-                }
-
-                if ( empty( $_zone ) || empty( $_partition ) )
-                {
-                    throw new \RuntimeException( 'Zone and/or partition unknown. Cannot provision storage.' );
-                }
-
-                $_map = [
-                    'zone'      => $_zone,
-                    'partition' => $_partition,
-                    'root-hash' => $_rootHash,
-                ];
-            }
-
-            $instance->instance_data_text = array_merge( $instance->instance_data_text, ['storage-map' => $_map] );
-        }
-
-        return $_map;
-    }
-
-    /**
-     * Returns the relative root directory of this instance's storage
-     *
-     * @param string $path
-     * @param string $tag
-     *
-     * @return FilesystemAdapter
-     */
-    public function getRootStorageMount( $path = null, $tag = null )
-    {
-        if ( !$this->webServer )
-        {
-            throw new InstanceException( 'No configured web server for instance.' );
-        }
-
-        $_mount = $this->webServer->mount;
-
-        return $_mount->getFilesystem( $path ?: $this->buildStoragePath(), $tag ?: 'root-storage-mount' );
-    }
-
-    /**
-     * Returns the relative root directory of this instance's storage
-     *
-     * @param string $append
-     * @param string $tag
-     *
-     * @return FilesystemAdapter
-     */
-    public function getSnapshotMount( $append = null, $tag = null )
-    {
-        $_path = $this->buildStoragePath()
-        $_path = $this->getOwnerPrivateStorageMount(
-            config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME )
-        );
-
-        return $_path;
-    }
-
-    /**
-     * @param string $append
-     * @param string $tag
-     *
-     * @return FilesystemAdapter
-     */
-    public function getStorageMount( $append = null, $tag = null )
-    {
-        $_path = $this->buildStoragePath(
-            $this->instance_id_text .
-            ( $append ? ltrim( $append, ' ' . DIRECTORY_SEPARATOR ) : null )
-        );
-
-        $_mount = $this->getRootStorageMount(
-            $_path,
-            ( $tag ?: 'storage-mount' )
-        );
-
-        return $_mount;
-    }
-
-    /**
-     * @return FilesystemAdapter
-     */
-    public function getPrivateStorageMount()
-    {
-        $_path = $this->getStorageMount(
-            $this->_privatePathName,
-            'private-storage'
-        );
-
-        return $_path;
-    }
-
-    /**
-     * @param string $append
-     *
-     * @return FilesystemAdapter
-     */
-    public function getOwnerPrivateStorageMount( $append = null )
-    {
-        $_path =
-            $this->_privatePathName . ( $append ? DIRECTORY_SEPARATOR . ltrim( $append, ' ' . DIRECTORY_SEPARATOR ) : $append );
-
-        $_mount = $this->getRootStorageMount( $_path, 'owner-private-storage' );
-
-        return $_mount;
+        return $this->getRootStoragePath( $instance, $this->_privatePathName );
     }
 
     /**
      * @param Instance $instance
-     * @param string   $append If supplied, appended to path name
      *
      * @return string
      */
-    public function buildStoragePath( Instance $instance, $append = null )
+    public function getSnapshotPath( Instance $instance )
     {
-        $_map = $this->getStorageMap( $instance );
+        return
+            $this->getOwnerPrivatePath( $instance ) .
+            $this->_cleanPath( config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME ) );
+    }
 
-        $_base =
-            GuestLocations::LOCAL !== $instance->guest_location_nbr
-                ? implode( DIRECTORY_SEPARATOR, [$_map['zone'], $_map['partition'], $_map['root-hash']] )
-                : storage_path();
+    /**
+     * @param Instance $instance
+     * @param string   $path
+     * @param string   $tag
+     * @param array    $options
+     *
+     * @return mixed
+     */
+    protected function _getMount( $instance, $path, $tag = null, $options = [] )
+    {
+        if ( !$instance->webServer )
+        {
+            throw new \InvalidArgumentException( 'No configured web server for instance.' );
+        }
 
-        return $_base . ( $append ? DIRECTORY_SEPARATOR . ltrim( $append, ' ' . DIRECTORY_SEPARATOR ) : $append );
+        $_mount = $instance->webServer->mount;
+
+        return $_mount->getFilesystem( $path, $tag, $options );
+    }
+
+    /**
+     * Returns the relative root directory of this instance's storage
+     *
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
+     * @param string                                                       $tag
+     *
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    public function getRootStorageMount( Instance $instance, $tag = null )
+    {
+        return $this->_getMount( $instance, $this->getRootStoragePath( $instance ), $tag ?: 'storage-root:' . $instance->instance_id_text );
+    }
+
+    /**
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
+     * @param string                                                       $tag
+     *
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    public function getStorageMount( Instance $instance, $tag = null )
+    {
+        return $this->_getMount( $instance, $this->getStoragePath( $instance ), $tag ?: 'storage:' . $instance->instance_id_text );
+    }
+
+    /**
+     * Returns the relative root directory of this instance's storage
+     *
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
+     * @param string                                                       $tag
+     *
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    public function getSnapshotMount( Instance $instance, $tag = null )
+    {
+        return $this->_getMount( $instance, $this->getSnapshotPath( $instance ), $tag ?: 'snapshots:' . $instance->instance_id_text );
+    }
+
+    /**
+     * @param Instance $instance
+     * @param string   $tag
+     *
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    public function getPrivateStorageMount( Instance $instance, $tag = null )
+    {
+        return $this->_getMount( $instance, $this->getPrivatePath( $instance ), $tag ?: 'private-storage:' . $instance->instance_id_text );
+    }
+
+    /**
+     * @param Instance $instance
+     * @param string   $tag
+     *
+     * @return FilesystemAdapter
+     */
+    public function getOwnerPrivateStorageMount( Instance $instance, $tag = null )
+    {
+        return $this->_getMount( $instance, $this->getOwnerPrivatePath( $instance ), $tag ?: 'owner-private-storage:' . $instance->instance_id_text );
+    }
+
+    /**
+     * @param string $path
+     * @param bool   $addSlash     If true (default), a leading slash is added
+     * @param bool   $trimTrailing If true, any trailing slashes are removed
+     *
+     * @return string
+     */
+    protected function _cleanPath( $path, $addSlash = true, $trimTrailing = false )
+    {
+        $path = $path ? ( $addSlash ? DIRECTORY_SEPARATOR : null ) . ltrim( $path, ' ' . DIRECTORY_SEPARATOR ) : $path;
+
+        return $trimTrailing ? rtrim( $path, DIRECTORY_SEPARATOR ) : $path;
     }
 }
