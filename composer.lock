@@ -984,12 +984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "cefb900fc87c2c83099058fe350abd4c87a99c09"
+                "reference": "6124841043b53b6254796bc68b91170800e82ffa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/cefb900fc87c2c83099058fe350abd4c87a99c09",
-                "reference": "cefb900fc87c2c83099058fe350abd4c87a99c09",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/6124841043b53b6254796bc68b91170800e82ffa",
+                "reference": "6124841043b53b6254796bc68b91170800e82ffa",
                 "shasum": ""
             },
             "require": {
@@ -1102,7 +1102,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-04-09 12:51:27"
+            "time": "2015-04-09 18:49:36"
         },
         {
             "name": "league/flysystem",
@@ -2768,12 +2768,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "bd939f05cdaca128f4ddbae1b447d6f0203b60af"
+                "reference": "3166541ec7107264270c3e85d4d42f2396a50ce6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/bd939f05cdaca128f4ddbae1b447d6f0203b60af",
-                "reference": "bd939f05cdaca128f4ddbae1b447d6f0203b60af",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/3166541ec7107264270c3e85d4d42f2396a50ce6",
+                "reference": "3166541ec7107264270c3e85d4d42f2396a50ce6",
                 "shasum": ""
             },
             "require": {
@@ -2818,7 +2818,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2015-03-30 15:54:10"
+            "time": "2015-04-09 12:33:02"
         },
         {
             "name": "symfony/var-dumper",
