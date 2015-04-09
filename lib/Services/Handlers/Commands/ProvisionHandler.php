@@ -72,6 +72,8 @@ class ProvisionHandler
 
             \Log::debug( 'dfe: ProvisionJob - complete: ' . print_r( $_result, true ) );
 
+            $command->setResult( $_result );
+
             return $_result;
         }
         catch ( \Exception $_ex )

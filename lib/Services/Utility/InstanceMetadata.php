@@ -146,7 +146,7 @@ class InstanceMetadata implements Jsonable, Arrayable
     public function load( Filesystem $filesystem )
     {
         $_file =
-            config( 'dfe.provisioning.private-path-base', ConsoleDefaults::PRIVATE_PATH_NAME ) . DIRECTORY_SEPARATOR . $this->_instanceId . '.json';
+            config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME ) . DIRECTORY_SEPARATOR . $this->_instanceId . '.json';
 
         if ( $filesystem->exists( $_file ) )
         {

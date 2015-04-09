@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static string getStoragePath( Instance $instance )
  * @method static string getSnapshotPath( Instance $instance )
+ * @method static string getPrivatePathName()
  * @method static string getPrivatePath( Instance $instance )
  * @method static string getOwnerPrivatePath( Instance $instance )
  * @method static FilesystemAdapter getRootStorageMount( Instance $instance, string $path = null, string $tag = 'root-storage-mount' )

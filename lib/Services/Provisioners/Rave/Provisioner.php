@@ -186,7 +186,7 @@ class Provisioner extends BaseProvisioner
         $_privatePath = $_storageProvisioner->getPrivatePath();
         $_ownerPrivatePath = $_storageProvisioner->getOwnerPrivatePath();
 
-        $_dbConfigFile = $_privatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
+        $_dbConfigFile = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
 
         //	1. Provision the database
         $_dbService = Provision::getDatabaseProvisioner( $_instance->guest_location_nbr );
@@ -245,9 +245,9 @@ class Provisioner extends BaseProvisioner
                     'paths' => [
                         'private-path'       => $_privatePath,
                         'owner-private-path' => $_ownerPrivatePath,
-                        'snapshot-path'      => $_ownerPrivatePath .
+                        'snapshot-path-name'      => $_ownerPrivatePath .
                             DIRECTORY_SEPARATOR .
-                            config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
+                            config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
                     ],
                 ]
             );
@@ -302,7 +302,7 @@ class Provisioner extends BaseProvisioner
             'owner_private_path'  => $_ownerPrivatePath,
             'snapshot_path'       => $_ownerPrivatePath .
                 DIRECTORY_SEPARATOR .
-                config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
+                config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
             'db_host'             => $_dbConfig['host'],
             'db_port'             => $_dbConfig['port'],
             'db_name'             => $_dbName,

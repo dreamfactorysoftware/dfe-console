@@ -87,34 +87,25 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      */
     protected function _createInstanceStorage( $request, $options = [] )
     {
-        $_privateName = trim( config( 'dfe.provisioning.private-base-path', '.private' ), DIRECTORY_SEPARATOR . ' ' );
-
         //  Wipe existing stuff
-        $this->_privatePath = $this->_ownerPrivatePath = null;
-
         $_instance = $request->getInstance();
-        $this->_storageMap = $_instance->getStorageMap();
-
         $_filesystem = $request->getStorage();
 
         //******************************************************************************
         //* Directories are all relative to the request's storage file system
         //******************************************************************************
 
-        //  Storage root path
-        $_rootPath = null;
-
         //  The instance's base storage path
         $_instanceRootPath = $_instance->instance_id_text;
+        $_privatePathName = \InstanceStorage::getPrivatePathName();
 
         //  The instance's private path
-        $_privatePath = $_instanceRootPath . DIRECTORY_SEPARATOR . $_privateName;
+        $_privatePath = $_instance->instance_id_text . DIRECTORY_SEPARATOR . $_privatePathName;
 
         //  The user's private path. Same as instance's when non-hosted
-        $_ownerPrivatePath = $_privateName;
+        $_ownerPrivatePath = $_privatePathName;
 
         //  Make sure everything exists
-        !$_filesystem->exists( $_rootPath ) && $_filesystem->makeDirectory( $_rootPath );
         !$_filesystem->exists( $_privatePath ) && $_filesystem->makeDirectory( $_privatePath );
         !$_filesystem->exists( $_ownerPrivatePath ) && $_filesystem->makeDirectory( $_ownerPrivatePath );
 
@@ -134,7 +125,6 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         }
 
         \Log::debug( '    * provisioner: instance storage created' );
-        \Log::debug( '      * root path:          ' . $_rootPath );
         \Log::debug( '      * private path:       ' . $_privatePath );
         \Log::debug( '      * owner private path: ' . $_ownerPrivatePath );
 

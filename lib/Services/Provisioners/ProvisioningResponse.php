@@ -3,10 +3,11 @@ namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Common\Packets\BasePacket;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class ProvisioningRequest
+class ProvisioningResponse
 {
     //******************************************************************************
     //* Members
@@ -32,10 +33,6 @@ class ProvisioningRequest
      * @type ResourceProvisioner|PrivatePathAware
      */
     protected $_storageProvisioner;
-    /**
-     * @type mixed The result of provisioning
-     */
-    protected $_result;
 
     //******************************************************************************
     //* Methods
@@ -137,26 +134,6 @@ class ProvisioningRequest
     public function setStorageProvisioner( $storageProvisioner )
     {
         $this->_storageProvisioner = $storageProvisioner;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResult()
-    {
-        return $this->_result;
-    }
-
-    /**
-     * @param mixed $result
-     *
-     * @return $this
-     */
-    public function setResult( $result )
-    {
-        $this->_result = $result;
 
         return $this;
     }

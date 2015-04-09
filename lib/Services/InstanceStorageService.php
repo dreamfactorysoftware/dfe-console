@@ -29,12 +29,12 @@ class InstanceStorageService extends BaseService
     public function boot()
     {
         $this->_privatePathName =
-            $this->_cleanPath( config( 'dfe.provisioning.private-path-base', ConsoleDefaults::PRIVATE_PATH_NAME ), false, true );
+            $this->_cleanPath( config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME ), false, true );
     }
 
     /**
-     * @param Instance $instance
-     * @param string   $append
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
+     * @param string                                                       $append
      *
      * @return string
      */
@@ -44,7 +44,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param Instance $instance
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
      *
      * @return string
      */
@@ -56,7 +56,7 @@ class InstanceStorageService extends BaseService
     /**
      * We want the private path of the instance to point to the user's area. Instances have no "private path" per se.
      *
-     * @param Instance $instance
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
      *
      * @return mixed
      */
@@ -68,7 +68,7 @@ class InstanceStorageService extends BaseService
     /**
      * We want the private path of the instance to point to the user's area. Instances have no "private path" per se.
      *
-     * @param Instance $instance
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
      *
      * @return mixed
      */
@@ -78,7 +78,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param Instance $instance
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
      *
      * @return string
      */
@@ -86,14 +86,14 @@ class InstanceStorageService extends BaseService
     {
         return
             $this->getOwnerPrivatePath( $instance ) .
-            $this->_cleanPath( config( 'dfe.provisioning.snapshot-path', ConsoleDefaults::SNAPSHOT_PATH_NAME ) );
+            $this->_cleanPath( config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ) );
     }
 
     /**
-     * @param Instance $instance
-     * @param string   $path
-     * @param string   $tag
-     * @param array    $options
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
+     * @param string                                                       $path
+     * @param string                                                       $tag
+     * @param array                                                        $options
      *
      * @return mixed
      */
@@ -147,8 +147,8 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param Instance $instance
-     * @param string   $tag
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
+     * @param string                                                       $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
@@ -158,8 +158,8 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param Instance $instance
-     * @param string   $tag
+     * @param \DreamFactory\Library\Fabric\Database\Models\Deploy\Instance $instance
+     * @param string                                                       $tag
      *
      * @return FilesystemAdapter
      */
@@ -181,4 +181,13 @@ class InstanceStorageService extends BaseService
 
         return $trimTrailing ? rtrim( $path, DIRECTORY_SEPARATOR ) : $path;
     }
+
+    /**
+     * @return string
+     */
+    public function getPrivatePathName()
+    {
+        return $this->_privatePathName;
+    }
+
 }

@@ -38,6 +38,8 @@ class ImportHandler
             $_result = Snapshot::restore( $command->getInstanceId(), $_options['snapshot'], IfSet::get( $_options, 'disk' ) );
             \Log::debug( 'dfe: import - complete' );
 
+            $command->setResult( $_result );
+
             return $_result;
         }
         catch ( \Exception $_ex )

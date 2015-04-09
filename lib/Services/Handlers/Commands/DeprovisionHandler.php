@@ -63,6 +63,8 @@ class DeprovisionHandler
 
             \Log::debug( 'dfe: DeprovisionJob - complete' );
 
+            $command->setResult( $_result );
+
             return $_result;
         }
         catch ( \Exception $_ex )

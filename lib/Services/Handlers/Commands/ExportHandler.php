@@ -53,6 +53,8 @@ class ExportHandler
             \Log::debug( '  * completed in ' . number_format( $_elapsed, 4 ) . 's' );
             \Log::debug( 'dfe: ExportJob - complete: ' . print_r( $_result, true ) );
 
+            $command->setResult( $_result );
+
             return $_result;
         }
         catch ( \Exception $_ex )

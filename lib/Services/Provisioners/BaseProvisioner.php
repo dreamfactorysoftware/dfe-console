@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -49,6 +50,20 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     //* Methods
     //******************************************************************************
 
+    /**
+     * @param ProvisioningRequest|mixed $request
+     *
+     * @return mixed
+     */
+    abstract protected function _doProvision( $request );
+
+    /**
+     * @param ProvisioningRequest|mixed $request
+     *
+     * @return mixed
+     */
+    abstract protected function _doDeprovision( $request );
+
     /** @inheritdoc */
     public function boot()
     {
@@ -56,7 +71,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
 
         if ( empty( $this->_subjectPrefix ) )
         {
-            $this->_subjectPrefix = config( 'dfe.email-subject-prefix', '[DFE]' );
+            $this->_subjectPrefix = config( 'dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX );
         }
     }
 
@@ -73,6 +88,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         }
 
         $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
+        $request->setResult( $_result );
 
         //  Send notification
         $_instance = $request->getInstance();
@@ -121,6 +137,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         }
 
         $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
+        $request->setResult( $_result );
 
         //  Send notification
         $_data = [
@@ -190,19 +207,5 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
 
         return $_result;
     }
-
-    /**
-     * @param ProvisioningRequest|mixed $request
-     *
-     * @return mixed
-     */
-    abstract protected function _doProvision( $request );
-
-    /**
-     * @param ProvisioningRequest|mixed $request
-     *
-     * @return mixed
-     */
-    abstract protected function _doDeprovision( $request );
 
 }
