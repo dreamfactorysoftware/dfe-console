@@ -67,7 +67,7 @@ class ProvisionHandler
 
             if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
             {
-                \Log::debug( 'dfe: completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
+                \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
             }
 
             \Log::debug( 'dfe: ProvisionJob - complete: ' . print_r( $_result, true ) );

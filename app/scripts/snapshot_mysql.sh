@@ -144,7 +144,6 @@ if [ "${DESTINATION}" != "" ] ; then
 	OUTPUT="--result-file=${DESTINATION}"
 fi
 
-echo "/usr/bin/mysqldump --compress --delayed-insert -u ${DB_USER} -p${DB_PASS} -h ${DB_HOST} \"${OUTPUT}\" ${DB_NAME}"
 /usr/bin/mysqldump --compress --delayed-insert -u ${DB_USER} -p${DB_PASS} -h ${DB_HOST} "${OUTPUT}" ${DB_NAME}
 
 if [ 0 != $? ] ; then

@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
+use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
@@ -11,6 +12,7 @@ use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Filesystem\FilesystemAdapter;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
+use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
@@ -67,6 +69,7 @@ class SnapshotService extends BaseService
     public function create( $instanceId, \Illuminate\Contracts\Filesystem\Filesystem $fsDestination = null, $keepDays = 30 )
     {
         //  Build our "mise en place", as it were...
+        $_start = microtime( true );
         $_stamp = date( 'YmdHis' );
         $_instance = $this->_findInstance( $instanceId );
         $_instanceName = $_instance->instance_name_text;
@@ -101,10 +104,8 @@ class SnapshotService extends BaseService
         );
 
         $_zipFileName = $this->_getConfigValue( 'snapshot.templates.snapshot-file-name', $_metadata );
-        $_metadata['contents-storage-zipball'] = $_storageZipName =
-            $this->_getConfigValue( 'snapshot.templates.storage-file-name', $_metadata );
-        $_sqlFileName = $this->_getConfigValue( 'snapshot.templates.db-file-name', $_metadata );
-        $_metadata['contents-db-zipball'] = $_sqlFileName . '.gz';
+        $_metadata['contents-storage-zipball'] = $_storageZipName = $this->_getConfigValue( 'snapshot.templates.storage-file-name', $_metadata );
+        $_metadata['contents-db-dumpfile'] = $this->_getConfigValue( 'snapshot.templates.db-file-name', $_metadata );
         $_metadata['hash'] = $_hash = RouteHashing::create( $_zipFileName, $keepDays );
         $_metadata['link'] = rtrim(
                 config( 'snapshot.hash_link_base' ),
@@ -118,7 +119,7 @@ class SnapshotService extends BaseService
         }
 
         //  Mount storage file system and archive
-        $_fsStorage = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_storageZipName ) );
+        $_fsStorage = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'] ) );
 
         //  Archive storage
         if ( !$this->_archivePath( $_fsSource, $_fsStorage ) )
@@ -131,10 +132,10 @@ class SnapshotService extends BaseService
 
         //  Mount snapshot and stuff the new files in it
         $_fsSnapshot = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName ) );
-        $this->_moveWorkFileToArchive( $_fsSnapshot, $_tempPath . DIRECTORY_SEPARATOR . $_storageZipName );
+        $this->_moveWorkFileToArchive( $_fsSnapshot, $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'] );
 
         //  Pull a database backup...
-        if ( !$this->_dumpDatabase( $_instance, $_tempPath . DIRECTORY_SEPARATOR . $_sqlFileName, $_fsSnapshot ) )
+        if ( !$this->_dumpDatabase( $_instance, $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-db-dumpfile'], $_fsSnapshot ) )
         {
             throw new \RuntimeException( 'Unable to dump source database. Aborting.' );
         }
@@ -327,8 +328,7 @@ class SnapshotService extends BaseService
                 }
                 elseif ( $_file['type'] == 'file' )
                 {
-                    $_resource = $_adapter->readStream( $_file['path'] );
-                    $zip->putStream( $_file['path'], $_resource['stream'] );
+                    file_exists( $_file['path'] ) && $this->_writeStream( $zip, $_file['path'], $_file['path'] );
                 }
             }
 
@@ -346,68 +346,47 @@ class SnapshotService extends BaseService
      * @param FilesystemInterface $zip
      *
      * @return bool
+     * @throws NotImplementedException
      */
     protected function _dumpDatabase( $instance, $dumpFile, $zip )
     {
+        if ( $instance->guest_location_nbr != GuestLocations::RAVE_CLUSTER )
+        {
+            throw new NotImplementedException();
+        }
+
         try
         {
-            $_script = config( 'snapshot.script.location' );
+            //  This script automatically gzips the resultant file...
+            $_command = str_replace( PHP_EOL, null, `which mysqldump` );
+            $_template = $_command . ' --compress --delayed-insert {options} >' . $dumpFile;
+            $_port = $instance->db_port_nbr;
+            $_name = $instance->db_name_text;
 
-            switch ( $instance->guest_location_nbr )
+            $_options = [
+                '--host=' . escapeshellarg( $instance->db_host_text ),
+                '--user=' . escapeshellarg( $instance->db_user_text ),
+                '--password=' . escapeshellarg( $instance->db_password_text ),
+                '--databases ' . escapeshellarg( $_name ),
+            ];
+
+            if ( !empty( $_port ) )
             {
-                case GuestLocations::DFE_CLUSTER:
-                    $_script = config( 'snapshot.script.location' );
-                    if ( !file_exists( $_script ) )
-                    {
-                        throw new \RuntimeException( 'No snapshot script configured.' );
-                    }
-
-                    if ( !is_executable( $_script ) )
-                    {
-                        if ( false === chmod( $_script, 0750 ) )
-                        {
-                            throw new \RuntimeException( 'Script found, but not executable.' );
-                        }
-                    }
-
-                    //  This script automatically gzips the resultant file...
-                    $_dbServer = $this->_findServer( $instance->db_server_id );
-                    $_args = [
-                        '--db-host=' . '"' . $_dbServer->config_text['host'] . '"',
-                        '--db-user=' . '"' . $_dbServer->config_text['username'] . '"',
-                        '--db-pass=' . '"' . $_dbServer->config_text['password'] . '"',
-                        '--db-port=' . $_dbServer->config_text['port'],
-                    ];
-
-                    $_command =
-                        sprintf(
-                            "sudo -u %s %s %s %s",
-                            config( 'snapshot.script.user', 'dfadmin' ),
-                            $_script . ' ' . implode( ' ', $_args ),
-                            $instance->db_name_text,
-                            $dumpFile
-                        );
-
-                    $_result = exec( $_command, $_output, $_return );
-
-                    if ( 0 != $_return )
-                    {
-                        throw new \RuntimeException( 'Error while dumping database of instance id "' . $instance->instance_id_text . '".' );
-                    }
-
-                    $dumpFile .= '.gz';
-
-                    //  Add dump to zip and delete from temp
-                    //@todo chunk or stream this copy so huge database files don't run out of memory
-                    $zip->put( basename( $dumpFile ), file_get_contents( $dumpFile ) );
-
-                    //  Clear up some junk
-                    unset( $_command, $_result, $_output, $_return );
-                    break;
-
-                default:
-                    throw new \RuntimeException( 'This feature is not available for the source instance\'s guest location.' );
+                $_options[] = '--port=' . $_port;
             }
+
+            $_command = str_replace( '{options}', implode( ' ', $_options ), $_template );
+            $_result = exec( $_command, $_output, $_return );
+
+            if ( 0 != $_return )
+            {
+                throw new \RuntimeException( 'Error while dumping database of instance id "' . $instance->instance_id_text . '".' );
+            }
+
+            $this->_writeStream( $zip, $dumpFile, basename( $dumpFile ) );
+
+            //  Clear up some junk
+            unset( $_command, $_result, $_output, $_return );
 
             //  Try and delete...
             if ( false === @unlink( $dumpFile ) )
@@ -427,21 +406,9 @@ class SnapshotService extends BaseService
      * @param Filesystem|\Illuminate\Contracts\Filesystem\Filesystem $archive
      * @param string                                                 $workFile
      */
-    protected function _moveWorkFileToArchive( $archive = null, $workFile = null )
+    protected function _moveWorkFileToArchive( $archive, $workFile = null )
     {
-        if ( false === ( $_stream = fopen( $workFile, 'rb' ) ) )
-        {
-            throw new \InvalidArgumentException( 'Unable to read file "' . $workFile . '".' );
-        }
-
-        if ( empty( $archive ) )
-        {
-
-        }
-
-        $archive->putStream( basename( $workFile ), $_stream );
-
-        if ( fclose( $_stream ) )
+        if ( $this->_writeStream( $archive, $workFile, basename( $workFile ) ) )
         {
             unlink( $workFile );
         }
@@ -462,9 +429,9 @@ class SnapshotService extends BaseService
         $_stringified = false;
         $_setting = config( $key );
 
-        if ( !is_string( $_setting ) )
+        if ( is_array( $_setting ) )
         {
-            if ( false === JsonFile::encode( $_setting ) )
+            if ( false === ( $_setting = JsonFile::encode( $_setting ) ) )
             {
                 throw new \InvalidArgumentException( 'The value at key "' . $key . '" is not a string or a jsonable array.' );
             }
@@ -478,7 +445,7 @@ class SnapshotService extends BaseService
             $_values = [];
             foreach ( $replacements as $_key => $_value )
             {
-                if ( is_string( $_value ) )
+                if ( !is_array( $_value ) && !is_object( $_value ) )
                 {
                     $_key = '{' . $_key . '}';
                     $_values[$_key] = $_value;
@@ -494,6 +461,40 @@ class SnapshotService extends BaseService
         }
 
         return $_setting;
+    }
+
+    /**
+     * @param FilesystemInterface|AdapterInterface $filesystem
+     * @param string                               $source
+     * @param string                               $destination
+     * @param array|Config                         $config
+     *
+     * @return bool
+     */
+    protected function _writeStream( $filesystem, $source, $destination, $config = [] )
+    {
+        if ( false !== ( $_fd = fopen( $source, 'r' ) ) )
+        {
+            //  Fallback gracefully if no stream support
+            if ( method_exists( $filesystem, 'writeStream' ) )
+            {
+                $_result = $filesystem->writeStream( $destination, $_fd, [] );
+            }
+            else if ( method_exists( $filesystem->getDriver(), 'writeStream' ) )
+            {
+                $_result = $filesystem->getDriver()->writeStream( $destination, $_fd, [] );
+            }
+            else
+            {
+                $_result = $filesystem->put( $destination, $source );
+            }
+
+            fclose( $_fd );
+
+            return $_result;
+        }
+
+        return false;
     }
 
 }

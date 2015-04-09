@@ -4,7 +4,6 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\ExportJob;
 use DreamFactory\Enterprise\Services\Facades\Snapshot;
-use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 
 /**
  * Processes queued snapshot requests
@@ -30,14 +29,14 @@ class ExportHandler
      */
     public function handle( ExportJob $command )
     {
-        $_options = $command->getOptions();
         \Log::debug( 'dfe: ExportJob - begin' );
+
+        $_start = microtime( true );
 
         try
         {
             //  Get the instance
             $_instance = $this->_findInstance( $command->getInstanceId() );
-            $_md = InstanceMetadata::createFromInstance( $_instance );
         }
         catch ( \Exception $_ex )
         {
@@ -49,18 +48,17 @@ class ExportHandler
         try
         {
             $_result = Snapshot::create( $_instance->instance_id_text );
+            $_elapsed = microtime( true ) - $_start;
 
-            if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
-            {
-                \Log::debug( 'dfe: completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
-            }
-
+            \Log::debug( '  * completed in ' . number_format( $_elapsed, 4 ) . 's' );
             \Log::debug( 'dfe: ExportJob - complete: ' . print_r( $_result, true ) );
 
             return $_result;
         }
         catch ( \Exception $_ex )
         {
+            $_elapsed = microtime( true ) - $_start;
+            \Log::debug( '  * completed in ' . number_format( $_elapsed, 4 ) . 's' );
             \Log::error( '  * exception: ' . $_ex->getMessage() );
             \Log::debug( 'dfe: ExportJob - fail' );
 

@@ -66,7 +66,9 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
             }
 
             //	2. Grant privileges
-            if ( !$this->_grantPrivileges( $_db, $_creds ) )
+            $_result = $this->_grantPrivileges( $_db, $_creds, $_instance->webServer->host_text );
+
+            if ( false === $_result )
             {
                 try
                 {
@@ -296,6 +298,7 @@ MYSQL
                     $_result = $db->statement( 'SET FOREIGN_KEY_CHECKS = 0' );
                     $_result && $_result = $db->statement( 'DROP DATABASE `' . $databaseToDrop . '`' );
                     $_result && $db->statement( 'SET FOREIGN_KEY_CHECKS = 1' );
+                    $this->debug( '    * provisioner: database dropped > ' . $databaseToDrop );
 
                     return $_result;
                 }
@@ -322,29 +325,80 @@ MYSQL
     /**
      * @param Connection $db
      * @param array      $creds
+     * @param string     $fromServer
      *
      * @return bool
      */
-    protected function _grantPrivileges( $db, $creds )
+    protected function _grantPrivileges( $db, $creds, $fromServer )
     {
-        //  Create user
-        $db->statement( 'CREATE USER \'' . $creds['username'] . '\'@\'%\' IDENTIFIED BY \'' . $creds['password'] . '\'' );
+        return $db->transaction(
+            function () use ( $db, $creds, $fromServer )
+            {
+                //  Create users
+                $_users = $this->_getDatabaseUsers( $creds, $fromServer );
 
-        $_sql = <<<MYSQL
-GRANT ALL PRIVILEGES ON {$creds['database']}.* TO '{$creds['username']}'@'%'
-MYSQL;
+                try
+                {
+                    foreach ( $_users as $_user )
+                    {
+                        $db->statement( 'CREATE USER ' . $_user . ' IDENTIFIED BY \'' . $creds['password'] . '\'' );
+                    }
 
-        try
-        {
-            //	Grants for instance database
-            return $db->statement( $_sql );
-        }
-        catch ( \Exception $_ex )
-        {
-            $this->error( '    * provisioner: issue grants - failure: ' . $_ex->getMessage() );
+                    //	Grants for instance database
+                    return $db->statement( 'GRANT ALL PRIVILEGES ON ' . $creds['database'] . '.* TO ' . implode( ', ', $_users ) );
+                }
+                catch ( \Exception $_ex )
+                {
+                    $this->error( '    * provisioner: issue grants - failure: ' . $_ex->getMessage() );
 
-            return false;
-        }
+                    return false;
+                }
+            }
+        );
+    }
+
+    /**
+     * @param Connection $db
+     * @param array      $creds
+     * @param string     $fromServer
+     *
+     * @return bool
+     */
+    protected function _revokePrivileges( $db, $creds, $fromServer )
+    {
+        return $db->transaction(
+            function () use ( $db, $creds, $fromServer )
+            {
+                //  Create users
+                $_users = implode( ', ', $this->_getDatabaseUsers( $creds, $fromServer ) );
+
+                try
+                {
+                    //	Grants for instance database
+                    if ( !( $_result = $db->statement( 'REVOKE ALL PRIVILEGES ON ' . $creds['database'] . '.* TO ' . $_users ) ) )
+                    {
+                        throw new ProvisioningException( 'Error revoking grants: ' . print_r( $db->getPdo()->errorInfo(), true ) );
+                    }
+
+                    $this->debug( '    * provisioner: grants revoked - complete' );
+
+                    if ( !( $_result = $db->statement( 'DROP USER ' . $_users ) ) )
+                    {
+                        throw new ProvisioningException( 'Error dropping users: ' . print_r( $db->getPdo()->errorInfo(), true ) );
+                    }
+
+                    $_result && $this->debug( '    * provisioner: users dropped > ', $_users );
+
+                    return $_result;
+                }
+                catch ( \Exception $_ex )
+                {
+                    $this->error( '    * provisioner: revoke grants - failure: ' . $_ex->getMessage() );
+
+                    return false;
+                }
+            }
+        );
     }
 
     /**
@@ -358,4 +412,21 @@ MYSQL;
     {
         return str_replace( '-', '_', $instance->instance_name_text );
     }
+
+    /**
+     * Generates a list of users to de/provision
+     *
+     * @param array  $creds
+     * @param string $fromServer
+     *
+     * @return array
+     */
+    protected function _getDatabaseUsers( $creds, $fromServer )
+    {
+        return [
+            '\'' . $creds['username'] . '\'@\'' . $fromServer . '\'',
+            '\'' . $creds['username'] . '\'@\'localhost\'',
+        ];
+    }
+
 }
