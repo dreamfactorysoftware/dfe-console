@@ -33,7 +33,7 @@ class Register extends Command
 
         $_result = AppKey::insert(
             array(
-                'owner_id'      => $this->argument( 'user-id' ),
+                'owner_id'      => $this->argument( 'owner-id' ),
                 'client_id'     => $_clientId,
                 'client_secret' => $_clientSecret,
                 'created_at'    => date( 'Y-m-d H-i-s' ),
