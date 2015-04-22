@@ -459,12 +459,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "f91a9b097d9a61d716131e8d273af6aa0992ba76"
+                "reference": "e90e0442791718326c5e54cb78e4f724b2b45187"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/f91a9b097d9a61d716131e8d273af6aa0992ba76",
-                "reference": "f91a9b097d9a61d716131e8d273af6aa0992ba76",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/e90e0442791718326c5e54cb78e4f724b2b45187",
+                "reference": "e90e0442791718326c5e54cb78e4f724b2b45187",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +512,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-04-16 02:38:15"
+            "time": "2015-04-22 21:41:39"
         },
         {
             "name": "dreamfactory/fabric-common",
@@ -574,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "391eadd3779770947f8d4fccae5ff8ace089565e"
+                "reference": "7388c589296aec9121099ee061ea230443bbadf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/391eadd3779770947f8d4fccae5ff8ace089565e",
-                "reference": "391eadd3779770947f8d4fccae5ff8ace089565e",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/7388c589296aec9121099ee061ea230443bbadf2",
+                "reference": "7388c589296aec9121099ee061ea230443bbadf2",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-04-21 20:50:26"
+            "time": "2015-04-22 21:41:57"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -984,12 +984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "06a09429322cf53e5bd4587db1060f02a291562e"
+                "reference": "62aad8531491613297c13d2861c5158d8a46b5da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/06a09429322cf53e5bd4587db1060f02a291562e",
-                "reference": "06a09429322cf53e5bd4587db1060f02a291562e",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/62aad8531491613297c13d2861c5158d8a46b5da",
+                "reference": "62aad8531491613297c13d2861c5158d8a46b5da",
                 "shasum": ""
             },
             "require": {
@@ -1102,7 +1102,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-04-21 01:44:32"
+            "time": "2015-04-22 21:43:02"
         },
         {
             "name": "league/flysystem",
@@ -1633,24 +1633,24 @@
         },
         {
             "name": "psy/psysh",
-            "version": "dev-develop",
+            "version": "v0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d"
+                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/19976b103ffe7db82c1d1e923626b1589ac4ef7d",
-                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/489816db71649bd95b416e3ed9062d40528ab0ac",
+                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac",
                 "shasum": ""
             },
             "require": {
                 "dnoegel/php-xdg-base-dir": "0.1",
                 "jakub-onderka/php-console-highlighter": "0.3.*",
-                "nikic/php-parser": "^1.2.1",
+                "nikic/php-parser": "~1.0",
                 "php": ">=5.3.0",
-                "symfony/console": "~2.3.10|^2.4.2"
+                "symfony/console": "~2.3.10|~2.4.2|~2.5"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.5",
@@ -1700,7 +1700,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-03-21 09:21:46"
+            "time": "2015-03-26 18:43:54"
         },
         {
             "name": "ruflin/elastica",
@@ -2768,12 +2768,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Translation.git",
-                "reference": "eb05625d5242718ce695e9b61aca76048203c9b3"
+                "reference": "a0d2da83c9facd8c368059d547cc48b5d422cc9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Translation/zipball/eb05625d5242718ce695e9b61aca76048203c9b3",
-                "reference": "eb05625d5242718ce695e9b61aca76048203c9b3",
+                "url": "https://api.github.com/repos/symfony/Translation/zipball/a0d2da83c9facd8c368059d547cc48b5d422cc9e",
+                "reference": "a0d2da83c9facd8c368059d547cc48b5d422cc9e",
                 "shasum": ""
             },
             "require": {
@@ -2818,7 +2818,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
-            "time": "2015-04-19 13:17:37"
+            "time": "2015-04-22 21:34:04"
         },
         {
             "name": "symfony/var-dumper",
@@ -2980,12 +2980,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "d9f79eb1288370601c9f4848a4f4419918817c3d"
+                "reference": "dac46a081d484af21c989564140ea2d3fd7ddf42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/d9f79eb1288370601c9f4848a4f4419918817c3d",
-                "reference": "d9f79eb1288370601c9f4848a4f4419918817c3d",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/dac46a081d484af21c989564140ea2d3fd7ddf42",
+                "reference": "dac46a081d484af21c989564140ea2d3fd7ddf42",
                 "shasum": ""
             },
             "require": {
@@ -3035,7 +3035,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2015-03-25 20:00:56"
+            "time": "2015-04-22 15:46:01"
         },
         {
             "name": "doctrine/cache",
