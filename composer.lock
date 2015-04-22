@@ -574,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "51ae37d1197ae5da02495e7fb89e353a6f8fc03b"
+                "reference": "391eadd3779770947f8d4fccae5ff8ace089565e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/51ae37d1197ae5da02495e7fb89e353a6f8fc03b",
-                "reference": "51ae37d1197ae5da02495e7fb89e353a6f8fc03b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/391eadd3779770947f8d4fccae5ff8ace089565e",
+                "reference": "391eadd3779770947f8d4fccae5ff8ace089565e",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-04-15 17:09:46"
+            "time": "2015-04-21 20:50:26"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -984,12 +984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "256d6b18ae797b3d2d11d8055e4f8542393e1efe"
+                "reference": "06a09429322cf53e5bd4587db1060f02a291562e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/256d6b18ae797b3d2d11d8055e4f8542393e1efe",
-                "reference": "256d6b18ae797b3d2d11d8055e4f8542393e1efe",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/06a09429322cf53e5bd4587db1060f02a291562e",
+                "reference": "06a09429322cf53e5bd4587db1060f02a291562e",
                 "shasum": ""
             },
             "require": {
@@ -1102,7 +1102,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-04-20 13:16:08"
+            "time": "2015-04-21 01:44:32"
         },
         {
             "name": "league/flysystem",
@@ -1110,12 +1110,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "768703274efa648ad63ac7646ad85c4e6a7f77e9"
+                "reference": "d747c3a3e45ed541beb09ddcac9af35e4559cb1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/768703274efa648ad63ac7646ad85c4e6a7f77e9",
-                "reference": "768703274efa648ad63ac7646ad85c4e6a7f77e9",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d747c3a3e45ed541beb09ddcac9af35e4559cb1b",
+                "reference": "d747c3a3e45ed541beb09ddcac9af35e4559cb1b",
                 "shasum": ""
             },
             "require": {
@@ -1186,7 +1186,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-04-08 11:33:45"
+            "time": "2015-04-20 17:41:47"
         },
         {
             "name": "league/flysystem-sftp",
@@ -1241,12 +1241,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-ziparchive.git",
-                "reference": "e60c233c34af99995d18c57f9e02004466bb16f4"
+                "reference": "ab2e804c6c121e30f8ccb0c996bf418c3c8ccab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-ziparchive/zipball/e60c233c34af99995d18c57f9e02004466bb16f4",
-                "reference": "e60c233c34af99995d18c57f9e02004466bb16f4",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-ziparchive/zipball/ab2e804c6c121e30f8ccb0c996bf418c3c8ccab8",
+                "reference": "ab2e804c6c121e30f8ccb0c996bf418c3c8ccab8",
                 "shasum": ""
             },
             "require": {
@@ -1279,7 +1279,7 @@
                 }
             ],
             "description": "Flysystem adapter for ZipArchive's",
-            "time": "2015-01-19 08:17:38"
+            "time": "2015-04-21 12:14:28"
         },
         {
             "name": "monolog/monolog",
@@ -3462,12 +3462,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "9727d75919a00455433e867565bc022f0b985a39"
+                "reference": "0c43cd9809a7941629dbc0cd3da126b2e6959c3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/9727d75919a00455433e867565bc022f0b985a39",
-                "reference": "9727d75919a00455433e867565bc022f0b985a39",
+                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/0c43cd9809a7941629dbc0cd3da126b2e6959c3b",
+                "reference": "0c43cd9809a7941629dbc0cd3da126b2e6959c3b",
                 "shasum": ""
             },
             "require": {
@@ -3532,7 +3532,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2015-04-18 16:22:51"
+            "time": "2015-04-21 12:28:04"
         },
         {
             "name": "phpspec/prophecy",
