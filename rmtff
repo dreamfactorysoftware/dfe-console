@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "${1}"
+ssh tff "cd ~/dl; find . -name \"$1\" -print0 | xargs -0 rm -rf"
+cd ~/dl ; find . -maxdepth 1 -name "$1" -print0 | xargs -0 rm -rf ; cd - >/dev/null
