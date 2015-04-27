@@ -47,7 +47,8 @@
 		"dreamfactory/dfe-common":     "dev-develop as dev-master",
 		"dreamfactory/fabric-common":  "dev-develop as dev-master",
 		"dreamfactory/fabric-db":      "dev-develop as dev-master",
-		"dreamfactory/console-tools":  "dev-develop as dev-master"
+		"dreamfactory/console-tools":  "dev-develop as dev-master",
+		"illuminate/html":		   "5.0.*"
 	},
 	"require-dev":       {
 		"barryvdh/laravel-ide-helper": "~2.0",

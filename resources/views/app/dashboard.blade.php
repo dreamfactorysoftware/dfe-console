@@ -1,10 +1,9 @@
-@extends('layouts.app')
+@include('layouts.partials.topmenu',array('pageName' => 'Dashboard'))
 
-{{-- @formatter:off --}}
-@section('page-title'){{"Dashboard"}}@overwrite
-{{-- @formatter:on --}}
+@extends('layouts.main')
 
 @section('content')
+    <div class="col-md-12">
     <div class="row">
         <div class="col-md-12 dashboard-content">
             <div class="dashboard-heading">
@@ -50,6 +49,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @stop
 
