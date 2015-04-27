@@ -11,7 +11,6 @@ use Elastica\Filter\Prefix;
 use Elastica\Query;
 use Elastica\ResultSet;
 use Elastica\Search;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 class ClientAuthService extends BaseService
@@ -41,8 +40,9 @@ class ClientAuthService extends BaseService
      */
     public function __construct( $app = null, array $settings = [] )
     {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $_config = Config::get( 'elk' );
+        parent::__construct( $app );
+
+        $_config = config( 'elk' );
 
         if ( empty( $_config ) )
         {

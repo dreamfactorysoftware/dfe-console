@@ -1,8 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Middleware;
 
 use Closure;
-use DreamFactory\Library\Fabric\Database\Models\Auth\User;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
 use Illuminate\Http\Response;
 
 class AuthenticateClient
@@ -43,8 +43,7 @@ class AuthenticateClient
             abort( Response::HTTP_UNAUTHORIZED );
         }
 
-        /** @type User $_key */
-        $_user = AppKey::find( $_userId );
+        $_user = User::find( $_userId );
 
         if ( empty( $_user ) )
         {
