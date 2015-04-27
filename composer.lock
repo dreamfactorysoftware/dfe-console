@@ -984,12 +984,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "62aad8531491613297c13d2861c5158d8a46b5da"
+                "reference": "05dfef1f34d54aae3dbf2a4c37bec66f9e1c0e38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/62aad8531491613297c13d2861c5158d8a46b5da",
-                "reference": "62aad8531491613297c13d2861c5158d8a46b5da",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/05dfef1f34d54aae3dbf2a4c37bec66f9e1c0e38",
+                "reference": "05dfef1f34d54aae3dbf2a4c37bec66f9e1c0e38",
                 "shasum": ""
             },
             "require": {
@@ -1102,7 +1102,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-04-22 21:43:02"
+            "time": "2015-04-23 15:44:41"
         },
         {
             "name": "league/flysystem",
@@ -1287,12 +1287,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "03fc68ca1419c7e16050e96c15c7f7e1f2fc26ff"
+                "reference": "aa90882a389dc7101efca47c781e8c4ba5842276"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/03fc68ca1419c7e16050e96c15c7f7e1f2fc26ff",
-                "reference": "03fc68ca1419c7e16050e96c15c7f7e1f2fc26ff",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/aa90882a389dc7101efca47c781e8c4ba5842276",
+                "reference": "aa90882a389dc7101efca47c781e8c4ba5842276",
                 "shasum": ""
             },
             "require": {
@@ -1306,6 +1306,7 @@
                 "aws/aws-sdk-php": "~2.4, >2.4.8",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
+                "php-console/php-console": "~3.1, >3.1.2",
                 "phpunit/phpunit": "~4.0",
                 "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*",
@@ -1318,6 +1319,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
@@ -1352,7 +1354,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-04-15 18:23:25"
+            "time": "2015-04-23 14:22:42"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -1633,24 +1635,24 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.4.4",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac"
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/489816db71649bd95b416e3ed9062d40528ab0ac",
-                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/19976b103ffe7db82c1d1e923626b1589ac4ef7d",
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d",
                 "shasum": ""
             },
             "require": {
                 "dnoegel/php-xdg-base-dir": "0.1",
                 "jakub-onderka/php-console-highlighter": "0.3.*",
-                "nikic/php-parser": "~1.0",
+                "nikic/php-parser": "^1.2.1",
                 "php": ">=5.3.0",
-                "symfony/console": "~2.3.10|~2.4.2|~2.5"
+                "symfony/console": "~2.3.10|^2.4.2"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.5",
@@ -1700,7 +1702,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-03-26 18:43:54"
+            "time": "2015-03-21 09:21:46"
         },
         {
             "name": "ruflin/elastica",
@@ -3540,12 +3542,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "c58c6dc07d1f76fd66e661418f66eecef931c2b1"
+                "reference": "08c0d7d648efdaa1491ce8f9ad5df4ec79b3d099"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/c58c6dc07d1f76fd66e661418f66eecef931c2b1",
-                "reference": "c58c6dc07d1f76fd66e661418f66eecef931c2b1",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/08c0d7d648efdaa1491ce8f9ad5df4ec79b3d099",
+                "reference": "08c0d7d648efdaa1491ce8f9ad5df4ec79b3d099",
                 "shasum": ""
             },
             "require": {
@@ -3592,7 +3594,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-04-17 14:44:34"
+            "time": "2015-04-23 08:18:32"
         },
         {
             "name": "phpunit/php-code-coverage",
