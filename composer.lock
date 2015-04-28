@@ -459,12 +459,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "0cc3d0400251d393b6ac8d3361a14ad1d54e8583"
+                "reference": "a73fbcbd92f96e0cfba26f8ac15a5cecc845a9be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/0cc3d0400251d393b6ac8d3361a14ad1d54e8583",
-                "reference": "0cc3d0400251d393b6ac8d3361a14ad1d54e8583",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/a73fbcbd92f96e0cfba26f8ac15a5cecc845a9be",
+                "reference": "a73fbcbd92f96e0cfba26f8ac15a5cecc845a9be",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +512,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-04-27 22:18:25"
+            "time": "2015-04-28 17:48:05"
         },
         {
             "name": "dreamfactory/fabric-common",
@@ -574,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "c6fc79bcc1231cfe69c40fd6c80671657752b76b"
+                "reference": "cf7ac0b206d7eef3557c448a4246038eeabf2cc2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/c6fc79bcc1231cfe69c40fd6c80671657752b76b",
-                "reference": "c6fc79bcc1231cfe69c40fd6c80671657752b76b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/cf7ac0b206d7eef3557c448a4246038eeabf2cc2",
+                "reference": "cf7ac0b206d7eef3557c448a4246038eeabf2cc2",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-04-28 17:37:50"
+            "time": "2015-04-28 17:55:00"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -1030,12 +1030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "be0b507fd1eea622439f114d438b8ffca3d372e6"
+                "reference": "90353245beec0974e605d1621995ae14bb1a1120"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/be0b507fd1eea622439f114d438b8ffca3d372e6",
-                "reference": "be0b507fd1eea622439f114d438b8ffca3d372e6",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/90353245beec0974e605d1621995ae14bb1a1120",
+                "reference": "90353245beec0974e605d1621995ae14bb1a1120",
                 "shasum": ""
             },
             "require": {
@@ -1148,7 +1148,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-04-28 14:18:08"
+            "time": "2015-04-28 18:51:30"
         },
         {
             "name": "league/flysystem",
@@ -3084,12 +3084,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03"
+                "reference": "9d141335b758cbff3c58b52777836ce945522a68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/c9eadeb743ac6199f7eec423cb9426bc518b7b03",
-                "reference": "c9eadeb743ac6199f7eec423cb9426bc518b7b03",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/9d141335b758cbff3c58b52777836ce945522a68",
+                "reference": "9d141335b758cbff3c58b52777836ce945522a68",
                 "shasum": ""
             },
             "require": {
@@ -3146,7 +3146,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-04-15 00:11:59"
+            "time": "2015-04-28 19:52:40"
         },
         {
             "name": "doctrine/collections",

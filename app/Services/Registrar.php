@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Services;
 
-use DreamFactory\Enterprise\Console\User;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 use Validator;
 
@@ -39,7 +39,7 @@ class Registrar implements RegistrarContract
      */
     public function create( array $data )
     {
-        return User::create(
+        return ServiceUser::create(
             [
                 'first_name_text' => $data['first_name_text'],
                 'last_name_text'  => $data['last_name_text'],

@@ -58,7 +58,7 @@ class FactoryController extends Controller
      */
     public static function getUserHash( $asArray = false )
     {
-        $_hash = md5( strtolower( Auth::user() ? Auth::user()->email : 'nobody@dreamfactory.com' ) );
+        $_hash = md5( strtolower( \Auth::user() ? \Auth::user()->email : 'nobody@dreamfactory.com' ) );
 
         return $asArray ? ['_userHash' => $_hash] : $_hash;
     }
@@ -68,7 +68,7 @@ class FactoryController extends Controller
      */
     public static function getUserInfo()
     {
-        $_name = \Auth::user() ? Auth::user()->email : 'nobody@dreamfactory.com';
+        $_name = \Auth::user() ? \Auth::user()->email : 'nobody@dreamfactory.com';
         $_hash = md5( strtolower( $_name ) );
 
         return [
