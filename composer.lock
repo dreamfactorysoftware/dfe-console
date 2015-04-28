@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0c5f2f015a920911e194edd3a9c655e4",
+    "hash": "9ce80359b6c8397c33c5c02001ccd4ca",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -574,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "fba760718c6605653bc5fee3ecbcc51134c97389"
+                "reference": "c6fc79bcc1231cfe69c40fd6c80671657752b76b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/fba760718c6605653bc5fee3ecbcc51134c97389",
-                "reference": "fba760718c6605653bc5fee3ecbcc51134c97389",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/c6fc79bcc1231cfe69c40fd6c80671657752b76b",
+                "reference": "c6fc79bcc1231cfe69c40fd6c80671657752b76b",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-04-27 22:26:36"
+            "time": "2015-04-28 17:37:50"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -629,12 +629,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/php-utils.git",
-                "reference": "7040462f92922b8cf2ed689656f1c69cfb432391"
+                "reference": "dcf22944aa1161f726e9c51886861b279119d0f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/7040462f92922b8cf2ed689656f1c69cfb432391",
-                "reference": "7040462f92922b8cf2ed689656f1c69cfb432391",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/dcf22944aa1161f726e9c51886861b279119d0f5",
+                "reference": "dcf22944aa1161f726e9c51886861b279119d0f5",
                 "shasum": ""
             },
             "require": {
@@ -672,7 +672,7 @@
                 "dreamfactory",
                 "utility"
             ],
-            "time": "2015-03-20 21:20:31"
+            "time": "2015-04-28 13:51:16"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -791,6 +791,52 @@
                 "stream"
             ],
             "time": "2014-08-17 21:15:53"
+        },
+        {
+            "name": "illuminate/html",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/illuminate/html.git",
+                "reference": "3d1009bb8e0f25720c914af5c1f4015dd373c9ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/illuminate/html/zipball/3d1009bb8e0f25720c914af5c1f4015dd373c9ef",
+                "reference": "3d1009bb8e0f25720c914af5c1f4015dd373c9ef",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/http": "~5.0",
+                "illuminate/session": "~5.0",
+                "illuminate/support": "~5.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Illuminate\\Html\\": ""
+                },
+                "files": [
+                    "helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylorotwell@gmail.com"
+                }
+            ],
+            "time": "2015-01-01 16:31:18"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -984,12 +1030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f9bd8a10a8eba258ad6d42d70a25a0a992f6a6fa"
+                "reference": "be0b507fd1eea622439f114d438b8ffca3d372e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f9bd8a10a8eba258ad6d42d70a25a0a992f6a6fa",
-                "reference": "f9bd8a10a8eba258ad6d42d70a25a0a992f6a6fa",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/be0b507fd1eea622439f114d438b8ffca3d372e6",
+                "reference": "be0b507fd1eea622439f114d438b8ffca3d372e6",
                 "shasum": ""
             },
             "require": {
@@ -1102,7 +1148,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-04-27 18:29:37"
+            "time": "2015-04-28 14:18:08"
         },
         {
             "name": "league/flysystem",
@@ -1110,12 +1156,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "d747c3a3e45ed541beb09ddcac9af35e4559cb1b"
+                "reference": "4ba5e3337122f686d0b84e7e0c29a674378f47fc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d747c3a3e45ed541beb09ddcac9af35e4559cb1b",
-                "reference": "d747c3a3e45ed541beb09ddcac9af35e4559cb1b",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/4ba5e3337122f686d0b84e7e0c29a674378f47fc",
+                "reference": "4ba5e3337122f686d0b84e7e0c29a674378f47fc",
                 "shasum": ""
             },
             "require": {
@@ -1186,7 +1232,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-04-20 17:41:47"
+            "time": "2015-04-28 06:42:58"
         },
         {
             "name": "league/flysystem-sftp",
@@ -1635,24 +1681,24 @@
         },
         {
             "name": "psy/psysh",
-            "version": "dev-develop",
+            "version": "v0.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d"
+                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/19976b103ffe7db82c1d1e923626b1589ac4ef7d",
-                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/489816db71649bd95b416e3ed9062d40528ab0ac",
+                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac",
                 "shasum": ""
             },
             "require": {
                 "dnoegel/php-xdg-base-dir": "0.1",
                 "jakub-onderka/php-console-highlighter": "0.3.*",
-                "nikic/php-parser": "^1.2.1",
+                "nikic/php-parser": "~1.0",
                 "php": ">=5.3.0",
-                "symfony/console": "~2.3.10|^2.4.2"
+                "symfony/console": "~2.3.10|~2.4.2|~2.5"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.5",
@@ -1702,7 +1748,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-03-21 09:21:46"
+            "time": "2015-03-26 18:43:54"
         },
         {
             "name": "ruflin/elastica",
@@ -1930,12 +1976,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Debug.git",
-                "reference": "c1dc68518cab71421ad54021319f2494f510c673"
+                "reference": "289e4e76fd2dc8689ae10a3312fff36c1a4d34fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Debug/zipball/c1dc68518cab71421ad54021319f2494f510c673",
-                "reference": "c1dc68518cab71421ad54021319f2494f510c673",
+                "url": "https://api.github.com/repos/symfony/Debug/zipball/289e4e76fd2dc8689ae10a3312fff36c1a4d34fa",
+                "reference": "289e4e76fd2dc8689ae10a3312fff36c1a4d34fa",
                 "shasum": ""
             },
             "require": {
@@ -1982,7 +2028,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "http://symfony.com",
-            "time": "2015-04-24 10:55:50"
+            "time": "2015-04-26 09:08:32"
         },
         {
             "name": "symfony/dependency-injection",
@@ -3457,12 +3503,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "0c43cd9809a7941629dbc0cd3da126b2e6959c3b"
+                "reference": "73d0335bf8473be8bcfab5a9d66adce8d0db3857"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/0c43cd9809a7941629dbc0cd3da126b2e6959c3b",
-                "reference": "0c43cd9809a7941629dbc0cd3da126b2e6959c3b",
+                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/73d0335bf8473be8bcfab5a9d66adce8d0db3857",
+                "reference": "73d0335bf8473be8bcfab5a9d66adce8d0db3857",
                 "shasum": ""
             },
             "require": {
@@ -3527,7 +3573,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2015-04-21 12:28:04"
+            "time": "2015-04-28 15:39:29"
         },
         {
             "name": "phpspec/prophecy",
