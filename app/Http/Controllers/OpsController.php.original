@@ -178,7 +178,7 @@ class OpsController extends Controller
                 'drupal_id'    => $_user->drupal_id,
                 'first_name'   => $_user->first_name_text,
                 'last_name'    => $_user->last_name_text,
-                'display_name' => $_user->display_name_text,
+                'display_name' => $_user->nickname_text,
             );
         }
 
@@ -277,13 +277,13 @@ class OpsController extends Controller
             //	Check uniqueness of dsp name
             if ( !empty( $this->_drupalUser ) )
             {
-                if ( 0 != User::model()->count( 'display_name_text = :name', array(':name' => $this->_drupalUser->name) ) )
+                if ( 0 != User::model()->count( 'nickname_text = :name', array(':name' => $this->_drupalUser->name) ) )
                 {
-                    $this->_resourceUser->display_name_text = $this->_drupalUser->mail;
+                    $this->_resourceUser->nickname_text = $this->_drupalUser->mail;
                 }
                 else
                 {
-                    $this->_resourceUser->display_name_text = $this->_drupalUser->name;
+                    $this->_resourceUser->nickname_text = $this->_drupalUser->name;
                 }
             }
         }
@@ -356,7 +356,7 @@ class OpsController extends Controller
                 break;
 
             case 1:
-                $_column = 'display_name_text';
+                $_column = 'nickname_text';
                 break;
 
             default:

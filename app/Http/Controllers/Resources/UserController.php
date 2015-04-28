@@ -108,7 +108,7 @@ class UserController extends ResourceController //FactoryController //
         $create_user->email_addr_text = Input::get( 'email_addr_text' );
         $create_user->first_name_text = Input::get( 'first_name_text' );
         $create_user->last_name_text = Input::get( 'last_name_text' );
-        $create_user->display_name_text = Input::get( 'display_name_text' );
+        $create_user->nickname_text = Input::get( 'nickname_text' );
 
         if ( $is_password_set )
         {
@@ -183,7 +183,7 @@ class UserController extends ResourceController //FactoryController //
         $user_data->email_addr_text = Input::get( 'email_addr_text' );
         $user_data->first_name_text = Input::get( 'first_name_text' );
         $user_data->last_name_text = Input::get( 'last_name_text' );
-        $user_data->display_name_text = Input::get( 'display_name_text' );
+        $user_data->nickname_text = Input::get( 'nickname_text' );
 
         if ( $is_password_set )
         {
@@ -228,7 +228,7 @@ class UserController extends ResourceController //FactoryController //
                 'id',
                 'first_name_text',
                 'last_name_text',
-                'display_name_text',
+                'nickname_text',
                 'email_addr_text',
                 'owner_id'
             ];
@@ -317,7 +317,7 @@ class UserController extends ResourceController //FactoryController //
                     '<input type="hidden" id="user_id" value="' . $value->id . '">',
                     $manage,
                     $value->first_name_text . ' ' . $value->last_name_text,
-                    $value->display_name_text,
+                    $value->nickname_text,
                     $value->email_addr_text,
                     $role,
                     '<span class="label label-success">Active</span>'
@@ -332,9 +332,4 @@ class UserController extends ResourceController //FactoryController //
         //$test = $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
         //return View::make('app.users')->with('prefix', $this->_prefix)->with('users', $users->all());//take(10)->get());
     }
-
 }
-
-
-
-

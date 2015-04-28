@@ -58,9 +58,9 @@ class DrupalConnector extends BaseService
             $this->_user->password_text = $this->_hashingEnabled ? $this->hash( $newPassword ) : $newPassword;
         }
 
-        if ( empty( $this->_user->display_name_text ) )
+        if ( empty( $this->_user->nickname_text ) )
         {
-            $this->_user->display_name_text = trim( $this->_user->first_name_text . ' ' . $this->_user->last_name_text );
+            $this->_user->nickname_text = trim( $this->_user->first_name_text . ' ' . $this->_user->last_name_text );
         }
     }
 
@@ -275,7 +275,7 @@ class DrupalConnector extends BaseService
         $_object->uid = $this->_user->drupal_id;
         $_object->mail = $this->_user->email_addr_text;
         $_object->pass = $this->_user->drupal_password_text;
-        $_object->name = $this->_user->display_name_text;
+        $_object->name = $this->_user->nickname_text;
         $_object->created = $this->_user->create_date;
         $_object->field_first_name = $this->_user->first_name_text;
         $_object->field_last_name = $this->_user->last_name_text;

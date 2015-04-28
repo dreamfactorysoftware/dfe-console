@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $id
  * @property string  $first_name_text
  * @property string  $last_name_text
- * @property string  $display_name_text
+ * @property string  $nickname_text
  * @property string  $email_addr_text
  * @property string  $password_text Big cuz it is a hash
  * @property integer $owner_id

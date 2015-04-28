@@ -55,7 +55,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Display Name</label>
-                                                            <input id="display_name_text" value="{{$user->display_name_text}}" class="form-control" placeholder="Enter display name." type="text">
+                                                            <input id="nickname_text" value="{{$user->nickname_text}}" class="form-control" placeholder="Enter display name." type="text">
                                                         </div>
                                                         <df-set-user-password>
                                                             <div class="form-group">

@@ -46,12 +46,12 @@ function validateCreateUser(){
         }
     }
     // Display Name exists
-    if($('#display_name_text').val() === ''){
+    if($('#nickname_text').val() === ''){
         alert('Last Name is missing');
         return false;
     }
     // Last Name validation
-    if($('#display_name_text').val() !== ''){
+    if($('#nickname_text').val() !== ''){
         var displayName = $('#last_name_text').val().toLowerCase();
         var re = /^\w+$/;
 
@@ -89,7 +89,7 @@ function submitCreateUser(){
         email_addr_text:    $('#email_addr_text').val(),
         first_name_text:    $('#first_name_text').val(),
         last_name_text:     $('#last_name_text').val(),
-        display_name_text:  $('#display_name_text').val(),
+        nickname_text:  $('#nickname_text').val(),
         system_admin:       $('#system_admin').is(':checked'),
         active:             $('#active').is(':checked'),
         instance_manage:    $('#instance_manage').val(),
@@ -181,12 +181,12 @@ function validateEditUser(){
         }
     }
     // Display Name exists
-    if($('#display_name_text').val() === ''){
+    if($('#nickname_text').val() === ''){
         alert('Last Name is missing');
         return false;
     }
     // Last Name validation
-    if($('#display_name_text').val() !== ''){
+    if($('#nickname_text').val() !== ''){
         var displayName = $('#last_name_text').val().toLowerCase();
         var re = /^\w+$/;
 
@@ -226,7 +226,7 @@ function submitEditUser(id){
         email_addr_text: $('#email_addr_text').val(),
         first_name_text: $('#first_name_text').val(),
         last_name_text: $('#last_name_text').val(),
-        display_name_text: $('#display_name_text').val(),
+        nickname_text: $('#nickname_text').val(),
         system_admin: $('#system_admin').is(':checked'),
         active: $('#active').is(':checked'),
         instance_manage: $('#instance_manage').val(),
