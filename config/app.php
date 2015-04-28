@@ -38,6 +38,7 @@ return [
         'Illuminate\\Translation\\TranslationServiceProvider',
         'Illuminate\\Validation\\ValidationServiceProvider',
         'Illuminate\\View\\ViewServiceProvider',
+        'Illuminate\\Html\\HtmlServiceProvider',
         /** Application Service Providers... */
         'DreamFactory\\Enterprise\\Console\\Providers\\AppServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\BusServiceProvider',
@@ -98,6 +99,8 @@ return [
         'URL'             => 'Illuminate\\Support\\Facades\\URL',
         'Validator'       => 'Illuminate\\Support\\Facades\\Validator',
         'View'            => 'Illuminate\\Support\\Facades\\View',
+        'Form'      => 'Illuminate\Html\FormFacade',
+        'HTML'      => 'Illuminate\Html\HtmlFacade',
         /** DreamFactory Aliases */
         'Audit'           => 'DreamFactory\\Enterprise\\Services\\Auditing\\Audit',
         'Provision'       => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',

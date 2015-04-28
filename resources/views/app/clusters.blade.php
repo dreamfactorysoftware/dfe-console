@@ -1,26 +1,109 @@
-@extends('layouts.app')
+@include('layouts.partials.topmenu',array('pageName' => 'Clusters', 'prefix' => $prefix))
 
-{{-- @formatter:off --}}
-@section('page-title'){{"Clusters"}}@overwrite
-{{-- @formatter:on --}}
+@extends('layouts.main')
 
 @section('content')
-    @include('app._page-header',array('pageName' => 'Clusters', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) )
-
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-compact table-bordered table-striped table-hover table-heading table-datatable nowrap"
-                data-resource="cluster"
-                id="dt-cluster">
-                <thead>
-                    <tr>
-                        <th data-column-name="id">ID</th>
-                        <th data-column-name="cluster_id_text">Name</th>
-                        <th data-column-name="subdomain_text">Sub-Domain</th>
-                        <th data-column-name="lmod_date">Last Modified</th>
-                    </tr>
-                </thead>
-            </table>
+    <div class="col-md-2 df-sidebar-nav">
+        <div class="">
+            <ul class="nav nav-pills nav-stacked visible-md visible-lg">
+                <li class="active">
+                    <a class="" href="/{{$prefix}}/clusters">Manage</a>
+                </li>
+                <li class="">
+                    <a class="" href="/{{$prefix}}/clusters/create">Create</a>
+                </li>
+            </ul>
         </div>
     </div>
+
+    <div style="" class="col-md-10">
+        <div>
+            <div class="">
+                <div class="df-section-header df-section-all-round">
+                    <h4>Manage Clusters</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tool Bar -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="well well-sm">
+                    <div class="btn-group btn-group pull-right">
+
+                    </div>
+                    <div class="btn-group btn-group">
+
+                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
+                                <span id="currentPage">Page 1</span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu" id="tablePages">
+                            </ul>
+                        </div>
+
+                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" id="selectedClustersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected clusters" value="delete" onclick="confirmRemoveSelectedClusters()" style="width: 40px"></button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-sm" id="selectedClusterRemoveCancel" onclick="cancelRemoveSelectedClusters()" value="delete" style="display: none">Cancel</button>
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive table-bordered table-striped table-hover table-condensed" id="clusterTable">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th style="text-align: center; vertical-align: middle;"></th>
+                            <th class="" >
+                                Name
+                            </th>
+                            <th class="" style="">
+                                Sub-Domain
+                            </th>
+                            <th class="" style="text-align: center; vertical-align: middle;">
+                                Last Modified
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($clusters as $key => $value)
+                            <tr>
+                                <td>
+                                    <input type="hidden" id="cluster_id" value="{{ $value->id }}">
+                                </td>
+                                <td style="text-align: center; vertical-align: middle;" id="actionColumn">
+                                    <div>
+                                        <input type="hidden" id="cluster_id" value="{{ $value->id }}">
+                                        <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_{{$value->id}}" onclick="confirmRemoveCluster({{$value->id}})" value="delete" style="width: 25px"></button>&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-default btn-xs" id="cluster_button_cancel_{{$value->id}}" onclick="cancelRemoveCluster({{$value->id}})" value="delete" style="display: none">Cancel</button>
+                                    </div>
+                                </td>
+                                <td style="text-align: left; vertical-align: middle;">{{ $value->cluster_id_text }}</td>
+                                <td style="text-align: left; vertical-align: middle;">{{ $value->subdomain_text }}</td>
+                                <td style="text-align: center; vertical-align: middle;">{{ $value->lmod_date }}</td>
+                            </tr>
+
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <span id="tableInfo"></span>
+                    <br><br><br><br>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../js/blade-scripts/clusters/clusters.js"></script>
 @stop
