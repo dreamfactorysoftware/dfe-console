@@ -43,7 +43,7 @@ class ProvisionHandler
 
             if ( !$_instance )
             {
-                throw new ProvisioningException( 'Failed to create instance row: .' );
+                throw new ProvisioningException( 'InstanceManager::make() failed' );
             }
         }
         catch ( \Exception $_ex )

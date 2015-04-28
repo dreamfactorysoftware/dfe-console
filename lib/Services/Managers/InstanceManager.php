@@ -143,7 +143,7 @@ class InstanceManager extends BaseManager implements Factory
             $_clusterConfig = $this->_getServersForCluster( $_clusterId );
 
             //  Write it out
-            return Instance::getConnectionResolver()->connection()->transaction(
+            return \DB::transaction(
                 function () use ( $_owner, $_sanitized, $_guestLocation, $_clusterConfig, $options )
                 {
                     $_instance = Instance::create(
@@ -160,6 +160,11 @@ class InstanceManager extends BaseManager implements Factory
                             'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
                         ]
                     );
+
+                    if ( !$_instance )
+                    {
+                        throw new \RuntimeException( 'Instance create fail' );
+                    }
 
                     InstanceGuest::create(
                         [
