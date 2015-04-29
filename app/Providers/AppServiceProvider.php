@@ -9,15 +9,6 @@ class AppServiceProvider extends ServiceProvider
     //******************************************************************************
 
     /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-    }
-
-    /**
      * Register any application services.
      *
      * This service provider is a great spot to register your various container
@@ -30,8 +21,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             'Illuminate\Contracts\Auth\Registrar',
-            'DreamFactory\Enterprise\Console\Services\Registrar',
-            'DreamFactory\Enterprise\Console\Services\InstanceRegistrar'
+            'DreamFactory\Enterprise\Console\Services\Registrar'
         );
     }
 

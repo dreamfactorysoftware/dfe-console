@@ -46,6 +46,10 @@ class DataController extends FactoryController
      * @type string The name of the model
      */
     protected $_model = null;
+    /**
+     * @type string A prefix prepended to outbound API requests
+     */
+    protected $_apiPrefix = null;
 
     //******************************************************************************
     //* Methods
@@ -269,4 +273,25 @@ class DataController extends FactoryController
 
         return hash( $algorithm, $value, $salt . $rawOutput );
     }
+
+    /**
+     * @return string
+     */
+    public function getApiPrefix()
+    {
+        return $this->_apiPrefix;
+    }
+
+    /**
+     * @param string $apiPrefix
+     *
+     * @return DataController
+     */
+    public function setApiPrefix( $apiPrefix )
+    {
+        $this->_apiPrefix = $apiPrefix;
+
+        return $this;
+    }
+
 }

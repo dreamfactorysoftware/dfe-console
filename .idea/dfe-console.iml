@@ -43,5 +43,6 @@
     <orderEntry type="library" name="dataTables.bootstrap" level="application" />
     <orderEntry type="library" name="jquery.validate" level="application" />
     <orderEntry type="library" name="jquery.validate" level="application" />
+    <orderEntry type="library" name="bootstrap-datepicker" level="application" />
   </component>
 </module>

@@ -1,23 +1,16 @@
-
 @include('layouts.partials.topmenu',array('pageName' => 'Clusters', 'prefix' => $prefix))
-
 @extends('layouts.main')
 
 @section('content')
-
     <script type='text/javascript'>
-
         $( document ).ready(function() {
             //$('#')
-
         });
 
 
         function cancel(){
             window.location = '/{{$prefix}}/clusters';
         }
-
-
 
         function save(){
 

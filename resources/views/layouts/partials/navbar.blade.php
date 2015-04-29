@@ -9,18 +9,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand">
-                    <img src="/img/DreamFactory-logo-inverse-horiz.png" style="padding-top: 7px" width="200px">
-                </a>
+                <a class="navbar-brand"> <img src="/img/DreamFactory-logo-inverse-horiz.png" alt="DreamFactory Enterprise"> </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right df-navbar-nav">
-                   <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <i class="fa fa-fw fa-user"></i>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-fw fa-user"></i>
                             {{ Auth::user()->email_addr_text }}
                             <span class="caret"></span>
                         </a>
+
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/"><i class="fa fa-fw fa-user"></i> Profile</a>

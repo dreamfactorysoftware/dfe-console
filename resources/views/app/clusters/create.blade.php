@@ -1,70 +1,62 @@
-
-@include('layouts.partials.topmenu',array('pageName' => 'Clusters', 'prefix' => $prefix))
-
 @extends('layouts.main')
-
+@include('layouts.partials.topmenu', ['pageName' => 'Clusters', 'prefix' => $prefix])
 @section('content')
 
     <script type='text/javascript'>
 
-        $( document ).ready(function() {
-            //$('#')
+    $(document).ready(function() {
+        //$('#')
 
+    });
+
+    function save() {
+        var formData = {
+
+            cluster_name_text:          $('#cluster_name_text').val(),
+            cluster_subdomain_text:     $('#cluster_subdomain_text').val(),
+            cluster_instancecount_text: $('#cluster_instancecount_text').val()
+
+        };
+        console.log(formData);
+        /**/
+        $.ajax({
+            url:     "/{{$prefix}}/clusters",
+            type:    "POST",
+            data:    formData,
+            success: function(data, textStatus, jqXHR) {
+                //data - response from server
+                window.location = '/{{$prefix}}/clusters';
+            },
+            error:   function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+            }
         });
 
+    }
+    /*
+     // $(document).ready(function() {
+     $("#system_admin").click(function () {
+     if ($('#system_admin').is(':checked')) {
+     $('#instance_manage').removeAttr("disabled");
+     $('#instance_policy').removeAttr("disabled");
 
+     } else {
+     $('#instance_manage').attr("disabled", true);
+     $('#instance_policy').attr("disabled", true);
+     }
+     });
 
-        function save(){
-            var  formData = {
+     $('#set_password').click(function () {
+     if ($('#set_password').is(':checked')) {
+     $('#set_password_form').show();
 
-                cluster_name_text: $('#cluster_name_text').val(),
-                cluster_subdomain_text: $('#cluster_subdomain_text').val(),
-                cluster_instancecount_text: $('#cluster_instancecount_text').val()
+     } else {
+     $('#set_password_form').hide();
 
-
-            };
-            console.log(formData);
-            /**/
-            $.ajax({
-                url : "/{{$prefix}}/clusters",
-                type: "POST",
-                data : formData,
-                success: function(data, textStatus, jqXHR)
-                {
-                    //data - response from server
-                    window.location = '/{{$prefix}}/clusters';
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    console.log(textStatus);
-                }
-            });
-
-        }
-/*
-       // $(document).ready(function() {
-            $("#system_admin").click(function () {
-                if ($('#system_admin').is(':checked')) {
-                    $('#instance_manage').removeAttr("disabled");
-                    $('#instance_policy').removeAttr("disabled");
-
-                } else {
-                    $('#instance_manage').attr("disabled", true);
-                    $('#instance_policy').attr("disabled", true);
-                }
-            });
-
-            $('#set_password').click(function () {
-                if ($('#set_password').is(':checked')) {
-                    $('#set_password_form').show();
-
-                } else {
-                    $('#set_password_form').hide();
-
-                }
-            });
-       // });
- */
+     }
+     });
+     // });
+     */
     </script>
 
     <div class="container-fluid">
@@ -92,7 +84,8 @@
                                 </df-sidebar-nav>
                             </div>
                             <div class="col-md-10 df-section df-section-3-round" df-fs-height="">
-                                <df-manage-users class=""><div>
+                                <df-manage-users class="">
+                                    <div>
                                         <div class="">
                                             <df-section-header class="" data-title="'Manage Servers'">
                                                 <div class="df-section-header df-section-all-round">
@@ -109,16 +102,20 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Sub-Domain</label>
-                                                            <input id="cluster_subdomain_text" class="form-control" placeholder="Enter sub-domain - sub.domain.com." type="subdomain">
+                                                            <input id="cluster_subdomain_text"
+                                                                class="form-control"
+                                                                placeholder="Enter sub-domain - sub.domain.com."
+                                                                type="subdomain">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Max number of instances</label>
-                                                            <input id="cluster_instancecount_text" class="form-control" placeholder="Enter instance count." type="instancecount">
+                                                            <input id="cluster_instancecount_text"
+                                                                class="form-control"
+                                                                placeholder="Enter instance count."
+                                                                type="instancecount">
                                                         </div>
 
-
                                                     </div>
-
 
                                                     <div class="col-md-6">
 

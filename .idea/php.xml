@@ -5,6 +5,11 @@
       <BehatSettings behat_path="$PROJECT_DIR$" />
     </behat_settings>
   </component>
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="dfe-console.local" id="d0c8cff4-a18f-4a6e-8351-8d4ca1477e32" name="dfe-console.local" />
+    </servers>
+  </component>
   <component name="PhpStepFilterConfiguration" skip_magic_methods="true">
     <option name="skippedFunctions">
       <list>
