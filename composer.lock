@@ -1030,12 +1030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "bc924d50857769b2cbc0ba4296865a36235dc37f"
+                "reference": "e7be204708091d07518c5bb4a392fb5782f232eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/bc924d50857769b2cbc0ba4296865a36235dc37f",
-                "reference": "bc924d50857769b2cbc0ba4296865a36235dc37f",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/e7be204708091d07518c5bb4a392fb5782f232eb",
+                "reference": "e7be204708091d07518c5bb4a392fb5782f232eb",
                 "shasum": ""
             },
             "require": {
@@ -1148,7 +1148,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-04-29 01:07:01"
+            "time": "2015-04-29 16:03:20"
         },
         {
             "name": "league/flysystem",
@@ -1156,12 +1156,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "4ba5e3337122f686d0b84e7e0c29a674378f47fc"
+                "reference": "1a6814fa9d7197fb9f35e8657264a45904cabc1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/4ba5e3337122f686d0b84e7e0c29a674378f47fc",
-                "reference": "4ba5e3337122f686d0b84e7e0c29a674378f47fc",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/1a6814fa9d7197fb9f35e8657264a45904cabc1b",
+                "reference": "1a6814fa9d7197fb9f35e8657264a45904cabc1b",
                 "shasum": ""
             },
             "require": {
@@ -1232,7 +1232,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2015-04-28 06:42:58"
+            "time": "2015-04-29 12:07:30"
         },
         {
             "name": "league/flysystem-sftp",
@@ -1681,24 +1681,24 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.4.4",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac"
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/489816db71649bd95b416e3ed9062d40528ab0ac",
-                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/19976b103ffe7db82c1d1e923626b1589ac4ef7d",
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d",
                 "shasum": ""
             },
             "require": {
                 "dnoegel/php-xdg-base-dir": "0.1",
                 "jakub-onderka/php-console-highlighter": "0.3.*",
-                "nikic/php-parser": "~1.0",
+                "nikic/php-parser": "^1.2.1",
                 "php": ">=5.3.0",
-                "symfony/console": "~2.3.10|~2.4.2|~2.5"
+                "symfony/console": "~2.3.10|^2.4.2"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.5",
@@ -1748,7 +1748,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-03-26 18:43:54"
+            "time": "2015-03-21 09:21:46"
         },
         {
             "name": "ruflin/elastica",
@@ -3293,12 +3293,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "c8c5470edea31f6f47265c78cf907f756a23816a"
+                "reference": "41e718eab32980697c876d217ff4413cf86a4d2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c8c5470edea31f6f47265c78cf907f756a23816a",
-                "reference": "c8c5470edea31f6f47265c78cf907f756a23816a",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/41e718eab32980697c876d217ff4413cf86a4d2b",
+                "reference": "41e718eab32980697c876d217ff4413cf86a4d2b",
                 "shasum": ""
             },
             "require": {
@@ -3357,7 +3357,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-04-15 23:26:40"
+            "time": "2015-04-30 15:49:28"
         },
         {
             "name": "doctrine/instantiator",
@@ -3887,12 +3887,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "60bbaff8602bd8eaae76196f6427b4b2396c72fb"
+                "reference": "13a957b45df0b04f2e3b1fabd4a83eb4e5e5046a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/60bbaff8602bd8eaae76196f6427b4b2396c72fb",
-                "reference": "60bbaff8602bd8eaae76196f6427b4b2396c72fb",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/13a957b45df0b04f2e3b1fabd4a83eb4e5e5046a",
+                "reference": "13a957b45df0b04f2e3b1fabd4a83eb4e5e5046a",
                 "shasum": ""
             },
             "require": {
@@ -3951,7 +3951,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-04-18 15:51:25"
+            "time": "2015-04-29 13:03:58"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
