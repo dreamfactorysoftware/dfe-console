@@ -3,9 +3,9 @@
 use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 
 /**
- * Called when a user logs in
+ * Fired when a new instance is provisioned
  */
-class AuthLoginEventHandler extends BaseEventHandler
+class InstanceUp extends BaseEventHandler
 {
     //******************************************************************************
     //* Methods

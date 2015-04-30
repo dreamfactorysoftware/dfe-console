@@ -1333,12 +1333,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "d84ba2cb20186688230a5a11f76a70e97fe2f886"
+                "reference": "1065abe1f7fcc0546c25f0730ce2ce290360898d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/d84ba2cb20186688230a5a11f76a70e97fe2f886",
-                "reference": "d84ba2cb20186688230a5a11f76a70e97fe2f886",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1065abe1f7fcc0546c25f0730ce2ce290360898d",
+                "reference": "1065abe1f7fcc0546c25f0730ce2ce290360898d",
                 "shasum": ""
             },
             "require": {
@@ -1400,7 +1400,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-04-25 10:55:55"
+            "time": "2015-04-30 17:29:05"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -1499,12 +1499,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "a35c2a20671199fffcb424d9183f0a959b105065"
+                "reference": "23bf4f0c13dc196efbd2027987afbda63c47462a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/a35c2a20671199fffcb424d9183f0a959b105065",
-                "reference": "a35c2a20671199fffcb424d9183f0a959b105065",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/23bf4f0c13dc196efbd2027987afbda63c47462a",
+                "reference": "23bf4f0c13dc196efbd2027987afbda63c47462a",
                 "shasum": ""
             },
             "require": {
@@ -1536,7 +1536,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-04-27 13:37:41"
+            "time": "2015-04-30 19:58:45"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -3293,12 +3293,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "41e718eab32980697c876d217ff4413cf86a4d2b"
+                "reference": "0383db83a085d3e36383fd560f29eb81d5d5ba48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/41e718eab32980697c876d217ff4413cf86a4d2b",
-                "reference": "41e718eab32980697c876d217ff4413cf86a4d2b",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/0383db83a085d3e36383fd560f29eb81d5d5ba48",
+                "reference": "0383db83a085d3e36383fd560f29eb81d5d5ba48",
                 "shasum": ""
             },
             "require": {
@@ -3313,8 +3313,7 @@
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
             },
             "bin": [
-                "bin/doctrine-dbal",
-                "bin/doctrine-dbal.php"
+                "bin/doctrine-dbal"
             ],
             "type": "library",
             "extra": {
@@ -3357,7 +3356,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2015-04-30 15:49:28"
+            "time": "2015-04-30 17:25:52"
         },
         {
             "name": "doctrine/instantiator",
