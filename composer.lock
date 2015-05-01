@@ -1499,12 +1499,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "23bf4f0c13dc196efbd2027987afbda63c47462a"
+                "reference": "9caa51b3a51c0b318344dd8fe1910bb60f558881"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/23bf4f0c13dc196efbd2027987afbda63c47462a",
-                "reference": "23bf4f0c13dc196efbd2027987afbda63c47462a",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9caa51b3a51c0b318344dd8fe1910bb60f558881",
+                "reference": "9caa51b3a51c0b318344dd8fe1910bb60f558881",
                 "shasum": ""
             },
             "require": {
@@ -1536,7 +1536,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-04-30 19:58:45"
+            "time": "2015-05-01 18:18:04"
         },
         {
             "name": "phpseclib/phpseclib",
