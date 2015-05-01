@@ -12,4 +12,6 @@ class ConsoleDefaults
     const SNAPSHOT_PATH_NAME = 'snapshots';
     /** @type string The default prefix for outgoing email */
     const EMAIL_SUBJECT_PREFIX = '[DFE]';
+    /** @type string The default hash algorithm used for signing requests */
+    const SIGNATURE_METHOD = 'sha256';
 }

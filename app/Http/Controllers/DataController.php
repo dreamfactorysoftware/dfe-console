@@ -2,6 +2,7 @@
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 use DreamFactory\Enterprise\Common\Facades\Packet;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -264,7 +265,7 @@ class DataController extends FactoryController
      *
      * @return null|string
      */
-    protected function _hashValue( $value, $algorithm = 'sha256', $salt = null, $rawOutput = false )
+    protected function _hashValue( $value, $algorithm = ConsoleDefaults::SIGNATURE_METHOD, $salt = null, $rawOutput = false )
     {
         if ( null === $value )
         {

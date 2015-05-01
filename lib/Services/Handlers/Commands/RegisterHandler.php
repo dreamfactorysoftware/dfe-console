@@ -4,6 +4,7 @@ namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Enums\AppKeyEntities;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Commands\RegisterJob;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
 use Illuminate\Http\Response;
@@ -40,8 +41,8 @@ class RegisterHandler
         $_entityType = $command->getEntityType();
 
         //  Generate the keys
-        $_clientId = hash_hmac( 'sha256', str_random( 40 ), $_key );
-        $_clientSecret = hash_hmac( 'sha256', str_random( 40 ), $_key . $_clientId );
+        $_clientId = hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), str_random( 40 ), $_key );
+        $_clientSecret = hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), str_random( 40 ), $_key . $_clientId );
 
         $_result = AppKey::insert(
             array(

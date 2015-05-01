@@ -1,9 +1,11 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Middleware;
 
 use Closure;
+use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthenticateClient
 {
@@ -23,36 +25,33 @@ class AuthenticateClient
     {
         $_token = $request->input( 'access-token' );
         $_clientId = $request->input( 'client-id' );
-        $_userId = $request->input( 'user-id' );
 
         /** @type AppKey $_key */
         $_key = AppKey::where( 'client_id', $_clientId )->first();
 
         if ( empty( $_key ) )
         {
-            \Log::error( 'auth.client fail: invalid "client-id"', ['token' => $_token, 'client-id' => $_clientId, 'user-id' => $_userId] );
-            abort( Response::HTTP_BAD_REQUEST, 'The "client-id" is invalid.' );
+            \Log::error( 'auth.client: invalid "client-id"' );
+
+            return ErrorPacket::create( new BadRequestHttpException( 'Invalid "client-id"' ) );
         }
 
-        if ( $_token != hash_hmac( 'sha256', $_clientId, $_key->client_secret ) )
+        if ( $_token != hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), $_clientId, $_key->client_secret ) )
         {
-            \Log::error(
-                'auth.client fail: invalid "access-token"',
-                ['access-token' => $_token, 'client-id' => $_clientId, 'client-secret' => $_key->client_secret, 'user-id' => $_userId]
-            );
-            abort( Response::HTTP_UNAUTHORIZED );
+            \Log::error( 'auth.client fail: invalid "access-token"' );
+
+            return ErrorPacket::create( new UnauthorizedHttpException( 'Invalid "access-token"' ) );
         }
 
-        $_user = User::find( $_userId );
-
-        if ( empty( $_user ) )
+        if ( !$_key->user )
         {
-            \Log::error( 'auth.client fail: invalid "user-id"', ['token' => $_token, 'client-id' => $_clientId, 'user-id' => $_userId] );
-            abort( Response::HTTP_BAD_REQUEST, 'The "user-id" is invalid.' );
+            \Log::error( 'auth.client: invalid "user" assigned to key id ' . $_key->id );
+
+            return ErrorPacket::create( new UnauthorizedHttpException( 'Invalid credentials' ) );
         }
 
-        \Log::info( 'auth.client pass', ['token' => $_token, 'client-id' => $_clientId, 'user-id' => $_userId] );
-        \Session::set( 'client.' . $_token, $_user );
+        \Log::info( 'auth.client: access granted to "' . $_clientId . '"' );
+        \Session::set( 'client.' . $_token, $_key->user );
 
         return $next( $request );
     }

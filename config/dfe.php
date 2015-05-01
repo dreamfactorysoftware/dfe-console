@@ -7,8 +7,9 @@ use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 
 return [
     /** This key needs to match the key configured in the dashboard */
-    'console-key'  => env( 'DFE_CONSOLE_KEY', 'StrongRandomString' ),
-    'provisioning' => [
+    'console-key'      => env( 'DFE_CONSOLE_KEY', 'StrongRandomString' ),
+    'signature-method' => env( 'DFE_SIGNATURE_METHOD', 'sha256' ),
+    'provisioning'     => [
         //  Storage & storage layout options/settings
         'storage-zone-type'           => env( 'DFE_STORAGE_ZONE_TYPE', 'static' ),          //  Either "static" or "dynamic"
         'static-zone-name'            => env( 'DFE_STORAGE_ZONE_TYPE', 'ec2.us-east-1a' ),  //  The "static" storage zone
