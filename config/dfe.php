@@ -17,9 +17,9 @@ return [
         'private-path-name'           => env( 'DFE_STORAGE_ZONE_TYPE', '.private' ),        //  relative to storage path (hosted or non)
         'snapshot-path-name'          => env( 'DFE_STORAGE_ZONE_TYPE', 'snapshots' ),       // relative to owner-private-path
         /** "DFE_*_PATHS" variables can contain one or more, pipe-delimited names of directories to create */
-        'public-paths'                => explode( '|', env( 'DFE_PUBLIC_PATHS', ['applications', 'plugins', 'vendor', '.private',] ) ),
-        'private-paths'               => explode( '|', env( 'DFE_PRIVATE_PATHS', ['.cache', 'config', 'scripts', 'scripts.user',] ) ),
-        'owner-private-paths'         => explode( '|', env( 'DFE_PRIVATE_PATHS', ['snapshots',] ) ),
+        'public-paths'                => explode( '|', env( 'DFE_PUBLIC_PATHS', 'applications|plugins|vendor|.private' ) ),
+        'private-paths'               => explode( '|', env( 'DFE_PRIVATE_PATHS', '.cache|config|scripts|scripts.user' ) ),
+        'owner-private-paths'         => explode( '|', env( 'DFE_OWNER_PRIVATE_PATHS', 'snapshots' ) ),
         //  Instance provisioning defaults
         'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
         'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE', 'db-east-1' ),
