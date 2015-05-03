@@ -163,8 +163,11 @@ class OpsController extends Controller
 
         return SuccessPacket::make(
             array(
-                'instance_name_text' => $_instance->instance_name_text,
                 'id'                 => $_instance->id,
+                'archived'           => $_archived,
+                'deleted'            => false,
+                //  snake
+                'instance_name_text' => $_instance->instance_name_text,
                 'instance_id_text'   => $_instance->instance_id_text,
                 'state_nbr'          => $_instance->state_nbr,
                 'vendor_state_nbr'   => $_instance->vendor_state_nbr,
@@ -174,6 +177,7 @@ class OpsController extends Controller
                 'deprovision_ind'    => ( 1 == $_instance->deprovision_ind ),
                 'start_date'         => (string)$_instance->start_date,
                 'create_date'        => (string)$_instance->create_date,
+                //  camel
                 'instanceName'       => $_instance->instance_name_text,
                 'instanceId'         => $_instance->id,
                 'vendorInstanceId'   => $_instance->instance_id_text,
@@ -185,8 +189,15 @@ class OpsController extends Controller
                 'deprovisioned'      => ( 1 == $_instance->deprovision_ind ),
                 'startDate'          => (string)$_instance->start_date,
                 'createDate'         => (string)$_instance->create_date,
-                'archived'           => $_archived,
-                'deleted'            => false,
+                //  morse
+                'instance-id'        => $_instance->id,
+                'vendor-instance-id' => $_instance->instance_id_text,
+                'instance-name'      => $_instance->instance_name_text,
+                'instance-state'     => $_instance->state_nbr,
+                'vendor-state'       => $_instance->vendor_state_nbr,
+                'vendor-state-name'  => $_instance->vendor_state_text,
+                'start-date'         => (string)$_instance->start_date,
+                'create-date'        => (string)$_instance->create_date,
             )
         );
     }
