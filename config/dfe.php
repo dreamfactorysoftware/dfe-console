@@ -12,10 +12,10 @@ return [
     'provisioning'     => [
         //  Storage & storage layout options/settings
         'storage-zone-type'           => env( 'DFE_STORAGE_ZONE_TYPE', 'static' ),          //  Either "static" or "dynamic"
-        'static-zone-name'            => env( 'DFE_STORAGE_ZONE_TYPE', 'ec2.us-east-1a' ),  //  The "static" storage zone
-        'public-path-base'            => env( 'DFE_STORAGE_ZONE_TYPE', '/' ),               //  relative to storage path (hosted or non)
-        'private-path-name'           => env( 'DFE_STORAGE_ZONE_TYPE', '.private' ),        //  relative to storage path (hosted or non)
-        'snapshot-path-name'          => env( 'DFE_STORAGE_ZONE_TYPE', 'snapshots' ),       // relative to owner-private-path
+        'static-zone-name'            => env( 'DFE_STATIC_ZONE_NAME', 'ec2.us-east-1a' ),  //  The "static" storage zone
+        'public-path-base'            => env( 'DFE_PUBLIC_PATH_BASE', '/' ),               //  relative to storage path (hosted or non)
+        'private-path-name'           => env( 'DFE_PRIVATE_PATH_NAME', '.private' ),        //  relative to storage path (hosted or non)
+        'snapshot-path-name'          => env( 'DFE_SNAPSHOT_PATH_NAME', 'snapshots' ),       // relative to owner-private-path
         /** "DFE_*_PATHS" variables can contain one or more, pipe-delimited names of directories to create */
         'public-paths'                => explode( '|', env( 'DFE_PUBLIC_PATHS', 'applications|plugins|vendor|.private' ) ),
         'private-paths'               => explode( '|', env( 'DFE_PRIVATE_PATHS', '.cache|config|scripts|scripts.user' ) ),
