@@ -7,7 +7,7 @@ use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 
 return [
     /** This key needs to match the key configured in the dashboard */
-    'console-key'      => env( 'DFE_CONSOLE_KEY', 'StrongRandomString' ),
+    'console-key'      => env( 'DFE_CONSOLE_KEY', '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy' ),
     'signature-method' => env( 'DFE_SIGNATURE_METHOD', 'sha256' ),
     'provisioning'     => [
         //  Storage & storage layout options/settings
