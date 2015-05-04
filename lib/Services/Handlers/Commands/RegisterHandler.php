@@ -36,6 +36,7 @@ class RegisterHandler
         \Log::debug( 'dfe: register - begin' );
 
         $_key = config( 'dfe.console-key' );
+
         $_ownerId = $command->getOwnerId();
         $_ownerType = $command->getOwnerType();
         $_entityType = $command->getEntityType();

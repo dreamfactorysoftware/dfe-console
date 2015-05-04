@@ -9,7 +9,6 @@ use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -144,28 +143,36 @@ class OpsController extends Controller
     public function postStatus( Request $request )
     {
         $_id = $request->input( 'id' );
+        \Log::debug( 'ops.status: ' . print_r( $request->input(), true ) );
 
         try
         {
             $_instance = $this->_findInstance( $request->input( 'id' ) );
             $_archived = false;
         }
-        catch ( ModelNotFoundException $_ex )
+        catch ( \Exception $_ex )
         {
             //  Check the deleted instances
             if ( null === ( $_instance = InstanceArchive::byNameOrId( $_id )->first() ) )
             {
-                return ErrorPacket::make( 'Instance not found.' );
+                return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found.' );
             }
 
             $_archived = true;
         }
+
+        $_rootStoragePath = $_instance->getRootStoragePath();
+        $_storagePath = $_instance->getStoragePath();
 
         return SuccessPacket::make(
             array(
                 'id'                 => $_instance->id,
                 'archived'           => $_archived,
                 'deleted'            => false,
+                'root-storage-path'  => $_rootStoragePath,
+                'storage-path'       => $_storagePath,
+                'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
+                'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
                 //  snake
                 'instance_name_text' => $_instance->instance_name_text,
                 'instance_id_text'   => $_instance->instance_id_text,
