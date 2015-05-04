@@ -1681,24 +1681,24 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.4.4",
+            "version": "dev-develop",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac"
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/489816db71649bd95b416e3ed9062d40528ab0ac",
-                "reference": "489816db71649bd95b416e3ed9062d40528ab0ac",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/19976b103ffe7db82c1d1e923626b1589ac4ef7d",
+                "reference": "19976b103ffe7db82c1d1e923626b1589ac4ef7d",
                 "shasum": ""
             },
             "require": {
                 "dnoegel/php-xdg-base-dir": "0.1",
                 "jakub-onderka/php-console-highlighter": "0.3.*",
-                "nikic/php-parser": "~1.0",
+                "nikic/php-parser": "^1.2.1",
                 "php": ">=5.3.0",
-                "symfony/console": "~2.3.10|~2.4.2|~2.5"
+                "symfony/console": "~2.3.10|^2.4.2"
             },
             "require-dev": {
                 "fabpot/php-cs-fixer": "~1.5",
@@ -1748,7 +1748,7 @@
                 "interactive",
                 "shell"
             ],
-            "time": "2015-03-26 18:43:54"
+            "time": "2015-03-21 09:21:46"
         },
         {
             "name": "ruflin/elastica",
