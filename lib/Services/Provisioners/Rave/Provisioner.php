@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
+use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
@@ -9,7 +10,9 @@ use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
+use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
 use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -229,7 +232,7 @@ class Provisioner extends BaseProvisioner
             {
                 $_guest->fill(
                     [
-                        'base_image_text'   => 'fabric.standard',
+                        'base_image_text'   => 'dfe.standard',
                         'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
                         'vendor_state_text' => 'running',
                         'public_host_text'  => $_host,
@@ -245,7 +248,7 @@ class Provisioner extends BaseProvisioner
                     'paths' => [
                         'private-path'       => $_privatePath,
                         'owner-private-path' => $_ownerPrivatePath,
-                        'snapshot-path-name'      => $_ownerPrivatePath .
+                        'snapshot-path-name' => $_ownerPrivatePath .
                             DIRECTORY_SEPARATOR .
                             config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
                     ],
@@ -267,6 +270,15 @@ class Provisioner extends BaseProvisioner
                 {
                     $_guest && $_guest->save();
                     $_instance->save();
+
+                    //  Generate keys for the instance
+                    AppKey::create(
+                        [
+                            'key_class_type' => AppKeyClasses::INSTANCE,
+                            'owner_id'       => $_instance->user_id,
+                            'owner_type_nbr' => OwnerTypes::USER,
+                        ]
+                    );
                 }
             );
 

@@ -1,7 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\JobCommand;
-use DreamFactory\Enterprise\Common\Enums\AppKeyEntities;
+use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -36,7 +36,7 @@ class RegisterJob extends JobCommand
     /**
      * @type string
      */
-    protected $_entityType = AppKeyEntities::USER;
+    protected $_entityType = AppKeyClasses::USER;
 
     //******************************************************************************
     //* Methods
@@ -45,22 +45,22 @@ class RegisterJob extends JobCommand
     /**
      * Create a new command instance.
      *
-     * @param int    $ownerId    The id of the entity
-     * @param string $entityType The type of entity
-     * @param int    $ownerType  The type of owner (implied from entity type if null)
+     * @param int    $ownerId   The id of the entity
+     * @param string $keyClass  The type of entity
+     * @param int    $ownerType The type of owner (implied from entity type if null)
      */
-    public function __construct( $ownerId, $entityType = AppKeyEntities::USER, $ownerType = null )
+    public function __construct( $ownerId, $keyClass = AppKeyClasses::USER, $ownerType = null )
     {
         $this->_ownerId = $ownerId;
-        $entityType = strtoupper( trim( $entityType ) );
+        $keyClass = strtoupper( trim( $keyClass ) );
         $ownerType = $ownerType ? strtoupper( trim( $ownerType ) ) : null;
 
         //  Make sure we have a good types
-        AppKeyEntities::defines( $entityType, true );
+        AppKeyClasses::defines( $keyClass, true );
 
         if ( null === $ownerType )
         {
-            $ownerType = AppKeyEntities::mapOwnerType( $entityType );
+            $ownerType = AppKeyClasses::mapOwnerType( $keyClass );
         }
         else
         {
@@ -78,7 +78,7 @@ class RegisterJob extends JobCommand
 
         $this->_ownerId = $_owner->id;
         $this->_ownerType = $ownerType;
-        $this->_entityType = $entityType;
+        $this->_entityType = $keyClass;
     }
 
     /**

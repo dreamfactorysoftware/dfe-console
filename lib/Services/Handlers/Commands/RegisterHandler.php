@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use Carbon\Carbon;
-use DreamFactory\Enterprise\Common\Enums\AppKeyEntities;
+use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Commands\RegisterJob;
@@ -49,7 +49,7 @@ class RegisterHandler
             array(
                 'owner_id'       => $_ownerId,
                 'owner_type_nbr' => $_ownerType,
-                'app_id_text'    => AppKeyEntities::make( 'entity', $_entityType ),
+                'key_class_text' => AppKeyClasses::make( $_entityType ),
                 'client_id'      => $_clientId,
                 'client_secret'  => $_clientSecret,
                 'server_secret'  => $_key,
@@ -66,8 +66,7 @@ class RegisterHandler
 
         $command->setResult(
             'Client registered successfully.' . PHP_EOL .
-            'Client ID:     ' . $_clientId . PHP_EOL .
-            'Client Secret: ' . $_clientSecret
+            '  * Client ID:     ' . $_clientId
         );
 
         return true;
