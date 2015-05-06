@@ -10,6 +10,8 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Library\Utility\JsonFile;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
 
 /**
@@ -41,6 +43,19 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     //* Members
     //******************************************************************************
 
+    /**
+     * @type array The default cluster environment file template.
+     */
+    protected static $_envTemplate = [
+        'cluster-id'       => null,
+        'default-domain'   => null,
+        'signature-method' => 'sha256',
+        'storage-root'     => '/data/storage',
+        'api-url'          => null,
+        'api-key'          => null,
+        'client-id'        => null,
+        'client-secret'    => null
+    ];
     /**
      * @type string A prefix for notification subjects
      */
@@ -206,6 +221,28 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         $this->debug( '  * provisioner: notification sent to ' . $instance->user->email_addr_text );
 
         return $_result;
+    }
+
+    /**
+     * @param string|Filesystem $filename      The absolute (relative if $filesystem supplied) location to write the environment file
+     * @param array             $env           The data to add to the default template
+     * @param Filesystem        $filesystem    An optional file system to write the file. If null, the file is written locally
+     * @param bool              $mergeDefaults If false, only the data in $env is written out
+     *
+     * @return bool
+     */
+    protected function _writeEnvironmentFile( $filename, array $env, $filesystem = null, $mergeDefaults = true )
+    {
+        $_data = $mergeDefaults ? array_merge( static::$_envTemplate, $env ) : $env;
+
+        if ( null !== $filesystem )
+        {
+            return $filesystem->put( $filename, JsonFile::encode( $_data ) );
+        }
+
+        JsonFile::encodeFile( $filename, $_data );
+
+        return true;
     }
 
 }

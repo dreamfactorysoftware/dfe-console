@@ -70,6 +70,8 @@ class InstanceMetadata implements Jsonable, Arrayable
      * @type array [:path-name => :relative-path]
      */
     protected $_paths = [];
+    /** @type array ['key' => 'value...] of hosted environment information */
+    protected $_env = [];
 
     //******************************************************************************
     //* Methods
@@ -426,6 +428,26 @@ class InstanceMetadata implements Jsonable, Arrayable
     public function setStorageMap( $storageMap )
     {
         $this->_storageMap = $storageMap;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEnv()
+    {
+        return $this->_env;
+    }
+
+    /**
+     * @param array $env
+     *
+     * @return InstanceMetadata
+     */
+    public function setEnv( $env )
+    {
+        $this->_env = $env;
 
         return $this;
     }

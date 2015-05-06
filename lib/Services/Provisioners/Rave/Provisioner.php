@@ -13,6 +13,7 @@ use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
 use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
+use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
@@ -226,19 +227,19 @@ class Provisioner extends BaseProvisioner
                 ]
             );
 
-            $_guest = $_instance->guest;
+            /**
+             * Generate an app key for the instance
+             */
+            $_appKey = AppKey::create(
+                [
+                    'key_class_text' => AppKeyClasses::INSTANCE,
+                    'owner_id'       => $_instance->id,
+                    'owner_type_nbr' => OwnerTypes::INSTANCE,
+                ]
+            );
 
-            if ( $_guest )
-            {
-                $_guest->fill(
-                    [
-                        'base_image_text'   => 'dfe.standard',
-                        'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
-                        'vendor_state_text' => 'running',
-                        'public_host_text'  => $_host,
-                    ]
-                );
-            }
+            /** @type Cluster $_cluster */
+            $_cluster = Cluster::findOrFail( $_instance->cluster_id, 'cluster_id_text' );
 
             //  Collect metadata
             $_md = new InstanceMetadata(
@@ -252,33 +253,40 @@ class Provisioner extends BaseProvisioner
                             DIRECTORY_SEPARATOR .
                             config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
                     ],
+                    'env'   => [
+                        'cluster-id'       => $_cluster->cluster_id_text,
+                        'default-domain'   => config( 'dfe.provisioning.default-domain' ),
+                        'signature-method' => 'sha256',
+                        'storage-root'     => config( 'dfe.provisioning.storage-root' ),
+                        'console-api-url'  => config( 'dfe.console-api-url' ),
+                        'console-api-key'  => config( 'dfe.console-api-key' ),
+                        'client-id'        => $_appKey->client_id,
+                        'client-secret'    => $_appKey->client_secret,
+                    ],
                 ]
             );
 
             $_instanceData = $_instance->instance_data_text;
-
-            if ( empty( $_instanceData ) )
-            {
-                $_instanceData = [];
-            }
-
             $_instanceData['metadata'] = $_md->toArray();
             $_instance->instance_data_text = $_instanceData;
 
-            $_instance->getConnection()->transaction(
-                function () use ( $_instance, $_guest )
+            \DB::transaction(
+                function () use ( $_instance, $_host )
                 {
-                    $_guest && $_guest->save();
-                    $_instance->save();
-
-                    //  Generate keys for the instance
-                    AppKey::create(
+                    /**
+                     * Add guest data if there is a guest record
+                     */
+                    $_instance->guest && $_instance->guest->fill(
                         [
-                            'key_class_type' => AppKeyClasses::INSTANCE,
-                            'owner_id'       => $_instance->user_id,
-                            'owner_type_nbr' => OwnerTypes::USER,
+                            'base_image_text'   => config( 'dfe.provisioning.base-image', ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE ),
+                            'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
+                            'vendor_state_text' => 'running',
+                            'public_host_text'  => $_host,
                         ]
-                    );
+                    )->save();
+
+                    //  Save the instance
+                    $_instance->save();
                 }
             );
 
