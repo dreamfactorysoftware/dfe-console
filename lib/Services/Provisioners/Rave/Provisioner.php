@@ -239,7 +239,7 @@ class Provisioner extends BaseProvisioner
             );
 
             /** @type Cluster $_cluster */
-            $_cluster = Cluster::findOrFail( $_instance->cluster_id, 'cluster_id_text' );
+            $_cluster = Cluster::findOrFail( $_instance->cluster_id, ['cluster_id_text'] );
 
             //  Collect metadata
             $_md = new InstanceMetadata(

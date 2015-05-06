@@ -2,13 +2,21 @@
 
 use Closure;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthenticateClient
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
+
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -45,7 +53,11 @@ class AuthenticateClient
             return ErrorPacket::create( new UnauthorizedHttpException( 'Invalid "access-token"' ) );
         }
 
-        if ( !$_key->user )
+        try
+        {
+            $this->_locateOwner( $_key->owner_id, $_key->owner_type_nbr );
+        }
+        catch ( ModelNotFoundException $_ex )
         {
             \Log::error( 'auth.client: invalid "user" assigned to key id ' . $_key->id );
 

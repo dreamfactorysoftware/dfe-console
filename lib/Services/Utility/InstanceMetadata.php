@@ -97,9 +97,17 @@ class InstanceMetadata implements Jsonable, Arrayable
             {
                 $this->{$_key} = $_value;
             }
+            else if ( property_exists( $this, '_' . $_key ) )
+            {
+                $this->{'_' . $_key} = $_value;
+            }
             else if ( method_exists( $this, 'set' . $_key ) )
             {
                 $this->{'set' . $_key}( $_value );
+            }
+            else
+            {
+                \Log::notice( 'Unable to set variable "' . $_key . '".' );
             }
         }
     }
@@ -120,17 +128,18 @@ class InstanceMetadata implements Jsonable, Arrayable
     {
         return [
             'instance-id'         => $this->_instanceId,
+            'storage-key'         => $this->_storageKey,
             'cluster-id'          => $this->_clusterId,
             'db-server-id'        => $this->_dbServerId,
             'app-server-id'       => $this->_appServerId,
             'web-server-id'       => $this->_webServerId,
             'owner-id'            => $this->_ownerId,
             'owner-email-address' => $this->_ownerEmailAddress,
-            'storage-key'         => $this->_storageKey,
             'owner-storage-key'   => $this->_ownerStorageKey,
-            'db'                  => $this->_db,
             'storage-map'         => $this->_storageMap,
+            'db'                  => $this->_db,
             'paths'               => $this->_paths,
+            'env'                 => $this->_env,
         ];
     }
 

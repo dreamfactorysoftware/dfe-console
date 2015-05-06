@@ -9,6 +9,7 @@ use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
+use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -169,7 +170,7 @@ class OpsController extends Controller
                 'id'                 => $_instance->id,
                 'archived'           => $_archived,
                 'deleted'            => false,
-                'metadata'           => $_instance->instance_data_text,
+                'metadata'           => IfSet::get( $_instance->instance_data_text, 'metadata', [] ),
                 'root-storage-path'  => $_rootStoragePath,
                 'storage-path'       => $_storagePath,
                 'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',

@@ -7,7 +7,12 @@
   </component>
   <component name="PhpProjectServersManager">
     <servers>
-      <server host="dfe-console.local" id="d0c8cff4-a18f-4a6e-8351-8d4ca1477e32" name="dfe-console.local" />
+      <server host="dfe-console.local" id="d0c8cff4-a18f-4a6e-8351-8d4ca1477e32" name="dfe-console.local" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/opt/dreamfactory/dfe/dfe-console" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-common" remote-root="/opt/dreamfactory/dfe/dfe-common" />
+        </path_mappings>
+      </server>
     </servers>
   </component>
   <component name="PhpStepFilterConfiguration" skip_magic_methods="true">
