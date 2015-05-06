@@ -136,12 +136,43 @@ $( document ).ready(function() {
 
 
 
+function removeServer(id, name) {
+    if(confirm('Remove Server "' + name + '" ?')){
+        $('#single_delete_' + id).submit();
+        return true;
+    }
+    else
+        return false;
+}
+
+
+$('#selectedServersRemove').click(function(){
+
+    var deleteArray = [];
+
+    $('input[type=checkbox]').each(function () {
+
+        if(this.checked)
+            deleteArray.push(this.value);
+    });
+
+    $('#_selected').val(deleteArray);
+
+    if(confirm('Remove Selected Servers?')){
+        $('#multi_delete').submit();
+        return true;
+    }
+    else
+        return false;
+});
 
 
 
 
 
 
+
+/*
 function confirmRemoveServer(id) {
 
     var state = $("#server_button_" + id).attr('value');
@@ -329,7 +360,7 @@ function saveCreateServer(){
     });
 }
 
-
+ */
 
 
 function cancelCreateServer(){

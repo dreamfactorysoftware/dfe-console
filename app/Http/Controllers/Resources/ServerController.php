@@ -1,11 +1,14 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
 use DreamFactory\Library\Fabric\Database\Models\Deploy;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\ServerType;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Redirect;
 
 use Illuminate\Support\Facades\View;
 
@@ -31,6 +34,11 @@ class ServerController extends ResourceController
     protected $_resource = 'server';
 
     protected $_prefix = 'v1';
+
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+    use EntityLookup;
 
 
     //******************************************************************************
@@ -64,54 +72,25 @@ class ServerController extends ResourceController
 
     public function edit($id)
     {
-        $cluster_servers = new Deploy\ClusterServer;
-        $cluster_server_list = $cluster_servers->where('server_id', '=', $id)->select(['cluster_id'])->get();
-
-        $cluster_ids = [];
-
-        foreach($cluster_server_list as $value){
-            array_push($cluster_ids, intval($value->cluster_id));
-        }
-
-        $cluster_ids = array_values($cluster_ids);
+        $cluster_servers = $this->_serverClusters($id);
 
         $cluster_names = '';
 
-        foreach($cluster_ids as $cluster_id){
-            $clusters = new Deploy\Cluster;
-            $cluster = $clusters->find($cluster_id);
+        foreach($cluster_servers as $value){
+            $cluster = $this->_findCluster($value->cluster_id);
             $cluster_names .= ' '.$cluster->cluster_id_text.',';
         }
 
         $cluster_names = rtrim($cluster_names, ',');
+        $cluster_names = ($cluster_names ? $cluster_names : '(none)');
 
-        if($cluster_names == '')
-            $cluster_names = '(none)';
-
-        $serv_t = new ServerType();
-        $server_types = $serv_t->all();
-
-        $serv = new Server;
-        $server_data = $serv->find($id);
-
-        //$config = json_decode(json_encode($server_data->config_text), true);
+        $server_types = ServerType::all();
+        $server_data = $this->_findServer($id);
 
         if(is_array($server_data->config_text))
             $config = $server_data->config_text;
         else
             $config = json_decode($server_data->config_text, true);
-
-        /*
-        if(is_array($conf_raw)){
-            $config = json_decode($conf_raw, true);
-        }
-        else{
-            $conf_raw = (string)$conf_raw;
-            $conf_mod = preg_replace("/\s+/","",$conf_raw);
-            $conf_mod = preg_replace("/,}/","}",$conf_mod);
-            $config = json_decode($conf_mod, true);
-        }
-        */
 
         return View::make('app.servers.edit')->with('server_id', $id)
             ->with('prefix', $this->_prefix)
@@ -125,62 +104,29 @@ class ServerController extends ResourceController
     public function update($id)
     {
 
-        $server_name_text = Input::get('server_name_text');
-        $server_type_select = Input::get('server_type_select');
-        $server_host_text = Input::get('server_host_text');
+        $test = Input::all();
 
+        $type = $test['server_type_select'];
+        $test1 = $test['config'][$type];
+        $test['config_text'] = $test1;
 
-        $settings = null;
+        if($type == 'db') $test['server_type_id'] = 1;
+        if($type == 'web') $test['server_type_id'] = 2;
+        if($type == 'app') $test['server_type_id'] = 3;
 
+        unset($test['_method']);
+        unset($test['_token']);
+        unset($test['config']);
+        unset($test['server_type_select']);
 
+        $server = Server::find($id);
+        $server->update($test);
 
-        if($server_type_select != null){
-            if($server_type_select == '1'){
-                $config_text = array(
-                    'port'                =>  Input::get('db_port_text'),
-                    'username'            =>  Input::get('db_username_text'),
-                    'password'            =>  Input::get('db_password_text'),
-                    'driver'              =>  Input::get('db_driver_text'),
-                    'default-database-name'     =>  Input::get('db_default_db_name_text')
-                );
-            }
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/servers';
 
-            if($server_type_select == '2'){
-                $config_text = array(
-                    //'host'                =>  Input::get('web_host_text'),
-                    'port'                =>  Input::get('web_port_text'),
-                    'scheme'              =>  Input::get('web_scheme_text'),
-                    'username'            =>  Input::get('web_username_text'),
-                    'password'            =>  Input::get('web_password_text')
-                );
-            }
-
-            if($server_type_select == '3'){
-                $config_text = array(
-                    //'host'                =>  Input::get('app_host_text'),
-                    'port'                =>  Input::get('app_port_text'),
-                    'scheme'              =>  Input::get('app_scheme_text'),
-                    'username'            =>  Input::get('app_username_text'),
-                    'password'            =>  Input::get('app_password_text'),
-                    'access_token'        =>  Input::get('app_accesstoken_text')
-                );
-            }
-        }
-
-
-
-        $servers = new Server;
-        $server = $servers->find($id);
-
-        $server->server_type_id = intval($server_type_select);
-        $server->server_id_text = $server_name_text;
-        $server->host_text = $server_host_text;
-        $server->config_text = json_encode($config_text);
-
-        $server->save();
-
-        return 'OK';
-
+        return Redirect::to($_redirect);
 
     }
 
@@ -188,79 +134,58 @@ class ServerController extends ResourceController
     public function store()
     {
 
+        $test = Input::all();
 
+        $type = $test['server_type_select'];
+        $test1 = $test['config'][$type];
+        $test['config_text'] = $test1;
 
-        $server_name_text = Input::get('server_name_text');
-        $server_type_select = Input::get('server_type_select');
-        $server_host_text = Input::get('server_host_text');
+        if($type == 'db') $test['server_type_id'] = 1;
+        if($type == 'web') $test['server_type_id'] = 2;
+        if($type == 'app') $test['server_type_id'] = 3;
 
+        unset($test['_method']);
+        unset($test['_token']);
+        unset($test['config']);
+        unset($test['server_type_select']);
 
-        $settings = null;
+        $create_server = new Deploy\Server;
+        $create_server->create($test);
 
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/servers';
 
-
-        if($server_type_select != null){
-            if($server_type_select == '1'){
-                $config_text = array(
-                    'port'                =>  Input::get('db_port_text'),
-                    'username'            =>  Input::get('db_username_text'),
-                    'password'            =>  Input::get('db_password_text'),
-                    'driver'           =>  Input::get('db_driver_text'),
-                    'default-database-name'     =>  Input::get('db_default_db_name_text')
-                );
-            }
-
-            if($server_type_select == '2'){
-                $config_text = array(
-                    //'host'                =>  Input::get('web_host_text'),
-                    'port'                =>  Input::get('web_port_text'),
-                    'scheme'              =>  Input::get('web_scheme_text'),
-                    'username'            =>  Input::get('web_username_text'),
-                    'password'            =>  Input::get('web_password_text')
-                );
-            }
-
-            if($server_type_select == '3'){
-                $config_text = array(
-                    //'host'                =>  Input::get('app_host_text'),
-                    'port'                =>  Input::get('app_port_text'),
-                    'scheme'              =>  Input::get('app_scheme_text'),
-                    'username'            =>  Input::get('app_username_text'),
-                    'password'            =>  Input::get('app_password_text'),
-                    'access_token'        =>  Input::get('app_accesstoken_text')
-                );
-            }
-        }
-
-        if(Server::where('server_id_text', '=', Input::get('server_name_text'))->exists()){
-            return 'EXISTS';
-        }
-
-        $create_server = new Server;
-
-        $create_server->server_type_id = intval($server_type_select);
-        $create_server->server_id_text = $server_name_text;
-        $create_server->host_text = $server_host_text;
-        $create_server->config_text = json_encode($config_text);
-
-        if($create_server->save())
-            return 'OK';
-        else
-            return 'FAIL';
+        return Redirect::to($_redirect);
 
     }
 
     public function destroy( $ids )
     {
-        $servers = new Server;
 
-        $id_array = explode(',', $ids);
+        $id_array = [];
+
+        if($ids == 'multi') {
+            $params = Input::all();
+            $selected = $params['_selected'];
+            $id_array = explode(',', $selected);
+        }
+        else{
+            $id_array = explode(',', $ids);
+
+        }
+
+        $servers = new Server;
 
         foreach ($id_array as $id) {
             $servers->find($id)->delete();
         }
 
-        return 'OK';
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/servers';
+
+        return Redirect::to($_redirect);
     }
 
 
