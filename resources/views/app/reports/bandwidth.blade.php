@@ -429,7 +429,7 @@
         </div>
     </div>
 
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link href="../../static/plugins/pikaday/pikaday.css" rel="stylesheet">
     <script type="text/javascript" src="../../static/plugins/pikaday/pikaday.js"></script>
     <script type="text/javascript" src="../../static/plugins/pikaday/pikaday.jquery.js"></script>
