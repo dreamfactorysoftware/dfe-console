@@ -23,6 +23,7 @@ class CreateAppKeysTable extends Migration
                 function ( Blueprint $table )
                 {
                     $table->increments( 'id' );
+                    $table->string( 'key_class_text', 64 );
                     $table->string( 'client_id', 128 )->unique();
                     $table->string( 'client_secret', 128 );
                     $table->integer( 'owner_id' );
