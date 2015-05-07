@@ -1,11 +1,24 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+<<<<<<< HEAD
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
+=======
+
+use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Services\Enums\ServerTypes;
+use Illuminate\Support\Facades\View;
+>>>>>>> master
 use DreamFactory\Library\Fabric\Database\Models\Deploy;
 use Illuminate\Support\Facades\Input;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\View;
+=======
+use Illuminate\Support\Facades\Redirect;
+
+>>>>>>> master
 
 class ClusterController extends ResourceController
 {
@@ -25,12 +38,23 @@ class ClusterController extends ResourceController
     //******************************************************************************
     //* Traits
     //******************************************************************************
+<<<<<<< HEAD
 
     use EntityLookup;
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
+=======
+    use EntityLookup;
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
+    /**
+     * @return mixed
+     */
+
+>>>>>>> master
 
     /**
      * @return mixed
@@ -45,11 +69,19 @@ class ClusterController extends ResourceController
         $_contexts = [ServerTypes::DB => 'primary', ServerTypes::WEB => 'success', ServerTypes::APP => 'warning'];
         $_cluster = $this->_findCluster( $id );
         $_clusterServers = $this->_clusterServers( $_cluster->id );
+<<<<<<< HEAD
         $_data = $_dropdown = $_ids = [];
+=======
+        $_data = $_dropdown = $_dropdown_all = $_ids = [];
+>>>>>>> master
 
         foreach ( $_clusterServers as $_type => $_servers )
         {
             $_serverType = ServerTypes::nameOf( $_type );
+<<<<<<< HEAD
+=======
+            $_serverType = strtoupper($_serverType);
+>>>>>>> master
 
             foreach ( $_servers as $_server )
             {
@@ -67,6 +99,7 @@ HTML;
                     $_server->server_id_text,
                     $_label,
                 ];
+<<<<<<< HEAD
             }
         }
 
@@ -80,6 +113,27 @@ HTML;
             {
                 $_type = $_server->server->server_type_id;
                 $_serverType = ServerTypes::nameOf( $_type );
+=======
+
+                $_ids[] = intval($_server->id);
+            }
+        }
+
+
+
+        $_servers_all = Deploy\Server::all();
+
+        if ( !empty( $_servers_all ) )
+        {
+            $_index1 = 0;
+            $_index2 = 0;
+
+            foreach ( $_servers_all as $_server )
+            {
+                $_type = $_server->server_type_id;
+                $_serverType = ServerTypes::nameOf( $_type );
+                $_serverType = strtoupper($_serverType);
+>>>>>>> master
 
                 $_label = <<<HTML
 <div><span class="label label-{$_contexts[$_type]}">{$_serverType}</span></div>
@@ -89,6 +143,7 @@ HTML;
 <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_" onclick="removeServer({$_server->id});" value="delete" style="width: 25px"></button>
 HTML;
 
+<<<<<<< HEAD
                 $_dropdown[] = [
                     $_index++,
                     intval( $_server->id ),
@@ -97,6 +152,28 @@ HTML;
                     $_label,
                     $_button
                 ];
+=======
+                if(!in_array(intval($_server->id), $_ids)){
+                    $_dropdown[] = [
+                        $_index1++,
+                        intval( $_server->id ),
+                        $_server->server_id_text,
+                        strtoupper($_serverType),
+                        $_label,
+                        $_button
+                    ];
+                }
+
+                $_dropdown_all[] = [
+                    $_index2++,
+                    intval( $_server->id ),
+                    $_server->server_id_text,
+                    strtoupper($_serverType),
+                    $_label,
+                    $_button
+                ];
+
+>>>>>>> master
             }
         }
 
@@ -107,12 +184,17 @@ HTML;
                 'prefix'              => $this->_prefix,
                 'cluster'             => $_cluster,
                 'servers'             => json_encode( $_data ),
+<<<<<<< HEAD
                 'server_dropdown_str' => json_encode( $_dropdown ),
+=======
+                'server_dropdown_all' => json_encode( $_dropdown_all ),
+>>>>>>> master
                 'server_dropdown'     => $_dropdown
             ]
         );
     }
 
+<<<<<<< HEAD
     public function update( $id )
     {
         $cluster_name_text = Input::get( 'cluster_name_text' );
@@ -124,6 +206,27 @@ HTML;
 
         $cluster_servers = new Deploy\ClusterServer;
         $cluster_server_list = $cluster_servers->where( 'cluster_id', '=', $id )->select( ['server_id'] )->get();
+=======
+
+    public function update($id)
+    {
+        $cluster_data = Input::all();
+
+        $servers = $cluster_data['_server_list'];
+
+        unset($cluster_data['_method']);
+        unset($cluster_data['_token']);
+        unset($cluster_data['_server_list']);
+
+        $cluster_assigned_servers_array = [];
+
+        if($servers != '')
+            $cluster_assigned_servers_array = array_map('intval', explode(',', $servers));
+
+        $cluster_server_list = Deploy\ClusterServer::where('cluster_id', '=', $id)
+            ->select(['server_id'])
+            ->get();
+>>>>>>> master
 
         $server_ids = [];
 
@@ -132,6 +235,7 @@ HTML;
             array_push( $server_ids, intval( $value->server_id ) );
         }
 
+<<<<<<< HEAD
         $servers_remove = array_diff( $server_ids, $cluster_assigned_servers_array );
         $servers_remove = array_values( $servers_remove );
 
@@ -154,18 +258,39 @@ HTML;
 
         $clusters = new Deploy\Cluster;
         $cluster = $clusters->find( $id );
+=======
+        $servers_remove = array_diff($server_ids, $cluster_assigned_servers_array);
 
-        $cluster->cluster_id_text = $cluster_name_text;
-        $cluster->subdomain_text = $cluster_subdomain_text;
+        foreach(array_values($servers_remove) as $value) {
+            Deploy\ClusterServer::where('server_id', '=', intval($value))
+                ->where('cluster_id', '=', intval($id))
+                ->delete();
+        }
 
-        $cluster->save();
+        $servers_add = array_diff($cluster_assigned_servers_array, $server_ids);
 
-        return 'OK';
+        foreach(array_values($servers_add) as $value) {
+            $add = array('server_id' => intval($value), 'cluster_id' => intval($id));
+            Deploy\ClusterServer::create($add);
+        }
+
+>>>>>>> master
+
+        $cluster = Deploy\Cluster::find($id);
+        $cluster->update($cluster_data);
+
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/clusters';
+
+        return Redirect::to($_redirect);
     }
 
     public function store()
     {
+        $create_cluster = new Deploy\Cluster;
 
+<<<<<<< HEAD
         $cluster_name_text = Input::get( 'cluster_name_text' );
         $cluster_subdomain_text = Input::get( 'cluster_subdomain_text' );
         $cluster_instancecount_text = Input::get( 'cluster_instancecount_text' );
@@ -174,13 +299,17 @@ HTML;
         {
             return 'EXISTS';
         }
+=======
+        $input = Input::all();
+>>>>>>> master
 
-        $create_cluster = new Deploy\Cluster;
+        $create_cluster->create($input);
 
-        //$create_cluster->user_id = null;
-        $create_cluster->cluster_id_text = $cluster_name_text;
-        $create_cluster->subdomain_text = $cluster_subdomain_text;
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/clusters';
 
+<<<<<<< HEAD
         if ( $create_cluster->save() )
         {
             return 'OK';
@@ -189,16 +318,22 @@ HTML;
         {
             return 'FAIL';
         }
+=======
+        return Redirect::to($_redirect);
+>>>>>>> master
     }
 
     public function index()
     {
-
         $clusters = new Deploy\Cluster;
 
+<<<<<<< HEAD
         //echo $clusters->all();
 
         return View::make( 'app.clusters' )->with( 'prefix', $this->_prefix )->with( 'clusters', $clusters->all() );//take(10)->get());
+=======
+        return View::make('app.clusters')->with('prefix', $this->_prefix)->with('clusters', $clusters->all());//take(10)->get());
+>>>>>>> master
     }
 
 }

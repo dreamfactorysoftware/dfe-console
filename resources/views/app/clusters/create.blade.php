@@ -32,6 +32,7 @@
             }
         });
 
+<<<<<<< HEAD
     }
     /*
      // $(document).ready(function() {
@@ -57,6 +58,62 @@
      });
      // });
      */
+=======
+
+/*
+        function save(){
+            var  formData = {
+
+                cluster_name_text: $('#cluster_name_text').val(),
+                cluster_subdomain_text: $('#cluster_subdomain_text').val(),
+                cluster_instancecount_text: $('#cluster_instancecount_text').val()
+
+
+            };
+            console.log(formData);
+
+            $.ajax({
+                url : "/{{$prefix}}/clusters",
+                type: "POST",
+                data : formData,
+                success: function(data, textStatus, jqXHR)
+                {
+                    //data - response from server
+                    window.location = '/{{$prefix}}/clusters';
+                },
+                error: function (jqXHR, textStatus, errorThrown)
+                {
+                    console.log(textStatus);
+                }
+            });
+
+        }
+         */
+/*
+       // $(document).ready(function() {
+            $("#system_admin").click(function () {
+                if ($('#system_admin').is(':checked')) {
+                    $('#instance_manage').removeAttr("disabled");
+                    $('#instance_policy').removeAttr("disabled");
+
+                } else {
+                    $('#instance_manage').attr("disabled", true);
+                    $('#instance_policy').attr("disabled", true);
+                }
+            });
+
+            $('#set_password').click(function () {
+                if ($('#set_password').is(':checked')) {
+                    $('#set_password_form').show();
+
+                } else {
+                    $('#set_password_form').hide();
+
+                }
+            });
+       // });
+ */
+>>>>>>> master
     </script>
 
     <div class="container-fluid">
@@ -93,15 +150,16 @@
                                                 </div>
                                             </df-section-header>
 
-                                            <form class="" name="create-user">
+                                            <form class="" name="create-user" method="POST" action="/{{$prefix}}/clusters">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Name</label>
-                                                            <input id="cluster_name_text" class="form-control" placeholder="Enter cluster name." type="name">
+                                                            <input id="cluster_id_text" name="cluster_id_text" class="form-control" placeholder="Enter cluster name." type="name">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Sub-Domain</label>
+<<<<<<< HEAD
                                                             <input id="cluster_subdomain_text"
                                                                 class="form-control"
                                                                 placeholder="Enter sub-domain - sub.domain.com."
@@ -113,6 +171,13 @@
                                                                 class="form-control"
                                                                 placeholder="Enter instance count."
                                                                 type="instancecount">
+=======
+                                                            <input id="subdomain_text" name="subdomain_text" class="form-control" placeholder="Enter sub-domain - sub.domain.com." type="subdomain">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Max number of instances</label>
+                                                            <input class="form-control" placeholder="Enter instance count." type="instancecount">
+>>>>>>> master
                                                         </div>
 
                                                     </div>
@@ -127,10 +192,10 @@
                                                         <hr>
                                                         <div class="form-group">
                                                             <div class="">
-
-                                                                <button type="button" class="btn btn-primary" onclick="javascript:save();">
+                                                                <button type="submit" class="btn btn-primary">Create</button>
+                                                                <!--button type="button" class="btn btn-primary" onclick="javascript:save();">
                                                                     Create
-                                                                </button>
+                                                                </button-->
                                                             </div>
                                                         </div>
                                                     </div>

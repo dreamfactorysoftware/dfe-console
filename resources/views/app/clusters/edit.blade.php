@@ -4,7 +4,12 @@
 @section('content')
     <script type='text/javascript'>
         $( document ).ready(function() {
+<<<<<<< HEAD
             //$('#')
+=======
+
+
+>>>>>>> master
         });
 
 
@@ -12,6 +17,26 @@
             window.location = '/{{$prefix}}/clusters';
         }
 
+<<<<<<< HEAD
+=======
+
+        function updateServerList(){
+            var table_data = $('#serverTable').DataTable().rows().data();
+            //var out = [];
+            var out = '';
+
+            for(var i = 0; i < table_data.length; i++){
+                //out.push(table_data[i][0]);
+                out += table_data[i][0] + ',';
+            }
+
+            out = out.replace(/(^,)|(,$)/g, "")
+
+            $('#_server_list').val(out);
+        }
+
+
+>>>>>>> master
         function save(){
 
             var table_data = $('#serverTable').DataTable().rows().data();
@@ -27,13 +52,13 @@
 
             var  formData = {
 
-                cluster_name_text: $('#cluster_name_text').val(),
+                cluster_name_text: $('#cluster_id_text').val(),
                 cluster_subdomain_text: $('#cluster_subdomain_text').val(),
                 cluster_instancecount_text: $('#cluster_instancecount_text').val(),
                 cluster_assigned_servers: out
 
             };
-            //console.log(formData);
+            console.log(formData);
             /**/
             $.ajax({
                 url : "/{{$prefix}}/clusters/{{$cluster_id}}",
@@ -42,7 +67,7 @@
                 success: function(data, textStatus, jqXHR)
                 {
                     //data - response from server
-                    window.location = '/{{$prefix}}/clusters';
+                    //window.location = '/{{$prefix}}/clusters';
                 },
                 error: function (jqXHR, textStatus, errorThrown)
                 {
@@ -112,24 +137,29 @@
                                                 </div>
                                             </df-section-header>
 
+                                            <!--form-->
 
-                                                <div class="row">
+                                            <form method="POST" action="/{{$prefix}}/clusters/{{$cluster_id}}">
+                                                <input name="_method" type="hidden" value="PUT">
+                                                <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                                <input id="_server_list" name="_server_list" type="hidden" value="">
+                                            <div class="row">
 
                                                     <div class="col-md-6">
-                                                        <form class="" name="create-user">
+                                                        <!--form class="" name="create-user"-->
                                                         <div class="form-group">
                                                             <label>Name</label>
-                                                            <input id="cluster_name_text" class="form-control" value="{{$cluster->cluster_id_text}}" type="name">
+                                                            <input id="cluster_id_text" name="cluster_id_text" class="form-control" value="{{$cluster->cluster_id_text}}" type="name" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Sub-Domain</label>
-                                                            <input id="cluster_subdomain_text" class="form-control" value="{{$cluster->subdomain_text}}" type="subdomain">
+                                                            <input id="subdomain_text" name="subdomain_text" class="form-control" value="{{$cluster->subdomain_text}}" type="subdomain">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Max number of instances</label>
                                                             <input id="cluster_instancecount_text" class="form-control" value="" type="instancecount">
                                                         </div>
-                                                        </form>
+                                                        <!--/form-->
 
                                                     </div>
 
@@ -187,20 +217,19 @@
 
                                                         <div class="col-md-12">
 
-
-                                                            <form class="form-inline">
+                                                            <div class="form-inline">
                                                                 <label>Assign Server&nbsp;&nbsp;&nbsp;</label>
                                                                 <select class="form-control" id="server_select">
                                                                     <option value="" disabled selected>Select Server...</option>
                                                                     @foreach($server_dropdown as $key => $value)
-                                                                        <option id="{{$value[0]}}">[{{$value[3]}}] {{$value[2]}}</option>
+                                                                        <option id="{{$value[1]}}">[{{$value[3]}}] {{$value[2]}}</option>
                                                                     @endforeach
                                                                 </select>&nbsp;&nbsp;
                                                                 <button type="button" class="btn btn-primary" id="addserver">
                                                                     Assign
                                                                 </button>
 
-                                                            </form>
+                                                            </div>
 
                                                         </div>
                                                     </div>
@@ -212,18 +241,23 @@
                                                         <div class="form-group">
                                                             <div class="">
 
-                                                                <button type="button" class="btn btn-primary" onclick="javascript:save();">
+                                                                <button type="submit" class="btn btn-primary">
                                                                     Update
                                                                 </button>
+                                                                <!--button type="button" class="btn btn-primary" onclick="javascript:save();">
+                                                                    Update
+                                                                </button-->
                                                                 &nbsp;&nbsp;
                                                                 <button type="button" class="btn btn-default" onclick="cancel()">
                                                                     Close
                                                                 </button>
 
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             <!--/form-->
                                         </div>
 
@@ -253,7 +287,7 @@
     <script>
 
         var str = eval({!!$servers!!});
-        
+
         var t = $('#serverTable').dataTable( {
             "aoColumns" : [
                 { sClass: "col_center" },
@@ -274,20 +308,39 @@
             "data": str
         } );
 
+        $('#serverTable').on( 'draw.dt', function () {
+            updateServerList();
+        } );
+
+        $('#serverTable').on( 'init.dt', function () {
+            updateServerList();
+        } );
+
+
         $('#addserver').on('click', function(){
 
             var id = $('#server_select').find('option:selected').attr('id');
 
             if(id !== undefined){
-                var servers = eval({!!$server_dropdown_str!!});
+
+                var servers = eval({!!$server_dropdown_all!!});
+
+                var this_id = 0;
+
+                for(var i = 0; i < servers.length; i++){
+                    if(servers[i][1] == id){
+                        this_id = i;
+                    }
+                }
+
                 $("#server_select option[id=" + id + "]").remove();
 
                 var t = $('#serverTable').DataTable();
                 t.row.add( [
-                    servers[id][1],
-                    servers[id][5],
-                    servers[id][2],
-                    servers[id][4]
+                    servers[this_id][1],
+                    servers[this_id][5],
+                    servers[this_id][2],
+                    servers[this_id][4]
                 ] ).draw();
             }
         });
@@ -300,10 +353,6 @@
             var indexes = table.rows().eq( 0 ).filter( function (rowIdx) {
                 return table.cell( rowIdx, 0 ).data() == id ? true : false;
             } );
-
-            //console.log(id + ' / ' + indexes[0]);
-            //console.log(indexes[0]);
-            //console.log(table.row(indexes[0]).data());
 
             var deleted_row = table.row(indexes[0]).data();
 
@@ -318,7 +367,7 @@
             if(deleted_row[3].indexOf('APP') > -1)
                 type = 'APP';
 
-            //$('#server_select').append('<option id=' + deleted_row[0] + '>[' + type + '] ' + deleted_row[2] + '</option>');
+            $('#server_select').append('<option id=' + deleted_row[0] + '>[' + type + '] ' + deleted_row[2] + '</option>');
 
             table.row(indexes[0]).remove().draw( false );
         }
