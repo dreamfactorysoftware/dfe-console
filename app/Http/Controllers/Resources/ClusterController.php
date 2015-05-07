@@ -53,7 +53,10 @@ class ClusterController extends ResourceController
 
         foreach ( $_clusterServers as $_type => $_servers )
         {
-            $_serverType = ServerTypes::nameOf( $_type );
+            //$_serverType = ServerTypes::nameOf( $_type );
+            if($_type == 1) $_serverType = 'DB';
+            if($_type == 2) $_serverType = 'WEB';
+            if($_type == 3) $_serverType = 'APP';
             $_serverType = strtoupper($_serverType);
 
             foreach ( $_servers as $_server )
@@ -89,7 +92,10 @@ HTML;
             foreach ( $_servers_all as $_server )
             {
                 $_type = $_server->server_type_id;
-                $_serverType = ServerTypes::nameOf( $_type );
+                //$_serverType = ServerTypes::nameOf( $_type );
+                if($_type == 1) $_serverType = 'DB';
+                if($_type == 2) $_serverType = 'WEB';
+                if($_type == 3) $_serverType = 'APP';
                 $_serverType = strtoupper($_serverType);
 
                 $_label = <<<HTML
