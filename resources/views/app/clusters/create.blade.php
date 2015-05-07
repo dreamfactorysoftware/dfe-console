@@ -13,7 +13,7 @@
         });
 
 
-
+/*
         function save(){
             var  formData = {
 
@@ -24,7 +24,7 @@
 
             };
             console.log(formData);
-            /**/
+
             $.ajax({
                 url : "/{{$prefix}}/clusters",
                 type: "POST",
@@ -41,6 +41,7 @@
             });
 
         }
+         */
 /*
        // $(document).ready(function() {
             $("#system_admin").click(function () {
@@ -100,20 +101,20 @@
                                                 </div>
                                             </df-section-header>
 
-                                            <form class="" name="create-user">
+                                            <form class="" name="create-user" method="POST" action="/{{$prefix}}/clusters">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Name</label>
-                                                            <input id="cluster_name_text" class="form-control" placeholder="Enter cluster name." type="name">
+                                                            <input id="cluster_id_text" name="cluster_id_text" class="form-control" placeholder="Enter cluster name." type="name">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Sub-Domain</label>
-                                                            <input id="cluster_subdomain_text" class="form-control" placeholder="Enter sub-domain - sub.domain.com." type="subdomain">
+                                                            <input id="subdomain_text" name="subdomain_text" class="form-control" placeholder="Enter sub-domain - sub.domain.com." type="subdomain">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Max number of instances</label>
-                                                            <input id="cluster_instancecount_text" class="form-control" placeholder="Enter instance count." type="instancecount">
+                                                            <input class="form-control" placeholder="Enter instance count." type="instancecount">
                                                         </div>
 
 
@@ -130,10 +131,10 @@
                                                         <hr>
                                                         <div class="form-group">
                                                             <div class="">
-
-                                                                <button type="button" class="btn btn-primary" onclick="javascript:save();">
+                                                                <button type="submit" class="btn btn-primary">Create</button>
+                                                                <!--button type="button" class="btn btn-primary" onclick="javascript:save();">
                                                                     Create
-                                                                </button>
+                                                                </button-->
                                                             </div>
                                                         </div>
                                                     </div>
