@@ -1,15 +1,15 @@
+
 @include('layouts.partials.topmenu',array('pageName' => 'Clusters', 'prefix' => $prefix))
+
 @extends('layouts.main')
 
 @section('content')
+
     <script type='text/javascript'>
+
         $( document ).ready(function() {
-<<<<<<< HEAD
-            //$('#')
-=======
 
 
->>>>>>> master
         });
 
 
@@ -17,8 +17,6 @@
             window.location = '/{{$prefix}}/clusters';
         }
 
-<<<<<<< HEAD
-=======
 
         function updateServerList(){
             var table_data = $('#serverTable').DataTable().rows().data();
@@ -36,7 +34,6 @@
         }
 
 
->>>>>>> master
         function save(){
 
             var table_data = $('#serverTable').DataTable().rows().data();
