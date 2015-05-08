@@ -173,7 +173,7 @@ class ServerController extends ResourceController
         else{
             $id_array = explode(',', $ids);
         }
-        
+
         foreach ($id_array as $id) {
             Server::find($id)->delete();
             Deploy\ClusterServer::where('server_id', '=', intval($id))->delete();

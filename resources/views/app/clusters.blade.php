@@ -27,6 +27,10 @@
 
         <!-- Tool Bar -->
         <div class="row">
+            <form method="POST" action="/{{$prefix}}/clusters/multi" id="multi_delete">
+                <input name="_method" type="hidden" value="DELETE">
+                <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                <input name="_selected" id="_selected" type="hidden" value="">
             <div class="col-xs-12">
                 <div class="well well-sm">
                     <div class="btn-group btn-group pull-right">
@@ -47,14 +51,18 @@
                         <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
                     </div>
                     <div class="btn-group">
+                        <button type="button" id="selectedClustersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected clusters" value="delete" style="width: 40px"></button>
+                    </div>
+                    <!--div class="btn-group">
                         <button type="button" id="selectedClustersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected clusters" value="delete" onclick="confirmRemoveSelectedClusters()" style="width: 40px"></button>
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-sm" id="selectedClusterRemoveCancel" onclick="cancelRemoveSelectedClusters()" value="delete" style="display: none">Cancel</button>
-                    </div>
+                    </div-->
                     <div style="clear: both"></div>
                 </div>
             </div>
+            </form>
         </div>
 
         <div class="">
@@ -84,10 +92,18 @@
                                 </td>
                                 <td style="text-align: center; vertical-align: middle;" id="actionColumn">
                                     <div>
-                                        <input type="hidden" id="cluster_id" value="{{ $value->id }}">
+                                        <form method="POST" action="/{{$prefix}}/clusters/{{$value->id}}" id="single_delete_{{ $value->id }}">
+                                            <input type="hidden" id="cluster_id" value="{{ $value->id }}">
+                                            <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
+                                        </form>
+
+                                        <!--input type="hidden" id="cluster_id" value="{{ $value->id }}">
                                         <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
                                         <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_{{$value->id}}" onclick="confirmRemoveCluster({{$value->id}})" value="delete" style="width: 25px"></button>&nbsp;&nbsp;
-                                        <button type="button" class="btn btn-default btn-xs" id="cluster_button_cancel_{{$value->id}}" onclick="cancelRemoveCluster({{$value->id}})" value="delete" style="display: none">Cancel</button>
+                                        <button type="button" class="btn btn-default btn-xs" id="cluster_button_cancel_{{$value->id}}" onclick="cancelRemoveCluster({{$value->id}})" value="delete" style="display: none">Cancel</button-->
                                     </div>
                                 </td>
                                 <td style="text-align: left; vertical-align: middle;">{{ $value->cluster_id_text }}</td>

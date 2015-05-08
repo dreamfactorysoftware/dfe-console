@@ -214,6 +214,34 @@ HTML;
 
 
 
+    public function destroy( $ids )
+    {
+
+        $id_array = [];
+
+        if($ids == 'multi') {
+            $params = Input::all();
+            $selected = $params['_selected'];
+            $id_array = explode(',', $selected);
+        }
+        else{
+            $id_array = explode(',', $ids);
+        }
+
+        foreach ($id_array as $id) {
+            Deploy\Cluster::find($id)->delete();
+            Deploy\ClusterServer::where('cluster_id', '=', intval($id))->delete();
+        }
+
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/clusters';
+
+        return Redirect::to($_redirect);
+    }
+
+
+
     public function index()
     {
         $clusters = new Deploy\Cluster;
