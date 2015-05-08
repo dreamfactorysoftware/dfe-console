@@ -83,6 +83,11 @@
                                                                 <label>Default Database Name</label>
                                                                 <input id="db_default_db_name_text" name="config[db][default-database-name]" class="form-control" value="{{ $config['default-database-name'] or '' }}" type="text">
                                                             </div>
+                                                            <div class="form-group">
+                                                                <label>Server Assignment</label><br>
+                                                                <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text" name="config[db][multi-assign]" @if (isset($config['multi-assign'])) checked="checked" @endif>
+                                                                Allow Multiple Server Assignments
+                                                            </div>
                                                         </div>
 
                                                         <div id="server_type_web" style="display: none;">
