@@ -49,7 +49,36 @@ class ClusterController extends ResourceController
         $_contexts = [ServerTypes::DB => 'primary', ServerTypes::WEB => 'success', ServerTypes::APP => 'warning'];
         $_cluster = $this->_findCluster( $id );
         $_clusterServers = $this->_clusterServers( $_cluster->id );
-        $_data = $_dropdown = $_dropdown_all = $_ids = [];
+
+        $_ids[] = [];
+
+        $_rows = Deploy\ClusterServer::join( 'server_t', 'id', '=', 'server_id' )
+            ->get(
+                [
+                    'server_t.id',
+                    'server_t.server_id_text',
+                    'server_t.server_type_id',
+                    'server_t.config_text',
+                    'cluster_server_asgn_t.cluster_id'
+                ]
+            );
+
+        foreach ( $_rows as $_server )
+        {
+            if($_server->server_type_id == '1'){
+               if(array_key_exists('config_text', $_server)){
+                    if(!array_key_exists('multi-assign', json_decode($_server->config_text, true))){
+                        $_ids[] = intval($_server->id);
+                    }
+               }
+                else
+                    $_ids[] = intval($_server->id);
+            }
+            else
+                $_ids[] = intval($_server->id);
+        }
+
+        $_data = $_dropdown = $_dropdown_all = [];
 
         foreach ( $_clusterServers as $_type => $_servers )
         {
@@ -76,11 +105,9 @@ HTML;
                     $_label,
                 ];
 
-                $_ids[] = intval($_server->id);
+                //$_ids[] = intval($_server->id);
             }
         }
-
-
 
         $_servers_all = Deploy\Server::all();
 
