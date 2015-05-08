@@ -1,11 +1,11 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
-use Carbon\Carbon;
-use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
+use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
+use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Commands\RegisterJob;
+use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
 use Illuminate\Http\Response;
 
@@ -37,37 +37,41 @@ class RegisterHandler
 
         $_key = config( 'dfe.console-api-key' );
 
-        $_ownerId = $command->getOwnerId();
-        $_ownerType = $command->getOwnerType();
-        $_entityType = $command->getEntityType();
-
-        //  Generate the keys
-        $_clientId = hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), str_random( 40 ), $_key );
-        $_clientSecret = hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), str_random( 40 ), $_key . $_clientId );
-
-        $_result = AppKey::insert(
-            array(
-                'owner_id'       => $_ownerId,
-                'owner_type_nbr' => $_ownerType,
-                'key_class_text' => AppKeyClasses::make( $_entityType ),
-                'client_id'      => $_clientId,
-                'client_secret'  => $_clientSecret,
-                'server_secret'  => $_key,
-                'created_at'     => new Carbon(),
-            )
-        );
-
-        if ( !$_result )
+        try
         {
-            abort( Response::HTTP_INTERNAL_SERVER_ERROR, 'Could not save new keys to database.' );
+            $_ownerId = $command->getOwnerId();
+            $_ownerType = $command->getOwnerType();
+            $_owner = OwnerTypes::getOwner( $_ownerId, $_ownerType );
+
+            //  Generate the key
+            $_key = AppKey::createKey( $_owner->id, $_ownerType, ['server_secret' => $_key] );
+
+            \Log::debug( 'dfe: register - complete' );
+
+            $_result = 'Client registered successfully.' . PHP_EOL . '  * Client ID:     ' . $_key->client_id;
+
+            if ( PHP_SAPI == 'cli' )
+            {
+                echo $_result . PHP_EOL;
+            }
+            else
+            {
+                $command->setResult( SuccessPacket::make( $_key->toArray(), Response::HTTP_CREATED ) );
+            }
         }
+        catch ( \Exception $_ex )
+        {
+            if ( PHP_SAPI == 'cli' )
+            {
+                echo 'Error during registration: ' . $_ex->getMessage() . PHP_EOL;
+            }
+            else
+            {
+                $command->setResult( ErrorPacket::make( null, Response::HTTP_BAD_REQUEST ) );
+            }
 
-        \Log::debug( 'dfe: register - complete' );
-
-        $command->setResult(
-            'Client registered successfully.' . PHP_EOL .
-            '  * Client ID:     ' . $_clientId
-        );
+            throw $_ex;
+        }
 
         return true;
     }

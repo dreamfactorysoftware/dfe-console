@@ -105,10 +105,6 @@ class InstanceMetadata implements Jsonable, Arrayable
             {
                 $this->{'set' . $_key}( $_value );
             }
-            else
-            {
-                \Log::notice( 'Unable to set variable "' . $_key . '".' );
-            }
         }
     }
 

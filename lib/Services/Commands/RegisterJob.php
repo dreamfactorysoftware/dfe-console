@@ -1,10 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\JobCommand;
-use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RegisterJob extends JobCommand
 {
@@ -33,10 +31,6 @@ class RegisterJob extends JobCommand
      * @type int The type of owner
      */
     protected $_ownerType = OwnerTypes::USER;
-    /**
-     * @type string
-     */
-    protected $_entityType = AppKeyClasses::USER;
 
     //******************************************************************************
     //* Methods
@@ -45,40 +39,16 @@ class RegisterJob extends JobCommand
     /**
      * Create a new command instance.
      *
-     * @param int    $ownerId   The id of the entity
-     * @param string $keyClass  The type of entity
-     * @param int    $ownerType The type of owner (implied from entity type if null)
+     * @param int $ownerId   The id of the entity
+     * @param int $ownerType The type of owner (implied from entity type if null)
      */
-    public function __construct( $ownerId, $keyClass = AppKeyClasses::USER, $ownerType = null )
+    public function __construct( $ownerId, $ownerType )
     {
-        $this->_ownerId = $ownerId;
-        $keyClass = strtoupper( trim( $keyClass ) );
-        $ownerType = $ownerType ? strtoupper( trim( $ownerType ) ) : null;
-
         //  Make sure we have a good types
-        AppKeyClasses::defines( $keyClass, true );
-
-        if ( null === $ownerType )
-        {
-            $ownerType = AppKeyClasses::mapOwnerType( $keyClass );
-        }
-        else
-        {
-            $ownerType = OwnerTypes::defines( $ownerType, true );
-        }
-
-        try
-        {
-            $_owner = $this->_locateOwner( $ownerId, $ownerType );
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            throw new \InvalidArgumentException( 'The $ownerId "' . $ownerId . '" could not be located.' );
-        }
+        $_owner = OwnerTypes::getOwner( $ownerId, $ownerType );
 
         $this->_ownerId = $_owner->id;
         $this->_ownerType = $ownerType;
-        $this->_entityType = $keyClass;
     }
 
     /**
@@ -100,9 +70,9 @@ class RegisterJob extends JobCommand
     /**
      * @return string
      */
-    public function getEntityType()
+    public function getOwnerTypeName()
     {
-        return $this->_entityType;
+        return OwnerTypes::prettyNameOf( $this->_ownerType );
     }
 
     /**
