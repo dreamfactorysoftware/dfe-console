@@ -156,6 +156,11 @@ $('#selectedServersRemove').click(function(){
             deleteArray.push(this.value);
     });
 
+    if(!deleteArray.length){
+        alert('No Server(s) Selected!');
+        return true;
+    }
+
     $('#_selected').val(deleteArray);
 
     if(confirm('Remove Selected Servers?')){
