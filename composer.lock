@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "hash": "9ce80359b6c8397c33c5c02001ccd4ca",
@@ -459,12 +459,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "0f12f1ff98fc657d9653cdb61a5e5dd8625c8ba8"
+                "reference": "b01480540751e1a3004aedf101260af845c2509c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/0f12f1ff98fc657d9653cdb61a5e5dd8625c8ba8",
-                "reference": "0f12f1ff98fc657d9653cdb61a5e5dd8625c8ba8",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/b01480540751e1a3004aedf101260af845c2509c",
+                "reference": "b01480540751e1a3004aedf101260af845c2509c",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +512,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-05-08 20:27:12"
+            "time": "2015-05-08 22:21:02"
         },
         {
             "name": "dreamfactory/fabric-common",
@@ -520,12 +520,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-common.git",
-                "reference": "3c82c745056d8a9ee71f541f5e06bff4d283fb81"
+                "reference": "ce6a663910db75f51b5c62a2a2c0f3ee3b104bbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-common/zipball/3c82c745056d8a9ee71f541f5e06bff4d283fb81",
-                "reference": "3c82c745056d8a9ee71f541f5e06bff4d283fb81",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-common/zipball/ce6a663910db75f51b5c62a2a2c0f3ee3b104bbd",
+                "reference": "ce6a663910db75f51b5c62a2a2c0f3ee3b104bbd",
                 "shasum": ""
             },
             "require": {
@@ -566,7 +566,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-common/issues"
             },
-            "time": "2015-03-10 20:05:02"
+            "time": "2015-05-08 22:23:35"
         },
         {
             "name": "dreamfactory/fabric-db",
@@ -574,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "199bfffdb6be570b63d2e3c927fa65c18242d9c6"
+                "reference": "0db6eeaf5aa16be7817403824c4cf25a8dfe5767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/199bfffdb6be570b63d2e3c927fa65c18242d9c6",
-                "reference": "199bfffdb6be570b63d2e3c927fa65c18242d9c6",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/0db6eeaf5aa16be7817403824c4cf25a8dfe5767",
+                "reference": "0db6eeaf5aa16be7817403824c4cf25a8dfe5767",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-05-08 20:25:52"
+            "time": "2015-05-08 22:22:48"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -1030,12 +1030,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "c7ffbf1fd4895ac4cdac551265d635d995346d97"
+                "reference": "125809bc364159773c09e5f480cff7f29a89fdea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/c7ffbf1fd4895ac4cdac551265d635d995346d97",
-                "reference": "c7ffbf1fd4895ac4cdac551265d635d995346d97",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/125809bc364159773c09e5f480cff7f29a89fdea",
+                "reference": "125809bc364159773c09e5f480cff7f29a89fdea",
                 "shasum": ""
             },
             "require": {
@@ -1148,7 +1148,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-05-08 19:11:13"
+            "time": "2015-05-09 14:17:50"
         },
         {
             "name": "league/flysystem",
@@ -1333,12 +1333,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "5202b35099e880183e9bcbacdb01dc4346622800"
+                "reference": "72123e3d6c7bf8f1454fe12deb69db2f783dd220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5202b35099e880183e9bcbacdb01dc4346622800",
-                "reference": "5202b35099e880183e9bcbacdb01dc4346622800",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/72123e3d6c7bf8f1454fe12deb69db2f783dd220",
+                "reference": "72123e3d6c7bf8f1454fe12deb69db2f783dd220",
                 "shasum": ""
             },
             "require": {
@@ -1400,7 +1400,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-05-05 17:26:17"
+            "time": "2015-05-09 17:17:49"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -1448,21 +1448,21 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.18.0",
+            "version": "1.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "99e2f69f7bdc2cc4334b2d00f1e0ba450623ea36"
+                "reference": "68868e0b02d2d803d0052a59d4e5003cccf87320"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/99e2f69f7bdc2cc4334b2d00f1e0ba450623ea36",
-                "reference": "99e2f69f7bdc2cc4334b2d00f1e0ba450623ea36",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/68868e0b02d2d803d0052a59d4e5003cccf87320",
+                "reference": "68868e0b02d2d803d0052a59d4e5003cccf87320",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
-                "symfony/translation": "2.6.*"
+                "symfony/translation": "~2.6"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0"
@@ -1491,7 +1491,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2015-03-26 03:05:57"
+            "time": "2015-05-09 03:23:44"
         },
         {
             "name": "nikic/php-parser",
@@ -3640,12 +3640,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "1678cee3b7f93f994da6acf7e998b23a98e955f1"
+                "reference": "9ef4b8cbf3e839a44a9b375d8c59e109ac7aa020"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1678cee3b7f93f994da6acf7e998b23a98e955f1",
-                "reference": "1678cee3b7f93f994da6acf7e998b23a98e955f1",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/9ef4b8cbf3e839a44a9b375d8c59e109ac7aa020",
+                "reference": "9ef4b8cbf3e839a44a9b375d8c59e109ac7aa020",
                 "shasum": ""
             },
             "require": {
@@ -3694,7 +3694,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-04-16 05:00:01"
+            "time": "2015-05-09 04:40:58"
         },
         {
             "name": "phpunit/php-file-iterator",
