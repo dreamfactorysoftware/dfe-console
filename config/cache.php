@@ -3,7 +3,7 @@
 //* Application Cache Settings
 //******************************************************************************
 return [
-    'default' => env( 'CACHE_DRIVER', 'file' ),
+    'default' => env( 'CACHE_DRIVER', 'memcached' ),
     'prefix'  => 'dfe',
     'stores'  => [
         'array'     => [

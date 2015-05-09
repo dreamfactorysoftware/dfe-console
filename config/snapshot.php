@@ -17,7 +17,7 @@ return [
     //  The value to place in the meta data's "type" field
     'metadata-type'  => 'dfe.snapshot',
     //  The base URL for linking to snapshots
-    'hash-link-base' => 'https://download.cloud.dreamfactory.com',
+    'hash-link-base' => 'https://download.enterprise.dreamfactory.com',
     //  Templates used by the snapshot service
     'templates'      => [
         //  File name templates

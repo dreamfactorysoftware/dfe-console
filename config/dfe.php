@@ -7,9 +7,9 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
 
 return [
-    'console-api-url'  => 'http://dfe-console.local/api/v1',
+    'console-api-url'  => 'http://console.enterprise.dreamfactory.com/api/v1/ops/',
     /** This key needs to match the key configured in the dashboard */
-    'console-api-key'  => env( 'DFE_CONSOLE_KEY', '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy' ),
+    'console-api-key'  => env( 'DFE_CONSOLE_API_KEY', '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy' ),
     'signature-method' => env( 'DFE_SIGNATURE_METHOD', 'sha256' ),
     'provisioning'     => [
         /**
@@ -40,8 +40,8 @@ return [
         //  Notification settings
         'email-subject-prefix'        => env( 'DFE_EMAIL_SUBJECT_PREFIX', '[DFE]' ),
         //  Instance defaults
-        'default-dns-zone'            => env( 'DFE_DEFAULT_ZONE', 'enterprise' ),
-        'default-dns-domain'          => env( 'DFE_DEFAULT_DOMAIN', 'dreamfactory.com' ),
+        'default-dns-zone'            => env( 'DFE_DEFAULT_DNS_ZONE', 'enterprise' ),
+        'default-dns-domain'          => env( 'DFE_DEFAULT_DNS_DOMAIN', 'dreamfactory.com' ),
         'default-domain'              => env( 'DFE_DEFAULT_DOMAIN', '.enterprise.dreamfactory.com' ),
         //@todo update image to 14.* LTS x64
         'default-vendor-image-id'     => 4647,
@@ -67,6 +67,15 @@ return [
             'df',
             'dfab',
             'dfdsp',
+            'rave',
+            /** The holy seven... */
+            'shit',
+            'piss',
+            'fuck',
+            'cunt',
+            'cocksucker',
+            'motherfucker',
+            'tits',
         ],
     ],
 ];

@@ -10,7 +10,7 @@ return [
     'fallback_locale' => 'en',
     'key'             => env( 'APP_KEY', 'ngv?hS"qNs5:~Gn%]R(_NCRS#1{l?s@/' ),
     'cipher'          => MCRYPT_RIJNDAEL_128,
-    'log'             => 'daily',
+    'log'             => 'single',
     //******************************************************************************
     //* Autoloaded Providers
     //******************************************************************************
@@ -99,13 +99,13 @@ return [
         'URL'             => 'Illuminate\\Support\\Facades\\URL',
         'Validator'       => 'Illuminate\\Support\\Facades\\Validator',
         'View'            => 'Illuminate\\Support\\Facades\\View',
-        'Form'      => 'Illuminate\Html\FormFacade',
-        'HTML'      => 'Illuminate\Html\HtmlFacade',
+        'Form'            => 'Illuminate\Html\FormFacade',
+        'HTML'            => 'Illuminate\Html\HtmlFacade',
         /** DreamFactory Aliases */
         'Audit'           => 'DreamFactory\\Enterprise\\Services\\Auditing\\Audit',
         'Provision'       => 'DreamFactory\\Enterprise\\Services\\Facades\\Provision',
         'Snapshot'        => 'DreamFactory\\Enterprise\\Services\\Facades\\Snapshot',
-        'InstanceManager' => 'DreamFactory\\Enterprise\\Services\\Facades\\Snapshot',
+        'InstanceManager' => 'DreamFactory\\Enterprise\\Services\\Facades\\InstanceManager',
         'InstanceStorage' => 'DreamFactory\\Enterprise\\Services\\Facades\\InstanceStorage',
         'Mounter'         => 'DreamFactory\\Enterprise\\Services\\Facades\\Mounter',
     ],
