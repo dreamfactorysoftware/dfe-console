@@ -147,47 +147,54 @@ class InstanceManager extends BaseManager implements Factory
             $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
             $_clusterId = IfSet::get( $options, 'cluster-id', config( 'dfe.provisioning.default-cluster-id' ) );
             $_clusterConfig = $this->_getServersForCluster( $_clusterId );
+            $_ownerId = $_owner->id;
+
+            $_attributes = [
+                'user_id'            => $_ownerId,
+                'instance_id_text'   => $_sanitized,
+                'instance_name_text' => $_sanitized,
+                'guest_location_nbr' => $_guestLocation,
+                'cluster_id'         => $_clusterConfig['cluster-id'],
+                'db_server_id'       => $_clusterConfig['db-server-id'],
+                'app_server_id'      => $_clusterConfig['app-server-id'],
+                'web_server_id'      => $_clusterConfig['web-server-id'],
+                'state_nbr'          => ProvisionStates::CREATED,
+                'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
+            ];
+
+            $_guestAttributes = [
+                'instance_id'           => null,
+                'vendor_id'             => $_guestLocation,
+                'vendor_image_id'       => IfSet::get(
+                    $options,
+                    'vendor-image-id',
+                    config( 'dfe.provisioning.default-vendor-image-id' )
+                ),
+                'vendor_credentials_id' => IfSet::get(
+                    $options,
+                    'vendor-credentials-id',
+                    config( 'dfe.provisioning.default-vendor-credentials-id' )
+                ),
+            ];
 
             //  Write it out
             return \DB::transaction(
-                function () use ( $_owner, $_sanitized, $_guestLocation, $_clusterConfig, $options )
+                function () use ( $_ownerId, $_attributes, $_guestAttributes )
                 {
-                    $_instance = Instance::create(
-                        [
-                            'user_id'            => $_owner->id,
-                            'instance_id_text'   => $_sanitized,
-                            'instance_name_text' => $_sanitized,
-                            'guest_location_nbr' => $_guestLocation,
-                            'cluster_id'         => $_clusterConfig['cluster-id'],
-                            'db_server_id'       => $_clusterConfig['db-server-id'],
-                            'app_server_id'      => $_clusterConfig['app-server-id'],
-                            'web_server_id'      => $_clusterConfig['web-server-id'],
-                            'state_nbr'          => ProvisionStates::CREATED,
-                            'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
-                        ]
-                    );
+                    \Log::debug( 'Creating instance for ' . $_ownerId );
 
-                    if ( !$_instance )
+                    $_instance = Instance::create( $_attributes );
+
+                    \Log::debug( 'Instance created: ' . print_r( $_instance->id, true ) );
+
+                    $_guest = InstanceGuest::create( array_merge( $_guestAttributes, ['instance_id' => $_instance->id] ) );
+
+                    \Log::debug( 'Instance guest created: ' . $_guest->id );
+
+                    if ( !$_instance || !$_guest )
                     {
                         throw new \RuntimeException( 'Instance create fail' );
                     }
-
-                    InstanceGuest::create(
-                        [
-                            'instance_id'           => $_instance->id,
-                            'vendor_id'             => $_guestLocation,
-                            'vendor_image_id'       => IfSet::get(
-                                $options,
-                                'vendor-image-id',
-                                config( 'dfe.provisioning.default-vendor-image-id' )
-                            ),
-                            'vendor_credentials_id' => IfSet::get(
-                                $options,
-                                'vendor-credentials-id',
-                                config( 'dfe.provisioning.default-vendor-credentials-id' )
-                            ),
-                        ]
-                    );
 
                     return $_instance;
                 }
