@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
@@ -29,8 +30,10 @@ class AuthenticateClient
      *
      * @return mixed
      */
-    public function handle( $request, Closure $next )
+    public function handle( Request $request, Closure $next )
     {
+        \Log::debug( 'All input: ' . print_r( $request->request->all(), true ) );
+
         $_token = $request->input( 'access-token' );
         $_clientId = $request->input( 'client-id' );
 
@@ -39,14 +42,14 @@ class AuthenticateClient
 
         if ( empty( $_key ) )
         {
-            \Log::error( 'auth.client: invalid "client-id" ' . $_clientId );
+            \Log::error( 'auth.client: invalid "client-id" [' . $_clientId . ']' );
 
             return ErrorPacket::create( new BadRequestHttpException( 'Invalid "client-id"' ) );
         }
 
         if ( $_token != hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), $_clientId, $_key->client_secret ) )
         {
-            \Log::error( 'auth.client fail: invalid "access-token"' );
+            \Log::error( 'auth.client fail: invalid "access-token" [' . $_token . ']' );
 
             return ErrorPacket::create( new UnauthorizedHttpException( 'Invalid "access-token"' ) );
         }

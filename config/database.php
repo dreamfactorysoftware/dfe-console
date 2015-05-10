@@ -7,9 +7,9 @@ return [
     //* Connections
     //******************************************************************************
     'connections' => [
-        'dfe-local'     => [
+        'dfe-local' => [
             'driver'    => 'mysql',
-            'host'      => 'localhost',
+            'host'      => 'console.enterprise.dreamfactory.com',
             'port'      => 3306,
             'database'  => 'dfe_local',
             'username'  => 'dfe_user',
