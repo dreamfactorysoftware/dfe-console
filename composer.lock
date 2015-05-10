@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9ce80359b6c8397c33c5c02001ccd4ca",
+    "hash": "52551ea64d0c09f5d84492b6fb6fb130",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -459,12 +459,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-common.git",
-                "reference": "b01480540751e1a3004aedf101260af845c2509c"
+                "reference": "5d7349478393dc3f44215c8b16b8a505e20911fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/b01480540751e1a3004aedf101260af845c2509c",
-                "reference": "b01480540751e1a3004aedf101260af845c2509c",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/5d7349478393dc3f44215c8b16b8a505e20911fe",
+                "reference": "5d7349478393dc3f44215c8b16b8a505e20911fe",
                 "shasum": ""
             },
             "require": {
@@ -512,7 +512,69 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-05-08 22:21:02"
+            "time": "2015-05-10 19:35:31"
+        },
+        {
+            "name": "dreamfactory/dfe-ops-client",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:dreamfactorysoftware/dfe-ops-client.git",
+                "reference": "659795b0dfc931ccac4baaddd480df34aae51106"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-ops-client/zipball/659795b0dfc931ccac4baaddd480df34aae51106",
+                "reference": "659795b0dfc931ccac4baaddd480df34aae51106",
+                "shasum": ""
+            },
+            "require": {
+                "dreamfactory/dfe-common": "dev-develop as dev-master",
+                "guzzlehttp/guzzle": "~4.0"
+            },
+            "require-dev": {
+                "dreamfactory/fabric-audit": "dev-develop as dev-master",
+                "dreamfactory/fabric-common": "dev-develop as dev-master",
+                "dreamfactory/fabric-db": "dev-develop as dev-master",
+                "laravel/framework": "5.0.*",
+                "phpspec/phpspec": "~2.1",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DreamFactory\\Enterprise\\Console\\Ops\\": "src/"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jerry Ablan",
+                    "email": "jerryablan@dreamfactory.com"
+                }
+            ],
+            "description": "DreamFactory Enterprise(tm) Console Operations Client",
+            "homepage": "https://www.dreamfactory.com/",
+            "keywords": [
+                "common",
+                "dreamfactory",
+                "enterprise",
+                "fabric",
+                "queue",
+                "utility"
+            ],
+            "support": {
+                "source": "https://github.com/dreamfactorysoftware/dfe-ops-client/tree/develop",
+                "issues": "https://github.com/dreamfactorysoftware/dfe-ops-client/issues"
+            },
+            "time": "2015-05-10 19:35:43"
         },
         {
             "name": "dreamfactory/fabric-common",
@@ -574,12 +636,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/fabric-db.git",
-                "reference": "0db6eeaf5aa16be7817403824c4cf25a8dfe5767"
+                "reference": "4c2746e2dad0116d7a652b9e27172450818fc40c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/0db6eeaf5aa16be7817403824c4cf25a8dfe5767",
-                "reference": "0db6eeaf5aa16be7817403824c4cf25a8dfe5767",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/fabric-db/zipball/4c2746e2dad0116d7a652b9e27172450818fc40c",
+                "reference": "4c2746e2dad0116d7a652b9e27172450818fc40c",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +683,7 @@
                 "source": "https://github.com/dreamfactorysoftware/fabric-db/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/fabric-db/issues"
             },
-            "time": "2015-05-08 22:22:48"
+            "time": "2015-05-10 19:36:29"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -4535,6 +4597,12 @@
             "alias": "dev-master",
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
+            "package": "dreamfactory/dfe-ops-client"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
             "package": "dreamfactory/fabric-common"
         },
         {
@@ -4554,6 +4622,7 @@
     "stability-flags": {
         "wpb/string-blade-compiler": 20,
         "dreamfactory/dfe-common": 20,
+        "dreamfactory/dfe-ops-client": 20,
         "dreamfactory/fabric-common": 20,
         "dreamfactory/fabric-db": 20,
         "dreamfactory/console-tools": 20
