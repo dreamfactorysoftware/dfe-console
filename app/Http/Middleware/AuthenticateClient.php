@@ -32,8 +32,6 @@ class AuthenticateClient
      */
     public function handle( Request $request, Closure $next )
     {
-        \Log::debug( 'All input: ' . print_r( $request->request->all(), true ) );
-
         $_token = $request->input( 'access-token' );
         $_clientId = $request->input( 'client-id' );
 
