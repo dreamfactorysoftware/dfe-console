@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
 use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
 use DreamFactory\Library\Fabric\Database\Enums\ServerTypes;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
@@ -128,13 +129,18 @@ class InstanceManager extends BaseManager implements Factory
                 throw new \InvalidArgumentException( 'No "owner-id" given. Cannot create instance.' );
             }
 
+            if ( null == ( $_ownerType = IfSet::get( $options, 'owner-type' ) ) )
+            {
+                $_ownerType = OwnerTypes::USER;
+            }
+
             try
             {
-                $_owner = static::_lookupUser( $_ownerId );
+                $_owner = OwnerTypes::getOwner( $_ownerId, $_ownerType );
             }
-            catch ( \Exception $_ex )
+            catch ( ModelNotFoundException $_ex )
             {
-                throw new \InvalidArgumentException( 'The "owner-id" specified is invalid.' );
+                throw new \InvalidArgumentException( 'The "owner-id" and/or "owner-type" specified is/are invalid.' );
             }
 
             //  Validate the cluster and pull component ids

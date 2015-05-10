@@ -65,10 +65,13 @@ class Provisioner extends BaseProvisioner
 
         try
         {
+            \Log::debug( '     * Provisioning storage');
+
             //  Provision storage and fill in the request
             $this->_provisionStorage( $request, $options );
 
             //  And the instance
+            \Log::debug( '     * Provisioning instance' );
             $_result = $this->_provisionInstance( $request, $options );
 
             return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
