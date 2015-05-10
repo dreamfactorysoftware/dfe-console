@@ -18,9 +18,13 @@ class ApiLogger
      */
     public function handle( $request, Closure $next )
     {
-        \Log::debug( 'api: ' . $request->getPathInfo() . PHP_EOL . print_r( $request->input(), true ) );
+        \Log::debug( '>>> api: ' . $request->getPathInfo() );
 
-        return $next( $request );
+        $_response = $next( $request );
+
+        \Log::debug( '<<< api: ' . $request->getPathInfo() . ' > ' . print_r( $_response, true ) );
+
+        return $_response;
     }
 
 }

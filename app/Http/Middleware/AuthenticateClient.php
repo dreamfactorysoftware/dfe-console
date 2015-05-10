@@ -54,7 +54,7 @@ class AuthenticateClient
 
         try
         {
-            $this->_locateOwner( $_key->owner_id, $_key->owner_type_nbr );
+            $_owner = $this->_locateOwner( $_key->owner_id, $_key->owner_type_nbr );
         }
         catch ( ModelNotFoundException $_ex )
         {
@@ -64,7 +64,7 @@ class AuthenticateClient
         }
 
         \Log::info( 'auth.client: access granted to "' . $_clientId . '"' );
-        \Session::set( 'client.' . $_token, $_key->user );
+        \Session::set( 'client.' . $_token, $_owner );
 
         return $next( $request );
     }

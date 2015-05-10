@@ -112,14 +112,19 @@ class OpsController extends Controller
      */
     public function postInstances( Request $request )
     {
-        /** auth.client middleware sticks the validated user into the session for us */
-        $_user = \Session::get( 'client.' . $request->input( 'access-token' ) );
+        /** auth.client middleware sticks the validated owner into the session for us */
+        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
+
+        if ( empty( $_owner ) )
+        {
+            throw new \RuntimeException( 'No owner found in current session for request.' );
+        }
 
         $_response = array();
 
-        $_instances = Instance::where( 'user_id', $_user->id )->get();
+        $_instances = Instance::where( 'user_id', $_owner->id )->get();
 
-        if ( $_instances )
+        if ( !empty( $_instances ) )
         {
             /** @type Instance $_instance */
             foreach ( $_instances as $_instance )

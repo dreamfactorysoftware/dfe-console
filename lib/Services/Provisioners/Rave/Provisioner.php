@@ -105,6 +105,7 @@ class Provisioner extends BaseProvisioner
         $_result = false;
         $_instance = $request->getInstance();
 
+        \Log::debug( '_doDeprovision: about to deprovision' );
         //	Update the current instance state
         $_instance->updateState( ProvisionStates::DEPROVISIONING );
 

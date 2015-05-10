@@ -11,13 +11,11 @@ use Elastica\Filter\Prefix;
 use Elastica\Query;
 use Elastica\ResultSet;
 use Elastica\Search;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Gets data from the ELK system
  */
-class Elk extends BaseService
+class ElkService extends BaseService
 {
     //******************************************************************************
     //* Constants
@@ -53,8 +51,10 @@ class Elk extends BaseService
      */
     public function __construct( $app = null, array $settings = [] )
     {
+        parent::__construct( $app );
+
         /** @noinspection PhpUndefinedMethodInspection */
-        $_config = Config::get( 'elk' );
+        $_config = config( 'elk', [] );
 
         if ( empty( $_config ) )
         {
@@ -95,7 +95,7 @@ class Elk extends BaseService
             }
             catch ( \Exception $_ex )
             {
-                Log::error( $_ex );
+                \Log::error( $_ex );
 
                 throw $_ex;
             }
@@ -122,7 +122,7 @@ class Elk extends BaseService
 
         $_query = $this->_buildQuery( $facility, $interval, $size, $from, $term );
 
-        Log::debug( json_encode( $_query ) );
+        \Log::debug( json_encode( $_query ) );
 
         $_results = null;
 
@@ -132,7 +132,7 @@ class Elk extends BaseService
         }
         catch ( \Exception $_ex )
         {
-            Log::error( 'Exception retrieving logs: ' . $_ex->getMessage() );
+            \Log::error( 'Exception retrieving logs: ' . $_ex->getMessage() );
 
             throw new \RuntimeException( 500, $_ex->getMessage() );
         }
@@ -253,7 +253,7 @@ class Elk extends BaseService
         }
         catch ( \Exception $_ex )
         {
-            Log::error( $_ex->getMessage() );
+            \Log::error( $_ex->getMessage() );
         }
 
         return $_results;
@@ -290,7 +290,7 @@ class Elk extends BaseService
         }
         catch ( PartialShardFailureException $_ex )
         {
-            Log::info( 'Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).' );
+            \Log::info( 'Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).' );
             $_result = $_ex->getResponse()->getData();
 
             if ( array_key_exists( 'hits', $_result ) )
@@ -301,7 +301,7 @@ class Elk extends BaseService
                 }
             }
 
-            Log::warning( 'No global stats found.' );
+            \Log::warning( 'No global stats found.' );
 
             return false;
         }
