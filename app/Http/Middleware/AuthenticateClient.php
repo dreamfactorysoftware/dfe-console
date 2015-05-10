@@ -34,14 +34,12 @@ class AuthenticateClient
         $_token = $request->input( 'access-token' );
         $_clientId = $request->input( 'client-id' );
 
-        \Log::debug( 'auth.client: ' . print_r( $request->input(), true ) );
-
         /** @type AppKey $_key */
         $_key = AppKey::where( 'client_id', $_clientId )->first();
 
         if ( empty( $_key ) )
         {
-            \Log::error( 'auth.client: invalid "client-id"' );
+            \Log::error( 'auth.client: invalid "client-id" ' . $_clientId );
 
             return ErrorPacket::create( new BadRequestHttpException( 'Invalid "client-id"' ) );
         }
