@@ -169,12 +169,16 @@ class OpsController extends Controller
         $_rootStoragePath = $_instance->getRootStoragePath();
         $_storagePath = $_instance->getStoragePath();
 
+        /**
+         * This has multiple copies of data because it is used by several different systems
+         */
+
         return SuccessPacket::make(
             array(
                 'id'                 => $_instance->id,
                 'archived'           => $_archived,
                 'deleted'            => false,
-                'metadata'           => $_instance->instance_data_text,
+                'metadata'           => (array)$_instance->instance_data_text,
                 'root-storage-path'  => $_rootStoragePath,
                 'storage-path'       => $_storagePath,
                 'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
