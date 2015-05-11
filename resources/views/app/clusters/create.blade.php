@@ -114,7 +114,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Max number of instances</label>
-                                                            <input class="form-control" placeholder="Enter instance count." type="instancecount">
+                                                            <input class="form-control" name="instance_nbr" placeholder="Enter instance count." type="instancecount">
                                                         </div>
 
 

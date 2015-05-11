@@ -154,7 +154,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Max number of instances</label>
-                                                            <input id="cluster_instancecount_text" class="form-control" value="" type="instancecount">
+                                                            <input id="instance_nbr" name="instance_nbr" class="form-control" value="{{$cluster->instance_nbr}}" type="instancecount">
                                                         </div>
                                                         <!--/form-->
 
