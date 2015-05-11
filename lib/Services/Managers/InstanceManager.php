@@ -5,11 +5,11 @@ use DreamFactory\Enterprise\Common\Contracts\Factory;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
+use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
 use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
-use DreamFactory\Library\Fabric\Database\Enums\ServerTypes;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceGuest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
@@ -233,17 +233,55 @@ class InstanceManager extends BaseManager implements Factory
             throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid.' );
         }
 
-        $_dbId = current( $_servers[ServerTypes::DB] )->id;
-        $_appId = current( $_servers[ServerTypes::APP] )->id;
-        $_webId = current( $_servers[ServerTypes::WEB] )->id;
+        $_serverIds = $this->_extractServerIds( $_servers );
 
         return [
             'cluster-id'    => $_cluster->id,
-            'db-server-id'  => $_dbId,
-            'app-server-id' => $_appId,
-            'web-server-id' => $_webId,
+            'db-server-id'  => $_serverIds[ServerTypes::DB],
+            'app-server-id' => $_serverIds[ServerTypes::APP],
+            'web-server-id' => $_serverIds[ServerTypes::WEB],
         ];
 
+    }
+
+    /**
+     * @param array  $servers
+     * @param string $name
+     *
+     * @return mixed
+     */
+    protected function _extractServerIds( array $servers, $name = 'id' )
+    {
+        $_types = ServerTypes::getDefinedConstants( true );
+
+        foreach ( $_types as $_type => $_typeValue )
+        {
+            $_types[$_type] = null;
+
+            if ( !isset( $servers[$_type] ) )
+            {
+                continue;
+            }
+
+            if ( null !== ( $_id = IfSet::get( $servers[$_type], '.id' ) ) )
+            {
+                $_types[$_type] = $_id;
+                break;
+            }
+
+            if ( null !== ( $_ids = IfSet::get( $servers[$_type], '.ids' ) ) )
+            {
+                if ( !is_array( $_ids ) || empty( $_ids ) )
+                {
+                    continue;
+                }
+
+                $_types[$_type] = $_ids[0];
+                break;
+            }
+        }
+
+        return $_types;
     }
 
     /**
