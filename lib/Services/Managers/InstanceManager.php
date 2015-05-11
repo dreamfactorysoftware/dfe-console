@@ -84,6 +84,7 @@ class InstanceManager extends BaseManager implements Factory
     public function unregisterInstance( $tag )
     {
         return $this->unmanage( $tag );
+
     }
 
     /**
@@ -232,29 +233,9 @@ class InstanceManager extends BaseManager implements Factory
             throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid.' );
         }
 
-        if ( null === ( $_server = $this->_locateServerByType( $_servers, ServerTypes::DB ) ) )
-        {
-            throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid. No database server found.' );
-        }
-
-        $_dbId = $_server->id;
-        unset( $_server );
-
-        if ( null === ( $_server = $this->_locateServerByType( $_servers, ServerTypes::APP ) ) )
-        {
-            throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid. No application server found.' );
-        }
-
-        $_appId = $_server->id;
-        unset( $_server );
-
-        if ( null === ( $_server = $this->_locateServerByType( $_servers, ServerTypes::WEB ) ) )
-        {
-            throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid. No web server found.' );
-        }
-
-        $_webId = $_server->id;
-        unset( $_server );
+        $_dbId = current( $_servers[ServerTypes::DB] )->id;
+        $_appId = current( $_servers[ServerTypes::APP] )->id;
+        $_webId = current( $_servers[ServerTypes::WEB] )->id;
 
         return [
             'cluster-id'    => $_cluster->id,
