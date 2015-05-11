@@ -50,7 +50,7 @@ class ClusterController extends ResourceController
         $_cluster = $this->_findCluster( $id );
         $_clusterServers = $this->_clusterServers( $_cluster->id );
 
-        $_ids[] = [];
+        $_ids = [];
 
         $_rows = Deploy\ClusterServer::join( 'server_t', 'id', '=', 'server_id' )
             ->get(
@@ -65,12 +65,18 @@ class ClusterController extends ResourceController
 
         foreach ( $_rows as $_server )
         {
+            //$_server_array = json_decode($_server, true);
+
             if($_server->server_type_id == '1'){
-               if(array_key_exists('config_text', $_server)){
-                    if(!array_key_exists('multi-assign', json_decode($_server->config_text, true))){
+                if(!property_exists($_server, 'config_text')){
+
+                    if(!array_key_exists('multi-assign', json_decode($_server->config_text, true)))
                         $_ids[] = intval($_server->id);
+                    else{
+                        if($_server->cluster_id == $id)
+                            $_ids[] = intval($_server->id);
                     }
-               }
+                }
                 else
                     $_ids[] = intval($_server->id);
             }
@@ -104,8 +110,6 @@ HTML;
                     $_server->server_id_text,
                     $_label,
                 ];
-
-                //$_ids[] = intval($_server->id);
             }
         }
 
