@@ -252,34 +252,35 @@ class InstanceManager extends BaseManager implements Factory
      */
     protected function _extractServerIds( array $servers, $name = 'id' )
     {
-        $_types = ServerTypes::getDefinedConstants( true );
+        $_list = ServerTypes::getDefinedConstants( true );
+        $_types = array_flip( $_list );
 
-        foreach ( $_types as $_type => $_typeValue )
+        foreach ( $_list as $_typeId => $_typeName )
         {
-            $_types[$_type] = null;
+            $_types[$_typeId] = false;
 
-            if ( !isset( $servers[$_type] ) )
+            if ( null === ( $_server = IfSet::get( $servers, $_typeId ) ) )
             {
                 continue;
             }
 
-            if ( null !== ( $_id = IfSet::get( $servers[$_type], '.id' ) ) )
+            if ( null !== ( $_id = IfSet::get( $_server, '.id' ) ) )
             {
-                $_types[$_type] = $_id;
-                break;
+                $_types[$_typeId] = $_id;
+                continue;
             }
 
-            if ( null !== ( $_ids = IfSet::get( $servers[$_type], '.ids' ) ) )
+            if ( null !== ( $_ids = IfSet::get( $_server, '.ids' ) ) )
             {
-                if ( !is_array( $_ids ) || empty( $_ids ) )
+                if ( is_array( $_ids ) && !empty( $_ids ) )
                 {
+                    $_types[$_typeId] = $_ids[0];
                     continue;
                 }
-
-                $_types[$_type] = $_ids[0];
-                break;
             }
         }
+
+        \Log::debug( 'Types: ' . print_r( $_types, true ) );
 
         return $_types;
     }
