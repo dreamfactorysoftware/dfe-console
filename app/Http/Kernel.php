@@ -1,7 +1,9 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http;
 
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Routing\Router;
 
 class Kernel extends HttpKernel
 {
@@ -52,6 +54,14 @@ class Kernel extends HttpKernel
     //******************************************************************************
     //* Methods
     //******************************************************************************
+
+    /** @inheritdoc */
+    public function __construct( Application $app, Router $router )
+    {
+        $this->_replaceClass();
+
+        parent::__construct( $app, $router );
+    }
 
     /**
      * @param string $fromClass The class to replace
