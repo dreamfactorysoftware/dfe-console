@@ -137,6 +137,8 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      *
      * @param ProvisioningRequest $request
      * @param array               $options
+     *
+     * @return bool
      */
     protected function _removeInstanceStorage( $request, $options = [] )
     {
