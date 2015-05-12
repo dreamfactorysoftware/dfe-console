@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http;
 
+use DreamFactory\Enterprise\Common\Traits\CustomLogPath;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Router;
@@ -19,6 +20,12 @@ class Kernel extends HttpKernel
      * @type string
      */
     const REPLACEMENT_CLASS = 'DreamFactory\Enterprise\Common\Bootstrap\CommonLoggingConfiguration';
+
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use CustomLogPath;
 
     //******************************************************************************
     //* Members
@@ -58,23 +65,9 @@ class Kernel extends HttpKernel
     /** @inheritdoc */
     public function __construct( Application $app, Router $router )
     {
-        $this->_replaceClass();
+        $this->_replaceLoggingConfigurationClass( static::CLASS_TO_REPLACE, static::REPLACEMENT_CLASS );
 
         parent::__construct( $app, $router );
     }
 
-    /**
-     * @param string $fromClass The class to replace
-     * @param string $toClass   The replacement
-     */
-    protected function _replaceClass( $fromClass = null, $toClass = null )
-    {
-        $_straps = array_flip( $this->bootstrappers );
-        $fromClass = $fromClass ?: static::CLASS_TO_REPLACE;
-
-        if ( array_key_exists( $fromClass, $_straps ) )
-        {
-            $this->bootstrappers[$_straps[$fromClass]] = $toClass ?: static::REPLACEMENT_CLASS;
-        }
-    }
 }

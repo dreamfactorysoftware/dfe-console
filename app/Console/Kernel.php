@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Console;
 
+use DreamFactory\Enterprise\Common\Traits\CustomLogPath;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
@@ -19,6 +20,12 @@ class Kernel extends ConsoleKernel
      * @type string
      */
     const REPLACEMENT_CLASS = 'DreamFactory\Enterprise\Common\Bootstrap\CommonLoggingConfiguration';
+
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use CustomLogPath;
 
     //******************************************************************************
     //* Members
@@ -59,23 +66,8 @@ class Kernel extends ConsoleKernel
      */
     public function __construct( Application $app, Dispatcher $events )
     {
-        $this->_replaceClass();
+        $this->_replaceLoggingConfigurationClass( static::CLASS_TO_REPLACE, static::REPLACEMENT_CLASS );
 
         parent::__construct( $app, $events );
-    }
-
-    /**
-     * @param string $fromClass The class to replace
-     * @param string $toClass   The replacement
-     */
-    protected function _replaceClass( $fromClass = null, $toClass = null )
-    {
-        $_straps = array_flip( $this->bootstrappers );
-        $fromClass = $fromClass ?: static::CLASS_TO_REPLACE;
-
-        if ( array_key_exists( $fromClass, $_straps ) )
-        {
-            $this->bootstrappers[$_straps[$fromClass]] = $toClass ?: static::REPLACEMENT_CLASS;
-        }
     }
 }
