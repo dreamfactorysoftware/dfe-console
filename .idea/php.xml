@@ -11,6 +11,7 @@
         <path_mappings>
           <mapping local-root="$PROJECT_DIR$" remote-root="/opt/dreamfactory/dfe/dfe-console" />
           <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-common" remote-root="/opt/dreamfactory/dfe/dfe-common" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/fabric-db" remote-root="/opt/dreamfactory/lib/fabric-db" />
         </path_mappings>
       </server>
     </servers>

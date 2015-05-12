@@ -5,10 +5,11 @@ use DreamFactory\Enterprise\Common\Contracts\Factory;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
+use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
 use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
-use DreamFactory\Library\Fabric\Database\Enums\ServerTypes;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceGuest;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
@@ -83,6 +84,7 @@ class InstanceManager extends BaseManager implements Factory
     public function unregisterInstance( $tag )
     {
         return $this->unmanage( $tag );
+
     }
 
     /**
@@ -128,60 +130,72 @@ class InstanceManager extends BaseManager implements Factory
                 throw new \InvalidArgumentException( 'No "owner-id" given. Cannot create instance.' );
             }
 
+            if ( null == ( $_ownerType = IfSet::get( $options, 'owner-type' ) ) )
+            {
+                $_ownerType = OwnerTypes::USER;
+            }
+
             try
             {
-                $_owner = static::_lookupUser( $_ownerId );
+                $_owner = OwnerTypes::getOwner( $_ownerId, $_ownerType );
             }
-            catch ( \Exception $_ex )
+            catch ( ModelNotFoundException $_ex )
             {
-                throw new \InvalidArgumentException( 'The "owner-id" specified is invalid.' );
+                throw new \InvalidArgumentException( 'The "owner-id" and/or "owner-type" specified is/are invalid.' );
             }
 
             //  Validate the cluster and pull component ids
             $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
             $_clusterId = IfSet::get( $options, 'cluster-id', config( 'dfe.provisioning.default-cluster-id' ) );
             $_clusterConfig = $this->_getServersForCluster( $_clusterId );
+            $_ownerId = $_owner->id;
+
+            $_attributes = [
+                'user_id'            => $_ownerId,
+                'instance_id_text'   => $_sanitized,
+                'instance_name_text' => $_sanitized,
+                'guest_location_nbr' => $_guestLocation,
+                'cluster_id'         => $_clusterConfig['cluster-id'],
+                'db_server_id'       => $_clusterConfig['db-server-id'],
+                'app_server_id'      => $_clusterConfig['app-server-id'],
+                'web_server_id'      => $_clusterConfig['web-server-id'],
+                'state_nbr'          => ProvisionStates::CREATED,
+                'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
+            ];
+
+            $_guestAttributes = [
+                'instance_id'           => null,
+                'vendor_id'             => $_guestLocation,
+                'vendor_image_id'       => IfSet::get(
+                    $options,
+                    'vendor-image-id',
+                    config( 'dfe.provisioning.default-vendor-image-id' )
+                ),
+                'vendor_credentials_id' => IfSet::get(
+                    $options,
+                    'vendor-credentials-id',
+                    config( 'dfe.provisioning.default-vendor-credentials-id' )
+                ),
+            ];
 
             //  Write it out
             return \DB::transaction(
-                function () use ( $_owner, $_sanitized, $_guestLocation, $_clusterConfig, $options )
+                function () use ( $_ownerId, $_attributes, $_guestAttributes )
                 {
-                    $_instance = Instance::create(
-                        [
-                            'user_id'            => $_owner->id,
-                            'instance_id_text'   => $_sanitized,
-                            'instance_name_text' => $_sanitized,
-                            'guest_location_nbr' => $_guestLocation,
-                            'cluster_id'         => $_clusterConfig['cluster-id'],
-                            'db_server_id'       => $_clusterConfig['db-server-id'],
-                            'app_server_id'      => $_clusterConfig['app-server-id'],
-                            'web_server_id'      => $_clusterConfig['web-server-id'],
-                            'state_nbr'          => ProvisionStates::CREATED,
-                            'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
-                        ]
-                    );
+                    \Log::debug( 'Creating instance for ' . $_ownerId );
 
-                    if ( !$_instance )
+                    $_instance = Instance::create( $_attributes );
+
+                    \Log::debug( 'Instance created: ' . print_r( $_instance->id, true ) );
+
+                    $_guest = InstanceGuest::create( array_merge( $_guestAttributes, ['instance_id' => $_instance->id] ) );
+
+                    \Log::debug( 'Instance guest created: ' . $_guest->id );
+
+                    if ( !$_instance || !$_guest )
                     {
                         throw new \RuntimeException( 'Instance create fail' );
                     }
-
-                    InstanceGuest::create(
-                        [
-                            'instance_id'           => $_instance->id,
-                            'vendor_id'             => $_guestLocation,
-                            'vendor_image_id'       => IfSet::get(
-                                $options,
-                                'vendor-image-id',
-                                config( 'dfe.provisioning.default-vendor-image-id' )
-                            ),
-                            'vendor_credentials_id' => IfSet::get(
-                                $options,
-                                'vendor-credentials-id',
-                                config( 'dfe.provisioning.default-vendor-credentials-id' )
-                            ),
-                        ]
-                    );
 
                     return $_instance;
                 }
@@ -219,37 +233,56 @@ class InstanceManager extends BaseManager implements Factory
             throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid.' );
         }
 
-        if ( null === ( $_server = $this->_locateServerByType( $_servers, ServerTypes::DB ) ) )
-        {
-            throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid. No database server found.' );
-        }
-
-        $_dbId = $_server->id;
-        unset( $_server );
-
-        if ( null === ( $_server = $this->_locateServerByType( $_servers, ServerTypes::APP ) ) )
-        {
-            throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid. No application server found.' );
-        }
-
-        $_appId = $_server->id;
-        unset( $_server );
-
-        if ( null === ( $_server = $this->_locateServerByType( $_servers, ServerTypes::WEB ) ) )
-        {
-            throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid. No web server found.' );
-        }
-
-        $_webId = $_server->id;
-        unset( $_server );
+        $_serverIds = $this->_extractServerIds( $_servers );
 
         return [
             'cluster-id'    => $_cluster->id,
-            'db-server-id'  => $_dbId,
-            'app-server-id' => $_appId,
-            'web-server-id' => $_webId,
+            'db-server-id'  => $_serverIds[ServerTypes::DB],
+            'app-server-id' => $_serverIds[ServerTypes::APP],
+            'web-server-id' => $_serverIds[ServerTypes::WEB],
         ];
 
+    }
+
+    /**
+     * @param array  $servers
+     * @param string $name
+     *
+     * @return mixed
+     */
+    protected function _extractServerIds( array $servers, $name = 'id' )
+    {
+        $_list = ServerTypes::getDefinedConstants( true );
+        $_types = array_flip( $_list );
+
+        foreach ( $_list as $_typeId => $_typeName )
+        {
+            $_types[$_typeId] = false;
+
+            if ( null === ( $_server = IfSet::get( $servers, $_typeId ) ) )
+            {
+                continue;
+            }
+
+            if ( null !== ( $_id = IfSet::get( $_server, '.id' ) ) )
+            {
+                $_types[$_typeId] = $_id;
+                continue;
+            }
+
+            if ( null !== ( $_ids = IfSet::get( $_server, '.ids' ) ) )
+            {
+                if ( is_array( $_ids ) && !empty( $_ids ) )
+                {
+                    $_types[$_typeId] = $_ids[0];
+                    continue;
+                }
+            }
+        }
+
+        \Log::debug( 'Types: ' . print_r( $_types, true ) );
+
+        return $_types;
     }
 
     /**

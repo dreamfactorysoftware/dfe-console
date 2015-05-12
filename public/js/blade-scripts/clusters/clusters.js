@@ -1,3 +1,4 @@
+/*
 function confirmRemoveCluster(id) {
     return;
     var state = $("#cluster_button_" + id).attr('value');
@@ -94,6 +95,9 @@ function confirmRemoveSelectedClusters () {
 
     }
 };
+*/
+
+
 
 var table = $('#clusterTable').DataTable({
     "dom": '<"toolbar">',
@@ -184,6 +188,43 @@ function selectPage(page) {
     $('#tableInfo').html('Showing clusters ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsTotal);
 }
 
+function removeCluster(id, name) {
+    if(confirm('Remove Cluster "' + name + '" ?')){
+        $('#single_delete_' + id).submit();
+        return true;
+    }
+    else
+        return false;
+}
+
+$('#selectedClustersRemove').click(function(){
+
+    var deleteArray = [];
+
+    $('input[type=checkbox]').each(function () {
+
+        if(this.checked)
+            deleteArray.push(this.value);
+    });
+
+    if(!deleteArray.length){
+        alert('No Cluster(s) Selected!');
+        return true;
+    }
+
+    $('#_selected').val(deleteArray);
+
+    if(confirm('Remove Selected Clusters?')){
+        $('#multi_delete').submit();
+        return true;
+    }
+    else
+        return false;
+});
+
+
+
+
 $( document ).ready(function() {
 
     for(var i = 0; i < info.pages; i++){
@@ -195,3 +236,4 @@ $( document ).ready(function() {
 
     $('#_prev').prop('disabled', true);
 });
+

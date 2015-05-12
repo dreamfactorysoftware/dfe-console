@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Response;
 
 class ApiLogger
 {
@@ -18,9 +19,14 @@ class ApiLogger
      */
     public function handle( $request, Closure $next )
     {
-        \Log::debug( 'api: ' . $request->getPathInfo() . PHP_EOL . print_r( $request->input(), true ) );
+        \Log::debug( '>>> api: ' . $request->getPathInfo() );
 
-        return $next( $request );
+        /** @type Response $_response */
+        $_response = $next( $request );
+
+        \Log::debug( '<<< api: ' . $request->getPathInfo() . ' > ' . print_r( $_response->getContent(), true ) );
+
+        return $_response;
     }
 
 }

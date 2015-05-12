@@ -9,7 +9,6 @@ use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
-use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -112,14 +111,19 @@ class OpsController extends Controller
      */
     public function postInstances( Request $request )
     {
-        /** auth.client middleware sticks the validated user into the session for us */
-        $_user = \Session::get( 'client.' . $request->input( 'access-token' ) );
+        /** auth.client middleware sticks the validated owner into the session for us */
+        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
+
+        if ( empty( $_owner ) )
+        {
+            throw new \RuntimeException( 'No owner found in current session for request.' );
+        }
 
         $_response = array();
 
-        $_instances = Instance::where( 'user_id', $_user->id )->get();
+        $_instances = Instance::where( 'user_id', $_owner->id )->get();
 
-        if ( $_instances )
+        if ( !empty( $_instances ) )
         {
             /** @type Instance $_instance */
             foreach ( $_instances as $_instance )
@@ -165,12 +169,16 @@ class OpsController extends Controller
         $_rootStoragePath = $_instance->getRootStoragePath();
         $_storagePath = $_instance->getStoragePath();
 
+        /**
+         * This has multiple copies of data because it is used by several different systems
+         */
+
         return SuccessPacket::make(
             array(
                 'id'                 => $_instance->id,
                 'archived'           => $_archived,
                 'deleted'            => false,
-                'metadata'           => IfSet::get( $_instance->instance_data_text, 'metadata', [] ),
+                'metadata'           => (array)$_instance->instance_data_text,
                 'root-storage-path'  => $_rootStoragePath,
                 'storage-path'       => $_storagePath,
                 'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',

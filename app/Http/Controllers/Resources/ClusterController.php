@@ -49,11 +49,49 @@ class ClusterController extends ResourceController
         $_contexts = [ServerTypes::DB => 'primary', ServerTypes::WEB => 'success', ServerTypes::APP => 'warning'];
         $_cluster = $this->_findCluster( $id );
         $_clusterServers = $this->_clusterServers( $_cluster->id );
-        $_data = $_dropdown = $_dropdown_all = $_ids = [];
+
+        $_ids = [];
+
+        $_rows = Deploy\ClusterServer::join( 'server_t', 'id', '=', 'server_id' )
+            ->get(
+                [
+                    'server_t.id',
+                    'server_t.server_id_text',
+                    'server_t.server_type_id',
+                    'server_t.config_text',
+                    'cluster_server_asgn_t.cluster_id'
+                ]
+            );
+
+        foreach ( $_rows as $_server )
+        {
+            //$_server_array = json_decode($_server, true);
+
+            if($_server->server_type_id == '1'){
+                if(!property_exists($_server, 'config_text')){
+
+                    if(!array_key_exists('multi-assign', json_decode($_server->config_text, true)))
+                        $_ids[] = intval($_server->id);
+                    else{
+                        if($_server->cluster_id == $id)
+                            $_ids[] = intval($_server->id);
+                    }
+                }
+                else
+                    $_ids[] = intval($_server->id);
+            }
+            else
+                $_ids[] = intval($_server->id);
+        }
+
+        $_data = $_dropdown = $_dropdown_all = [];
 
         foreach ( $_clusterServers as $_type => $_servers )
         {
-            $_serverType = ServerTypes::nameOf( $_type );
+            //$_serverType = ServerTypes::nameOf( $_type );
+            if($_type == 1) $_serverType = 'DB';
+            if($_type == 2) $_serverType = 'WEB';
+            if($_type == 3) $_serverType = 'APP';
             $_serverType = strtoupper($_serverType);
 
             foreach ( $_servers as $_server )
@@ -72,12 +110,8 @@ HTML;
                     $_server->server_id_text,
                     $_label,
                 ];
-
-                $_ids[] = intval($_server->id);
             }
         }
-
-
 
         $_servers_all = Deploy\Server::all();
 
@@ -89,7 +123,10 @@ HTML;
             foreach ( $_servers_all as $_server )
             {
                 $_type = $_server->server_type_id;
-                $_serverType = ServerTypes::nameOf( $_type );
+                //$_serverType = ServerTypes::nameOf( $_type );
+                if($_type == 1) $_serverType = 'DB';
+                if($_type == 2) $_serverType = 'WEB';
+                if($_type == 3) $_serverType = 'APP';
                 $_serverType = strtoupper($_serverType);
 
                 $_label = <<<HTML
@@ -198,6 +235,34 @@ HTML;
         $input = Input::all();
 
         $create_cluster->create($input);
+
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/clusters';
+
+        return Redirect::to($_redirect);
+    }
+
+
+
+    public function destroy( $ids )
+    {
+
+        $id_array = [];
+
+        if($ids == 'multi') {
+            $params = Input::all();
+            $selected = $params['_selected'];
+            $id_array = explode(',', $selected);
+        }
+        else{
+            $id_array = explode(',', $ids);
+        }
+
+        foreach ($id_array as $id) {
+            Deploy\Cluster::find($id)->delete();
+            Deploy\ClusterServer::where('cluster_id', '=', intval($id))->delete();
+        }
 
         $_redirect = '/';
         $_redirect .= $this->_prefix;

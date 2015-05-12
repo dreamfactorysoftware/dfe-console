@@ -172,13 +172,11 @@ class ServerController extends ResourceController
         }
         else{
             $id_array = explode(',', $ids);
-
         }
 
-        $servers = new Server;
-
         foreach ($id_array as $id) {
-            $servers->find($id)->delete();
+            Server::find($id)->delete();
+            Deploy\ClusterServer::where('server_id', '=', intval($id))->delete();
         }
 
         $_redirect = '/';

@@ -145,9 +145,24 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $_storagePath = $_instance->instance_id_text;
 
         //  I'm not sure how hard this tries to delete the directory
-        $_filesystem->exists( $_storagePath ) && $_filesystem->deleteDirectory( $_storagePath );
+        if ( !$_filesystem->exists( $_storagePath ) )
+        {
+            \Log::notice( '    * provisioner: unable to stat storage path' );
+            \Log::notice( '      * not deleting storage area "' . $_storagePath . '"' );
+
+            return false;
+        }
+
+        if ( !$_filesystem->deleteDirectory( $_storagePath ) )
+        {
+            \Log::error( '    * provisioner: error removing storage area "' . $_storagePath . '"' );
+
+            return false;
+        }
 
         \Log::debug( '    * provisioner: instance storage removed' );
+
+        return true;
     }
 
     /** @inheritdoc */

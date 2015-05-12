@@ -1,14 +1,23 @@
 <?php
 //******************************************************************************
+//* Implicit Controllers
+//******************************************************************************
+
+//  Main page
+\Route::group(
+    ['middleware' => 'auth'],
+    function ()
+    {
+        \Route::get( '/', 'HomeController@index' );
+        \Route::get( 'home', 'HomeController@index' );
+    }
+);
+
+//******************************************************************************
 //* Resource Controllers
 //******************************************************************************
 
-/**
- * resource controllers
- */
 \Route::group(
-
-    //['prefix' => 'v1', 'namespace' => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\Resources', 'middleware' => 'auth'],
     ['prefix' => 'v1', 'middleware' => 'auth'],
     function ()
     {
@@ -22,9 +31,11 @@
     }
 );
 
-/**
- * Ops controller for operational api
- */
+//******************************************************************************
+//* Other Controllers
+//******************************************************************************
+
+/** Ops controller for operational api */
 \Route::group(
     ['prefix' => 'api/v1', 'middleware' => 'dfe.api-logging',],
     function ()
@@ -33,58 +44,7 @@
     }
 );
 
-//******************************************************************************
-//* Implicit Controllers
-//******************************************************************************
-
-//  Main page
-\Route::get(
-    '/',
-    function ()
-    {
-        /** @noinspection PhpUndefinedMethodInspection */
-
-        return View::make(
-            'app.dashboard',
-            ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0], 'prefix' => 'v1']
-        );
-
-    }
-
-    /*
-    '/',
-    [
-        'as'         => 'home',
-        'middleware' => 'auth',
-        function ()
-        {
-            // @noinspection PhpUndefinedMethodInspection
-            return \View::make(
-                'app.dashboard',
-                ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0]]
-            );
-        }
-    ]
-    */
-);
-
-\Route::get(
-    '/home',
-
-    function ()
-    {
-        /** @noinspection PhpUndefinedMethodInspection */
-
-        return View::make(
-            'app.dashboard',
-            ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0], 'prefix' => 'v1']
-        );
-
-    }
-
-);
-
-//  Other controllers
+/** Miscellaneous controllers for dashboard functionality */
 \Route::controllers(
     [
         //'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',

@@ -7,7 +7,7 @@ return [
     //* Connections
     //******************************************************************************
     'connections' => [
-        'dfe-local'     => [
+        'dfe-local' => [
             'driver'    => 'mysql',
             'host'      => 'localhost',
             'port'      => 3306,

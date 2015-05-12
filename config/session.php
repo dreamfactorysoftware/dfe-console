@@ -16,7 +16,7 @@ return [
     //  Session Sweeping Lottery
     'lottery'         => [2, 100],
     //  Session Cookie Name
-    'cookie'          => 'dfe_session',
+    'cookie'          => 'dfe-console-session',
     //  Session Cookie Path
     'path'            => '/',
     //  Session Cookie Domain

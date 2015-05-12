@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Console\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-use DreamFactory\Enterprise\Console\Services\Elk;
+use DreamFactory\Enterprise\Console\Services\ElkService;
 
 /**
  * Gets data from the ELK system
@@ -27,7 +27,7 @@ class ElkServiceProvider extends BaseServiceProvider
     //******************************************************************************
 
     /** @inheritdoc */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Console\\Services\\Elk';
+    protected $_serviceClass = 'DreamFactory\\Enterprise\\Console\\Services\\ElkService';
 
     //*************************************************************************
     //* Methods
@@ -44,7 +44,7 @@ class ElkServiceProvider extends BaseServiceProvider
             static::IOC_NAME,
             function ( $app )
             {
-                return new Elk( $app );
+                return new ElkService( $app );
             }
         );
     }
