@@ -4,9 +4,10 @@
     <unboundedVersionInspectionSettings>
       <excludedPackages>
         <pattern pattern="dreamfactory/*" />
-        <pattern pattern="ruflin/*" />
         <pattern pattern="league/*" />
+        <pattern pattern="ruflin/*" />
       </excludedPackages>
     </unboundedVersionInspectionSettings>
+    <customRepositories />
   </component>
 </project>

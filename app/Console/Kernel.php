@@ -6,6 +6,19 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string
+     */
+    const CLASS_TO_REPLACE = 'Illuminate\Foundation\Bootstrap\ConfigureLogging';
+    /**
+     * @type string
+     */
+    const REPLACEMENT_CLASS = 'DreamFactory\Enterprise\Common\Bootstrap\CommonLoggingConfiguration';
+
+    //******************************************************************************
     //* Members
     //******************************************************************************
 
@@ -34,4 +47,22 @@ class Kernel extends ConsoleKernel
     {
     }
 
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
+
+    /**
+     * @param string $fromClass The class to replace
+     * @param string $toClass   The replacement
+     */
+    protected function _replaceClass( $fromClass = null, $toClass = null )
+    {
+        $_straps = array_flip( $this->bootstrappers );
+        $fromClass = $fromClass ?: static::CLASS_TO_REPLACE;
+
+        if ( array_key_exists( $fromClass, $_straps ) )
+        {
+            $this->bootstrappers[$_straps[$fromClass]] = $toClass ?: static::REPLACEMENT_CLASS;
+        }
+    }
 }

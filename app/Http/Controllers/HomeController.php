@@ -8,7 +8,10 @@ class HomeController extends FactoryController
 
     public function index()
     {
+        \Log::debug( 'Home controller' );
+
         /** @noinspection PhpUndefinedMethodInspection */
+
         return \View::make(
             'app.dashboard',
             ['_trail' => null, '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0], 'prefix' => 'v1',]

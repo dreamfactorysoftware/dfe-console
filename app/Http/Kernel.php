@@ -6,6 +6,19 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel
 {
     //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string
+     */
+    const CLASS_TO_REPLACE = 'Illuminate\Foundation\Bootstrap\ConfigureLogging';
+    /**
+     * @type string
+     */
+    const REPLACEMENT_CLASS = 'DreamFactory\Enterprise\Common\Bootstrap\CommonLoggingConfiguration';
+
+    //******************************************************************************
     //* Members
     //******************************************************************************
 
@@ -36,4 +49,22 @@ class Kernel extends HttpKernel
         'dfe.api-logging' => 'DreamFactory\Enterprise\Console\Http\Middleware\ApiLogger',
     ];
 
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
+
+    /**
+     * @param string $fromClass The class to replace
+     * @param string $toClass   The replacement
+     */
+    protected function _replaceClass( $fromClass = null, $toClass = null )
+    {
+        $_straps = array_flip( $this->bootstrappers );
+        $fromClass = $fromClass ?: static::CLASS_TO_REPLACE;
+
+        if ( array_key_exists( $fromClass, $_straps ) )
+        {
+            $this->bootstrappers[$_straps[$fromClass]] = $toClass ?: static::REPLACEMENT_CLASS;
+        }
+    }
 }
