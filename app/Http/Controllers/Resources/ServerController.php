@@ -61,7 +61,7 @@ class ServerController extends ResourceController
     }
 
 
-    public function create()
+    public function create( array $viewData = [] )
     {
         $serv_t = new ServerType();
         $server_types = $serv_t->all();

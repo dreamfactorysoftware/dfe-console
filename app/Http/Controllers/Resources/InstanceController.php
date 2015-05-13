@@ -68,7 +68,7 @@ class InstanceController extends ResourceController
     }
 
 
-    public function create()
+    public function create( array $viewData = [] )
     {
         $clusters = new Deploy\Cluster;
         $clusters_list = $clusters->all();
