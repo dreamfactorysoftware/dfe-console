@@ -53,10 +53,17 @@ class ResourceController extends DataController
     {
     }
 
-    /** {@InheritDoc} */
-    public function create()
+    /**
+     * @param array $viewData
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create( array $viewData = [] )
     {
-        return View::make( $this->_getResourceView(), array('model' => false, 'pageHeader' => 'New ' . ucwords( $this->_resource )) );
+        return \View::make(
+            $this->_getResourceView(),
+            array_merge( array('model' => false, 'pageHeader' => 'New ' . ucwords( $this->_resource )), $viewData )
+        );
     }
 
     /** {@InheritDoc} */
