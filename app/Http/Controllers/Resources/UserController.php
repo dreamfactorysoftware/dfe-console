@@ -40,7 +40,7 @@ class UserController extends ResourceController //FactoryController //
     /**
      * @return $this
      */
-    public function create()
+    public function create( $viewData )
     {
         return \View::make( 'app.users.create' )->with( 'prefix', $this->_prefix );
     }
