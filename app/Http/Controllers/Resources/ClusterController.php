@@ -38,7 +38,7 @@ class ClusterController extends ResourceController
     /**
      * @return mixed
      */
-    public function create()
+    public function create( array $viewData = [] )
     {
         return \View::make( 'app.clusters.create', ['prefix' => $this->_prefix] );
     }
