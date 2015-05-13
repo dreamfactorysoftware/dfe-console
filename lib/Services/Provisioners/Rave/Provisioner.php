@@ -3,10 +3,13 @@
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Services\Contracts\Offering;
+use DreamFactory\Enterprise\Services\Contracts\OfferingProvisioner;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisionerOffering;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
@@ -18,7 +21,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class Provisioner extends BaseProvisioner
+class Provisioner extends BaseProvisioner implements OfferingProvisioner
 {
     //******************************************************************************
     //* Traits
@@ -27,8 +30,41 @@ class Provisioner extends BaseProvisioner
     use EntityLookup;
 
     //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type array My offerings
+     */
+    protected $_offerings = false;
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
+
+    /** @inheritdoc */
+    public function boot()
+    {
+        parent::boot();
+
+        //  Have we read these yet?
+        if ( false === $this->_offerings )
+        {
+            $this->_offerings = [];
+            $_list = config( 'provisioners.rave.offerings', [] );
+
+            if ( is_array( $_list ) && !empty( $_list ) )
+            {
+                foreach ( $_list as $_key => $_value )
+                {
+                    if ( !empty( $_key ) )
+                    {
+                        $this->_offerings[$_key] = new ProvisionerOffering( $_key, $_value );
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Get the current status of a provisioning request
@@ -65,7 +101,7 @@ class Provisioner extends BaseProvisioner
 
         try
         {
-            \Log::debug( '     * Provisioning storage');
+            \Log::debug( '     * Provisioning storage' );
 
             //  Provision storage and fill in the request
             $this->_provisionStorage( $request, $options );
@@ -379,4 +415,19 @@ class Provisioner extends BaseProvisioner
         return true;
     }
 
+    /**
+     * @return Offering[]
+     */
+    public function getOfferings()
+    {
+        return $this->_offerings;
+    }
+
+    /**
+     * @return string The id of this provisioner
+     */
+    public function getProvisionerId()
+    {
+        return 'rave';
+    }
 }

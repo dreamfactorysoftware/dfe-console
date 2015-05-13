@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Provisioners;
+<?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;

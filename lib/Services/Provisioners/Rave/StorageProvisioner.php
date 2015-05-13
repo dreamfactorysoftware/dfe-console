@@ -214,5 +214,4 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     {
         return $this->_storageMap;
     }
-
 }

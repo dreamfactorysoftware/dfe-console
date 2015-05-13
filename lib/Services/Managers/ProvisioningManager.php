@@ -63,41 +63,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function resolve( $tag )
     {
-        return $this->_doResolve( $tag );
-    }
-
-    /**
-     * @param string $tag
-     *
-     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
-     */
-    public function resolveStorage( $tag )
-    {
-        return $this->_doResolve( $tag, 'storage' );
-    }
-
-    /**
-     * @param string $tag
-     *
-     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
-     */
-    public function resolveDatabase( $tag )
-    {
-        return $this->_doResolve( $tag, 'db' );
-    }
-
-    /**
-     * @param string $tag
-     * @param string $subkey
-     *
-     * @return mixed
-     */
-    protected function _doResolve( $tag, $subkey = null )
-    {
-        $tag = GuestLocations::resolve( $tag ?: $this->getDefaultProvisioner() );
-
-        $subkey = $subkey ?: 'instance';
-        $_key = $tag . '.' . $subkey;
+        $_key = $this->_buildTag( $tag );
 
         try
         {
@@ -113,5 +79,39 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         $this->manage( $_key, $_provisioner );
 
         return $_provisioner;
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
+     */
+    public function resolveStorage( $tag )
+    {
+        return $this->resolve( $this->_buildTag( $tag, 'storage' ) );
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
+     */
+    public function resolveDatabase( $tag )
+    {
+        return $this->resolve( $this->_buildTag( $tag, 'db' ) );
+    }
+
+    /**
+     * @param string $tag
+     * @param string $subkey
+     *
+     * @return mixed
+     */
+    protected function _buildTag( $tag, $subkey = null )
+    {
+        $tag = GuestLocations::resolve( $tag ?: $this->getDefaultProvisioner() );
+        $subkey = $subkey ?: ( false === strpos( $subkey, '.instance' ) ? 'instance' : null );
+
+        return $tag . '.' . $subkey;
     }
 }

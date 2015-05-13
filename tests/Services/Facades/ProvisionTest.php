@@ -13,9 +13,10 @@ class ProvisionTest extends TestCase
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::provisioner
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::getDefaultProvisioner
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::storageProvisioner
-     * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::_doResolve
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolve
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolveStorage
+     * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolveDatabase
+     * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::_buildTag
      *
      * @return void
      */

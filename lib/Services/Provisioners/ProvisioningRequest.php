@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Provisioners;
+<?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;

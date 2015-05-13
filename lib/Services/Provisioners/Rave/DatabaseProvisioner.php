@@ -428,5 +428,4 @@ MYSQL
             '\'' . $creds['username'] . '\'@\'localhost\'',
         ];
     }
-
 }
