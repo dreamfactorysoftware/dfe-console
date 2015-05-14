@@ -19,7 +19,7 @@ class CreateMountTable extends Migration
                 {
                     $table->increments( 'id' );
                     $table->integer( 'mount_type_nbr' )->default( 0 );
-                    $table->string( 'mount_id_text', 64 )->unique();
+                    $table->string( 'mount_id_text', 64 )->unique()->index();
                     $table->string( 'root_path_text', 128 )->nullable();
                     $table->mediumText( 'config_text' )->nullable();
                     $table->integer( 'owner_id' )->nullable();
@@ -35,7 +35,7 @@ class CreateMountTable extends Migration
             'server_t',
             function ( Blueprint $table )
             {
-                $table->integer( 'mount_id' )->nullable();
+                $table->integer( 'mount_id' )->index()->nullable();
             }
         );
     }

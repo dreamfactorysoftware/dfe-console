@@ -43,7 +43,10 @@ class CreateAppKeysTable extends Migration
      */
     public function down()
     {
-        \Schema::drop( 'app_key_t' );
+        if ( \Schema::hasTable( 'app_key_t' ) )
+        {
+            \Schema::drop( 'app_key_t' );
+        }
     }
 
 }

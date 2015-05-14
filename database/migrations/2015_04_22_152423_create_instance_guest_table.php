@@ -22,7 +22,7 @@ class CreateInstanceGuestTable extends Migration
                     $table->integer( 'instance_id' )->index();
                     $table->integer( 'vendor_id' )->index();
                     $table->integer( 'vendor_image_id' )->index();
-                    $table->integer( 'vendor_credentials_id' )->nullable();
+                    $table->integer( 'vendor_credentials_id' )->nullable()->index();
                     $table->integer( 'flavor_nbr' );
                     $table->string( 'base_image_text', 32 )->default( 'dfe.standard' );
                     $table->string( 'region_text', 32 );

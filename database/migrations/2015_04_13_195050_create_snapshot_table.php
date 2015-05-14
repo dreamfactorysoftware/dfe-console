@@ -23,7 +23,7 @@ class CreateSnapshotTable extends Migration
                 function ( Blueprint $table )
                 {
                     $table->bigIncrements( 'id' );
-                    $table->string( 'snapshot_id_text', 128 );
+                    $table->string( 'snapshot_id_text', 128 )->index();
                     $table->integer( 'user_id' )->index();
                     $table->integer( 'instance_id' )->index();
                     $table->string( 'url_text', 1024 );
