@@ -47,7 +47,7 @@ function validateCreateUser(){
     }
     // Display Name exists
     if($('#nickname_text').val() === ''){
-        alert('Last Name is missing');
+        alert('Nickname is missing');
         return false;
     }
     // Last Name validation
@@ -56,12 +56,12 @@ function validateCreateUser(){
         var re = /^\w+$/;
 
         if(!re.test(displayName)){
-            alert('Last Name is invalid');
+            alert('Nickname is invalid');
             return false;
         }
     }
     // Validate password
-    if($('#set_usercreate_password').is(':checked')){
+    if($('#set_password').is(':checked')){
         if($('#new_password').val() !== $('#retype_new_password').val()){
             alert('Password and Re-enter password are not identical');
             return false;
@@ -94,8 +94,8 @@ function submitCreateUser(){
         active:             $('#active').is(':checked'),
         instance_manage:    $('#instance_manage').val(),
         instance_policy:    $('#instance_policy').val(),
-        set_password:       $('#set_usercreate_password').is(':checked'),
-        password_text:      $('#new_usercreate_password').val()
+        set_password:       $('#set_password').is(':checked'),
+        password_text:      $('#new_password').val()
     };
 
     $.ajax({
@@ -293,6 +293,56 @@ function systemAdminClick(){
 
 
 
+function removeUser(id, name, type) {
+
+    //console.log(id +', ' + name +', ' + type);
+
+    if(confirm('Remove User "' + name + '" ? ')){
+        $('#single_delete_' + id + '_' + type).submit();
+        return true;
+    }
+    else
+        return false;
+
+}
+
+
+$('#selectedUsersRemove').click(function(){
+
+    var deleteArrayIds = [];
+    var deleteArrayTypes = [];
+
+    $('input[type=checkbox]').each(function () {
+
+        var val = this.value.split(',');
+
+        if(this.checked){
+            deleteArrayIds.push(val[0]);
+            deleteArrayTypes.push(val[1]);
+        }
+    });
+
+    if(!deleteArrayIds.length){
+        alert('No User(s) Selected!');
+        return true;
+    }
+
+    $('#_selectedIds').val(deleteArrayIds);
+    $('#_selectedTypes').val(deleteArrayTypes);
+    console.log(deleteArrayIds);
+    console.log(deleteArrayTypes);
+
+    if(confirm('Remove Selected Users?')){
+        $('#multi_delete').submit();
+        return true;
+    }
+    else
+        return false;
+});
+
+
+
+/*
 function confirmRemoveUser(id, admin) {
 
     var state = null;
@@ -402,10 +452,45 @@ function confirmRemoveSelectedUsers () {
         }
     }
 };
+*/
+
 
 var tableRowIndex = null;
 var tableColIndex = null;
 
+
+
+var table = $('#userTable').DataTable({
+    "dom": '<"toolbar">',
+    "aoColumnDefs": [
+        {
+            "bSortable": false,
+            "aTargets": [1]
+        },
+        {
+            "targets": [0],
+            "visible": false
+        }
+    ]
+});
+
+/*
+$('#userTable tbody').on( 'click', 'td', function () {
+
+    var rowId = table.cell( this ).index().row - (10 * table.page.info().page);
+    var cellId = table.cell( this ).index().column;
+
+    var user_id = $("#userTable tr:eq('" + (rowId + 1) + "')").find('input[type="hidden"]').val();
+
+    if(cellId > 1)
+        window.location = 'users/' + user_id + '/edit';
+
+
+} );
+*/
+
+
+/**/
 $('#userTable tbody').on( 'click', 'tr', function () {
 
     tableRowIndex = null;
@@ -417,7 +502,7 @@ $('#userTable tbody').on( 'click', 'tr', function () {
     }
 
     var user_id = $tr.find('input[type="hidden"][id="user_id"]').val();
-    var user_admin = $tr.find('input[type="hidden"][id="user_admin"]').val();
+    var user_admin = $tr.find('input[type="hidden"][id="user_type"]').val();
 
     tableRowIndex = user_id;
 
@@ -429,6 +514,8 @@ $('#userTable tbody').on( 'click', 'tr', function () {
             user_type = 'admin';
         else
             user_type = 'user';
+
+        console.log(user_admin);
 
          if(tableColIndex > 1)
              window.location = 'users/' + user_id + '/edit?user_type=' + user_type;
@@ -444,6 +531,8 @@ $('#userTable tbody').on( 'click', 'td', function () {
 
     tableColIndex = cellId;
 });
+
+
 
 var table = $('#userTable').DataTable();
 var info = table.page.info();

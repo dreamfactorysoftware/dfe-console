@@ -38,37 +38,41 @@
                                                 </div>
                                             </df-section-header>
 
-                                            <form class="" name="create-user">
+                                            <form method="POST" action="/{{$prefix}}/users/{{$user_id}}">
+                                                <input name="_method" type="hidden" value="PUT">
+                                                <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                                <input name="user_type" type="hidden" id="user_type" value="{{ $is_admin }}">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Email</label>
-                                                            <input id="email_addr_text" value="{{$user->email_addr_text}}" class="form-control" placeholder="Enter email address." type="email">
+                                                            <input id="email_addr_text" name="email_addr_text" value="{{$user->email_addr_text}}" class="form-control" placeholder="Enter email address." type="email">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>First Name</label>
-                                                            <input id="first_name_text" value="{{$user->first_name_text}}" class="form-control" placeholder="Enter first name." type="text">
+                                                            <input id="first_name_text" name="first_name_text" value="{{$user->first_name_text}}" class="form-control" placeholder="Enter first name." type="text">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Last Name</label>
-                                                            <input id="last_name_text" value="{{$user->last_name_text}}" class="form-control" placeholder="Enter last name." type="text">
+                                                            <input id="last_name_text" name="last_name_text" value="{{$user->last_name_text}}" class="form-control" placeholder="Enter last name." type="text">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Display Name</label>
-                                                            <input id="nickname_text" value="{{$user->nickname_text}}" class="form-control" placeholder="Enter display name." type="text">
+                                                            <input id="nickname_text" name="nickname_text" value="{{$user->nickname_text}}" class="form-control" placeholder="Enter display name." type="text">
                                                         </div>
                                                         <df-set-user-password>
                                                             <div class="form-group">
                                                                 <div class="checkbox">
                                                                     <label>
-                                                                        <input id="set_password" class="" type="checkbox">
+                                                                        <input id="set_password" name="set_password" value="1" type="checkbox">
                                                                         Set Password Manually
                                                                     </label>
                                                                 </div>
                                                                 <div id="set_password_form" style="display: none;">
                                                                     <label>Set Password</label>
-                                                                    <input id="new_password" class="form-control"  placeholder="Enter password" type="password">
-                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
+                                                                    <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password1">
+                                                                    <div>&nbsp;</div>
+                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password1">
                                                                 </div>
                                                             </div>
 
@@ -79,7 +83,7 @@
                                                             <label>User Options</label>
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input id="system_admin" class="" type="checkbox" disabled onclick="systemAdminClick();" @if($is_admin) checked @endif>
+                                                                    <input id="system_admin" name="system_admin" value="1" type="checkbox" disabled onclick="systemAdminClick();" @if($is_admin) checked @endif>
                                                                     System Administrator
                                                                 </label>
                                                             </div>
@@ -88,7 +92,8 @@
                                                         <div class="form-group">
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input id="active" class="" type="checkbox" checked>
+
+                                                                    <input id="active_ind" name="active_ind" value="1" type="checkbox" @if($user->active_ind) checked @endif>
                                                                     Active
                                                                 </label>
                                                             </div>
@@ -124,10 +129,12 @@
                                                         <hr>
                                                         <div class="form-group">
                                                             <div class="">
-
-                                                                <button type="button" class="btn btn-primary" onclick="javascript:editUser({{$user_id}});">
+                                                                <button type="submit" class="btn btn-primary">
                                                                     Update
                                                                 </button>
+                                                                <!--button type="button" class="btn btn-primary" onclick="javascript:editUser({{$user_id}});">
+                                                                    Update
+                                                                </button-->
                                                                 &nbsp;&nbsp;
                                                                 <button type="button" class="btn btn-default" onclick="javascript:cancelEditUser();">
                                                                     Close

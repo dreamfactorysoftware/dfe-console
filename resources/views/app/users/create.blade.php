@@ -36,41 +36,41 @@
 
 
                                             <!-- Create User Form -->
-                                            <form id="new_user_form" class="" name="create-user" autocomplete="off">
+                                            <form class="" name="create-user" method="POST" action="/{{$prefix}}/users">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <!-- User Email -->
                                                         <div class="form-group">
                                                             <label>Email</label>
-                                                            <input id="email_addr_text" value="" class="form-control" placeholder="Enter email address." type="email">
+                                                            <input id="email_addr_text" name="email_addr_text" value="" class="form-control" placeholder="Enter email address." type="email" required>
                                                         </div>
                                                         <!-- User First Name -->
                                                         <div class="form-group">
                                                             <label>First Name</label>
-                                                            <input id="first_name_text" value="" class="form-control" placeholder="Enter first name." type="text">
+                                                            <input id="first_name_text" name="first_name_text" value="" class="form-control" placeholder="Enter first name." type="text" required>
                                                         </div>
                                                         <!-- User Last Name -->
                                                         <div class="form-group">
                                                             <label>Last Name</label>
-                                                            <input id="last_name_text" value="" class="form-control" placeholder="Enter last name." type="text">
+                                                            <input id="last_name_text" name="last_name_text" value="" class="form-control" placeholder="Enter last name." type="text" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Display Name</label>
-                                                            <input id="nickname_text" value="" class="form-control" placeholder="Enter display name." type="text">
+                                                            <label>Nickname</label>
+                                                            <input id="nickname_text" name="nickname_text" value="" class="form-control" placeholder="Enter display name." type="text" required>
                                                         </div>
                                                         <df-set-user-password>
                                                             <div class="form-group">
                                                                 <div class="checkbox">
                                                                     <label>
-                                                                        <input id="set_usercreate_password" class="" type="checkbox">
+                                                                        <input id="set_password" name="set_password" class="" type="checkbox">
                                                                         Set Password Manually
                                                                     </label>
                                                                 </div>
                                                                 <div id="set_usercreate_password_form" style="display: none;">
                                                                     <label>Set Password</label>
-                                                                    <input id="new_usercreate_password" class="form-control"  placeholder="Enter password" type="password">
+                                                                    <input id="new_password" name="new_password" class="form-control"  placeholder="Enter password" type="password">
                                                                     <span>&nbsp;</span>
-                                                                    <input id="retype_new_usercreate_password" class="form-control"  placeholder="Re-enter password" type="password">
+                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
                                                                 </div>
                                                             </div>
 
@@ -81,7 +81,7 @@
                                                             <label>User Options</label>
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input id="system_admin" class="" type="checkbox" onclick="systemAdminClick();">
+                                                                    <input id="system_admin" name="system_admin" value="1" type="checkbox" onclick="systemAdminClick();">
                                                                     System Administrator
                                                                 </label>
                                                             </div>
@@ -90,7 +90,7 @@
                                                         <div class="form-group">
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input id="active" class="" type="checkbox">
+                                                                    <input id="active" name="active" value="1" type="checkbox">
                                                                     Active
                                                                 </label>
                                                             </div>
@@ -124,7 +124,7 @@
                                                         <div class="form-group">
                                                             <div class="">
 
-                                                                <button type="button" class="btn btn-primary" onclick="javascript:createUser();">
+                                                                <button type="submit" class="btn btn-primary">
                                                                     Create
                                                                 </button>
                                                                 &nbsp;&nbsp;
@@ -150,8 +150,8 @@
     </div>
 
     <script>
-        $('#set_usercreate_password').click(function () {
-            if ($('#set_usercreate_password').is(':checked')) {
+        $('#set_password').click(function () {
+            if ($('#set_password').is(':checked')) {
                 $('#set_usercreate_password_form').show();
 
             } else {

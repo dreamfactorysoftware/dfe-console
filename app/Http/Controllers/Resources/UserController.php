@@ -5,6 +5,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Redirect;
 
 class UserController extends ResourceController //FactoryController //
 {
@@ -40,15 +41,15 @@ class UserController extends ResourceController //FactoryController //
     /**
      * @return $this
      */
+
     public function create( array $viewData = [] )
     {
-        return \View::make( 'app.users.create' )->with( 'prefix', $this->_prefix );
+        return \View::make( 'app.users.create', [ 'prefix' => $this->_prefix ] );
     }
+
 
     public function edit( $id )
     {
-        //echo $_GET['user_type'];
-
         if ( isset( $_GET['user_type'] ) )
         {
             $user_type = $_GET['user_type'];
@@ -66,6 +67,8 @@ class UserController extends ResourceController //FactoryController //
 
             $user_data = $users->find( $id );
 
+            unset($user_data['password_text']);
+
             return View::make( 'app.users.edit' )
                 ->with( 'user_id', $id )
                 ->with( 'prefix', $this->_prefix )
@@ -81,80 +84,88 @@ class UserController extends ResourceController //FactoryController //
 
     public function store()
     {
+        $is_system_admin    = '';
+        $is_password_set    = false;
+        $user               = null;
+        $user_data          = Input::all();
 
-        $is_system_admin = Input::get( 'system_admin' );
-
-        $create_user = null;
-
-        if ( $is_system_admin == 'true' )
+        if(array_key_exists('system_admin', $user_data))
         {
-            if ( ServiceUser::where( 'email_addr_text', '=', Input::get( 'email_addr_text' ) )->exists() )
-            {
-                return 'EXISTS';
-            }
-            $create_user = new ServiceUser;
+            $is_system_admin = 1;
+        }
+
+        if ( $is_system_admin != '' )
+        {
+            $user = new ServiceUser;
         }
         else
         {
-            if ( User::where( 'email_addr_text', '=', Input::get( 'email_addr_text' ) )->exists() )
-            {
-                return 'EXISTS';
-            }
-            $create_user = new User;
+            $user = new User;
         }
 
-        $is_password_set = Input::get( 'set_password' );
-
-        $create_user->email_addr_text = Input::get( 'email_addr_text' );
-        $create_user->first_name_text = Input::get( 'first_name_text' );
-        $create_user->last_name_text = Input::get( 'last_name_text' );
-        $create_user->nickname_text = Input::get( 'nickname_text' );
+        if(array_key_exists('set_password', $user_data))
+        {
+            $is_password_set = $user_data[ 'set_password' ];
+        }
 
         if ( $is_password_set )
         {
-            $create_user->password_text = Input::get( 'password_text' );
+            $user->password_text = bcrypt( $user_data[ 'new_password' ] );
+        }
+
+        if(array_key_exists('active', $user_data))
+        {
+            $user->active_ind = 1;
         }
         else
         {
-            $create_user->password_text = null;
+            $user->active_ind = 0;
         }
 
-        $create_user->owner_id = null;
-        $create_user->owner_type_nbr = null;
-        $create_user->last_login_date = '';
-        $create_user->last_login_ip_text = null;
+        $user->email_addr_text  = $user_data['email_addr_text'];
+        $user->first_name_text  = $user_data['first_name_text'];
+        $user->last_name_text   = $user_data['last_name_text'];
+        $user->nickname_text    = $user_data['nickname_text'];
 
-        //$inserted_id = '';
+        $user->save();
 
-        if ( !$create_user->save() )
-        {
-            return 'FAIL';
-        }
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/users';
 
-        /*
-        if($create_user->save()){
-            $inserted_id = $create_user->id;
-
-            if($is_system_admin){
-                $create_user->owner_id = $inserted_id;
-                $create_user->save();
-            }
-        }
-        */
-
-        return 'OK';
+        return Redirect::to($_redirect);
     }
 
     public function update( $id )
     {
-        $is_password_set = Input::get( 'set_password' );
-        $is_system_admin = Input::get( 'system_admin' );
+        $is_system_admin    = '';
+        $is_password_set    = false;
+        $users              = null;
+        $user_data          = Input::all();
 
-        $users = null;
-
-        if ( $is_system_admin == 'true' )
+        if(array_key_exists('user_type', $user_data))
         {
-            $user = ServiceUser::where( 'email_addr_text', '=', Input::get( 'email_addr_text' ) )->first();
+            $is_system_admin = $user_data[ 'user_type' ];
+        }
+
+        if(array_key_exists('set_password', $user_data))
+        {
+            $is_password_set = $user_data[ 'set_password' ];
+        }
+
+        if(array_key_exists('active_ind', $user_data))
+        {
+            $user_data[ 'active_ind' ] = 1;
+        }
+        else
+        {
+            $user_data[ 'active_ind' ] = 0;
+        }
+
+        if ( $is_system_admin != '' )
+        {
+            $user = ServiceUser::where( 'email_addr_text', '=', $user_data[ 'email_addr_text' ] )->first();
+
             if ( $user != null )
             {
                 if ( $user->id != $id )
@@ -162,11 +173,13 @@ class UserController extends ResourceController //FactoryController //
                     return 'FAIL';
                 }
             }
+
             $users = new ServiceUser;
         }
         else
         {
-            $user = User::where( 'email_addr_text', '=', Input::get( 'email_addr_text' ) )->first();
+            $user = User::where( 'email_addr_text', '=', $user_data[ 'email_addr_text' ] )->first();
+
             if ( $user != null )
             {
                 if ( $user->id != $id )
@@ -174,48 +187,72 @@ class UserController extends ResourceController //FactoryController //
                     return 'FAIL';
                 }
             }
+
             $users = new User;
         }
 
-        //$users = new ServiceUser;
-        $user_data = $users->find( $id );
-
-        $user_data->email_addr_text = Input::get( 'email_addr_text' );
-        $user_data->first_name_text = Input::get( 'first_name_text' );
-        $user_data->last_name_text = Input::get( 'last_name_text' );
-        $user_data->nickname_text = Input::get( 'nickname_text' );
-
         if ( $is_password_set )
         {
-            $user_data->password_text = bcrypt( Input::get( 'password_text' ) );
+            $user_data[ 'password_text' ] = bcrypt( $user_data[ 'new_password' ] );
         }
 
-        $user_data->save();
+        unset($user_data['_method']);
+        unset($user_data['_token']);
+        unset($user_data['new_password']);
+        unset($user_data['set_password']);
+        unset($user_data['user_type']);
 
-        return 'OK';
+        $user = $users->find( $id );
+        $user->update($user_data);
+
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/users';
+
+        return Redirect::to($_redirect);
     }
 
     public function destroy( $ids )
     {
-        $a_users = new ServiceUser;
-        $o_users = new User;;
+        $user_data  = Input::all();
+        $a_users    = new ServiceUser;
+        $o_users    = new User;
 
-        $id_array = explode( ',', $ids );
-
-        foreach ( $id_array as $id )
+        if($ids != 'multi')
         {
-
-            if ( strpos( $id, '_' ) !== false )
+            if($user_data['user_type'] != "")
             {
-                $a_users->find( str_replace( '_admin', '', $id ) )->delete();
+                $a_users->find($ids)->delete();
             }
             else
             {
-                $o_users->find( $id )->delete();
+                $o_users->find($ids)->delete();
+            }
+        }
+        else
+        {
+            $id_array = explode(',', $user_data['_selectedIds']);
+            $type_array = explode(',', $user_data['_selectedTypes']);
+
+            foreach($id_array as $i => $id)
+            {
+                if($type_array[$i] != "")
+                {
+                    $a_users->find($id_array[$i])->delete();
+                }
+                else
+                {
+                    $o_users->find($id_array[$i])->delete();
+                }
             }
         }
 
-        return 'OK';
+
+        $_redirect = '/';
+        $_redirect .= $this->_prefix;
+        $_redirect .= '/users';
+
+        return Redirect::to($_redirect);
     }
 
     public function index()
@@ -230,7 +267,8 @@ class UserController extends ResourceController //FactoryController //
                 'last_name_text',
                 'nickname_text',
                 'email_addr_text',
-                'owner_id'
+                'owner_id',
+                'active_ind'
             ];
 
         $o_users = $users_owners->take( 500 )->get( $_columns );
@@ -259,77 +297,14 @@ class UserController extends ResourceController //FactoryController //
         $result = array_map( "unserialize", array_unique( array_map( "serialize", $result ) ) );
         sort( $result );
 
-        $servers_tabledata = [];
-        foreach ( $result as $value )
-        {
-
-            $manage =
-                '<div><input type="hidden" id="user_id" value="' .
-                $value->id .
-                '"><input type="hidden" id="user_admin" value="' .
-                $value->admin .
-                '">';
-
-            if ( $value->admin )
-            {
-                $manage .= '<input type="checkbox" value="' .
-                    $value->id .
-                    '_admin" id="user_checkbox_' .
-                    $value->id .
-                    '_admin">&nbsp;&nbsp;
-                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="user_button_' .
-                    $value->id .
-                    '_admin" onclick="confirmRemoveUser(' .
-                    $value->id .
-                    ', true)" value="delete" style="width: 25px"></button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-default btn-xs" id="user_button_cancel_' .
-                    $value->id .
-                    '_admin" onclick="cancelRemoveUser(' .
-                    $value->id .
-                    ', true)" value="delete" style="display: none">Cancel</button>';
-                $role = '<span class="label label-primary" id="user_type">System Administrator</span>';
-            }
-            else
-            {
-                $manage .= '<input type="checkbox" value="' .
-                    $value->id .
-                    '" id="user_checkbox_' .
-                    $value->id .
-                    '">&nbsp;&nbsp;
-                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="user_button_' .
-                    $value->id .
-                    '" onclick="confirmRemoveUser(' .
-                    $value->id .
-                    ', false)" value="delete" style="width: 25px"></button>&nbsp;&nbsp;
-                            <button type="button" class="btn btn-default btn-xs" id="user_button_cancel_' .
-                    $value->id .
-                    '" onclick="cancelRemoveUser(' .
-                    $value->id .
-                    ', false)" value="delete" style="display: none">Cancel</button>';
-                $role = '<span class="label label-info" id="user_type">DSP Owner</span>';
-            }
-
-            $manage .= '</div>';
-
-            array_push(
-                $servers_tabledata,
-                array(
-                    '<input type="hidden" id="user_id" value="' . $value->id . '">',
-                    $manage,
-                    $value->first_name_text . ' ' . $value->last_name_text,
-                    $value->nickname_text,
-                    $value->email_addr_text,
-                    $role,
-                    '<span class="label label-success">Active</span>'
-                )
-            );
-        }
-
-        $result = json_encode( $servers_tabledata );
-
-        return \View::make( 'app.users' )->with( 'prefix', $this->_prefix )->with( 'users', $result );//$users_owners->all());
-
-        //$test = $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
-        //return View::make('app.users')->with('prefix', $this->_prefix)->with('users', $users->all());//take(10)->get());
+        return View::make('app.users')->with('prefix', $this->_prefix)->with('users', $result);//$users_owners->all());
     }
+
+
+
+
 }
+
+
+
+
