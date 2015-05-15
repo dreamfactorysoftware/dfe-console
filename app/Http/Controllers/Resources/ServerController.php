@@ -190,10 +190,20 @@ class ServerController extends ResourceController
 
     public function index()
     {
-        $servers = new Server;
+        $asgn_servers = Server::join('cluster_server_asgn_t', 'server_id', '=', 'id')->get();
 
-        return View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $servers->all());
+        $excludes = [];
 
+        foreach($asgn_servers as $obj)
+        {
+            array_push($excludes, $obj->id);
+        }
+
+        $not_asgn_servers = Server::whereNotIn('id', $excludes)->get();
+
+        $result = array_merge(json_decode($asgn_servers), json_decode($not_asgn_servers));
+
+        return View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $result);
     }
 
 
