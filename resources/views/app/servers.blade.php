@@ -79,6 +79,9 @@
                                 Host
                             </th>
                             <th class="" style="text-align: center; vertical-align: middle;">
+                                Status
+                            </th>
+                            <th class="" style="text-align: center; vertical-align: middle;">
                                 Last Modified
                             </th>
                         </tr>
@@ -96,10 +99,18 @@
                                     <!--div-->
                                     <form method="POST" action="/{{$prefix}}/servers/{{$value->id}}" id="single_delete_{{ $value->id }}">
                                     <input type="hidden" id="server_id" value="{{ $value->id }}">
-                                        <input type="checkbox" value="{{ $value->id }}" id="server_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                        @if (array_key_exists('cluster_id', $value))
+                                            <input type="checkbox" value="{{ $value->id }}" disabled id="server_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled onclick="removeServer({{ $value->id }}, '{{ $value->server_id_text }}')" value="delete" style="width: 25px" ></button>
+                                        @else
+                                            <input type="checkbox" value="{{ $value->id }}" id="server_checkbox_{{ $value->id }}">&nbsp;&nbsp;
                                             <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeServer({{ $value->id }}, '{{ $value->server_id_text }}')" value="delete" style="width: 25px" ></button>
+                                        @endif
+
+
                                         </form>
                                     <!--/div-->
                                 </td>
@@ -115,6 +126,21 @@
                                 @endif
 
                                 <td style="text-align: left; vertical-align: middle;">{{ $value->host_text }}</td>
+
+                                <td style="text-align: center; vertical-align: middle;">
+                                @if ( array_key_exists( 'cluster_id', $value ) && ( $value->server_type_id == "1" ) )
+                                    @if ( array_key_exists( 'multi-assign', $value->config_text ) )
+                                        <span class="label label-primary">Assignable</span>
+                                    @else
+                                        <span class="label label-warning">Assigned</span>
+                                    @endif
+                                @elseif( array_key_exists( 'cluster_id', $value ) && ( $value->server_type_id != "1" ))
+                                    <span class="label label-warning">Assigned</span>
+                                @else
+                                    <span class="label label-success">Not Assigned</span>
+                                @endif
+                                </td>
+
                                 <td style="text-align: center; vertical-align: middle;">{{ $value->lmod_date }}</td>
                             </tr>
 
