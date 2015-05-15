@@ -1,4 +1,4 @@
-<?php namespace DreamFactory\Enterprise\Common\Services\Provisioners\Offerings;
+<?php namespace DreamFactory\Enterprise\Services\Contracts;
 
 /**
  * The contract for a provisioner who has offerings

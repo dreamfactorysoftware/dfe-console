@@ -24,7 +24,7 @@ class ApiLogger
         /** @type Response $_response */
         $_response = $next( $request );
 
-        \Log::debug( '<<< api: ' . $request->getPathInfo() . ' > ' . print_r( $_response->getContent(), true ) );
+        \Log::debug( '<<< api: ' . $request->getPathInfo() );
 
         return $_response;
     }

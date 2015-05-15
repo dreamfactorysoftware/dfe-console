@@ -6,6 +6,8 @@ use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
+use DreamFactory\Enterprise\Services\Contracts\HasOfferings;
+use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
@@ -48,96 +50,6 @@ class OpsController extends Controller
     public function __construct()
     {
         $this->middleware( 'auth.client' );
-    }
-
-    /**
-     * Provision an instance...
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function postProvision( Request $request )
-    {
-        try
-        {
-            $_payload = $request->input();
-
-            \Log::debug( 'Queuing provisioning request: ' . print_r( $_payload, true ) );
-
-            $_result = \Queue::push( new ProvisionJob( $request->input( 'instance-id' ), $_payload ) );
-
-            return SuccessPacket::make( $_result );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
-
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
-        }
-    }
-
-    /**
-     * Deprovision an instance...
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function postDeprovision( Request $request )
-    {
-        try
-        {
-            $_payload = $request->input();
-
-            \Log::debug( 'Queuing deprovisioning request: ' . print_r( $_payload, true ) );
-
-            $_result = \Queue::push( new DeprovisionJob( $request->input( 'instance-id' ), $_payload ) );
-
-            return SuccessPacket::make( $_result );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
-
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
-        }
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return array
-     */
-    public function postInstances( Request $request )
-    {
-        /** auth.client middleware sticks the validated owner into the session for us */
-        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
-
-        if ( empty( $_owner ) )
-        {
-            throw new \RuntimeException( 'No owner found in current session for request.' );
-        }
-
-        $_response = array();
-
-        $_instances = Instance::where( 'user_id', $_owner->id )->get();
-
-        if ( !empty( $_instances ) )
-        {
-            /** @type Instance $_instance */
-            foreach ( $_instances as $_instance )
-            {
-                if ( !empty( $_instance->instance_name_text ) )
-                {
-                    $_response[$_instance->instance_name_text] = $_instance->toArray();
-                }
-
-                unset( $_instance );
-            }
-        }
-
-        return SuccessPacket::make( $_response );
     }
 
     /**
@@ -217,5 +129,151 @@ class OpsController extends Controller
                 'create-date'        => (string)$_instance->create_date,
             )
         );
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function postInstances( Request $request )
+    {
+        /** auth.client middleware sticks the validated owner into the session for us */
+        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
+
+        if ( empty( $_owner ) )
+        {
+            throw new \RuntimeException( 'No owner found in current session for request.' );
+        }
+
+        $_response = array();
+
+        $_instances = Instance::where( 'user_id', $_owner->id )->get();
+
+        if ( !empty( $_instances ) )
+        {
+            /** @type Instance $_instance */
+            foreach ( $_instances as $_instance )
+            {
+                if ( !empty( $_instance->instance_name_text ) )
+                {
+                    $_response[$_instance->instance_name_text] = $_instance->toArray();
+                }
+
+                unset( $_instance );
+            }
+        }
+
+        return SuccessPacket::make( $_response );
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function postProvisioners( Request $request )
+    {
+        try
+        {
+            $_response = [];
+            $_provisioners = Provision::getProvisioners();
+
+            foreach ( $_provisioners as $_tag => $_provisioner )
+            {
+                $_offerings = false;
+
+                if ( $_provisioner instanceof HasOfferings )
+                {
+                    foreach ( $_provisioner->getOfferings() as $_name => $_config )
+                    {
+                        $_offerings[$_name] = $_config;
+                    }
+                }
+
+                $_response[$_tag] = [
+                    'id'        => $_tag,
+                    'offerings' => $_offerings,
+                ];
+            }
+
+            return SuccessPacket::make( $_response );
+        }
+        catch ( \Exception $_ex )
+        {
+            return ErrorPacket::create( $_ex );
+        }
+    }
+
+    /**
+     * Provision an instance...
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function postProvision( Request $request )
+    {
+        try
+        {
+            $_payload = $request->input();
+
+            \Log::debug( 'Queuing provisioning request: ' . print_r( $_payload, true ) );
+
+            $_result = \Queue::push( new ProvisionJob( $request->input( 'instance-id' ), $_payload ) );
+
+            return SuccessPacket::make( $_result );
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+
+            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+        }
+    }
+
+    /**
+     * Deprovision an instance...
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function postDeprovision( Request $request )
+    {
+        try
+        {
+            $_payload = $request->input();
+
+            \Log::debug( 'Queuing deprovisioning request: ' . print_r( $_payload, true ) );
+
+            $_result = \Queue::push( new DeprovisionJob( $request->input( 'instance-id' ), $_payload ) );
+
+            return SuccessPacket::make( $_result );
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+
+            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+        }
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return User
+     */
+    protected function _validateOwner( Request $request )
+    {
+        /** auth.client middleware sticks the validated owner into the session for us */
+        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
+
+        if ( empty( $_owner ) )
+        {
+            throw new \RuntimeException( 'No owner found in current session for request.' );
+        }
+
+        return $_owner;
     }
 }

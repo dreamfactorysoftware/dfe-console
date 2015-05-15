@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Services\Contracts\HasOfferings;
 use DreamFactory\Enterprise\Services\Contracts\Offering;
 use DreamFactory\Enterprise\Services\Contracts\OfferingProvisioner;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
@@ -21,7 +22,7 @@ use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class Provisioner extends BaseProvisioner implements OfferingProvisioner
+class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvisioner
 {
     //******************************************************************************
     //* Traits
@@ -51,7 +52,7 @@ class Provisioner extends BaseProvisioner implements OfferingProvisioner
         if ( false === $this->_offerings )
         {
             $this->_offerings = [];
-            $_list = config( 'provisioners.rave.offerings', [] );
+            $_list = config( 'provisioners.hosts.rave.offerings', [] );
 
             if ( is_array( $_list ) && !empty( $_list ) )
             {
@@ -59,10 +60,13 @@ class Provisioner extends BaseProvisioner implements OfferingProvisioner
                 {
                     if ( !empty( $_key ) )
                     {
-                        $this->_offerings[$_key] = new ProvisionerOffering( $_key, $_value );
+                        $_offer = new ProvisionerOffering( $_key, $_value );
+                        $this->_offerings[$_key] = $_offer->toArray();
                     }
                 }
             }
+
+            \Log::info( '     * Loaded ' . count( $this->_offerings ) . ' offering(s) for provisioner "rave".' );
         }
     }
 

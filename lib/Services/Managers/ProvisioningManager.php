@@ -23,6 +23,27 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
+     * @return ResourceProvisioner[]
+     */
+    public function getProvisioners()
+    {
+        $_provisioners = [];
+
+        if ( null !== ( $_list = config( 'provisioners.hosts' ) ) )
+        {
+            foreach ( $_list as $_tag => $_config )
+            {
+                if ( null !== ( $_provisioner = $this->getProvisioner( $_tag ) ) )
+                {
+                    $_provisioners[$_tag] = $_provisioner;
+                }
+            }
+        }
+
+        return $_provisioners;
+    }
+
+    /**
      * Returns an instance of the storage provisioner for the specified host
      *
      * @param string $name
@@ -74,6 +95,13 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         }
 
         $_class = config( 'provisioners.hosts.' . $_key );
+
+        if ( empty( $_class ) )
+        {
+            \Log::notice( 'Requested provisioner "' . $_key . '" is not valid.' );
+
+            return null;
+        }
 
         $_provisioner = new $_class( $this->app );
         $this->manage( $_key, $_provisioner );

@@ -1,11 +1,13 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Services\Contracts\Offering;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 
 /**
  * A provisioner's offering
  */
-class ProvisionerOffering implements Offering
+class ProvisionerOffering implements Offering, Jsonable, Arrayable
 {
     //******************************************************************************
     //* Members
@@ -54,17 +56,9 @@ class ProvisionerOffering implements Offering
 
         foreach ( $values as $_key => $_value )
         {
-            if ( method_exists( $this, 'set' . $_key ) )
+            if ( $_key != 'id' && method_exists( $this, 'set' . $_key ) )
             {
                 $this->{'set' . $_key}( $_value );
-            }
-            else if ( property_exists( $this, '_' . $_key ) )
-            {
-                $this->{'_' . $_key} = $_value;
-            }
-            else if ( property_exists( $this, $_key ) )
-            {
-                $this->{$_key} = $_value;
             }
         }
     }
@@ -164,6 +158,11 @@ class ProvisionerOffering implements Offering
      */
     public function setItems( $items )
     {
+        if ( !is_array( $items ) )
+        {
+            $items = (array)$items;
+        }
+
         $this->_items = $items;
 
         return $this;
@@ -197,4 +196,22 @@ class ProvisionerOffering implements Offering
         return $this->_selection;
     }
 
+    /** @inheritdoc */
+    public function toArray()
+    {
+        return [
+            'id'          => $this->_id,
+            'name'        => $this->_name,
+            'description' => $this->_description,
+            'items'       => $this->_items,
+            'suggested'   => $this->_suggested,
+            'selection'   => $this->_selection,
+        ];
+    }
+
+    /** @inheritdoc */
+    public function toJson( $options = 0 )
+    {
+        return json_encode( $this->toArray(), $options );
+    }
 }

@@ -4,16 +4,22 @@
       <w>aight</w>
       <w>authenticatable</w>
       <w>bcrypt</w>
+      <w>binlogging</w>
+      <w>binlogs</w>
       <w>csrf</w>
+      <w>datadir</w>
       <w>dfac</w>
       <w>dfdsp</w>
       <w>eprovision</w>
       <w>gzips</w>
       <w>horiz</w>
+      <w>isam</w>
       <w>jsonable</w>
       <w>loginbox</w>
       <w>longopts</w>
       <w>misconfigured</w>
+      <w>myisam</w>
+      <w>mysqld</w>
       <w>packetized</w>
       <w>pesce's</w>
       <w>printf</w>

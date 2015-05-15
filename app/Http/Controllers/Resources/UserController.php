@@ -4,8 +4,8 @@ namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
 use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class UserController extends ResourceController //FactoryController //
 {
@@ -28,9 +28,6 @@ class UserController extends ResourceController //FactoryController //
     //* Methods
     //******************************************************************************
 
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct();
@@ -39,14 +36,16 @@ class UserController extends ResourceController //FactoryController //
     }
 
     /**
-     * @return $this
+     * @param array $viewData
+     *
+     * @return \Illuminate\View\View
      */
-
     public function create( array $viewData = [] )
     {
-        return \View::make( 'app.users.create', [ 'prefix' => $this->_prefix ] );
-    }
+        $this->_resourceView = 'app.users.create';
 
+        return parent::create( array_merge( ['prefix' => $this->_prefix], $viewData ) );
+    }
 
     public function edit( $id )
     {
@@ -67,7 +66,7 @@ class UserController extends ResourceController //FactoryController //
 
             $user_data = $users->find( $id );
 
-            unset($user_data['password_text']);
+            unset( $user_data['password_text'] );
 
             return View::make( 'app.users.edit' )
                 ->with( 'user_id', $id )
@@ -84,12 +83,12 @@ class UserController extends ResourceController //FactoryController //
 
     public function store()
     {
-        $is_system_admin    = '';
-        $is_password_set    = false;
-        $user               = null;
-        $user_data          = Input::all();
+        $is_system_admin = '';
+        $is_password_set = false;
+        $user = null;
+        $user_data = Input::all();
 
-        if(array_key_exists('system_admin', $user_data))
+        if ( array_key_exists( 'system_admin', $user_data ) )
         {
             $is_system_admin = 1;
         }
@@ -103,17 +102,17 @@ class UserController extends ResourceController //FactoryController //
             $user = new User;
         }
 
-        if(array_key_exists('set_password', $user_data))
+        if ( array_key_exists( 'set_password', $user_data ) )
         {
-            $is_password_set = $user_data[ 'set_password' ];
+            $is_password_set = $user_data['set_password'];
         }
 
         if ( $is_password_set )
         {
-            $user->password_text = bcrypt( $user_data[ 'new_password' ] );
+            $user->password_text = bcrypt( $user_data['new_password'] );
         }
 
-        if(array_key_exists('active', $user_data))
+        if ( array_key_exists( 'active', $user_data ) )
         {
             $user->active_ind = 1;
         }
@@ -122,10 +121,10 @@ class UserController extends ResourceController //FactoryController //
             $user->active_ind = 0;
         }
 
-        $user->email_addr_text  = $user_data['email_addr_text'];
-        $user->first_name_text  = $user_data['first_name_text'];
-        $user->last_name_text   = $user_data['last_name_text'];
-        $user->nickname_text    = $user_data['nickname_text'];
+        $user->email_addr_text = $user_data['email_addr_text'];
+        $user->first_name_text = $user_data['first_name_text'];
+        $user->last_name_text = $user_data['last_name_text'];
+        $user->nickname_text = $user_data['nickname_text'];
 
         $user->save();
 
@@ -133,38 +132,38 @@ class UserController extends ResourceController //FactoryController //
         $_redirect .= $this->_prefix;
         $_redirect .= '/users';
 
-        return Redirect::to($_redirect);
+        return Redirect::to( $_redirect );
     }
 
     public function update( $id )
     {
-        $is_system_admin    = '';
-        $is_password_set    = false;
-        $users              = null;
-        $user_data          = Input::all();
+        $is_system_admin = '';
+        $is_password_set = false;
+        $users = null;
+        $user_data = Input::all();
 
-        if(array_key_exists('user_type', $user_data))
+        if ( array_key_exists( 'user_type', $user_data ) )
         {
-            $is_system_admin = $user_data[ 'user_type' ];
+            $is_system_admin = $user_data['user_type'];
         }
 
-        if(array_key_exists('set_password', $user_data))
+        if ( array_key_exists( 'set_password', $user_data ) )
         {
-            $is_password_set = $user_data[ 'set_password' ];
+            $is_password_set = $user_data['set_password'];
         }
 
-        if(array_key_exists('active_ind', $user_data))
+        if ( array_key_exists( 'active_ind', $user_data ) )
         {
-            $user_data[ 'active_ind' ] = 1;
+            $user_data['active_ind'] = 1;
         }
         else
         {
-            $user_data[ 'active_ind' ] = 0;
+            $user_data['active_ind'] = 0;
         }
 
         if ( $is_system_admin != '' )
         {
-            $user = ServiceUser::where( 'email_addr_text', '=', $user_data[ 'email_addr_text' ] )->first();
+            $user = ServiceUser::where( 'email_addr_text', '=', $user_data['email_addr_text'] )->first();
 
             if ( $user != null )
             {
@@ -178,7 +177,7 @@ class UserController extends ResourceController //FactoryController //
         }
         else
         {
-            $user = User::where( 'email_addr_text', '=', $user_data[ 'email_addr_text' ] )->first();
+            $user = User::where( 'email_addr_text', '=', $user_data['email_addr_text'] )->first();
 
             if ( $user != null )
             {
@@ -193,66 +192,65 @@ class UserController extends ResourceController //FactoryController //
 
         if ( $is_password_set )
         {
-            $user_data[ 'password_text' ] = bcrypt( $user_data[ 'new_password' ] );
+            $user_data['password_text'] = bcrypt( $user_data['new_password'] );
         }
 
-        unset($user_data['_method']);
-        unset($user_data['_token']);
-        unset($user_data['new_password']);
-        unset($user_data['set_password']);
-        unset($user_data['user_type']);
+        unset( $user_data['_method'] );
+        unset( $user_data['_token'] );
+        unset( $user_data['new_password'] );
+        unset( $user_data['set_password'] );
+        unset( $user_data['user_type'] );
 
         $user = $users->find( $id );
-        $user->update($user_data);
+        $user->update( $user_data );
 
         $_redirect = '/';
         $_redirect .= $this->_prefix;
         $_redirect .= '/users';
 
-        return Redirect::to($_redirect);
+        return Redirect::to( $_redirect );
     }
 
     public function destroy( $ids )
     {
-        $user_data  = Input::all();
-        $a_users    = new ServiceUser;
-        $o_users    = new User;
+        $user_data = Input::all();
+        $a_users = new ServiceUser;
+        $o_users = new User;
 
-        if($ids != 'multi')
+        if ( $ids != 'multi' )
         {
-            if($user_data['user_type'] != "")
+            if ( $user_data['user_type'] != "" )
             {
-                $a_users->find($ids)->delete();
+                $a_users->find( $ids )->delete();
             }
             else
             {
-                $o_users->find($ids)->delete();
+                $o_users->find( $ids )->delete();
             }
         }
         else
         {
-            $id_array = explode(',', $user_data['_selectedIds']);
-            $type_array = explode(',', $user_data['_selectedTypes']);
+            $id_array = explode( ',', $user_data['_selectedIds'] );
+            $type_array = explode( ',', $user_data['_selectedTypes'] );
 
-            foreach($id_array as $i => $id)
+            foreach ( $id_array as $i => $id )
             {
-                if($type_array[$i] != "")
+                if ( $type_array[$i] != "" )
                 {
-                    $a_users->find($id_array[$i])->delete();
+                    $a_users->find( $id_array[$i] )->delete();
                 }
                 else
                 {
-                    $o_users->find($id_array[$i])->delete();
+                    $o_users->find( $id_array[$i] )->delete();
                 }
             }
         }
-
 
         $_redirect = '/';
         $_redirect .= $this->_prefix;
         $_redirect .= '/users';
 
-        return Redirect::to($_redirect);
+        return Redirect::to( $_redirect );
     }
 
     public function index()
@@ -297,11 +295,8 @@ class UserController extends ResourceController //FactoryController //
         $result = array_map( "unserialize", array_unique( array_map( "serialize", $result ) ) );
         sort( $result );
 
-        return View::make('app.users')->with('prefix', $this->_prefix)->with('users', $result);//$users_owners->all());
+        return View::make( 'app.users' )->with( 'prefix', $this->_prefix )->with( 'users', $result );//$users_owners->all());
     }
-
-
-
 
 }
 
