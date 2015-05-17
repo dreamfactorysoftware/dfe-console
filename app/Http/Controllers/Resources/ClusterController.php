@@ -305,9 +305,20 @@ HTML;
 
     public function index()
     {
-        $clusters = new Deploy\Cluster;
+        $asgn_clusters = Deploy\Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')->distinct()->get(['cluster_t.*', 'cluster_id']);
 
-        return View::make( 'app.clusters' )->with( 'prefix', $this->_prefix )->with( 'clusters', $clusters->all() );//take(10)->get());
+        $excludes = [];
+
+        foreach($asgn_clusters as $obj)
+        {
+            array_push($excludes, $obj->id);
+        }
+
+        $not_asgn_clusters = Deploy\Cluster::whereNotIn('id', $excludes)->get();
+
+        $result = array_merge(json_decode($asgn_clusters), json_decode($not_asgn_clusters));
+
+        return View::make( 'app.clusters' )->with( 'prefix', $this->_prefix )->with( 'clusters', $result );
     }
 
 }
