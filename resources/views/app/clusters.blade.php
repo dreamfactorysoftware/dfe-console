@@ -53,12 +53,6 @@
                     <div class="btn-group">
                         <button type="button" id="selectedClustersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected clusters" value="delete" style="width: 40px"></button>
                     </div>
-                    <!--div class="btn-group">
-                        <button type="button" id="selectedClustersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected clusters" value="delete" onclick="confirmRemoveSelectedClusters()" style="width: 40px"></button>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-sm" id="selectedClusterRemoveCancel" onclick="cancelRemoveSelectedClusters()" value="delete" style="display: none">Cancel</button>
-                    </div-->
                     <div style="clear: both"></div>
                 </div>
             </div>
@@ -80,6 +74,9 @@
                                 Sub-Domain
                             </th>
                             <th class="" style="text-align: center; vertical-align: middle;">
+                                Status
+                            </th>
+                            <th class="" style="text-align: center; vertical-align: middle;">
                                 Last Modified
                             </th>
                         </tr>
@@ -94,20 +91,32 @@
                                     <div>
                                         <form method="POST" action="/{{$prefix}}/clusters/{{$value->id}}" id="single_delete_{{ $value->id }}">
                                             <input type="hidden" id="cluster_id" value="{{ $value->id }}">
-                                            <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
-                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
-                                        </form>
 
-                                        <!--input type="hidden" id="cluster_id" value="{{ $value->id }}">
-                                        <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
-                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_{{$value->id}}" onclick="confirmRemoveCluster({{$value->id}})" value="delete" style="width: 25px"></button>&nbsp;&nbsp;
-                                        <button type="button" class="btn btn-default btn-xs" id="cluster_button_cancel_{{$value->id}}" onclick="cancelRemoveCluster({{$value->id}})" value="delete" style="display: none">Cancel</button-->
+                                            @if (array_key_exists('cluster_id', $value))
+                                                <input type="checkbox" value="{{ $value->id }}" disabled id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
+                                            @else
+                                                <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
+                                            @endif
+
+                                        </form>
                                     </div>
                                 </td>
                                 <td style="text-align: left; vertical-align: middle;">{{ $value->cluster_id_text }}</td>
                                 <td style="text-align: left; vertical-align: middle;">{{ $value->subdomain_text }}</td>
+
+                                <td style="text-align: center; vertical-align: middle;">
+                                    @if ( array_key_exists( 'cluster_id', $value ) )
+                                        <span class="label label-warning">In Use</span>
+                                    @else
+                                        <span class="label label-success">Not In Use</span>
+                                    @endif
+                                </td>
+
                                 <td style="text-align: center; vertical-align: middle;">{{ $value->lmod_date }}</td>
                             </tr>
 
