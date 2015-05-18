@@ -181,19 +181,19 @@ class InstanceManager extends BaseManager implements Factory
             return \DB::transaction(
                 function () use ( $_ownerId, $_attributes, $_guestAttributes )
                 {
-                    \Log::debug( 'Creating instance for ' . $_ownerId );
+                    \Log::debug( '    * creating instance for user id ' . $_ownerId );
 
                     $_instance = Instance::create( $_attributes );
 
-                    \Log::debug( 'Instance created: ' . print_r( $_instance->id, true ) );
+                    \Log::debug( '    * instance created: ' . print_r( $_instance->id, true ) );
 
                     $_guest = InstanceGuest::create( array_merge( $_guestAttributes, ['instance_id' => $_instance->id] ) );
 
-                    \Log::debug( 'Instance guest created: ' . $_guest->id );
+                    \Log::debug( '      * instance guest created: ' . $_guest->id );
 
                     if ( !$_instance || !$_guest )
                     {
-                        throw new \RuntimeException( 'Instance create fail' );
+                        throw new \RuntimeException( '    ! instance create fail' );
                     }
 
                     return $_instance;
@@ -217,29 +217,21 @@ class InstanceManager extends BaseManager implements Factory
         try
         {
             $_cluster = static::_lookupCluster( $clusterId );
-            $_ck = 'instance-manager.cache.clusters.' . $_cluster->cluster_id_text;
+            $_servers = static::_lookupClusterServers( $_cluster->id );
 
-            //  Try cache first
-            $_servers = \Cache::get( $_ck . '.servers', [] );
+            $_serverIds = $this->_extractServerIds( $_servers );
 
-            if ( empty( $_servers ) )
-            {
-                \Cache::put( $_ck . '.servers', $_servers = static::_lookupClusterServers( $_cluster->id ), 5 );
-            }
+            return [
+                'cluster-id'    => $_cluster->id,
+                'db-server-id'  => $_serverIds[ServerTypes::DB],
+                'app-server-id' => $_serverIds[ServerTypes::APP],
+                'web-server-id' => $_serverIds[ServerTypes::WEB],
+            ];
         }
         catch ( ModelNotFoundException $_ex )
         {
             throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid.' );
         }
-
-        $_serverIds = $this->_extractServerIds( $_servers );
-
-        return [
-            'cluster-id'    => $_cluster->id,
-            'db-server-id'  => $_serverIds[ServerTypes::DB],
-            'app-server-id' => $_serverIds[ServerTypes::APP],
-            'web-server-id' => $_serverIds[ServerTypes::WEB],
-        ];
 
     }
 

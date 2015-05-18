@@ -79,12 +79,13 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
 
     /**
      * @param string $tag
+     * @param string $subkey
      *
-     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
+     * @return ResourceProvisioner
      */
-    public function resolve( $tag )
+    public function resolve( $tag, $subkey = null )
     {
-        $_key = $this->_buildTag( $tag );
+        $_key = $this->_buildTag( $tag, $subkey );
 
         try
         {
@@ -116,7 +117,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function resolveStorage( $tag )
     {
-        return $this->resolve( $this->_buildTag( $tag, 'storage' ) );
+        return $this->resolve( $tag, 'storage' );
     }
 
     /**
@@ -126,7 +127,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function resolveDatabase( $tag )
     {
-        return $this->resolve( $this->_buildTag( $tag, 'db' ) );
+        return $this->resolve( $tag, 'db' );
     }
 
     /**
@@ -138,7 +139,11 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     protected function _buildTag( $tag, $subkey = null )
     {
         $tag = GuestLocations::resolve( $tag ?: $this->getDefaultProvisioner() );
-        $subkey = $subkey ?: ( false === strpos( $subkey, '.instance' ) ? 'instance' : null );
+
+        if ( null === $subkey )
+        {
+            $subkey = 'instance';
+        }
 
         return $tag . '.' . $subkey;
     }

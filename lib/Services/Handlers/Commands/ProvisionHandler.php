@@ -34,7 +34,7 @@ class ProvisionHandler
     public function handle( ProvisionJob $command )
     {
         $_options = $command->getOptions();
-        \Log::debug( 'dfe: ProvisionJob - begin' );
+        \Log::debug( '>>> ProvisionHandler' );
 
         try
         {
@@ -48,7 +48,7 @@ class ProvisionHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'dfe: ProvisionJob - failure, exception creating instance: ' . $_ex->getMessage() );
+            \Log::error( '<<< ProvisionHandler - failure, exception creating instance: ' . $_ex->getMessage() );
 
             return false;
         }
@@ -70,7 +70,7 @@ class ProvisionHandler
                 \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
             }
 
-            \Log::debug( 'dfe: ProvisionJob - complete: ' . print_r( $_result, true ) );
+            \Log::debug( '<<< ProvisionHandler - complete: ' . print_r( $_result, true ) );
 
             $command->setResult( $_result );
 
@@ -78,7 +78,7 @@ class ProvisionHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( 'exception during provisioning: ' . $_ex->getMessage() );
+            \Log::error( '<<< ProvisionHandler - exception during provisioning: ' . $_ex->getMessage() );
 
             //  Delete instance record...
             if ( !$_instance->delete() )
@@ -87,7 +87,7 @@ class ProvisionHandler
             }
         }
 
-        \Log::debug( 'dfe: ProvisionJob - fail' );
+        \Log::debug( '<<< ProvisionHandler - failure' );
 
         return false;
     }

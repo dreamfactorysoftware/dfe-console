@@ -103,7 +103,7 @@ class ClusterController extends ResourceController
 
         foreach ( $_clusterServers as $_type => $_servers )
         {
-            $_serverType = strtoupper( ServerTypes::nameOf( $_type ) );
+            $_serverType = strtoupper( ServerTypes::nameOf( $_type, false ) );
 
             foreach ( $_servers as $_server )
             {
@@ -133,7 +133,7 @@ HTML;
 
             foreach ( $_servers_all as $_server )
             {
-                $_serverType = strtoupper( ServerTypes::nameOf( $_type = $_server->server_type_id ) );
+                $_serverType = strtoupper( ServerTypes::nameOf( $_type = $_server->server_type_id, false ) );
 
                 $_label = <<<HTML
 <div><span class="label label-{$_contexts[$_type]}">{$_serverType}</span></div>

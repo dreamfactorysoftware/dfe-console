@@ -28,21 +28,21 @@ return [
         // relative to owner-private-path
         'snapshot-path-name'          => env( 'DFE_SNAPSHOT_PATH_NAME', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
         /** "DFE_*_PATHS" variables can contain one or more, pipe-delimited names of directories to create */
-        'public-paths'                => explode( '|', env( 'DFE_PUBLIC_PATHS', 'applications|plugins|vendor|.private' ) ),
+        'public-paths'                => explode( '|', env( 'DFE_PUBLIC_PATHS', 'applications|.private' ) ),
         'private-paths'               => explode( '|', env( 'DFE_PRIVATE_PATHS', '.cache|config|scripts|scripts.user|log' ) ),
         'owner-private-paths'         => explode( '|', env( 'DFE_OWNER_PRIVATE_PATHS', ConsoleDefaults::SNAPSHOT_PATH_NAME ) ),
         //  Instance provisioning defaults
-        'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER', 'cluster-east-1' ),
-        'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE', 'db-east-1' ),
+        'default-cluster-id'          => env( 'DFE_DEFAULT_CLUSTER' ),
+        'default-db-server-id'        => env( 'DFE_DEFAULT_DATABASE' ),
         'default-guest-location'      => env( 'DFE_DEFAULT_GUEST_LOCATION', GuestLocations::DFE_CLUSTER ),
         'default-ram-size'            => env( 'DFE_DEFAULT_RAM_SIZE', 1 ),
         'default-disk-size'           => env( 'DFE_DEFAULT_DISK_SIZE', 8 ),
         //  Notification settings
         'email-subject-prefix'        => env( 'DFE_EMAIL_SUBJECT_PREFIX', '[DFE]' ),
         //  Instance defaults
-        'default-dns-zone'            => env( 'DFE_DEFAULT_DNS_ZONE', 'enterprise' ),
-        'default-dns-domain'          => env( 'DFE_DEFAULT_DNS_DOMAIN', 'dreamfactory.com' ),
-        'default-domain'              => env( 'DFE_DEFAULT_DOMAIN', '.enterprise.dreamfactory.com' ),
+        'default-dns-zone'            => env( 'DFE_DEFAULT_DNS_ZONE' ),
+        'default-dns-domain'          => env( 'DFE_DEFAULT_DNS_DOMAIN' ),
+        'default-domain'              => env( 'DFE_DEFAULT_DOMAIN' ),
         //@todo update image to 14.* LTS x64
         'default-vendor-image-id'     => 4647,
         //	Ubuntu server 12.04.1 i386

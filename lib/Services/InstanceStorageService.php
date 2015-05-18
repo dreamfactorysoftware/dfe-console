@@ -34,7 +34,7 @@ class InstanceStorageService extends BaseService
 
     /**
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param string                                                       $append
+     * @param string                                            $append
      *
      * @return string
      */
@@ -91,9 +91,9 @@ class InstanceStorageService extends BaseService
 
     /**
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param string                                                       $path
-     * @param string                                                       $tag
-     * @param array                                                        $options
+     * @param string                                            $path
+     * @param string                                            $tag
+     * @param array                                             $options
      *
      * @return mixed
      */
@@ -106,6 +106,11 @@ class InstanceStorageService extends BaseService
 
         $_mount = $instance->webServer->mount;
 
+        if ( !$_mount )
+        {
+            throw new \RuntimeException( 'The web server "' . $instance->webServer->server_id_text . '" does not have a mount defined.' );
+        }
+
         return $_mount->getFilesystem( $path, $tag, $options );
     }
 
@@ -113,7 +118,7 @@ class InstanceStorageService extends BaseService
      * Returns the relative root directory of this instance's storage
      *
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param string                                                       $tag
+     * @param string                                            $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
@@ -124,7 +129,7 @@ class InstanceStorageService extends BaseService
 
     /**
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param string                                                       $tag
+     * @param string                                            $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
@@ -137,7 +142,7 @@ class InstanceStorageService extends BaseService
      * Returns the relative root directory of this instance's storage
      *
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param string                                                       $tag
+     * @param string                                            $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
@@ -148,7 +153,7 @@ class InstanceStorageService extends BaseService
 
     /**
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param string                                                       $tag
+     * @param string                                            $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
@@ -159,7 +164,7 @@ class InstanceStorageService extends BaseService
 
     /**
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param string                                                       $tag
+     * @param string                                            $tag
      *
      * @return FilesystemAdapter
      */
