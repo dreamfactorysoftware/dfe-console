@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateLimitTable extends Migration
+class CreateClusterLimitTable extends Migration
 {
 
     /**
@@ -15,7 +15,7 @@ class CreateLimitTable extends Migration
     {
         if ( !\Schema::hasTable( 'limit_t' ) )
         {
-            Schema::table(
+            \Schema::create(
                 'limit_t',
                 function ( Blueprint $table )
                 {

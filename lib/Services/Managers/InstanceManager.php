@@ -3,16 +3,15 @@ namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\Factory;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\InstanceGuest;
+use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
-use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
-use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
-use DreamFactory\Enterprise\Database\Models\Deploy\InstanceGuest;
-use DreamFactory\Enterprise\Database\Models\Deploy\Server;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,7 +26,7 @@ class InstanceManager extends BaseManager implements Factory
     //* Traits
     //******************************************************************************
 
-    use StaticComponentLookup, InstanceValidation;
+    use StaticComponentLookup;
 
     //******************************************************************************
     //* Methods

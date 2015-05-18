@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\JobCommand;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 
 abstract class BaseInstanceJob extends JobCommand
 {

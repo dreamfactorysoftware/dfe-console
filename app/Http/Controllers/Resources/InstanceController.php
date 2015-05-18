@@ -1,18 +1,13 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Enterprise\Database\Models\Deploy;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\Response;
-
-use Illuminate\Support\Facades\View;
-
-
-
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\View;
 
 class InstanceController extends ResourceController
 {
@@ -27,7 +22,7 @@ class InstanceController extends ResourceController
     /**
      * @type string
      */
-    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\Instance';
+    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Instance';
     /** @type string */
     protected $_resource = 'instance';
 
@@ -67,56 +62,53 @@ class InstanceController extends ResourceController
         return $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
     }
 
-
     public function create( array $viewData = [] )
     {
-        $clusters = new Deploy\Cluster;
+        $clusters = new Cluster();
         $clusters_list = $clusters->all();
 
-        return View::make( 'app.instances.create' )->with('prefix', $this->_prefix)->with('clusters', $clusters_list);
+        return View::make( 'app.instances.create' )->with( 'prefix', $this->_prefix )->with( 'clusters', $clusters_list );
     }
 
-    public function edit($id)
+    public function edit( $id )
     {
-        $clusters = new Deploy\Cluster;
+        $clusters = new Cluster();
         $clusters_list = $clusters->all();
 
-        $instances = new Instance;
-        $instance = $instances->find($id);
-
-
         $_columns = [
-                'instance_t.id',
-                'instance_t.instance_id_text',
-                'cluster_t.cluster_id_text',
-                'instance_t.create_date',
-                'user_t.email_addr_text',
-                'user_t.lmod_date',
-            ];
+            'instance_t.id',
+            'instance_t.instance_id_text',
+            'cluster_t.cluster_id_text',
+            'instance_t.create_date',
+            'user_t.email_addr_text',
+            'user_t.lmod_date',
+        ];
 
         /** @type Builder $_query */
         $_query = Instance::join( 'user_t', 'instance_t.user_id', '=', 'user_t.id' )
             ->join( 'cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id' )
-            ->select( $_columns )->where('instance_t.id', '=', $id);
+            ->select( $_columns )->where( 'instance_t.id', '=', $id );
 
         $test = $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
 
-        return View::make('app.instances.edit')->with('instance_id', $id)->with('prefix', $this->_prefix)->with('instance', $test['response'][0])->with('clusters', $clusters_list);
+        return View::make( 'app.instances.edit' )->with( 'instance_id', $id )->with( 'prefix', $this->_prefix )->with(
+            'instance',
+            $test['response'][0]
+        )->with( 'clusters', $clusters_list );
     }
-
 
     public function store()
     {
 
-        $instance_name_text = Input::get('instance_name_text');
-        $instance_cluster_select = Input::get('instance_cluster_select');
-        $instance_policy_select = Input::get('instance_policy_select');
-        $instance_ownername_text = Input::get('instance_ownername_text');
+        $instance_name_text = Input::get( 'instance_name_text' );
+        $instance_cluster_select = Input::get( 'instance_cluster_select' );
+        $instance_policy_select = Input::get( 'instance_policy_select' );
+        $instance_ownername_text = Input::get( 'instance_ownername_text' );
 
-        $user = Deploy\ServiceUser::where('email_addr_text', '=', $instance_ownername_text)->first();
+        $user = ServiceUser::where( 'email_addr_text', '=', $instance_ownername_text )->first();
 
-
-        if(Instance::where('instance_id_text', '=', Input::get('instance_name_text'))->exists()){
+        if ( Instance::where( 'instance_id_text', '=', Input::get( 'instance_name_text' ) )->exists() )
+        {
             return 'EXISTS';
         }
 
@@ -134,14 +126,16 @@ class InstanceController extends ResourceController
         $create_instance->storage_id_text = '0';
         //$create_instance->cluster_id = $instance_cluster_select;
 
-        if($create_instance->save())
+        if ( $create_instance->save() )
+        {
             return 'OK';
+        }
         else
+        {
             return 'FAIL';
-
+        }
 
     }
-
 
     public function index()
     {
@@ -163,7 +157,7 @@ class InstanceController extends ResourceController
 
         $test = $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
 
-        return View::make('app.instances')->with('prefix', $this->_prefix)->with('instances', $test['response']);
+        return View::make( 'app.instances' )->with( 'prefix', $this->_prefix )->with( 'instances', $test['response'] );
 
     }
 }

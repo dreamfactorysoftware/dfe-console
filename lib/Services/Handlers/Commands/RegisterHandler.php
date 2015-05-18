@@ -6,7 +6,7 @@ use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\RegisterJob;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
-use DreamFactory\Enterprise\Database\Models\Deploy\AppKey;
+use DreamFactory\Enterprise\Database\Models\AppKey;
 use Illuminate\Http\Response;
 
 /**

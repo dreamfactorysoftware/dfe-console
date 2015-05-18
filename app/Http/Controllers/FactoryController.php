@@ -1,11 +1,10 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use DreamFactory\Enterprise\Database\Models\Deploy\Cluster;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
-use DreamFactory\Enterprise\Database\Models\Deploy\Server;
-use DreamFactory\Enterprise\Database\Models\Deploy\ServiceUser;
-use Illuminate\Support\Facades\Auth;
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\Server;
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
 
 class FactoryController extends Controller
 {

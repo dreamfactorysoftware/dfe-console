@@ -22,13 +22,6 @@ class ElkServiceProvider extends BaseServiceProvider
      */
     const ALIAS_NAME = 'Elk';
 
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /** @inheritdoc */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Console\\Services\\ElkService';
-
     //*************************************************************************
     //* Methods
     //*************************************************************************

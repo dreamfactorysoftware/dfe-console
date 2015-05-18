@@ -2,8 +2,10 @@
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\ClusterServer;
+use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
-use DreamFactory\Enterprise\Database\Models\Deploy;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
@@ -17,7 +19,7 @@ class ClusterController extends ResourceController
     /** @type string */
     protected $_tableName = 'cluster_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\Cluster';
+    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Cluster';
     /** @type string */
     protected $_resource = 'cluster';
     /**
@@ -57,7 +59,7 @@ class ClusterController extends ResourceController
 
         $_ids = [];
 
-        $_rows = Deploy\ClusterServer::join( 'server_t', 'id', '=', 'server_id' )->get(
+        $_rows = ClusterServer::join( 'server_t', 'id', '=', 'server_id' )->get(
             [
                 'server_t.id',
                 'server_t.server_id_text',
@@ -67,6 +69,7 @@ class ClusterController extends ResourceController
             ]
         );
 
+        /** @type Server $_server */
         foreach ( $_rows as $_server )
         {
             if ( ServerTypes::DB == $_server->server_type_id )
@@ -100,20 +103,7 @@ class ClusterController extends ResourceController
 
         foreach ( $_clusterServers as $_type => $_servers )
         {
-            //$_serverType = ServerTypes::nameOf( $_type );
-            if ( $_type == 1 )
-            {
-                $_serverType = 'DB';
-            }
-            if ( $_type == 2 )
-            {
-                $_serverType = 'WEB';
-            }
-            if ( $_type == 3 )
-            {
-                $_serverType = 'APP';
-            }
-            $_serverType = strtoupper( $_serverType );
+            $_serverType = strtoupper( ServerTypes::nameOf( $_type ) );
 
             foreach ( $_servers as $_server )
             {
@@ -134,7 +124,7 @@ HTML;
             }
         }
 
-        $_servers_all = Deploy\Server::all();
+        $_servers_all = Server::all();
 
         if ( !empty( $_servers_all ) )
         {
@@ -143,21 +133,7 @@ HTML;
 
             foreach ( $_servers_all as $_server )
             {
-                $_type = $_server->server_type_id;
-                //$_serverType = ServerTypes::nameOf( $_type );
-                if ( $_type == 1 )
-                {
-                    $_serverType = 'DB';
-                }
-                if ( $_type == 2 )
-                {
-                    $_serverType = 'WEB';
-                }
-                if ( $_type == 3 )
-                {
-                    $_serverType = 'APP';
-                }
-                $_serverType = strtoupper( $_serverType );
+                $_serverType = strtoupper( ServerTypes::nameOf( $_type = $_server->server_type_id ) );
 
                 $_label = <<<HTML
 <div><span class="label label-{$_contexts[$_type]}">{$_serverType}</span></div>
@@ -221,7 +197,7 @@ HTML;
             $cluster_assigned_servers_array = array_map( 'intval', explode( ',', $servers ) );
         }
 
-        $cluster_server_list = Deploy\ClusterServer::where( 'cluster_id', '=', $id )
+        $cluster_server_list = ClusterServer::where( 'cluster_id', '=', $id )
             ->select( ['server_id'] )
             ->get();
 
@@ -236,7 +212,7 @@ HTML;
 
         foreach ( array_values( $servers_remove ) as $value )
         {
-            Deploy\ClusterServer::where( 'server_id', '=', intval( $value ) )
+            ClusterServer::where( 'server_id', '=', intval( $value ) )
                 ->where( 'cluster_id', '=', intval( $id ) )
                 ->delete();
         }
@@ -246,10 +222,10 @@ HTML;
         foreach ( array_values( $servers_add ) as $value )
         {
             $add = array('server_id' => intval( $value ), 'cluster_id' => intval( $id ));
-            Deploy\ClusterServer::create( $add );
+            ClusterServer::create( $add );
         }
 
-        $cluster = Deploy\Cluster::find( $id );
+        $cluster = Cluster::find( $id );
         $cluster->update( $cluster_data );
 
         $_redirect = '/';
@@ -261,7 +237,7 @@ HTML;
 
     public function store()
     {
-        $create_cluster = new Deploy\Cluster;
+        $create_cluster = new Cluster;
 
         $input = Input::all();
 
@@ -276,7 +252,6 @@ HTML;
 
     public function destroy( $ids )
     {
-
         $id_array = [];
 
         if ( $ids == 'multi' )
@@ -292,8 +267,8 @@ HTML;
 
         foreach ( $id_array as $id )
         {
-            Deploy\Cluster::find( $id )->delete();
-            Deploy\ClusterServer::where( 'cluster_id', '=', intval( $id ) )->delete();
+            Cluster::find( $id )->delete();
+            ClusterServer::where( 'cluster_id', '=', intval( $id ) )->delete();
         }
 
         $_redirect = '/';
@@ -305,18 +280,18 @@ HTML;
 
     public function index()
     {
-        $asgn_clusters = Deploy\Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')->distinct()->get(['cluster_t.*', 'cluster_id']);
+        $asgn_clusters = Cluster::join( 'cluster_server_asgn_t', 'cluster_id', '=', 'id' )->distinct()->get( ['cluster_t.*', 'cluster_id'] );
 
         $excludes = [];
 
-        foreach($asgn_clusters as $obj)
+        foreach ( $asgn_clusters as $obj )
         {
-            array_push($excludes, $obj->id);
+            array_push( $excludes, $obj->id );
         }
 
-        $not_asgn_clusters = Deploy\Cluster::whereNotIn('id', $excludes)->get();
+        $not_asgn_clusters = Cluster::whereNotIn( 'id', $excludes )->get();
 
-        $result = array_merge(json_decode($asgn_clusters), json_decode($not_asgn_clusters));
+        $result = array_merge( json_decode( $asgn_clusters ), json_decode( $not_asgn_clusters ) );
 
         return View::make( 'app.clusters' )->with( 'prefix', $this->_prefix )->with( 'clusters', $result );
     }

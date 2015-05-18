@@ -170,7 +170,7 @@ $(function() {
 
 	_chart('#timeline-chart', 'Live DSP API Calls', 'Calls');
 	_chart('#timeline-chart-logins', 'DSP User Logins', 'Logins', 'logins');
-	_chart('#timeline-chart-fabric-api', 'Fabric API Calls', 'Calls', '', 'fabric/*');
+	_chart('#timeline-chart-fabric-api', 'DFE API Calls', 'Calls', '', 'fabric/*');
 
 	_update();
 });

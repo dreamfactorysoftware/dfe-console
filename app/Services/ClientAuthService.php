@@ -11,7 +11,6 @@ use Elastica\Filter\Prefix;
 use Elastica\Query;
 use Elastica\ResultSet;
 use Elastica\Search;
-use Illuminate\Support\Facades\Log;
 
 class ClientAuthService extends BaseService
 {
@@ -83,7 +82,7 @@ class ClientAuthService extends BaseService
             }
             catch ( \Exception $_ex )
             {
-                Log::error( $_ex );
+                \Log::error( $_ex );
 
                 throw $_ex;
             }
@@ -110,7 +109,7 @@ class ClientAuthService extends BaseService
 
         $_query = $this->_buildQuery( $facility, $interval, $size, $from, $term );
 
-        Log::debug( json_encode( $_query ) );
+        \Log::debug( json_encode( $_query ) );
 
         $_results = null;
 
@@ -120,7 +119,7 @@ class ClientAuthService extends BaseService
         }
         catch ( \Exception $_ex )
         {
-            Log::error( 'Exception retrieving logs: ' . $_ex->getMessage() );
+            \Log::error( 'Exception retrieving logs: ' . $_ex->getMessage() );
 
             throw new \RuntimeException( 500, $_ex->getMessage() );
         }
@@ -241,7 +240,7 @@ class ClientAuthService extends BaseService
         }
         catch ( \Exception $_ex )
         {
-            Log::error( $_ex->getMessage() );
+            \Log::error( $_ex->getMessage() );
         }
 
         return $_results;
@@ -278,7 +277,7 @@ class ClientAuthService extends BaseService
         }
         catch ( PartialShardFailureException $_ex )
         {
-            Log::info( 'Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).' );
+            \Log::info( 'Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).' );
             $_result = $_ex->getResponse()->getData();
 
             if ( array_key_exists( 'hits', $_result ) )
@@ -289,7 +288,7 @@ class ClientAuthService extends BaseService
                 }
             }
 
-            Log::warning( 'No global stats found.' );
+            \Log::warning( 'No global stats found.' );
 
             return false;
         }

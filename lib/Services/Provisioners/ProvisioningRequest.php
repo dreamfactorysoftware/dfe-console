@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
 class ProvisioningRequest
@@ -41,7 +41,7 @@ class ProvisioningRequest
     //******************************************************************************
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param Filesystem                                                   $storage
      * @param bool                                                         $deprovision
      * @param bool                                                         $force

@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use Illuminate\Filesystem\FilesystemAdapter;
 
 /**
@@ -33,7 +33,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                                       $append
      *
      * @return string
@@ -44,7 +44,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      *
      * @return string
      */
@@ -56,7 +56,7 @@ class InstanceStorageService extends BaseService
     /**
      * We want the private path of the instance to point to the user's area. Instances have no "private path" per se.
      *
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      *
      * @return mixed
      */
@@ -68,7 +68,7 @@ class InstanceStorageService extends BaseService
     /**
      * We want the private path of the instance to point to the user's area. Instances have no "private path" per se.
      *
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      *
      * @return mixed
      */
@@ -78,7 +78,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      *
      * @return string
      */
@@ -90,7 +90,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                                       $path
      * @param string                                                       $tag
      * @param array                                                        $options
@@ -112,7 +112,7 @@ class InstanceStorageService extends BaseService
     /**
      * Returns the relative root directory of this instance's storage
      *
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                                       $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
@@ -123,7 +123,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                                       $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
@@ -136,7 +136,7 @@ class InstanceStorageService extends BaseService
     /**
      * Returns the relative root directory of this instance's storage
      *
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                                       $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
@@ -147,7 +147,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                                       $tag
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
@@ -158,7 +158,7 @@ class InstanceStorageService extends BaseService
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Deploy\Instance $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                                       $tag
      *
      * @return FilesystemAdapter

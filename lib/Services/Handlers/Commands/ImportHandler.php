@@ -1,7 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\ImportJob;
 use DreamFactory\Enterprise\Services\Facades\Snapshot;
 use DreamFactory\Library\Utility\IfSet;

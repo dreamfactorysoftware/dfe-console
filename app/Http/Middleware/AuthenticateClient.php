@@ -4,7 +4,7 @@ use Closure;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Enterprise\Database\Models\Deploy\AppKey;
+use DreamFactory\Enterprise\Database\Models\AppKey;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;

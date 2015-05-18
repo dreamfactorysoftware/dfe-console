@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Facades;
 
 use DreamFactory\Enterprise\Services\Providers\InstanceStorageServiceProvider;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Facade;
 

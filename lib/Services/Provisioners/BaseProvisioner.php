@@ -2,13 +2,13 @@
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;

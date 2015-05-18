@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 class ServiceUserController extends ResourceController
 {
@@ -14,7 +13,7 @@ class ServiceUserController extends ResourceController
     /**
      * @type string
      */
-    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\ServiceUser';
+    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\ServiceUser';
     /** @type string */
     protected $_resource = 'service-user';
 }

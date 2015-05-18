@@ -4,13 +4,13 @@ namespace DreamFactory\Enterprise\Console\Http\Controllers;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
-use DreamFactory\Enterprise\Console\Services\Elk;
+use DreamFactory\Enterprise\Console\Services\ElkService;
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\InstanceArchive;
+use DreamFactory\Enterprise\Database\Models\Server;
+use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Auditing\AuditingService;
-use DreamFactory\Enterprise\Database\Models\Deploy\Cluster;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
-use DreamFactory\Enterprise\Database\Models\Deploy\InstanceArchive;
-use DreamFactory\Enterprise\Database\Models\Deploy\Server;
-use DreamFactory\Enterprise\Database\Models\Deploy\User;
 use DreamFactory\Library\Utility\IfSet;
 
 class DashboardController extends FactoryController
@@ -151,7 +151,7 @@ class DashboardController extends FactoryController
 
         if ( empty( $_stats ) )
         {
-            /** @type Elk $_source */
+            /** @type ElkService $_source */
             $_source = $this->_elk();
 
             if ( false === ( $_stats = $_source->globalStats() ) )
@@ -204,7 +204,7 @@ class DashboardController extends FactoryController
     }
 
     /**
-     * @return Elk
+     * @return ElkService
      */
     protected function _elk()
     {

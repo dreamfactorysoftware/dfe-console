@@ -4,7 +4,6 @@ namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 use DreamFactory\Enterprise\Common\Facades\Packet;
 use DreamFactory\Enterprise\Console\Http\Controllers\DataController;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -86,7 +85,7 @@ class ResourceController extends DataController
         {
             $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
 
-            return View::make( $this->_getResourceView(), array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords( $this->_resource )) );
+            return \View::make( $this->_getResourceView(), array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords( $this->_resource )) );
         }
         catch ( \Exception $_ex )
         {

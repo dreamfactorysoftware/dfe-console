@@ -14,7 +14,7 @@ class ReportController extends ResourceController
     /** @type string */
     protected $_tableName = 'report_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\Report';
+    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Report';
     /** @type string */
     protected $_resource = 'report';
 

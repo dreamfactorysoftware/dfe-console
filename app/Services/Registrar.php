@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Services;
 
-use DreamFactory\Enterprise\Database\Models\Deploy\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\User;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 use Validator;
 

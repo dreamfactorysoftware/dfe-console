@@ -1,10 +1,10 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Controllers;
 
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
-use DreamFactory\Enterprise\Database\Models\Deploy\Cluster;
-use DreamFactory\Enterprise\Database\Models\Deploy\Server;
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Server;
+use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 
 class InstanceController extends FactoryController
 {

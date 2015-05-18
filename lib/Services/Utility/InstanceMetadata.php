@@ -2,10 +2,10 @@
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Library\Fabric\Common\Utility\Json;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use DreamFactory\Library\Utility\Inflector;
+use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
@@ -142,7 +142,7 @@ class InstanceMetadata implements Jsonable, Arrayable
     /** @inheritdoc */
     public function toJson( $options = 0 )
     {
-        return Json::encode( $this->toArray(), $options );
+        return JsonFile::encode( $this->toArray(), $options );
     }
 
     /**
@@ -157,7 +157,7 @@ class InstanceMetadata implements Jsonable, Arrayable
 
         if ( $filesystem->exists( $_file ) )
         {
-            return Json::decode( $_json = $filesystem->get( $_file ) );
+            return JsonFile::decode( $_json = $filesystem->get( $_file ) );
         }
 
         \Log::info( 'Building missing instance metadata: ' . $_file );

@@ -1,9 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Console\Handlers\Events;
 
-use DreamFactory\Enterprise\Database\Models\Deploy\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
 
 /**
- * Fired when a new instance is provisioned
+ * Fired when a new instance is deprovisioned
  */
 class InstanceUp extends BaseEventHandler
 {
@@ -19,14 +19,5 @@ class InstanceUp extends BaseEventHandler
      */
     public function handle( ServiceUser $user, $remember )
     {
-        //  Create an app key...
-
-
-        return $user->update(
-            [
-                'last_login_date'    => $user->freshTimestamp(),
-                'last_login_ip_text' => $this->_request->getClientIp()
-            ]
-        );
     }
 }

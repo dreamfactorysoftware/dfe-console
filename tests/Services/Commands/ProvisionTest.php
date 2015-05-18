@@ -3,7 +3,7 @@ namespace DreamFactory\Enterprise\Services\Tests\Commands;
 
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 
 class ProvisionTest extends \TestCase
 {

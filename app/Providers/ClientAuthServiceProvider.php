@@ -15,13 +15,6 @@ class ClientAuthServiceProvider extends BaseServiceProvider
      */
     const IOC_NAME = 'auth.client';
 
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /** @inheritdoc */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Console\\Services\\ClientAuthService';
-
     //*************************************************************************
     //* Methods
     //*************************************************************************

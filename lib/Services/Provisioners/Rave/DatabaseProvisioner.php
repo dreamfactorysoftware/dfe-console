@@ -7,7 +7,7 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

@@ -16,9 +16,9 @@ use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
-use DreamFactory\Enterprise\Database\Models\Deploy\AppKey;
-use DreamFactory\Enterprise\Database\Models\Deploy\Cluster;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\AppKey;
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 

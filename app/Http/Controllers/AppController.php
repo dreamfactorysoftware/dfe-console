@@ -60,7 +60,14 @@ class AppController extends FactoryController
         }
 
         //  Show 404
-        return \View::make( 'app.404', ['_trail' => null] );
+        try
+        {
+            return parent::missingMethod( $parameters );
+        }
+        catch ( \Exception $_ex )
+        {
+            return \View::make( 'app.404', ['_trail' => null] );
+        }
     }
 
 }

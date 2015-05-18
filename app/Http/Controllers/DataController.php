@@ -6,8 +6,6 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -73,7 +71,7 @@ class DataController extends FactoryController
             $this->_parseDataRequest( null, $columns );
 
             /** @type Builder $_table */
-            $_table = $builder ?: DB::table( $table );
+            $_table = $builder ?: \DB::table( $table );
             $_table->select( $columns );
 
             if ( !empty( $this->_order ) )
@@ -225,7 +223,7 @@ class DataController extends FactoryController
             'data'            => $this->_prepareResponseData( $data ),
         );
 
-        return Response::json( $_response );
+        return \Response::json( $_response );
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
-use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;

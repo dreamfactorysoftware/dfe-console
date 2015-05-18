@@ -1,13 +1,11 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Enterprise\Database\Models\Deploy\ServiceUser;
-use DreamFactory\Enterprise\Database\Models\Deploy\User;
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\User;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
 
-class UserController extends ResourceController //FactoryController //
+class UserController extends ResourceController
 {
     //******************************************************************************
     //* Members
@@ -16,7 +14,7 @@ class UserController extends ResourceController //FactoryController //
     /** @type string */
     protected $_tableName = 'user_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\User';
+    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\User';
     /** @type string */
     protected $_resource = 'user';
     /**
@@ -68,7 +66,7 @@ class UserController extends ResourceController //FactoryController //
 
             unset( $user_data['password_text'] );
 
-            return View::make( 'app.users.edit' )
+            return \View::make( 'app.users.edit' )
                 ->with( 'user_id', $id )
                 ->with( 'prefix', $this->_prefix )
                 ->with( 'user', $user_data )
@@ -208,12 +206,12 @@ class UserController extends ResourceController //FactoryController //
         $_redirect .= $this->_prefix;
         $_redirect .= '/users';
 
-        return Redirect::to( $_redirect );
+        return \Redirect::to( $_redirect );
     }
 
     public function destroy( $ids )
     {
-        $user_data = Input::all();
+        $user_data = \Input::all();
         $a_users = new ServiceUser;
         $o_users = new User;
 
@@ -250,7 +248,7 @@ class UserController extends ResourceController //FactoryController //
         $_redirect .= $this->_prefix;
         $_redirect .= '/users';
 
-        return Redirect::to( $_redirect );
+        return \Redirect::to( $_redirect );
     }
 
     public function index()
@@ -295,7 +293,7 @@ class UserController extends ResourceController //FactoryController //
         $result = array_map( "unserialize", array_unique( array_map( "serialize", $result ) ) );
         sort( $result );
 
-        return View::make( 'app.users' )->with( 'prefix', $this->_prefix )->with( 'users', $result );//$users_owners->all());
+        return \View::make( 'app.users' )->with( 'prefix', $this->_prefix )->with( 'users', $result );//$users_owners->all());
     }
 
 }

@@ -4,10 +4,9 @@ use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
-use DreamFactory\Library\Fabric\Common\Utility\Json;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -70,7 +69,6 @@ class SnapshotService extends BaseService
     public function create( $instanceId, \Illuminate\Contracts\Filesystem\Filesystem $fsDestination = null, $keepDays = 30 )
     {
         //  Build our "mise en place", as it were...
-        $_start = microtime( true );
         $_stamp = date( 'YmdHis' );
         $_instance = $this->_findInstance( $instanceId );
         $_instanceName = $_instance->instance_name_text;
@@ -144,7 +142,7 @@ class SnapshotService extends BaseService
         $_md = $this->_getConfigValue( 'snapshot.templates.metadata', $_metadata );
 
         //  Put it in the snapshot...
-        $_fsSnapshot->put( 'snapshot.json', Json::encode( $_md ) );
+        $_fsSnapshot->put( 'snapshot.json', JsonFile::encode( $_md ) );
 
         //  Unset to close file
         unset( $_fsSnapshot );
@@ -468,10 +466,10 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param FilesystemInterface|AdapterInterface $filesystem
-     * @param string                               $source
-     * @param string                               $destination
-     * @param array|Config                         $config
+     * @param FilesystemAdapter|FilesystemInterface|AdapterInterface $filesystem
+     * @param string                                                 $source
+     * @param string                                                 $destination
+     * @param array|Config                                           $config
      *
      * @return bool
      */
@@ -479,14 +477,16 @@ class SnapshotService extends BaseService
     {
         if ( false !== ( $_fd = fopen( $source, 'r' ) ) )
         {
+            $_driver = $filesystem->getDriver();
+
             //  Fallback gracefully if no stream support
             if ( method_exists( $filesystem, 'writeStream' ) )
             {
                 $_result = $filesystem->writeStream( $destination, $_fd, [] );
             }
-            else if ( method_exists( $filesystem->getDriver(), 'writeStream' ) )
+            elseif ( method_exists( $_driver, 'writeStream' ) )
             {
-                $_result = $filesystem->getDriver()->writeStream( $destination, $_fd, [] );
+                $_result = $_driver->writeStream( $destination, $_fd, [] );
             }
             else
             {
