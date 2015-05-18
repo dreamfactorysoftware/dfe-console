@@ -23,6 +23,22 @@ class PolicyController extends ResourceController
     protected $_prefix = 'v1';
 
 
+    public function store()
+    {
+
+    }
+
+
+    public function edit()
+    {
+
+
+    }
+
+    public function destroy()
+    {
+        
+    }
 
 
     public function create( array $viewData = [] )
@@ -33,9 +49,6 @@ class PolicyController extends ResourceController
 
     public function index()
     {
-        //$test = $id;
-        //
-        //echo 'asd';
         return View::make('app.policies')->with('prefix', $this->_prefix)->with( 'policies', []);//.index');//->with('nerd', $test);
     }
 
