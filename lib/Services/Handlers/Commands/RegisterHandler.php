@@ -5,8 +5,8 @@ use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Commands\RegisterJob;
-use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Models\Deploy\AppKey;
 use Illuminate\Http\Response;
 
 /**

@@ -1,8 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
+use DreamFactory\Enterprise\Database\Models\Deploy\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\Deploy\User;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;

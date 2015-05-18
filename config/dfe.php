@@ -4,7 +4,7 @@
 //******************************************************************************
 
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 
 return [
     'console-api-url'  => 'http://console.enterprise.dreamfactory.com/api/v1/ops/',

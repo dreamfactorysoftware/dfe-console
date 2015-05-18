@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Contracts\StorageMounter;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
-use DreamFactory\Library\Fabric\Database\Exceptions\MountException;
+use DreamFactory\Enterprise\Database\Exceptions\MountException;
 use DreamFactory\Library\Utility\IfSet;
 
 class MountManager extends BaseManager implements StorageMounter
@@ -18,7 +18,7 @@ class MountManager extends BaseManager implements StorageMounter
      * @param array  $options
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
-     * @throws \DreamFactory\Library\Fabric\Database\Exceptions\MountException
+     * @throws \DreamFactory\Enterprise\Database\Exceptions\MountException
      */
     public function mount( $name, $options = [] )
     {

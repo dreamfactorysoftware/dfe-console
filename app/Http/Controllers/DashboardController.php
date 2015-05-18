@@ -6,11 +6,11 @@ use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
 use DreamFactory\Enterprise\Console\Services\Elk;
 use DreamFactory\Enterprise\Services\Auditing\AuditingService;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\InstanceArchive;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\User;
+use DreamFactory\Enterprise\Database\Models\Deploy\Cluster;
+use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Deploy\InstanceArchive;
+use DreamFactory\Enterprise\Database\Models\Deploy\Server;
+use DreamFactory\Enterprise\Database\Models\Deploy\User;
 use DreamFactory\Library\Utility\IfSet;
 
 class DashboardController extends FactoryController

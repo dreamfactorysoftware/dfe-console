@@ -1,8 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Library\Fabric\Database\Models\Deploy;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Deploy;
+use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Response;
 

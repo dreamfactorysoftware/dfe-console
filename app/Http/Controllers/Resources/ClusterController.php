@@ -3,7 +3,7 @@ namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
-use DreamFactory\Library\Fabric\Database\Models\Deploy;
+use DreamFactory\Enterprise\Database\Models\Deploy;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;

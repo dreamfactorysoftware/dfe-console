@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Commands\JobCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 
 class RegisterJob extends JobCommand
 {

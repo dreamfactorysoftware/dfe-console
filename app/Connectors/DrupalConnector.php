@@ -1,7 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Connectors;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Library\Fabric\Database\Models\Auth\User;
+use DreamFactory\Enterprise\Database\Models\Auth\User;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 
 class DrupalConnector extends BaseService

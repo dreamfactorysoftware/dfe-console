@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Handlers\Events;
 
-use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\Deploy\ServiceUser;
 
 /**
  * Called when a user logs in

@@ -13,12 +13,12 @@ use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisionerOffering;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
-use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
-use DreamFactory\Library\Fabric\Database\Enums\OwnerTypes;
-use DreamFactory\Library\Fabric\Database\Enums\ProvisionStates;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\AppKey;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
+use DreamFactory\Enterprise\Database\Models\Deploy\AppKey;
+use DreamFactory\Enterprise\Database\Models\Deploy\Cluster;
+use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 

@@ -1,10 +1,10 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Cluster;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\Deploy\Cluster;
+use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Deploy\Server;
+use DreamFactory\Enterprise\Database\Models\Deploy\ServiceUser;
 use Illuminate\Support\Facades\Auth;
 
 class FactoryController extends Controller

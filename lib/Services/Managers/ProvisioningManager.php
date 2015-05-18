@@ -4,7 +4,7 @@ namespace DreamFactory\Enterprise\Services\Managers;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
-use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware
 {

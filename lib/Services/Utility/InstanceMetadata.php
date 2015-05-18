@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Fabric\Common\Utility\Json;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use DreamFactory\Library\Utility\Inflector;
 use Illuminate\Contracts\Filesystem\Filesystem;

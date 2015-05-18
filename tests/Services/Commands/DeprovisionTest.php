@@ -2,7 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Tests\Commands;
 
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
-use DreamFactory\Library\Fabric\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 
 class DeprovisionTest extends \TestCase
 {

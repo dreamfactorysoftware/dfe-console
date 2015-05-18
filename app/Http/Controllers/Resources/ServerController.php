@@ -3,9 +3,9 @@ namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Server;
-use DreamFactory\Library\Fabric\Database\Models\Deploy;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\ServerType;
+use DreamFactory\Enterprise\Database\Models\Deploy\Server;
+use DreamFactory\Enterprise\Database\Models\Deploy;
+use DreamFactory\Enterprise\Database\Models\Deploy\ServerType;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Redirect;

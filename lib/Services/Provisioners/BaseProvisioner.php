@@ -8,7 +8,7 @@ use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;

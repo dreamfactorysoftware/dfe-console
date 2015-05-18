@@ -4,7 +4,7 @@ use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Library\Fabric\Database\Models\Deploy\Instance;
+use DreamFactory\Enterprise\Database\Models\Deploy\Instance;
 
 /**
  * DreamFactory Enterprise(tm) and Services Platform File System
