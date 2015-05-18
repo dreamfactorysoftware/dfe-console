@@ -1,15 +1,12 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-<<<<<<< HEAD
-=======
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Library\Fabric\Database\Models\Deploy;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
 
->>>>>>> master
 class PolicyController extends ResourceController
 {
     //******************************************************************************
@@ -19,15 +16,29 @@ class PolicyController extends ResourceController
     /** @type string */
     protected $_tableName = 'policy_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Policy';
+    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\Policy';
     /** @type string */
     protected $_resource = 'policy';
 
     protected $_prefix = 'v1';
 
-<<<<<<< HEAD
-=======
 
+    public function store()
+    {
+
+    }
+
+
+    public function edit()
+    {
+
+
+    }
+
+    public function destroy()
+    {
+        
+    }
 
 
     public function create( array $viewData = [] )
@@ -36,17 +47,9 @@ class PolicyController extends ResourceController
     }
 
 
->>>>>>> master
     public function index()
     {
-        //$test = $id;
-        //
-        //echo 'asd';
-<<<<<<< HEAD
-        return \View::make( 'app.policies' )->with( 'prefix', $this->_prefix );//.index');//->with('nerd', $test);
-=======
         return View::make('app.policies')->with('prefix', $this->_prefix)->with( 'policies', []);//.index');//->with('nerd', $test);
->>>>>>> master
     }
 
 }
