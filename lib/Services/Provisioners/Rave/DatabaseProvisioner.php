@@ -4,10 +4,10 @@ namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -341,11 +341,13 @@ MYSQL
                 {
                     foreach ( $_users as $_user )
                     {
-                        $db->statement( 'CREATE USER ' . $_user . ' IDENTIFIED BY \'' . $creds['password'] . '\'' );
+                        $db->statement(
+                            'GRANT ALL PRIVILEGES ON ' . $creds['database'] . '.* TO ' . $_user . ' IDENTIFIED BY \'' . $creds['password'] . '\''
+                        );
                     }
 
                     //	Grants for instance database
-                    return $db->statement( 'GRANT ALL PRIVILEGES ON ' . $creds['database'] . '.* TO ' . implode( ', ', $_users ) );
+                    return true;
                 }
                 catch ( \Exception $_ex )
                 {
@@ -370,26 +372,30 @@ MYSQL
             function () use ( $db, $creds, $fromServer )
             {
                 //  Create users
-                $_users = implode( ', ', $this->_getDatabaseUsers( $creds, $fromServer ) );
+                $_users = $this->_getDatabaseUsers( $creds, $fromServer );
 
                 try
                 {
-                    //	Grants for instance database
-                    if ( !( $_result = $db->statement( 'REVOKE ALL PRIVILEGES ON ' . $creds['database'] . '.* TO ' . $_users ) ) )
+                    foreach ( $_users as $_user )
                     {
-                        throw new ProvisioningException( 'Error revoking grants: ' . print_r( $db->getPdo()->errorInfo(), true ) );
+                        //	Grants for instance database
+                        if ( !( $_result = $db->statement( 'REVOKE ALL PRIVILEGES ON ' . $creds['database'] . '.* FROM ' . $_user ) ) )
+                        {
+                            \Log::error( '    * provisioner: error revoking privileges from "' . $_user . '"' );
+                            continue;
+                        }
+
+                        $this->debug( '    * provisioner: grants revoked - complete' );
+
+                        if ( !( $_result = $db->statement( 'DROP USER ' . $_user ) ) )
+                        {
+                            \Log::error( '    * provisioner: error dropping user "' . $_user . '"' );
+                        }
+
+                        $_result && $this->debug( '    * provisioner: users dropped > ', $_users );
                     }
 
-                    $this->debug( '    * provisioner: grants revoked - complete' );
-
-                    if ( !( $_result = $db->statement( 'DROP USER ' . $_users ) ) )
-                    {
-                        throw new ProvisioningException( 'Error dropping users: ' . print_r( $db->getPdo()->errorInfo(), true ) );
-                    }
-
-                    $_result && $this->debug( '    * provisioner: users dropped > ', $_users );
-
-                    return $_result;
+                    return true;
                 }
                 catch ( \Exception $_ex )
                 {

@@ -148,7 +148,7 @@ class OpsController extends Controller
 
         $_response = array();
 
-        $_instances = Instance::where( 'user_id', $_owner->id )->get();
+        $_instances = Instance::userId( $_owner->id )->get();
 
         if ( !empty( $_instances ) )
         {
