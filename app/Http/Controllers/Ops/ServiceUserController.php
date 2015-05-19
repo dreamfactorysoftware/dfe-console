@@ -1,8 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
-use DreamFactory\Enterprise\Console\Http\Controllers\Resources\ResourceController;
-
-class ServiceUserController extends ResourceController
+class ServiceUserController extends OpsResourceController
 {
     //******************************************************************************
     //* Members

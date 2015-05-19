@@ -41,6 +41,16 @@
     function ()
     {
         \Route::controller( 'ops', 'OpsController' );
+
+        \Route::resource( 'users', 'Ops\\UserController' );
+        \Route::resource( 'service-users', 'Ops\\ServiceUserController' );
+        \Route::resource( 'servers', 'Ops\\ServerController' );
+        \Route::resource( 'clusters', 'Ops\\ClusterController' );
+        \Route::resource( 'instances', 'Ops\\InstanceController' );
+        \Route::resource( 'mounts', 'Ops\\MountController' );
+        \Route::resource( 'app-keys', 'Ops\\AppKeyController' );
+        \Route::resource( 'instances', 'Ops\\InstanceController' );
+        \Route::resource( 'policies', 'Ops\\PolicyController' );
     }
 );
 
