@@ -38,7 +38,7 @@
                                                 </div>
                                             </df-section-header>
 
-                                            <form method="POST" action="/{{$prefix}}/users/{{$user_id}}">
+                                                <form id="user_form" method="POST" action="/{{$prefix}}/users/{{$user_id}}">
                                                 <input name="_method" type="hidden" value="PUT">
                                                 <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
                                                 <input name="user_type" type="hidden" id="user_type" value="{{ $is_admin }}">
@@ -70,9 +70,9 @@
                                                                 </div>
                                                                 <div id="set_password_form" style="display: none;">
                                                                     <label>Set Password</label>
-                                                                    <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password1">
+                                                                    <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password">
                                                                     <div>&nbsp;</div>
-                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password1">
+                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
                                                                 </div>
                                                             </div>
 
@@ -129,7 +129,7 @@
                                                         <hr>
                                                         <div class="form-group">
                                                             <div class="">
-                                                                <button type="submit" class="btn btn-primary">
+                                                                <button type="button" onclick="submitForm()" class="btn btn-primary">
                                                                     Update
                                                                 </button>
                                                                 <!--button type="button" class="btn btn-primary" onclick="javascript:editUser({{$user_id}});">

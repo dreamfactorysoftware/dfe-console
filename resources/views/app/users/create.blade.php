@@ -36,7 +36,7 @@
 
 
                                             <!-- Create User Form -->
-                                            <form class="" name="create-user" method="POST" action="/{{$prefix}}/users">
+                                            <form id="user_form" class="" name="create-user" method="POST" action="/{{$prefix}}/users">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <!-- User Email -->
@@ -124,7 +124,7 @@
                                                         <div class="form-group">
                                                             <div class="">
 
-                                                                <button type="submit" class="btn btn-primary">
+                                                                <button type="button" onclick="submitForm()" class="btn btn-primary">
                                                                     Create
                                                                 </button>
                                                                 &nbsp;&nbsp;
