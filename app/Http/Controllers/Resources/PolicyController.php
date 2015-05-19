@@ -29,15 +29,22 @@ class PolicyController extends ResourceController
     }
 
 
-    public function edit()
+    public function edit( $id )
     {
 
 
     }
 
-    public function destroy()
+
+    public function update( $id )
     {
-        
+
+    }
+
+
+    public function destroy( $ids )
+    {
+
     }
 
 
