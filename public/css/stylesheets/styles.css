@@ -5477,8 +5477,8 @@ tbody.collapse.in {
 /* line 176, ../../../../../../Library/Ruby/Gems/2.0.0/gems/bootstrap-sass-3.3.1.0/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-brand > img {
 	display:     block;
-	padding-top: 7px;
-	width:       200px;
+	/*padding-top: 7px;*/
+	width:       194px;
 }
 
 @media (min-width: 768px) {
