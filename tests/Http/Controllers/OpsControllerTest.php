@@ -1,54 +1,57 @@
-<?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
+<?php namespace DreamFactory\Enterprise\Console\Tests\Http\Controllers;
 
-use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
-use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
-use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\InstanceArchive;
-use DreamFactory\Enterprise\Database\Models\User;
-use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
-use DreamFactory\Enterprise\Services\Contracts\HasOfferings;
-use DreamFactory\Enterprise\Services\Facades\Provision;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Routing\Controller;
+use GuzzleHttp\Client;
 
-class OpsController extends Controller
+/**
+ * Tests the OpsController
+ */
+class OpsControllerTest extends \TestCase
 {
     //******************************************************************************
-    //* Traits
+    //* Members
     //******************************************************************************
 
-    use EntityLookup;
-
-    //*************************************************************************
-    //* Members
-    //*************************************************************************
-
     /**
-     * @var string
+     * @type Client
      */
-    protected $_instanceName;
-    /**
-     * @type User
-     */
-    protected $_user;
-    /**
-     * @type string
-     */
-    protected $_clientId;
+    protected $_client;
 
-    //********************************************************************************
-    //* Public Methods
-    //********************************************************************************
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
 
-    /**
-     * ctor
-     */
-    public function __construct()
+    /** @inheritdoc */
+    public function setUp()
     {
-        $this->middleware( 'auth.client' );
+        parent::setUp();
+
+        $this->_client = new Client(
+            [
+                'base_url' => 'http://mybookstore.com',
+                'defaults' => ['exceptions' => false]
+            ]
+        );
+    }
+
+    public function testPost_ValidInput_BookObject()
+    {
+        $response = $this->_client->get(
+            '/books',
+            [
+                'query' => [
+                    'bookId' => 'hitchhikers-guide-to-the-galaxy'
+                ]
+            ]
+        );
+
+        $this->assertEquals( 200, $response->getStatusCode() );
+
+        $data = $response->json();
+
+        $this->assertArrayHasKey( 'bookId', $data );
+        $this->assertArrayHasKey( 'title', $data );
+        $this->assertArrayHasKey( 'author', $data );
+        $this->assertEquals( 42, $data['price'] );
     }
 
     /**
@@ -56,7 +59,7 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postStatus( Request $request )
+    public function testStatuspostStatus( Request $request )
     {
         $_id = $request->input( 'id' );
         \Log::debug( 'ops.status: ' . print_r( $request->input(), true ) );
