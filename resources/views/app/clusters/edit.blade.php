@@ -162,7 +162,9 @@
                                                                 name="max_instances_nbr"
                                                                 class="form-control"
                                                                 value="{{$cluster->max_instances_nbr}}"
-                                                                type="number">
+                                                                type="number"
+                                                                min="0"
+                                                                max="1000">
                                                         </div>
                                                         <!--/form-->
                                                     </div>
@@ -291,10 +293,7 @@
     </style>
     <script>
 
-    var str = eval({
-    !!$servers
-    !!
-    })
+    var str = eval({!!$servers!!})
     ;
 
     var t = $('#serverTable').dataTable({
@@ -324,12 +323,7 @@
 
         if (id !== undefined) {
 
-            var servers = eval({
-            !!$server_dropdown_all
-            !!
-        }
-        )
-        ;
+            var servers = eval({!!$server_dropdown_all!!});
 
         var this_id = 0;
 
