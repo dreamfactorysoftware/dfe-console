@@ -31,6 +31,10 @@ class RegisterJob extends JobCommand
      * @type int The type of owner
      */
     protected $_ownerType = OwnerTypes::USER;
+    /**
+     * @type \stdClass
+     */
+    protected $_ownerInfo;
 
     //******************************************************************************
     //* Methods
@@ -45,10 +49,10 @@ class RegisterJob extends JobCommand
     public function __construct( $ownerId, $ownerType )
     {
         //  Make sure we have a good types
-        $_owner = OwnerTypes::getOwner( $ownerId, $ownerType );
+        $this->_ownerInfo = OwnerTypes::getOwner( $ownerId, $ownerType );
 
-        $this->_ownerId = $_owner->id;
-        $this->_ownerType = $ownerType;
+        $this->_ownerId = $this->_ownerInfo->id;
+        $this->_ownerType = $this->_ownerInfo->type;
     }
 
     /**
@@ -73,6 +77,11 @@ class RegisterJob extends JobCommand
     public function getOwnerTypeName()
     {
         return OwnerTypes::prettyNameOf( $this->_ownerType );
+    }
+
+    public function getOwnerInfo()
+    {
+        return $this->_ownerInfo;
     }
 
     /**

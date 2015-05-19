@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Http\Controllers;
 
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use GuzzleHttp\Client;
 
 /**
@@ -15,6 +16,10 @@ class OpsControllerTest extends \TestCase
      * @type Client
      */
     protected $_client;
+    /**
+     * @type string
+     */
+    protected $_baseUrl = 'http://dfe-console.local/api/v1/ops/';
 
     //******************************************************************************
     //* Methods
@@ -27,16 +32,24 @@ class OpsControllerTest extends \TestCase
 
         $this->_client = new Client(
             [
-                'base_url' => 'http://mybookstore.com',
-                'defaults' => ['exceptions' => false]
+                'base_url' => $this->_baseUrl,
+                'defaults' => ['exceptions' => false],
             ]
         );
     }
 
-    public function testPost_ValidInput_BookObject()
+    public function testRegister()
+    {
+        $_response = \Artisan::call( 'dfe:register', ['owner-id' => 0, 'owner-type' => OwnerTypes::TESTING] );
+
+        $this->assertNotEmpty( $_response, 'Invalid response received from registration request.' );
+        $this->assertInstanceOf( '\\stdClass', get_class( $_response ) );
+    }
+
+    public function testPostStatus()
     {
         $response = $this->_client->get(
-            '/books',
+            '/status',
             [
                 'query' => [
                     'bookId' => 'hitchhikers-guide-to-the-galaxy'
