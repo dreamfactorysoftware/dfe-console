@@ -70,9 +70,9 @@
                                                                 </div>
                                                                 <div id="set_password_form" style="display: none;">
                                                                     <label>Set Password</label>
-                                                                    <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password1">
+                                                                    <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password">
                                                                     <div>&nbsp;</div>
-                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password1">
+                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
                                                                 </div>
                                                             </div>
 
