@@ -3,15 +3,18 @@
 //* DFE Console Specific Settings
 //******************************************************************************
 
+use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 
 return [
-    'console-api-url'  => 'http://console.enterprise.dreamfactory.com/api/v1/ops/',
+    'console-api-url'           => 'http://console.enterprise.dreamfactory.com/api/v1/ops/',
     /** This key needs to match the key configured in the dashboard */
-    'console-api-key'  => env( 'DFE_CONSOLE_API_KEY', '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy' ),
-    'signature-method' => env( 'DFE_SIGNATURE_METHOD', 'sha256' ),
-    'provisioning'     => [
+    'console-api-key'           => env( 'DFE_CONSOLE_API_KEY', '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy' ),
+    'console-api-client-id'     => env( 'DFE_CONSOLE_API_CLIENT_ID' ),
+    'console-api-client-secret' => env( 'DFE_CONSOLE_API_CLIENT_SECRET' ),
+    'signature-method'          => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
+    'provisioning'              => [
         /**
          * Storage & storage layout options/settings
          */

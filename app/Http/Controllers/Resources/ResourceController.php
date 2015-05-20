@@ -2,10 +2,11 @@
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Facades\Packet;
+use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
+use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Console\Http\Controllers\DataController;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ResourceController extends DataController
 {
@@ -74,7 +75,7 @@ class ResourceController extends DataController
         }
         catch ( \Exception $_ex )
         {
-            throw new NotFoundHttpException();
+            return ErrorPacket::create();
         }
     }
 
@@ -89,18 +90,43 @@ class ResourceController extends DataController
         }
         catch ( \Exception $_ex )
         {
-            throw new NotFoundHttpException();
+            return ErrorPacket::create();
         }
     }
 
     /** {@InheritDoc} */
     public function update( $id )
     {
+        try
+        {
+            $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
+
+            return \View::make( $this->_getResourceView(), array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords( $this->_resource )) );
+        }
+        catch ( \Exception $_ex )
+        {
+            return ErrorPacket::create();
+        }
     }
 
     /** {@InheritDoc} */
     public function destroy( $id )
     {
+        try
+        {
+            $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
+
+            if ( !$_model->delete() )
+            {
+                return ErrorPacket::create( \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR, 'Delete of id "' . $id . '" failed.' );
+            }
+
+            return SuccessPacket::make();
+        }
+        catch ( \Exception $_ex )
+        {
+            return ErrorPacket::create();
+        }
     }
 
     /**

@@ -1,7 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Http\Controllers;
 
-use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use GuzzleHttp\Client;
+use GuzzleHttp\Message\ResponseInterface;
+use Illuminate\Http\Request;
 
 /**
  * Tests the OpsController
@@ -15,280 +17,123 @@ class OpsControllerTest extends \TestCase
     /**
      * @type Client
      */
-    protected $_client;
+    protected static $_client;
     /**
      * @type string
      */
-    protected $_baseUrl = 'http://dfe-console.local/api/v1/ops/';
+    protected static $_clientId;
+    /**
+     * @type string
+     */
+    protected static $_signature;
+    /**
+     * @type string
+     */
+    protected static $_baseUrl = 'http://dfe-console.local/api/v1/ops/';
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /** @inheritdoc */
-    public function setUp()
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
-        $this->_client = new Client(
+        static::$_client = new Client(
             [
-                'base_url' => $this->_baseUrl,
+                'base_url' => static::$_baseUrl,
                 'defaults' => ['exceptions' => false],
             ]
         );
     }
 
-    public function testRegister()
-    {
-        $_response = \Artisan::call( 'dfe:register', ['owner-id' => 0, 'owner-type' => OwnerTypes::TESTING] );
-
-        $this->assertNotEmpty( $_response, 'Invalid response received from registration request.' );
-        $this->assertInstanceOf( '\\stdClass', get_class( $_response ) );
-    }
-
+    /**
+     * Tests /status of valid and invalid instances
+     */
     public function testPostStatus()
     {
-        $response = $this->_client->get(
-            '/status',
-            [
-                'query' => [
-                    'bookId' => 'hitchhikers-guide-to-the-galaxy'
-                ]
-            ]
-        );
+        //  Get status of an invalid instance (xx)
+        $_response = $this->_apiCall( 'status', ['id' => 'xx'] );
+        $this->assertFalse( $_response->success );
+        $this->assertEquals( 404, $_response->status_code );
 
-        $this->assertEquals( 200, $response->getStatusCode() );
+        //  Get status of a valid instance
+        $_response = $this->_apiCall( 'status', ['id' => 'rave-test1'] );
+        $this->assertTrue( $_response->success );
+        $this->assertEquals( 200, $_response->status_code );
+    }
 
-        $data = $response->json();
+    public function testPostInstances()
+    {
+        $_response = $this->_apiCall( 'instances' );
 
-        $this->assertArrayHasKey( 'bookId', $data );
-        $this->assertArrayHasKey( 'title', $data );
-        $this->assertArrayHasKey( 'author', $data );
-        $this->assertEquals( 42, $data['price'] );
+        $this->assertEquals( 200, $_response->status_code );
     }
 
     /**
-     * @param Request $request
+     * @param array $payload
      *
      * @return array
      */
-    public function testStatuspostStatus( Request $request )
+    protected function _signPayload( array $payload )
     {
-        $_id = $request->input( 'id' );
-        \Log::debug( 'ops.status: ' . print_r( $request->input(), true ) );
-
-        try
-        {
-            $_instance = $this->_findInstance( $request->input( 'id' ) );
-            $_archived = false;
-        }
-        catch ( \Exception $_ex )
-        {
-            //  Check the deleted instances
-            if ( null === ( $_instance = InstanceArchive::byNameOrId( $_id )->first() ) )
-            {
-                return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found.' );
-            }
-
-            $_archived = true;
-        }
-
-        $_rootStoragePath = $_instance->getRootStoragePath();
-        $_storagePath = $_instance->getStoragePath();
-
-        /**
-         * This has multiple copies of data because it is used by several different systems
-         */
-
-        return SuccessPacket::make(
+        return array_merge(
             array(
-                'id'                 => $_instance->id,
-                'archived'           => $_archived,
-                'deleted'            => false,
-                'metadata'           => (array)$_instance->instance_data_text,
-                'root-storage-path'  => $_rootStoragePath,
-                'storage-path'       => $_storagePath,
-                'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
-                'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
-                //  snake
-                'instance_name_text' => $_instance->instance_name_text,
-                'instance_id_text'   => $_instance->instance_id_text,
-                'state_nbr'          => $_instance->state_nbr,
-                'vendor_state_nbr'   => $_instance->vendor_state_nbr,
-                'vendor_state_text'  => $_instance->vendor_state_text,
-                'provision_ind'      => ( 1 == $_instance->provision_ind ),
-                'trial_instance_ind' => ( 1 == $_instance->trial_instance_ind ),
-                'deprovision_ind'    => ( 1 == $_instance->deprovision_ind ),
-                'start_date'         => (string)$_instance->start_date,
-                'create_date'        => (string)$_instance->create_date,
-                //  camel
-                'instanceName'       => $_instance->instance_name_text,
-                'instanceId'         => $_instance->id,
-                'vendorInstanceId'   => $_instance->instance_id_text,
-                'instanceState'      => $_instance->state_nbr,
-                'vendorState'        => $_instance->vendor_state_nbr,
-                'vendorStateName'    => $_instance->vendor_state_text,
-                'provisioned'        => ( 1 == $_instance->provision_ind ),
-                'trial'              => ( 1 == $_instance->trial_instance_ind ),
-                'deprovisioned'      => ( 1 == $_instance->deprovision_ind ),
-                'startDate'          => (string)$_instance->start_date,
-                'createDate'         => (string)$_instance->create_date,
-                //  morse
-                'instance-id'        => $_instance->id,
-                'vendor-instance-id' => $_instance->instance_id_text,
-                'instance-name'      => $_instance->instance_name_text,
-                'instance-state'     => $_instance->state_nbr,
-                'vendor-state'       => $_instance->vendor_state_nbr,
-                'vendor-state-name'  => $_instance->vendor_state_text,
-                'start-date'         => (string)$_instance->start_date,
-                'create-date'        => (string)$_instance->create_date,
-            )
+                'client-id'    => static::$_clientId,
+                'access-token' => static::$_signature,
+            ),
+            $payload ?: []
         );
+
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param string $clientId
+     * @param string $clientSecret
      *
-     * @return array
+     * @return string
      */
-    public function postInstances( Request $request )
+    protected static function _generateSignature( $clientId, $clientSecret )
     {
-        /** auth.client middleware sticks the validated owner into the session for us */
-        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
-
-        if ( empty( $_owner ) )
-        {
-            throw new \RuntimeException( 'No owner found in current session for request.' );
-        }
-
-        $_response = array();
-
-        $_instances = Instance::userId( $_owner->id )->get();
-
-        if ( !empty( $_instances ) )
-        {
-            /** @type Instance $_instance */
-            foreach ( $_instances as $_instance )
-            {
-                if ( !empty( $_instance->instance_name_text ) )
-                {
-                    $_response[$_instance->instance_name_text] = $_instance->toArray();
-                }
-
-                unset( $_instance );
-            }
-        }
-
-        return SuccessPacket::make( $_response );
+        return hash_hmac( config( 'dfe.signature-method', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ), $clientId, $clientSecret );
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param ResponseInterface $response
+     * @param bool              $object
      *
-     * @return array
+     * @return mixed
      */
-    public function postProvisioners( Request $request )
+    protected function _ensureResponse( $response, $object = true )
     {
-        try
-        {
-            $_response = [];
-            $_provisioners = Provision::getProvisioners();
+        $this->assertTrue( $response instanceof ResponseInterface );
 
-            foreach ( $_provisioners as $_tag => $_provisioner )
-            {
-                $_offerings = false;
-
-                if ( $_provisioner instanceof HasOfferings )
-                {
-                    foreach ( $_provisioner->getOfferings() as $_name => $_config )
-                    {
-                        $_offerings[$_name] = $_config;
-                    }
-                }
-
-                $_response[$_tag] = [
-                    'id'        => $_tag,
-                    'offerings' => $_offerings,
-                ];
-            }
-
-            return SuccessPacket::make( $_response );
-        }
-        catch ( \Exception $_ex )
-        {
-            return ErrorPacket::create( $_ex );
-        }
+        return $response->json( ['object' => $object] );
     }
 
     /**
-     * Provision an instance...
+     * @param string $url
+     * @param array  $payload
+     * @param array  $options
+     * @param string $method
+     * @param bool   $object
      *
-     * @param Request $request
-     *
-     * @return array
+     * @return mixed
      */
-    public function postProvision( Request $request )
+    protected function _apiCall( $url, $payload = [], $options = [], $method = Request::METHOD_POST, $object = true )
     {
-        try
-        {
-            $_payload = $request->input();
+        static::$_clientId = config( 'dfe.console-api-client-id' );
+        static::$_signature = static::_generateSignature( static::$_clientId, config( 'dfe.console-api-client-secret' ) );
 
-            \Log::debug( 'Queuing provisioning request: ' . print_r( $_payload, true ) );
+        $_request = static::$_client->createRequest(
+            $method,
+            ltrim( $url, '/ ' ),
+            array_merge( $options, ['json' => $this->_signPayload( $payload )] )
+        );
 
-            $_result = \Queue::push( new ProvisionJob( $request->input( 'instance-id' ), $_payload ) );
+        $_response = static::$_client->send( $_request );
 
-            return SuccessPacket::make( $_result );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
-
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
-        }
-    }
-
-    /**
-     * Deprovision an instance...
-     *
-     * @param Request $request
-     *
-     * @return array
-     */
-    public function postDeprovision( Request $request )
-    {
-        try
-        {
-            $_payload = $request->input();
-
-            \Log::debug( 'Queuing deprovisioning request: ' . print_r( $_payload, true ) );
-
-            $_result = \Queue::push( new DeprovisionJob( $request->input( 'instance-id' ), $_payload ) );
-
-            return SuccessPacket::make( $_result );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
-
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
-        }
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return User
-     */
-    protected function _validateOwner( Request $request )
-    {
-        /** auth.client middleware sticks the validated owner into the session for us */
-        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
-
-        if ( empty( $_owner ) )
-        {
-            throw new \RuntimeException( 'No owner found in current session for request.' );
-        }
-
-        return $_owner;
+        return $this->_ensureResponse( $_response, $object );
     }
 }
