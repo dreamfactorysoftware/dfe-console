@@ -64,7 +64,7 @@ class UserController extends ResourceController
 
             $user_data = $users->find( $id );
 
-            unset( $user_data['password_text'] );
+            $user_data['password_text'] = '1234567890';
 
             return \View::make( 'app.users.edit' )
                 ->with( 'user_id', $id )
@@ -82,7 +82,6 @@ class UserController extends ResourceController
     public function store()
     {
         $is_system_admin = '';
-        $is_password_set = false;
         $user = null;
         $user_data = Input::all();
 
@@ -100,16 +99,6 @@ class UserController extends ResourceController
             $user = new User;
         }
 
-        if ( array_key_exists( 'set_password', $user_data ) )
-        {
-            $is_password_set = $user_data['set_password'];
-        }
-
-        if ( $is_password_set )
-        {
-            $user->password_text = bcrypt( $user_data['new_password'] );
-        }
-
         if ( array_key_exists( 'active', $user_data ) )
         {
             $user->active_ind = 1;
@@ -119,6 +108,7 @@ class UserController extends ResourceController
             $user->active_ind = 0;
         }
 
+        $user->password_text = bcrypt( $user_data['new_password'] );
         $user->email_addr_text = $user_data['email_addr_text'];
         $user->first_name_text = $user_data['first_name_text'];
         $user->last_name_text = $user_data['last_name_text'];
@@ -136,18 +126,12 @@ class UserController extends ResourceController
     public function update( $id )
     {
         $is_system_admin = '';
-        $is_password_set = false;
         $users = null;
         $user_data = Input::all();
 
         if ( array_key_exists( 'user_type', $user_data ) )
         {
             $is_system_admin = $user_data['user_type'];
-        }
-
-        if ( array_key_exists( 'set_password', $user_data ) )
-        {
-            $is_password_set = $user_data['set_password'];
         }
 
         if ( array_key_exists( 'active_ind', $user_data ) )
@@ -188,15 +172,18 @@ class UserController extends ResourceController
             $users = new User;
         }
 
-        if ( $is_password_set )
+        if ( $user_data['new_password'] != '1234567890' )
         {
             $user_data['password_text'] = bcrypt( $user_data['new_password'] );
+        }
+        else
+        {
+            unset( $user_data['password_text'] );
         }
 
         unset( $user_data['_method'] );
         unset( $user_data['_token'] );
         unset( $user_data['new_password'] );
-        unset( $user_data['set_password'] );
         unset( $user_data['user_type'] );
 
         $user = $users->find( $id );

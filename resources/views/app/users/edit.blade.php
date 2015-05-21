@@ -57,26 +57,17 @@
                                                             <input id="last_name_text" name="last_name_text" value="{{$user->last_name_text}}" class="form-control" placeholder="Enter last name." type="text">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Display Name</label>
-                                                            <input id="nickname_text" name="nickname_text" value="{{$user->nickname_text}}" class="form-control" placeholder="Enter display name." type="text">
+                                                            <label>Nickname</label>
+                                                            <input id="nickname_text" name="nickname_text" value="{{$user->nickname_text}}" class="form-control" placeholder="Enter nickname." type="text">
                                                         </div>
-                                                        <df-set-user-password>
-                                                            <div class="form-group">
-                                                                <div class="checkbox">
-                                                                    <label>
-                                                                        <input id="set_password" name="set_password" value="1" type="checkbox">
-                                                                        Set Password Manually
-                                                                    </label>
-                                                                </div>
-                                                                <div id="set_password_form" style="display: none;">
-                                                                    <label>Set Password</label>
-                                                                    <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password">
-                                                                    <div>&nbsp;</div>
-                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
-                                                                </div>
+                                                        <div class="form-group">
+                                                            <div id="set_password_form">
+                                                                <label>Set Password</label>
+                                                                <input id="new_password" name="new_password" class="form-control" value="{{$user->password_text}}" placeholder="Enter password" type="password">
+                                                                <div>&nbsp;</div>
+                                                                <input id="retype_new_password" class="form-control" value="{{$user->password_text}}" placeholder="Re-enter password" type="password">
                                                             </div>
-
-                                                        </df-set-user-password>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
@@ -132,9 +123,6 @@
                                                                 <button type="button" onclick="submitForm()" class="btn btn-primary">
                                                                     Update
                                                                 </button>
-                                                                <!--button type="button" class="btn btn-primary" onclick="javascript:editUser({{$user_id}});">
-                                                                    Update
-                                                                </button-->
                                                                 &nbsp;&nbsp;
                                                                 <button type="button" class="btn btn-default" onclick="javascript:cancelEditUser();">
                                                                     Close
@@ -170,17 +158,6 @@
                 else
                     echo "initUserEditSet(true);";
             ?>
-
-
-            $('#set_password').click(function () {
-                if ($('#set_password').is(':checked')) {
-                    $('#set_password_form').show();
-
-                } else {
-                    $('#set_password_form').hide();
-
-                }
-            });
 
         });
 

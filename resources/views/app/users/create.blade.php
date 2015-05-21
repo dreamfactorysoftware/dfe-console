@@ -56,25 +56,18 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Nickname</label>
-                                                            <input id="nickname_text" name="nickname_text" value="" class="form-control" placeholder="Enter display name." type="text" required>
+                                                            <input id="nickname_text" name="nickname_text" value="" class="form-control" placeholder="Enter nickname." type="text" required>
                                                         </div>
-                                                        <df-set-user-password>
-                                                            <div class="form-group">
-                                                                <div class="checkbox">
-                                                                    <label>
-                                                                        <input id="set_password" name="set_password" class="" type="checkbox">
-                                                                        Set Password Manually
-                                                                    </label>
-                                                                </div>
-                                                                <div id="set_usercreate_password_form" style="display: none;">
-                                                                    <label>Set Password</label>
-                                                                    <input id="new_password" name="new_password" class="form-control"  placeholder="Enter password" type="password">
-                                                                    <span>&nbsp;</span>
-                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
-                                                                </div>
-                                                            </div>
 
-                                                        </df-set-user-password>
+                                                        <div class="form-group">
+                                                            <div id="">
+                                                                <label>Set Password</label>
+                                                                <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password">
+                                                                <span>&nbsp;</span>
+                                                                <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
@@ -148,18 +141,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $('#set_password').click(function () {
-            if ($('#set_password').is(':checked')) {
-                $('#set_usercreate_password_form').show();
-
-            } else {
-                $('#set_usercreate_password_form').hide();
-
-            }
-        });
-    </script>
 
     <script type="text/javascript" src="../../js/blade-scripts/users/users.js"></script>
 @stop

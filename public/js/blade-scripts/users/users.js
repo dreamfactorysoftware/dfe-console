@@ -127,48 +127,37 @@ function cancelCreateUser(){
 
 function submitForm(){
 
-    if($('#set_password').is(':checked')){
-
-        var passwordEq = function(){
-            if($('#new_password').val() !== $('#retype_new_password').val())
-                return false;
-            else
-                return true;
-        }
-
-        var passwordEmpty = function(){
-            if($('#new_password').val() === '')
-                return false;
-            else
-                return true;
-        }
-
-        if(passwordEq() && passwordEmpty()) {
-            $( "#user_form" ).submit();
-        }
-        else{
-            if(!passwordEmpty())
-            {
-                alert('Password not entered');
-                return;
-            }
-
-            if(!passwordEq())
-            {
-                alert('Password and Re-enter password are not identical');
-                return;
-            }
-        }
+    var passwordEq = function(){
+        if($('#new_password').val() !== $('#retype_new_password').val())
+            return false;
+        else
+            return true;
     }
-    else
-    {
+
+    var passwordEmpty = function(){
+        if($('#new_password').val() === '')
+            return false;
+        else
+            return true;
+    }
+
+    if(passwordEq() && passwordEmpty()) {
         $( "#user_form" ).submit();
     }
+    else{
+        if(!passwordEmpty())
+        {
+            alert('Password not entered');
+            return;
+        }
+
+        if(!passwordEq())
+        {
+            alert('Password and Re-enter password are not identical');
+            return;
+        }
+    }
 }
-
-
-
-
 
 
 
