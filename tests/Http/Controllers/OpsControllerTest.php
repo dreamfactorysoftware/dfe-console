@@ -17,32 +17,32 @@ class OpsControllerTest extends \TestCase
     /**
      * @type Client
      */
-    protected static $_client;
+    protected $_client;
     /**
      * @type string
      */
-    protected static $_clientId;
+    protected $_clientId;
     /**
      * @type string
      */
-    protected static $_signature;
+    protected $_signature;
     /**
      * @type string
      */
-    protected static $_baseUrl = 'http://dfe-console.local/api/v1/ops/';
+    protected $_baseUrl = 'http://dfe-console.local/api/v1/ops/';
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /** @inheritdoc */
-    public static function setUpBeforeClass()
+    public function setUp()
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
-        static::$_client = new Client(
+        $this->_client = new Client(
             [
-                'base_url' => static::$_baseUrl,
+                'base_url' => $this->_baseUrl,
                 'defaults' => ['exceptions' => false],
             ]
         );
@@ -80,8 +80,8 @@ class OpsControllerTest extends \TestCase
     {
         return array_merge(
             array(
-                'client-id'    => static::$_clientId,
-                'access-token' => static::$_signature,
+                'client-id'    => $this->_clientId,
+                'access-token' => $this->_signature,
             ),
             $payload ?: []
         );
@@ -94,7 +94,7 @@ class OpsControllerTest extends \TestCase
      *
      * @return string
      */
-    protected static function _generateSignature( $clientId, $clientSecret )
+    protected function _generateSignature( $clientId, $clientSecret )
     {
         return hash_hmac( config( 'dfe.signature-method', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ), $clientId, $clientSecret );
     }
@@ -123,16 +123,16 @@ class OpsControllerTest extends \TestCase
      */
     protected function _apiCall( $url, $payload = [], $options = [], $method = Request::METHOD_POST, $object = true )
     {
-        static::$_clientId = config( 'dfe.console-api-client-id' );
-        static::$_signature = static::_generateSignature( static::$_clientId, config( 'dfe.console-api-client-secret' ) );
+        $this->_clientId = config( 'dfe.console-api-client-id' );
+        $this->_signature = $this->_generateSignature( $this->_clientId, config( 'dfe.console-api-client-secret' ) );
 
-        $_request = static::$_client->createRequest(
+        $_request = $this->_client->createRequest(
             $method,
             ltrim( $url, '/ ' ),
             array_merge( $options, ['json' => $this->_signPayload( $payload )] )
         );
 
-        $_response = static::$_client->send( $_request );
+        $_response = $this->_client->send( $_request );
 
         return $this->_ensureResponse( $_response, $object );
     }
