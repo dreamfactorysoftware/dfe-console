@@ -40,12 +40,15 @@ class OpsControllerTest extends \TestCase
     {
         parent::setUp();
 
-        $this->_client = new Client(
-            [
-                'base_url' => $this->_baseUrl,
-                'defaults' => ['exceptions' => false],
-            ]
-        );
+        if ( !$this->_client )
+        {
+            $this->_client = new Client(
+                [
+                    'base_url' => $this->_baseUrl,
+                    'defaults' => ['exceptions' => false],
+                ]
+            );
+        }
     }
 
     /**
@@ -59,7 +62,7 @@ class OpsControllerTest extends \TestCase
         $this->assertEquals( 404, $_response->status_code );
 
         //  Get status of a valid instance
-        $_response = $this->_apiCall( 'status', ['id' => 'rave-test1'] );
+        $_response = $this->_apiCall( 'status', ['id' => 'gha'] );
         $this->assertTrue( $_response->success );
         $this->assertEquals( 200, $_response->status_code );
     }
