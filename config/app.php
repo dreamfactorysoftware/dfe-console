@@ -62,6 +62,7 @@ return [
         'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
         /** 3rd-party Service Providers */
         'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
+        'GrahamCampbell\\Flysystem\\FlysystemServiceProvider',
     ],
     //******************************************************************************
     //* Aliases
@@ -108,6 +109,7 @@ return [
         'InstanceManager' => 'DreamFactory\\Enterprise\\Services\\Facades\\InstanceManager',
         'InstanceStorage' => 'DreamFactory\\Enterprise\\Services\\Facades\\InstanceStorage',
         'Mounter'         => 'DreamFactory\\Enterprise\\Services\\Facades\\Mounter',
+        /** Third-party Aliases */
+        'Flysystem'       => 'GrahamCampbell\Flysystem\Facades\Flysystem',
     ],
-
 ];

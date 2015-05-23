@@ -12,7 +12,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function createApplication()
     {
         $_app = require __DIR__ . '/../bootstrap/app.php';
-        $_app->singleton( 'Illuminate\Contracts\Console\Kernel', 'Illuminate\Foundation\Console\Kernel' );
         $_app->make( 'Illuminate\Contracts\Console\Kernel' )->bootstrap();
 
         return $_app;

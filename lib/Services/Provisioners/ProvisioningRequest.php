@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use Illuminate\Contracts\Filesystem\Filesystem;
+use League\Flysystem\Filesystem;
 
 class ProvisioningRequest
 {
@@ -42,9 +42,9 @@ class ProvisioningRequest
 
     /**
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param Filesystem                                                   $storage
-     * @param bool                                                         $deprovision
-     * @param bool                                                         $force
+     * @param Filesystem                                        $storage
+     * @param bool                                              $deprovision
+     * @param bool                                              $force
      */
     public function __construct( Instance $instance, Filesystem $storage = null, $deprovision = false, $force = false )
     {
@@ -65,7 +65,7 @@ class ProvisioningRequest
     /**
      * @param bool $createIfNull
      *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
+     * @return Filesystem
      */
     public function getStorage( $createIfNull = true )
     {
@@ -89,7 +89,7 @@ class ProvisioningRequest
     }
 
     /**
-     * @param Filesystem $storage
+     * @param \League\Flysystem\Filesystem $storage
      *
      * @return ProvisioningRequest
      */

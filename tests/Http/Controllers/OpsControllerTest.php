@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Http\Controllers;
 
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use GuzzleHttp\Client;
 use GuzzleHttp\Message\ResponseInterface;
 use Illuminate\Http\Request;
@@ -40,19 +41,27 @@ class OpsControllerTest extends \TestCase
     {
         parent::setUp();
 
-        if ( !$this->_client )
-        {
-            $this->_client = new Client(
-                [
-                    'base_url' => $this->_baseUrl,
-                    'defaults' => ['exceptions' => false],
-                ]
-            );
-        }
+        $this->_client = new Client(
+            [
+                'base_url' => $this->_baseUrl,
+                'defaults' => ['exceptions' => false],
+            ]
+        );
+    }
+
+    /** @inheritdoc */
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->_client = null;
     }
 
     /**
      * Tests /status of valid and invalid instances
+     *
+     * @covers \DreamFactory\Enterprise\Console\Http\Controllers\OpsController::postStatus()
+     * @covers \DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient::handle()
      */
     public function testPostStatus()
     {
@@ -67,9 +76,57 @@ class OpsControllerTest extends \TestCase
         $this->assertEquals( 200, $_response->status_code );
     }
 
+    /**
+     * @covers \DreamFactory\Enterprise\Console\Http\Controllers\OpsController::postInstances()
+     * @covers \DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient::handle()
+     */
     public function testPostInstances()
     {
         $_response = $this->_apiCall( 'instances' );
+
+        $this->assertEquals( 200, $_response->status_code );
+    }
+
+    /**
+     * @covers \DreamFactory\Enterprise\Console\Http\Controllers\OpsController::postProvision()
+     * @covers \DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient::handle()
+     */
+    public function testPostProvision()
+    {
+        $_response = $this->_apiCall( 'provision', ['instance-id' => 'dfe-unit-test', 'owner-id' => 22, 'owner-type' => OwnerTypes::USER] );
+
+        $this->assertEquals( 200, $_response->status_code );
+    }
+
+    /**
+     * @covers \DreamFactory\Enterprise\Console\Http\Controllers\OpsController::postExport()
+     * @covers \DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient::handle()
+     */
+    public function testPostExport()
+    {
+        $_response = $this->_apiCall( 'export', ['instance-id' => 'dfe-unit-test', 'owner-id' => 22, 'owner-type' => OwnerTypes::USER] );
+
+        $this->assertEquals( 200, $_response->status_code );
+    }
+
+    /**
+     * @covers \DreamFactory\Enterprise\Console\Http\Controllers\OpsController::postDeprovision()
+     * @covers \DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient::handle()
+     */
+    public function testPostDeprovision()
+    {
+        $_response = $this->_apiCall( 'deprovision', ['instance-id' => 'dfe-unit-test', 'owner-id' => 22, 'owner-type' => OwnerTypes::USER] );
+
+        $this->assertEquals( 200, $_response->status_code );
+    }
+
+    /**
+     * @covers \DreamFactory\Enterprise\Console\Http\Controllers\OpsController::postProvisioners()
+     * @covers \DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient::handle()
+     */
+    public function testPostProvisioners()
+    {
+        $_response = $this->_apiCall( 'provisioners' );
 
         $this->assertEquals( 200, $_response->status_code );
     }

@@ -57,12 +57,4 @@ abstract class BaseInstanceJob extends JobCommand
     {
         return $this->_options;
     }
-
-    /**
-     * @return string The handler class for this job if different from "[class-name]Handler"
-     */
-    public function getHandler()
-    {
-        //
-    }
 }

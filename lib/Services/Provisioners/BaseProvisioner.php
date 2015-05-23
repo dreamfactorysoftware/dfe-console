@@ -5,10 +5,10 @@ use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
@@ -104,8 +104,13 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
         $request->setResult( $_result );
 
-        //  Send notification
+        //  Save results...
         $_instance = $request->getInstance();
+        $_data = $_instance->instance_data_text;
+        $_data['.provisioning'] = $_result;
+        $_instance->update( ['instance_data_text' => $_data] );
+
+        //  Send notification
         $_guest = $_instance->guest;
         $_host =
             $_guest

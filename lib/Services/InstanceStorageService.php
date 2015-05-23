@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use Illuminate\Filesystem\FilesystemAdapter;
+use League\Flysystem\Filesystem;
 
 /**
  * Instance storage services
@@ -95,7 +95,7 @@ class InstanceStorageService extends BaseService
      * @param string                                            $tag
      * @param array                                             $options
      *
-     * @return mixed
+     * @return Filesystem
      */
     protected function _getMount( $instance, $path, $tag = null, $options = [] )
     {
@@ -120,7 +120,7 @@ class InstanceStorageService extends BaseService
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                            $tag
      *
-     * @return \Illuminate\Filesystem\FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     public function getRootStorageMount( Instance $instance, $tag = null )
     {
@@ -131,7 +131,7 @@ class InstanceStorageService extends BaseService
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                            $tag
      *
-     * @return \Illuminate\Filesystem\FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     public function getStorageMount( Instance $instance, $tag = null )
     {
@@ -144,7 +144,7 @@ class InstanceStorageService extends BaseService
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                            $tag
      *
-     * @return \Illuminate\Filesystem\FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     public function getSnapshotMount( Instance $instance, $tag = null )
     {
@@ -155,7 +155,7 @@ class InstanceStorageService extends BaseService
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                            $tag
      *
-     * @return \Illuminate\Filesystem\FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     public function getPrivateStorageMount( Instance $instance, $tag = null )
     {
@@ -166,7 +166,7 @@ class InstanceStorageService extends BaseService
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
      * @param string                                            $tag
      *
-     * @return FilesystemAdapter
+     * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
     public function getOwnerPrivateStorageMount( Instance $instance, $tag = null )
     {

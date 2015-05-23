@@ -2,9 +2,9 @@
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Database\Models\Instance;
 
 /**
  * DreamFactory Enterprise(tm) and Services Platform File System
@@ -106,22 +106,23 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $_ownerPrivatePath = $_privatePathName;
 
         //  Make sure everything exists
-        !$_filesystem->exists( $_privatePath ) && $_filesystem->makeDirectory( $_privatePath );
-        !$_filesystem->exists( $_ownerPrivatePath ) && $_filesystem->makeDirectory( $_ownerPrivatePath );
+        !$_filesystem->has( $_privatePath ) && $_filesystem->createDir( $_privatePath );
+        !$_filesystem->has( $_ownerPrivatePath ) && $_filesystem->createDir( $_ownerPrivatePath );
 
         //  Now ancillary sub-directories
         foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
         {
-            !$_filesystem->exists( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
+            !$_filesystem->has( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
         }
 
         foreach ( config( 'dfe.provisioning.private-paths', [] ) as $_path )
         {
-            !$_filesystem->exists( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
+            !$_filesystem->has( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
         }
+
         foreach ( config( 'dfe.provisioning.owner-private-paths', [] ) as $_path )
         {
-            !$_filesystem->exists( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->makeDirectory( $_check );
+            !$_filesystem->has( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
         }
 
         \Log::debug( '    * provisioner: instance storage created' );
@@ -147,7 +148,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $_storagePath = $_instance->instance_id_text;
 
         //  I'm not sure how hard this tries to delete the directory
-        if ( !$_filesystem->exists( $_storagePath ) )
+        if ( !$_filesystem->has( $_storagePath ) )
         {
             \Log::notice( '    * provisioner: unable to stat storage path' );
             \Log::notice( '      * not deleting storage area "' . $_storagePath . '"' );
@@ -155,7 +156,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
             return false;
         }
 
-        if ( !$_filesystem->deleteDirectory( $_storagePath ) )
+        if ( !$_filesystem->deleteDir( $_storagePath ) )
         {
             \Log::error( '    * provisioner: error removing storage area "' . $_storagePath . '"' );
 

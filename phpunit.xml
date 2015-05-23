@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="false"
 		 backupStaticAttributes="false"
-		 bootstrap="bootstrap/autoload.php"
+		 bootstrap="./bootstrap/autoload.php"
 		 colors="true"
 		 convertErrorsToExceptions="true"
 		 convertNoticesToExceptions="true"
@@ -19,6 +19,5 @@
 		<env name="CACHE_DRIVER" value="array" />
 		<env name="SESSION_DRIVER" value="array" />
 		<env name="DFE_HOSTED_BASE_PATH" value="/opt/dreamfactory/dfe/dfe-console/tests/storage" />
-		"
 	</php>
 </phpunit>

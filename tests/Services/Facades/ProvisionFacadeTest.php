@@ -1,10 +1,11 @@
-<?php
+<?php namespace DreamFactory\Enterprise\Console\Tests\Services\Facades;
+
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\Rave\Provisioner;
 use DreamFactory\Enterprise\Services\Provisioners\Rave\StorageProvisioner;
 
-class ProvisionTest extends TestCase
+class ProvisionFacadeTest extends \TestCase
 {
     /**
      * A basic functional test example.

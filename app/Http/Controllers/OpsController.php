@@ -7,9 +7,13 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
+use DreamFactory\Enterprise\Services\Commands\ExportJob;
+use DreamFactory\Enterprise\Services\Commands\ImportJob;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Contracts\HasOfferings;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Library\Utility\IfSet;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -137,13 +141,7 @@ class OpsController extends Controller
      */
     public function postInstances( Request $request )
     {
-        /** auth.client middleware sticks the validated owner into the session for us */
-        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
-
-        if ( empty( $_owner ) )
-        {
-            throw new \RuntimeException( 'No owner found in current session for request.' );
-        }
+        $_owner = $this->_validateOwner( $request );
 
         $_response = array();
 
@@ -219,9 +217,27 @@ class OpsController extends Controller
 
             \Log::debug( 'Queuing provisioning request: ' . print_r( $_payload, true ) );
 
-            $_result = \Queue::push( new ProvisionJob( $request->input( 'instance-id' ), $_payload ) );
+            \Queue::push( $_job = new ProvisionJob( $request->input( 'instance-id' ), $_payload ) );
 
-            return SuccessPacket::make( $_result );
+            try
+            {
+                $_instance = $this->_findInstance( $_job->getInstanceId() );
+                $_data = $_instance->instance_data_text;
+                $_result = IfSet::get( $_data, '.provisioning' );
+                unset( $_data['.provisioning'] );
+                $_instance->update( ['instance_data_text' => $_data] );
+
+                if ( !isset( $_result['instance'] ) )
+                {
+                    throw new \RuntimeException( 'The provisioning information is incomplete. Bailing.' );
+                }
+
+                return SuccessPacket::make( $_result['instance'] );
+            }
+            catch ( ModelNotFoundException $_ex )
+            {
+                throw new \Exception( 'Instance not found after provisioning.' );
+            }
         }
         catch ( \Exception $_ex )
         {
@@ -246,9 +262,65 @@ class OpsController extends Controller
 
             \Log::debug( 'Queuing deprovisioning request: ' . print_r( $_payload, true ) );
 
-            $_result = \Queue::push( new DeprovisionJob( $request->input( 'instance-id' ), $_payload ) );
+            \Queue::push( $_job = new DeprovisionJob( $request->input( 'instance-id' ), $_payload ) );
 
-            return SuccessPacket::make( $_result );
+            return SuccessPacket::make( $_job->getResult() );
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+
+            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+        }
+    }
+
+    /**
+     * Import an instance
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function postImport( Request $request )
+    {
+        try
+        {
+            $_payload = $request->input();
+
+            \Log::debug( 'Queuing import request: ' . print_r( $_payload, true ) );
+
+            \Queue::push( $_job = new ImportJob( $request->input( 'instance-id' ), $_payload ) );
+
+            return SuccessPacket::make( $_job->getResult() );
+        }
+        catch ( \Exception $_ex )
+        {
+            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+
+            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+        }
+    }
+
+    /**
+     * Export an instance
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function postExport( Request $request )
+    {
+        try
+        {
+            $_payload = $request->input();
+
+            \Log::debug( 'Queuing export request: ' . print_r( $_payload, true ) );
+
+            $_job = new ExportJob( $request->input( 'instance-id' ), $_payload );
+
+            \Queue::push( $_job );
+
+            return SuccessPacket::make( $_job->getResult() );
         }
         catch ( \Exception $_ex )
         {

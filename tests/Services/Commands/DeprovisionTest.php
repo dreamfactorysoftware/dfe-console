@@ -1,8 +1,7 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Tests\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
-use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 
 class DeprovisionTest extends \TestCase
 {

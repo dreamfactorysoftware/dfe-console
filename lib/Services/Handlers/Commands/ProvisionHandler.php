@@ -27,7 +27,7 @@ class ProvisionHandler
     /**
      * Handle a provisioning request
      *
-     * @param  ProvisionJob $command
+     * @param ProvisionJob $command
      *
      * @return mixed
      */
@@ -70,11 +70,9 @@ class ProvisionHandler
                 \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
             }
 
-            \Log::debug( '<<< ProvisionHandler - complete: ' . print_r( $_result, true ) );
+            \Log::debug( '<<< ProvisionHandler - complete' );
 
-            $command->setResult( $_result );
-
-            return $_result;
+            return true;
         }
         catch ( \Exception $_ex )
         {

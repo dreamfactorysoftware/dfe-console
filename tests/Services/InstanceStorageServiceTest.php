@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Tests;
+<?php namespace DreamFactory\Enterprise\Console\Tests\Services;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;

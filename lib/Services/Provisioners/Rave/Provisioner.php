@@ -3,6 +3,12 @@
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
+use DreamFactory\Enterprise\Database\Models\AppKey;
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Contracts\HasOfferings;
 use DreamFactory\Enterprise\Services\Contracts\Offering;
 use DreamFactory\Enterprise\Services\Contracts\OfferingProvisioner;
@@ -13,12 +19,6 @@ use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisionerOffering;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
-use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
-use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
-use DreamFactory\Enterprise\Database\Models\AppKey;
-use DreamFactory\Enterprise\Database\Models\Cluster;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
@@ -66,7 +66,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                 }
             }
 
-            \Log::info( '     * Loaded ' . count( $this->_offerings ) . ' offering(s) for provisioner "rave".' );
+            \Log::debug( '     * Loaded ' . count( $this->_offerings ) . ' offering(s) for provisioner "rave".' );
         }
     }
 
@@ -310,8 +310,9 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                 ]
             );
 
+            //  Merge in the metadata
             $_instanceData = $_instance->instance_data_text;
-            $_instanceData['metadata'] = $_md->toArray();
+            $_instanceData = array_merge( $_instanceData, $_md->toArray() );
             $_instance->instance_data_text = $_instanceData;
 
             \DB::transaction(

@@ -4,6 +4,7 @@ use DreamFactory\Enterprise\Common\Contracts\StorageMounter;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Database\Exceptions\MountException;
 use DreamFactory\Library\Utility\IfSet;
+use League\Flysystem\Filesystem;
 
 class MountManager extends BaseManager implements StorageMounter
 {
@@ -17,11 +18,13 @@ class MountManager extends BaseManager implements StorageMounter
      * @param string $name
      * @param array  $options
      *
-     * @return \Illuminate\Filesystem\FilesystemAdapter
+     * @return Filesystem
      * @throws \DreamFactory\Enterprise\Database\Exceptions\MountException
      */
     public function mount( $name, $options = [] )
     {
+        \Log::debug( 'Mounting "' . $name . '" options: ' . print_r( $options, true ) );
+
         $_tag = str_replace( '.', '-', IfSet::get( $options, 'tag', $name ) );
         $_prefix = IfSet::get( $options, 'prefix' );
 
@@ -34,16 +37,20 @@ class MountManager extends BaseManager implements StorageMounter
         }
 
         //  See if we have a disk
-        if ( null === ( $_config = config( 'filesystems.disks.' . $_tag ) ) )
+        if ( null === ( $_config = config( 'flysystem.connections.' . $_tag ) ) )
         {
-            if ( null === ( $_config = config( 'filesystems.disks.' . $name ) ) )
+            if ( null === ( $_config = config( 'flysystem.connections.' . $name ) ) )
             {
-                if ( empty( $options ) )
+                if ( null === ( $_config = config( 'filesystems.disks.' . $_tag ) ) )
                 {
-                    throw new MountException( 'No configuration found or specified for mount "' . $name . '".' );
+                    if ( null === ( $_config = config( 'filesystems.disks.' . $name ) ) )
+                    {
+                        if ( empty( $options ) )
+                        {
+                            throw new MountException( 'No configuration found or specified for mount "' . $name . '".' );
+                        }
+                    }
                 }
-
-                \Config::set( 'filesystems.disks.' . $_tag, $options );
             }
             //  Start with a fresh config for this disk
             else if ( $_tag != $name )
@@ -53,7 +60,7 @@ class MountManager extends BaseManager implements StorageMounter
                     $_prefix = trim( $_prefix, ' ' . DIRECTORY_SEPARATOR );
 
                     /** @noinspection PhpUndefinedMethodInspection */
-                    $_oldPrefix = $_config['root'];
+                    $_oldPrefix = $_config['path'];
 
                     if ( false !== strpos( $_oldPrefix, dirname( $_prefix ) ) )
                     {
@@ -65,17 +72,21 @@ class MountManager extends BaseManager implements StorageMounter
                     /** @noinspection PhpUndefinedMethodInspection */
                     if ( $_oldPrefix != $_newPrefix )
                     {
-                        $_config['root'] = $_newPrefix;
+                        $_config['path'] = $_newPrefix;
                     }
                 }
-
-                \Config::set( 'filesystems.disks.' . $_tag, $_config );
             }
         }
 
+        !isset( $_config['driver'] ) && $_config['driver'] = 'local';
+        !isset( $_config['path'] ) && isset( $_config['root'] ) && $_config['path'] = $_config['root'];
+        unset( $_config['root'] );
+
+        \Config::set( 'flysystem.connections.' . $_tag, array_merge( $_config, $options ) );
+
         $this->manage(
             $_tag,
-            $_filesystem = \Storage::disk( $_tag )
+            $_filesystem = \Flysystem::connection( $_tag )
         );
 
         return $_filesystem;
@@ -89,7 +100,8 @@ class MountManager extends BaseManager implements StorageMounter
      *
      * @return StorageMounter
      */
-    public function unmount( $name, $options = [] )
+    public
+    function unmount( $name, $options = [] )
     {
         return $this->unmanage( $name );
     }

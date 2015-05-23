@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Tests\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
 use DreamFactory\Enterprise\Services\Commands\ExportJob;
 

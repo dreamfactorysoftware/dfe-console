@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Tests\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Tests\Services\Facades;
 
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Instance;

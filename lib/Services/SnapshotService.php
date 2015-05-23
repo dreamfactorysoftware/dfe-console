@@ -9,7 +9,6 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
-use Illuminate\Filesystem\FilesystemAdapter;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
@@ -60,13 +59,13 @@ class SnapshotService extends BaseService
     /**
      * Creates a snapshot of a fabric-hosted instance
      *
-     * @param string                                      $instanceId
-     * @param \Illuminate\Contracts\Filesystem\Filesystem $fsDestination
-     * @param int                                         $keepDays The number of days to keep the snapshot
+     * @param string     $instanceId
+     * @param Filesystem $fsDestination
+     * @param int        $keepDays The number of days to keep the snapshot
      *
      * @return array
      */
-    public function create( $instanceId, \Illuminate\Contracts\Filesystem\Filesystem $fsDestination = null, $keepDays = 30 )
+    public function create( $instanceId, Filesystem $fsDestination = null, $keepDays = 30 )
     {
         //  Build our "mise en place", as it were...
         $_stamp = date( 'YmdHis' );
@@ -117,17 +116,11 @@ class SnapshotService extends BaseService
             throw new \RuntimeException( 'Cannot create temporary work space "' . $_tempPath . '". Aborting.' );
         }
 
-        //  Mount storage file system and archive
-        $_fsStorage = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'] ) );
-
         //  Archive storage
-        if ( !$this->_archivePath( $_fsSource, $_fsStorage ) )
+        if ( !$this->_archivePath( $_fsSource, $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'] ) )
         {
             throw new \RuntimeException( 'Unable to archive source file system. Aborting.' );
         }
-
-        //  Unset to close file
-        unset( $_fsStorage );
 
         //  Mount snapshot and stuff the new files in it
         $_fsSnapshot = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName ) );
@@ -305,20 +298,18 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param FilesystemAdapter   $source The source file system to archive
-     * @param FilesystemInterface $zip    The full zip file name
+     * @param \Illuminate\Contracts\Filesystem\Filesystem|FilesystemInterface $source  The source file system to archive
+     * @param string                                                          $zipPath The full zip file name
      *
      * @return bool
      */
-    protected function _archivePath( $source, $zip )
+    protected function _archivePath( $source, $zipPath )
     {
-        /** @type AdapterInterface $_adapter */
-        /** @noinspection PhpUndefinedMethodInspection */
-        $_adapter = $source->getDriver()->getAdapter();
+        $zip = new Filesystem( new ZipArchiveAdapter( $zipPath ) );
 
         try
         {
-            foreach ( $_adapter->listContents( '', true ) as $_file )
+            foreach ( $source->listContents( '', true ) as $_file )
             {
                 if ( $_file['type'] == 'dir' )
                 {
@@ -333,6 +324,9 @@ class SnapshotService extends BaseService
                     file_exists( $_file['path'] ) && $this->_writeStream( $zip, $_file['path'], $_file['path'] );
                 }
             }
+
+            //  Flush zip to disk
+            $zip = null;
 
             return true;
         }
