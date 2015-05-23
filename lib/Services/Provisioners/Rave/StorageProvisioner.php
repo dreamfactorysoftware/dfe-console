@@ -106,23 +106,33 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $_ownerPrivatePath = $_privatePathName;
 
         //  Make sure everything exists
-        !$_filesystem->has( $_privatePath ) && $_filesystem->createDir( $_privatePath );
-        !$_filesystem->has( $_ownerPrivatePath ) && $_filesystem->createDir( $_ownerPrivatePath );
-
-        //  Now ancillary sub-directories
-        foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
+        try
         {
-            !$_filesystem->has( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            \Log::debug( '  * Checking path: ' . $_privatePath );
+            !$_filesystem->has( $_privatePath ) && $_filesystem->createDir( $_privatePath );
+            \Log::debug( '  * Checking path: ' . $_ownerPrivatePath );
+            !$_filesystem->has( $_ownerPrivatePath ) && $_filesystem->createDir( $_ownerPrivatePath );
+
+            //  Now ancillary sub-directories
+            foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
+            {
+                !$_filesystem->has( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            }
+
+            foreach ( config( 'dfe.provisioning.private-paths', [] ) as $_path )
+            {
+                !$_filesystem->has( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            }
+
+            foreach ( config( 'dfe.provisioning.owner-private-paths', [] ) as $_path )
+            {
+                !$_filesystem->has( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            }
         }
-
-        foreach ( config( 'dfe.provisioning.private-paths', [] ) as $_path )
+        catch ( \Exception $_ex )
         {
-            !$_filesystem->has( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
-        }
-
-        foreach ( config( 'dfe.provisioning.owner-private-paths', [] ) as $_path )
-        {
-            !$_filesystem->has( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            \Log::error( 'Error creating directory structure: ' . $_ex->getMessage() );
+            throw $_ex;
         }
 
         \Log::debug( '    * provisioner: instance storage created' );

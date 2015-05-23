@@ -10,7 +10,6 @@ use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
 use League\Flysystem\Adapter\Local;
-use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
@@ -460,10 +459,10 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param FilesystemAdapter|FilesystemInterface|AdapterInterface $filesystem
-     * @param string                                                 $source
-     * @param string                                                 $destination
-     * @param array|Config                                           $config
+     * @param Filesystem   $filesystem
+     * @param string       $source
+     * @param string       $destination
+     * @param array|Config $config
      *
      * @return bool
      */
@@ -471,16 +470,14 @@ class SnapshotService extends BaseService
     {
         if ( false !== ( $_fd = fopen( $source, 'r' ) ) )
         {
-            $_driver = $filesystem->getDriver();
-
             //  Fallback gracefully if no stream support
             if ( method_exists( $filesystem, 'writeStream' ) )
             {
                 $_result = $filesystem->writeStream( $destination, $_fd, [] );
             }
-            elseif ( method_exists( $_driver, 'writeStream' ) )
+            elseif ( method_exists( $filesystem->getAdapter(), 'writeStream' ) )
             {
-                $_result = $_driver->writeStream( $destination, $_fd, [] );
+                $_result = $filesystem->getAdapter()->writeStream( $destination, $_fd, $filesystem->getConfig() );
             }
             else
             {

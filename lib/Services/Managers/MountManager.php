@@ -26,7 +26,11 @@ class MountManager extends BaseManager implements StorageMounter
         \Log::debug( 'Mounting "' . $name . '" options: ' . print_r( $options, true ) );
 
         $_tag = str_replace( '.', '-', IfSet::get( $options, 'tag', $name ) );
-        $_prefix = IfSet::get( $options, 'prefix' );
+
+        if ( null !== ( $_prefix = IfSet::get( $options, 'prefix' ) ) )
+        {
+            $_prefix = rtrim( $_prefix ) . DIRECTORY_SEPARATOR;
+        }
 
         try
         {
@@ -36,51 +40,39 @@ class MountManager extends BaseManager implements StorageMounter
         {
         }
 
-        //  See if we have a disk
+        //  See if we have a pre-defined connection
         if ( null === ( $_config = config( 'flysystem.connections.' . $_tag ) ) )
         {
-            if ( null === ( $_config = config( 'flysystem.connections.' . $name ) ) )
+            if ( empty( $options ) )
             {
-                if ( null === ( $_config = config( 'filesystems.disks.' . $_tag ) ) )
-                {
-                    if ( null === ( $_config = config( 'filesystems.disks.' . $name ) ) )
-                    {
-                        if ( empty( $options ) )
-                        {
-                            throw new MountException( 'No configuration found or specified for mount "' . $name . '".' );
-                        }
-                    }
-                }
+                throw new MountException( 'No configuration found or specified for mount "' . $name . '".' );
             }
-            //  Start with a fresh config for this disk
-            else if ( $_tag != $name )
-            {
-                if ( !empty( $_prefix ) )
-                {
-                    $_prefix = trim( $_prefix, ' ' . DIRECTORY_SEPARATOR );
 
-                    /** @noinspection PhpUndefinedMethodInspection */
-                    $_oldPrefix = $_config['path'];
+            $_config = [];
+        }
 
-                    if ( false !== strpos( $_oldPrefix, dirname( $_prefix ) ) )
-                    {
-                        $_oldPrefix = rtrim( str_replace( dirname( $_prefix ), null, $_oldPrefix ), DIRECTORY_SEPARATOR );
-                    }
-
-                    $_newPrefix = rtrim( $_oldPrefix, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $_prefix;
-
-                    /** @noinspection PhpUndefinedMethodInspection */
-                    if ( $_oldPrefix != $_newPrefix )
-                    {
-                        $_config['path'] = $_newPrefix;
-                    }
-                }
-            }
+        if ( null === ( $_path = IfSet::get( $_config, 'path', IfSet::get( $_config, 'root' ) ) ) )
+        {
+            $_path = env( 'DFE_HOSTED_BASE_PATH' );
+            \Log::notice( 'No path in mount config. Setting to "' . $_path . '"' );
+            unset( $_config['path'], $_config['root'] );
+            $_config['path'] = $_path;
         }
 
         !isset( $_config['driver'] ) && $_config['driver'] = 'local';
-        !isset( $_config['path'] ) && isset( $_config['root'] ) && $_config['path'] = $_config['root'];
-        unset( $_config['root'] );
+
+        if ( !empty( $_prefix ) )
+        {
+            $_path = rtrim( $_config['path'], DIRECTORY_SEPARATOR );
+            $_prefix = trim( $_prefix, ' ' . DIRECTORY_SEPARATOR );
+
+            if ( false === strpos( $_path, $_prefix ) )
+            {
+                $_config['path'] = $_path . DIRECTORY_SEPARATOR . $_prefix;
+            }
+        }
+
+        \Log::debug( 'Storage config: ' . print_r( $_config, true ) );
 
         \Config::set( 'flysystem.connections.' . $_tag, array_merge( $_config, $options ) );
 

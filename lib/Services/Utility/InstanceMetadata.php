@@ -6,9 +6,9 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\IfSet;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
+use League\Flysystem\Filesystem;
 
 class InstanceMetadata implements Jsonable, Arrayable
 {
@@ -146,7 +146,7 @@ class InstanceMetadata implements Jsonable, Arrayable
     }
 
     /**
-     * @param \Illuminate\Contracts\Filesystem\Filesystem $filesystem
+     * @param Filesystem $filesystem
      *
      * @return mixed
      */
@@ -155,7 +155,7 @@ class InstanceMetadata implements Jsonable, Arrayable
         $_file =
             config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME ) . DIRECTORY_SEPARATOR . $this->_instanceId . '.json';
 
-        if ( $filesystem->exists( $_file ) )
+        if ( $filesystem->has( $_file ) )
         {
             return JsonFile::decode( $_json = $filesystem->get( $_file ) );
         }
@@ -166,8 +166,8 @@ class InstanceMetadata implements Jsonable, Arrayable
     }
 
     /**
-     * @param \Illuminate\Contracts\Filesystem\Filesystem $filesystem
-     * @param array                                       $values Optional values to merge with metadata for writing
+     * @param Filesystem $filesystem
+     * @param array      $values Optional values to merge with metadata for writing
      *
      * @return
      */
