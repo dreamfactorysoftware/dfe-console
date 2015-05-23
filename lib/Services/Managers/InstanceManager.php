@@ -271,8 +271,6 @@ class InstanceManager extends BaseManager implements Factory
             }
         }
 
-        \Log::debug( 'Types: ' . print_r( $_types, true ) );
-
         return $_types;
     }
 

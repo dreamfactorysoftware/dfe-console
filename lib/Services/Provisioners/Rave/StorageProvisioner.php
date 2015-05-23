@@ -108,9 +108,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         //  Make sure everything exists
         try
         {
-            \Log::debug( '  * Checking path: ' . $_privatePath );
             !$_filesystem->has( $_privatePath ) && $_filesystem->createDir( $_privatePath );
-            \Log::debug( '  * Checking path: ' . $_ownerPrivatePath );
             !$_filesystem->has( $_ownerPrivatePath ) && $_filesystem->createDir( $_ownerPrivatePath );
 
             //  Now ancillary sub-directories

@@ -66,7 +66,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                 }
             }
 
-            \Log::debug( '     * Loaded ' . count( $this->_offerings ) . ' offering(s) for provisioner "rave".' );
+            //\Log::debug( '     * Loaded ' . count( $this->_offerings ) . ' offering(s) for provisioner "rave".' );
         }
     }
 
@@ -105,20 +105,17 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
 
         try
         {
-            \Log::debug( '     * Provisioning storage' );
-
             //  Provision storage and fill in the request
             $this->_provisionStorage( $request, $options );
 
             //  And the instance
-            \Log::debug( '     * Provisioning instance' );
             $_result = $this->_provisionInstance( $request, $options );
 
             return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
         }
         catch ( \Exception $_ex )
         {
-            $this->error( '    * provisioner exception: ' . $_ex->getMessage() );
+            $this->error( '     * exception: ' . $_ex->getMessage() );
 
             $_instance->updateState( ProvisionStates::PROVISIONING_ERROR );
 
@@ -148,7 +145,6 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         $_result = false;
         $_instance = $request->getInstance();
 
-        \Log::debug( '_doDeprovision: about to deprovision' );
         //	Update the current instance state
         $_instance->updateState( ProvisionStates::DEPROVISIONING );
 
@@ -228,7 +224,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         $_name = $_instance->instance_name_text;
         $_storageKey = $_instance->storage_id_text;
 
-        \Log::debug( '  * rave: provision "' . $_name . '" - begin' );
+        \Log::debug( '  * rave: provision instance "' . $_name . '" - begin' );
 
         $_storageProvisioner = $request->getStorageProvisioner();
         $_privatePath = $_storageProvisioner->getPrivatePath();
@@ -345,7 +341,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                 \Log::error( 'Exception saving instance metadata: ' . $_ex->getMessage() );
             }
 
-            \Log::debug( '    * rave: instance update - complete' );
+            //\Log::debug( '    * rave: instance update - complete' );
         }
         catch ( \Exception $_ex )
         {
@@ -353,10 +349,10 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         }
 
         //  Fire off a "launch" event...
-        \Log::debug( '    * rave: fire "dfe.launch" event' );
-        \Event::fire( 'dfe.launch', [$this, $request, $_md] );
+        //\Log::debug( '    * rave: fire "dfe.launch" event' );
+        \Log::info( '  * rave: provision "' . $_name . '" - complete' );
 
-        \Log::debug( '  * rave: provision "' . $_name . '" - complete' );
+        \Event::fire( 'dfe.launch', [$this, $request, $_md] );
 
         return [
             'host'                => $_host,

@@ -23,7 +23,7 @@ class MountManager extends BaseManager implements StorageMounter
      */
     public function mount( $name, $options = [] )
     {
-        \Log::debug( 'Mounting "' . $name . '" options: ' . print_r( $options, true ) );
+        \Log::debug( '    * provisioner: storage mount "' . $name . '"' );
 
         $_tag = str_replace( '.', '-', IfSet::get( $options, 'tag', $name ) );
 
@@ -54,7 +54,7 @@ class MountManager extends BaseManager implements StorageMounter
         if ( null === ( $_path = IfSet::get( $_config, 'path', IfSet::get( $_config, 'root' ) ) ) )
         {
             $_path = env( 'DFE_HOSTED_BASE_PATH' );
-            \Log::notice( 'No path in mount config. Setting to "' . $_path . '"' );
+            //\Log::notice( 'No path in mount config. Setting to "' . $_path . '"' );
             unset( $_config['path'], $_config['root'] );
             $_config['path'] = $_path;
         }
@@ -71,8 +71,6 @@ class MountManager extends BaseManager implements StorageMounter
                 $_config['path'] = $_path . DIRECTORY_SEPARATOR . $_prefix;
             }
         }
-
-        \Log::debug( 'Storage config: ' . print_r( $_config, true ) );
 
         \Config::set( 'flysystem.connections.' . $_tag, array_merge( $_config, $options ) );
 
@@ -92,8 +90,7 @@ class MountManager extends BaseManager implements StorageMounter
      *
      * @return StorageMounter
      */
-    public
-    function unmount( $name, $options = [] )
+    public function unmount( $name, $options = [] )
     {
         return $this->unmanage( $name );
     }

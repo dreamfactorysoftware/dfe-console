@@ -34,7 +34,6 @@ class ProvisionHandler
     public function handle( ProvisionJob $command )
     {
         $_options = $command->getOptions();
-        \Log::debug( '>>> ProvisionHandler' );
 
         try
         {
@@ -48,7 +47,7 @@ class ProvisionHandler
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( '<<< ProvisionHandler - failure, exception creating instance: ' . $_ex->getMessage() );
+            \Log::error( 'provisioning - failure, exception creating instance: ' . $_ex->getMessage() );
 
             return false;
         }
@@ -67,16 +66,14 @@ class ProvisionHandler
 
             if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
             {
-                \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
+                \Log::info( 'provisioning - success, completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
             }
-
-            \Log::debug( '<<< ProvisionHandler - complete' );
 
             return true;
         }
         catch ( \Exception $_ex )
         {
-            \Log::error( '<<< ProvisionHandler - exception during provisioning: ' . $_ex->getMessage() );
+            \Log::error( 'provisioning - failure, exception during provisioning: ' . $_ex->getMessage() );
 
             //  Delete instance record...
             if ( !$_instance->delete() )
@@ -84,8 +81,6 @@ class ProvisionHandler
                 throw new \LogicException( 'Unable to remove created instance "' . $_instance->instance_id_text . '".' );
             }
         }
-
-        \Log::debug( '<<< ProvisionHandler - failure' );
 
         return false;
     }
