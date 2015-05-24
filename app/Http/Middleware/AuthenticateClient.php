@@ -39,14 +39,14 @@ class AuthenticateClient
 
         if ( empty( $_key ) )
         {
-            \Log::error( '     * auth.client: invalid "client-id" [' . $_clientId . ']' );
+            \Log::error( '[auth.client] forbidden: invalid "client-id" [' . $_clientId . ']' );
 
             return ErrorPacket::create( Response::HTTP_FORBIDDEN, 'Invalid "client-id"' );
         }
 
         if ( $_token != hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), $_clientId, $_key->client_secret ) )
         {
-            \Log::error( '     * auth.client fail: invalid "access-token" [' . $_token . ']' );
+            \Log::error( '[auth.client] unauthorized: invalid "access-token" [' . $_token . ']' );
 
             return ErrorPacket::create( Response::HTTP_UNAUTHORIZED, 'Invalid "access-token"' );
         }
@@ -57,13 +57,17 @@ class AuthenticateClient
         }
         catch ( ModelNotFoundException $_ex )
         {
-            \Log::error( '     * auth.client: invalid "user" assigned to key id ' . $_key->id );
+            \Log::error( '[auth.client] unauthorized: invalid "user" assigned to akt#' . $_key->id );
 
-            return ErrorPacket::create( Response::HTTP_UNAUTHORIZED, 'Invalid credentials' );
+            return ErrorPacket::create( Response::HTTP_UNAUTHORIZED );
         }
 
-        \Log::info( '     * auth.client: access granted to "' . $_clientId . '"' );
-        \Session::set( 'client.' . $_token, $_owner );
+        $request->setUserResolver(
+            function () use ( $_owner )
+            {
+                return $_owner;
+            }
+        );
 
         return $next( $request );
     }

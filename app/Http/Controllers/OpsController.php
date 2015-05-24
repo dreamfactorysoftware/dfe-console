@@ -62,13 +62,20 @@ class OpsController extends Controller
      */
     public function postStatus( Request $request )
     {
+        $_archived = false;
         $_id = $request->input( 'id' );
-        \Log::debug( 'ops.status: ' . print_r( $request->input(), true ) );
+
+        \Log::debug( 'ops.status: [id => ' . $_id . ']' );
 
         try
         {
+            $_owner = $this->_validateOwner( $request );
             $_instance = $this->_findInstance( $request->input( 'id' ) );
-            $_archived = false;
+
+            if ( $_instance->user_id != $_owner->id )
+            {
+                return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found.' );
+            }
         }
         catch ( \Exception $_ex )
         {
@@ -225,7 +232,11 @@ class OpsController extends Controller
                 $_data = $_instance->instance_data_text;
                 $_result = IfSet::get( $_data, '.provisioning' );
                 unset( $_data['.provisioning'] );
-                $_instance->update( ['instance_data_text' => $_data] );
+
+                if ( !$_instance->update( ['instance_data_text' => $_data] ) )
+                {
+                    throw new \RuntimeException( 'Unable to update instance row.' );
+                }
 
                 if ( !isset( $_result['instance'] ) )
                 {
@@ -337,12 +348,12 @@ class OpsController extends Controller
      */
     protected function _validateOwner( Request $request )
     {
-        /** auth.client middleware sticks the validated owner into the session for us */
-        $_owner = \Session::get( 'client.' . $request->input( 'access-token' ) );
+        /** auth.client middleware registers a user resolver with the request for us */
+        $_owner = $request->user();
 
         if ( empty( $_owner ) )
         {
-            throw new \RuntimeException( 'No owner found in current session for request.' );
+            throw new \RuntimeException( 'Invalid credentials' );
         }
 
         return $_owner;
