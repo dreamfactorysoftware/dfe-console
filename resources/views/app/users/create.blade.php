@@ -62,9 +62,9 @@
                                                         <div class="form-group">
                                                             <div id="">
                                                                 <label>Set Password</label>
-                                                                <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password">
+                                                                <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password." type="password">
                                                                 <span>&nbsp;</span>
-                                                                <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password">
+                                                                <input id="retype_new_password" class="form-control"  placeholder="Re-enter password." type="password">
                                                             </div>
                                                         </div>
 
