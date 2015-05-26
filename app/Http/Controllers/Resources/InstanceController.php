@@ -62,13 +62,20 @@ class InstanceController extends ResourceController
         return $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
     }
 
+
+    /*
     public function create( array $viewData = [] )
     {
+
         $clusters = new Cluster();
         $clusters_list = $clusters->all();
 
         return View::make( 'app.instances.create' )->with( 'prefix', $this->_prefix )->with( 'clusters', $clusters_list );
+
+
+        return 'OK';
     }
+    */
 
     public function edit( $id )
     {
@@ -97,6 +104,7 @@ class InstanceController extends ResourceController
         )->with( 'clusters', $clusters_list );
     }
 
+    /*
     public function store()
     {
 
@@ -114,7 +122,7 @@ class InstanceController extends ResourceController
 
         //return 'OK';
 
-        /* */
+
         $create_instance = new Instance;
 
         $create_instance->user_id = $user->id;
@@ -135,7 +143,10 @@ class InstanceController extends ResourceController
             return 'FAIL';
         }
 
+
+        return 'OK';
     }
+*/
 
     public function index()
     {

@@ -15,7 +15,7 @@ var table = $('#instanceTable').DataTable({
     "aoColumnDefs": [
         {
             "bSortable": false,
-            "aTargets": [1]
+            "aTargets": [6]
         },
         {
             "targets": [0],
@@ -31,7 +31,7 @@ $('#instanceTable tbody').on( 'click', 'td', function () {
 
     var user_id = $("#instanceTable tr:eq('" + (rowId + 1) + "')").find('input[type="hidden"]').val();
 
-    if(cellId > 0)
+    //if(cellId >= 0)
         window.location = 'instances/' + user_id + '/edit';
 
 
@@ -100,13 +100,14 @@ function selectPage(page) {
 }
 
 $( document ).ready(function() {
+    if(info) {
+        for (var i = 0; i < info.pages; i++) {
+            $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
+        }
 
-    for(var i = 0; i < info.pages; i++){
-        $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
+        if (info.pages > 1)
+            $('#_next').prop('disabled', false);
     }
-
-    if(info.pages > 1)
-        $('#_next').prop('disabled', false);
 
     $('#_prev').prop('disabled', true);
 });
@@ -155,3 +156,8 @@ function deleteSelectedInstances () {
      alert('No instances selected');
      */
 };
+
+function cancelEditInstance(){
+
+    window.location = '/v1/instances';
+}
