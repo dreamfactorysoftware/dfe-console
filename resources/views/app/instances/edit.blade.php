@@ -88,9 +88,6 @@
                                             <li class="active">
                                                 <a class="" href="/{{$prefix}}/instances">Manage</a>
                                             </li>
-                                            <li class="">
-                                                <a class="" href="/{{$prefix}}/instances">Create</a>
-                                            </li>
                                         </ul>
                                         <div class="hidden-lg hidden-md" id="sidebar-open">
                                             <button type="button" class="btn btn-default btn-sm"><i class="fa fa-fw fa-bars"></i></button>
@@ -147,9 +144,8 @@
                                                         <hr>
                                                         <div class="form-group">
                                                             <div class="">
-
-                                                                <button type="button" class="btn btn-primary" onclick="">
-                                                                    Update
+                                                                <button type="button" class="btn btn-default" onclick="cancelEditInstance();">
+                                                                    Close
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -169,6 +165,7 @@
         </div>
     </div>
 
+    <script type="text/javascript" src="../../../js/blade-scripts/instances/instances.js"></script>
 
 
 @stop

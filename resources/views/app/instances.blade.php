@@ -10,9 +10,6 @@
                 <li class="active">
                     <a class="" href="/{{$prefix}}/instances">Manage</a>
                 </li>
-                <li class="">
-                    <a class="" href="/{{$prefix}}/instances">Create</a>
-                </li>
             </ul>
         </div>
     </div>
@@ -47,12 +44,6 @@
 
                         <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
                     </div>
-                    <div class="btn-group">
-                        <button type="button" id="selectedInstancesRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected instances" value="delete" onclick="confirmRemoveSelectedInstances()" style="width: 40px"></button>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-sm" id="selectedInstanceRemoveCancel" onclick="cancelRemoveSelectedInstances()" value="delete" style="display: none">Cancel</button>
-                    </div>
                     <div style="clear: both"></div>
                 </div>
             </div>
@@ -68,7 +59,6 @@
                         <thead>
                         <tr>
                             <th></th>
-                            <th style="text-align: center; vertical-align: middle;"> </th>
                             <th class="" >
                                 Name
                             </th>
@@ -100,20 +90,12 @@
                                 <td>
 
                                 </td>
-                                <td style="text-align: center; vertical-align: middle; width: 80px;">
-                                    <div class="btn-group">
-                                        <input type="hidden" id="instance_id" value="{{ $value->id }}">
-                                        <input type="checkbox" value="{{ $value->id }}">&nbsp;&nbsp;
-                                        {!! Form::open(array('url' => 'v1/instances/' . $value->id, 'class' => 'pull-right', 'id' => 'instance_' . $value->id)) !!}
-                                        {!! Form::hidden('_method', 'DELETE') !!}
-                                        {!! Form::button('<i class="fa fa-trash"></i>', array('id' => 'btn-save1', 'class' => 'btn btn-default btn-sm')) !!}
-                                        {!! Form::close() !!}
-                                    </div>
+                                <td style="text-align: left; vertical-align: middle;">
+                                    <input type="hidden" id="instance_id" value="{{ $value->id }}">
+                                    {{ $value->instance_id_text }}
                                 </td>
-                                <td style="text-align: left; vertical-align: middle;">{{ $value->instance_id_text }}</td>
                                 <td style="text-align: left; vertical-align: middle;">{{ $value->cluster_id_text }}</td>
                                 <!--td style="text-align: left; vertical-align: middle;">{{ $value->create_date }}</td-->
-
 
                                 <td style="text-align: left; vertical-align: middle;">{{ $value->email_addr_text }}</td>
                                 <td style="text-align: left; vertical-align: middle;"> </td>
