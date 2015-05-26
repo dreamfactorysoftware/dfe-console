@@ -103,8 +103,10 @@
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
                                         @if (array_key_exists('cluster_id', $value))
-                                            <input type="checkbox" value="{{ $value->id }}" disabled id="server_checkbox_{{ $value->id }}">&nbsp;&nbsp;
-                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled onclick="removeServer({{ $value->id }}, '{{ $value->server_id_text }}')" value="delete" style="width: 25px" ></button>
+                                            <div class="tooltip-wrapper"  data-title="Server In Use - Delete Disabled">
+                                                <input type="checkbox" disabled>&nbsp;&nbsp;
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled style="width: 25px" ></button>
+                                            </div>
                                         @else
                                             <input type="checkbox" value="{{ $value->id }}" id="server_checkbox_{{ $value->id }}">&nbsp;&nbsp;
                                             <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeServer({{ $value->id }}, '{{ $value->server_id_text }}')" value="delete" style="width: 25px" ></button>
@@ -158,9 +160,11 @@
 
     <script type="text/javascript" src="../js/blade-scripts/servers/servers.js"></script>
 
-    <script>
+    <style>
+        .tooltip-wrapper {
+            display: inline-block;
+        }
 
-
-    </script>
+    </style>
 @stop
 
