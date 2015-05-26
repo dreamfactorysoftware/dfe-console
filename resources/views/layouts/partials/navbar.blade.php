@@ -15,7 +15,7 @@
                 <ul class="nav navbar-nav navbar-right df-navbar-nav">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> <i class="fa fa-fw fa-user"></i>
-                            {{ Auth::user()->email_addr_text }}
+                            <span>{{ Auth::user()->email_addr_text }}</span>
                             <span class="caret"></span>
                         </a>
 
