@@ -78,7 +78,7 @@
                                         Name
                                     </th>
                                     <th class="" style="">
-                                        Display Name
+                                        Nickname
                                     </th>
                                     <th class="" style="text-align: left; vertical-align: middle;">
                                         Email
