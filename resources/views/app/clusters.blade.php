@@ -96,8 +96,10 @@
                                             <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
 
                                             @if (array_key_exists('cluster_id', $value))
-                                                <input type="checkbox" value="{{ $value->id }}" disabled id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
-                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
+                                                <div class="tooltip-wrapper"  data-title="Cluster In Use - Delete Disabled">
+                                                    <input type="checkbox" disabled>&nbsp;&nbsp;
+                                                    <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled style="width: 25px" ></button>
+                                                </div>
                                             @else
                                                 <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
                                                 <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
@@ -131,4 +133,11 @@
         </div>
     </div>
     <script type="text/javascript" src="../js/blade-scripts/clusters/clusters.js"></script>
+
+    <style>
+        .tooltip-wrapper {
+            display: inline-block;
+        }
+
+    </style>
 @stop

@@ -235,5 +235,7 @@ $( document ).ready(function() {
         $('#_next').prop('disabled', false);
 
     $('#_prev').prop('disabled', true);
+
+    $('.tooltip-wrapper').tooltip({position: "bottom"});
 });
 
