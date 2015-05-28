@@ -17,11 +17,15 @@ interface EnterpriseJob
     //******************************************************************************
 
     /**
+     * @param string|int $clusterId
+     *
      * @return string Return the id/name of the cluster involved in this job
      */
     public function getCluster( $clusterId = null );
 
     /**
+     * @param string|int $serverId
+     *
      * @return string Return the id/name of the server involved in this job
      */
     public function getServer( $serverId = null );

@@ -37,10 +37,11 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Provision',
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Deprovision',
-        'DreamFactory\\Enterprise\\Services\\Console\\Commands\\ClusterState',
+        //        'DreamFactory\\Enterprise\\Services\\Console\\Commands\\ClusterState',
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Import',
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Export',
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Register',
+        'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Manifest',
     ];
 
     //******************************************************************************
