@@ -71,7 +71,7 @@
                             <th class="" style="text-align: center; vertical-align: middle;">
                                 Owner Email
                             </th>
-                            <th class="" style="text-align: center; vertical-align: middle;">
+                            <th class="" style="text-align: center; vertical-align: middle; min-width:85px">
                                 Policy
                             </th>
                             <th class="" style="text-align: center; vertical-align: middle;">
