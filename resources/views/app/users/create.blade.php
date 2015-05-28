@@ -33,8 +33,6 @@
                                                     <h4 class="ng-binding">Create User</h4>
                                                 </div>
                                             </df-section-header>
-
-
                                             <!-- Create User Form -->
                                             <form id="user_form" class="" name="create-user" method="POST" action="/{{$prefix}}/users">
                                                 <div class="row">
@@ -62,9 +60,9 @@
                                                         <div class="form-group">
                                                             <div id="">
                                                                 <label>Set Password</label>
-                                                                <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password." type="password">
+                                                                <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password." type="password" required>
                                                                 <span>&nbsp;</span>
-                                                                <input id="retype_new_password" class="form-control"  placeholder="Re-enter password." type="password">
+                                                                <input id="retype_new_password" class="form-control"  placeholder="Re-enter password." type="password"required>
                                                             </div>
                                                         </div>
 
@@ -116,10 +114,7 @@
                                                         <hr>
                                                         <div class="form-group">
                                                             <div class="">
-
-                                                                <button type="button" onclick="submitForm()" class="btn btn-primary">
-                                                                    Create
-                                                                </button>
+                                                                <input type="submit" id="btnSubmitForm" value="Create" class="btn btn-primary">
                                                                 &nbsp;&nbsp;
                                                                 <button type="button" class="btn btn-default" onclick="javascript:cancelCreateUser();">
                                                                     Close
