@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
@@ -70,7 +71,7 @@ class OpsController extends Controller
             $_owner = $this->_validateOwner( $request );
             $_instance = $this->_findInstance( $request->input( 'id' ) );
 
-            if ( $_instance->user_id != $_owner->id )
+            if ( $_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id )
             {
                 return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found, invalid owner (' . $_owner->id . ').' );
             }
