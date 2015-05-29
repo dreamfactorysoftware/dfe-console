@@ -1,8 +1,10 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Response;
 
+/**
+ * Simple middleware that logs api requests to the log
+ */
 class ApiLogger
 {
     //******************************************************************************
@@ -19,14 +21,9 @@ class ApiLogger
      */
     public function handle( $request, Closure $next )
     {
-        \Log::debug( '>>> api: ' . $request->getPathInfo() );
+        \Log::debug( '[api.logging] ' . $request->getMethod() . ': ' . $request->getPathInfo() );
 
-        /** @type Response $_response */
-        $_response = $next( $request );
-
-        \Log::debug( '<<< api: ' . $request->getPathInfo() );
-
-        return $_response;
+        return $next( $request );
     }
 
 }
