@@ -1,8 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Commands;
 
-use DreamFactory\Enterprise\Common\Commands\EnterpriseJobCommand;
-
-class ManifestJob extends EnterpriseJobCommand
+class ManifestJob extends BaseEnterpriseJob
 {
     //******************************************************************************
     //* Constants
@@ -31,6 +29,8 @@ class ManifestJob extends EnterpriseJobCommand
      * @type bool
      */
     protected $_noKeys = false;
+    /** @type string Our handler */
+    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ManifestHandler';
 
     //******************************************************************************
     //* Methods
@@ -108,13 +108,5 @@ class ManifestJob extends EnterpriseJobCommand
         $this->_noKeys = $noKeys;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHandler()
-    {
-        return 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ManifestHandler';
     }
 }

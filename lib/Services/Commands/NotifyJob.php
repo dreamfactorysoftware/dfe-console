@@ -23,6 +23,8 @@ class NotifyJob extends JobCommand
      * @type array
      */
     protected $_data = [];
+    /** @type string Our handler */
+    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\NotifyHandler';
 
     //******************************************************************************
     //* Methods
@@ -54,13 +56,5 @@ class NotifyJob extends JobCommand
     public function getData()
     {
         return $this->_data;
-    }
-
-    /**
-     * @return string The handler class for this job if different from "[class-name]Handler"
-     */
-    public function getHandler()
-    {
-        return 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\NotifyHandler';
     }
 }

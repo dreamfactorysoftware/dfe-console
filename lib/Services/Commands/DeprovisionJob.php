@@ -1,9 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Commands;
 
-use DreamFactory\Enterprise\Common\Commands\EnterpriseJobCommand;
-
-class DeprovisionJob extends EnterpriseJobCommand
+class DeprovisionJob extends BaseEnterpriseJob
 {
     //******************************************************************************
     //* Constants
@@ -11,4 +9,11 @@ class DeprovisionJob extends EnterpriseJobCommand
 
     /** @type string My queue */
     const JOB_QUEUE = 'deprovision';
+
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /** @type string Our handler */
+    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\DeprovisionHandler';
 }

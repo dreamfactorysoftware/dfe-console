@@ -35,6 +35,8 @@ class RegisterJob extends JobCommand
      * @type \stdClass
      */
     protected $_ownerInfo;
+    /** @type string Our handler */
+    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\RegisterHandler';
 
     //******************************************************************************
     //* Methods
@@ -82,13 +84,5 @@ class RegisterJob extends JobCommand
     public function getOwnerInfo()
     {
         return $this->_ownerInfo;
-    }
-
-    /**
-     * @return string The handler class for this job if different from "[class-name]Handler"
-     */
-    public function getHandler()
-    {
-        return 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\RegisterHandler';
     }
 }

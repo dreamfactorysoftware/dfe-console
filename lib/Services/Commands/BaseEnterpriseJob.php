@@ -77,7 +77,7 @@ abstract class BaseEnterpriseJob extends JobCommand
     /**
      * @param mixed $clusterId
      *
-     * @return EnterpriseJobCommand
+     * @return $this
      */
     public function setClusterId( $clusterId )
     {
@@ -98,7 +98,7 @@ abstract class BaseEnterpriseJob extends JobCommand
     /**
      * @param mixed $serverId
      *
-     * @return EnterpriseJobCommand
+     * @return $this
      */
     public function setServerId( $serverId )
     {
@@ -119,7 +119,7 @@ abstract class BaseEnterpriseJob extends JobCommand
     /**
      * @param mixed $serverType Defaults to "WEB"
      *
-     * @return EnterpriseJobCommand
+     * @return $this
      */
     public function setServerType( $serverType = ServerTypes::WEB )
     {

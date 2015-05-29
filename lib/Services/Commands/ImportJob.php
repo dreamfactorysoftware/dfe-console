@@ -11,14 +11,9 @@ class ImportJob extends BaseInstanceJob
     const JOB_QUEUE = 'import';
 
     //******************************************************************************
-    //* Methods
+    //* Members
     //******************************************************************************
 
-    /**
-     * @return string The handler class for this job if different from "[class-name]Handler"
-     */
-    public function getHandler()
-    {
-        return 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ImportHandler';
-    }
+    /** @type string Our handler */
+    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ImportHandler';
 }
