@@ -72,7 +72,7 @@ class OpsController extends Controller
 
             if ( $_instance->user_id != $_owner->id )
             {
-                return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found.' );
+                return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found, invalid owner (' . $_owner->id . ').' );
             }
         }
         catch ( \Exception $_ex )
