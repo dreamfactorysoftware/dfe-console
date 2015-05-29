@@ -169,4 +169,17 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
 
         return $this;
     }
+
+    /** @inheritdoc */
+    public function getCluster( $clusterId = null )
+    {
+        return static::_lookupCluster( $clusterId ?: $this->_clusterId );
+    }
+
+    /** @inheritdoc */
+    public function getServer( $serverId = null )
+    {
+        return static::_lookupServer( $serverId ?: $this->_serverId );
+    }
+
 }
