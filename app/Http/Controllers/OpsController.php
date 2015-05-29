@@ -65,8 +65,6 @@ class OpsController extends Controller
         $_archived = false;
         $_id = $request->input( 'id' );
 
-        \Log::debug( 'ops.status: [id => ' . $_id . ']' );
-
         try
         {
             $_owner = $this->_validateOwner( $request );
@@ -221,10 +219,9 @@ class OpsController extends Controller
         try
         {
             $_payload = $request->input();
+            $_job = new ProvisionJob( $request->input( 'instance-id' ), $_payload );
 
-            \Log::debug( 'Queuing provisioning request: ' . print_r( $_payload, true ) );
-
-            \Queue::push( $_job = new ProvisionJob( $request->input( 'instance-id' ), $_payload ) );
+            \Queue::push( $_job );
 
             try
             {
@@ -270,10 +267,8 @@ class OpsController extends Controller
         try
         {
             $_payload = $request->input();
-
-            \Log::debug( 'Queuing deprovisioning request: ' . print_r( $_payload, true ) );
-
-            \Queue::push( $_job = new DeprovisionJob( $request->input( 'instance-id' ), $_payload ) );
+            $_job = new DeprovisionJob( $request->input( 'instance-id' ), $_payload );
+            \Queue::push( $_job );
 
             return SuccessPacket::make( $_job->getResult() );
         }
@@ -297,10 +292,8 @@ class OpsController extends Controller
         try
         {
             $_payload = $request->input();
-
-            \Log::debug( 'Queuing import request: ' . print_r( $_payload, true ) );
-
-            \Queue::push( $_job = new ImportJob( $request->input( 'instance-id' ), $_payload ) );
+            $_job = new ImportJob( $request->input( 'instance-id' ), $_payload );
+            \Queue::push( $_job );
 
             return SuccessPacket::make( $_job->getResult() );
         }
@@ -324,11 +317,7 @@ class OpsController extends Controller
         try
         {
             $_payload = $request->input();
-
-            \Log::debug( 'Queuing export request: ' . print_r( $_payload, true ) );
-
             $_job = new ExportJob( $request->input( 'instance-id' ), $_payload );
-
             \Queue::push( $_job );
 
             return SuccessPacket::make( $_job->getResult() );
