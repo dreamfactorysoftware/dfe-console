@@ -7,6 +7,7 @@ return [
     /** Global options */
     'display-name'    => 'Admin Console',
     'display-version' => 'v1.0.x-alpha',
+    'instance-prefix' => null,
     /**
      * Theme selection -- a bootswatch theme name
      * Included are cerulean, darkly, flatly, paper, and superhero.
@@ -14,5 +15,5 @@ return [
      */
     'theme'           => 'flatly',
     'log-path'        => env( 'DFE_LOG_PATH', '/data/logs/console' ),
-    'log-file-name'   => 'laravel.log',
+    'log-file-name'   => env( 'DFE_LOG_FILE_NAME', 'laravel.log' ),
 ];
