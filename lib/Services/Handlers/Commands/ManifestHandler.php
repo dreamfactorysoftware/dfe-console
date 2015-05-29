@@ -39,7 +39,7 @@ class ManifestHandler
 
         if ( $command->showManifest() )
         {
-            $_manifest = ClusterManifest::createFromFile( base_path() . DIRECTORY_SEPARATOR . ConsoleDefaults::CLUSTER_ENV_FILE );
+            $_manifest = ClusterManifest::createFromFile( base_path() . DIRECTORY_SEPARATOR . ConsoleDefaults::CLUSTER_MANIFEST_FILE );
             $_result = !$_manifest->existed() ? ErrorPacket::create() : SuccessPacket::make( $_manifest->toArray() );
 
             //  And then show it...

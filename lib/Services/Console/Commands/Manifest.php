@@ -28,7 +28,7 @@ class Manifest extends Command implements EnterpriseJob
     /** @var string The console command name */
     protected $name = 'dfe:manifest';
     /**  @var string The console command description */
-    protected $description = 'Generates a cluster manifest file (.env.cluster.json) for DFE installations.';
+    protected $description = 'Generates a cluster manifest file (.dfe.cluster.json) for DFE installations.';
     /** @type ManifestJob */
     protected $_job = null;
 

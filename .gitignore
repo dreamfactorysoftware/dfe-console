@@ -9,4 +9,4 @@ node_modules/
 _ide_*.php
 /original
 composer.lock
-/.env.cluster.json
+/.dfe.cluster.json

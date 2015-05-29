@@ -8,12 +8,24 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 
 return [
+    //******************************************************************************
+    //* Console API Keys
+    //******************************************************************************
     'console-api-url'           => 'http://console.enterprise.dreamfactory.com/api/v1/ops/',
     /** This key needs to match the key configured in the dashboard */
     'console-api-key'           => env( 'DFE_CONSOLE_API_KEY', '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy' ),
     'console-api-client-id'     => env( 'DFE_CONSOLE_API_CLIENT_ID' ),
     'console-api-client-secret' => env( 'DFE_CONSOLE_API_CLIENT_SECRET' ),
     'signature-method'          => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
+    //******************************************************************************
+    //* Console security settings
+    //******************************************************************************
+    'security'                  => [
+        'open-registration' => false,
+    ],
+    //******************************************************************************
+    //* Console provisioning settings
+    //******************************************************************************
     'provisioning'              => [
         /**
          * Storage & storage layout options/settings

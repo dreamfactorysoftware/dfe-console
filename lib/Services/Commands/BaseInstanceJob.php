@@ -4,14 +4,19 @@ namespace DreamFactory\Enterprise\Services\Commands;
 use DreamFactory\Enterprise\Common\Commands\JobCommand;
 use DreamFactory\Enterprise\Database\Models\Instance;
 
+/**
+ * A base class for all DFE instance-related "job" commands (non-console)
+ */
 abstract class BaseInstanceJob extends JobCommand
 {
     //******************************************************************************
     //* Constants
     //******************************************************************************
 
-    /** @type string My queue */
-    const JOB_QUEUE = null;
+    /**
+     * @type string
+     */
+    const DEFAULT_HANDLER_NAMESPACE = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\';
 
     //******************************************************************************
     //* Members
