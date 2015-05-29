@@ -1,7 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Commands;
 
-class DeprovisionJob extends BaseEnterpriseJob
+class DeprovisionJob extends BaseInstanceJob
 {
     //******************************************************************************
     //* Constants
