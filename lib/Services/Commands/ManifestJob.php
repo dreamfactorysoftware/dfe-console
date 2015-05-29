@@ -1,6 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Commands;
 
-class ManifestJob extends BaseEnterpriseJob
+use Illuminate\Console\Command;
+
+class ManifestJob extends Command
 {
     //******************************************************************************
     //* Constants
