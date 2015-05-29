@@ -24,7 +24,23 @@ interface EnterpriseJob
     public function getServer( $serverId = null );
 
     /**
+     * @return string Return the id of the type of server
+     */
+    public function getServerType();
+
+    /**
      * @return string Return the absolute path of the output file
      */
     public function getOutputFile();
+
+    /**
+     * @return int Return the id of the owner
+     */
+    public function getOwnerId();
+
+    /**
+     * @return string Return the id of owner type
+     */
+    public function getOwnerType();
+
 }

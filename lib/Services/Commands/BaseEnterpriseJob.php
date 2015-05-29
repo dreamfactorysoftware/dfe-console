@@ -4,12 +4,13 @@ namespace DreamFactory\Enterprise\Services\Commands;
 use DreamFactory\Enterprise\Common\Commands\JobCommand;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Services\Contracts\EnterpriseJob;
 use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 
 /**
  * A base class for all DFE non-instance "job" type commands (non-console)
  */
-abstract class BaseEnterpriseJob extends JobCommand
+abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
 {
     //******************************************************************************
     //* Constants

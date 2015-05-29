@@ -8,12 +8,11 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Commands\ManifestJob;
-use DreamFactory\Enterprise\Services\Contracts\EnterpriseJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Manifest extends Command implements EnterpriseJob
+class Manifest extends Command
 {
     //******************************************************************************
     //* Traits
