@@ -181,15 +181,15 @@ class InstanceManager extends BaseManager implements Factory
             return \DB::transaction(
                 function () use ( $_ownerId, $_attributes, $_guestAttributes )
                 {
-                    \Log::debug( '    * creating instance for user id ' . $_ownerId );
+                    \Log::debug( '    * creating instance for user id#' . $_ownerId );
 
                     $_instance = Instance::create( $_attributes );
 
-                    \Log::debug( '    * instance created: ' . print_r( $_instance->id, true ) );
+                    \Log::debug( '      * created, id#' . $_instance->id );
 
                     $_guest = InstanceGuest::create( array_merge( $_guestAttributes, ['instance_id' => $_instance->id] ) );
 
-                    \Log::debug( '      * instance guest created: ' . $_guest->id );
+                    \Log::debug( '      * guest created, id#' . $_guest->id );
 
                     if ( !$_instance || !$_guest )
                     {
