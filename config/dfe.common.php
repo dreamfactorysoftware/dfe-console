@@ -7,7 +7,6 @@ return [
     /** Global options */
     'display-name'    => 'Admin Console',
     'display-version' => 'v1.0.x-alpha',
-    'instance-prefix' => null,
     /**
      * Theme selection -- a bootswatch theme name
      * Included are cerulean, darkly, flatly, paper, and superhero.
