@@ -13,6 +13,7 @@ return [
      * You may also install other compatible themes and use them as well.
      */
     'theme'           => 'flatly',
+    /** Log locations */
     'log-path'        => env( 'DFE_LOG_PATH', '/data/logs/console' ),
     'log-file-name'   => env( 'DFE_LOG_FILE_NAME', 'laravel.log' ),
 ];
