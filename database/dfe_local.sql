@@ -1,67 +1,43 @@
--- MySQL dump 10.13  Distrib 5.6.24-72.2, for debian-linux-gnu (x86_64)
---
--- Host: localhost    Database: dfe_local
--- ------------------------------------------------------
--- Server version	5.6.24-72.2-log
+/*
+SQLyog Community v12.09 (32 bit)
+MySQL - 5.5.43-0ubuntu0.14.04.1 : Database - dfe_local
+*********************************************************************
+*/
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
+
+/*!40101 SET SQL_MODE=''*/;
+
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Current Database: `dfe_local`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `dfe_local` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`dfe_local` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `dfe_local`;
 
---
--- Table structure for table `app_key_t`
---
+/*Table structure for table `app_key_t` */
 
 DROP TABLE IF EXISTS `app_key_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `app_key_t` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) NOT NULL,
-  `owner_type_nbr` int(11) NOT NULL,
+  `key_class_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `client_id` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `client_secret` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `server_secret` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `key_class_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `owner_type_nbr` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_key_t_client_id_unique` (`client_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `app_key_t`
---
-
-LOCK TABLES `app_key_t` WRITE;
-/*!40000 ALTER TABLE `app_key_t` DISABLE KEYS */;
-INSERT INTO `app_key_t` VALUES (1,0,1000,'9fc8edf51872fa82e43afed4956f05ffbbc7f135fbdedf6df6d5b5b354202be7','dbed2ff0a38e27186177e3cdc6eb41e99e3bd75ae78d105c775997ff43249aaa','%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy','[entity:console]','2015-05-09 16:09:56','2015-05-09 16:09:56'),(2,0,1001,'28b23fedb0b186fc00e9dceba473a3326f36fbc79b390c615a199603fdb1b13f','5a1a84735446812372ae7e380a413348a7b94e42b444424abed0b5197678d625','%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy','[entity:dashboard]','2015-05-09 16:10:01','2015-05-09 16:10:01');
-/*!40000 ALTER TABLE `app_key_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `auth_reset_t`
---
+/*Table structure for table `auth_reset_t` */
 
 DROP TABLE IF EXISTS `auth_reset_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `auth_reset_t` (
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -69,76 +45,35 @@ CREATE TABLE `auth_reset_t` (
   KEY `auth_reset_t_email_addr_text_index` (`email`),
   KEY `auth_reset_t_token_text_index` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `auth_reset_t`
---
-
-LOCK TABLES `auth_reset_t` WRITE;
-/*!40000 ALTER TABLE `auth_reset_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `auth_reset_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cluster_arch_t`
---
+/*Table structure for table `cluster_arch_t` */
 
 DROP TABLE IF EXISTS `cluster_arch_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `cluster_arch_t` (
-  `id` int(11) NOT NULL,
+  `id` int(11) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `cluster_id_text` varchar(128) NOT NULL,
-  `subdomain_text` varchar(128) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `cluster_id_text` varchar(128) DEFAULT NULL,
+  `subdomain_text` varchar(128) DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `cluster_arch_t`
---
-
-LOCK TABLES `cluster_arch_t` WRITE;
-/*!40000 ALTER TABLE `cluster_arch_t` DISABLE KEYS */;
-INSERT INTO `cluster_arch_t` VALUES (3,NULL,'ben-cluster','ben.com','2015-04-30 18:06:06','2015-04-30 18:06:06'),(4,NULL,'toddcluster','todd.df.com','2015-05-05 09:51:30','2015-05-05 09:51:30'),(5,NULL,'cluster-db12','domain1','2015-05-06 08:42:30','2015-05-06 08:42:30'),(12,NULL,'CJ Test123','test123','2015-05-07 13:23:07','2015-05-08 12:01:47');
-/*!40000 ALTER TABLE `cluster_arch_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cluster_server_asgn_arch_t`
---
+/*Table structure for table `cluster_server_asgn_arch_t` */
 
 DROP TABLE IF EXISTS `cluster_server_asgn_arch_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `cluster_server_asgn_arch_t` (
-  `cluster_id` int(11) NOT NULL,
-  `server_id` int(11) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `cluster_id` int(11) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `cluster_server_asgn_arch_t`
---
-
-LOCK TABLES `cluster_server_asgn_arch_t` WRITE;
-/*!40000 ALTER TABLE `cluster_server_asgn_arch_t` DISABLE KEYS */;
-INSERT INTO `cluster_server_asgn_arch_t` VALUES (4,4,'2015-05-07 14:32:59','2015-05-07 14:32:59'),(4,6,'2015-05-07 14:32:59','2015-05-07 14:32:59'),(12,12,'2015-05-07 15:14:37','2015-05-07 15:14:37'),(10,13,'0000-00-00 00:00:00','2015-05-07 16:49:50');
-/*!40000 ALTER TABLE `cluster_server_asgn_arch_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `cluster_server_asgn_t`
---
+/*Table structure for table `cluster_server_asgn_t` */
 
 DROP TABLE IF EXISTS `cluster_server_asgn_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `cluster_server_asgn_t` (
   `cluster_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
@@ -150,46 +85,11 @@ CREATE TABLE `cluster_server_asgn_t` (
   CONSTRAINT `fk_csa_cluster_id` FOREIGN KEY (`cluster_id`) REFERENCES `cluster_t` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_csa_server_id` FOREIGN KEY (`server_id`) REFERENCES `server_t` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `cluster_server_asgn_t`
---
-
-LOCK TABLES `cluster_server_asgn_t` WRITE;
-/*!40000 ALTER TABLE `cluster_server_asgn_t` DISABLE KEYS */;
-INSERT INTO `cluster_server_asgn_t` VALUES (1,4,'2014-09-14 19:24:38','2014-09-14 19:24:38'),(1,5,'2014-09-14 19:24:58','2014-09-14 19:24:58'),(1,6,'2014-09-14 19:25:02','2014-09-14 19:25:05'),(2,7,'2014-09-14 19:29:27','2014-09-14 19:29:27'),(2,8,'2014-09-14 19:29:32','2014-09-14 19:29:32'),(2,9,'2014-09-14 19:29:36','2014-09-14 19:29:36');
-/*!40000 ALTER TABLE `cluster_server_asgn_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `csa_beforeDelete` BEFORE DELETE ON `dfe_local`.`cluster_server_asgn_t` FOR EACH ROW BEGIN
-	INSERT INTO `cluster_server_asgn_arch_t` 
-		SELECT *
-		FROM `cluster_server_asgn_t` 
-		WHERE 
-		`cluster_id` = old.cluster_id AND `server_id` = old.server_id;
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `cluster_t`
---
+/*Table structure for table `cluster_t` */
 
 DROP TABLE IF EXISTS `cluster_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `cluster_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -199,72 +99,28 @@ CREATE TABLE `cluster_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_cluster_user_id_name` (`cluster_id_text`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `cluster_t`
---
-
-LOCK TABLES `cluster_t` WRITE;
-/*!40000 ALTER TABLE `cluster_t` DISABLE KEYS */;
-INSERT INTO `cluster_t` VALUES (1,NULL,'cluster-legacy','cloud.dreamfactory.com','2014-09-14 19:24:03','2014-09-24 15:01:33'),(2,NULL,'cluster-east-1','cloud.dreamfactory.com','2014-09-14 19:25:33','2014-09-14 20:07:04');
-/*!40000 ALTER TABLE `cluster_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `cluster_beforeDelete` BEFORE DELETE ON `dfe_local`.`cluster_t` FOR EACH ROW BEGIN
-		INSERT INTO `cluster_arch_t` SELECT * FROM `cluster_t` WHERE `id` = old.id;
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `deactivation_arch_t`
---
+/*Table structure for table `deactivation_arch_t` */
 
 DROP TABLE IF EXISTS `deactivation_arch_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `deactivation_arch_t` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `instance_id` int(11) NOT NULL,
-  `activate_by_date` datetime NOT NULL,
-  `extend_count_nbr` int(1) NOT NULL DEFAULT '0',
-  `user_notified_nbr` int(1) NOT NULL DEFAULT '0',
-  `action_reason_nbr` int(11) NOT NULL DEFAULT '0',
-  `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `instance_id` int(11) DEFAULT NULL,
+  `activate_by_date` datetime DEFAULT NULL,
+  `extend_count_nbr` int(1) DEFAULT '0',
+  `user_notified_nbr` int(1) DEFAULT '0',
+  `action_reason_nbr` int(11) DEFAULT '0',
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `deactivation_arch_t`
---
-
-LOCK TABLES `deactivation_arch_t` WRITE;
-/*!40000 ALTER TABLE `deactivation_arch_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `deactivation_arch_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `deactivation_t`
---
+/*Table structure for table `deactivation_t` */
 
 DROP TABLE IF EXISTS `deactivation_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `deactivation_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -277,42 +133,12 @@ CREATE TABLE `deactivation_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_user_instance` (`user_id`,`instance_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `deactivation_t`
---
-
-LOCK TABLES `deactivation_t` WRITE;
-/*!40000 ALTER TABLE `deactivation_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `deactivation_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `deactivation_beforeDelete` BEFORE DELETE ON `dfe_local`.`deactivation_t` FOR EACH ROW BEGIN
-	INSERT INTO `deactivation_arch_t` SELECT * FROM `deactivation_t` WHERE `id` = old.id;
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `environment_t`
---
+/*Table structure for table `environment_t` */
 
 DROP TABLE IF EXISTS `environment_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `environment_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -320,189 +146,125 @@ CREATE TABLE `environment_t` (
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `environment_t`
---
-
-LOCK TABLES `environment_t` WRITE;
-/*!40000 ALTER TABLE `environment_t` DISABLE KEYS */;
-INSERT INTO `environment_t` VALUES (1,NULL,'Development','2012-11-26 13:33:24','2012-12-04 14:56:21'),(2,NULL,'Production','2012-11-26 13:33:31','2012-11-26 13:33:31');
-/*!40000 ALTER TABLE `environment_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `instance_arch_t`
---
+/*Table structure for table `instance_arch_t` */
 
 DROP TABLE IF EXISTS `instance_arch_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `instance_arch_t` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `instance_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `instance_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
+  `vendor_image_id` int(11) NOT NULL DEFAULT '0',
+  `vendor_credentials_id` int(11) DEFAULT NULL,
   `guest_location_nbr` int(11) NOT NULL DEFAULT '0',
-  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
-  `instance_data_text` mediumtext COLLATE utf8_unicode_ci,
-  `environment_id` int(11) NOT NULL DEFAULT '1',
-  `cluster_id` int(11) NOT NULL DEFAULT '1',
+  `instance_id_text` varchar(64) CHARACTER SET latin1 DEFAULT NULL,
   `app_server_id` int(11) NOT NULL DEFAULT '6',
-  `db_server_id` int(11) NOT NULL DEFAULT '4',
   `web_server_id` int(11) NOT NULL DEFAULT '5',
+  `db_server_id` int(11) NOT NULL DEFAULT '4',
   `db_host_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
   `db_port_nbr` int(11) NOT NULL DEFAULT '3306',
   `db_name_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dreamfactory',
-  `db_user_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
-  `db_password_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
+  `db_user_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `db_password_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `cluster_id` int(11) NOT NULL DEFAULT '1',
+  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
+  `flavor_nbr` int(11) NOT NULL DEFAULT '0',
+  `base_image_text` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT 't1.micro',
+  `instance_name_text` varchar(128) CHARACTER SET latin1 DEFAULT NULL,
+  `region_text` varchar(32) CHARACTER SET latin1 DEFAULT NULL,
+  `availability_zone_text` varchar(32) CHARACTER SET latin1 DEFAULT NULL,
+  `security_group_text` varchar(1024) CHARACTER SET latin1 DEFAULT NULL,
+  `ssh_key_text` varchar(64) CHARACTER SET latin1 DEFAULT NULL,
+  `root_device_type_nbr` int(11) NOT NULL DEFAULT '0',
+  `public_host_text` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  `public_ip_text` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `private_host_text` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  `private_ip_text` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `request_id_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `request_date` datetime DEFAULT NULL,
-  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `trial_instance_ind` tinyint(1) NOT NULL DEFAULT '1',
-  `provision_ind` tinyint(1) NOT NULL DEFAULT '0',
   `deprovision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `provision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `trial_instance_ind` tinyint(1) NOT NULL DEFAULT '1',
   `state_nbr` int(11) NOT NULL DEFAULT '0',
+  `vendor_state_nbr` int(11) DEFAULT NULL,
+  `vendor_state_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `ready_state_nbr` int(11) NOT NULL DEFAULT '0',
   `platform_state_nbr` int(11) NOT NULL DEFAULT '0',
-  `last_state_date` datetime NOT NULL,
+  `environment_id` int(11) NOT NULL DEFAULT '1',
+  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `last_state_date` datetime DEFAULT NULL,
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `terminate_date` datetime DEFAULT NULL,
-  `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `ixu_instance_name` (`instance_name_text`),
-  KEY `fk_instance_environment` (`environment_id`),
-  KEY `fk_instance_user_id` (`user_id`),
-  KEY `fk_instance_cluster_id` (`cluster_id`),
-  KEY `fk_instance_app_server_id` (`app_server_id`),
-  KEY `fk_instance_db_server_id` (`db_server_id`),
-  KEY `fk_instance_web_server` (`web_server_id`),
-  KEY `ix_state_date` (`last_state_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=MyISAM AUTO_INCREMENT=22651 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `instance_arch_t`
---
-
-LOCK TABLES `instance_arch_t` WRITE;
-/*!40000 ALTER TABLE `instance_arch_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instance_arch_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `instance_guest_arch_t`
---
+/*Table structure for table `instance_guest_arch_t` */
 
 DROP TABLE IF EXISTS `instance_guest_arch_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `instance_guest_arch_t` (
   `id` int(11) NOT NULL,
+  `instance_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `vendor_image_id` int(11) NOT NULL,
+  `vendor_credentials_id` int(11) DEFAULT NULL,
+  `flavor_nbr` int(11) NOT NULL,
+  `base_image_text` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `region_text` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `availability_zone_text` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `security_group_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
+  `ssh_key_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `root_device_type_nbr` int(11) NOT NULL,
+  `public_host_text` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `public_ip_text` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `private_host_text` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
+  `private_ip_text` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `state_nbr` int(11) NOT NULL,
+  `state_text` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_date` datetime NOT NULL,
+  `lmod_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Table structure for table `instance_guest_t` */
+
+DROP TABLE IF EXISTS `instance_guest_t`;
+
+CREATE TABLE `instance_guest_t` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `instance_id` int(11) NOT NULL,
   `vendor_id` int(11) NOT NULL,
   `vendor_image_id` int(11) NOT NULL DEFAULT '0',
   `vendor_credentials_id` int(11) DEFAULT NULL,
   `flavor_nbr` int(11) NOT NULL DEFAULT '0',
-  `base_image_text` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT 't1.micro',
-  `region_text` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  `availability_zone_text` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  `security_group_text` varchar(1024) CHARACTER SET utf8 DEFAULT NULL,
-  `ssh_key_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `base_image_text` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT 'dfe.standard',
+  `region_text` varchar(32) CHARACTER SET latin1 DEFAULT NULL,
+  `availability_zone_text` varchar(32) CHARACTER SET latin1 DEFAULT NULL,
+  `security_group_text` varchar(1024) CHARACTER SET latin1 DEFAULT NULL,
+  `ssh_key_text` varchar(64) CHARACTER SET latin1 DEFAULT NULL,
   `root_device_type_nbr` int(11) NOT NULL DEFAULT '0',
-  `public_host_text` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `public_ip_text` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
-  `private_host_text` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `private_ip_text` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
+  `public_host_text` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  `public_ip_text` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `private_host_text` varchar(256) CHARACTER SET latin1 DEFAULT NULL,
+  `private_ip_text` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `state_nbr` int(11) NOT NULL DEFAULT '0',
   `state_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `create_date` datetime DEFAULT NULL,
-  `lmod_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  KEY `ix_instance_guest_instance_id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `instance_guest_arch_t`
---
-
-LOCK TABLES `instance_guest_arch_t` WRITE;
-/*!40000 ALTER TABLE `instance_guest_arch_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instance_guest_arch_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `instance_guest_t`
---
-
-DROP TABLE IF EXISTS `instance_guest_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `instance_guest_t` (
-  `id` int(11) NOT NULL,
-  `instance_id` int(11) DEFAULT NULL,
-  `vendor_id` int(11) DEFAULT NULL,
-  `vendor_image_id` int(11) DEFAULT '0',
-  `vendor_credentials_id` int(11) DEFAULT NULL,
-  `flavor_nbr` int(11) DEFAULT '0',
-  `base_image_text` varchar(32) CHARACTER SET utf8 DEFAULT 't1.micro',
-  `region_text` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  `availability_zone_text` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  `security_group_text` varchar(1024) CHARACTER SET utf8 DEFAULT NULL,
-  `ssh_key_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `root_device_type_nbr` int(11) DEFAULT '0',
-  `public_host_text` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `public_ip_text` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
-  `private_host_text` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `private_ip_text` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
-  `state_nbr` int(11) DEFAULT '0',
-  `state_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `create_date` datetime DEFAULT NULL,
-  `lmod_date` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `create_date` datetime NOT NULL,
+  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
   KEY `ix_instance_guest_instance_id` (`id`),
   KEY `fk_instance_guest_instance_id` (`instance_id`),
   CONSTRAINT `fk_instance_guest_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `instance_guest_t`
---
-
-LOCK TABLES `instance_guest_t` WRITE;
-/*!40000 ALTER TABLE `instance_guest_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instance_guest_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `instanceGuest_beforeDelete` BEFORE DELETE ON `dfe_local`.`instance_guest_t` FOR EACH ROW BEGIN
-		INSERT INTO `instance_guest_arch_t` SELECT * FROM `instance_guest_t` WHERE `id` = old.id;
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `instance_janitor_t`
---
+/*Table structure for table `instance_janitor_t` */
 
 DROP TABLE IF EXISTS `instance_janitor_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `instance_janitor_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `storage_id_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
@@ -511,49 +273,80 @@ CREATE TABLE `instance_janitor_t` (
   `user_id` int(11) NOT NULL,
   `user_storage_id_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=20428 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `instance_janitor_t`
---
+/*Table structure for table `instance_old_t` */
 
-LOCK TABLES `instance_janitor_t` WRITE;
-/*!40000 ALTER TABLE `instance_janitor_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instance_janitor_t` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `instance_old_t`;
 
---
--- Table structure for table `instance_server_asgn_arch_t`
---
+CREATE TABLE `instance_old_t` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `vendor_image_id` int(11) NOT NULL DEFAULT '0',
+  `vendor_credentials_id` int(11) NOT NULL,
+  `guest_location_nbr` int(11) NOT NULL DEFAULT '0',
+  `instance_id_text` varchar(64) DEFAULT NULL,
+  `instance_data_text` mediumtext CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `app_server_id` int(11) NOT NULL DEFAULT '6',
+  `web_server_id` int(11) NOT NULL DEFAULT '5',
+  `db_server_id` int(11) NOT NULL DEFAULT '4',
+  `db_host_text` varchar(1024) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
+  `db_port_nbr` int(11) NOT NULL DEFAULT '3306',
+  `db_name_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dreamfactory',
+  `db_user_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
+  `db_password_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
+  `cluster_id` int(11) NOT NULL DEFAULT '1',
+  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
+  `flavor_nbr` int(11) NOT NULL DEFAULT '0',
+  `base_image_text` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT 't1.micro',
+  `instance_name_text` varchar(128) DEFAULT NULL,
+  `region_text` varchar(32) DEFAULT NULL,
+  `availability_zone_text` varchar(32) DEFAULT NULL,
+  `security_group_text` varchar(1024) DEFAULT NULL,
+  `ssh_key_text` varchar(64) DEFAULT NULL,
+  `root_device_type_nbr` int(11) NOT NULL DEFAULT '0',
+  `public_host_text` varchar(256) DEFAULT NULL,
+  `public_ip_text` varchar(20) DEFAULT NULL,
+  `private_host_text` varchar(256) DEFAULT NULL,
+  `private_ip_text` varchar(20) DEFAULT NULL,
+  `request_id_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `request_date` datetime DEFAULT NULL,
+  `deprovision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `provision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `trial_instance_ind` tinyint(1) NOT NULL DEFAULT '1',
+  `state_nbr` int(11) NOT NULL DEFAULT '0',
+  `vendor_state_nbr` int(11) DEFAULT NULL,
+  `vendor_state_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `ready_state_nbr` int(11) NOT NULL DEFAULT '0',
+  `platform_state_nbr` int(11) NOT NULL DEFAULT '0',
+  `environment_id` int(11) NOT NULL DEFAULT '1',
+  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `last_state_date` datetime NOT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `terminate_date` datetime DEFAULT NULL,
+  `create_date` datetime NOT NULL,
+  `lmod_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `instance_server_asgn_arch_t` */
 
 DROP TABLE IF EXISTS `instance_server_asgn_arch_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `instance_server_asgn_arch_t` (
-  `instance_id` int(11) NOT NULL,
-  `server_id` int(11) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `instance_id` int(11) DEFAULT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `instance_server_asgn_arch_t`
---
-
-LOCK TABLES `instance_server_asgn_arch_t` WRITE;
-/*!40000 ALTER TABLE `instance_server_asgn_arch_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instance_server_asgn_arch_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `instance_server_asgn_t`
---
+/*Table structure for table `instance_server_asgn_t` */
 
 DROP TABLE IF EXISTS `instance_server_asgn_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `instance_server_asgn_t` (
   `instance_id` int(11) NOT NULL,
   `server_id` int(11) NOT NULL,
@@ -565,61 +358,24 @@ CREATE TABLE `instance_server_asgn_t` (
   CONSTRAINT `fk_isa_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_isa_server_id` FOREIGN KEY (`server_id`) REFERENCES `server_t` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `instance_server_asgn_t`
---
-
-LOCK TABLES `instance_server_asgn_t` WRITE;
-/*!40000 ALTER TABLE `instance_server_asgn_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instance_server_asgn_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `isa_beforeDelete` BEFORE DELETE ON `dfe_local`.`instance_server_asgn_t` FOR EACH ROW BEGIN
-		INSERT INTO `instance_server_asgn_arch_t` 
-		
-			SELECT * 
-			FROM `instance_server_asgn_t` 
-			WHERE 
-				`server_id` = old.server_id AND 
-				`instance_id` = old.instance_id;
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `instance_t`
---
+/*Table structure for table `instance_t` */
 
 DROP TABLE IF EXISTS `instance_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `instance_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `instance_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `instance_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `guest_location_nbr` int(11) NOT NULL DEFAULT '0',
-  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
-  `instance_data_text` mediumtext COLLATE utf8_unicode_ci,
   `environment_id` int(11) NOT NULL DEFAULT '1',
+  `instance_id_text` varchar(64) CHARACTER SET latin1 DEFAULT NULL,
+  `instance_name_text` varchar(128) CHARACTER SET latin1 DEFAULT NULL,
+  `instance_data_text` mediumtext COLLATE utf8_unicode_ci,
   `cluster_id` int(11) NOT NULL DEFAULT '1',
   `app_server_id` int(11) NOT NULL DEFAULT '6',
   `db_server_id` int(11) NOT NULL DEFAULT '4',
   `web_server_id` int(11) NOT NULL DEFAULT '5',
+  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `db_host_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
   `db_port_nbr` int(11) NOT NULL DEFAULT '3306',
   `db_name_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dreamfactory',
@@ -634,6 +390,7 @@ CREATE TABLE `instance_t` (
   `state_nbr` int(11) NOT NULL DEFAULT '0',
   `ready_state_nbr` int(11) NOT NULL DEFAULT '0',
   `platform_state_nbr` int(11) NOT NULL DEFAULT '0',
+  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
   `last_state_date` datetime NOT NULL,
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
@@ -655,66 +412,25 @@ CREATE TABLE `instance_t` (
   CONSTRAINT `fk_instance_environment` FOREIGN KEY (`environment_id`) REFERENCES `environment_t` (`id`),
   CONSTRAINT `fk_instance_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`),
   CONSTRAINT `fk_instance_web_server` FOREIGN KEY (`web_server_id`) REFERENCES `server_t` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `instance_t`
---
+/*Table structure for table `job_fail_t` */
 
-LOCK TABLES `instance_t` WRITE;
-/*!40000 ALTER TABLE `instance_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `instance_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `instance_afterInsert` AFTER INSERT ON `dfe_local`.`instance_t` FOR EACH ROW BEGIN
-    
-	INSERT INTO `deactivation_t` 
-		(user_id, instance_id, activate_by_date, create_date )
-	VALUES
-		(new.user_id, new.id, CURRENT_TIMESTAMP + INTERVAL 7 DAY, current_timestamp );
-		
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `instance_beforeDelete` BEFORE DELETE ON `instance_t` 
-    FOR EACH ROW BEGIN
-	Insert into `instance_arch_t` select * from `instance_t` where `id` = old.id;
-	DELETE from `deactivation_t` where `user_id` = old.user_id and `instance_id` = old.id;
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
+DROP TABLE IF EXISTS `job_fail_t`;
 
---
--- Table structure for table `job_t`
---
+CREATE TABLE `job_fail_t` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `connection` text COLLATE utf8_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8_unicode_ci NOT NULL,
+  `payload` text COLLATE utf8_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Table structure for table `job_t` */
 
 DROP TABLE IF EXISTS `job_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `job_t` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `queue` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -726,47 +442,36 @@ CREATE TABLE `job_t` (
   `created_at` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `job_t`
---
+/*Table structure for table `limit_t` */
 
-LOCK TABLES `job_t` WRITE;
-/*!40000 ALTER TABLE `job_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `job_t` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `limit_t`;
 
---
--- Table structure for table `migration_t`
---
+CREATE TABLE `limit_t` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `owner_id` int(11) NOT NULL,
+  `owner_type_nbr` int(11) NOT NULL,
+  `parameters_text` mediumtext COLLATE utf8_unicode_ci,
+  `create_date` datetime NOT NULL,
+  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `limit_t_owner_id_index` (`owner_id`),
+  KEY `limit_t_owner_type_nbr_index` (`owner_type_nbr`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Table structure for table `migration_t` */
 
 DROP TABLE IF EXISTS `migration_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `migration_t` (
   `migration` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `migration_t`
---
-
-LOCK TABLES `migration_t` WRITE;
-/*!40000 ALTER TABLE `migration_t` DISABLE KEYS */;
-INSERT INTO `migration_t` VALUES ('2014_10_12_000000_create_users_table',1),('2014_10_12_100000_create_password_resets_table',1),('2015_02_23_151514_create_jobs_table',1),('2015_02_23_152109_create_failed_jobs_table',1),('2015_03_26_114654_CreateAppKeysTable',1),('2015_03_26_114654_create_app_keys_table',2),('2015_04_02_121533_create_mount_table',2),('2015_04_13_195050_create_snapshot_table',3),('2015_04_22_152423_create_instance_guest_table',4),('2015_04_22_153218_create_instance_guest_arch_table',5);
-/*!40000 ALTER TABLE `migration_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `mount_t`
---
+/*Table structure for table `mount_t` */
 
 DROP TABLE IF EXISTS `mount_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `mount_t` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `mount_type_nbr` int(11) NOT NULL DEFAULT '0',
@@ -780,25 +485,11 @@ CREATE TABLE `mount_t` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `mount_t_mount_id_text_unique` (`mount_id_text`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `mount_t`
---
-
-LOCK TABLES `mount_t` WRITE;
-/*!40000 ALTER TABLE `mount_t` DISABLE KEYS */;
-INSERT INTO `mount_t` VALUES (1,0,'mount-east-1',0,'/data/storage','{\"disk\":\"mount-east-1\"}',NULL,'2015-04-04 13:44:55','2015-04-04 13:44:55'),(2,0,'mount-local-1',0,'/data/storage','{\"disk\":\"local\"}',NULL,'2015-04-04 14:05:59','2015-04-04 14:05:49');
-/*!40000 ALTER TABLE `mount_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `owner_hash_t`
---
+/*Table structure for table `owner_hash_t` */
 
 DROP TABLE IF EXISTS `owner_hash_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `owner_hash_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner_id` int(11) NOT NULL,
@@ -807,25 +498,12 @@ CREATE TABLE `owner_hash_t` (
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `owner_hash_t`
---
-
-LOCK TABLES `owner_hash_t` WRITE;
-/*!40000 ALTER TABLE `owner_hash_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `owner_hash_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `role_t`
---
+/*Table structure for table `role_t` */
 
 DROP TABLE IF EXISTS `role_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `role_t` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `role_name_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
@@ -837,24 +515,11 @@ CREATE TABLE `role_t` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_t_role_name_text_unique` (`role_name_text`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `role_t`
---
-
-LOCK TABLES `role_t` WRITE;
-/*!40000 ALTER TABLE `role_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `route_hash_t`
---
+/*Table structure for table `route_hash_t` */
 
 DROP TABLE IF EXISTS `route_hash_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `route_hash_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type_nbr` int(11) NOT NULL DEFAULT '0',
@@ -865,54 +530,44 @@ CREATE TABLE `route_hash_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_route_hash_hash` (`hash_text`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=MyISAM AUTO_INCREMENT=4761 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `route_hash_t`
---
+/*Table structure for table `saveuser` */
 
-LOCK TABLES `route_hash_t` WRITE;
-/*!40000 ALTER TABLE `route_hash_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `route_hash_t` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `saveuser`;
 
---
--- Table structure for table `server_arch_t`
---
+CREATE TABLE `saveuser` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `first_name_text` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `last_name_text` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `display_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `email_addr_text` varchar(320) CHARACTER SET utf8 NOT NULL,
+  `password_text` varchar(200) CHARACTER SET utf8 NOT NULL COMMENT 'Big cuz it is a hash',
+  `owner_id` int(11) DEFAULT NULL,
+  `owner_type_nbr` int(11) DEFAULT NULL,
+  `last_login_date` datetime DEFAULT NULL,
+  `last_login_ip_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `create_date` datetime NOT NULL,
+  `lmod_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `server_arch_t` */
 
 DROP TABLE IF EXISTS `server_arch_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `server_arch_t` (
-  `id` int(11) NOT NULL,
-  `server_type_id` int(11) NOT NULL,
-  `server_id_text` varchar(128) NOT NULL,
-  `host_text` varchar(1024) NOT NULL,
-  `mount_id` int(11) DEFAULT NULL,
+  `id` int(11) DEFAULT NULL,
+  `server_type_id` int(11) DEFAULT NULL,
+  `server_id_text` varchar(128) DEFAULT NULL,
+  `host_text` varchar(1024) DEFAULT NULL,
   `config_text` mediumtext,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  KEY `idx_server_server_type_id` (`server_type_id`),
-  KEY `ux_server_id_name` (`server_type_id`,`server_id_text`)
+  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `server_arch_t`
---
-
-LOCK TABLES `server_arch_t` WRITE;
-/*!40000 ALTER TABLE `server_arch_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `server_arch_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `server_t`
---
+/*Table structure for table `server_t` */
 
 DROP TABLE IF EXISTS `server_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `server_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `server_type_id` int(11) NOT NULL,
@@ -925,43 +580,12 @@ CREATE TABLE `server_t` (
   KEY `idx_server_server_type_id` (`server_type_id`),
   KEY `ux_server_id_name` (`server_type_id`,`server_id_text`),
   CONSTRAINT `fk_server_server_type_id` FOREIGN KEY (`server_type_id`) REFERENCES `server_type_t` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `server_t`
---
-
-LOCK TABLES `server_t` WRITE;
-/*!40000 ALTER TABLE `server_t` DISABLE KEYS */;
-INSERT INTO `server_t` VALUES (4,1,'cumulus ','cumulus.fabric.dreamfactory.com',1,'\"{\\\"port\\\":\\\"3306\\\",\\\"username\\\":\\\"dsp_user\\\",\\\"password\\\":\\\"dsp_user\\\",\\\"driver\\\":\\\"\\\",\\\"default-database-name\\\":\\\"dreamfactory\\\"}\"','2015-05-05 15:16:48'),(5,2,'web-legacy','cumulus.fabric.dreamfactory.com',1,'{\r\n	\"host\":\"cumulus.fabric.dreamfactory.com\",\r\n}','2015-04-04 14:04:38'),(6,3,'app-legacy','cumulus.fabric.dreamfactory.com',1,'{\r\n	\"host\":\"cumulus.fabric.dreamfactory.com\",\r\n}','2015-04-04 14:04:41'),(7,1,'db-east-1','web-east-1.fabric.dreamfactory.com',1,'{\r\n	\"id\": \"db-east-1\",\r\n	\"host\":\"db-east-1.fabric.dreamfactory.com\",\r\n	\"port\":3306,\r\n	\"username\":\"cerberus\",\r\n	\"password\":\"KlL8ZF-E-rBFw_h9ygQZh3ZF\",\r\n	\"driver\":\"mysql\",\r\n	\"default-database-name\":\"\"\r\n}','2015-04-04 14:04:25'),(8,2,'web-east-1','web-east-1.fabric.dreamfactory.com',1,'{\"port\":\"\",\"username\":\"\",\"password\":\"asas\"}','2015-05-08 13:14:13'),(9,3,'app-east-1','app-east-1.fabric.dreamfactory.com',1,'{\"port\":\"443\",\"scheme\":\"https\",\"username\":\"\",\"password\":\"asas\",\"access_token\":\"\"}','2015-05-08 13:13:41');
-/*!40000 ALTER TABLE `server_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`66.162.17.86`*/ /*!50003 TRIGGER `server_beforeDelete` BEFORE DELETE ON `dfe_local`.`server_t` FOR EACH ROW BEGIN
-		INSERT INTO `server_arch_t` SELECT * FROM `server_t` WHERE `id` = old.id;
-    END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `server_type_t`
---
+/*Table structure for table `server_type_t` */
 
 DROP TABLE IF EXISTS `server_type_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `server_type_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type_name_text` varchar(32) NOT NULL,
@@ -970,97 +594,50 @@ CREATE TABLE `server_type_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_server_type_name_text` (`type_name_text`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `server_type_t`
---
-
-LOCK TABLES `server_type_t` WRITE;
-/*!40000 ALTER TABLE `server_type_t` DISABLE KEYS */;
-INSERT INTO `server_type_t` VALUES (1,'db','','2014-09-14 17:03:35','2014-09-14 17:03:35'),(2,'web','','2014-09-14 17:03:40','2014-09-14 17:03:40'),(3,'app','','2014-09-14 17:03:44','2014-09-14 17:03:44');
-/*!40000 ALTER TABLE `server_type_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `service_user_t`
---
+/*Table structure for table `service_user_t` */
 
 DROP TABLE IF EXISTS `service_user_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `service_user_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email_addr_text` varchar(320) NOT NULL,
-  `password_text` varchar(200) NOT NULL COMMENT 'Big cuz it is a hash',
-  `remember_token` varchar(128) DEFAULT NULL,
   `first_name_text` varchar(64) NOT NULL,
   `last_name_text` varchar(64) NOT NULL,
   `nickname_text` varchar(128) DEFAULT NULL,
+  `email_addr_text` varchar(320) NOT NULL,
+  `password_text` varchar(200) NOT NULL COMMENT 'Big cuz it is a hash',
   `owner_id` int(11) DEFAULT NULL,
   `owner_type_nbr` int(11) DEFAULT NULL,
   `last_login_date` datetime DEFAULT NULL,
   `last_login_ip_text` varchar(64) DEFAULT NULL,
+  `remember_token` varchar(128) DEFAULT NULL,
+  `active_ind` tinyint(1) NOT NULL DEFAULT '0',
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `ixu_user_nickname_text` (`nickname_text`),
   KEY `fk_service_user_owner_id` (`owner_id`),
   CONSTRAINT `fk_service_user_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `service_user_t` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `service_user_t`
---
-
-LOCK TABLES `service_user_t` WRITE;
-/*!40000 ALTER TABLE `service_user_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `service_user_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `snapshot_t`
---
+/*Table structure for table `snapshot_t` */
 
 DROP TABLE IF EXISTS `snapshot_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `snapshot_t` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `snapshot_id_text` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `user_id` int(11) NOT NULL,
-  `instance_id` int(11) NOT NULL,
-  `url_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
-  `expire_date` datetime NOT NULL,
+  `file_name_text` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `file_path_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `ux_snapshot_shapshot_id` (`snapshot_id_text`),
-  KEY `snapshot_t_user_id_index` (`user_id`),
-  KEY `snapshot_t_instance_id_index` (`instance_id`),
-  CONSTRAINT `fk_snapshot_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_snapshot_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`) ON UPDATE CASCADE
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `snapshot_t`
---
-
-LOCK TABLES `snapshot_t` WRITE;
-/*!40000 ALTER TABLE `snapshot_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `snapshot_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_role_asgn_t`
---
+/*Table structure for table `user_role_asgn_t` */
 
 DROP TABLE IF EXISTS `user_role_asgn_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `user_role_asgn_t` (
   `user_id` int(10) NOT NULL,
   `role_id` int(10) unsigned NOT NULL,
@@ -1070,37 +647,23 @@ CREATE TABLE `user_role_asgn_t` (
   KEY `fk_role_role_id` (`role_id`),
   CONSTRAINT `fk_role_role_id` FOREIGN KEY (`role_id`) REFERENCES `role_t` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_role_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `user_role_asgn_t`
---
-
-LOCK TABLES `user_role_asgn_t` WRITE;
-/*!40000 ALTER TABLE `user_role_asgn_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_role_asgn_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user_t`
---
+/*Table structure for table `user_t` */
 
 DROP TABLE IF EXISTS `user_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `user_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `email_addr_text` varchar(200) NOT NULL,
-  `password_text` varchar(200) NOT NULL COMMENT 'Big cuz it is a hash',
-  `remember_token` varchar(128) DEFAULT NULL,
+  `drupal_id` int(11) DEFAULT NULL,
+  `api_token_text` varchar(128) DEFAULT NULL,
   `first_name_text` varchar(64) DEFAULT NULL,
   `last_name_text` varchar(64) DEFAULT NULL,
-  `nickname_text` varchar(128) DEFAULT NULL,
-  `api_token_text` varchar(128) DEFAULT NULL,
-  `storage_id_text` varchar(64) NOT NULL,
-  `external_id_text` varchar(128) DEFAULT NULL,
-  `external_password_text` varchar(200) DEFAULT NULL,
+  `nickname_text` varchar(64) DEFAULT NULL,
+  `display_name_text` varchar(128) DEFAULT NULL,
+  `email_addr_text` varchar(200) NOT NULL,
+  `password_text` varchar(200) NOT NULL COMMENT 'Big cuz it is a hash',
+  `drupal_password_text` varchar(200) DEFAULT NULL,
   `owner_id` int(11) DEFAULT NULL,
   `owner_type_nbr` int(11) DEFAULT NULL,
   `company_name_text` varchar(128) DEFAULT NULL,
@@ -1110,37 +673,34 @@ CREATE TABLE `user_t` (
   `country_text` varchar(2) DEFAULT NULL,
   `postal_code_text` varchar(32) DEFAULT NULL,
   `phone_text` varchar(32) DEFAULT NULL,
+  `fax_text` varchar(32) DEFAULT NULL,
   `opt_in_ind` tinyint(1) NOT NULL DEFAULT '1',
   `agree_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `valid_email_hash_text` varchar(128) DEFAULT NULL,
+  `valid_email_hash_expire_time` int(11) DEFAULT NULL,
+  `valid_email_date` datetime DEFAULT NULL,
+  `recover_hash_text` varchar(128) DEFAULT NULL,
+  `recover_hash_expire_time` int(11) DEFAULT NULL,
   `last_login_date` datetime DEFAULT NULL,
   `last_login_ip_text` varchar(64) DEFAULT NULL,
   `admin_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `storage_id_text` varchar(64) NOT NULL,
   `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `active_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `remember_token` varchar(128) DEFAULT NULL,
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ixu_user_email_addr_text` (`email_addr_text`),
-  UNIQUE KEY `ixu_user_nickname_text` (`nickname_text`),
-  KEY `fk_user_owner_id` (`owner_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  UNIQUE KEY `ixu_user_display_name_text` (`display_name_text`),
+  KEY `fk_user_owner_id` (`owner_id`),
+  CONSTRAINT `fk_user_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `user_t` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `user_t`
---
-
-LOCK TABLES `user_t` WRITE;
-/*!40000 ALTER TABLE `user_t` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `vendor_credentials_t`
---
+/*Table structure for table `vendor_credentials_t` */
 
 DROP TABLE IF EXISTS `vendor_credentials_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `vendor_credentials_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
@@ -1153,25 +713,11 @@ CREATE TABLE `vendor_credentials_t` (
   PRIMARY KEY (`id`),
   KEY `fk_vendor_credentials_vendor_id` (`vendor_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `vendor_credentials_t`
---
-
-LOCK TABLES `vendor_credentials_t` WRITE;
-/*!40000 ALTER TABLE `vendor_credentials_t` DISABLE KEYS */;
-INSERT INTO `vendor_credentials_t` VALUES (0,1,1,1,'AKIAJFCV4OWB6C637UIQ',NULL,'2012-11-26 13:40:58','2012-11-26 08:41:47');
-/*!40000 ALTER TABLE `vendor_credentials_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `vendor_image_t`
---
+/*Table structure for table `vendor_image_t` */
 
 DROP TABLE IF EXISTS `vendor_image_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `vendor_image_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vendor_id` int(11) NOT NULL,
@@ -1190,25 +736,11 @@ CREATE TABLE `vendor_image_t` (
   KEY `ixu_vendor_image_id_name` (`vendor_id`,`image_id_text`),
   CONSTRAINT `fk_vendor_image_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor_t` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=13288 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `vendor_image_t`
---
-
-LOCK TABLES `vendor_image_t` WRITE;
-/*!40000 ALTER TABLE `vendor_image_t` DISABLE KEYS */;
-INSERT INTO `vendor_image_t` VALUES (34,1,'Linux','Public','ami-013f9768','ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20120728',NULL,1,NULL,NULL,'ebs','2012-11-26 17:28:04','2013-01-18 14:19:18'),(169,1,'Linux','Public','ami-057bcf6c','ubuntu/images/ebs/ubuntu-precise-12.04-i386-server-20120822',NULL,0,NULL,NULL,'ebs','2012-11-26 17:28:16','2013-01-18 14:19:21'),(430,1,'Linux','Public','ami-0d3f9764','ubuntu/images/ebs/ubuntu-precise-12.04-i386-server-20120728',NULL,0,NULL,NULL,'ebs','2012-11-26 17:28:37','2013-01-18 14:19:27'),(624,1,'Linux','Public','ami-137bcf7a','ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20120822',NULL,1,NULL,NULL,'ebs','2012-11-26 17:28:54','2013-01-18 14:19:33'),(1865,1,'Linux','Public','ami-3b4ff252','ubuntu/images/ebs/ubuntu-precise-12.04-i386-server-20121001',NULL,0,NULL,NULL,'ebs','2012-11-26 17:30:44','2013-01-18 14:20:06'),(1920,1,'Linux','Public','ami-3d4ff254','ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20121001',NULL,1,NULL,NULL,'ebs','2012-11-26 17:30:49','2013-01-18 14:20:07'),(3981,1,'Linux','Public','ami-82fa58eb','ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20120616',NULL,1,NULL,NULL,'ebs','2012-11-26 17:34:14','2013-01-18 14:21:05'),(4275,1,'Linux','Public','ami-8cfa58e5','ubuntu/images/ebs/ubuntu-precise-12.04-i386-server-20120616',NULL,0,NULL,NULL,'ebs','2012-11-26 17:34:42','2013-01-18 14:21:14'),(4647,1,'Linux','Public','ami-9878c0f1','ubuntu/images/ebs/ubuntu-precise-12.04-i386-server-20121026.1',NULL,0,NULL,NULL,'ebs','2012-11-26 17:35:14','2013-01-18 14:21:23'),(4764,1,'Linux','Public','ami-9c78c0f5','ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20121026.1',NULL,1,NULL,NULL,'ebs','2012-11-26 17:35:24','2013-01-18 14:21:26'),(4946,1,'Linux','Public','ami-a29943cb','ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20120424',NULL,1,NULL,NULL,'ebs','2012-11-26 17:35:40','2013-01-18 14:21:31'),(5246,1,'Linux','Public','ami-ac9943c5','ubuntu/images/ebs/ubuntu-precise-12.04-i386-server-20120424',NULL,0,NULL,NULL,'ebs','2012-11-26 17:36:06','2013-01-18 14:21:39'),(5635,1,'Linux','Public','ami-0baf7662','ubuntu/images/ebs/ubuntu-lucid-10.04-amd64-server-20120403',NULL,1,NULL,NULL,'ebs','2013-01-18 14:19:26','2013-01-18 14:19:26'),(5965,1,'Linux','Public','ami-1616ca7f','ubuntu/images/ebs/ubuntu-natty-11.04-i386-server-20120312',NULL,0,NULL,NULL,'ebs','2013-01-18 14:19:34','2013-01-18 14:19:34'),(6944,1,'Linux','Public','ami-349b495d','ubuntu/images/ebs/ubuntu-lucid-10.04-amd64-server-20120221',NULL,1,NULL,NULL,'ebs','2013-01-18 14:19:59','2013-01-18 14:19:59'),(7050,1,'Linux','Public','ami-37af765e','ubuntu/images/ebs/ubuntu-lucid-10.04-i386-server-20120403',NULL,0,NULL,NULL,'ebs','2013-01-18 14:20:03','2013-01-18 14:20:03'),(7274,1,'Linux','Public','ami-3e9b4957','ubuntu/images/ebs/ubuntu-lucid-10.04-i386-server-20120221',NULL,0,NULL,NULL,'ebs','2013-01-18 14:20:08','2013-01-18 14:20:08'),(7665,1,'Linux','Public','ami-4bad7422','ubuntu/images/ebs/ubuntu-oneiric-11.10-i386-server-20120401',NULL,0,NULL,NULL,'ebs','2013-01-18 14:20:19','2013-01-18 14:20:19'),(7728,1,'Linux','Public','ami-4dad7424','ubuntu/images/ebs/ubuntu-oneiric-11.10-amd64-server-20120401',NULL,1,NULL,NULL,'ebs','2013-01-18 14:20:21','2013-01-18 14:20:21'),(7984,1,'Linux','Public','ami-55dc0b3c','ubuntu/images/ebs/ubuntu-lucid-10.04-amd64-server-20120110',NULL,1,NULL,NULL,'ebs','2013-01-18 14:20:27','2013-01-18 14:20:27'),(8592,1,'Linux','Public','ami-699f3600','ubuntu/images/ebs/ubuntu-natty-11.04-amd64-server-20120723',NULL,1,NULL,NULL,'ebs','2013-01-18 14:20:44','2013-01-18 14:20:44'),(8657,1,'Linux','Public','ami-6ba27502','ubuntu/images/ebs/ubuntu-oneiric-11.10-i386-server-20120108',NULL,0,NULL,NULL,'ebs','2013-01-18 14:20:45','2013-01-18 14:20:45'),(8808,1,'Linux','Public','ami-6fa27506','ubuntu/images/ebs/ubuntu-oneiric-11.10-amd64-server-20120108',NULL,1,NULL,NULL,'ebs','2013-01-18 14:20:49','2013-01-18 14:20:49'),(8879,1,'Linux','Public','ami-71dc0b18','ubuntu/images/ebs/ubuntu-lucid-10.04-i386-server-20120110',NULL,0,NULL,NULL,'ebs','2013-01-18 14:20:51','2013-01-18 14:20:51'),(8923,1,'Linux','Public','ami-7339b41a','ubuntu/images/ebs/ubuntu-quantal-12.10-i386-server-20121218',NULL,0,NULL,NULL,'ebs','2013-01-18 14:20:52','2013-01-18 14:20:52'),(8998,1,'Linux','Public','ami-7539b41c','ubuntu/images/ebs/ubuntu-quantal-12.10-amd64-server-20121218',NULL,1,NULL,NULL,'ebs','2013-01-18 14:20:54','2013-01-18 14:20:54'),(9362,1,'Linux','Public','ami-81c31ae8','ubuntu/images/ebs/ubuntu-natty-11.04-i386-server-20120402',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:04','2013-01-18 14:21:04'),(9364,1,'Linux','Public','ami-81cf46e8','ubuntu/images/ebs/ubuntu-oneiric-11.10-i386-server-20130103',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:04','2013-01-18 14:21:04'),(9441,1,'Linux','Public','ami-83cf46ea','ubuntu/images/ebs/ubuntu-oneiric-11.10-amd64-server-20130103',NULL,1,NULL,NULL,'ebs','2013-01-18 14:21:06','2013-01-18 14:21:06'),(9559,1,'Linux','Public','ami-87c31aee','ubuntu/images/ebs/ubuntu-natty-11.04-amd64-server-20120402',NULL,1,NULL,NULL,'ebs','2013-01-18 14:21:09','2013-01-18 14:21:09'),(9909,1,'Linux','Public','ami-9265dbfb','ubuntu/images/ebs/ubuntu-quantal-12.10-i386-server-20121017',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:18','2013-01-18 14:21:18'),(9966,1,'Linux','Public','ami-9465dbfd','ubuntu/images/ebs/ubuntu-quantal-12.10-amd64-server-20121017',NULL,1,NULL,NULL,'ebs','2013-01-18 14:21:20','2013-01-18 14:21:20'),(10309,1,'Linux','Public','ami-9f9c35f6','ubuntu/images/ebs/ubuntu-natty-11.04-i386-server-20120723',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:29','2013-01-18 14:21:29'),(10344,1,'Linux','Public','ami-a0ba68c9','ubuntu/images/ebs/ubuntu-oneiric-11.10-i386-server-20120222',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:29','2013-01-18 14:21:29'),(10487,1,'Linux','Public','ami-a562a9cc','ubuntu/images/ebs/ubuntu-oneiric-11.10-i386-server-20111205',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:33','2013-01-18 14:21:33'),(10520,1,'Linux','Public','ami-a6b10acf','ubuntu/images/ebs/ubuntu-natty-11.04-i386-server-20121028',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:34','2013-01-18 14:21:34'),(11152,1,'Linux','Public','ami-bab10ad3','ubuntu/images/ebs/ubuntu-natty-11.04-amd64-server-20121028',NULL,1,NULL,NULL,'ebs','2013-01-18 14:21:50','2013-01-18 14:21:50'),(11153,1,'Linux','Public','ami-baba68d3','ubuntu/images/ebs/ubuntu-oneiric-11.10-amd64-server-20120222',NULL,1,NULL,NULL,'ebs','2013-01-18 14:21:50','2013-01-18 14:21:50'),(11297,1,'Linux','Public','ami-bf62a9d6','ubuntu/images/ebs/ubuntu-oneiric-11.10-amd64-server-20111205',NULL,1,NULL,NULL,'ebs','2013-01-18 14:21:54','2013-01-18 14:21:54'),(11313,1,'Linux','Public','ami-c012cea9','ubuntu/images/ebs/ubuntu-maverick-10.10-i386-server-20120310',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:54','2013-01-18 14:21:54'),(11368,1,'Linux','Public','ami-c19e37a8','ubuntu/images/ebs/ubuntu-oneiric-11.10-i386-server-20120722',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:55','2013-01-18 14:21:55'),(11445,1,'Linux','Public','ami-c412cead','ubuntu/images/ebs/ubuntu-maverick-10.10-amd64-server-20120310',NULL,1,NULL,NULL,'ebs','2013-01-18 14:21:57','2013-01-18 14:21:57'),(11502,1,'Linux','Public','ami-c5b202ac','ubuntu/images/ebs/ubuntu-lucid-10.04-i386-server-20120913',NULL,0,NULL,NULL,'ebs','2013-01-18 14:21:59','2013-01-18 14:21:59'),(11566,1,'Linux','Public','ami-c7b202ae','ubuntu/images/ebs/ubuntu-lucid-10.04-amd64-server-20120913',NULL,1,NULL,NULL,'ebs','2013-01-18 14:22:00','2013-01-18 14:22:00'),(11702,1,'Linux','Public','ami-cbc072a2','ubuntu/images/ebs/ubuntu-oneiric-11.10-i386-server-20120918',NULL,0,NULL,NULL,'ebs','2013-01-18 14:22:04','2013-01-18 14:22:04'),(11771,1,'Linux','Public','ami-cdc072a4','ubuntu/images/ebs/ubuntu-oneiric-11.10-amd64-server-20120918',NULL,1,NULL,NULL,'ebs','2013-01-18 14:22:06','2013-01-18 14:22:06'),(11948,1,'Linux','Public','ami-d38f57ba','ubuntu/images/ebs/ubuntu-maverick-10.10-i386-server-20120410',NULL,0,NULL,NULL,'ebs','2013-01-18 14:22:11','2013-01-18 14:22:11'),(12030,1,'Linux','Public','ami-d5e54dbc','ubuntu/images/ebs/ubuntu-lucid-10.04-amd64-server-20120724',NULL,1,NULL,NULL,'ebs','2013-01-18 14:22:13','2013-01-18 14:22:13'),(12079,1,'Linux','Public','ami-d78f57be','ubuntu/images/ebs/ubuntu-maverick-10.10-amd64-server-20120410',NULL,1,NULL,NULL,'ebs','2013-01-18 14:22:14','2013-01-18 14:22:14'),(12148,1,'Linux','Public','ami-d99e37b0','ubuntu/images/ebs/ubuntu-oneiric-11.10-amd64-server-20120722',NULL,1,NULL,NULL,'ebs','2013-01-18 14:22:16','2013-01-18 14:22:16'),(12360,1,'Linux','Public','ami-dfe54db6','ubuntu/images/ebs/ubuntu-lucid-10.04-i386-server-20120724',NULL,0,NULL,NULL,'ebs','2013-01-18 14:22:21','2013-01-18 14:22:21'),(12367,1,'Linux','Public','ami-e016ca89','ubuntu/images/ebs/ubuntu-natty-11.04-amd64-server-20120312',NULL,1,NULL,NULL,'ebs','2013-01-18 14:22:21','2013-01-18 14:22:21'),(12601,1,'Linux','Public','ami-e720ad8e','ubuntu/images/ebs/ubuntu-precise-12.04-i386-server-20121218',NULL,0,NULL,NULL,'ebs','2013-01-18 14:22:27','2013-01-18 14:22:27'),(13287,1,'Linux','Public','ami-fd20ad94','ubuntu/images/ebs/ubuntu-precise-12.04-amd64-server-20121218',NULL,1,NULL,NULL,'ebs','2013-01-18 14:22:45','2013-01-18 14:22:45');
-/*!40000 ALTER TABLE `vendor_image_t` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `vendor_t`
---
+/*Table structure for table `vendor_t` */
 
 DROP TABLE IF EXISTS `vendor_t`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+
 CREATE TABLE `vendor_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vendor_name_text` varchar(48) NOT NULL,
@@ -1216,25 +748,130 @@ CREATE TABLE `vendor_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `vendor_t`
---
+/* Trigger structure for table `cluster_server_asgn_t` */
 
-LOCK TABLES `vendor_t` WRITE;
-/*!40000 ALTER TABLE `vendor_t` DISABLE KEYS */;
-INSERT INTO `vendor_t` VALUES (1,'Amazon EC2','2012-11-12 11:54:50','2012-11-12 11:54:50'),(2,'DreamFactory','2012-11-12 11:54:57','2012-11-12 11:54:57'),(3,'Windows Azure','2012-11-12 11:55:04','2012-11-12 11:55:04'),(4,'Rackspace','2012-11-12 11:55:12','2012-11-12 11:55:12'),(5,'OpenStack','0000-00-00 00:00:00','2013-03-02 23:36:49');
-/*!40000 ALTER TABLE `vendor_t` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `csa_beforeDelete` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `csa_beforeDelete` BEFORE DELETE ON `cluster_server_asgn_t` FOR EACH ROW BEGIN
+	INSERT INTO `cluster_server_asgn_arch_t` 
+		SELECT *
+		FROM `cluster_server_asgn_t` 
+		WHERE 
+		`cluster_id` = old.cluster_id AND `server_id` = old.server_id;
+    END */$$
+
+
+DELIMITER ;
+
+/* Trigger structure for table `cluster_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `cluster_beforeDelete` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `cluster_beforeDelete` BEFORE DELETE ON `cluster_t` FOR EACH ROW BEGIN
+		INSERT INTO `cluster_arch_t` SELECT * FROM `cluster_t` WHERE `id` = old.id;
+    END */$$
+
+
+DELIMITER ;
+
+/* Trigger structure for table `deactivation_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `deactivation_beforeDelete` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `deactivation_beforeDelete` BEFORE DELETE ON `deactivation_t` FOR EACH ROW BEGIN
+	INSERT INTO `deactivation_arch_t` SELECT * FROM `deactivation_t` WHERE `id` = old.id;
+    END */$$
+
+
+DELIMITER ;
+
+/* Trigger structure for table `instance_guest_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `instanceGuest_beforeDelete` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `instanceGuest_beforeDelete` BEFORE DELETE ON `instance_guest_t` FOR EACH ROW BEGIN
+		INSERT INTO `instance_guest_arch_t` SELECT * FROM `instance_guest_t` WHERE `id` = old.id;
+    END */$$
+
+
+DELIMITER ;
+
+/* Trigger structure for table `instance_server_asgn_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `isa_beforeDelete` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `isa_beforeDelete` BEFORE DELETE ON `instance_server_asgn_t` FOR EACH ROW BEGIN
+		INSERT INTO `instance_server_asgn_arch_t` 
+		
+			SELECT * 
+			FROM `instance_server_asgn_t` 
+			WHERE 
+				`server_id` = old.server_id AND 
+				`instance_id` = old.instance_id;
+    END */$$
+
+
+DELIMITER ;
+
+/* Trigger structure for table `instance_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `instance_afterInsert` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `instance_afterInsert` AFTER INSERT ON `instance_t` FOR EACH ROW BEGIN
+    
+	INSERT INTO `deactivation_t` 
+		(user_id, instance_id, activate_by_date, create_date )
+	VALUES
+		(new.user_id, new.id, CURRENT_TIMESTAMP + INTERVAL 7 DAY, current_timestamp );
+		
+    END */$$
+
+
+DELIMITER ;
+
+/* Trigger structure for table `instance_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `instance_beforeDelete` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `instance_beforeDelete` BEFORE DELETE ON `instance_t` FOR EACH ROW BEGIN
+		/* Insert into `instance_arch_t` select * from `instance_t` where `id` = old.id; */
+		DELETE from `deactivation_t` where `user_id` = old.user_id and `instance_id` = old.id;
+		/** Delete any keys **/
+		DELETE FROM `app_key_t` WHERE `owner_id` = old.id AND `owner_type_nbr` = 0;
+    END */$$
+
+
+DELIMITER ;
+
+/* Trigger structure for table `server_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `server_beforeDelete` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `server_beforeDelete` BEFORE DELETE ON `server_t` FOR EACH ROW BEGIN
+		INSERT INTO `server_arch_t` SELECT * FROM `server_t` WHERE `id` = old.id;
+    END */$$
+
+
+DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2015-05-09 20:15:51

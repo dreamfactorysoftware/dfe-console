@@ -166,7 +166,7 @@ class Setup extends Command
      */
     protected function _info( $message, $type = OutputInterface::OUTPUT_NORMAL )
     {
-        return $this->output->writeln( $this->_prefixOutput( 'error', $message, 'info' ), $type );
+        return $this->output->writeln( $this->_prefixOutput( 'setup', $message, 'info' ), $type );
     }
 
     /**

@@ -14,16 +14,16 @@ return [
     //  The id of THIS cluster
     'cluster-id'                => 'cluster-east-2',
     //  A string to be pre-pended to instance names for non-admin users
-    'instance-prefix'           => null,
+    'instance-prefix'           => env( 'DFE_DEFAULT_INSTANCE_PREFIX' ),
     //******************************************************************************
     //* Console API Keys
     //******************************************************************************
-    'console-api-url'           => 'http://console.enterprise.dreamfactory.com/api/v1/ops/',
+    'signature-method'          => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
+    'console-api-url'           => env( 'DFE_CONSOLE_API_URL', 'http://localhost/api/v1/ops/' ),
     /** This key needs to match the key configured in the dashboard */
     'console-api-key'           => env( 'DFE_CONSOLE_API_KEY', '%]3,]~&t,EOxL30[wKw3auju:[+L>eYEVWEP,@3n79Qy' ),
     'console-api-client-id'     => env( 'DFE_CONSOLE_API_CLIENT_ID' ),
     'console-api-client-secret' => env( 'DFE_CONSOLE_API_CLIENT_SECRET' ),
-    'signature-method'          => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
     //******************************************************************************
     //* Console security settings
     //******************************************************************************
