@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Export',
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Register',
         'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Manifest',
+        'DreamFactory\\Enterprise\\Services\\Console\\Commands\\Setup',
     ];
 
     //******************************************************************************

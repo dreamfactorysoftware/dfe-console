@@ -9,6 +9,12 @@ use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 
 return [
     //******************************************************************************
+    //* General
+    //******************************************************************************
+
+    //  The id of THIS cluster
+    'cluster-id'                => 'cluster-east-2',
+    //******************************************************************************
     //* Console API Keys
     //******************************************************************************
     'console-api-url'           => 'http://console.enterprise.dreamfactory.com/api/v1/ops/',

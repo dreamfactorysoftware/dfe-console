@@ -55,6 +55,6 @@ class RegisterHandler
 
         $command->setResult( $_result );
 
-        return $command;
+        return $_result;
     }
 }

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dfe-console.local (cli)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:manifest --show cluster-east-1 web-east-1 ">
+  <configuration default="false" name="dfe-console.local (cli)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:setup --force jerryablan@dreamfactory.com">
     <RunnerSettings RunnerId="PhpScriptDebugRunner" />
     <ConfigurationWrapper RunnerId="PhpScriptDebugRunner" />
     <method />
