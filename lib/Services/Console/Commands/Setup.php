@@ -100,8 +100,8 @@ class Setup extends Command
         $_apiSecret = $this->option( 'api-secret' ) ?: $this->_generateApiSecret();
 
         //  4. Generate .dfe.cluster.json file
-        $_cluster = new ClusterManifest( base_path() );
-        $_cluster->fill(
+        ClusterManifest::make(
+            base_path(),
             [
                 'cluster-id'                => config( 'dfe.cluster-id' ),
                 'default-domain'            => config( 'dfe.provisioning.default-domain' ),
@@ -115,8 +115,6 @@ class Setup extends Command
                 'dashboard-client-secret'   => $_dashboardKey->client_secret,
             ]
         );
-
-        $_cluster->write();
 
         return 0;
     }
