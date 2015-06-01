@@ -1,0 +1,8 @@
+<?php $__env->startSection('auth.branding'); ?>
+	<h3><img src="/vendor/dfe-common/img/logo-dfe.png" alt="" />
+		<small><?php echo e(isset($pageDisplayName) ? $pageDisplayName : config('dfe.common.display-name')); ?>
+
+			<span><?php echo e(config('dfe.common.display-version')); ?></span>
+		</small>
+	</h3>
+<?php $__env->stopSection(true); ?>

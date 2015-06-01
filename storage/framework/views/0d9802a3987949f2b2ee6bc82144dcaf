@@ -1,0 +1,193 @@
+<?php echo $__env->make('layouts.partials.topmenu',array('pageName' => 'Users', 'prefix' => $prefix), array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+
+
+<?php $__env->startSection('content'); ?>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="row">
+                    <div class="ng-scope">
+                        <div class="ng-scope">
+                            <div class="col-md-2 df-sidebar-nav">
+                                <df-sidebar-nav>
+                                    <div class="">
+                                        <ul class="nav nav-pills nav-stacked visible-md visible-lg">
+                                            <li class="ng-scope active">
+                                                <a class="" href="/<?php echo e($prefix); ?>/users">Manage</a>
+                                            </li>
+                                            <li class="">
+                                                <a class="" href="/<?php echo e($prefix); ?>/users/create">Create</a>
+                                            </li>
+                                        </ul>
+                                        <div class="hidden-lg hidden-md" id="sidebar-open">
+                                            <button type="button" class="btn btn-default btn-sm"><i class="fa fa-fw fa-bars"></i></button>
+                                        </div>
+
+                                    </div>
+                                </df-sidebar-nav>
+                            </div>
+                            <div class="col-md-10 df-section df-section-3-round" df-fs-height="">
+                                <df-manage-users class=""><div>
+                                        <div class="">
+                                            <df-section-header class="" data-title="'Manage Users'">
+                                                <div class="df-section-header df-section-all-round">
+                                                    <h4 class="">Edit User</h4>
+                                                </div>
+                                            </df-section-header>
+
+                                            <form method="POST" action="/<?php echo e($prefix); ?>/users/<?php echo e($user_id); ?>">
+                                                <input name="_method" type="hidden" value="PUT">
+                                                <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                                <input name="user_type" type="hidden" id="user_type" value="<?php echo e($is_admin); ?>">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Email</label>
+                                                            <input id="email_addr_text" name="email_addr_text" value="<?php echo e($user->email_addr_text); ?>" class="form-control" placeholder="Enter email address." type="email">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>First Name</label>
+                                                            <input id="first_name_text" name="first_name_text" value="<?php echo e($user->first_name_text); ?>" class="form-control" placeholder="Enter first name." type="text">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Last Name</label>
+                                                            <input id="last_name_text" name="last_name_text" value="<?php echo e($user->last_name_text); ?>" class="form-control" placeholder="Enter last name." type="text">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Display Name</label>
+                                                            <input id="nickname_text" name="nickname_text" value="<?php echo e($user->nickname_text); ?>" class="form-control" placeholder="Enter display name." type="text">
+                                                        </div>
+                                                        <df-set-user-password>
+                                                            <div class="form-group">
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input id="set_password" name="set_password" value="1" type="checkbox">
+                                                                        Set Password Manually
+                                                                    </label>
+                                                                </div>
+                                                                <div id="set_password_form" style="display: none;">
+                                                                    <label>Set Password</label>
+                                                                    <input id="new_password" name="new_password" class="form-control" value="" placeholder="Enter password" type="password1">
+                                                                    <div>&nbsp;</div>
+                                                                    <input id="retype_new_password" class="form-control"  placeholder="Re-enter password" type="password1">
+                                                                </div>
+                                                            </div>
+
+                                                        </df-set-user-password>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>User Options</label>
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input id="system_admin" name="system_admin" value="1" type="checkbox" disabled onclick="systemAdminClick();" <?php if($is_admin): ?> checked <?php endif; ?>>
+                                                                    System Administrator
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <!-- User Active -->
+                                                        <div class="form-group">
+                                                            <div class="checkbox">
+                                                                <label>
+
+                                                                    <input id="active_ind" name="active_ind" value="1" type="checkbox" <?php if($user->active_ind): ?> checked <?php endif; ?>>
+                                                                    Active
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div id="advancedUserOptions" >
+                                                            <div class="form-group">
+                                                                <label><br>Advanced User Options</label>
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input id="instance_manage" class="" type="checkbox">
+                                                                        Allow User to <b>Create</b> and <b>Delete</b> Instances
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <!-- User Active -->
+                                                            <div class="form-group">
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                        <input id="instance_policy" class="" type="checkbox">
+                                                                        Allow User to <b>Change</b> Instance Policies
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                        <hr>
+                                                        <div class="form-group">
+                                                            <div class="">
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    Update
+                                                                </button>
+                                                                <!--button type="button" class="btn btn-primary" onclick="javascript:editUser(<?php echo e($user_id); ?>);">
+                                                                    Update
+                                                                </button-->
+                                                                &nbsp;&nbsp;
+                                                                <button type="button" class="btn btn-default" onclick="javascript:cancelEditUser();">
+                                                                    Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        </df-user-details>
+                                    </div>
+
+                                </df-manage-users>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../../../js/blade-scripts/users/users.js"></script>
+
+    <script type='text/javascript'>
+
+        $( document ).ready(function() {
+
+            <?php
+
+                if($is_admin)
+                    echo "initUserEditSet(false);";
+                else
+                    echo "initUserEditSet(true);";
+            ?>
+
+
+            $('#set_password').click(function () {
+                if ($('#set_password').is(':checked')) {
+                    $('#set_password_form').show();
+
+                } else {
+                    $('#set_password_form').hide();
+
+                }
+            });
+
+        });
+
+    </script>
+
+
+<?php $__env->stopSection(); ?>
+
+
+
+<?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
