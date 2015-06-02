@@ -83,7 +83,11 @@
                                                         <div class="form-group">
                                                             <div class="checkbox">
                                                                 <label>
-                                                                    <input id="active_ind" name="active_ind" value="1" type="checkbox" @if($user->active_ind) checked @endif>
+                                                                    @if( Auth::user()->id != $user->id )
+                                                                        <input id="active_ind" name="active_ind" value="1" type="checkbox" @if($user->active_ind) checked @endif>
+                                                                    @else
+                                                                        <input id="active_ind" name="active_ind" value="1" type="checkbox" disabled @if($user->active_ind) checked @endif>
+                                                                    @endif
                                                                     Active
                                                                 </label>
                                                             </div>
