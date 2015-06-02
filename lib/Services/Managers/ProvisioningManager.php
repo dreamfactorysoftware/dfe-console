@@ -29,7 +29,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     {
         $_provisioners = [];
 
-        if ( null !== ( $_list = config( 'provisioners.hosts' ) ) )
+        if ( null !== ( $_list = config( 'dfe.provisioners.hosts' ) ) )
         {
             foreach ( $_list as $_tag => $_config )
             {
@@ -74,7 +74,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function getDefaultProvisioner()
     {
-        return config( 'provisioners.default' );
+        return config( 'dfe.provisioners.default' );
     }
 
     /**
@@ -95,7 +95,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         {
         }
 
-        $_class = config( 'provisioners.hosts.' . $_key );
+        $_class = config( 'dfe.provisioners.hosts.' . $_key );
 
         if ( empty( $_class ) )
         {

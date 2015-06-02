@@ -4,7 +4,9 @@
  */
 
 return [
-    /** Global options */
+    /**
+     * Settings for common auth (i.e. name, version, etc.)
+     */
     'display-name'    => 'Admin Console',
     'display-version' => 'v1.0.x-alpha',
     /**

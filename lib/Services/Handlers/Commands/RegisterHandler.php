@@ -35,7 +35,7 @@ class RegisterHandler
     {
         \Log::debug( 'dfe: register - begin' );
 
-        $_key = config( 'dfe.console-api-key' );
+        $_key = config( 'dfe.security.console-api-key' );
 
         try
         {

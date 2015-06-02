@@ -183,8 +183,8 @@ class OpsControllerTest extends \TestCase
      */
     protected function _apiCall( $url, $payload = [], $options = [], $method = Request::METHOD_POST, $object = true )
     {
-        $this->_clientId = config( 'dfe.console-api-client-id' );
-        $this->_signature = $this->_generateSignature( $this->_clientId, config( 'dfe.console-api-client-secret' ) );
+        $this->_clientId = config( 'dfe.security.console-api-client-id' );
+        $this->_signature = $this->_generateSignature( $this->_clientId, config( 'dfe.security.console-api-client-secret' ) );
 
         $_request = $this->_client->createRequest(
             $method,

@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
@@ -48,8 +49,8 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     protected static $_envTemplate = [
         'cluster-id'       => null,
         'default-domain'   => null,
-        'signature-method' => 'sha256',
-        'storage-root'     => '/data/storage',
+        'signature-method' => ConsoleDefaults::SIGNATURE_METHOD,
+        'storage-root'     => EnterprisePaths::DEFAULT_HOSTED_BASE_PATH,
         'api-url'          => null,
         'api-key'          => null,
         'client-id'        => null,

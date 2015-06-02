@@ -52,7 +52,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         if ( false === $this->_offerings )
         {
             $this->_offerings = [];
-            $_list = config( 'provisioners.hosts.rave.offerings', [] );
+            $_list = config( 'dfe.provisioners.hosts.rave.offerings', [] );
 
             if ( is_array( $_list ) && !empty( $_list ) )
             {
@@ -296,10 +296,10 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                     'env'   => [
                         'cluster-id'       => $_cluster->cluster_id_text,
                         'default-domain'   => config( 'dfe.provisioning.default-domain' ),
-                        'signature-method' => 'sha256',
+                        'signature-method' => config( 'dfe.signature-method' ),
                         'storage-root'     => config( 'dfe.provisioning.storage-root' ),
-                        'console-api-url'  => config( 'dfe.console-api-url' ),
-                        'console-api-key'  => config( 'dfe.console-api-key' ),
+                        'console-api-url'  => config( 'dfe.security.console-api-url' ),
+                        'console-api-key'  => config( 'dfe.security.console-api-key' ),
                         'client-id'        => $_appKey->client_id,
                         'client-secret'    => $_appKey->client_secret,
                     ],

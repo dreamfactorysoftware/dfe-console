@@ -4,10 +4,12 @@ use DreamFactory\Enterprise\Common\Config\ClusterManifest;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Common\Traits\Lumberjack;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Services\Commands\ManifestJob;
 use Illuminate\Http\Response;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Processes queued environment manifest generation requests
@@ -18,7 +20,7 @@ class ManifestHandler
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, Lumberjack;
 
     //******************************************************************************
     //* Methods
@@ -54,40 +56,38 @@ class ManifestHandler
         }
         else
         {
-
             try
             {
-                //  Create a new manifest...
-                $_manifest = new ClusterManifest( base_path() );
+                $_key = $command->noKeys() ? false : AppKey::createKey( $command->getOwnerId(), $command->getOwnerType() );
 
-                $_manifest->fill(
-                    [
-                        'cluster-id'       => config( 'dfe.provisioning.default-cluster-id' ),
-                        'default-domain'   => config( 'dfe.provisioning.default-domain' ),
-                        'signature-method' => config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ),
-                        'storage-root'     => config( 'dfe.provisioning.storage-root' ),
-                        'console-api-url'  => config( 'dfe.provisioning.console-api-url' ),
-                        'console-api-key'  => config( 'dfe.provisioning.console-api-key' ),
-                    ]
-                );
-
-                if ( !$command->noKeys() )
+                if ( $_key )
                 {
-                    $_key = AppKey::createKey( $command->getOwnerId(), $command->getOwnerType() );
-
-                    $_manifest->fill(
-                        [
-                            'client-id'     => $_key->client_id,
-                            'client-secret' => $_key->client_secret,
-                        ]
-                    );
+                    $command->getOutput()->getVerbosity() == OutputInterface::VERBOSITY_VERBOSE &&
+                    $command->getOutput()->writeln( ' - generated client-id and secret: ' . $_key->client_id );
                 }
 
-                $command->createManifest() && $_manifest->write();
+                if ( $command->createManifest() )
+                {
+                    //  Create a new manifest...
+                    $_manifest = ClusterManifest::make(
+                        base_path(),
+                        [
+                            'cluster-id'       => config( 'dfe.provisioning.default-cluster-id' ),
+                            'default-domain'   => config( 'dfe.provisioning.default-domain' ),
+                            'signature-method' => config( 'dfe.signature-method' ),
+                            'storage-root'     => config( 'dfe.provisioning.storage-root' ),
+                            'console-api-url'  => config( 'dfe.security.console-api-url' ),
+                            'console-api-key'  => config( 'dfe.security.console-api-key' ),
+                            'client-id'        => !$_key ? null : $_key->client_id,
+                            'client-secret'    => !$_key ? null : $_key->client_secret,
+                        ]
+                    );
 
-                $_result = SuccessPacket::make( $_manifest->toArray(), Response::HTTP_CREATED );
+                    $_result = SuccessPacket::make( $_manifest->toArray(), Response::HTTP_CREATED );
+                }
             }
-            catch ( \Exception $_ex )
+            catch
+            ( \Exception $_ex )
             {
                 $_result = ErrorPacket::create( Response::HTTP_BAD_REQUEST );
             }

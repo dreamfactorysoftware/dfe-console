@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{bootstrap, dataTables.bootstrap, highcharts, jquery, jquery.dataTables, jquery.validate, material, ripples}" />
+    <file url="PROJECT" libraries="{bootstrap, dataTables.bootstrap, highcharts, jquery, jquery.dataTables, jquery.validate, material, ripples, underscore-DefinitelyTyped}" />
   </component>
 </project>

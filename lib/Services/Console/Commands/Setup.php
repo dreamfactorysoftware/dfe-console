@@ -1,13 +1,16 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Config\ClusterManifest;
+use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Library\Utility\FileSystem;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -17,7 +20,7 @@ class Setup extends Command
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, ArtisanHelper;
 
     //******************************************************************************
     //* Members
@@ -27,10 +30,23 @@ class Setup extends Command
     protected $name = 'dfe:setup';
     /**  @var string The console command description */
     protected $description = 'Initializes a new installation and generates a cluster environment file.';
+    /**
+     * @type array Any configuration read from config/dfe.setup.php
+     */
+    protected $_config = [];
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
+
+    /** @inheritdoc */
+    public function run( InputInterface $input, OutputInterface $output )
+    {
+        $this->setOutputInterface( $output );
+        $this->_config = config( 'dfe.commands.setup' );
+
+        return parent::run( $input, $output );
+    }
 
     /**
      * Handle the command
@@ -39,11 +55,7 @@ class Setup extends Command
      */
     public function fire()
     {
-        $this->output->writeln(
-            '<info>DreamFactory Enterprise Setup and Initialization</info> (<comment>' . config( 'dfe.common.display-version' ) . '</comment>)'
-        );
-        $this->output->writeln( '<info>Copyright (c) 2012-2015 All Rights Reserved</info>' );
-        $this->output->writeln( '' );
+        $this->_ahShowHeader( 'setup' );
 
         //  1. Make sure it's a clean install
         if ( 0 != ServiceUser::count() )
@@ -55,7 +67,7 @@ class Setup extends Command
             }
             else
             {
-                $this->_error( 'system has users. use --force to override.' );
+                $this->_ahError( 'system has users. use --force to override.' );
 
                 return 1;
             }
@@ -83,16 +95,25 @@ class Setup extends Command
                 throw new \Exception( 'Invalid response from user::create' );
             }
 
-            $this->_info( 'user <comment>' . $this->argument( 'admin-email' ) . '</comment> created.' );
+            $this->_ahInfo( 'user <comment>' . $this->argument( 'admin-email' ) . '</comment> created.' );
         }
         catch ( \Exception $_ex )
         {
-            $this->_error( 'Error while creating admin user: ' . $_ex->getMessage() );
+            $this->_ahError( 'Error while creating admin user: ' . $_ex->getMessage() );
 
             return 1;
         }
 
         //  2. Check permissions and required directories
+        $_paths = config( 'dfe.commands.setup.required-directories', [] );
+
+        foreach ( $_paths as $_path )
+        {
+            if ( !FileSystem::ensurePath( $_path ) )
+            {
+                $this->_ahError( 'Unable to create directory: ' . $_path );
+            }
+        }
 
         //  3. Create console and dashboard API key sets
         $_consoleKey = AppKey::createKey( 0, OwnerTypes::CONSOLE );
@@ -107,16 +128,38 @@ class Setup extends Command
                 'default-domain'            => config( 'dfe.provisioning.default-domain' ),
                 'signature-method'          => config( 'dfe.signature-method' ),
                 'storage-root'              => config( 'dfe.provisioning.storage-root' ),
-                'console-api-url'           => config( 'dfe.console-api-url' ),
+                'console-api-url'           => $_endpoint = config( 'dfe.security.console-api-url' ),
                 'console-api-key'           => $_apiSecret,
                 'console-api-client-id'     => $_consoleKey->client_id,
                 'console-api-client-secret' => $_consoleKey->client_secret,
                 'dashboard-client-id'       => $_dashboardKey->client_id,
                 'dashboard-client-secret'   => $_dashboardKey->client_secret,
+                'client-id'                 => null,
+                'client-secret'             => null,
             ]
         );
 
-        return 0;
+        //  Make a console environment
+        $_config = <<<INI
+DFE_OPEN_REGISTRATION=false
+DFE_CONSOLE_API_URL={$_endpoint}
+DFE_CONSOLE_API_KEY={$_apiSecret}
+DFE_CONSOLE_API_CLIENT_ID={$_consoleKey->client_id}
+DFE_CONSOLE_API_CLIENT_SECRET={$_consoleKey->client_secret}
+INI;
+
+        $this->_writeFile( 'console.env', $_config );
+
+        //  Make a dashboard config file...
+        $_config = <<<INI
+DFE_OPEN_REGISTRATION=true
+DFE_CONSOLE_API_URL={$_endpoint}
+DFE_CONSOLE_API_KEY={$_apiSecret}
+DFE_CONSOLE_API_CLIENT_ID={$_dashboardKey->client_id}
+DFE_CONSOLE_API_CLIENT_SECRET={$_dashboardKey->client_secret}
+INI;
+
+        return $this->_writeFile( 'dashboard.env', $_config );
     }
 
     /** @inheritdoc */
@@ -146,67 +189,28 @@ class Setup extends Command
     }
 
     /**
-     * @param string|array $message
-     * @param int          $type
+     * @param string $filename The name of the file relative to /database/dfe/
+     * @param mixed  $contents
+     * @param bool   $jsonEncode
      *
-     * @return mixed
+     * @return bool
      */
-    protected function _error( $message, $type = OutputInterface::OUTPUT_NORMAL )
+    protected function _writeFile( $filename, $contents, $jsonEncode = false )
     {
-        return $this->output->writeln( $this->_prefixOutput( 'setup', $message, 'error' ), $type );
-    }
+        $_path = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
-    /**
-     * @param string|array $message
-     * @param int          $type
-     *
-     * @return mixed
-     */
-    protected function _info( $message, $type = OutputInterface::OUTPUT_NORMAL )
-    {
-        return $this->output->writeln( $this->_prefixOutput( 'setup', $message, 'info' ), $type );
-    }
-
-    /**
-     * @param string|array $message
-     * @param int          $type
-     *
-     * @return mixed
-     */
-    protected function _writeln( $message, $type = OutputInterface::OUTPUT_NORMAL )
-    {
-        return $this->output->writeln( $this->_prefixOutput( 'setup', $message, 'info' ), $type );
-    }
-
-    /**
-     * @param string       $prefix
-     * @param string|array $messages
-     * @param string       $context  An output context "info", "comment", "error", etc.
-     * @param bool         $addColon If true, a colon will be appended to the prefix before concatenation
-     *
-     * @return array|string
-     */
-    protected function _prefixOutput( $prefix, $messages, $context = null, $addColon = true )
-    {
-        !is_array( $messages ) && ( $messages = array($messages) );
-
-        $_prefixed = [];
-        $_cOn = $_cOff = null;
-
-        if ( $context )
+        if ( !FileSystem::ensurePath( $_path ) )
         {
-            $_cOn = '<' . $context . '>';
-            $_cOff = '</' . $context . '>';
+            $this->_ahError( 'Unable to write to backup path <comment>' . $_path . '</comment>. Aborting.' );
+
+            return false;
         }
 
-        $_prefix = $_cOn . $prefix . $_cOff . ( $addColon ? ':' : null );
-
-        foreach ( $messages as $_message )
-        {
-            $_prefixed[] = trim( $_prefix ) . ' ' . trim( $_message );
-        }
-
-        return 1 == sizeof( $_prefixed ) ? $_prefixed[0] : $_prefixed;
+        return
+            false !== file_put_contents(
+                $_path . DIRECTORY_SEPARATOR . ltrim( $filename, DIRECTORY_SEPARATOR ),
+                $jsonEncode ? JsonFile::encode( $contents ) : $contents
+            );
     }
 
     /**
@@ -216,9 +220,9 @@ class Setup extends Command
     {
         $_backupPath = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
-        if ( !is_dir( $_backupPath ) && false === @mkdir( $_backupPath, 0777, true ) )
+        if ( !FileSystem::ensurePath( $_backupPath ) )
         {
-            $this->_error( 'Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.' );
+            $this->_ahError( 'Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.' );
 
             return false;
         }
@@ -231,7 +235,9 @@ class Setup extends Command
             $_users[] = $_user->toArray();
         }
 
-        JsonFile::encodeFile( $_backupPath . DIRECTORY_SEPARATOR . 'service-user.backup.json', $_users );
+        JsonFile::encodeFile( $_backupPath . DIRECTORY_SEPARATOR . 'service-user.backup.' . date( 'YmdHis' ) . '.json', $_users );
+
+        return true;
     }
 
     /**
