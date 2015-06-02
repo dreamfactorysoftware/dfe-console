@@ -13,3 +13,5 @@ node_modules/
 /_ide_*.php
 /original
 composer.lock
+/database/dfe/*
+!/database/dfe/dfe_local.schema.sql
