@@ -72,7 +72,7 @@ class ManifestHandler
                     $_manifest = ClusterManifest::make(
                         base_path(),
                         [
-                            'cluster-id'       => config( 'dfe.provisioning.default-cluster-id' ),
+                            'cluster-id'       => config( 'dfe.cluster-id' ),
                             'default-domain'   => config( 'dfe.provisioning.default-domain' ),
                             'signature-method' => config( 'dfe.signature-method' ),
                             'storage-root'     => config( 'dfe.provisioning.storage-root' ),
@@ -83,17 +83,15 @@ class ManifestHandler
                         ]
                     );
 
-                    $_result = SuccessPacket::make( $_manifest->toArray(), Response::HTTP_CREATED );
+                    $command->setResult( $_result = SuccessPacket::make( $_manifest->toArray(), Response::HTTP_CREATED ) );
                 }
             }
             catch
             ( \Exception $_ex )
             {
-                $_result = ErrorPacket::create( Response::HTTP_BAD_REQUEST );
+                $command->setResult( $_result = ErrorPacket::create( Response::HTTP_BAD_REQUEST ) );
             }
         }
-
-        $command->setResult( $_result );
 
         \Log::debug( '[dfe:manifest] end' );
 

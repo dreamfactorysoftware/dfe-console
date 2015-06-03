@@ -189,7 +189,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
         }
 
         //  Add it to the connection list
-        \Config::set( 'database.connections.' . $_server->server_id_text, $_config );
+        config( ['database.connections.' . $_server->server_id_text => $_config] );
 
         //  Create a connection and return. It's in Joe Pesce's hands now...
         return [\DB::connection( $_dbServer ), $_config, $_server];

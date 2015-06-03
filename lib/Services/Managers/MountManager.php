@@ -72,7 +72,7 @@ class MountManager extends BaseManager implements StorageMounter
             }
         }
 
-        \Config::set( 'flysystem.connections.' . $_tag, array_merge( $_config, $options ) );
+        config( ['flysystem.connections.' . $_tag => array_merge( $_config, $options )] );
 
         $this->manage(
             $_tag,
