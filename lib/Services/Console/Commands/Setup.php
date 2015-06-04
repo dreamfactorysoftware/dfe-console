@@ -87,6 +87,7 @@ class Setup extends Command
                     'nickname_text'   => 'Admin',
                     'email_addr_text' => $this->argument( 'admin-email' ),
                     'password_text'   => \Hash::make( $this->option( 'admin-password' ) ),
+                    'active_ind'      => 1,
                 ]
             );
 
@@ -124,18 +125,14 @@ class Setup extends Command
         ClusterManifest::make(
             base_path(),
             [
-                'cluster-id'                => config( 'dfe.cluster-id' ),
-                'default-domain'            => config( 'dfe.provisioning.default-domain' ),
-                'signature-method'          => config( 'dfe.signature-method' ),
-                'storage-root'              => config( 'dfe.provisioning.storage-root' ),
-                'console-api-url'           => $_endpoint = config( 'dfe.security.console-api-url' ),
-                'console-api-key'           => $_apiSecret,
-                'console-api-client-id'     => $_consoleKey->client_id,
-                'console-api-client-secret' => $_consoleKey->client_secret,
-                'dashboard-client-id'       => $_dashboardKey->client_id,
-                'dashboard-client-secret'   => $_dashboardKey->client_secret,
-                'client-id'                 => null,
-                'client-secret'             => null,
+                'cluster-id'       => config( 'dfe.cluster-id' ),
+                'default-domain'   => config( 'dfe.provisioning.default-domain' ),
+                'signature-method' => config( 'dfe.signature-method' ),
+                'storage-root'     => config( 'dfe.provisioning.storage-root' ),
+                'console-api-url'  => $_endpoint = config( 'dfe.security.console-api-url' ),
+                'console-api-key'  => $_apiSecret,
+                'client-id'        => null,
+                'client-secret'    => null,
             ]
         );
 

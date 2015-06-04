@@ -3,7 +3,7 @@
 use Closure;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Common\Traits\VerifiesSignatures;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class AuthenticateClient
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, VerifiesSignatures;
 
     //******************************************************************************
     //* Methods
@@ -34,21 +34,31 @@ class AuthenticateClient
         $_token = $request->input( 'access-token' );
         $_clientId = $request->input( 'client-id' );
 
-        /** @type AppKey $_key */
-        $_key = AppKey::where( 'client_id', $_clientId )->first();
+        //  Just plain ol' bad...
+        if ( empty( $_token ) || empty( $_clientId ) )
+        {
+            \Log::error( '[auth.client] bad request: no token or client-id present' );
 
-        if ( empty( $_key ) )
+            return ErrorPacket::create( Response::HTTP_BAD_REQUEST );
+        }
+
+        /** @type AppKey $_key */
+        try
+        {
+            $_key = AppKey::where( 'client_id', $_clientId )->firstOrFail();
+        }
+        catch ( \Exception $_ex )
         {
             \Log::error( '[auth.client] forbidden: invalid "client-id" [' . $_clientId . ']' );
 
             return ErrorPacket::create( Response::HTTP_FORBIDDEN, 'Invalid "client-id"' );
         }
 
-        if ( $_token != hash_hmac( config( 'dfe.signature-method', ConsoleDefaults::SIGNATURE_METHOD ), $_clientId, $_key->client_secret ) )
+        if ( !$this->_verifySignature( $_token, $_clientId, $_key->client_secret ) )
         {
-            \Log::error( '[auth.client] unauthorized: invalid "access-token" [' . $_token . ']' );
+            \Log::error( '[auth.client] bad request: signature verification fail' );
 
-            return ErrorPacket::create( Response::HTTP_UNAUTHORIZED, 'Invalid "access-token"' );
+            return ErrorPacket::create( Response::HTTP_BAD_REQUEST );
         }
 
         try
