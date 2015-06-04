@@ -46,6 +46,7 @@ class AuthenticateClient
         try
         {
             $_key = AppKey::where( 'client_id', $_clientId )->firstOrFail();
+            $this->_setSigningCredentials( $_clientId, $_key->client_secret );
         }
         catch ( \Exception $_ex )
         {
