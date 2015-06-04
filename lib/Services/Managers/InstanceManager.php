@@ -143,8 +143,6 @@ class InstanceManager extends BaseManager implements Factory
                 throw new \InvalidArgumentException( 'The "owner-id" and/or "owner-type" specified is/are invalid.' );
             }
 
-            \Log::debug( 'dfe config: ' . print_r( config( 'dfe' ), true ) );
-
             //  Validate the cluster and pull component ids
             $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
             $_clusterId = IfSet::get( $options, 'cluster-id', config( 'dfe.provisioning.default-cluster-id' ) );
@@ -222,7 +220,7 @@ class InstanceManager extends BaseManager implements Factory
             $_servers = static::_lookupClusterServers( $_cluster->id );
             \Log::debug( 'Servers: ' . print_r( $_servers, true ) );
 
-            $_serverIds = $this->_extractServerIds( $_servers->toArray() );
+            $_serverIds = $this->_extractServerIds( $_servers );
 
             return [
                 'cluster-id'    => $_cluster->id,
