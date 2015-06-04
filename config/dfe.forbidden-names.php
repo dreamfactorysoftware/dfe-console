@@ -1,7 +1,7 @@
 <?php
 
 //******************************************************************************
-//* Console restrictions on instance names
+//* DFE Console restrictions on instance names
 //******************************************************************************
 
 return [
