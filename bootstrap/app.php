@@ -3,12 +3,12 @@
 //* Application Bootstrap
 //******************************************************************************
 
-if ( !function_exists( '__bootstrap' ) )
+if ( !function_exists( '__dfe_bootstrap' ) )
 {
     /**
      * @return \Illuminate\Foundation\Application
      */
-    function __bootstrap()
+    function __dfe_bootstrap()
     {
         //  Create the app
         $_app = new Illuminate\Foundation\Application( realpath( dirname( __DIR__ ) ) );
@@ -23,4 +23,4 @@ if ( !function_exists( '__bootstrap' ) )
     }
 }
 
-return __bootstrap();
+return __dfe_bootstrap();
