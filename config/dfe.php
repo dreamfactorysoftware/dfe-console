@@ -19,6 +19,23 @@ return [
     'signature-method'  => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
     //  If true, users may self-register. Otherwise, admins must create users */
     'open-registration' => env( 'DFE_OPEN_REGISTRATION', false ),
+    //******************************************************************************
+    //* Common settings across all app
+    //******************************************************************************
+    'common'            => [
+        'display-name'      => 'DreamFactory Enterprise&trade; Console',
+        'display-version'   => 'v1.0.x-alpha',
+        'display-copyright' => '© DreamFactory Software, Inc. 2012-' . date( 'Y' ) . '. All Rights Reserved.',
+        /**
+         * Theme selection -- a bootswatch theme name
+         * Included are cerulean, darkly, flatly, paper, and superhero.
+         * You may also install other compatible themes and use them as well.
+         */
+        'themes'            => ['auth' => 'darkly', 'page' => 'flatly'],
+    ],
+    //******************************************************************************
+    //* Provisioners
+    //******************************************************************************
     'provisioners'      => [
         //  The default provisioner
         'default' => 'rave',
@@ -43,6 +60,9 @@ return [
             ],
         ],
     ],
+    //******************************************************************************
+    //* Provisioning Defaults
+    //******************************************************************************
     'provisioning'      => [
         //******************************************************************************
         //* Storage & storage layout options/settings
@@ -83,16 +103,19 @@ return [
         //	i386
         'default-vendor-image-flavor' => 0,
     ],
+    //******************************************************************************
+    //* Console API Keys
+    //******************************************************************************
     'security'          => [
-        //******************************************************************************
-        //* Console API Keys
-        //******************************************************************************
         'console-api-url'           => env( 'DFE_CONSOLE_API_URL' ),
         /** This key needs to match the key configured in the dashboard */
         'console-api-key'           => env( 'DFE_CONSOLE_API_KEY' ),
         'console-api-client-id'     => env( 'DFE_CONSOLE_API_CLIENT_ID' ),
         'console-api-client-secret' => env( 'DFE_CONSOLE_API_CLIENT_SECRET' ),
     ],
+    //******************************************************************************
+    //* Individual command settings
+    //******************************************************************************
     'commands'          => [
         'setup' => [
             'display-name'         => 'DreamFactory Enterprise Setup and Initialization',
@@ -107,6 +130,9 @@ return [
             ],
         ],
     ],
+    //******************************************************************************
+    //* Forbidden instance names
+    //******************************************************************************
     'forbidden-names'   => [
         /** reserved */
         'dreamfactory',
