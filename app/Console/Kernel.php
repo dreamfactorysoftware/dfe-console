@@ -6,14 +6,20 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-//    use CommonLogging;
-
-    //******************************************************************************
     //* Members
     //******************************************************************************
+
+    /** @inheritdoc */
+    protected $bootstrappers = [
+        'Illuminate\Foundation\Bootstrap\DetectEnvironment',
+        'DreamFactory\Enterprise\Common\Bootstrap\LoadConfiguration',
+        'DreamFactory\Enterprise\Common\Bootstrap\ConfigureCommonLogging',
+        'Illuminate\Foundation\Bootstrap\HandleExceptions',
+        'Illuminate\Foundation\Bootstrap\RegisterFacades',
+        'Illuminate\Foundation\Bootstrap\SetRequestForConsole',
+        'Illuminate\Foundation\Bootstrap\RegisterProviders',
+        'Illuminate\Foundation\Bootstrap\BootProviders',
+    ];
 
     /**
      * @var array The artisan commands provided by your application.

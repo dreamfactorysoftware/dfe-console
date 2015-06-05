@@ -6,6 +6,7 @@
       <w>bcrypt</w>
       <w>binlogging</w>
       <w>binlogs</w>
+      <w>bootstrappers</w>
       <w>console's</w>
       <w>csrf</w>
       <w>datadir</w>
