@@ -2,14 +2,11 @@ vendor/
 node_modules/
 /.env
 /.dfe.cluster.json
-/storage/framework/cache/*
-/storage/framework/sessions/*
-/storage/framework/views/*
-/storage/logs/*
+/storage/
 /.idea/workspace.xml
 /.idea/tasks.xml
 /build
-/tests/storage/*
+/tests/storage/
 /_ide_*.php
 /original
 composer.lock
