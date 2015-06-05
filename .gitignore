@@ -2,7 +2,10 @@ vendor/
 node_modules/
 /.env
 /.dfe.cluster.json
-/storage/
+/storage/app/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
 /.idea/workspace.xml
 /.idea/tasks.xml
 /build
