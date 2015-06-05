@@ -3,6 +3,8 @@
 //* Application Bootstrap
 //******************************************************************************
 
+use Illuminate\Support\Facades\Log;
+
 if ( !function_exists( '__dfe_bootstrap' ) )
 {
     /**
