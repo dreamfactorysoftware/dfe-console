@@ -104,6 +104,7 @@ class OpsController extends Controller
                 'storage-path'       => $_storagePath,
                 'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
                 'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
+                'home-links'         => config( 'links' ),
                 //  snake
                 'instance_name_text' => $_instance->instance_name_text,
                 'instance_id_text'   => $_instance->instance_id_text,
