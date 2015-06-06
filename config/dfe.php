@@ -17,8 +17,6 @@ return [
     //  A string to be pre-pended to instance names for non-admin users
     'instance-prefix'   => env( 'DFE_DEFAULT_INSTANCE_PREFIX' ),
     'signature-method'  => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
-    //  If true, users may self-register. Otherwise, admins must create users */
-    'open-registration' => env( 'DFE_OPEN_REGISTRATION', false ),
     //******************************************************************************
     //* Common settings across all app
     //******************************************************************************
