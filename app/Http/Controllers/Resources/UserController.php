@@ -134,13 +134,34 @@ class UserController extends ResourceController
             $is_system_admin = $user_data['user_type'];
         }
 
-        if ( array_key_exists( 'active_ind', $user_data ) )
+        if($id != $user_data['user_auth'])
         {
-            $user_data['active_ind'] = 1;
+            if ( array_key_exists( 'active_ind', $user_data ) )
+            {
+                $user_data['active_ind'] = 1;
+            }
+            else
+            {
+                $user_data['active_ind'] = 0;
+            }
+        }
+
+        if ( array_key_exists( 'instance_manage_ind', $user_data ) )
+        {
+            //$user_data['instance_manage_ind'] = 1;
         }
         else
         {
-            $user_data['active_ind'] = 0;
+            //$user_data['instance_manage_ind'] = 0;
+        }
+
+        if ( array_key_exists( 'instance_policy_ind', $user_data ) )
+        {
+            //$user_data['instance_policy_ind'] = 1;
+        }
+        else
+        {
+            //$user_data['instance_policy_ind'] = 0;
         }
 
         if ( $is_system_admin != '' )
@@ -185,6 +206,7 @@ class UserController extends ResourceController
         unset( $user_data['_token'] );
         unset( $user_data['new_password'] );
         unset( $user_data['user_type'] );
+        unset( $user_data['user_auth'] );
 
         $user = $users->find( $id );
         $user->update( $user_data );

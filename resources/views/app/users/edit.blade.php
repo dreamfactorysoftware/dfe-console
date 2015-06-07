@@ -42,6 +42,7 @@
                                                 <input name="_method" type="hidden" value="PUT">
                                                 <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
                                                 <input name="user_type" type="hidden" id="user_type" value="{{ $is_admin }}">
+                                                <input name="user_auth" type="hidden" id="user_auth" value="{{ Auth::user()->id }}">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
