@@ -687,6 +687,8 @@ CREATE TABLE `user_t` (
   `storage_id_text` varchar(64) NOT NULL,
   `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
   `active_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `instance_manage_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `instance_policy_ind` tinyint(1) NOT NULL DEFAULT '0',
   `remember_token` varchar(128) DEFAULT NULL,
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
