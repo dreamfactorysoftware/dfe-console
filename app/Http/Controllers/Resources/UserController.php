@@ -148,20 +148,20 @@ class UserController extends ResourceController
 
         if ( array_key_exists( 'instance_manage_ind', $user_data ) )
         {
-            //$user_data['instance_manage_ind'] = 1;
+            $user_data['instance_manage_ind'] = 1;
         }
         else
         {
-            //$user_data['instance_manage_ind'] = 0;
+            $user_data['instance_manage_ind'] = 0;
         }
 
         if ( array_key_exists( 'instance_policy_ind', $user_data ) )
         {
-            //$user_data['instance_policy_ind'] = 1;
+            $user_data['instance_policy_ind'] = 1;
         }
         else
         {
-            //$user_data['instance_policy_ind'] = 0;
+            $user_data['instance_policy_ind'] = 0;
         }
 
         if ( $is_system_admin != '' )

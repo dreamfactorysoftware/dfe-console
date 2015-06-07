@@ -100,7 +100,7 @@
                                                                 <label><br>Advanced User Options</label>
                                                                 <div class="checkbox">
                                                                     <label>
-                                                                        <input id="instance_manage" class="" type="checkbox">
+                                                                        <input id="instance_manage_ind" name="instance_manage_ind" @if($user->instance_manage_ind) checked @endif type="checkbox">
                                                                         Allow User to <b>Create</b> and <b>Delete</b> Instances
                                                                     </label>
                                                                 </div>
@@ -109,7 +109,7 @@
                                                             <div class="form-group">
                                                                 <div class="checkbox">
                                                                     <label>
-                                                                        <input id="instance_policy" class="" type="checkbox">
+                                                                        <input id="instance_policy_ind" name="instance_policy_ind" @if($user->instance_policy_ind) checked @endif type="checkbox">
                                                                         Allow User to <b>Change</b> Instance Policies
                                                                     </label>
                                                                 </div>
