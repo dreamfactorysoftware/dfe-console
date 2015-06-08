@@ -145,7 +145,7 @@ class UserController extends ResourceController
                 $user_data['active_ind'] = 0;
             }
         }
-
+/*
         if ( array_key_exists( 'instance_manage_ind', $user_data ) )
         {
             $user_data['instance_manage_ind'] = 1;
@@ -163,7 +163,7 @@ class UserController extends ResourceController
         {
             $user_data['instance_policy_ind'] = 0;
         }
-
+*/
         if ( $is_system_admin != '' )
         {
             $user = ServiceUser::where( 'email_addr_text', '=', $user_data['email_addr_text'] )->first();
@@ -207,6 +207,8 @@ class UserController extends ResourceController
         unset( $user_data['new_password'] );
         unset( $user_data['user_type'] );
         unset( $user_data['user_auth'] );
+        unset( $user_data['instance_manage_ind'] );
+        unset( $user_data['instance_policy_ind'] );
 
         $user = $users->find( $id );
         $user->update( $user_data );
