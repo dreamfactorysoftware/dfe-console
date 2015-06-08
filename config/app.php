@@ -55,7 +55,7 @@ return [
         'DreamFactory\\Enterprise\\Services\\Auditing\\AuditServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\InstanceServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\InstanceStorageServiceProvider',
-        'DreamFactory\\Enterprise\\Services\\Providers\\MountServiceProvider',
+        'DreamFactory\\Enterprise\\Storage\\Providers\\MountServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\ProvisioningServiceProvider',
         'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
         /** DreamFactory Console (local app) service providers */
