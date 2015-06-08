@@ -23,10 +23,10 @@ class CreateSnapshotTable extends Migration
                 function ( Blueprint $table )
                 {
                     $table->bigIncrements( 'id' );
-                    $table->integer( 'user_id' )->index();
-                    $table->integer( 'instance_id' )->index();
-                    $table->integer( 'route_hash_id' )->index();
-                    $table->string( 'snapshot_id_text', 128 )->index()->nullable();
+                    $table->integer( 'user_id' );
+                    $table->integer( 'instance_id' );
+                    $table->integer( 'route_hash_id' );
+                    $table->string( 'snapshot_id_text', 128 )->index();
                     $table->boolean( 'public_ind' )->default( true );
                     $table->string( 'public_url_text', 1024 );
                     $table->dateTime( 'expire_date' );
@@ -38,11 +38,14 @@ class CreateSnapshotTable extends Migration
                     $table->unique( ['user_id', 'snapshot_id_text'] );
 
                     //  Foreign keys
+                    $table->index( 'user_id' );
                     $table->foreign( 'user_id' )->references( 'id' )->on( 'user_t' )->onDelete( 'cascade' );
+
+                    $table->index( 'instance_id' );
                     $table->foreign( 'instance_id' )->references( 'id' )->on( 'instance_t' )->onDelete( 'cascade' );
 
-                    \Schema::hasTable( 'route_hash_t' ) &&
-                    $table->foreign( 'route_hash_id' )->references( 'id' )->on( 'route_hash_t' )->onDelete( 'cascade' );
+                    $table->index( 'route_hash_id' );
+//                    $table->foreign( 'route_hash_id' )->references( 'id' )->on( 'route_hash_t' )->onDelete( 'cascade' );
                 }
             );
         }
