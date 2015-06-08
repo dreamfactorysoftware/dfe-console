@@ -15,7 +15,7 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        if ( \Schema::hasTable( 'auth_reset_t' ) )
+        if ( !\Schema::hasTable( 'auth_reset_t' ) )
         {
             Schema::create(
                 'auth_reset_t',

@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        if ( \Schema::hasTable( 'service_user_t' ) )
+        if ( !\Schema::hasTable( 'service_user_t' ) )
         {
             Schema::create(
                 'service_user_t',
@@ -36,7 +36,7 @@ class CreateUsersTable extends Migration
             );
         }
 
-        if ( \Schema::hasTable( 'user_t' ) )
+        if ( !\Schema::hasTable( 'user_t' ) )
         {
             Schema::create(
                 'service_user_t',
