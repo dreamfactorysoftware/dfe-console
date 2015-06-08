@@ -40,6 +40,8 @@ class CreateSnapshotTable extends Migration
                     //  Foreign keys
                     $table->foreign( 'user_id' )->references( 'id' )->on( 'user_t' )->onDelete( 'cascade' );
                     $table->foreign( 'instance_id' )->references( 'id' )->on( 'instance_t' )->onDelete( 'cascade' );
+
+                    \Schema::hasTable( 'route_hash_t' ) &&
                     $table->foreign( 'route_hash_id' )->references( 'id' )->on( 'route_hash_t' )->onDelete( 'cascade' );
                 }
             );
