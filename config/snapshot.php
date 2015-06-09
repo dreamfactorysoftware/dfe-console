@@ -2,6 +2,8 @@
 //******************************************************************************
 //* Snapshot Service Configuration
 //******************************************************************************
+use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
+
 return [
     //  The relative path under the local private file system. Resolves to "/path/to/storage/.private/[storage-path]"
     'storage-path'   => 'snapshots',
@@ -18,12 +20,18 @@ return [
     'metadata-type'  => 'dfe.snapshot',
     //  The base URL for linking to snapshots
     'hash-link-base' => 'https://download.enterprise.dreamfactory.com',
+    //  The number of days to keep snapshots before removing them from storage
+    'days-to-keep'   => env( 'DFE_SNAPSHOT_DAYS_TO_KEEP', EnterpriseDefaults::SNAPSHOT_DAYS_TO_KEEP ),
+    //  If true, files are moved to 'soft-delete-path' instead of being deleted
+    'soft-delete'    => env( 'DFE_SNAPSHOT_SOFT_DELETE', EnterpriseDefaults::SNAPSHOT_SOFT_DELETE ),
+    //  Where to move files that have expired when 'soft-delete' is TRUE
+    'trash-path'     => env( 'DFE_SNAPSHOT_TRASH_PATH', EnterpriseDefaults::DEFAULT_TRASH_PATH ),
     //  Templates used by the snapshot service
     'templates'      => [
         //  File name templates
         'snapshot-file-name' => '{snapshot-prefix}.snapshot.zip',
-        'storage-file-name'  => '{snapshot-prefix}.storage.zip',
-        'db-file-name'       => '{snapshot-prefix}.sql',
+        'storage-file-name'  => 'storage.zip',
+        'db-file-name'       => 'database.sql',
         'metadata-file-name' => 'snapshot.json',
         //  Metadata guts template
         'metadata'           => [

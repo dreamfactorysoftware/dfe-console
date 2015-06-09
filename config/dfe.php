@@ -13,14 +13,15 @@ return [
     //* General
     //******************************************************************************
     //  The id of THIS cluster
-    'cluster-id'        => env( 'DFE_CLUSTER_ID' ),
+    'cluster-id'       => env( 'DFE_CLUSTER_ID' ),
     //  A string to be pre-pended to instance names for non-admin users
-    'instance-prefix'   => env( 'DFE_DEFAULT_INSTANCE_PREFIX' ),
-    'signature-method'  => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
+    'instance-prefix'  => env( 'DFE_DEFAULT_INSTANCE_PREFIX' ),
+    //  The hash algorithm for hashing api keys. Defaults to 'sha256'
+    'signature-method' => env( 'DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD ),
     //******************************************************************************
-    //* Common settings across all app
+    //* Common settings across portions of app
     //******************************************************************************
-    'common'            => [
+    'common'           => [
         'display-name'      => 'DreamFactory Enterprise&trade; Console',
         'display-version'   => 'v1.0.x-alpha',
         'display-copyright' => '© DreamFactory Software, Inc. 2012-' . date( 'Y' ) . '. All Rights Reserved.',
@@ -32,24 +33,50 @@ return [
         'themes'            => ['auth' => 'darkly', 'page' => 'flatly'],
     ],
     //******************************************************************************
-    //* Provisioners
+    //* The provisioners available from this console
     //******************************************************************************
-    'provisioners'      => [
+    'provisioners'     => [
         //  The default provisioner
         'default' => 'rave',
-        //  The supported provisioners/hosts
+        //  The provisioners, or "hosts" of our instances, or "guests".
         'hosts'   => [
+            /** RAVE = DSP2 */
             'rave' => [
-                /** Our sub-provisioners */
+                /********************************************************************************
+                 * Each provisioner has a main "instance" provisioning class. In addition there
+                 * are two sub-provisioners required.
+                 *
+                 * The first is "storage" which is the class responsible for instance storage
+                 * provisioning.
+                 *
+                 * The second is "db", or the class/service responsible for instance database
+                 * provisioning.
+                 *
+                 * Currently, all three are required. However, even though required, no actions
+                 * need to be performed (if unnecessary, for example).
+                 ********************************************************************************/
+                //  The main provisioner of the instance
                 'instance'  => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave\\Provisioner',
+                //  The instance's storage provisioner
                 'storage'   => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave\\StorageProvisioner',
+                //  The instance's database provisioner
                 'db'        => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave\\DatabaseProvisioner',
+                /********************************************************************************
+                 * Provisioners may have "offerings" or options that dictate certain features of
+                 * the available guest(s). Selecting a version for instance (as below). It can be
+                 * used for anything and provides an automatic UI in the Dashboard for user selection.
+                 ********************************************************************************/
                 /** Our offerings */
                 'offerings' => [
+                    //  An "id" for this offering
                     'instance-version' => [
+                        //  The display (label) name to show on the UI
                         'name'       => 'Version',
+                        //  Any text you wish displayed below the selection (i.e. help text, explanation, etc.)
                         'help-block' => 'If you wish, you may choose a different version of the DSP to provision.',
+                        //  The item in the below list of items to pre-select for the user.
                         'suggested'  => '1.10.x-dev',
+                        //  The list of items to show for this offering.
                         'items'      => [
                             '1.10.x-dev' => ['document-root' => '/var/www/_releases/dsp-core/1.9.x-dev/web', 'description' => 'DSP v1.10.x-dev',],
                         ],
@@ -61,12 +88,12 @@ return [
     //******************************************************************************
     //* Provisioning Defaults
     //******************************************************************************
-    'provisioning'      => [
+    'provisioning'     => [
         //******************************************************************************
         //* Storage & storage layout options/settings
         //******************************************************************************
         //  The root path of where instances' data will live
-        'storage-root'                => env( 'DFE_STORAGE_BASE_PATH', ConsoleDefaults::STORAGE_ROOT ),
+        'storage-root'                => env( 'DFE_HOSTED_BASE_PATH', base_path() ),
         //  Either "static" or "dynamic"
         'storage-zone-type'           => env( 'DFE_STORAGE_ZONE_TYPE', 'static' ),
         //  The "static" storage zone
@@ -104,7 +131,7 @@ return [
     //******************************************************************************
     //* Console API Keys
     //******************************************************************************
-    'security'          => [
+    'security'         => [
         'console-api-url'           => env( 'DFE_CONSOLE_API_URL' ),
         /** This key needs to match the key configured in the dashboard */
         'console-api-key'           => env( 'DFE_CONSOLE_API_KEY' ),
@@ -114,7 +141,7 @@ return [
     //******************************************************************************
     //* Individual command settings
     //******************************************************************************
-    'commands'          => [
+    'commands'         => [
         'setup' => [
             'display-name'         => 'DreamFactory Enterprise Setup and Initialization',
             'display-version'      => 'v1.0.x-alpha',
@@ -131,7 +158,7 @@ return [
     //******************************************************************************
     //* Forbidden instance names
     //******************************************************************************
-    'forbidden-names'   => [
+    'forbidden-names'  => [
         /** reserved */
         'dreamfactory',
         'dream',
