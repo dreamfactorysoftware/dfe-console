@@ -1,8 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
-use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models;
@@ -16,7 +14,7 @@ class Cluster extends ConsoleCommand
     //* Traits
     //******************************************************************************
 
-    use EntityLookup, ArtisanHelper, ArtisanOptionHelper;
+    use EntityLookup;
 
     //******************************************************************************
     //* Members

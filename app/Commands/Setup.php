@@ -1,26 +1,23 @@
-<?php namespace DreamFactory\Enterprise\Services\Console\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Config\ClusterManifest;
-use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Library\Utility\FileSystem;
 use DreamFactory\Library\Utility\JsonFile;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
-class Setup extends Command
+class Setup extends ConsoleCommand
 {
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use EntityLookup, ArtisanHelper;
+    use EntityLookup;
 
     //******************************************************************************
     //* Members
@@ -39,15 +36,6 @@ class Setup extends Command
     //* Methods
     //******************************************************************************
 
-    /** @inheritdoc */
-    public function run(InputInterface $input, OutputInterface $output)
-    {
-        $this->setOutputInterface($output);
-        $this->_config = config('dfe.commands.setup');
-
-        return parent::run($input, $output);
-    }
-
     /**
      * Handle the command
      *
@@ -55,15 +43,17 @@ class Setup extends Command
      */
     public function fire()
     {
-        $this->_ahShowHeader('setup');
+        parent::fire();
+
+        $this->_config = config('dfe.commands.setup');
 
         //  1. Make sure it's a clean install
         if (0 != ServiceUser::count()) {
             if ($this->option('force')) {
-                $this->_writeln('system has users. <comment>--force</comment> override in place.');
+                $this->writeln('system has users. <comment>--force</comment> override in place.');
                 $this->_backupServiceUsers();
             } else {
-                $this->_ahError('system has users. use --force to override.');
+                $this->writeln('system has users. use --force to override.', 'error');
 
                 return 1;
             }
@@ -78,11 +68,11 @@ class Setup extends Command
             $_user = ServiceUser::create(
                 [
                     'first_name_text' => 'System',
-                    'last_name_text'  => 'Administrator',
-                    'nickname_text'   => 'Admin',
+                    'last_name_text' => 'Administrator',
+                    'nickname_text' => 'Admin',
                     'email_addr_text' => $this->argument('admin-email'),
-                    'password_text'   => \Hash::make($this->option('admin-password')),
-                    'active_ind'      => 1,
+                    'password_text' => \Hash::make($this->option('admin-password')),
+                    'active_ind' => 1,
                 ]
             );
 
@@ -90,9 +80,9 @@ class Setup extends Command
                 throw new \Exception('Invalid response from user::create');
             }
 
-            $this->_ahInfo('user <comment>' . $this->argument('admin-email') . '</comment> created.');
+            $this->writeln('user <comment>' . $this->argument('admin-email') . '</comment> created.', 'info');
         } catch (\Exception $_ex) {
-            $this->_ahError('Error while creating admin user: ' . $_ex->getMessage());
+            $this->writeln('Error while creating admin user: ' . $_ex->getMessage(), 'error');
 
             return 1;
         }
@@ -102,7 +92,7 @@ class Setup extends Command
 
         foreach ($_paths as $_path) {
             if (!FileSystem::ensurePath($_path)) {
-                $this->_ahError('Unable to create directory: ' . $_path);
+                $this->writeln('Unable to create directory: ' . $_path, 'error');
             }
         }
 
@@ -115,14 +105,14 @@ class Setup extends Command
         ClusterManifest::make(
             base_path(),
             [
-                'cluster-id'       => config('dfe.cluster-id'),
-                'default-domain'   => config('dfe.provisioning.default-domain'),
+                'cluster-id' => config('dfe.cluster-id'),
+                'default-domain' => config('dfe.provisioning.default-domain'),
                 'signature-method' => config('dfe.signature-method'),
-                'storage-root'     => config('dfe.provisioning.storage-root'),
-                'console-api-url'  => $_endpoint = config('dfe.security.console-api-url'),
-                'console-api-key'  => $_apiSecret,
-                'client-id'        => null,
-                'client-secret'    => null,
+                'storage-root' => config('dfe.provisioning.storage-root'),
+                'console-api-url' => $_endpoint = config('dfe.security.console-api-url'),
+                'console-api-key' => $_apiSecret,
+                'client-id' => null,
+                'client-secret' => null,
             ]
         );
 
@@ -188,8 +178,8 @@ INI;
 
     /**
      * @param string $filename The name of the file relative to /database/dfe/
-     * @param mixed  $contents
-     * @param bool   $jsonEncode
+     * @param mixed $contents
+     * @param bool $jsonEncode
      *
      * @return bool
      */
@@ -198,7 +188,7 @@ INI;
         $_path = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
         if (!FileSystem::ensurePath($_path)) {
-            $this->_ahError('Unable to write to backup path <comment>' . $_path . '</comment>. Aborting.');
+            $this->writeln('Unable to write to backup path <comment>' . $_path . '</comment>. Aborting.', 'error');
 
             return false;
         }
@@ -218,7 +208,7 @@ INI;
         $_backupPath = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
         if (!FileSystem::ensurePath($_backupPath)) {
-            $this->_ahError('Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.');
+            $this->writeln('Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.', 'error');
 
             return false;
         }

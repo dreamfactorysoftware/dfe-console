@@ -1,12 +1,12 @@
-<?php namespace DreamFactory\Enterprise\Services\Console\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Services\Commands\RegisterJob;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Register extends Command
+class Register extends ConsoleCommand
 {
     //******************************************************************************
     //* Traits
@@ -34,6 +34,8 @@ class Register extends Command
      */
     public function fire()
     {
+        parent::fire();
+
         $_command = new RegisterJob(
             $this->argument('owner-id'),
             $this->argument('owner-type')
