@@ -34,20 +34,18 @@ class AppController extends FactoryController
      *
      * @return \Illuminate\View\View|mixed
      */
-    public function missingMethod( $parameters = [] )
+    public function missingMethod($parameters = [])
     {
-        if ( !is_array( $parameters ) )
-        {
+        if (!is_array($parameters)) {
             $parameters = [$parameters];
         }
 
-        $this->_action = array_shift( $parameters );
+        $this->_action = array_shift($parameters);
 
         $_viewName = 'app.' . $this->_action;
         $parameters['_trail'] = null;
 
-        if ( \View::exists( $_viewName ) )
-        {
+        if (\View::exists($_viewName)) {
             //@todo remove this
             $parameters['_active'] = [
                 'instances' => 0,
@@ -56,17 +54,14 @@ class AppController extends FactoryController
                 'user'      => null,
             ];
 
-            return \View::make( $_viewName, $parameters );
+            return \View::make($_viewName, $parameters);
         }
 
         //  Show 404
-        try
-        {
-            return parent::missingMethod( $parameters );
-        }
-        catch ( \Exception $_ex )
-        {
-            return \View::make( 'app.404', ['_trail' => null] );
+        try {
+            return parent::missingMethod($parameters);
+        } catch (\Exception $_ex) {
+            return \View::make('app.404', ['_trail' => null]);
         }
     }
 

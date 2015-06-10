@@ -6,10 +6,9 @@
 //  Main page
 \Route::group(
     ['middleware' => 'auth'],
-    function ()
-    {
-        \Route::get( '/', 'HomeController@index' );
-        \Route::get( 'home', 'HomeController@index' );
+    function (){
+        \Route::get('/', 'HomeController@index');
+        \Route::get('home', 'HomeController@index');
     }
 );
 
@@ -19,15 +18,14 @@
 
 \Route::group(
     ['prefix' => 'v1', 'middleware' => 'auth'],
-    function ()
-    {
+    function (){
         //\Route::resource( 'dashboard', 'DashboardController' );
-        \Route::resource( 'users', 'Resources\\UserController' );
-        \Route::resource( 'servers', 'Resources\\ServerController' );
-        \Route::resource( 'clusters', 'Resources\\ClusterController' );
-        \Route::resource( 'instances', 'Resources\\InstanceController' );
-        \Route::resource( 'policies', 'Resources\\PolicyController' );
-        \Route::resource( 'reports', 'Resources\\ReportController' );
+        \Route::resource('users', 'Resources\\UserController');
+        \Route::resource('servers', 'Resources\\ServerController');
+        \Route::resource('clusters', 'Resources\\ClusterController');
+        \Route::resource('instances', 'Resources\\InstanceController');
+        \Route::resource('policies', 'Resources\\PolicyController');
+        \Route::resource('reports', 'Resources\\ReportController');
     }
 );
 
@@ -38,19 +36,18 @@
 /** Ops controller for operational api */
 \Route::group(
     ['prefix' => 'api/v1', 'middleware' => 'dfe.api-logging',],
-    function ()
-    {
-        \Route::controller( 'ops', 'OpsController' );
+    function (){
+        \Route::controller('ops', 'OpsController');
 
-        \Route::resource( 'users', 'Ops\\UserController' );
-        \Route::resource( 'service-users', 'Ops\\ServiceUserController' );
-        \Route::resource( 'servers', 'Ops\\ServerController' );
-        \Route::resource( 'clusters', 'Ops\\ClusterController' );
-        \Route::resource( 'instances', 'Ops\\InstanceController' );
-        \Route::resource( 'mounts', 'Ops\\MountController' );
-        \Route::resource( 'app-keys', 'Ops\\AppKeyController' );
-        \Route::resource( 'instances', 'Ops\\InstanceController' );
-        \Route::resource( 'policies', 'Ops\\PolicyController' );
+        \Route::resource('users', 'Ops\\UserController');
+        \Route::resource('service-users', 'Ops\\ServiceUserController');
+        \Route::resource('servers', 'Ops\\ServerController');
+        \Route::resource('clusters', 'Ops\\ClusterController');
+        \Route::resource('instances', 'Ops\\InstanceController');
+        \Route::resource('mounts', 'Ops\\MountController');
+        \Route::resource('app-keys', 'Ops\\AppKeyController');
+        \Route::resource('instances', 'Ops\\InstanceController');
+        \Route::resource('policies', 'Ops\\PolicyController');
     }
 );
 
@@ -74,8 +71,7 @@
     'form-submit',
     [
         'before' => 'csrf',
-        function ()
-        {
+        function (){
             //  validation;
         }
     ]

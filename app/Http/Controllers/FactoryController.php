@@ -47,7 +47,7 @@ class FactoryController extends Controller
      */
     public function __construct()
     {
-        $this->middleware( 'auth' );
+        $this->middleware('auth');
     }
 
     /**
@@ -55,9 +55,9 @@ class FactoryController extends Controller
      *
      * @return array|string The hashed email address
      */
-    public static function getUserHash( $asArray = false )
+    public static function getUserHash($asArray = false)
     {
-        $_hash = md5( strtolower( \Auth::user() ? \Auth::user()->email : 'nobody@dreamfactory.com' ) );
+        $_hash = md5(strtolower(\Auth::user() ? \Auth::user()->email : 'nobody@dreamfactory.com'));
 
         return $asArray ? ['_userHash' => $_hash] : $_hash;
     }
@@ -68,7 +68,7 @@ class FactoryController extends Controller
     public static function getUserInfo()
     {
         $_name = \Auth::user() ? \Auth::user()->email : 'nobody@dreamfactory.com';
-        $_hash = md5( strtolower( $_name ) );
+        $_hash = md5(strtolower($_name));
 
         return [
             'name' => $_name,
@@ -83,10 +83,9 @@ class FactoryController extends Controller
      */
     public static function getActiveCounts()
     {
-        $_counts = \Cache::get( 'console.active_counts' );
+        $_counts = \Cache::get('console.active_counts');
 
-        if ( empty( $_counts ) )
-        {
+        if (empty($_counts)) {
             $_counts = [
                 'clusters'  => Cluster::count(),
                 'users'     => ServiceUser::count(),
@@ -94,7 +93,7 @@ class FactoryController extends Controller
                 'servers'   => Server::count(),
             ];
 
-            \Cache::put( 'console.active_counts', $_counts, 1 );
+            \Cache::put('console.active_counts', $_counts, 1);
         }
 
         return $_counts;

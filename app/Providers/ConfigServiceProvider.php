@@ -19,7 +19,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        config( [] );
+        config([]);
     }
 
 }

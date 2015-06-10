@@ -49,19 +49,18 @@ class ElkService extends BaseService
      *
      * @throws \Exception
      */
-    public function __construct( $app = null, array $settings = [] )
+    public function __construct($app = null, array $settings = [])
     {
-        parent::__construct( $app );
+        parent::__construct($app);
 
         /** @noinspection PhpUndefinedMethodInspection */
-        $_config = config( 'elk', [] );
+        $_config = config('elk', []);
 
-        if ( empty( $_config ) )
-        {
-            throw new \RuntimeException( 'No configuration file found for ELK.' );
+        if (empty($_config)) {
+            throw new \RuntimeException('No configuration file found for ELK.');
         }
 
-        $this->_client = new Client( $_config );
+        $this->_client = new Client($_config);
 
         $this->_getIndices();
     }
@@ -71,31 +70,24 @@ class ElkService extends BaseService
      */
     protected function _getIndices()
     {
-        if ( null === static::$_indices )
-        {
+        if (null === static::$_indices) {
             $_indices = [];
 
-            try
-            {
-                $_response = $this->_client->request( '_aliases?pretty=1' );
+            try {
+                $_response = $this->_client->request('_aliases?pretty=1');
 
-                foreach ( $_response->getData() as $_index => $_aliases )
-                {
+                foreach ($_response->getData() as $_index => $_aliases) {
                     //  No recent index
-                    if ( false === stripos( $_index, '_recent' ) && '.kibana' !== $_index )
-                    {
+                    if (false === stripos($_index, '_recent') && '.kibana' !== $_index) {
                         $_indices[] = $_index;
                     }
                 }
 
-                if ( !empty( $_indices ) )
-                {
+                if (!empty($_indices)) {
                     static::$_indices = $_indices;
                 }
-            }
-            catch ( \Exception $_ex )
-            {
-                \Log::error( $_ex );
+            } catch (\Exception $_ex) {
+                \Log::error($_ex);
 
                 throw $_ex;
             }
@@ -113,28 +105,24 @@ class ElkService extends BaseService
      *
      * @return \Elastica\ResultSet
      */
-    public function callOverTime( $facility, $interval = ElkIntervals::DAY, $size = 30, $from = 0, $term = null )
+    public function callOverTime($facility, $interval = ElkIntervals::DAY, $size = 30, $from = 0, $term = null)
     {
-        if ( !ElkIntervals::contains( $interval ) )
-        {
-            throw new \InvalidArgumentException( 'Interval "' . $interval . '" is not valid.' );
+        if (!ElkIntervals::contains($interval)) {
+            throw new \InvalidArgumentException('Interval "' . $interval . '" is not valid.');
         }
 
-        $_query = $this->_buildQuery( $facility, $interval, $size, $from, $term );
+        $_query = $this->_buildQuery($facility, $interval, $size, $from, $term);
 
-        \Log::debug( json_encode( $_query ) );
+        \Log::debug(json_encode($_query));
 
         $_results = null;
 
-        try
-        {
-            $_results = $this->_doSearch( $_query );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'Exception retrieving logs: ' . $_ex->getMessage() );
+        try {
+            $_results = $this->_doSearch($_query);
+        } catch (\Exception $_ex) {
+            \Log::error('Exception retrieving logs: ' . $_ex->getMessage());
 
-            throw new \RuntimeException( 500, $_ex->getMessage() );
+            throw new \RuntimeException(500, $_ex->getMessage());
         }
 
         return $_results;
@@ -150,9 +138,9 @@ class ElkService extends BaseService
      *
      * @return array
      */
-    protected function _buildQuery( $facility, $interval = 'day', $size = 30, $from = 0, $term = null )
+    protected function _buildQuery($facility, $interval = 'day', $size = 30, $from = 0, $term = null)
     {
-        $facility = str_replace( '/', '?', $facility );
+        $facility = str_replace('/', '?', $facility);
 
         $_query = [
             'size' => $size,
@@ -173,8 +161,7 @@ class ElkService extends BaseService
             ]
         ];
 
-        if ( empty( $term ) )
-        {
+        if (empty($term)) {
             $_query['aggs']['paths'] = [
                 'terms' => [
                     'field' => 'fabric.path.raw',
@@ -182,8 +169,7 @@ class ElkService extends BaseService
                 ]
             ];
 
-            if ( !empty( $facility ) )
-            {
+            if (!empty($facility)) {
                 $_query['query'] = [
                     'bool' => [
                         'must' => [
@@ -194,23 +180,16 @@ class ElkService extends BaseService
                     ],
                 ];
             }
-        }
-        else
-        {
+        } else {
             $_query['query'] = ['term' => []];
 
-            if ( is_array( $term ) )
-            {
-                foreach ( $term as $_field => $_value )
-                {
+            if (is_array($term)) {
+                foreach ($term as $_field => $_value) {
                     $_query['query']['term'][$_field] = $_value;
                 }
-            }
-            else
-            {
+            } else {
                 $_query['query']['term']['fabric.path.raw'] = $term;
             }
-
         }
 
         return $_query;
@@ -222,42 +201,34 @@ class ElkService extends BaseService
      *
      * @return \Elastica\ResultSet
      */
-    protected function _doSearch( $query, $indices = null )
+    protected function _doSearch($query, $indices = null)
     {
         $_results = false;
 
-        $_query = !( $query instanceof Query ) ? new Query( $query ) : $query;
-        $_search = new Search( $this->_client );
+        $_query = !($query instanceof Query) ? new Query($query) : $query;
+        $_search = new Search($this->_client);
 
         $indices = $indices ?: static::$_indices;
 
-        if ( null !== $indices )
-        {
-            if ( !is_array( $indices ) )
-            {
+        if (null !== $indices) {
+            if (!is_array($indices)) {
                 $indices = [$indices];
             }
 
-            $_search->addIndices( $indices );
+            $_search->addIndices($indices);
         }
 
-        try
-        {
-            $_results = $_search->search( $_query );
-        }
-        catch ( PartialShardFailureException $_ex )
-        {
+        try {
+            $_results = $_search->search($_query);
+        } catch (PartialShardFailureException $_ex) {
             //Log::info( 'Partial shard failure. ' . $_ex->getMessage() . ' failed shard(s).' );
 
-            return new ResultSet( $_ex->getResponse(), $_query );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( $_ex->getMessage() );
+            return new ResultSet($_ex->getResponse(), $_query);
+        } catch (\Exception $_ex) {
+            \Log::error($_ex->getMessage());
         }
 
         return $_results;
-
     }
 
     /**
@@ -266,7 +237,7 @@ class ElkService extends BaseService
      *
      * @return bool
      */
-    public function globalStats( $from = 0, $size = 1 )
+    public function globalStats($from = 0, $size = 1)
     {
         $_query = [
             'query' => [
@@ -281,27 +252,22 @@ class ElkService extends BaseService
             ],
         ];
 
-        $_query = new Query( $_query );
-        $_search = new Search( $this->_client );
+        $_query = new Query($_query);
+        $_search = new Search($this->_client);
 
-        try
-        {
-            $_result = $_search->search( $_query )->current()->getHit();
-        }
-        catch ( PartialShardFailureException $_ex )
-        {
-            \Log::info( 'Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).' );
+        try {
+            $_result = $_search->search($_query)->current()->getHit();
+        } catch (PartialShardFailureException $_ex) {
+            \Log::info('Partial shard failure: ' . $_ex->getMessage() . ' failed shard(s).');
             $_result = $_ex->getResponse()->getData();
 
-            if ( array_key_exists( 'hits', $_result ) )
-            {
-                if ( isset( $_result['total'] ) && 0 != $_result['total'] )
-                {
+            if (array_key_exists('hits', $_result)) {
+                if (isset($_result['total']) && 0 != $_result['total']) {
                     return $_result['hits']['hits'][0]['_source'];
                 }
             }
 
-            \Log::warning( 'No global stats found.' );
+            \Log::warning('No global stats found.');
 
             return false;
         }
@@ -315,7 +281,7 @@ class ElkService extends BaseService
      *
      * @return array
      */
-    public function allStats( $from = 0, $size = 1 )
+    public function allStats($from = 0, $size = 1)
     {
         $_query = [
             'query' => [
@@ -330,14 +296,13 @@ class ElkService extends BaseService
             ],
         ];
 
-        $_query = new Query( $_query );
-        $_search = new Search( $this->_client );
-        $_result = $_search->search( $_query )->getResults();
+        $_query = new Query($_query);
+        $_search = new Search($this->_client);
+        $_result = $_search->search($_query)->getResults();
 
         $_data = [];
 
-        foreach ( $_result as $_hit )
-        {
+        foreach ($_result as $_hit) {
             $_data[] = $_hit->getSource();
         }
 
@@ -354,24 +319,24 @@ class ElkService extends BaseService
      *
      * @return \Elastica\ResultSet
      */
-    public function termQuery( $term, $value, $size = 30 )
+    public function termQuery($term, $value, $size = 30)
     {
-        $_facet = new DateHistogram( 'occurred_on' );
-        $_facet->setField( '@timestamp' );
-        $_facet->setInterval( 'day' );
+        $_facet = new DateHistogram('occurred_on');
+        $_facet->setField('@timestamp');
+        $_facet->setInterval('day');
 
         $_query = new Query();
-        $_query->setSize( $size );
-        $_query->setSort( ['@timestamp'] );
+        $_query->setSize($size);
+        $_query->setSort(['@timestamp']);
 
         //	Filter for term
-        $_filter = new Prefix( $term, $value );
+        $_filter = new Prefix($term, $value);
         $_and = new Bool();
-        $_and->addMust( $_filter );
-        $_query->setPostFilter( $_and );
-        $_query->addFacet( $_facet );
+        $_and->addMust($_filter);
+        $_query->setPostFilter($_and);
+        $_query->addFacet($_facet);
 
-        $_results = $this->_doSearch( $_query );
+        $_results = $this->_doSearch($_query);
 
         return $_results;
     }

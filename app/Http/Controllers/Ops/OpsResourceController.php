@@ -15,7 +15,7 @@ class OpsResourceController extends ResourceController
     {
         parent::__construct();
 
-        $this->middleware( 'auth.client' );
+        $this->middleware('auth.client');
     }
 
 }

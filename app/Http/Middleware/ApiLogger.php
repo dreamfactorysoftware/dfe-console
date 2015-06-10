@@ -19,11 +19,11 @@ class ApiLogger
      *
      * @return mixed
      */
-    public function handle( $request, Closure $next )
+    public function handle($request, Closure $next)
     {
-        \Log::debug( '[api.logging] ' . $request->getMethod() . ': ' . $request->getPathInfo() );
+        \Log::debug('[api.logging] ' . $request->getMethod() . ': ' . $request->getPathInfo());
 
-        return $next( $request );
+        return $next($request);
     }
 
 }

@@ -28,13 +28,10 @@ class ResourceController extends DataController
      */
     protected function _loadData()
     {
-        try
-        {
-            return $this->_processDataRequest( $this->_tableName, call_user_func( array($this->_model, 'count') ) );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new BadRequestHttpException( $_ex->getMessage() );
+        try {
+            return $this->_processDataRequest($this->_tableName, call_user_func(array($this->_model, 'count')));
+        } catch (\Exception $_ex) {
+            throw new BadRequestHttpException($_ex->getMessage());
         }
     }
 
@@ -58,73 +55,63 @@ class ResourceController extends DataController
      *
      * @return \Illuminate\View\View
      */
-    public function create( array $viewData = [] )
+    public function create(array $viewData = [])
     {
         return \View::make(
             $this->_getResourceView(),
-            array_merge( array('model' => false, 'pageHeader' => 'New ' . ucwords( $this->_resource )), $viewData )
+            array_merge(array('model' => false, 'pageHeader' => 'New ' . ucwords($this->_resource)), $viewData)
         );
     }
 
     /** {@InheritDoc} */
-    public function show( $id )
+    public function show($id)
     {
-        try
-        {
-            return Packet::success( call_user_func( array($this->_model, 'findOrFail'), $id ) );
-        }
-        catch ( \Exception $_ex )
-        {
+        try {
+            return Packet::success(call_user_func(array($this->_model, 'findOrFail'), $id));
+        } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
     }
 
     /** {@InheritDoc} */
-    public function edit( $id )
+    public function edit($id)
     {
-        try
-        {
-            $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
+        try {
+            $_model = call_user_func(array($this->_model, 'findOrFail'), $id);
 
-            return \View::make( $this->_getResourceView(), array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords( $this->_resource )) );
-        }
-        catch ( \Exception $_ex )
-        {
+            return \View::make($this->_getResourceView(),
+                array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)));
+        } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
     }
 
     /** {@InheritDoc} */
-    public function update( $id )
+    public function update($id)
     {
-        try
-        {
-            $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
+        try {
+            $_model = call_user_func(array($this->_model, 'findOrFail'), $id);
 
-            return \View::make( $this->_getResourceView(), array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords( $this->_resource )) );
-        }
-        catch ( \Exception $_ex )
-        {
+            return \View::make($this->_getResourceView(),
+                array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)));
+        } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
     }
 
     /** {@InheritDoc} */
-    public function destroy( $id )
+    public function destroy($id)
     {
-        try
-        {
-            $_model = call_user_func( array($this->_model, 'findOrFail'), $id );
+        try {
+            $_model = call_user_func(array($this->_model, 'findOrFail'), $id);
 
-            if ( !$_model->delete() )
-            {
-                return ErrorPacket::create( \Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR, 'Delete of id "' . $id . '" failed.' );
+            if (!$_model->delete()) {
+                return ErrorPacket::create(\Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR,
+                    'Delete of id "' . $id . '" failed.');
             }
 
             return SuccessPacket::make();
-        }
-        catch ( \Exception $_ex )
-        {
+        } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
     }

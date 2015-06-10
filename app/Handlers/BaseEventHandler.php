@@ -23,7 +23,7 @@ class BaseEventHandler
     /**
      * @param Request $request
      */
-    public function __construct( Request $request )
+    public function __construct(Request $request)
     {
         $this->_request = $request;
     }

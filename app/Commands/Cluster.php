@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
+use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models;
@@ -15,7 +16,7 @@ class Cluster extends ConsoleCommand
     //* Traits
     //******************************************************************************
 
-    use EntityLookup, ArtisanHelper;
+    use EntityLookup, ArtisanHelper, ArtisanOptionHelper;
 
     //******************************************************************************
     //* Members
@@ -39,19 +40,18 @@ class Cluster extends ConsoleCommand
     {
         parent::fire();
 
-        switch ( $_command = trim( strtolower( $this->argument( 'operation' ) ) ) )
-        {
+        switch ($_command = trim(strtolower($this->argument('operation')))) {
             case 'create':
             case 'update':
             case 'delete':
-                return $this->{'_' . $_command . 'Cluster'}( $this->argument( 'cluster-id' ) );
+                return $this->{'_' . $_command . 'Cluster'}($this->argument('cluster-id'));
 
             case 'add':
             case 'remove':
-                return $this->{'_' . $_command . 'Server'}( $this->argument( 'cluster-id' ) );
+                return $this->{'_' . $_command . 'Server'}($this->argument('cluster-id'));
         }
 
-        throw new \InvalidArgumentException( 'The command "' . $_command . '" is invalid' );
+        throw new \InvalidArgumentException('The command "' . $_command . '" is invalid');
     }
 
     /** @inheritdoc */
@@ -82,7 +82,12 @@ class Cluster extends ConsoleCommand
             [
                 //  Create/Update/Delete
                 ['owner-id', null, InputOption::VALUE_REQUIRED, 'The "owner-id" of this cluster'],
-                ['owner-type', null, InputOption::VALUE_REQUIRED, 'The type of owner: ' . implode( ', ', OwnerTypes::getDefinedConstants( true ) )],
+                [
+                    'owner-type',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'The type of owner: ' . implode(', ', OwnerTypes::getDefinedConstants(true))
+                ],
                 ['subdomain', null, InputOption::VALUE_REQUIRED, 'The subdomain in which this cluster resides'],
                 ['max-instances', 'm', InputOption::VALUE_REQUIRED, 'The maximum number of instances allowed, if any.'],
                 //  Add/Remove
@@ -98,16 +103,15 @@ class Cluster extends ConsoleCommand
      *
      * @return bool|\DreamFactory\Enterprise\Database\Models\Cluster
      */
-    protected function _createCluster( $clusterId )
+    protected function _createCluster($clusterId)
     {
-        if ( false === ( $_data = $this->_prepareData( $clusterId ) ) )
-        {
+        if (false === ($_data = $this->_prepareData($clusterId))) {
             return false;
         }
 
-        $_cluster = Models\Cluster::create( $_data );
+        $_cluster = Models\Cluster::create($_data);
 
-        $this->concat( 'cluster id ' )->asComment( $clusterId )->flush( ' created.' );
+        $this->concat('cluster id ')->asComment($clusterId)->flush(' created.');
 
         return $_cluster;
     }
@@ -119,37 +123,30 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _updateCluster( $clusterId )
+    protected function _updateCluster($clusterId)
     {
-        try
-        {
-            $_cluster = $this->_findCluster( $clusterId );
+        try {
+            $_cluster = $this->_findCluster($clusterId);
 
-            if ( false === ( $_data = $this->_prepareData() ) )
-            {
+            if (false === ($_data = $this->_prepareData())) {
                 return false;
             }
 
-            if ( $_cluster->update( $_data ) )
-            {
-                $this->concat( 'cluster id ' )->asComment( $clusterId )->flush( ' updated.' );
+            if ($_cluster->update($_data)) {
+                $this->concat('cluster id ')->asComment($clusterId)->flush(' updated.');
 
                 return true;
             }
 
-            $this->writeln( 'error updating cluster id "' . $clusterId . '"', 'error' );
+            $this->writeln('error updating cluster id "' . $clusterId . '"', 'error');
 
             return true;
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->writeln( 'cluster-id "' . $clusterId . '" is not valid.', 'error' );
+        } catch (ModelNotFoundException $_ex) {
+            $this->writeln('cluster-id "' . $clusterId . '" is not valid.', 'error');
 
             return false;
-        }
-        catch ( \Exception $_ex )
-        {
-            $this->writeln( 'error updating cluster record: ' . $_ex->getMessage(), 'error' );
+        } catch (\Exception $_ex) {
+            $this->writeln('error updating cluster record: ' . $_ex->getMessage(), 'error');
 
             return false;
         }
@@ -162,28 +159,22 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _deleteCluster( $clusterId )
+    protected function _deleteCluster($clusterId)
     {
-        try
-        {
-            $_cluster = $this->_findCluster( $clusterId );
+        try {
+            $_cluster = $this->_findCluster($clusterId);
 
-            if ( $_cluster->delete() )
-            {
-                $this->concat( 'cluster id ' )->asComment( $clusterId )->flush( ' deleted.' );
+            if ($_cluster->delete()) {
+                $this->concat('cluster id ')->asComment($clusterId)->flush(' deleted.');
 
                 return true;
             }
 
-            $this->writeln( 'error deleting cluster id "' . $clusterId . '"', 'error' );
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->writeln( 'cluster id "' . $clusterId . '" is not valid.', 'error' );
-        }
-        catch ( \Exception $_ex )
-        {
-            $this->writeln( 'error deleting cluster record: ' . $_ex->getMessage() );
+            $this->writeln('error deleting cluster id "' . $clusterId . '"', 'error');
+        } catch (ModelNotFoundException $_ex) {
+            $this->writeln('cluster id "' . $clusterId . '" is not valid.', 'error');
+        } catch (\Exception $_ex) {
+            $this->writeln('error deleting cluster record: ' . $_ex->getMessage());
         }
 
         return false;
@@ -196,31 +187,25 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _addServer( $clusterId )
+    protected function _addServer($clusterId)
     {
-        try
-        {
-            $_cluster = $this->_findCluster( $clusterId );
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->writeln( 'cluster-id "' . $clusterId . '" is not valid.', 'error' );
+        try {
+            $_cluster = $this->_findCluster($clusterId);
+        } catch (ModelNotFoundException $_ex) {
+            $this->writeln('cluster-id "' . $clusterId . '" is not valid.', 'error');
 
             return false;
         }
 
-        try
-        {
-            $_server = $this->_findServer( $this->option( 'server-id' ) );
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->writeln( '"server-id" is a required option for this operation.' );
+        try {
+            $_server = $this->_findServer($this->option('server-id'));
+        } catch (ModelNotFoundException $_ex) {
+            $this->writeln('"server-id" is a required option for this operation.');
 
             return false;
         }
 
-        return $_server->addToCluster( $_cluster->id );
+        return $_server->addToCluster($_cluster->id);
     }
 
     /**
@@ -230,57 +215,48 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _removeServer( $clusterId )
+    protected function _removeServer($clusterId)
     {
-        try
-        {
-            $_cluster = $this->_findCluster( $clusterId );
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->writeln( 'cluster-id "' . $clusterId . '" is not valid.', 'error' );
+        try {
+            $_cluster = $this->_findCluster($clusterId);
+        } catch (ModelNotFoundException $_ex) {
+            $this->writeln('cluster-id "' . $clusterId . '" is not valid.', 'error');
 
             return false;
         }
 
-        try
-        {
-            $_server = $this->_findServer( $this->option( 'server-id' ) );
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->writeln( '"server-id" is a required option for this operation.' );
+        try {
+            $_server = $this->_findServer($this->option('server-id'));
+        } catch (ModelNotFoundException $_ex) {
+            $this->writeln('"server-id" is a required option for this operation.');
 
             return false;
         }
 
-        return $_server->removeFromCluster( $_cluster );
+        return $_server->removeFromCluster($_cluster);
     }
 
     /**
-     * @param bool|string $create If false, no data will be required. Pass $clusterId to have data be required and fill cluster_id_text field
+     * @param bool|string $create If false, no data will be required. Pass $clusterId to have data be required and fill
+     *                            cluster_id_text field
      *
      * @return array|bool
      */
-    protected function _prepareData( $create = false )
+    protected function _prepareData($create = false)
     {
         $_data = [];
 
-        if ( !is_bool( $create ) )
-        {
-            $_clusterId = trim( $create );
+        if (!is_bool($create)) {
+            $_clusterId = trim($create);
             $create = true;
 
-            try
-            {
-                $this->_findCluster( $_clusterId );
+            try {
+                $this->_findCluster($_clusterId);
 
-                $this->writeln( 'dfe: The cluster-id "' . $_clusterId . '" already exists.', 'error' );
+                $this->writeln('dfe: The cluster-id "' . $_clusterId . '" already exists.', 'error');
 
                 return false;
-            }
-            catch ( ModelNotFoundException $_ex )
-            {
+            } catch (ModelNotFoundException $_ex) {
                 //  This is what we want...
             }
 
@@ -288,37 +264,16 @@ class Cluster extends ConsoleCommand
         }
 
         //  Owner
-        if ( null !== ( $_ownerId = $this->option( 'owner-id' ) ) )
-        {
-            $_ownerType = $this->option( 'owner-type' );
-
-            if ( empty( $_ownerType ) )
-            {
-                $this->writeln( '"owner-type" required when "owner-id" specified.', 'error' );
-
-                return false;
-            }
-
-            try
-            {
-                $_owner = $this->_locateOwner( $_ownerId, $_ownerType );
-            }
-            catch ( \Exception $_ex )
-            {
-                $this->writeln( 'owner-id "' . $_ownerId . '" is not valid.' );
-
-                return false;
-            }
+        if (!$this->optionOwner($_data, false)) {
+            return false;
         }
 
-        if ( !$this->optionString( 'subdomain', 'subdomain_text', $_data, $create ) )
-        {
+        if (!$this->optionString('subdomain', 'subdomain_text', $_data, $create)) {
             return false;
         }
 
         //  Config (optional)
-        if ( !$this->optionArray( 'config', 'config_text', $_data ) )
-        {
+        if (!$this->optionArray('config', 'config_text', $_data)) {
             return false;
         }
 

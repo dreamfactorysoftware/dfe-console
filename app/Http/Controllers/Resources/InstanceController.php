@@ -3,9 +3,7 @@ namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
 
@@ -51,17 +49,16 @@ class InstanceController extends ResourceController
             ];
 
         /** @type Builder $_query */
-        $_query = Instance::join( 'user_t', 'instance_t.user_id', '=', 'user_t.id' )
-            ->join( 'cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id' )
-            ->select( $_columns );
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
+            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
+            ->select($_columns);
 
-        $test = $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
+        $test = $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
 
         echo $test->count();
 
-        return $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
+        return $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
     }
-
 
     /*
     public function create( array $viewData = [] )
@@ -77,7 +74,7 @@ class InstanceController extends ResourceController
     }
     */
 
-    public function edit( $id )
+    public function edit($id)
     {
         $clusters = new Cluster();
         $clusters_list = $clusters->all();
@@ -92,16 +89,16 @@ class InstanceController extends ResourceController
         ];
 
         /** @type Builder $_query */
-        $_query = Instance::join( 'user_t', 'instance_t.user_id', '=', 'user_t.id' )
-            ->join( 'cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id' )
-            ->select( $_columns )->where( 'instance_t.id', '=', $id );
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
+            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
+            ->select($_columns)->where('instance_t.id', '=', $id);
 
-        $test = $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
+        $test = $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
 
-        return View::make( 'app.instances.edit' )->with( 'instance_id', $id )->with( 'prefix', $this->_prefix )->with(
+        return View::make('app.instances.edit')->with('instance_id', $id)->with('prefix', $this->_prefix)->with(
             'instance',
             $test['response'][0]
-        )->with( 'clusters', $clusters_list );
+        )->with('clusters', $clusters_list);
     }
 
     /*
@@ -162,13 +159,12 @@ class InstanceController extends ResourceController
             ];
 
         /** @type Builder $_query */
-        $_query = Instance::join( 'user_t', 'instance_t.user_id', '=', 'user_t.id' )
-            ->join( 'cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id' )
-            ->select( $_columns );
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
+            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
+            ->select($_columns);
 
-        $test = $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
+        $test = $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
 
-        return View::make( 'app.instances' )->with( 'prefix', $this->_prefix )->with( 'instances', $test['response'] );
-
+        return View::make('app.instances')->with('prefix', $this->_prefix)->with('instances', $test['response']);
     }
 }

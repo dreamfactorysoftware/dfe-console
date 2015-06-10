@@ -23,9 +23,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot( Router $router )
+    public function boot(Router $router)
     {
-        parent::boot( $router );
+        parent::boot($router);
     }
 
     /**
@@ -35,14 +35,13 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function map( Router $router )
+    public function map(Router $router)
     {
         $router->group(
             ['namespace' => $this->namespace],
-            function ( $router )
-            {
+            function ($router){
                 /** @noinspection PhpIncludeInspection */
-                require app_path( 'Http/routes.php' );
+                require app_path('Http/routes.php');
             }
         );
     }

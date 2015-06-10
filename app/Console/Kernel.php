@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
      *
      * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      */
-    protected function schedule( Schedule $schedule )
+    protected function schedule(Schedule $schedule)
     {
     }
 }

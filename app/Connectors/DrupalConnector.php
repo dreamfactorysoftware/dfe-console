@@ -40,7 +40,7 @@ class DrupalConnector extends BaseService
      * @param User $user
      * @param bool $hashPasswords
      */
-    public function __construct( User $user, $hashPasswords = true )
+    public function __construct(User $user, $hashPasswords = true)
     {
         $this->_user = $user;
         $this->_hashingEnabled = $hashPasswords;
@@ -51,16 +51,14 @@ class DrupalConnector extends BaseService
      *
      * @param string $newPassword
      */
-    public function scrub( $newPassword = null )
+    public function scrub($newPassword = null)
     {
-        if ( null !== $newPassword )
-        {
-            $this->_user->password_text = $this->_hashingEnabled ? $this->hash( $newPassword ) : $newPassword;
+        if (null !== $newPassword) {
+            $this->_user->password_text = $this->_hashingEnabled ? $this->hash($newPassword) : $newPassword;
         }
 
-        if ( empty( $this->_user->nickname_text ) )
-        {
-            $this->_user->nickname_text = trim( $this->_user->first_name_text . ' ' . $this->_user->last_name_text );
+        if (empty($this->_user->nickname_text)) {
+            $this->_user->nickname_text = trim($this->_user->first_name_text . ' ' . $this->_user->last_name_text);
         }
     }
 
@@ -69,9 +67,9 @@ class DrupalConnector extends BaseService
      *
      * @return string
      */
-    public function generatePasswordHash( $password )
+    public function generatePasswordHash($password)
     {
-        return hash( 'sha512', $password );
+        return hash('sha512', $password);
     }
 
     /**
@@ -79,9 +77,9 @@ class DrupalConnector extends BaseService
      *
      * @return string
      */
-    public function generateConfirmationHash( $save = false )
+    public function generateConfirmationHash($save = false)
     {
-        return $this->_generateHash( 'valid_email', '*', $save );
+        return $this->_generateHash('valid_email', '*', $save);
     }
 
     /**
@@ -89,9 +87,9 @@ class DrupalConnector extends BaseService
      *
      * @return string
      */
-    public function generateRecoverHash( $save = false )
+    public function generateRecoverHash($save = false)
     {
-        return $this->_generateHash( 'recover', '|', $save );
+        return $this->_generateHash('recover', '|', $save);
     }
 
     /**
@@ -100,10 +98,10 @@ class DrupalConnector extends BaseService
      *
      * @return string
      */
-    protected function _generateHash( $type, $delimiter = '*' )
+    protected function _generateHash($type, $delimiter = '*')
     {
         return [
-            $type . '_hash_text'   => sha1( implode( $delimiter, $this->_user->toArray() ) . microtime( true ) ),
+            $type . '_hash_text'   => sha1(implode($delimiter, $this->_user->toArray()) . microtime(true)),
             $type . '_expire_time' => time() + DateTimeIntervals::SECONDS_PER_DAY
         ];
     }
@@ -115,25 +113,21 @@ class DrupalConnector extends BaseService
      *
      * @return bool
      */
-    public function authenticateWithDrupal( $password = null )
+    public function authenticateWithDrupal($password = null)
     {
-        if ( substr( $this->_user->drupal_password_text, 0, 2 ) == 'U$' )
-        {
+        if (substr($this->_user->drupal_password_text, 0, 2) == 'U$') {
             // This may be an updated password from user_update_7000(). Such hashes
             // have 'U' added as the first character and need an extra md5().
-            $_storedHash = substr( $this->_user->drupal_password_text, 1 );
-            $password = md5( $password );
-        }
-        else
-        {
+            $_storedHash = substr($this->_user->drupal_password_text, 1);
+            $password = md5($password);
+        } else {
             $_storedHash = $this->_user->drupal_password_text;
         }
 
-        switch ( substr( $_storedHash, 0, 3 ) )
-        {
+        switch (substr($_storedHash, 0, 3)) {
             case '$S$':
                 // A normal Drupal 7 password using sha512.
-                $_hash = $this->_drupalHash( 'sha512', $password, $_storedHash );
+                $_hash = $this->_drupalHash('sha512', $password, $_storedHash);
                 break;
 
             case '$H$':
@@ -141,13 +135,13 @@ class DrupalConnector extends BaseService
             case '$P$':
                 // A phpass password generated using md5.  This is an
                 // imported password or from an earlier Drupal version.
-                $_hash = $this->_drupalHash( 'md5', $password, $_storedHash );
+                $_hash = $this->_drupalHash('md5', $password, $_storedHash);
                 break;
             default:
                 return false;
         }
 
-        return ( $_hash && $_storedHash == $_hash );
+        return ($_hash && $_storedHash == $_hash);
     }
 
     /**
@@ -165,29 +159,26 @@ class DrupalConnector extends BaseService
      *
      * @return bool|string A string containing the hashed password (and salt) or FALSE on failure.
      */
-    protected function _drupalHash( $hashType, $password, $setting )
+    protected function _drupalHash($hashType, $password, $setting)
     {
         // The first 12 characters of an existing hash are its setting string.
-        $setting = substr( $setting, 0, 12 );
+        $setting = substr($setting, 0, 12);
 
-        if ( $setting[0] != '$' || $setting[2] != '$' )
-        {
+        if ($setting[0] != '$' || $setting[2] != '$') {
             return false;
         }
 
-        $_count = strpos( static::BASE64_ALLOWED_CHARACTERS, $setting[3] );
+        $_count = strpos(static::BASE64_ALLOWED_CHARACTERS, $setting[3]);
 
         // Hashes may be imported from elsewhere, so we allow != DRUPAL_HASH_COUNT
-        if ( $_count < static::MIN_HASH_COUNT || $_count > static::MAX_HASH_COUNT )
-        {
+        if ($_count < static::MIN_HASH_COUNT || $_count > static::MAX_HASH_COUNT) {
             return false;
         }
 
-        $_salt = substr( $setting, 4, 8 );
+        $_salt = substr($setting, 4, 8);
 
         // Hashes must have an 8 character salt.
-        if ( strlen( $_salt ) != 8 )
-        {
+        if (strlen($_salt) != 8) {
             return false;
         }
 
@@ -195,23 +186,21 @@ class DrupalConnector extends BaseService
         $_count = 1 << $_count;
 
         // We rely on the hash() function being available in PHP 5.2+.
-        $_hash = hash( $hashType, $_salt . $password, true );
+        $_hash = hash($hashType, $_salt . $password, true);
 
-        do
-        {
-            $_hash = hash( $hashType, $_hash . $password, true );
-        }
-        while ( --$_count );
+        do {
+            $_hash = hash($hashType, $_hash . $password, true);
+        } while (--$_count);
 
-        $_len = strlen( $_hash );
+        $_len = strlen($_hash);
 
-        $_output = $setting . $this->_drupalPasswordBase64Encode( $_hash, $_len );
+        $_output = $setting . $this->_drupalPasswordBase64Encode($_hash, $_len);
 
         // _password_base64_encode() of a 16 byte MD5 will always be 22 characters.
         // _password_base64_encode() of a 64 byte sha512 will always be 86 characters.
-        $_expected = 12 + ceil( ( 8 * $_len ) / 6 );
+        $_expected = 12 + ceil((8 * $_len) / 6);
 
-        return ( strlen( $_output ) == $_expected ) ? substr( $_output, 0, static::HASH_LENGTH ) : false;
+        return (strlen($_output) == $_expected) ? substr($_output, 0, static::HASH_LENGTH) : false;
     }
 
     /**
@@ -224,44 +213,38 @@ class DrupalConnector extends BaseService
      *
      * @return string Encoded string
      */
-    protected function _drupalPasswordBase64Encode( $input, $count )
+    protected function _drupalPasswordBase64Encode($input, $count)
     {
         $_output = '';
         $_index = 0;
         $_charSet = static::BASE64_ALLOWED_CHARACTERS;
 
-        do
-        {
-            $_value = ord( $input[$_index++] );
+        do {
+            $_value = ord($input[$_index++]);
             $_output .= $_charSet[$_value & 0x3f];
 
-            if ( $_index < $count )
-            {
-                $_value |= ord( $input[$_index] ) << 8;
+            if ($_index < $count) {
+                $_value |= ord($input[$_index]) << 8;
             }
 
-            $_output .= $_charSet[( $_value >> 6 ) & 0x3f];
+            $_output .= $_charSet[($_value >> 6) & 0x3f];
 
-            if ( $_index++ >= $count )
-            {
+            if ($_index++ >= $count) {
                 break;
             }
 
-            if ( $_index < $count )
-            {
-                $_value |= ord( $input[$_index] ) << 16;
+            if ($_index < $count) {
+                $_value |= ord($input[$_index]) << 16;
             }
 
-            $_output .= $_charSet[( $_value >> 12 ) & 0x3f];
+            $_output .= $_charSet[($_value >> 12) & 0x3f];
 
-            if ( $_index++ >= $count )
-            {
+            if ($_index++ >= $count) {
                 break;
             }
 
-            $_output .= $_charSet[( $_value >> 18 ) & 0x3f];
-        }
-        while ( $_index < $count );
+            $_output .= $_charSet[($_value >> 18) & 0x3f];
+        } while ($_index < $count);
 
         return $_output;
     }

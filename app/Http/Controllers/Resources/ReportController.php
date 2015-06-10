@@ -2,8 +2,8 @@
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use Illuminate\Support\Facades\View;
+
 //use Illuminate\Html\HtmlServiceProvider;
-use Illuminate\Html\FormFacade;
 
 class ReportController extends ResourceController
 {
@@ -20,13 +20,24 @@ class ReportController extends ResourceController
 
     protected $_prefix = 'v1';
 
-
     public function index()
     {
         $clusters = array('1', 'cluster', 'east');
         $clusters = json_encode($clusters);
 
-        $endpoints = array('&#47;rest&#47;db&#47;MichiganSetpoints', '/rest/db/MichiganModelOverride', '/rest/db/MichiganAve', '/rest/user/session', '/rest/db/joke', '/rest/system/config', '//rest/user/session', '/rest/api_docs', '/rest/api_docs/email', '/rest/api_docs/user');
+        $endpoints =
+            array(
+                '&#47;rest&#47;db&#47;MichiganSetpoints',
+                '/rest/db/MichiganModelOverride',
+                '/rest/db/MichiganAve',
+                '/rest/user/session',
+                '/rest/db/joke',
+                '/rest/system/config',
+                '//rest/user/session',
+                '/rest/api_docs',
+                '/rest/api_docs/email',
+                '/rest/api_docs/user'
+            );
         $endpoints = json_encode($endpoints);
 
         $roles = array('engine', 'jro', 'role', 'my', 'test', 'josh');
@@ -35,7 +46,19 @@ class ReportController extends ResourceController
         $instance_ids = array('1', 'east', 'web', 'next.cloud.dreamfactory.com', 'macbook');
         $instance_ids = json_encode($instance_ids);
 
-        $applications = array('orm', 'admin', 'todojquery', 'dfauth', 'todoangular', 'testapp', 'pollutants_visualization', 'sensobee', 'midata', 'bibo');
+        $applications =
+            array(
+                'orm',
+                'admin',
+                'todojquery',
+                'dfauth',
+                'todoangular',
+                'testapp',
+                'pollutants_visualization',
+                'sensobee',
+                'midata',
+                'bibo'
+            );
         $applications = json_encode($applications);
 
         $users = array('gmail.com', 'zsoldoszsolt', 'dreamfactory.com', 'jerryablan', 'dmartin');
@@ -53,18 +76,45 @@ class ReportController extends ResourceController
 
     public function show($id)
     {
-        if($id == 'bandwidth'){
+        if ($id == 'bandwidth') {
 
-            $applications = array('admin', 'simsa', 'orm', 'af1', 'osa', 'gno_app', 'inv', 'jigarpatel', 'todoangular', 'sensobee');
+            $applications =
+                array('admin', 'simsa', 'orm', 'af1', 'osa', 'gno_app', 'inv', 'jigarpatel', 'todoangular', 'sensobee');
             $applications = json_encode($applications);
 
             $clusters = array('1', 'cluster', 'east');
             $clusters = json_encode($clusters);
 
-            $endpoints = array('/rest/files/applications/calendar/', '/rest/files/applications/', '/rest/bi-storage/jobAds', '/rest/system/service/6', '/rest/db/MichiganAve', '/rest/medb/medicos', '/rest/medb/_schema', '/rest/af1/PX5', '/rest/files/applications/neboola/', '/rest/files/applications/neboola/lib/');
+            $endpoints =
+                array(
+                    '/rest/files/applications/calendar/',
+                    '/rest/files/applications/',
+                    '/rest/bi-storage/jobAds',
+                    '/rest/system/service/6',
+                    '/rest/db/MichiganAve',
+                    '/rest/medb/medicos',
+                    '/rest/medb/_schema',
+                    '/rest/af1/PX5',
+                    '/rest/files/applications/neboola/',
+                    '/rest/files/applications/neboola/lib/'
+                );
             $endpoints = json_encode($endpoints);
 
-            $instance_ids = array('1', 'east', 'web', 'next.cloud.dreamfactory.com', 'macbook', 'pro.local', 'df', 'jablan', 'ablan', 'jerry', 'test', 'case');
+            $instance_ids =
+                array(
+                    '1',
+                    'east',
+                    'web',
+                    'next.cloud.dreamfactory.com',
+                    'macbook',
+                    'pro.local',
+                    'df',
+                    'jablan',
+                    'ablan',
+                    'jerry',
+                    'test',
+                    'case'
+                );
             $instance_ids = json_encode($instance_ids);
 
             $users = array('gmail.com', 'zsoldoszsolt', 'dreamfactory.com', 'fh.org', 'dmartin');
@@ -73,7 +123,6 @@ class ReportController extends ResourceController
             $roles = array('engine', 'jro', 'role', 'my', 'test', 'josh');
             $roles = json_encode($roles);
         }
-
 
         return View::make('app.reports.bandwidth')
             ->with('prefix', $this->_prefix)
@@ -86,6 +135,5 @@ class ReportController extends ResourceController
     }
 
 }
-
 
 ?>

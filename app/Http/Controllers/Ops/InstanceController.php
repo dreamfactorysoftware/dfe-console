@@ -43,11 +43,11 @@ class InstanceController extends OpsResourceController
             ];
 
         /** @type Builder $_query */
-        $_query = Instance::join( 'user_t', 'instance_t.user_id', '=', 'user_t.id' )
-            ->join( 'cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id' )
-            ->select( $_columns );
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
+            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
+            ->select($_columns);
 
-        return $this->_processDataRequest( 'instance_t', Instance::count(), $_columns, $_query );
+        return $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
     }
 
 }

@@ -64,39 +64,35 @@ class DataController extends FactoryController
      *
      * @return \Illuminate\Database\Query\Builder|mixed
      */
-    public function _processDataRequest( $table, $count, array $columns = array('*'), $builder = null )
+    public function _processDataRequest($table, $count, array $columns = array('*'), $builder = null)
     {
-        try
-        {
-            $this->_parseDataRequest( null, $columns );
+        try {
+            $this->_parseDataRequest(null, $columns);
 
             /** @type Builder $_table */
-            $_table = $builder ?: \DB::table( $table );
-            $_table->select( $columns );
+            $_table = $builder ?: \DB::table($table);
+            $_table->select($columns);
 
-            if ( !empty( $this->_order ) )
-            {
-                foreach ( $this->_order as $_column => $_direction )
-                {
-                    $_table->orderByRaw( $_column . ' ' . $_direction );
+            if (!empty($this->_order)) {
+                foreach ($this->_order as $_column => $_direction) {
+                    $_table->orderByRaw($_column . ' ' . $_direction);
                 }
             }
 
-            if ( $this->_search && $this->_columns )
-            {
+            if ($this->_search && $this->_columns) {
                 $_where = array();
 
-                foreach ( $this->_columns as $_column )
-                {
-                    if ( $_column['searchable'] )
-                    {
-                        $_name = !empty( $_column['name'] ) ? $_column['name'] : ( !empty( $_column['data'] ) ? $_column['data'] : null );
+                foreach ($this->_columns as $_column) {
+                    if ($_column['searchable']) {
+                        $_name =
+                            !empty($_column['name'])
+                                ? $_column['name']
+                                : (!empty($_column['data']) ? $_column['data']
+                                : null);
 
-                        if ( !empty( $_name ) )
-                        {
+                        if (!empty($_name)) {
                             //  Add table name?
-                            if ( in_array( $_name, $this->_forcedColumns ) )
-                            {
+                            if (in_array($_name, $this->_forcedColumns)) {
                                 $_name = $table . '.' . $_name;
                             }
 
@@ -105,32 +101,27 @@ class DataController extends FactoryController
                     }
                 }
 
-                $_table->whereRaw( implode( ' OR ', $_where ) );
+                $_table->whereRaw(implode(' OR ', $_where));
             }
 
-            if ( false === $count )
-            {
+            if (false === $count) {
                 return $_table;
             }
 
-            if ( !empty( $this->_limit ) )
-            {
-                if ( !empty( $this->_skip ) )
-                {
-                    $_table->skip( $this->_skip );
+            if (!empty($this->_limit)) {
+                if (!empty($this->_skip)) {
+                    $_table->skip($this->_skip);
                 }
 
-                $_table->take( $this->_limit );
+                $_table->take($this->_limit);
             }
 
             /** @type array|Model $_response */
             $_response = $_table->get();
 
-            return $this->_respond( $_response, $count, 0 );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new BadRequestHttpException( $_ex->getMessage() );
+            return $this->_respond($_response, $count, 0);
+        } catch (\Exception $_ex) {
+            throw new BadRequestHttpException($_ex->getMessage());
         }
     }
 
@@ -140,59 +131,48 @@ class DataController extends FactoryController
      * @param int|string $defaultSort Default sort column name or number
      * @param array      $columns
      */
-    protected function _parseDataRequest( $defaultSort = null, array &$columns = null )
+    protected function _parseDataRequest($defaultSort = null, array &$columns = null)
     {
-        $this->_dtRequest = isset( $_REQUEST, $_REQUEST['length'] );
-        $this->_skip = IfSet::get( $_REQUEST, 'start', 0 );
-        $this->_limit = IfSet::get( $_REQUEST, 'length', static::DEFAULT_PER_PAGE );
+        $this->_dtRequest = isset($_REQUEST, $_REQUEST['length']);
+        $this->_skip = IfSet::get($_REQUEST, 'start', 0);
+        $this->_limit = IfSet::get($_REQUEST, 'length', static::DEFAULT_PER_PAGE);
         $this->_order = $defaultSort;
-        $this->_search = trim( str_replace( '\'', null, IfSet::getDeep( $_REQUEST, 'search', 'value' ) ) );
+        $this->_search = trim(str_replace('\'', null, IfSet::getDeep($_REQUEST, 'search', 'value')));
 
-        if ( null === ( $_sortOrder = IfSet::get( $_REQUEST, 'order' ) ) )
-        {
+        if (null === ($_sortOrder = IfSet::get($_REQUEST, 'order'))) {
             return;
         }
 
         //  Parse the columns
-        if ( empty( $this->_columns ) && empty( $columns ) )
-        {
-            $_dataColumns = IfSet::get( $_REQUEST, 'columns', array() );
+        if (empty($this->_columns) && empty($columns)) {
+            $_dataColumns = IfSet::get($_REQUEST, 'columns', array());
 
             $_columns = array();
 
-            foreach ( $_dataColumns as $_column )
-            {
-                if ( null !== ( $_name = IfSet::get( $_column, 'data', IfSet::get( $_column, 'name' ) ) ) )
-                {
+            foreach ($_dataColumns as $_column) {
+                if (null !== ($_name = IfSet::get($_column, 'data', IfSet::get($_column, 'name')))) {
                     $_columns[] = $_name;
                 }
             }
 
-            if ( !empty( $_columns ) )
-            {
+            if (!empty($_columns)) {
                 $this->_columns = $columns = $_columns;
             }
         }
 
         $_sort = array();
 
-        if ( is_array( $_sortOrder ) )
-        {
-            foreach ( $_sortOrder as $_key => $_value )
-            {
-                if ( isset( $_value['column'] ) )
-                {
-                    $_sort[( $_value['column'] + 1 )] = IfSet::get( $_value, 'dir', 'ASC' );
+        if (is_array($_sortOrder)) {
+            foreach ($_sortOrder as $_key => $_value) {
+                if (isset($_value['column'])) {
+                    $_sort[($_value['column'] + 1)] = IfSet::get($_value, 'dir', 'ASC');
                 }
             }
-        }
-        elseif ( is_string( $_sortOrder ) )
-        {
-            $this->_order = $_sort[$_sortOrder] = IfSet::get( $_REQUEST, 'dir', 'ASC' );
+        } elseif (is_string($_sortOrder)) {
+            $this->_order = $_sort[$_sortOrder] = IfSet::get($_REQUEST, 'dir', 'ASC');
         }
 
-        if ( !empty( $_sort ) )
-        {
+        if (!empty($_sort)) {
             $this->_order = $_sort;
         }
     }
@@ -206,46 +186,43 @@ class DataController extends FactoryController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function _respond( $data, $totalRows = null, $totalFiltered = null )
+    protected function _respond($data, $totalRows = null, $totalFiltered = null)
     {
         //  Don't wrap if there are no totals
-        if ( !$this->_dtRequest || ( null === $totalRows && null === $totalFiltered ) )
-        {
-            return Packet::success( $data );
+        if (!$this->_dtRequest || (null === $totalRows && null === $totalFiltered)) {
+            return Packet::success($data);
         }
 
-        $totalRows = (integer)( $totalRows ?: 0 );
+        $totalRows = (integer)($totalRows ?: 0);
 
         $_response = array(
-            'draw'            => (integer)IfSet::get( $_REQUEST, 'draw' ),
+            'draw'            => (integer)IfSet::get($_REQUEST, 'draw'),
             'recordsTotal'    => $totalRows,
-            'recordsFiltered' => (integer)( $totalFiltered ?: $totalRows ),
-            'data'            => $this->_prepareResponseData( $data ),
+            'recordsFiltered' => (integer)($totalFiltered ?: $totalRows),
+            'data'            => $this->_prepareResponseData($data),
         );
 
-        return \Response::json( $_response );
+        return \Response::json($_response);
     }
 
     /**
-     * Cleans up any necessary things before the data is shipped back to the client. The default implementation adds a "DT_RowId" key to
-     * each returned row.
+     * Cleans up any necessary things before the data is shipped back to the client. The default implementation adds a
+     * "DT_RowId" key to each returned row.
      *
      * @param array $data
      *
      * @return array
      */
-    protected function _prepareResponseData( $data )
+    protected function _prepareResponseData($data)
     {
         $_cleaned = array();
 
         /** @type Model[] $data */
-        foreach ( $data as $_item )
-        {
-            $_values = ( is_object( $_item ) && method_exists( $_item, 'getAttributes' ) )
+        foreach ($data as $_item) {
+            $_values = (is_object($_item) && method_exists($_item, 'getAttributes'))
                 ? $_item->getAttributes() : (array)$_item;
 
-            if ( null !== ( $_id = IfSet::get( $_values, 'id' ) ) )
-            {
+            if (null !== ($_id = IfSet::get($_values, 'id'))) {
                 $_values['DT_RowId'] = $_id;
             }
 
@@ -263,14 +240,17 @@ class DataController extends FactoryController
      *
      * @return null|string
      */
-    protected function _hashValue( $value, $algorithm = ConsoleDefaults::SIGNATURE_METHOD, $salt = null, $rawOutput = false )
-    {
-        if ( null === $value )
-        {
+    protected function _hashValue(
+        $value,
+        $algorithm = ConsoleDefaults::SIGNATURE_METHOD,
+        $salt = null,
+        $rawOutput = false
+    ){
+        if (null === $value) {
             return null;
         }
 
-        return hash( $algorithm, $value, $salt . $rawOutput );
+        return hash($algorithm, $value, $salt . $rawOutput);
     }
 
     /**
@@ -286,7 +266,7 @@ class DataController extends FactoryController
      *
      * @return DataController
      */
-    public function setApiPrefix( $apiPrefix )
+    public function setApiPrefix($apiPrefix)
     {
         $this->_apiPrefix = $apiPrefix;
 

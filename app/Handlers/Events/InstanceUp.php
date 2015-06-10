@@ -17,7 +17,7 @@ class InstanceUp extends BaseEventHandler
      *
      * @return bool|int
      */
-    public function handle( ServiceUser $user, $remember )
+    public function handle(ServiceUser $user, $remember)
     {
     }
 }

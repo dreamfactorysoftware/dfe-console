@@ -18,7 +18,7 @@ class Registrar implements RegistrarContract
      *
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator( array $data )
+    public function validator(array $data)
     {
         return Validator::make(
             $data,
@@ -38,14 +38,14 @@ class Registrar implements RegistrarContract
      *
      * @return User
      */
-    public function create( array $data )
+    public function create(array $data)
     {
         return ServiceUser::create(
             [
                 'first_name_text' => $data['first_name_text'],
                 'last_name_text'  => $data['last_name_text'],
                 'email_addr_text' => $data['email_addr_text'],
-                'password_text'   => bcrypt( $data['password_text'] ),
+                'password_text'   => bcrypt($data['password_text']),
             ]
         );
     }

@@ -53,7 +53,7 @@ class OpsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware( 'auth.client' );
+        $this->middleware('auth.client');
     }
 
     /**
@@ -61,27 +61,23 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postStatus( Request $request )
+    public function postStatus(Request $request)
     {
         $_archived = false;
-        $_id = $request->input( 'id' );
+        $_id = $request->input('id');
 
-        try
-        {
-            $_owner = $this->_validateOwner( $request );
-            $_instance = $this->_findInstance( $request->input( 'id' ) );
+        try {
+            $_owner = $this->_validateOwner($request);
+            $_instance = $this->_findInstance($request->input('id'));
 
-            if ( $_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id )
-            {
-                return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found, invalid owner (' . $_owner->id . ').' );
+            if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
+                return ErrorPacket::create(Response::HTTP_NOT_FOUND,
+                    'Instance not found, invalid owner (' . $_owner->id . ').');
             }
-        }
-        catch ( \Exception $_ex )
-        {
+        } catch (\Exception $_ex) {
             //  Check the deleted instances
-            if ( null === ( $_instance = InstanceArchive::byNameOrId( $_id )->first() ) )
-            {
-                return ErrorPacket::create( Response::HTTP_NOT_FOUND, 'Instance not found.' );
+            if (null === ($_instance = InstanceArchive::byNameOrId($_id)->first())) {
+                return ErrorPacket::create(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
 
             $_archived = true;
@@ -104,16 +100,16 @@ class OpsController extends Controller
                 'storage-path'       => $_storagePath,
                 'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
                 'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
-                'home-links'         => config( 'links' ),
+                'home-links'         => config('links'),
                 //  snake
                 'instance_name_text' => $_instance->instance_name_text,
                 'instance_id_text'   => $_instance->instance_id_text,
                 'state_nbr'          => $_instance->state_nbr,
                 'vendor_state_nbr'   => $_instance->vendor_state_nbr,
                 'vendor_state_text'  => $_instance->vendor_state_text,
-                'provision_ind'      => ( 1 == $_instance->provision_ind ),
-                'trial_instance_ind' => ( 1 == $_instance->trial_instance_ind ),
-                'deprovision_ind'    => ( 1 == $_instance->deprovision_ind ),
+                'provision_ind'      => (1 == $_instance->provision_ind),
+                'trial_instance_ind' => (1 == $_instance->trial_instance_ind),
+                'deprovision_ind'    => (1 == $_instance->deprovision_ind),
                 'start_date'         => (string)$_instance->start_date,
                 'create_date'        => (string)$_instance->create_date,
                 //  camel
@@ -123,9 +119,9 @@ class OpsController extends Controller
                 'instanceState'      => $_instance->state_nbr,
                 'vendorState'        => $_instance->vendor_state_nbr,
                 'vendorStateName'    => $_instance->vendor_state_text,
-                'provisioned'        => ( 1 == $_instance->provision_ind ),
-                'trial'              => ( 1 == $_instance->trial_instance_ind ),
-                'deprovisioned'      => ( 1 == $_instance->deprovision_ind ),
+                'provisioned'        => (1 == $_instance->provision_ind),
+                'trial'              => (1 == $_instance->trial_instance_ind),
+                'deprovisioned'      => (1 == $_instance->deprovision_ind),
                 'startDate'          => (string)$_instance->start_date,
                 'createDate'         => (string)$_instance->create_date,
                 //  morse
@@ -146,29 +142,26 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postInstances( Request $request )
+    public function postInstances(Request $request)
     {
-        $_owner = $this->_validateOwner( $request );
+        $_owner = $this->_validateOwner($request);
 
         $_response = array();
 
-        $_instances = Instance::userId( $_owner->id )->get();
+        $_instances = Instance::userId($_owner->id)->get();
 
-        if ( !empty( $_instances ) )
-        {
+        if (!empty($_instances)) {
             /** @type Instance $_instance */
-            foreach ( $_instances as $_instance )
-            {
-                if ( !empty( $_instance->instance_name_text ) )
-                {
+            foreach ($_instances as $_instance) {
+                if (!empty($_instance->instance_name_text)) {
                     $_response[$_instance->instance_name_text] = $_instance->toArray();
                 }
 
-                unset( $_instance );
+                unset($_instance);
             }
         }
 
-        return SuccessPacket::make( $_response );
+        return SuccessPacket::make($_response);
     }
 
     /**
@@ -176,21 +169,17 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postProvisioners( Request $request )
+    public function postProvisioners(Request $request)
     {
-        try
-        {
+        try {
             $_response = [];
             $_provisioners = Provision::getProvisioners();
 
-            foreach ( $_provisioners as $_tag => $_provisioner )
-            {
+            foreach ($_provisioners as $_tag => $_provisioner) {
                 $_offerings = false;
 
-                if ( $_provisioner instanceof HasOfferings )
-                {
-                    foreach ( $_provisioner->getOfferings() as $_name => $_config )
-                    {
+                if ($_provisioner instanceof HasOfferings) {
+                    foreach ($_provisioner->getOfferings() as $_name => $_config) {
                         $_offerings[$_name] = $_config;
                     }
                 }
@@ -201,11 +190,9 @@ class OpsController extends Controller
                 ];
             }
 
-            return SuccessPacket::make( $_response );
-        }
-        catch ( \Exception $_ex )
-        {
-            return ErrorPacket::create( $_ex );
+            return SuccessPacket::make($_response);
+        } catch (\Exception $_ex) {
+            return ErrorPacket::create($_ex);
         }
     }
 
@@ -216,44 +203,36 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postProvision( Request $request )
+    public function postProvision(Request $request)
     {
-        try
-        {
+        try {
             $_payload = $request->input();
-            $_job = new ProvisionJob( $request->input( 'instance-id' ), $_payload );
+            $_job = new ProvisionJob($request->input('instance-id'), $_payload);
 
-            \Queue::push( $_job );
+            \Queue::push($_job);
 
-            try
-            {
-                $_instance = $this->_findInstance( $_job->getInstanceId() );
+            try {
+                $_instance = $this->_findInstance($_job->getInstanceId());
                 $_data = $_instance->instance_data_text;
-                $_result = IfSet::get( $_data, '.provisioning' );
-                unset( $_data['.provisioning'] );
+                $_result = IfSet::get($_data, '.provisioning');
+                unset($_data['.provisioning']);
 
-                if ( !$_instance->update( ['instance_data_text' => $_data] ) )
-                {
-                    throw new \RuntimeException( 'Unable to update instance row.' );
+                if (!$_instance->update(['instance_data_text' => $_data])) {
+                    throw new \RuntimeException('Unable to update instance row.');
                 }
 
-                if ( !isset( $_result['instance'] ) )
-                {
-                    throw new \RuntimeException( 'The provisioning information is incomplete. Bailing.' );
+                if (!isset($_result['instance'])) {
+                    throw new \RuntimeException('The provisioning information is incomplete. Bailing.');
                 }
 
-                return SuccessPacket::make( $_result['instance'] );
+                return SuccessPacket::make($_result['instance']);
+            } catch (ModelNotFoundException $_ex) {
+                throw new \Exception('Instance not found after provisioning.');
             }
-            catch ( ModelNotFoundException $_ex )
-            {
-                throw new \Exception( 'Instance not found after provisioning.' );
-            }
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            \Log::debug('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
         }
     }
 
@@ -264,21 +243,18 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postDeprovision( Request $request )
+    public function postDeprovision(Request $request)
     {
-        try
-        {
+        try {
             $_payload = $request->input();
-            $_job = new DeprovisionJob( $request->input( 'instance-id' ), $_payload );
-            \Queue::push( $_job );
+            $_job = new DeprovisionJob($request->input('instance-id'), $_payload);
+            \Queue::push($_job);
 
-            return SuccessPacket::make( $_job->getResult() );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+            return SuccessPacket::make($_job->getResult());
+        } catch (\Exception $_ex) {
+            \Log::debug('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
         }
     }
 
@@ -289,21 +265,18 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postImport( Request $request )
+    public function postImport(Request $request)
     {
-        try
-        {
+        try {
             $_payload = $request->input();
-            $_job = new ImportJob( $request->input( 'instance-id' ), $_payload );
-            \Queue::push( $_job );
+            $_job = new ImportJob($request->input('instance-id'), $_payload);
+            \Queue::push($_job);
 
-            return SuccessPacket::make( $_job->getResult() );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+            return SuccessPacket::make($_job->getResult());
+        } catch (\Exception $_ex) {
+            \Log::debug('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
         }
     }
 
@@ -314,21 +287,18 @@ class OpsController extends Controller
      *
      * @return array
      */
-    public function postExport( Request $request )
+    public function postExport(Request $request)
     {
-        try
-        {
+        try {
             $_payload = $request->input();
-            $_job = new ExportJob( $request->input( 'instance-id' ), $_payload );
-            \Queue::push( $_job );
+            $_job = new ExportJob($request->input('instance-id'), $_payload);
+            \Queue::push($_job);
 
-            return SuccessPacket::make( $_job->getResult() );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::debug( 'Queuing error: ' . $_ex->getMessage() );
+            return SuccessPacket::make($_job->getResult());
+        } catch (\Exception $_ex) {
+            \Log::debug('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make( null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex );
+            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
         }
     }
 
@@ -337,14 +307,13 @@ class OpsController extends Controller
      *
      * @return User
      */
-    protected function _validateOwner( Request $request )
+    protected function _validateOwner(Request $request)
     {
         /** auth.client middleware registers a user resolver with the request for us */
         $_owner = $request->user();
 
-        if ( empty( $_owner ) )
-        {
-            throw new \RuntimeException( 'Invalid credentials' );
+        if (empty($_owner)) {
+            throw new \RuntimeException('Invalid credentials');
         }
 
         return $_owner;

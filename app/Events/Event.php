@@ -1,7 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Events;
 
-abstract class Event {
+abstract class Event
+{
 
-	//
+    //
 
 }
