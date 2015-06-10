@@ -2,7 +2,7 @@
 SQLyog Community v12.09 (32 bit)
 MySQL - 5.5.43-0ubuntu0.14.04.1 : Database - dfe_local
 *********************************************************************
-*/
+*/
 
 /*!40101 SET NAMES utf8 */;
 
