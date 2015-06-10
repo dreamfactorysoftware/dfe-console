@@ -26,18 +26,15 @@ class InstanceController extends FactoryController
         $_response = [];
 
         /** @type Cluster $_cluster */
-        foreach ( Cluster::all() as $_cluster )
-        {
+        foreach (Cluster::all() as $_cluster) {
             $_response[$_cluster->cluster_id_text] = $_cluster->toArray();
             $_response[$_cluster->cluster_id_text]['servers'] = [];
 
             $_servers = $_cluster->servers();
 
-            if ( $_servers->count() )
-            {
+            if ($_servers->count()) {
                 /** @type Server $_server */
-                foreach ( $_servers as $_server )
-                {
+                foreach ($_servers as $_server) {
                     $_response[$_cluster->cluster_id_text]['servers'][$_server->server_id_text] = $_server->toArray();
                 }
             }
@@ -53,13 +50,12 @@ class InstanceController extends FactoryController
      * @throws \DreamFactory\Enterprise\Services\Exceptions\ResourceNotFoundException
      *
      */
-    public function getMetadata( $instanceId )
+    public function getMetadata($instanceId)
     {
-        $_instance = $this->_validateInstance( $instanceId );
+        $_instance = $this->_validateInstance($instanceId);
 
-        if ( !$_instance->user )
-        {
-            throw new \RuntimeException( 'The user for instance "' . $instanceId . '" was not found.' );
+        if (!$_instance->user) {
+            throw new \RuntimeException('The user for instance "' . $instanceId . '" was not found.');
         }
 
         return $_instance->getMetadata();

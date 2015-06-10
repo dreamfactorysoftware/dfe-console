@@ -81,29 +81,22 @@ class InstanceMetadata implements Jsonable, Arrayable
      * @param string $instanceId
      * @param array  $values
      */
-    public function __construct( $instanceId, array $values = [] )
+    public function __construct($instanceId, array $values = [])
     {
-        $_instance = $this->_findInstance( $instanceId );
+        $_instance = $this->_findInstance($instanceId);
         $this->_instanceId = $_instance->instance_id_text;
 
-        foreach ( $values as $_key => $_value )
-        {
-            if ( false !== strpos( $_key, '-' ) )
-            {
-                $_key = Inflector::deneutralize( $_key, true, '-' );
+        foreach ($values as $_key => $_value) {
+            if (false !== strpos($_key, '-')) {
+                $_key = Inflector::deneutralize($_key, true, '-');
             }
 
-            if ( property_exists( $this, $_key ) )
-            {
+            if (property_exists($this, $_key)) {
                 $this->{$_key} = $_value;
-            }
-            else if ( property_exists( $this, '_' . $_key ) )
-            {
+            } else if (property_exists($this, '_' . $_key)) {
                 $this->{'_' . $_key} = $_value;
-            }
-            else if ( method_exists( $this, 'set' . $_key ) )
-            {
-                $this->{'set' . $_key}( $_value );
+            } else if (method_exists($this, 'set' . $_key)) {
+                $this->{'set' . $_key}($_value);
             }
         }
     }
@@ -113,10 +106,9 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return static
      */
-    public static function createFromInstance( Instance $instance )
+    public static function createFromInstance(Instance $instance)
     {
-        return new static( $instance->instance_id_text, $instance->getMetadata( false ) );
-
+        return new static($instance->instance_id_text, $instance->getMetadata(false));
     }
 
     /** @inheritdoc */
@@ -140,9 +132,9 @@ class InstanceMetadata implements Jsonable, Arrayable
     }
 
     /** @inheritdoc */
-    public function toJson( $options = 0 )
+    public function toJson($options = 0)
     {
-        return JsonFile::encode( $this->toArray(), $options );
+        return JsonFile::encode($this->toArray(), $options);
     }
 
     /**
@@ -150,19 +142,21 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return mixed
      */
-    public function load( Filesystem $filesystem )
+    public function load(Filesystem $filesystem)
     {
         $_file =
-            config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME ) . DIRECTORY_SEPARATOR . $this->_instanceId . '.json';
+            config('dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME) .
+            DIRECTORY_SEPARATOR .
+            $this->_instanceId .
+            '.json';
 
-        if ( $filesystem->has( $_file ) )
-        {
-            return JsonFile::decode( $_json = $filesystem->get( $_file ) );
+        if ($filesystem->has($_file)) {
+            return JsonFile::decode($_json = $filesystem->get($_file));
         }
 
-        \Log::info( 'Building missing instance metadata: ' . $_file );
+        \Log::info('Building missing instance metadata: ' . $_file);
 
-        return $this->save( $filesystem );
+        return $this->save($filesystem);
     }
 
     /**
@@ -171,11 +165,11 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return
      */
-    public function save( Filesystem $filesystem, array $values = null )
+    public function save(Filesystem $filesystem, array $values = null)
     {
-        $_instance = $this->_findInstance( $this->_instanceId );
+        $_instance = $this->_findInstance($this->_instanceId);
 
-        $_map = IfSet::get( $_instance->instance_data_text, 'storage-map' );
+        $_map = IfSet::get($_instance->instance_data_text, 'storage-map');
 
         $_values = array_merge(
             $_instance->getMetadata(),
@@ -185,14 +179,15 @@ class InstanceMetadata implements Jsonable, Arrayable
             $values ?: []
         );
 
-        $_md = new static( $_instance->instance_id_text, $_values );
+        $_md = new static($_instance->instance_id_text, $_values);
         $_file =
-            rtrim( config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME ), ' ' . DIRECTORY_SEPARATOR ) .
+            rtrim(config('dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME),
+                ' ' . DIRECTORY_SEPARATOR) .
             DIRECTORY_SEPARATOR .
             $_instance->instance_id_text .
             '.json';
 
-        $filesystem->put( $_file, $_md->toJson() );
+        $filesystem->put($_file, $_md->toJson());
 
         return $_md->toArray();
     }
@@ -210,7 +205,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setInstanceId( $instanceId )
+    public function setInstanceId($instanceId)
     {
         $this->_instanceId = $instanceId;
 
@@ -230,7 +225,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setWebServerId( $webServerId )
+    public function setWebServerId($webServerId)
     {
         $this->_webServerId = $webServerId;
 
@@ -250,7 +245,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setPaths( $paths )
+    public function setPaths($paths)
     {
         $this->_paths = $paths;
 
@@ -270,7 +265,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setClusterId( $clusterId )
+    public function setClusterId($clusterId)
     {
         $this->_clusterId = $clusterId;
 
@@ -290,7 +285,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setDbServerId( $dbServerId )
+    public function setDbServerId($dbServerId)
     {
         $this->_dbServerId = $dbServerId;
 
@@ -310,7 +305,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setAppServerId( $appServerId )
+    public function setAppServerId($appServerId)
     {
         $this->_appServerId = $appServerId;
 
@@ -330,7 +325,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setOwnerId( $ownerId )
+    public function setOwnerId($ownerId)
     {
         $this->_ownerId = $ownerId;
 
@@ -350,7 +345,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setOwnerEmailAddress( $ownerEmailAddress )
+    public function setOwnerEmailAddress($ownerEmailAddress)
     {
         $this->_ownerEmailAddress = $ownerEmailAddress;
 
@@ -370,7 +365,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setDb( $db )
+    public function setDb($db)
     {
         $this->_db = $db;
 
@@ -390,7 +385,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setStorageKey( $storageKey )
+    public function setStorageKey($storageKey)
     {
         $this->_storageKey = $storageKey;
 
@@ -410,7 +405,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setOwnerStorageKey( $ownerStorageKey )
+    public function setOwnerStorageKey($ownerStorageKey)
     {
         $this->_ownerStorageKey = $ownerStorageKey;
 
@@ -430,7 +425,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setStorageMap( $storageMap )
+    public function setStorageMap($storageMap)
     {
         $this->_storageMap = $storageMap;
 
@@ -450,7 +445,7 @@ class InstanceMetadata implements Jsonable, Arrayable
      *
      * @return InstanceMetadata
      */
-    public function setEnv( $env )
+    public function setEnv($env)
     {
         $this->_env = $env;
 

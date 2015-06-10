@@ -41,7 +41,7 @@ abstract class BaseInstanceJob extends JobCommand
      * @param string $instanceId The instance to provision
      * @param array  $options    Provisioning options
      */
-    public function __construct( $instanceId, $options = [] )
+    public function __construct($instanceId, $options = [])
     {
         $this->_instanceId = $instanceId;
         $this->_options = $options;

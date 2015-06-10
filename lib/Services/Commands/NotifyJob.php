@@ -36,7 +36,7 @@ class NotifyJob extends JobCommand
      * @param string $view The name of the view for the email body
      * @param array  $data The data for the view
      */
-    public function __construct( $view, $data = [] )
+    public function __construct($view, $data = [])
     {
         $this->_view = $view;
         $this->_data = $data;

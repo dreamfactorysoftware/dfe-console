@@ -24,12 +24,11 @@ class TestFileGenerator
      *
      * @return int The number of files generated
      */
-    public function generate( $prefix = null, $extension = 'php', $blockSize = 512 )
+    public function generate($prefix = null, $extension = 'php', $blockSize = 512)
     {
-        for ( $_i = 0, $_count = rand( static::MAX_ITERATIONS / 4, static::MAX_ITERATIONS ); $_i < $_count; $_i++ )
-        {
-            $_file = $this->_getName( $_i );
-            $_size = rand( static::MAX_SIZE / 4, static::MAX_SIZE );
+        for ($_i = 0, $_count = rand(static::MAX_ITERATIONS / 4, static::MAX_ITERATIONS); $_i < $_count; $_i++) {
+            $_file = $this->_getName($_i);
+            $_size = rand(static::MAX_SIZE / 4, static::MAX_SIZE);
 
             $_result = `dd if=/dev/zero of={$_file} count={$_size} bs={$blockSize} status=none`;
         }
@@ -43,12 +42,12 @@ class TestFileGenerator
      *
      * @return string
      */
-    protected function _getName( $prefix = null, $extension = 'php' )
+    protected function _getName($prefix = null, $extension = 'php')
     {
-        $extension = $extension ? '.' . trim( $extension, ' .' ) : null;
-        $prefix = $prefix ? trim( $prefix, ' .' ) . '.' : null;
+        $extension = $extension ? '.' . trim($extension, ' .') : null;
+        $prefix = $prefix ? trim($prefix, ' .') . '.' : null;
 
-        return $prefix . sha1( microtime( true ) . gethostname() . getmypid() ) . $extension;
+        return $prefix . sha1(microtime(true) . gethostname() . getmypid()) . $extension;
     }
 
 }

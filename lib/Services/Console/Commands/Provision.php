@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Queue;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -34,14 +33,14 @@ class Provision extends Command
     {
         return \Queue::push(
             new ProvisionJob(
-                $this->argument( 'instance-id' ),
+                $this->argument('instance-id'),
                 [
-                    'guest-location' => $this->argument( 'guest-location' ),
-                    'owner-id'       => $this->argument( 'owner-id' ),
-                    'cluster-id'     => $this->option( 'cluster-id' ),
-                    'restart'        => $this->option( 'restart' ),
-                    'trial'          => $this->option( 'trial' ),
-                    'tag'            => $this->option( 'tag' ),
+                    'guest-location' => $this->argument('guest-location'),
+                    'owner-id'       => $this->argument('owner-id'),
+                    'cluster-id'     => $this->option('cluster-id'),
+                    'restart'        => $this->option('restart'),
+                    'trial'          => $this->option('trial'),
+                    'tag'            => $this->option('tag'),
                 ]
             )
         );
@@ -61,7 +60,7 @@ class Provision extends Command
                 'guest-location',
                 InputArgument::OPTIONAL,
                 'The location of the new instance. Values: 1 = DFE, 2 = AWS, or 3 = Azure.',
-                config( 'dfe.provisioning.default-guest-location' )
+                config('dfe.provisioning.default-guest-location')
             ],
         ];
     }
@@ -79,11 +78,21 @@ class Provision extends Command
                 'c',
                 InputOption::VALUE_OPTIONAL,
                 'The cluster-id where this instance should be placed.',
-                config( 'dfe.provisioning.default-cluster-id' )
+                config('dfe.provisioning.default-cluster-id')
             ],
             ['restart', 'r', InputOption::VALUE_NONE, 'If specified, an existing stopped instance will be restarted.'],
-            ['trial', 't', InputOption::VALUE_NONE, 'If specified, sets the trial flag to TRUE on the provisioned instance.'],
-            ['tag', 'a', InputOption::VALUE_OPTIONAL, 'The key to use for retrieving this instance from the manager. Defaults to the instance name.']
+            [
+                'trial',
+                't',
+                InputOption::VALUE_NONE,
+                'If specified, sets the trial flag to TRUE on the provisioned instance.'
+            ],
+            [
+                'tag',
+                'a',
+                InputOption::VALUE_OPTIONAL,
+                'The key to use for retrieving this instance from the manager. Defaults to the instance name.'
+            ]
         ];
     }
 

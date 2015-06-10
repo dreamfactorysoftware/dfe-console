@@ -28,51 +28,43 @@ class DeprovisionHandler
      *
      * @return bool|mixed
      */
-    public function handle( DeprovisionJob $command )
+    public function handle(DeprovisionJob $command)
     {
         $_options = $command->getOptions();
-        \Log::debug( 'dfe: DeprovisionJob - begin' );
+        \Log::debug('dfe: DeprovisionJob - begin');
 
-        try
-        {
+        try {
             //  Find the instance
-            $_instance = $this->_findInstance( $command->getInstanceId() );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'dfe: DeprovisionJob - failure, instance not found.' );
+            $_instance = $this->_findInstance($command->getInstanceId());
+        } catch (\Exception $_ex) {
+            \Log::error('dfe: DeprovisionJob - failure, instance not found.');
 
             return false;
         }
 
-        try
-        {
-            $_provisioner = Provision::getProvisioner( $_instance->guest_location_nbr );
+        try {
+            $_provisioner = Provision::getProvisioner($_instance->guest_location_nbr);
 
-            if ( empty( $_provisioner ) )
-            {
-                throw new \RuntimeException( 'The provisioner of the request is not valid.' );
+            if (empty($_provisioner)) {
+                throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_result = $_provisioner->deprovision( new ProvisioningRequest( $_instance, null, true ), $_options );
+            $_result = $_provisioner->deprovision(new ProvisioningRequest($_instance, null, true), $_options);
 
-            if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
-            {
-                \Log::debug( '  * completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
+            if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
+                \Log::debug('  * completed in ' . number_format($_result['elapsed'], 4) . 's');
             }
 
-            \Log::debug( 'dfe: DeprovisionJob - complete' );
+            \Log::debug('dfe: DeprovisionJob - complete');
 
-            $command->setResult( $_result );
+            $command->setResult($_result);
 
             return $_result;
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'dfe: DeprovisionJob - failure, exception during deprovisioning: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            \Log::error('dfe: DeprovisionJob - failure, exception during deprovisioning: ' . $_ex->getMessage());
         }
 
-        \Log::debug( 'dfe: DeprovisionJob - fail' );
+        \Log::debug('dfe: DeprovisionJob - fail');
 
         return false;
     }

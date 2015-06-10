@@ -28,23 +28,21 @@ class ImportHandler
      *
      * @return mixed
      */
-    public function handle( ImportJob $command )
+    public function handle(ImportJob $command)
     {
         $_options = $command->getOptions();
-        \Log::debug( 'dfe: import - begin' );
+        \Log::debug('dfe: import - begin');
 
-        try
-        {
-            $_result = Snapshot::restore( $command->getInstanceId(), $_options['snapshot'], IfSet::get( $_options, 'disk' ) );
-            \Log::debug( 'dfe: import - complete' );
+        try {
+            $_result =
+                Snapshot::restore($command->getInstanceId(), $_options['snapshot'], IfSet::get($_options, 'disk'));
+            \Log::debug('dfe: import - complete');
 
-            $command->setResult( $_result );
+            $command->setResult($_result);
 
             return $_result;
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'dfe: instance import - failure > ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            \Log::error('dfe: instance import - failure > ' . $_ex->getMessage());
 
             return false;
         }

@@ -14,14 +14,14 @@ interface EnterpriseJob
      *
      * @return string Return the id/name of the cluster involved in this job
      */
-    public function getCluster( $clusterId = null );
+    public function getCluster($clusterId = null);
 
     /**
      * @param string|int $serverId
      *
      * @return string Return the id/name of the server involved in this job
      */
-    public function getServer( $serverId = null );
+    public function getServer($serverId = null);
 
     /**
      * @return string Return the id of the type of server

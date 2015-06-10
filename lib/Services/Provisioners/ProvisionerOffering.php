@@ -48,17 +48,16 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
 
     /**
      * @param string $id
-     * @param array  $values The other values of the offering. These can be one of 'name', 'description', 'items', 'suggested', or 'config'
+     * @param array  $values The other values of the offering. These can be one of 'name', 'description', 'items',
+     *                       'suggested', or 'config'
      */
-    public function __construct( $id, $values = [] )
+    public function __construct($id, $values = [])
     {
         $this->_id = $id;
 
-        foreach ( $values as $_key => $_value )
-        {
-            if ( $_key != 'id' && method_exists( $this, 'set' . $_key ) )
-            {
-                $this->{'set' . $_key}( $_value );
+        foreach ($values as $_key => $_value) {
+            if ($_key != 'id' && method_exists($this, 'set' . $_key)) {
+                $this->{'set' . $_key}($_value);
             }
         }
     }
@@ -76,7 +75,7 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
      *
      * @return ProvisionerOffering
      */
-    public function setConfig( $config )
+    public function setConfig($config)
     {
         $this->_config = $config;
 
@@ -96,7 +95,7 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
      *
      * @return ProvisionerOffering
      */
-    public function setId( $id )
+    public function setId($id)
     {
         $this->_id = $id;
 
@@ -116,7 +115,7 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
      *
      * @return ProvisionerOffering
      */
-    public function setName( $name )
+    public function setName($name)
     {
         $this->_name = $name;
 
@@ -136,7 +135,7 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
      *
      * @return ProvisionerOffering
      */
-    public function setDescription( $description )
+    public function setDescription($description)
     {
         $this->_description = $description;
 
@@ -156,10 +155,9 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
      *
      * @return ProvisionerOffering
      */
-    public function setItems( $items )
+    public function setItems($items)
     {
-        if ( !is_array( $items ) )
-        {
+        if (!is_array($items)) {
             $items = (array)$items;
         }
 
@@ -181,7 +179,7 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
      *
      * @return ProvisionerOffering
      */
-    public function setSuggested( $suggested )
+    public function setSuggested($suggested)
     {
         $this->_suggested = $suggested;
 
@@ -210,8 +208,8 @@ class ProvisionerOffering implements Offering, Jsonable, Arrayable
     }
 
     /** @inheritdoc */
-    public function toJson( $options = 0 )
+    public function toJson($options = 0)
     {
-        return json_encode( $this->toArray(), $options );
+        return json_encode($this->toArray(), $options);
     }
 }

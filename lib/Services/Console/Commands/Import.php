@@ -32,9 +32,9 @@ class Import extends Command
     {
         return \Queue::push(
             new ImportJob(
-                $this->argument( 'instance-id' ),
+                $this->argument('instance-id'),
                 [
-                    'snapshot' => $this->argument( 'snapshot' ),
+                    'snapshot' => $this->argument('snapshot'),
                 ]
             )
         );

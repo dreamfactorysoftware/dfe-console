@@ -37,9 +37,8 @@ class InstanceStorageServiceProvider extends BaseServiceProvider
         //  Register the manager
         $this->singleton(
             static::IOC_NAME,
-            function ( $app )
-            {
-                return new InstanceStorageService( $app );
+            function ($app){
+                return new InstanceStorageService($app);
             }
         );
     }

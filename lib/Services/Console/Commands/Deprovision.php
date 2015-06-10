@@ -39,7 +39,7 @@ class Deprovision extends Command
     public function fire()
     {
         return
-            Queue::push( new DeprovisionJob( $this->argument( 'instance-id' ) ) );
+            Queue::push(new DeprovisionJob($this->argument('instance-id')));
     }
 
     /**

@@ -17,9 +17,9 @@ class ResourceNotFoundException extends ProvisioningException
      * @param int       $code
      * @param Exception $previous
      */
-    public function __construct( $message = 'Resource not found', $code = 404, Exception $previous = null )
+    public function __construct($message = 'Resource not found', $code = 404, Exception $previous = null)
     {
-        parent::__construct( $message, $code, $previous );
+        parent::__construct($message, $code, $previous);
     }
 
 }

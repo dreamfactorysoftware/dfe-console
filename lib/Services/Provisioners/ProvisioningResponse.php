@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
-use DreamFactory\Enterprise\Common\Packets\BasePacket;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
@@ -39,11 +38,11 @@ class ProvisioningResponse
 
     /**
      * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param Filesystem                                                   $storage
-     * @param bool                                                         $deprovision
-     * @param bool                                                         $force
+     * @param Filesystem                                        $storage
+     * @param bool                                              $deprovision
+     * @param bool                                              $force
      */
-    public function __construct( Instance $instance, Filesystem $storage = null, $deprovision = false, $force = false )
+    public function __construct(Instance $instance, Filesystem $storage = null, $deprovision = false, $force = false)
     {
         $this->_instance = $instance;
         $this->_storage = $storage;
@@ -64,11 +63,10 @@ class ProvisioningResponse
      *
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getStorage( $createIfNull = true )
+    public function getStorage($createIfNull = true)
     {
         //  Use requested file system if one...
-        if ( null === $this->_storage && $createIfNull )
-        {
+        if (null === $this->_storage && $createIfNull) {
             $this->setStorage(
                 $_storage = $this->getInstance()->getRootStorageMount()
             );
@@ -90,7 +88,7 @@ class ProvisioningResponse
      *
      * @return ProvisioningRequest
      */
-    public function setStorage( Filesystem $storage )
+    public function setStorage(Filesystem $storage)
     {
         $this->_storage = $storage;
 
@@ -110,7 +108,7 @@ class ProvisioningResponse
      *
      * @return ProvisioningRequest
      */
-    public function setForced( $forced )
+    public function setForced($forced)
     {
         $this->_forced = $forced;
 
@@ -130,7 +128,7 @@ class ProvisioningResponse
      *
      * @return ProvisioningRequest
      */
-    public function setStorageProvisioner( $storageProvisioner )
+    public function setStorageProvisioner($storageProvisioner)
     {
         $this->_storageProvisioner = $storageProvisioner;
 

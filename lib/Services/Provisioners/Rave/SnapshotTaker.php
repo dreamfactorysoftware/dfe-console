@@ -16,14 +16,15 @@ class SnapshotTaker implements TakesSnapshots
 
     /**
      * @param int|string $instanceId  The instance id
-     * @param Filesystem $destination The optional destination to store the created snapshot. The default is to store it in the
+     * @param Filesystem $destination The optional destination to store the created snapshot. The default is to store
+     *                                it in the
      * @param int        $expires
      *
      * @return SnapshotCustodian
      */
-    public function createSnapshot( $instanceId, Filesystem $destination = null, $expires = null )
+    public function createSnapshot($instanceId, Filesystem $destination = null, $expires = null)
     {
-        return Snapshot::create( $instanceId, $destination, $expires );
+        return Snapshot::create($instanceId, $destination, $expires);
     }
 
     /**
@@ -31,22 +32,23 @@ class SnapshotTaker implements TakesSnapshots
      *
      * @return string
      */
-    public function getSnapshot( $snapshotId )
+    public function getSnapshot($snapshotId)
     {
-        return Snapshot::get( $snapshotId );
+        return Snapshot::get($snapshotId);
     }
 
     /**
      * Delete a snapshot
      *
      * @param string $snapshotId The id of the snapshot
-     * @param bool   $softDelete If true, file will be moved to "trash" and not deleted. This overrides the system setting
+     * @param bool   $softDelete If true, file will be moved to "trash" and not deleted. This overrides the system
+     *                           setting
      *
      * @return bool
      */
-    public function deleteSnapshot( $snapshotId, $softDelete = null )
+    public function deleteSnapshot($snapshotId, $softDelete = null)
     {
-        return Snapshot::delete( $snapshotId, $softDelete );
+        return Snapshot::delete($snapshotId, $softDelete);
     }
 
     /**
@@ -56,8 +58,8 @@ class SnapshotTaker implements TakesSnapshots
      *
      * @return bool
      */
-    public function isSnapshotExpired( $snapshotId )
+    public function isSnapshotExpired($snapshotId)
     {
-        return Snapshot::isExpired( $snapshotId );
+        return Snapshot::isExpired($snapshotId);
     }
 }

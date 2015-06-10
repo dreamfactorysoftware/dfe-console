@@ -41,9 +41,8 @@ class ProvisioningServiceProvider extends BaseServiceProvider
         //  Register the manager
         $this->singleton(
             static::IOC_NAME,
-            function ( $app )
-            {
-                return new ProvisioningManager( $app );
+            function ($app){
+                return new ProvisioningManager($app);
             }
         );
     }

@@ -38,11 +38,11 @@ class InstanceManager extends BaseManager implements Factory
      * @param \Illuminate\Contracts\Foundation\Application $app
      * @param Instance[]                                   $instances
      */
-    public function __construct( $app, array $instances = [] )
+    public function __construct($app, array $instances = [])
     {
-        parent::__construct( $app );
+        parent::__construct($app);
 
-        !empty( $instances ) && $this->registerInstances( $instances );
+        !empty($instances) && $this->registerInstances($instances);
     }
 
     /**
@@ -52,11 +52,10 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return $this
      */
-    public function registerInstances( array $instances )
+    public function registerInstances(array $instances)
     {
-        foreach ( $instances as $_tag => $_instance )
-        {
-            $this->registerInstance( $_tag, $_instance );
+        foreach ($instances as $_tag => $_instance) {
+            $this->registerInstance($_tag, $_instance);
         }
 
         return $this;
@@ -70,9 +69,9 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return $this
      */
-    public function registerInstance( $tag, Instance $instance )
+    public function registerInstance($tag, Instance $instance)
     {
-        return $this->manage( $tag, $instance );
+        return $this->manage($tag, $instance);
     }
 
     /**
@@ -80,10 +79,9 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return $this
      */
-    public function unregisterInstance( $tag )
+    public function unregisterInstance($tag)
     {
-        return $this->unmanage( $tag );
-
+        return $this->unmanage($tag);
     }
 
     /**
@@ -95,9 +93,9 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return Instance
      */
-    public function getInstance( $tag )
+    public function getInstance($tag)
     {
-        return $this->resolve( $tag );
+        return $this->resolve($tag);
     }
 
     /**
@@ -114,39 +112,32 @@ class InstanceManager extends BaseManager implements Factory
      * @throws DuplicateInstanceException
      * @throws ProvisioningException
      */
-    public function make( $instanceName, $options = [] )
+    public function make($instanceName, $options = [])
     {
-        if ( false === ( $_sanitized = Instance::isNameAvailable( $instanceName ) ) )
-        {
-            throw new DuplicateInstanceException( 'The instance name "' . $instanceName . '" is not available.' );
+        if (false === ($_sanitized = Instance::isNameAvailable($instanceName))) {
+            throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
         }
 
-        try
-        {
+        try {
             //  Basic checks...
-            if ( null === ( $_ownerId = IfSet::get( $options, 'owner-id' ) ) )
-            {
-                throw new \InvalidArgumentException( 'No "owner-id" given. Cannot create instance.' );
+            if (null === ($_ownerId = IfSet::get($options, 'owner-id'))) {
+                throw new \InvalidArgumentException('No "owner-id" given. Cannot create instance.');
             }
 
-            if ( null == ( $_ownerType = IfSet::get( $options, 'owner-type' ) ) )
-            {
+            if (null == ($_ownerType = IfSet::get($options, 'owner-type'))) {
                 $_ownerType = OwnerTypes::USER;
             }
 
-            try
-            {
-                $_owner = OwnerTypes::getOwner( $_ownerId, $_ownerType );
-            }
-            catch ( ModelNotFoundException $_ex )
-            {
-                throw new \InvalidArgumentException( 'The "owner-id" and/or "owner-type" specified is/are invalid.' );
+            try {
+                $_owner = OwnerTypes::getOwner($_ownerId, $_ownerType);
+            } catch (ModelNotFoundException $_ex) {
+                throw new \InvalidArgumentException('The "owner-id" and/or "owner-type" specified is/are invalid.');
             }
 
             //  Validate the cluster and pull component ids
-            $_guestLocation = IfSet::get( $options, 'guest-location', config( 'dfe.provisioning.default-guest-location' ) );
-            $_clusterId = IfSet::get( $options, 'cluster-id', config( 'dfe.provisioning.default-cluster-id' ) );
-            $_clusterConfig = $this->_getServersForCluster( $_clusterId );
+            $_guestLocation = IfSet::get($options, 'guest-location', config('dfe.provisioning.default-guest-location'));
+            $_clusterId = IfSet::get($options, 'cluster-id', config('dfe.provisioning.default-cluster-id'));
+            $_clusterConfig = $this->_getServersForCluster($_clusterId);
             $_ownerId = $_owner->id;
 
             $_attributes = [
@@ -159,7 +150,7 @@ class InstanceManager extends BaseManager implements Factory
                 'app_server_id'      => $_clusterConfig['app-server-id'],
                 'web_server_id'      => $_clusterConfig['web-server-id'],
                 'state_nbr'          => ProvisionStates::CREATED,
-                'trial_instance_ind' => IfSet::get( $options, 'trial', false ) ? 1 : 0,
+                'trial_instance_ind' => IfSet::get($options, 'trial', false) ? 1 : 0,
             ];
 
             $_guestAttributes = [
@@ -168,41 +159,37 @@ class InstanceManager extends BaseManager implements Factory
                 'vendor_image_id'       => IfSet::get(
                     $options,
                     'vendor-image-id',
-                    config( 'dfe.provisioning.default-vendor-image-id' )
+                    config('dfe.provisioning.default-vendor-image-id')
                 ),
                 'vendor_credentials_id' => IfSet::get(
                     $options,
                     'vendor-credentials-id',
-                    config( 'dfe.provisioning.default-vendor-credentials-id' )
+                    config('dfe.provisioning.default-vendor-credentials-id')
                 ),
             ];
 
             //  Write it out
             return \DB::transaction(
-                function () use ( $_ownerId, $_attributes, $_guestAttributes )
-                {
-                    \Log::debug( '    * creating instance for user id#' . $_ownerId );
+                function () use ($_ownerId, $_attributes, $_guestAttributes){
+                    \Log::debug('    * creating instance for user id#' . $_ownerId);
 
-                    $_instance = Instance::create( $_attributes );
+                    $_instance = Instance::create($_attributes);
 
-                    \Log::debug( '      * created, id#' . $_instance->id );
+                    \Log::debug('      * created, id#' . $_instance->id);
 
-                    $_guest = InstanceGuest::create( array_merge( $_guestAttributes, ['instance_id' => $_instance->id] ) );
+                    $_guest = InstanceGuest::create(array_merge($_guestAttributes, ['instance_id' => $_instance->id]));
 
-                    \Log::debug( '      * guest created, id#' . $_guest->id );
+                    \Log::debug('      * guest created, id#' . $_guest->id);
 
-                    if ( !$_instance || !$_guest )
-                    {
-                        throw new \RuntimeException( '    ! instance create fail' );
+                    if (!$_instance || !$_guest) {
+                        throw new \RuntimeException('    ! instance create fail');
                     }
 
                     return $_instance;
                 }
             );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new ProvisioningException( 'Error creating new instance: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            throw new ProvisioningException('Error creating new instance: ' . $_ex->getMessage());
         }
     }
 
@@ -212,15 +199,14 @@ class InstanceManager extends BaseManager implements Factory
      * @return array
      * @throws ProvisioningException
      */
-    protected function _getServersForCluster( $clusterId )
+    protected function _getServersForCluster($clusterId)
     {
-        try
-        {
-            $_cluster = static::_lookupCluster( $clusterId );
-            $_servers = static::_lookupClusterServers( $_cluster->id );
-            \Log::debug( 'Servers: ' . print_r( $_servers, true ) );
+        try {
+            $_cluster = static::_lookupCluster($clusterId);
+            $_servers = static::_lookupClusterServers($_cluster->id);
+            \Log::debug('Servers: ' . print_r($_servers, true));
 
-            $_serverIds = $this->_extractServerIds( $_servers );
+            $_serverIds = $this->_extractServerIds($_servers);
 
             return [
                 'cluster-id'    => $_cluster->id,
@@ -228,12 +214,9 @@ class InstanceManager extends BaseManager implements Factory
                 'app-server-id' => $_serverIds[ServerTypes::APP],
                 'web-server-id' => $_serverIds[ServerTypes::WEB],
             ];
+        } catch (ModelNotFoundException $_ex) {
+            throw new ProvisioningException('Cluster "' . $clusterId . '" configuration incomplete or invalid.');
         }
-        catch ( ModelNotFoundException $_ex )
-        {
-            throw new ProvisioningException( 'Cluster "' . $clusterId . '" configuration incomplete or invalid.' );
-        }
-
     }
 
     /**
@@ -242,30 +225,25 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return mixed
      */
-    protected function _extractServerIds( array $servers, $name = 'id' )
+    protected function _extractServerIds(array $servers, $name = 'id')
     {
-        $_list = ServerTypes::getDefinedConstants( true );
-        $_types = array_flip( $_list );
+        $_list = ServerTypes::getDefinedConstants(true);
+        $_types = array_flip($_list);
 
-        foreach ( $_list as $_typeId => $_typeName )
-        {
+        foreach ($_list as $_typeId => $_typeName) {
             $_types[$_typeId] = false;
 
-            if ( null === ( $_server = IfSet::get( $servers, $_typeId ) ) )
-            {
+            if (null === ($_server = IfSet::get($servers, $_typeId))) {
                 continue;
             }
 
-            if ( null !== ( $_id = IfSet::get( $_server, '.id' ) ) )
-            {
+            if (null !== ($_id = IfSet::get($_server, '.id'))) {
                 $_types[$_typeId] = $_id;
                 continue;
             }
 
-            if ( null !== ( $_ids = IfSet::get( $_server, '.ids' ) ) )
-            {
-                if ( is_array( $_ids ) && !empty( $_ids ) )
-                {
+            if (null !== ($_ids = IfSet::get($_server, '.ids'))) {
+                if (is_array($_ids) && !empty($_ids)) {
                     $_types[$_typeId] = $_ids[0];
                     continue;
                 }
@@ -281,23 +259,20 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return Server|null
      */
-    protected function _locateServerByType( $servers, $type )
+    protected function _locateServerByType($servers, $type)
     {
-        if ( !isset( $servers[$type] ) || empty( $servers[$type] ) )
-        {
+        if (!isset($servers[$type]) || empty($servers[$type])) {
             return null;
         }
 
         $_ck = 'instance-manager.cache.lru.' . $type;
-        $_lastId = \Cache::get( $_ck . '.last-used-id' );
-        $_exclude = $_lastId && 1 > count( $servers[$type] ) ? [$_lastId] : [];
+        $_lastId = \Cache::get($_ck . '.last-used-id');
+        $_exclude = $_lastId && 1 > count($servers[$type]) ? [$_lastId] : [];
 
         /** @type Server $_server */
-        foreach ( $servers[$type] as $_server )
-        {
-            if ( !in_array( $_server->id, $_exclude ) )
-            {
-                \Cache::put( $_ck . '.last-used-id', $_server->id, 60 );
+        foreach ($servers[$type] as $_server) {
+            if (!in_array($_server->id, $_exclude)) {
+                \Cache::put($_ck . '.last-used-id', $_server->id, 60);
 
                 return $_server;
             }
@@ -311,7 +286,7 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return Filesystem
      */
-    public function getFilesystem( $instance )
+    public function getFilesystem($instance)
     {
         return $instance->getStorageMount();
     }

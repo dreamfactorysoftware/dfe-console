@@ -27,42 +27,36 @@ class ExportHandler
      *
      * @return mixed
      */
-    public function handle( ExportJob $command )
+    public function handle(ExportJob $command)
     {
-        \Log::debug( 'dfe: ExportJob - begin' );
+        \Log::debug('dfe: ExportJob - begin');
 
-        $_start = microtime( true );
+        $_start = microtime(true);
 
-        try
-        {
+        try {
             //  Get the instance
-            $_instance = $this->_findInstance( $command->getInstanceId() );
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'dfe: ExportJob - failure, invalid instance "' . $command->getInstanceId() . '".' );
+            $_instance = $this->_findInstance($command->getInstanceId());
+        } catch (\Exception $_ex) {
+            \Log::error('dfe: ExportJob - failure, invalid instance "' . $command->getInstanceId() . '".');
 
             return false;
         }
 
-        try
-        {
-            $_result = Snapshot::create( $_instance->instance_id_text );
-            $_elapsed = microtime( true ) - $_start;
+        try {
+            $_result = Snapshot::create($_instance->instance_id_text);
+            $_elapsed = microtime(true) - $_start;
 
-            \Log::debug( '  * completed in ' . number_format( $_elapsed, 4 ) . 's' );
-            \Log::debug( 'dfe: ExportJob - complete: ' . print_r( $_result, true ) );
+            \Log::debug('  * completed in ' . number_format($_elapsed, 4) . 's');
+            \Log::debug('dfe: ExportJob - complete: ' . print_r($_result, true));
 
-            $command->setResult( $_result );
+            $command->setResult($_result);
 
             return $_result;
-        }
-        catch ( \Exception $_ex )
-        {
-            $_elapsed = microtime( true ) - $_start;
-            \Log::debug( '  * completed in ' . number_format( $_elapsed, 4 ) . 's' );
-            \Log::error( '  * exception: ' . $_ex->getMessage() );
-            \Log::debug( 'dfe: ExportJob - fail' );
+        } catch (\Exception $_ex) {
+            $_elapsed = microtime(true) - $_start;
+            \Log::debug('  * completed in ' . number_format($_elapsed, 4) . 's');
+            \Log::error('  * exception: ' . $_ex->getMessage());
+            \Log::debug('dfe: ExportJob - fail');
 
             return false;
         }

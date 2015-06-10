@@ -17,7 +17,8 @@ use Illuminate\Mail\Message;
 /**
  * A base class for all provisioners
  *
- * This class provides a foundation upon which to build other PaaS provisioners for the DFE ecosystem. Merely extend the class and add the
+ * This class provides a foundation upon which to build other PaaS provisioners for the DFE ecosystem. Merely extend
+ * the class and add the
  * _doProvision and _doDeprovision methods.
  *
  * @todo Move all english text to templates
@@ -70,46 +71,44 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      *
      * @return mixed
      */
-    abstract protected function _doProvision( $request );
+    abstract protected function _doProvision($request);
 
     /**
      * @param ProvisioningRequest|mixed $request
      *
      * @return mixed
      */
-    abstract protected function _doDeprovision( $request );
+    abstract protected function _doDeprovision($request);
 
     /** @inheritdoc */
     public function boot()
     {
         parent::boot();
 
-        if ( empty( $this->_subjectPrefix ) )
-        {
-            $this->_subjectPrefix = config( 'dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX );
+        if (empty($this->_subjectPrefix)) {
+            $this->_subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
         }
     }
 
     /** @inheritdoc */
-    public function provision( $request, $options = [] )
+    public function provision($request, $options = [])
     {
-        $_timestamp = microtime( true );
-        $_result = $this->_doProvision( $request );
-        $_elapsed = microtime( true ) - $_timestamp;
+        $_timestamp = microtime(true);
+        $_result = $this->_doProvision($request);
+        $_elapsed = microtime(true) - $_timestamp;
 
-        if ( is_array( $_result ) )
-        {
+        if (is_array($_result)) {
             $_result['elapsed'] = $_elapsed;
         }
 
-        $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
-        $request->setResult( $_result );
+        $this->_logProvision(['elapsed' => $_elapsed, 'result' => $_result]);
+        $request->setResult($_result);
 
         //  Save results...
         $_instance = $request->getInstance();
         $_data = $_instance->instance_data_text;
         $_data['.provisioning'] = $_result;
-        $_instance->update( ['instance_data_text' => $_data] );
+        $_instance->update(['instance_data_text' => $_data]);
 
         //  Send notification
         $_guest = $_instance->guest;
@@ -117,9 +116,9 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
             $_guest
                 ? $_guest->public_host_text
                 : $_instance->instance_id_text . '.' .
-                config( 'dfe.provisioning.default-dns-zone' ) .
+                config('dfe.provisioning.default-dns-zone') .
                 '.' .
-                config( 'dfe.provisioning.default-dns-domain' );
+                config('dfe.provisioning.default-dns-domain');
 
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
@@ -132,32 +131,33 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
                     'has been created. You can reach it by going to <a href="//' . $_host . '">' .
                     $_host . '</a> from any browser.</p>'
                     :
-                    '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' .
+                    '<p>Your instance <strong>' .
+                    $_instance->instance_name_text .
+                    '</strong> ' .
                     'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
         ];
 
         $_subject = $_result['success'] ? 'Instance launch successful' : 'Instance launch failure';
 
-        $this->_notify( $_instance, $_subject, $_data );
+        $this->_notify($_instance, $_subject, $_data);
 
         return $_result;
     }
 
     /** @inheritdoc */
-    public function deprovision( $request, $options = [] )
+    public function deprovision($request, $options = [])
     {
-        $_timestamp = microtime( true );
-        $_result = $this->_doDeprovision( $request );
-        $_elapsed = microtime( true ) - $_timestamp;
+        $_timestamp = microtime(true);
+        $_result = $this->_doDeprovision($request);
+        $_elapsed = microtime(true) - $_timestamp;
         $_instance = $request->getInstance();
 
-        if ( is_array( $_result ) )
-        {
+        if (is_array($_result)) {
             $_result['elapsed'] = $_elapsed;
         }
 
-        $this->_logProvision( ['elapsed' => $_elapsed, 'result' => $_result] );
-        $request->setResult( $_result );
+        $this->_logProvision(['elapsed' => $_elapsed, 'result' => $_result]);
+        $request->setResult($_result);
 
         //  Send notification
         $_data = [
@@ -176,7 +176,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
 
         $_subject = $_result['success'] ? 'Instance shutdown successful' : 'Instance shutdown failure';
 
-        $this->_notify( $_instance, $_subject, $_data );
+        $this->_notify($_instance, $_subject, $_data);
 
         return $_result;
     }
@@ -188,12 +188,12 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      *
      * @return bool
      */
-    protected function _logProvision( $data = [], $level = AuditLevels::INFO, $deprovisioning = false )
+    protected function _logProvision($data = [], $level = AuditLevels::INFO, $deprovisioning = false)
     {
         //  Put instance ID into the correct place
-        isset( $data['instance'] ) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
+        isset($data['instance']) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        return Audit::log( $data, $level, app( 'request' ), ( ( $deprovisioning ? 'de' : null ) . 'provision' ) );
+        return Audit::log($data, $level, app('request'), (($deprovisioning ? 'de' : null) . 'provision'));
     }
 
     /**
@@ -203,49 +203,49 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      *
      * @return int The number of recipients mailed
      */
-    protected function _notify( $instance, $subject, array $data )
+    protected function _notify($instance, $subject, array $data)
     {
-        if ( !empty( $this->_subjectPrefix ) )
-        {
-            $subject = $this->_subjectPrefix . ' ' . trim( str_replace( $this->_subjectPrefix, null, $subject ) );
+        if (!empty($this->_subjectPrefix)) {
+            $subject = $this->_subjectPrefix . ' ' . trim(str_replace($this->_subjectPrefix, null, $subject));
         }
 
         $_result =
             \Mail::send(
                 'emails.generic',
                 $data,
-                function ( $message ) use ( $instance, $subject )
-                {
+                function ($message) use ($instance, $subject){
                     /** @var Message $message */
                     $message
-                        ->to( $instance->user->email_addr_text, $instance->user->first_name_text . ' ' . $instance->user->last_name_text )
-                        ->subject( $subject );
+                        ->to($instance->user->email_addr_text,
+                            $instance->user->first_name_text . ' ' . $instance->user->last_name_text)
+                        ->subject($subject);
                 }
             );
 
-        $this->debug( '  * provisioner: notification sent to ' . $instance->user->email_addr_text );
+        $this->debug('  * provisioner: notification sent to ' . $instance->user->email_addr_text);
 
         return $_result;
     }
 
     /**
-     * @param string|Filesystem $filename      The absolute (relative if $filesystem supplied) location to write the environment file
+     * @param string|Filesystem $filename      The absolute (relative if $filesystem supplied) location to write the
+     *                                         environment file
      * @param array             $env           The data to add to the default template
-     * @param Filesystem        $filesystem    An optional file system to write the file. If null, the file is written locally
+     * @param Filesystem        $filesystem    An optional file system to write the file. If null, the file is written
+     *                                         locally
      * @param bool              $mergeDefaults If false, only the data in $env is written out
      *
      * @return bool
      */
-    protected function _writeEnvironmentFile( $filename, array $env, $filesystem = null, $mergeDefaults = true )
+    protected function _writeEnvironmentFile($filename, array $env, $filesystem = null, $mergeDefaults = true)
     {
-        $_data = $mergeDefaults ? array_merge( static::$_envTemplate, $env ) : $env;
+        $_data = $mergeDefaults ? array_merge(static::$_envTemplate, $env) : $env;
 
-        if ( null !== $filesystem )
-        {
-            return $filesystem->put( $filename, JsonFile::encode( $_data ) );
+        if (null !== $filesystem) {
+            return $filesystem->put($filename, JsonFile::encode($_data));
         }
 
-        JsonFile::encodeFile( $filename, $_data );
+        JsonFile::encodeFile($filename, $_data);
 
         return true;
     }

@@ -66,17 +66,17 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     //*************************************************************************
 
     /** @inheritdoc */
-    public function provision( $request, $options = [] )
+    public function provision($request, $options = [])
     {
         //  Make structure
-        $this->_createInstanceStorage( $request, $options );
+        $this->_createInstanceStorage($request, $options);
     }
 
     /** @inheritdoc */
-    public function deprovision( $request, $options = [] )
+    public function deprovision($request, $options = [])
     {
         //  '86 structure
-        $this->_removeInstanceStorage( $request, $options );
+        $this->_removeInstanceStorage($request, $options);
     }
 
     /**
@@ -85,7 +85,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      * @param ProvisioningRequest $request
      * @param array               $options
      */
-    protected function _createInstanceStorage( $request, $options = [] )
+    protected function _createInstanceStorage($request, $options = [])
     {
         //  Wipe existing stuff
         $_instance = $request->getInstance();
@@ -106,36 +106,33 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
         $_ownerPrivatePath = $_privatePathName;
 
         //  Make sure everything exists
-        try
-        {
-            !$_filesystem->has( $_privatePath ) && $_filesystem->createDir( $_privatePath );
-            !$_filesystem->has( $_ownerPrivatePath ) && $_filesystem->createDir( $_ownerPrivatePath );
+        try {
+            !$_filesystem->has($_privatePath) && $_filesystem->createDir($_privatePath);
+            !$_filesystem->has($_ownerPrivatePath) && $_filesystem->createDir($_ownerPrivatePath);
 
             //  Now ancillary sub-directories
-            foreach ( config( 'dfe.provisioning.public-paths', [] ) as $_path )
-            {
-                !$_filesystem->has( $_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            foreach (config('dfe.provisioning.public-paths', []) as $_path) {
+                !$_filesystem->has($_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path) &&
+                $_filesystem->createDir($_check);
             }
 
-            foreach ( config( 'dfe.provisioning.private-paths', [] ) as $_path )
-            {
-                !$_filesystem->has( $_check = $_privatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            foreach (config('dfe.provisioning.private-paths', []) as $_path) {
+                !$_filesystem->has($_check = $_privatePath . DIRECTORY_SEPARATOR . $_path) &&
+                $_filesystem->createDir($_check);
             }
 
-            foreach ( config( 'dfe.provisioning.owner-private-paths', [] ) as $_path )
-            {
-                !$_filesystem->has( $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path ) && $_filesystem->createDir( $_check );
+            foreach (config('dfe.provisioning.owner-private-paths', []) as $_path) {
+                !$_filesystem->has($_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path) &&
+                $_filesystem->createDir($_check);
             }
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'Error creating directory structure: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            \Log::error('Error creating directory structure: ' . $_ex->getMessage());
             throw $_ex;
         }
 
-        \Log::debug( '    * provisioner: instance storage created' );
-        \Log::debug( '      * private path:       ' . $_privatePath );
-        \Log::debug( '      * owner private path: ' . $_ownerPrivatePath );
+        \Log::debug('    * provisioner: instance storage created');
+        \Log::debug('      * private path:       ' . $_privatePath);
+        \Log::debug('      * owner private path: ' . $_ownerPrivatePath);
 
         $this->_privatePath = $_privatePath;
         $this->_ownerPrivatePath = $_ownerPrivatePath;
@@ -149,49 +146,48 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      *
      * @return bool
      */
-    protected function _removeInstanceStorage( $request, $options = [] )
+    protected function _removeInstanceStorage($request, $options = [])
     {
         $_instance = $request->getInstance();
         $_filesystem = $request->getStorage();
         $_storagePath = $_instance->instance_id_text;
 
         //  I'm not sure how hard this tries to delete the directory
-        if ( !$_filesystem->has( $_storagePath ) )
-        {
-            \Log::notice( '    * provisioner: unable to stat storage path' );
-            \Log::notice( '      * not deleting storage area "' . $_storagePath . '"' );
+        if (!$_filesystem->has($_storagePath)) {
+            \Log::notice('    * provisioner: unable to stat storage path');
+            \Log::notice('      * not deleting storage area "' . $_storagePath . '"');
 
             return false;
         }
 
-        if ( !$_filesystem->deleteDir( $_storagePath ) )
-        {
-            \Log::error( '    * provisioner: error removing storage area "' . $_storagePath . '"' );
+        if (!$_filesystem->deleteDir($_storagePath)) {
+            \Log::error('    * provisioner: error removing storage area "' . $_storagePath . '"');
 
             return false;
         }
 
-        \Log::debug( '    * provisioner: instance storage removed' );
+        \Log::debug('    * provisioner: instance storage removed');
 
         return true;
     }
 
     /** @inheritdoc */
-    public function getPrivatePath( $append = null )
+    public function getPrivatePath($append = null)
     {
-        return $this->_privatePath . ( $append ? DIRECTORY_SEPARATOR . ltrim( $append, DIRECTORY_SEPARATOR . ' ' ) : $append );
+        return $this->_privatePath .
+        ($append ? DIRECTORY_SEPARATOR . ltrim($append, DIRECTORY_SEPARATOR . ' ') : $append);
     }
 
     /** @inheritdoc */
-    public function getOwnerPrivatePath( $append = null )
+    public function getOwnerPrivatePath($append = null)
     {
         //  I hate doing this, but it will make this service more streamlined...
-        return ( $this->_hostedStorage ? $this->_ownerPrivatePath : $this->getPrivatePath() ) .
-        ( $append ? DIRECTORY_SEPARATOR . ltrim( $append, DIRECTORY_SEPARATOR . ' ' ) : $append );
+        return ($this->_hostedStorage ? $this->_ownerPrivatePath : $this->getPrivatePath()) .
+        ($append ? DIRECTORY_SEPARATOR . ltrim($append, DIRECTORY_SEPARATOR . ' ') : $append);
     }
 
     /** @inheritdoc */
-    public function getOwnerHash( Instance $instance )
+    public function getOwnerHash(Instance $instance)
     {
         return $instance->user->getHash();
     }
@@ -209,7 +205,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      *
      * @return $this
      */
-    public function setHostedStorage( $hostedStorage )
+    public function setHostedStorage($hostedStorage)
     {
         $this->_hostedStorage = $hostedStorage;
 

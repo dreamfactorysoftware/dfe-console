@@ -46,7 +46,7 @@ class ProvisioningRequest
      * @param bool                                              $deprovision
      * @param bool                                              $force
      */
-    public function __construct( Instance $instance, Filesystem $storage = null, $deprovision = false, $force = false )
+    public function __construct(Instance $instance, Filesystem $storage = null, $deprovision = false, $force = false)
     {
         $this->_instance = $instance;
         $this->_storage = $storage;
@@ -67,11 +67,10 @@ class ProvisioningRequest
      *
      * @return Filesystem
      */
-    public function getStorage( $createIfNull = true )
+    public function getStorage($createIfNull = true)
     {
         //  Use requested file system if one...
-        if ( null === $this->_storage && $createIfNull )
-        {
+        if (null === $this->_storage && $createIfNull) {
             $this->setStorage(
                 $_storage = $this->getInstance()->getRootStorageMount()
             );
@@ -93,7 +92,7 @@ class ProvisioningRequest
      *
      * @return ProvisioningRequest
      */
-    public function setStorage( Filesystem $storage )
+    public function setStorage(Filesystem $storage)
     {
         $this->_storage = $storage;
 
@@ -113,7 +112,7 @@ class ProvisioningRequest
      *
      * @return ProvisioningRequest
      */
-    public function setForced( $forced )
+    public function setForced($forced)
     {
         $this->_forced = $forced;
 
@@ -133,7 +132,7 @@ class ProvisioningRequest
      *
      * @return ProvisioningRequest
      */
-    public function setStorageProvisioner( $storageProvisioner )
+    public function setStorageProvisioner($storageProvisioner)
     {
         $this->_storageProvisioner = $storageProvisioner;
 
@@ -153,7 +152,7 @@ class ProvisioningRequest
      *
      * @return $this
      */
-    public function setResult( $result )
+    public function setResult($result)
     {
         $this->_result = $result;
 

@@ -38,32 +38,31 @@ class Manifest extends Command
     /** @inheritdoc */
     public function fire()
     {
-        if ( $this->option( 'create' ) && $this->option( 'show' ) )
-        {
+        if ($this->option('create') && $this->option('show')) {
             throw new \InvalidArgumentException(
                 'The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.'
             );
         }
 
         $this->_job = new ManifestJob(
-            $this->argument( 'cluster-id' ),
-            $this->argument( 'web-server-id' ),
+            $this->argument('cluster-id'),
+            $this->argument('web-server-id'),
             ServerTypes::WEB
         );
 
         $this->_job
-            ->setOutput( $this->output )
-            ->setInput( $this->input )
-            ->setOwnerId( $this->option( 'owner-id' ) )
-            ->setOwnerType( $this->option( 'owner-type' ) )
-            ->setShowManifest( $this->option( 'show' ) )
-            ->setCreateManifest( $this->option( 'create' ) )
-            ->setNoKeys( $this->option( 'no-keys' ) );
+            ->setOutput($this->output)
+            ->setInput($this->input)
+            ->setOwnerId($this->option('owner-id'))
+            ->setOwnerType($this->option('owner-type'))
+            ->setShowManifest($this->option('show'))
+            ->setCreateManifest($this->option('create'))
+            ->setNoKeys($this->option('no-keys'));
 
-        $_output = $this->argument( 'output-file' );
-        $this->_job->setOutputFile( !empty( $_output ) ? $_output : null );
+        $_output = $this->argument('output-file');
+        $this->_job->setOutputFile(!empty($_output) ? $_output : null);
 
-        \Queue::push( $this->_job );
+        \Queue::push($this->_job);
 
         return $this->_job->getResult();
     }
@@ -93,9 +92,20 @@ class Manifest extends Command
             [
                 ['create', 'c', InputOption::VALUE_NONE, 'Create a new manifest file. This is the default.'],
                 ['no-keys', 'k', InputOption::VALUE_NONE, 'If specified, no application keys will be generated.'],
-                ['show', 's', InputOption::VALUE_NONE, 'If specified, show the contents of an installation\'s manifest.'],
+                [
+                    'show',
+                    's',
+                    InputOption::VALUE_NONE,
+                    'If specified, show the contents of an installation\'s manifest.'
+                ],
                 ['owner-id', null, InputOption::VALUE_REQUIRED, 'The owner id for the manifest key if not 0', 0],
-                ['owner-type', null, InputOption::VALUE_REQUIRED, 'The owner type for the manifest key if not "dashboard"', 'dashboard'],
+                [
+                    'owner-type',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'The owner type for the manifest key if not "dashboard"',
+                    'dashboard'
+                ],
             ]
         );
     }
@@ -105,9 +115,9 @@ class Manifest extends Command
      *
      * @return string Return the id/name of the cluster involved in this job
      */
-    public function getCluster( $clusterId = null )
+    public function getCluster($clusterId = null)
     {
-        return $this->_findCluster( $clusterId ?: $this->_job->getClusterId() );
+        return $this->_findCluster($clusterId ?: $this->_job->getClusterId());
     }
 
     /**
@@ -115,9 +125,9 @@ class Manifest extends Command
      *
      * @return string Return the id/name of the server involved in this job
      */
-    public function getServer( $serverId = null )
+    public function getServer($serverId = null)
     {
-        return $this->_findCluster( $serverId ?: $this->_job->getServerId() );
+        return $this->_findCluster($serverId ?: $this->_job->getServerId());
     }
 
     /**
@@ -133,7 +143,7 @@ class Manifest extends Command
      */
     public function getOwner()
     {
-        return $this->_locateOwner( $this->_job->getOwnerId(), $this->_job->getOwnerType() );
+        return $this->_locateOwner($this->_job->getOwnerId(), $this->_job->getOwnerType());
     }
 
 }

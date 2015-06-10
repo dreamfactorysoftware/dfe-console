@@ -48,9 +48,8 @@ class SnapshotServiceProvider extends BaseServiceProvider
     {
         $this->singleton(
             static::IOC_NAME,
-            function ( $app )
-            {
-                return new SnapshotService( $app );
+            function ($app){
+                return new SnapshotService($app);
             }
         );
     }

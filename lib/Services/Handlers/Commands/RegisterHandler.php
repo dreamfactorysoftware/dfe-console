@@ -31,29 +31,26 @@ class RegisterHandler
      * @return mixed
      * @throws \Exception
      */
-    public function handle( RegisterJob $command )
+    public function handle(RegisterJob $command)
     {
-        \Log::debug( 'dfe: register - begin' );
+        \Log::debug('dfe: register - begin');
 
-        $_key = config( 'dfe.security.console-api-key' );
+        $_key = config('dfe.security.console-api-key');
 
-        try
-        {
+        try {
             $_owner = $command->getOwnerInfo();
 
             //  Generate the key
-            $_key = AppKey::createKey( $_owner->id, $_owner->type, ['server_secret' => $_key] );
+            $_key = AppKey::createKey($_owner->id, $_owner->type, ['server_secret' => $_key]);
 
-            \Log::debug( 'dfe: register - complete' );
+            \Log::debug('dfe: register - complete');
 
-            $_result = SuccessPacket::make( $_key->toArray(), Response::HTTP_CREATED );
-        }
-        catch ( \Exception $_ex )
-        {
-            $_result = ErrorPacket::create( Response::HTTP_BAD_REQUEST );
+            $_result = SuccessPacket::make($_key->toArray(), Response::HTTP_CREATED);
+        } catch (\Exception $_ex) {
+            $_result = ErrorPacket::create(Response::HTTP_BAD_REQUEST);
         }
 
-        $command->setResult( $_result );
+        $command->setResult($_result);
 
         return $_result;
     }

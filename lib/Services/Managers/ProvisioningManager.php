@@ -17,9 +17,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return ResourceProvisioner
      */
-    public function getProvisioner( $name = null )
+    public function getProvisioner($name = null)
     {
-        return $this->resolve( $name );
+        return $this->resolve($name);
     }
 
     /**
@@ -29,12 +29,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     {
         $_provisioners = [];
 
-        if ( null !== ( $_list = config( 'dfe.provisioners.hosts' ) ) )
-        {
-            foreach ( $_list as $_tag => $_config )
-            {
-                if ( null !== ( $_provisioner = $this->getProvisioner( $_tag ) ) )
-                {
+        if (null !== ($_list = config('dfe.provisioners.hosts'))) {
+            foreach ($_list as $_tag => $_config) {
+                if (null !== ($_provisioner = $this->getProvisioner($_tag))) {
                     $_provisioners[$_tag] = $_provisioner;
                 }
             }
@@ -50,9 +47,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return ResourceProvisioner
      */
-    public function getStorageProvisioner( $name = null )
+    public function getStorageProvisioner($name = null)
     {
-        return $this->resolveStorage( $name );
+        return $this->resolveStorage($name);
     }
 
     /**
@@ -62,9 +59,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return ResourceProvisioner
      */
-    public function getDatabaseProvisioner( $name = null )
+    public function getDatabaseProvisioner($name = null)
     {
-        return $this->resolveDatabase( $name );
+        return $this->resolveDatabase($name);
     }
 
     /**
@@ -74,7 +71,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function getDefaultProvisioner()
     {
-        return config( 'dfe.provisioners.default' );
+        return config('dfe.provisioners.default');
     }
 
     /**
@@ -83,29 +80,25 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return ResourceProvisioner
      */
-    public function resolve( $tag, $subkey = null )
+    public function resolve($tag, $subkey = null)
     {
-        $_key = $this->_buildTag( $tag, $subkey );
+        $_key = $this->_buildTag($tag, $subkey);
 
-        try
-        {
-            return parent::resolve( $_key );
-        }
-        catch ( \InvalidArgumentException $_ex )
-        {
+        try {
+            return parent::resolve($_key);
+        } catch (\InvalidArgumentException $_ex) {
         }
 
-        $_class = config( 'dfe.provisioners.hosts.' . $_key );
+        $_class = config('dfe.provisioners.hosts.' . $_key);
 
-        if ( empty( $_class ) )
-        {
-            \Log::notice( 'Requested provisioner "' . $_key . '" is not valid.' );
+        if (empty($_class)) {
+            \Log::notice('Requested provisioner "' . $_key . '" is not valid.');
 
             return null;
         }
 
-        $_provisioner = new $_class( $this->app );
-        $this->manage( $_key, $_provisioner );
+        $_provisioner = new $_class($this->app);
+        $this->manage($_key, $_provisioner);
 
         return $_provisioner;
     }
@@ -115,9 +108,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
      */
-    public function resolveStorage( $tag )
+    public function resolveStorage($tag)
     {
-        return $this->resolve( $tag, 'storage' );
+        return $this->resolve($tag, 'storage');
     }
 
     /**
@@ -125,9 +118,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
      */
-    public function resolveDatabase( $tag )
+    public function resolveDatabase($tag)
     {
-        return $this->resolve( $tag, 'db' );
+        return $this->resolve($tag, 'db');
     }
 
     /**
@@ -136,12 +129,11 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return mixed
      */
-    protected function _buildTag( $tag, $subkey = null )
+    protected function _buildTag($tag, $subkey = null)
     {
-        $tag = GuestLocations::resolve( $tag ?: $this->getDefaultProvisioner() );
+        $tag = GuestLocations::resolve($tag ?: $this->getDefaultProvisioner());
 
-        if ( null === $subkey )
-        {
+        if (null === $subkey) {
             $subkey = 'instance';
         }
 

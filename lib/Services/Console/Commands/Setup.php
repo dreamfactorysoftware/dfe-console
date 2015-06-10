@@ -40,12 +40,12 @@ class Setup extends Command
     //******************************************************************************
 
     /** @inheritdoc */
-    public function run( InputInterface $input, OutputInterface $output )
+    public function run(InputInterface $input, OutputInterface $output)
     {
-        $this->setOutputInterface( $output );
-        $this->_config = config( 'dfe.commands.setup' );
+        $this->setOutputInterface($output);
+        $this->_config = config('dfe.commands.setup');
 
-        return parent::run( $input, $output );
+        return parent::run($input, $output);
     }
 
     /**
@@ -55,29 +55,24 @@ class Setup extends Command
      */
     public function fire()
     {
-        $this->_ahShowHeader( 'setup' );
+        $this->_ahShowHeader('setup');
 
         //  1. Make sure it's a clean install
-        if ( 0 != ServiceUser::count() )
-        {
-            if ( $this->option( 'force' ) )
-            {
-                $this->_writeln( 'system has users. <comment>--force</comment> override in place.' );
+        if (0 != ServiceUser::count()) {
+            if ($this->option('force')) {
+                $this->_writeln('system has users. <comment>--force</comment> override in place.');
                 $this->_backupServiceUsers();
-            }
-            else
-            {
-                $this->_ahError( 'system has users. use --force to override.' );
+            } else {
+                $this->_ahError('system has users. use --force to override.');
 
                 return 1;
             }
         }
 
         //  2. Create initial admin user
-        try
-        {
+        try {
             //  Delete all users
-            \DB::table( 'service_user_t' )->delete();
+            \DB::table('service_user_t')->delete();
 
             //  Add our new user
             $_user = ServiceUser::create(
@@ -85,51 +80,46 @@ class Setup extends Command
                     'first_name_text' => 'System',
                     'last_name_text'  => 'Administrator',
                     'nickname_text'   => 'Admin',
-                    'email_addr_text' => $this->argument( 'admin-email' ),
-                    'password_text'   => \Hash::make( $this->option( 'admin-password' ) ),
+                    'email_addr_text' => $this->argument('admin-email'),
+                    'password_text'   => \Hash::make($this->option('admin-password')),
                     'active_ind'      => 1,
                 ]
             );
 
-            if ( empty( $_user ) )
-            {
-                throw new \Exception( 'Invalid response from user::create' );
+            if (empty($_user)) {
+                throw new \Exception('Invalid response from user::create');
             }
 
-            $this->_ahInfo( 'user <comment>' . $this->argument( 'admin-email' ) . '</comment> created.' );
-        }
-        catch ( \Exception $_ex )
-        {
-            $this->_ahError( 'Error while creating admin user: ' . $_ex->getMessage() );
+            $this->_ahInfo('user <comment>' . $this->argument('admin-email') . '</comment> created.');
+        } catch (\Exception $_ex) {
+            $this->_ahError('Error while creating admin user: ' . $_ex->getMessage());
 
             return 1;
         }
 
         //  2. Check permissions and required directories
-        $_paths = config( 'dfe.commands.setup.required-directories', [] );
+        $_paths = config('dfe.commands.setup.required-directories', []);
 
-        foreach ( $_paths as $_path )
-        {
-            if ( !FileSystem::ensurePath( $_path ) )
-            {
-                $this->_ahError( 'Unable to create directory: ' . $_path );
+        foreach ($_paths as $_path) {
+            if (!FileSystem::ensurePath($_path)) {
+                $this->_ahError('Unable to create directory: ' . $_path);
             }
         }
 
         //  3. Create console and dashboard API key sets
-        $_consoleKey = AppKey::createKey( 0, OwnerTypes::CONSOLE );
-        $_dashboardKey = AppKey::createKey( 0, OwnerTypes::DASHBOARD );
-        $_apiSecret = $this->option( 'api-secret' ) ?: $this->_generateApiSecret();
+        $_consoleKey = AppKey::createKey(0, OwnerTypes::CONSOLE);
+        $_dashboardKey = AppKey::createKey(0, OwnerTypes::DASHBOARD);
+        $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret();
 
         //  4. Generate .dfe.cluster.json file
         ClusterManifest::make(
             base_path(),
             [
-                'cluster-id'       => config( 'dfe.cluster-id' ),
-                'default-domain'   => config( 'dfe.provisioning.default-domain' ),
-                'signature-method' => config( 'dfe.signature-method' ),
-                'storage-root'     => config( 'dfe.provisioning.storage-root' ),
-                'console-api-url'  => $_endpoint = config( 'dfe.security.console-api-url' ),
+                'cluster-id'       => config('dfe.cluster-id'),
+                'default-domain'   => config('dfe.provisioning.default-domain'),
+                'signature-method' => config('dfe.signature-method'),
+                'storage-root'     => config('dfe.provisioning.storage-root'),
+                'console-api-url'  => $_endpoint = config('dfe.security.console-api-url'),
                 'console-api-key'  => $_apiSecret,
                 'client-id'        => null,
                 'client-secret'    => null,
@@ -145,7 +135,7 @@ DFE_CONSOLE_API_CLIENT_ID={$_consoleKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_consoleKey->client_secret}
 INI;
 
-        $this->_writeFile( 'console.env', $_config );
+        $this->_writeFile('console.env', $_config);
 
         //  Make a dashboard config file...
         $_config = <<<INI
@@ -156,7 +146,7 @@ DFE_CONSOLE_API_CLIENT_ID={$_dashboardKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_dashboardKey->client_secret}
 INI;
 
-        return $this->_writeFile( 'dashboard.env', $_config );
+        return $this->_writeFile('dashboard.env', $_config);
     }
 
     /** @inheritdoc */
@@ -179,8 +169,19 @@ INI;
                 ['force', null, InputOption::VALUE_NONE, 'Use to force re-initialization of system.'],
                 ['no-manifest', null, InputOption::VALUE_NONE, 'Do not create a manifest file.'],
                 ['no-keys', null, InputOption::VALUE_NONE, 'Do not create initialization keys.'],
-                ['admin-password', null, InputOption::VALUE_OPTIONAL, 'The admin account password to use.', 'dfe.admin'],
-                ['api-secret', null, InputOption::VALUE_OPTIONAL, 'The API secret to use. If not specified, one will be generated'],
+                [
+                    'admin-password',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'The admin account password to use.',
+                    'dfe.admin'
+                ],
+                [
+                    'api-secret',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'The API secret to use. If not specified, one will be generated'
+                ],
             ]
         );
     }
@@ -192,21 +193,20 @@ INI;
      *
      * @return bool
      */
-    protected function _writeFile( $filename, $contents, $jsonEncode = false )
+    protected function _writeFile($filename, $contents, $jsonEncode = false)
     {
         $_path = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
-        if ( !FileSystem::ensurePath( $_path ) )
-        {
-            $this->_ahError( 'Unable to write to backup path <comment>' . $_path . '</comment>. Aborting.' );
+        if (!FileSystem::ensurePath($_path)) {
+            $this->_ahError('Unable to write to backup path <comment>' . $_path . '</comment>. Aborting.');
 
             return false;
         }
 
         return
             false !== file_put_contents(
-                $_path . DIRECTORY_SEPARATOR . ltrim( $filename, DIRECTORY_SEPARATOR ),
-                $jsonEncode ? JsonFile::encode( $contents ) : $contents
+                $_path . DIRECTORY_SEPARATOR . ltrim($filename, DIRECTORY_SEPARATOR),
+                $jsonEncode ? JsonFile::encode($contents) : $contents
             );
     }
 
@@ -217,9 +217,8 @@ INI;
     {
         $_backupPath = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
-        if ( !FileSystem::ensurePath( $_backupPath ) )
-        {
-            $this->_ahError( 'Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.' );
+        if (!FileSystem::ensurePath($_backupPath)) {
+            $this->_ahError('Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.');
 
             return false;
         }
@@ -227,12 +226,12 @@ INI;
         $_users = [];
 
         /** @type ServiceUser $_user */
-        foreach ( ServiceUser::all() as $_user )
-        {
+        foreach (ServiceUser::all() as $_user) {
             $_users[] = $_user->toArray();
         }
 
-        JsonFile::encodeFile( $_backupPath . DIRECTORY_SEPARATOR . 'service-user.backup.' . date( 'YmdHis' ) . '.json', $_users );
+        JsonFile::encodeFile($_backupPath . DIRECTORY_SEPARATOR . 'service-user.backup.' . date('YmdHis') . '.json',
+            $_users);
 
         return true;
     }
@@ -242,6 +241,6 @@ INI;
      */
     private function _generateApiSecret()
     {
-        return rtrim( base64_encode( hash( 'sha256', microtime() ) ), '=' );
+        return rtrim(base64_encode(hash('sha256', microtime())), '=');
     }
 }

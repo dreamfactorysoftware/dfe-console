@@ -35,65 +35,58 @@ class ManifestHandler
      * @return bool
      * @throws \Exception
      */
-    public function handle( ManifestJob $command )
+    public function handle(ManifestJob $command)
     {
-        \Log::debug( '[dfe:manifest] begin' );
+        \Log::debug('[dfe:manifest] begin');
 
-        if ( $command->showManifest() )
-        {
-            $_manifest = ClusterManifest::createFromFile( base_path() . DIRECTORY_SEPARATOR . ConsoleDefaults::CLUSTER_MANIFEST_FILE );
-            $_result = !$_manifest->existed() ? ErrorPacket::create() : SuccessPacket::make( $_manifest->toArray() );
+        if ($command->showManifest()) {
+            $_manifest =
+                ClusterManifest::createFromFile(base_path() .
+                    DIRECTORY_SEPARATOR .
+                    ConsoleDefaults::CLUSTER_MANIFEST_FILE);
+            $_result = !$_manifest->existed() ? ErrorPacket::create() : SuccessPacket::make($_manifest->toArray());
 
             //  And then show it...
-            if ( $_manifest->existed() )
-            {
-                \Log::debug( '  * Manifest found: ' . print_r( $_manifest->all(), true ) );
+            if ($_manifest->existed()) {
+                \Log::debug('  * Manifest found: ' . print_r($_manifest->all(), true));
+            } else {
+                \Log::info('  * No manifest file found. Nothing to show.');
             }
-            else
-            {
-                \Log::info( '  * No manifest file found. Nothing to show.' );
-            }
-        }
-        else
-        {
-            try
-            {
-                $_key = $command->noKeys() ? false : AppKey::createKey( $command->getOwnerId(), $command->getOwnerType() );
+        } else {
+            try {
+                $_key =
+                    $command->noKeys() ? false : AppKey::createKey($command->getOwnerId(), $command->getOwnerType());
 
-                if ( $_key )
-                {
+                if ($_key) {
                     $command->getOutput()->getVerbosity() == OutputInterface::VERBOSITY_VERBOSE &&
-                    $command->getOutput()->writeln( ' - generated client-id and secret: ' . $_key->client_id );
+                    $command->getOutput()->writeln(' - generated client-id and secret: ' . $_key->client_id);
                 }
 
-                if ( $command->createManifest() )
-                {
+                if ($command->createManifest()) {
                     //  Create a new manifest...
                     $_manifest = ClusterManifest::make(
                         base_path(),
                         [
-                            'cluster-id'       => config( 'dfe.cluster-id' ),
-                            'default-domain'   => config( 'dfe.provisioning.default-domain' ),
-                            'signature-method' => config( 'dfe.signature-method' ),
-                            'storage-root'     => config( 'dfe.provisioning.storage-root' ),
-                            'console-api-url'  => config( 'dfe.security.console-api-url' ),
-                            'console-api-key'  => config( 'dfe.security.console-api-key' ),
+                            'cluster-id'       => config('dfe.cluster-id'),
+                            'default-domain'   => config('dfe.provisioning.default-domain'),
+                            'signature-method' => config('dfe.signature-method'),
+                            'storage-root'     => config('dfe.provisioning.storage-root'),
+                            'console-api-url'  => config('dfe.security.console-api-url'),
+                            'console-api-key'  => config('dfe.security.console-api-key'),
                             'client-id'        => !$_key ? null : $_key->client_id,
                             'client-secret'    => !$_key ? null : $_key->client_secret,
                         ]
                     );
 
-                    $command->setResult( $_result = SuccessPacket::make( $_manifest->toArray(), Response::HTTP_CREATED ) );
+                    $command->setResult($_result = SuccessPacket::make($_manifest->toArray(), Response::HTTP_CREATED));
                 }
-            }
-            catch
-            ( \Exception $_ex )
-            {
-                $command->setResult( $_result = ErrorPacket::create( Response::HTTP_BAD_REQUEST ) );
+            } catch
+            (\Exception $_ex) {
+                $command->setResult($_result = ErrorPacket::create(Response::HTTP_BAD_REQUEST));
             }
         }
 
-        \Log::debug( '[dfe:manifest] end' );
+        \Log::debug('[dfe:manifest] end');
 
         return $command;
     }

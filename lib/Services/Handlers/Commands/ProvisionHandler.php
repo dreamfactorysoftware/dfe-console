@@ -31,54 +31,44 @@ class ProvisionHandler
      *
      * @return mixed
      */
-    public function handle( ProvisionJob $command )
+    public function handle(ProvisionJob $command)
     {
         $_options = $command->getOptions();
 
-        try
-        {
+        try {
             //  Create the instance record
-            $_instance = InstanceManager::make( $command->getInstanceId(), $_options );
+            $_instance = InstanceManager::make($command->getInstanceId(), $_options);
 
-            if ( !$_instance )
-            {
-                throw new ProvisioningException( 'InstanceManager::make() failed' );
+            if (!$_instance) {
+                throw new ProvisioningException('InstanceManager::make() failed');
             }
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'provisioning - failure, exception creating instance: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            \Log::error('provisioning - failure, exception creating instance: ' . $_ex->getMessage());
 
             return false;
         }
 
-        try
-        {
-            $_guest = IfSet::get( $_options, 'guest-location-nbr', config( 'dfe.provisioning.default-guest-location' ) );
-            $_provisioner = Provision::getProvisioner( $_guest );
+        try {
+            $_guest = IfSet::get($_options, 'guest-location-nbr', config('dfe.provisioning.default-guest-location'));
+            $_provisioner = Provision::getProvisioner($_guest);
 
-            if ( empty( $_provisioner ) )
-            {
-                throw new \RuntimeException( 'The provisioner of the request is not valid.' );
+            if (empty($_provisioner)) {
+                throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_result = $_provisioner->provision( new ProvisioningRequest( $_instance ), $_options );
+            $_result = $_provisioner->provision(new ProvisioningRequest($_instance), $_options);
 
-            if ( is_array( $_result ) && $_result['success'] && isset( $_result['elapsed'] ) )
-            {
-                \Log::info( 'provisioning - success, completed in ' . number_format( $_result['elapsed'], 4 ) . 's' );
+            if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
+                \Log::info('provisioning - success, completed in ' . number_format($_result['elapsed'], 4) . 's');
             }
 
             return true;
-        }
-        catch ( \Exception $_ex )
-        {
-            \Log::error( 'provisioning - failure, exception during provisioning: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            \Log::error('provisioning - failure, exception during provisioning: ' . $_ex->getMessage());
 
             //  Delete instance record...
-            if ( !$_instance->delete() )
-            {
-                throw new \LogicException( 'Unable to remove created instance "' . $_instance->instance_id_text . '".' );
+            if (!$_instance->delete()) {
+                throw new \LogicException('Unable to remove created instance "' . $_instance->instance_id_text . '".');
             }
         }
 

@@ -35,11 +35,11 @@ class Register extends Command
     public function fire()
     {
         $_command = new RegisterJob(
-            $this->argument( 'owner-id' ),
-            $this->argument( 'owner-type' )
+            $this->argument('owner-id'),
+            $this->argument('owner-type')
         );
 
-        \Queue::push( $_command );
+        \Queue::push($_command);
 
         return $_command->getResult();
     }
@@ -53,11 +53,9 @@ class Register extends Command
     {
         static $_types = [];
 
-        if ( empty( $_types ) )
-        {
-            foreach ( OwnerTypes::getDefinedConstants( true ) as $_constant )
-            {
-                $_types[] = '"' . strtolower( $_constant ) . '"';
+        if (empty($_types)) {
+            foreach (OwnerTypes::getDefinedConstants(true) as $_constant) {
+                $_types[] = '"' . strtolower($_constant) . '"';
             }
         }
 
@@ -72,7 +70,7 @@ class Register extends Command
                 [
                     'owner-type',
                     InputArgument::REQUIRED,
-                    'One of the following owner types: ' . implode( ', ', $_types )
+                    'One of the following owner types: ' . implode(', ', $_types)
                 ]
             ]
         );

@@ -47,9 +47,8 @@ class InstanceServiceProvider extends BaseServiceProvider
         //  Register the manager
         $this->singleton(
             static::IOC_NAME,
-            function ( $app )
-            {
-                return new InstanceManager( $app );
+            function ($app){
+                return new InstanceManager($app);
             }
         );
     }

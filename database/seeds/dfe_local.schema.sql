@@ -480,7 +480,7 @@ CREATE TABLE `server_arch_t` (
 /*Table structure for table `server_t` */
 
 DROP TABLE IF EXISTS `server_t`;
-
+ok
 CREATE TABLE `server_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `server_type_id` int(11) NOT NULL,

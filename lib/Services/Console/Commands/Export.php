@@ -33,9 +33,9 @@ class Export extends Command
     {
         return \Queue::push(
             new ExportJob(
-                $this->argument( 'instance-id' ),
+                $this->argument('instance-id'),
                 [
-                    'destination' => $this->option( 'destination' ),
+                    'destination' => $this->option('destination'),
                 ]
             )
         );

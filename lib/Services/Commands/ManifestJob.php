@@ -49,7 +49,7 @@ class ManifestJob extends BaseEnterpriseJob
      *
      * @return $this
      */
-    public function setOutputFile( $outputFile )
+    public function setOutputFile($outputFile)
     {
         $this->_outputFile = $outputFile;
 
@@ -66,7 +66,7 @@ class ManifestJob extends BaseEnterpriseJob
      *
      * @return $this
      */
-    public function setCreateManifest( $createManifest )
+    public function setCreateManifest($createManifest)
     {
         $this->_createManifest = $createManifest;
 
@@ -83,7 +83,7 @@ class ManifestJob extends BaseEnterpriseJob
      *
      * @return $this
      */
-    public function setShowManifest( $showManifest )
+    public function setShowManifest($showManifest)
     {
         $this->_showManifest = $showManifest;
 
@@ -103,7 +103,7 @@ class ManifestJob extends BaseEnterpriseJob
      *
      * @return $this
      */
-    public function setNoKeys( $noKeys = false )
+    public function setNoKeys($noKeys = false)
     {
         $this->_noKeys = $noKeys;
 

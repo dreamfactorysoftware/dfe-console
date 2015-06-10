@@ -49,23 +49,18 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         parent::boot();
 
         //  Have we read these yet?
-        if ( false === $this->_offerings )
-        {
+        if (false === $this->_offerings) {
             $this->_offerings = [];
-            $_list = config( 'dfe.provisioners.hosts.rave.offerings', [] );
+            $_list = config('dfe.provisioners.hosts.rave.offerings', []);
 
-            if ( is_array( $_list ) && !empty( $_list ) )
-            {
-                foreach ( $_list as $_key => $_value )
-                {
-                    if ( !empty( $_key ) )
-                    {
-                        $_offer = new ProvisionerOffering( $_key, $_value );
+            if (is_array($_list) && !empty($_list)) {
+                foreach ($_list as $_key => $_value) {
+                    if (!empty($_key)) {
+                        $_offer = new ProvisionerOffering($_key, $_value);
                         $this->_offerings[$_key] = $_offer->toArray();
                     }
                 }
             }
-
             //\Log::debug( '     * Loaded ' . count( $this->_offerings ) . ' offering(s) for provisioner "rave".' );
         }
     }
@@ -77,15 +72,17 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
      *
      * @return array
      */
-    public function status( Instance $instance )
+    public function status(Instance $instance)
     {
         /** @var Instance $_instance */
-        if ( null === ( $_instance = Instance::find( $instance->id ) ) )
-        {
+        if (null === ($_instance = Instance::find($instance->id))) {
             return ['success' => false, 'error' => ['code' => 404, 'message' => 'Instance not found.']];
         }
 
-        return ['success' => true, 'status' => $_instance->state_nbr, 'status_text' => ProvisionStates::prettyNameOf( $_instance->state_nbr )];
+        return ['success'     => true,
+                'status'      => $_instance->state_nbr,
+                'status_text' => ProvisionStates::prettyNameOf($_instance->state_nbr)
+        ];
     }
 
     /**
@@ -94,39 +91,37 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
      *
      * @return array
      */
-    protected function _doProvision( $request, $options = [] )
+    protected function _doProvision($request, $options = [])
     {
         $_output = [];
         $_result = false;
         $_instance = $request->getInstance();
 
         //	Update the current instance state
-        $_instance->updateState( ProvisionStates::PROVISIONING );
+        $_instance->updateState(ProvisionStates::PROVISIONING);
 
-        try
-        {
+        try {
             //  Provision storage and fill in the request
-            $this->_provisionStorage( $request, $options );
+            $this->_provisionStorage($request, $options);
 
             //  And the instance
-            $_result = $this->_provisionInstance( $request, $options );
+            $_result = $this->_provisionInstance($request, $options);
 
             return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
-        }
-        catch ( \Exception $_ex )
-        {
-            $this->error( '     * exception: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            $this->error('     * exception: ' . $_ex->getMessage());
 
-            $_instance->updateState( ProvisionStates::PROVISIONING_ERROR );
+            $_instance->updateState(ProvisionStates::PROVISIONING_ERROR);
 
             //  Force-kill anything we made before blowing up
-            $request->setForced( true );
+            $request->setForced(true);
 
-            $this->_deprovisionStorage( $request );
+            $this->_deprovisionStorage($request);
 
-            if ( !$this->_deprovisionInstance( $request, ['keep-database' => ( $_ex instanceof SchemaExistsException )] ) )
-            {
-                $this->error( 'Unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.' );
+            if (!$this->_deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
+                $this->error('Unable to remove instance "' .
+                    $_instance->instance_id_text .
+                    '" after failed provision.');
             }
 
             return ['success' => false, 'instance' => false, 'log' => $_output, 'result' => $_result];
@@ -139,24 +134,21 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
      *
      * @return array
      */
-    protected function _doDeprovision( $request, $options = [] )
+    protected function _doDeprovision($request, $options = [])
     {
         $_output = [];
         $_result = false;
         $_instance = $request->getInstance();
 
         //	Update the current instance state
-        $_instance->updateState( ProvisionStates::DEPROVISIONING );
+        $_instance->updateState(ProvisionStates::DEPROVISIONING);
 
-        try
-        {
-            $_result = $this->_deprovisionInstance( $request, $options );
+        try {
+            $_result = $this->_deprovisionInstance($request, $options);
 
             return ['success' => true, 'instance' => $_instance->toArray(), 'log' => $_output, 'result' => $_result];
-        }
-        catch ( \Exception $_ex )
-        {
-            $_instance->updateState( ProvisionStates::DEPROVISIONING_ERROR );
+        } catch (\Exception $_ex) {
+            $_instance->updateState(ProvisionStates::DEPROVISIONING_ERROR);
 
             return ['success' => false, 'instance' => false, 'log' => $_output, 'result' => $_result];
         }
@@ -168,21 +160,21 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
      *
      * @return Filesystem
      */
-    protected function _provisionStorage( $request, $options = [] )
+    protected function _provisionStorage($request, $options = [])
     {
-        \Log::debug( '  * rave: provision storage - begin' );
+        \Log::debug('  * rave: provision storage - begin');
 
         //  Use requested file system if one...
         $_filesystem = $request->getStorage();
 
         //  Do it!
         $request->setStorageProvisioner(
-            $_provisioner = Provision::resolveStorage( $request->getInstance()->guest_location_nbr )
+            $_provisioner = Provision::resolveStorage($request->getInstance()->guest_location_nbr)
         );
 
-        $_provisioner->provision( $request );
+        $_provisioner->provision($request);
 
-        \Log::debug( '  * rave: provision storage - complete' );
+        \Log::debug('  * rave: provision storage - complete');
 
         return $_filesystem;
     }
@@ -193,17 +185,17 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
      *
      * @return bool
      */
-    protected function _deprovisionStorage( $request, $options = [] )
+    protected function _deprovisionStorage($request, $options = [])
     {
-        \Log::debug( '  * rave: deprovision storage' );
+        \Log::debug('  * rave: deprovision storage');
 
         //  Use requested file system if one...
         $_filesystem = $request->getStorage();
 
         //  Do it!
-        Provision::resolveStorage( $request->getInstance()->guest_location_nbr )->deprovision( $request );
+        Provision::resolveStorage($request->getInstance()->guest_location_nbr)->deprovision($request);
 
-        \Log::debug( '  * rave: deprovision storage - complete' );
+        \Log::debug('  * rave: deprovision storage - complete');
 
         return $_filesystem;
     }
@@ -215,7 +207,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
      * @return array
      * @throws ProvisioningException
      */
-    protected function _provisionInstance( $request, $options = [] )
+    protected function _provisionInstance($request, $options = [])
     {
         $_storagePath = null;
 
@@ -224,7 +216,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         $_name = $_instance->instance_name_text;
         $_storageKey = $_instance->storage_id_text;
 
-        \Log::debug( '  * rave: provision instance "' . $_name . '" - begin' );
+        \Log::debug('  * rave: provision instance "' . $_name . '" - begin');
 
         $_storageProvisioner = $request->getStorageProvisioner();
         $_privatePath = $_storageProvisioner->getPrivatePath();
@@ -233,19 +225,23 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         $_dbConfigFile = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_name . '.database.config.php';
 
         //	1. Provision the database
-        $_dbService = Provision::getDatabaseProvisioner( $_instance->guest_location_nbr );
-        $_dbConfig = $_dbService->provision( $request );
+        $_dbService = Provision::getDatabaseProvisioner($_instance->guest_location_nbr);
+        $_dbConfig = $_dbService->provision($request);
 
         $_dbUser = $_dbConfig['username'];
         $_dbPassword = $_dbConfig['password'];
         $_dbName = $_dbConfig['database'];
 
         //  2. Update the instance...
-        $_host = $_name . '.' . config( 'dfe.provisioning.default-dns-zone' ) . '.' . config( 'dfe.provisioning.default-dns-domain' );
+        $_host =
+            $_name .
+            '.' .
+            config('dfe.provisioning.default-dns-zone') .
+            '.' .
+            config('dfe.provisioning.default-dns-domain');
 
         //	Update instance with new provision info
-        try
-        {
+        try {
             $_instance->fill(
                 [
                     'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
@@ -259,7 +255,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                     'ready_state_nbr'    => 0, //   Admin Required
                     'state_nbr'          => ProvisionStates::PROVISIONED,
                     'platform_state_nbr' => 0, //   Not Activated
-                    'start_date'         => date( 'c' ),
+                    'start_date'         => date('c'),
                     'end_date'           => null,
                     'terminate_date'     => null,
                     'provision_ind'      => 1,
@@ -279,7 +275,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
             );
 
             /** @type Cluster $_cluster */
-            $_cluster = Cluster::findOrFail( $_instance->cluster_id, ['cluster_id_text'] );
+            $_cluster = Cluster::findOrFail($_instance->cluster_id, ['cluster_id_text']);
 
             //  Collect metadata
             $_md = new InstanceMetadata(
@@ -291,15 +287,15 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                         'owner-private-path' => $_ownerPrivatePath,
                         'snapshot-path-name' => $_ownerPrivatePath .
                             DIRECTORY_SEPARATOR .
-                            config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
+                            config('dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME),
                     ],
                     'env'   => [
                         'cluster-id'       => $_cluster->cluster_id_text,
-                        'default-domain'   => config( 'dfe.provisioning.default-domain' ),
-                        'signature-method' => config( 'dfe.signature-method' ),
-                        'storage-root'     => config( 'dfe.provisioning.storage-root' ),
-                        'console-api-url'  => config( 'dfe.security.console-api-url' ),
-                        'console-api-key'  => config( 'dfe.security.console-api-key' ),
+                        'default-domain'   => config('dfe.provisioning.default-domain'),
+                        'signature-method' => config('dfe.signature-method'),
+                        'storage-root'     => config('dfe.provisioning.storage-root'),
+                        'console-api-url'  => config('dfe.security.console-api-url'),
+                        'console-api-key'  => config('dfe.security.console-api-key'),
                         'client-id'        => $_appKey->client_id,
                         'client-secret'    => $_appKey->client_secret,
                     ],
@@ -308,18 +304,18 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
 
             //  Merge in the metadata
             $_instanceData = $_instance->instance_data_text;
-            $_instanceData = array_merge( $_instanceData, $_md->toArray() );
+            $_instanceData = array_merge($_instanceData, $_md->toArray());
             $_instance->instance_data_text = $_instanceData;
 
             \DB::transaction(
-                function () use ( $_instance, $_host )
-                {
+                function () use ($_instance, $_host){
                     /**
                      * Add guest data if there is a guest record
                      */
                     $_instance->guest && $_instance->guest->fill(
                         [
-                            'base_image_text'   => config( 'dfe.provisioning.base-image', ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE ),
+                            'base_image_text'   => config('dfe.provisioning.base-image',
+                                ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE),
                             'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
                             'vendor_state_text' => 'running',
                             'public_host_text'  => $_host,
@@ -332,27 +328,21 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
             );
 
             //  Try 'n Save the metadata
-            try
-            {
-                $_md->save( $request->getStorage() );
+            try {
+                $_md->save($request->getStorage());
+            } catch (\Exception $_ex) {
+                \Log::error('Exception saving instance metadata: ' . $_ex->getMessage());
             }
-            catch ( \Exception $_ex )
-            {
-                \Log::error( 'Exception saving instance metadata: ' . $_ex->getMessage() );
-            }
-
             //\Log::debug( '    * rave: instance update - complete' );
-        }
-        catch ( \Exception $_ex )
-        {
-            throw new \RuntimeException( 'Error updating instance data: ' . $_ex->getMessage() );
+        } catch (\Exception $_ex) {
+            throw new \RuntimeException('Error updating instance data: ' . $_ex->getMessage());
         }
 
         //  Fire off a "launch" event...
         //\Log::debug( '    * rave: fire "dfe.launch" event' );
-        \Log::info( '  * rave: provision "' . $_name . '" - complete' );
+        \Log::info('  * rave: provision "' . $_name . '" - complete');
 
-        \Event::fire( 'dfe.launch', [$this, $request, $_md] );
+        \Event::fire('dfe.launch', [$this, $request, $_md]);
 
         return [
             'host'                => $_host,
@@ -363,7 +353,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
             'owner_private_path'  => $_ownerPrivatePath,
             'snapshot_path'       => $_ownerPrivatePath .
                 DIRECTORY_SEPARATOR .
-                config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ),
+                config('dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME),
             'db_host'             => $_dbConfig['host'],
             'db_port'             => $_dbConfig['port'],
             'db_name'             => $_dbName,
@@ -382,36 +372,31 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
      * @return bool
      * @throws ProvisioningException
      */
-    protected function _deprovisionInstance( $request, $options = [] )
+    protected function _deprovisionInstance($request, $options = [])
     {
         $_instance = $request->getInstance();
-        $_keepDatabase = IfSet::get( $options, 'keep-database', false );
+        $_keepDatabase = IfSet::get($options, 'keep-database', false);
 
-        if ( $_keepDatabase )
-        {
-            $this->notice( '    * rave: not removing existing schema.' );
-        }
-        else
-        {
+        if ($_keepDatabase) {
+            $this->notice('    * rave: not removing existing schema.');
+        } else {
             //	Deprovision the database
-            $_dbService = Provision::getDatabaseProvisioner( $_instance->guest_location_nbr );
+            $_dbService = Provision::getDatabaseProvisioner($_instance->guest_location_nbr);
 
-            if ( false === ( $_dbConfig = $_dbService->deprovision( $request ) ) )
-            {
-                throw new ProvisioningException( 'Failed to deprovision database. Check logs for error.' );
+            if (false === ($_dbConfig = $_dbService->deprovision($request))) {
+                throw new ProvisioningException('Failed to deprovision database. Check logs for error.');
             }
         }
 
-        if ( !$_instance->delete() )
-        {
-            throw new \RuntimeException( 'Instance row deletion failed.' );
+        if (!$_instance->delete()) {
+            throw new \RuntimeException('Instance row deletion failed.');
         }
 
-        \Log::debug( '    * rave: instance deleted' );
+        \Log::debug('    * rave: instance deleted');
 
         //  Fire off a "shutdown" event...
-        \Event::fire( 'dfe.shutdown', [$this, $request] );
-        \Log::debug( '    * rave: event "dfe.shutdown" fired' );
+        \Event::fire('dfe.shutdown', [$this, $request]);
+        \Log::debug('    * rave: event "dfe.shutdown" fired');
 
         return true;
     }

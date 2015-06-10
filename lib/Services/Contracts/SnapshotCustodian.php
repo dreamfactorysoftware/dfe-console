@@ -15,7 +15,7 @@ interface SnapshotCustodian
      *
      * @return mixed
      */
-    public function getMetadata( $key = null, $default = null );
+    public function getMetadata($key = null, $default = null);
 
     /**
      * @param string $key
@@ -23,7 +23,6 @@ interface SnapshotCustodian
      *
      * @return $this
      */
-    public function setMetadata( $key, $value = null );
-
+    public function setMetadata($key, $value = null);
 
 }

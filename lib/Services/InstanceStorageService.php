@@ -29,7 +29,8 @@ class InstanceStorageService extends BaseService
     public function boot()
     {
         $this->_privatePathName =
-            $this->_cleanPath( config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME ), false, true );
+            $this->_cleanPath(config('dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME), false,
+                true);
     }
 
     /**
@@ -38,9 +39,9 @@ class InstanceStorageService extends BaseService
      *
      * @return string
      */
-    public function getRootStoragePath( Instance $instance, $append = null )
+    public function getRootStoragePath(Instance $instance, $append = null)
     {
-        return $instance->getRootStoragePath( $append );
+        return $instance->getRootStoragePath($append);
     }
 
     /**
@@ -48,9 +49,9 @@ class InstanceStorageService extends BaseService
      *
      * @return string
      */
-    public function getStoragePath( Instance $instance )
+    public function getStoragePath(Instance $instance)
     {
-        return $this->getRootStoragePath( $instance, $instance->instance_id_text );
+        return $this->getRootStoragePath($instance, $instance->instance_id_text);
     }
 
     /**
@@ -60,9 +61,9 @@ class InstanceStorageService extends BaseService
      *
      * @return mixed
      */
-    public function getPrivatePath( Instance $instance )
+    public function getPrivatePath(Instance $instance)
     {
-        return $this->getStoragePath( $instance ) . DIRECTORY_SEPARATOR . $this->_privatePathName;
+        return $this->getStoragePath($instance) . DIRECTORY_SEPARATOR . $this->_privatePathName;
     }
 
     /**
@@ -72,9 +73,9 @@ class InstanceStorageService extends BaseService
      *
      * @return mixed
      */
-    public function getOwnerPrivatePath( Instance $instance )
+    public function getOwnerPrivatePath(Instance $instance)
     {
-        return $this->getRootStoragePath( $instance, $this->_privatePathName );
+        return $this->getRootStoragePath($instance, $this->_privatePathName);
     }
 
     /**
@@ -82,11 +83,11 @@ class InstanceStorageService extends BaseService
      *
      * @return string
      */
-    public function getSnapshotPath( Instance $instance )
+    public function getSnapshotPath(Instance $instance)
     {
         return
-            $this->getOwnerPrivatePath( $instance ) .
-            $this->_cleanPath( config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME ) );
+            $this->getOwnerPrivatePath($instance) .
+            $this->_cleanPath(config('dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME));
     }
 
     /**
@@ -97,21 +98,21 @@ class InstanceStorageService extends BaseService
      *
      * @return Filesystem
      */
-    protected function _getMount( $instance, $path, $tag = null, $options = [] )
+    protected function _getMount($instance, $path, $tag = null, $options = [])
     {
-        if ( !$instance->webServer )
-        {
-            throw new \InvalidArgumentException( 'No configured web server for instance.' );
+        if (!$instance->webServer) {
+            throw new \InvalidArgumentException('No configured web server for instance.');
         }
 
         $_mount = $instance->webServer->mount;
 
-        if ( !$_mount )
-        {
-            throw new \RuntimeException( 'The web server "' . $instance->webServer->server_id_text . '" does not have a mount defined.' );
+        if (!$_mount) {
+            throw new \RuntimeException('The web server "' .
+                $instance->webServer->server_id_text .
+                '" does not have a mount defined.');
         }
 
-        return $_mount->getFilesystem( $path, $tag, $options );
+        return $_mount->getFilesystem($path, $tag, $options);
     }
 
     /**
@@ -122,9 +123,10 @@ class InstanceStorageService extends BaseService
      *
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getRootStorageMount( Instance $instance, $tag = null )
+    public function getRootStorageMount(Instance $instance, $tag = null)
     {
-        return $this->_getMount( $instance, $this->getRootStoragePath( $instance ), $tag ?: 'storage-root:' . $instance->instance_id_text );
+        return $this->_getMount($instance, $this->getRootStoragePath($instance),
+            $tag ?: 'storage-root:' . $instance->instance_id_text);
     }
 
     /**
@@ -133,9 +135,10 @@ class InstanceStorageService extends BaseService
      *
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getStorageMount( Instance $instance, $tag = null )
+    public function getStorageMount(Instance $instance, $tag = null)
     {
-        return $this->_getMount( $instance, $this->getStoragePath( $instance ), $tag ?: 'storage:' . $instance->instance_id_text );
+        return $this->_getMount($instance, $this->getStoragePath($instance),
+            $tag ?: 'storage:' . $instance->instance_id_text);
     }
 
     /**
@@ -146,9 +149,10 @@ class InstanceStorageService extends BaseService
      *
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getSnapshotMount( Instance $instance, $tag = null )
+    public function getSnapshotMount(Instance $instance, $tag = null)
     {
-        return $this->_getMount( $instance, $this->getSnapshotPath( $instance ), $tag ?: 'snapshots:' . $instance->instance_id_text );
+        return $this->_getMount($instance, $this->getSnapshotPath($instance),
+            $tag ?: 'snapshots:' . $instance->instance_id_text);
     }
 
     /**
@@ -157,9 +161,10 @@ class InstanceStorageService extends BaseService
      *
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getPrivateStorageMount( Instance $instance, $tag = null )
+    public function getPrivateStorageMount(Instance $instance, $tag = null)
     {
-        return $this->_getMount( $instance, $this->getPrivatePath( $instance ), $tag ?: 'private-storage:' . $instance->instance_id_text );
+        return $this->_getMount($instance, $this->getPrivatePath($instance),
+            $tag ?: 'private-storage:' . $instance->instance_id_text);
     }
 
     /**
@@ -168,9 +173,10 @@ class InstanceStorageService extends BaseService
      *
      * @return \Illuminate\Contracts\Filesystem\Filesystem
      */
-    public function getOwnerPrivateStorageMount( Instance $instance, $tag = null )
+    public function getOwnerPrivateStorageMount(Instance $instance, $tag = null)
     {
-        return $this->_getMount( $instance, $this->getOwnerPrivatePath( $instance ), $tag ?: 'owner-private-storage:' . $instance->instance_id_text );
+        return $this->_getMount($instance, $this->getOwnerPrivatePath($instance),
+            $tag ?: 'owner-private-storage:' . $instance->instance_id_text);
     }
 
     /**
@@ -180,11 +186,11 @@ class InstanceStorageService extends BaseService
      *
      * @return string
      */
-    protected function _cleanPath( $path, $addSlash = true, $trimTrailing = false )
+    protected function _cleanPath($path, $addSlash = true, $trimTrailing = false)
     {
-        $path = $path ? ( $addSlash ? DIRECTORY_SEPARATOR : null ) . ltrim( $path, ' ' . DIRECTORY_SEPARATOR ) : $path;
+        $path = $path ? ($addSlash ? DIRECTORY_SEPARATOR : null) . ltrim($path, ' ' . DIRECTORY_SEPARATOR) : $path;
 
-        return $trimTrailing ? rtrim( $path, DIRECTORY_SEPARATOR ) : $path;
+        return $trimTrailing ? rtrim($path, DIRECTORY_SEPARATOR) : $path;
     }
 
     /**

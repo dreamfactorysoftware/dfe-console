@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Facade;
 use League\Flysystem\Filesystem;
 
 /**
- * @method static array create( string $instanceId, Filesystem $fsDestination = null, int $keepDays = 30 )
- * @method static array restore( string $instanceId, string $snapshot, Filesystem $fsDestination = null )
+ * @method static array create(string $instanceId, Filesystem $fsDestination = null, int $keepDays = 30)
+ * @method static array restore(string $instanceId, string $snapshot, Filesystem $fsDestination = null)
  */
 class Snapshot extends Facade
 {

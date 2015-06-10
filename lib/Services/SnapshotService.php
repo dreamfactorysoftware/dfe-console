@@ -64,35 +64,35 @@ class SnapshotService extends BaseService
      *
      * @return array
      */
-    public function create( $instanceId, Filesystem $fsDestination = null, $keepDays = 30 )
+    public function create($instanceId, Filesystem $fsDestination = null, $keepDays = 30)
     {
         //  Build our "mise en place", as it were...
-        $_stamp = date( 'YmdHis' );
-        $_instance = $this->_findInstance( $instanceId );
+        $_stamp = date('YmdHis');
+        $_instance = $this->_findInstance($instanceId);
         $_instanceName = $_instance->instance_name_text;
         $_fsSource = $_instance->getStorageMount();
 
         //  Make our temp path...
         $_tempPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . 'tmp';
-        !is_dir( $_tempPath ) && mkdir( $_tempPath, 0777, true );
+        !is_dir($_tempPath) && mkdir($_tempPath, 0777, true);
 
         //  A-Z, 0-9, and inner dashes (i.e. "abc-xyz"), but not outer (i.e., "-abc-")
         $_idPrefix = trim(
                 preg_replace(
                     '/[^A-Za-z0-9-]+/',
                     null,
-                    config( 'snapshot.id-prefix', static::SNAPSHOT_ID_PREFIX )
+                    config('snapshot.id-prefix', static::SNAPSHOT_ID_PREFIX)
                 ),
                 ' -'
             ) . '-';
 
-        $_id = implode( '.', [Inflector::neutralize( $_instanceName ), $_idPrefix . $_stamp] );
+        $_id = implode('.', [Inflector::neutralize($_instanceName), $_idPrefix . $_stamp]);
 
         //  Start building our metadata array
         $_metadata = array_merge(
             [
                 'id'                         => $_id,
-                'type'                       => config( 'snapshot.metadata-type', 'dfe.snapshot' ),
+                'type'                       => config('snapshot.metadata-type', 'dfe.snapshot'),
                 'snapshot-prefix'            => $_id,
                 'contents-storage-timestamp' => (int)time(),
                 'contents-db-timestamp'      => (int)time(),
@@ -100,48 +100,51 @@ class SnapshotService extends BaseService
             $_instance->getMetadata()
         );
 
-        $_zipFileName = $this->_getConfigValue( 'snapshot.templates.snapshot-file-name', $_metadata );
-        $_metadata['contents-storage-zipball'] = $_storageZipName = $this->_getConfigValue( 'snapshot.templates.storage-file-name', $_metadata );
-        $_metadata['contents-db-dumpfile'] = $this->_getConfigValue( 'snapshot.templates.db-file-name', $_metadata );
-        $_metadata['hash'] = $_hash = RouteHashing::create( $_zipFileName, $keepDays );
+        $_zipFileName = $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
+        $_metadata['contents-storage-zipball'] =
+        $_storageZipName = $this->_getConfigValue('snapshot.templates.storage-file-name', $_metadata);
+        $_metadata['contents-db-dumpfile'] = $this->_getConfigValue('snapshot.templates.db-file-name', $_metadata);
+        $_metadata['hash'] = $_hash = RouteHashing::create($_zipFileName, $keepDays);
         $_metadata['link'] = rtrim(
-                config( 'snapshot.hash_link_base' ),
+                config('snapshot.hash_link_base'),
                 ' ' . DIRECTORY_SEPARATOR
             ) . DIRECTORY_SEPARATOR . $_hash;
 
         //  Prep the temp space...
-        if ( !is_dir( $_tempPath ) && !@mkdir( $_tempPath, 0777, true ) && !@chmod( $_tempPath, 0777 ) )
-        {
-            throw new \RuntimeException( 'Cannot create temporary work space "' . $_tempPath . '". Aborting.' );
+        if (!is_dir($_tempPath) && !@mkdir($_tempPath, 0777, true) && !@chmod($_tempPath, 0777)) {
+            throw new \RuntimeException('Cannot create temporary work space "' . $_tempPath . '". Aborting.');
         }
 
         //  Archive storage
-        if ( !$this->_archivePath( $_fsSource, $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'] ) )
-        {
-            throw new \RuntimeException( 'Unable to archive source file system. Aborting.' );
+        if (!$this->_archivePath($_fsSource,
+            $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'])
+        ) {
+            throw new \RuntimeException('Unable to archive source file system. Aborting.');
         }
 
         //  Mount snapshot and stuff the new files in it
-        $_fsSnapshot = new Filesystem( new ZipArchiveAdapter( $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName ) );
-        $this->_moveWorkFileToArchive( $_fsSnapshot, $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'] );
+        $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_tempPath . DIRECTORY_SEPARATOR . $_zipFileName));
+        $this->_moveWorkFileToArchive($_fsSnapshot,
+            $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball']);
 
         //  Pull a database backup...
-        if ( !$this->_dumpDatabase( $_instance, $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-db-dumpfile'], $_fsSnapshot ) )
-        {
-            throw new \RuntimeException( 'Unable to dump source database. Aborting.' );
+        if (!$this->_dumpDatabase($_instance, $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-db-dumpfile'],
+            $_fsSnapshot)
+        ) {
+            throw new \RuntimeException('Unable to dump source database. Aborting.');
         }
 
-        $_md = $this->_getConfigValue( 'snapshot.templates.metadata', $_metadata );
+        $_md = $this->_getConfigValue('snapshot.templates.metadata', $_metadata);
 
         //  Put it in the snapshot...
-        $_fsSnapshot->put( 'snapshot.json', JsonFile::encode( $_md ) );
+        $_fsSnapshot->put('snapshot.json', JsonFile::encode($_md));
 
         //  Unset to close file
-        unset( $_fsSnapshot );
+        unset($_fsSnapshot);
 
         //  Stuff it in the snapshot
         $this->_moveWorkFileToArchive(
-            $fsDestination ?: InstanceStorage::getSnapshotMount( $_instance ),
+            $fsDestination ?: InstanceStorage::getSnapshotMount($_instance),
             $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName
         );
 
@@ -156,7 +159,7 @@ class SnapshotService extends BaseService
      *
      * @return bool
      */
-    public function restore( $instanceId, $snapshot )
+    public function restore($instanceId, $snapshot)
     {
         //        $_instance = $this->_validateInstance( $instanceId );
         //
@@ -290,10 +293,10 @@ class SnapshotService extends BaseService
      *
      * @return Filesystem
      */
-    protected function _getTempFilesystem( $base = null )
+    protected function _getTempFilesystem($base = null)
     {
         //  Set our temp base
-        return new Filesystem( new Local( $base ?: sys_get_temp_dir() ) );
+        return new Filesystem(new Local($base ?: sys_get_temp_dir()));
     }
 
     /**
@@ -302,25 +305,18 @@ class SnapshotService extends BaseService
      *
      * @return bool
      */
-    protected function _archivePath( $source, $zipPath )
+    protected function _archivePath($source, $zipPath)
     {
-        $zip = new Filesystem( new ZipArchiveAdapter( $zipPath ) );
+        $zip = new Filesystem(new ZipArchiveAdapter($zipPath));
 
-        try
-        {
-            foreach ( $source->listContents( '', true ) as $_file )
-            {
-                if ( $_file['type'] == 'dir' )
-                {
-                    $zip->createDir( $_file['path'] );
-                }
-                elseif ( $_file['type'] == 'link' )
-                {
-                    $zip->put( $_file['path'], $_file['target'] );
-                }
-                elseif ( $_file['type'] == 'file' )
-                {
-                    file_exists( $_file['path'] ) && $this->_writeStream( $zip, $_file['path'], $_file['path'] );
+        try {
+            foreach ($source->listContents('', true) as $_file) {
+                if ($_file['type'] == 'dir') {
+                    $zip->createDir($_file['path']);
+                } elseif ($_file['type'] == 'link') {
+                    $zip->put($_file['path'], $_file['target']);
+                } elseif ($_file['type'] == 'file') {
+                    file_exists($_file['path']) && $this->_writeStream($zip, $_file['path'], $_file['path']);
                 }
             }
 
@@ -328,9 +324,7 @@ class SnapshotService extends BaseService
             $zip = null;
 
             return true;
-        }
-        catch ( \Exception $_ex )
-        {
+        } catch (\Exception $_ex) {
             return false;
         }
     }
@@ -343,56 +337,51 @@ class SnapshotService extends BaseService
      * @return bool
      * @throws NotImplementedException
      */
-    protected function _dumpDatabase( $instance, $dumpFile, $zip )
+    protected function _dumpDatabase($instance, $dumpFile, $zip)
     {
-        if ( $instance->guest_location_nbr != GuestLocations::DFE_CLUSTER )
-        {
+        if ($instance->guest_location_nbr != GuestLocations::DFE_CLUSTER) {
             throw new NotImplementedException();
         }
 
-        try
-        {
+        try {
             //  This script automatically gzips the resultant file...
-            $_command = str_replace( PHP_EOL, null, `which mysqldump` );
+            $_command = str_replace(PHP_EOL, null, `which mysqldump`);
             $_template = $_command . ' --compress --delayed-insert {options} >' . $dumpFile;
             $_port = $instance->db_port_nbr;
             $_name = $instance->db_name_text;
 
             $_options = [
-                '--host=' . escapeshellarg( $instance->db_host_text ),
-                '--user=' . escapeshellarg( $instance->db_user_text ),
-                '--password=' . escapeshellarg( $instance->db_password_text ),
-                '--databases ' . escapeshellarg( $_name ),
+                '--host=' . escapeshellarg($instance->db_host_text),
+                '--user=' . escapeshellarg($instance->db_user_text),
+                '--password=' . escapeshellarg($instance->db_password_text),
+                '--databases ' . escapeshellarg($_name),
             ];
 
-            if ( !empty( $_port ) )
-            {
+            if (!empty($_port)) {
                 $_options[] = '--port=' . $_port;
             }
 
-            $_command = str_replace( '{options}', implode( ' ', $_options ), $_template );
-            $_result = exec( $_command, $_output, $_return );
+            $_command = str_replace('{options}', implode(' ', $_options), $_template);
+            $_result = exec($_command, $_output, $_return);
 
-            if ( 0 != $_return )
-            {
-                throw new \RuntimeException( 'Error while dumping database of instance id "' . $instance->instance_id_text . '".' );
+            if (0 != $_return) {
+                throw new \RuntimeException('Error while dumping database of instance id "' .
+                    $instance->instance_id_text .
+                    '".');
             }
 
-            $this->_writeStream( $zip, $dumpFile, basename( $dumpFile ) );
+            $this->_writeStream($zip, $dumpFile, basename($dumpFile));
 
             //  Clear up some junk
-            unset( $_command, $_result, $_output, $_return );
+            unset($_command, $_result, $_output, $_return);
 
             //  Try and delete...
-            if ( false === @unlink( $dumpFile ) )
-            {
-                $this->warning( 'Failed to remove work file "' . $dumpFile . '" after database dump.' );
+            if (false === @unlink($dumpFile)) {
+                $this->warning('Failed to remove work file "' . $dumpFile . '" after database dump.');
             }
 
             return true;
-        }
-        catch ( \Exception $_ex )
-        {
+        } catch (\Exception $_ex) {
             return false;
         }
     }
@@ -401,11 +390,10 @@ class SnapshotService extends BaseService
      * @param Filesystem|\Illuminate\Contracts\Filesystem\Filesystem $archive
      * @param string                                                 $workFile
      */
-    protected function _moveWorkFileToArchive( $archive, $workFile = null )
+    protected function _moveWorkFileToArchive($archive, $workFile = null)
     {
-        if ( $this->_writeStream( $archive, $workFile, basename( $workFile ) ) )
-        {
-            unlink( $workFile );
+        if ($this->_writeStream($archive, $workFile, basename($workFile))) {
+            unlink($workFile);
         }
 
         return;
@@ -419,40 +407,36 @@ class SnapshotService extends BaseService
      *
      * @return string
      */
-    protected function _getConfigValue( $key, $replacements )
+    protected function _getConfigValue($key, $replacements)
     {
         $_stringified = false;
-        $_setting = config( $key );
+        $_setting = config($key);
 
-        if ( is_array( $_setting ) )
-        {
-            if ( false === ( $_setting = JsonFile::encode( $_setting ) ) )
-            {
-                throw new \InvalidArgumentException( 'The value at key "' . $key . '" is not a string or a jsonable array.' );
+        if (is_array($_setting)) {
+            if (false === ($_setting = JsonFile::encode($_setting))) {
+                throw new \InvalidArgumentException('The value at key "' .
+                    $key .
+                    '" is not a string or a jsonable array.');
             }
 
             $_stringified = true;
         }
 
         //  Surround keys with squiggles
-        if ( !empty( $replacements ) )
-        {
+        if (!empty($replacements)) {
             $_values = [];
-            foreach ( $replacements as $_key => $_value )
-            {
-                if ( !is_array( $_value ) && !is_object( $_value ) )
-                {
+            foreach ($replacements as $_key => $_value) {
+                if (!is_array($_value) && !is_object($_value)) {
                     $_key = '{' . $_key . '}';
                     $_values[$_key] = $_value;
                 }
             }
 
-            $_setting = str_replace( array_keys( $_values ), array_values( $_values ), $_setting );
+            $_setting = str_replace(array_keys($_values), array_values($_values), $_setting);
         }
 
-        if ( $_stringified )
-        {
-            $_setting = JsonFile::decode( $_setting );
+        if ($_stringified) {
+            $_setting = JsonFile::decode($_setting);
         }
 
         return $_setting;
@@ -466,30 +450,23 @@ class SnapshotService extends BaseService
      *
      * @return bool
      */
-    protected function _writeStream( $filesystem, $source, $destination, $config = [] )
+    protected function _writeStream($filesystem, $source, $destination, $config = [])
     {
-        if ( false !== ( $_fd = fopen( $source, 'r' ) ) )
-        {
+        if (false !== ($_fd = fopen($source, 'r'))) {
             //  Fallback gracefully if no stream support
-            if ( method_exists( $filesystem, 'writeStream' ) )
-            {
-                $_result = $filesystem->writeStream( $destination, $_fd, [] );
-            }
-            elseif ( method_exists( $filesystem->getAdapter(), 'writeStream' ) )
-            {
-                $_result = $filesystem->getAdapter()->writeStream( $destination, $_fd, $filesystem->getConfig() );
-            }
-            else
-            {
-                $_result = $filesystem->put( $destination, $source );
+            if (method_exists($filesystem, 'writeStream')) {
+                $_result = $filesystem->writeStream($destination, $_fd, []);
+            } elseif (method_exists($filesystem->getAdapter(), 'writeStream')) {
+                $_result = $filesystem->getAdapter()->writeStream($destination, $_fd, $filesystem->getConfig());
+            } else {
+                $_result = $filesystem->put($destination, $source);
             }
 
-            fclose( $_fd );
+            fclose($_fd);
 
             return $_result;
         }
 
         return false;
     }
-
 }
