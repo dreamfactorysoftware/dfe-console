@@ -471,9 +471,11 @@ CREATE TABLE `server_arch_t` (
   `server_type_id` int(11) DEFAULT NULL,
   `server_id_text` varchar(128) DEFAULT NULL,
   `host_text` varchar(1024) DEFAULT NULL,
+  `mount_id` int(11) DEFAULT NULL,
   `config_text` mediumtext,
+  `create_date` datetime DEFAULT NULL,
   `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 /*Table structure for table `server_t` */
 
