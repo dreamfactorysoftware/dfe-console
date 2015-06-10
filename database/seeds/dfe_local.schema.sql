@@ -474,13 +474,12 @@ CREATE TABLE `server_arch_t` (
   `mount_id` int(11) DEFAULT NULL,
   `config_text` mediumtext,
   `create_date` datetime DEFAULT NULL,
-  `lmod_date` timestamp DEFAULT NULL
+  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `server_t` */
 
 DROP TABLE IF EXISTS `server_t`;
-ok
 CREATE TABLE `server_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `server_type_id` int(11) NOT NULL,
