@@ -27,6 +27,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-ops-client.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-ops-client/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-ops-client/vendor" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-storage.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-storage/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-storage/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/build" />
