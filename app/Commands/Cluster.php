@@ -268,12 +268,8 @@ class Cluster extends ConsoleCommand
             return false;
         }
 
+        //  Subdomain
         if (!$this->optionString('subdomain', 'subdomain_text', $_data, $create)) {
-            return false;
-        }
-
-        //  Config (optional)
-        if (!$this->optionArray('config', 'config_text', $_data)) {
             return false;
         }
 
