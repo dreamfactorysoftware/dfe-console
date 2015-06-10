@@ -1,7 +1,7 @@
 <?php
 return [
     //  View Storage Paths
-    'paths'    => [
+    'paths' => [
         realpath(base_path('resources/views'))
     ],
     //  Compiled View Path

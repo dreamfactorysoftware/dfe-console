@@ -1,26 +1,26 @@
 <?php
 return [
     //  Default Session Driver
-    'driver'          => env('SESSION_DRIVER', 'file'),
+    'driver' => env('SESSION_DRIVER', 'file'),
     //  Session Lifetime
-    'lifetime'        => 120,
+    'lifetime' => 120,
     'expire_on_close' => false,
     //  Session Encryption
-    'encrypt'         => false,
+    'encrypt' => false,
     //  Session File Location
-    'files'           => storage_path() . '/framework/sessions',
+    'files' => storage_path() . '/framework/sessions',
     //  Session Database Connection
-    'connection'      => null,
+    'connection' => null,
     //  Session Database Table
-    'table'           => 'session_t',
+    'table' => 'session_t',
     //  Session Sweeping Lottery
-    'lottery'         => [2, 100],
+    'lottery' => [2, 100],
     //  Session Cookie Name
-    'cookie'          => 'dfe-console-session',
+    'cookie' => 'dfe-console-session',
     //  Session Cookie Path
-    'path'            => '/',
+    'path' => '/',
     //  Session Cookie Domain
-    'domain'          => null,
+    'domain' => null,
     //  HTTPS Only Cookies
-    'secure'          => false,
+    'secure' => false,
 ];

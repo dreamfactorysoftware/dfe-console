@@ -109,10 +109,8 @@ return [
         'snapshot-path-name' => env('DFE_SNAPSHOT_PATH_NAME', ConsoleDefaults::SNAPSHOT_PATH_NAME),
         /** "DFE_*_PATHS" variables can contain one or more, pipe-delimited names of directories to create */
         'public-paths' => explode('|', env('DFE_PUBLIC_PATHS', 'applications|.private')),
-        'private-paths' => explode('|',
-            env('DFE_PRIVATE_PATHS', '.cache|config|scripts|scripts.user|log')),
-        'owner-private-paths' => explode('|',
-            env('DFE_OWNER_PRIVATE_PATHS', ConsoleDefaults::SNAPSHOT_PATH_NAME)),
+        'private-paths' => explode('|', env('DFE_PRIVATE_PATHS', '.cache|config|scripts|scripts.user|log')),
+        'owner-private-paths' => explode('|', env('DFE_OWNER_PRIVATE_PATHS', ConsoleDefaults::SNAPSHOT_PATH_NAME)),
         //******************************************************************************
         //* Instance provisioning defaults
         //******************************************************************************
