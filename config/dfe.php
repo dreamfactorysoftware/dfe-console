@@ -142,10 +142,11 @@ return [
     //* Individual command settings
     //******************************************************************************
     'commands'         => [
-        'setup' => [
-            'display-name'         => 'DreamFactory Enterprise Setup and Initialization',
-            'display-version'      => 'v1.0.x-alpha',
-            'display-copyright'    => 'Copyright (c) 2012-' . date( 'Y' ) . ', All Rights Reserved',
+        //  Display header information
+        'display-name'      => 'DreamFactory Enterprise(tm) Console Manager',
+        'display-version'   => 'v1.0.x-alpha',
+        'display-copyright' => 'Copyright (c) 2012-' . date( 'Y' ) . ', All Rights Reserved',
+        'setup'             => [
             /** Necessary directory structure and modes */
             'required-directories' => [
                 'storage/framework/cache',

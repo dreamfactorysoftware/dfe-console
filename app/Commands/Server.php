@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\ServerTypes;
+use DreamFactory\Enterprise\Database\Models;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,126 +29,6 @@ class Server extends ConsoleCommand
     //******************************************************************************
     //* Methods
     //******************************************************************************
-
-    /**
-     * Handle the command
-     *
-     * @return mixed
-     */
-    public function fire()
-    {
-        switch ( $_command = trim( strtolower( $this->argument( 'operation' ) ) ) )
-        {
-            case 'create':
-            case 'update':
-            case 'delete':
-                return $this->{'_' . $_command . 'Server'}( $this->argument( 'server-id' ) );
-        }
-
-        throw new \InvalidArgumentException( 'The command "' . $_command . '" is invalid' );
-    }
-
-    /**
-     * Create a server
-     *
-     * @param $serverId
-     *
-     * @return bool|\DreamFactory\Enterprise\Database\Models\Server
-     */
-    protected function _createServer( $serverId )
-    {
-        if ( false === ( $_data = $this->_prepareData( $serverId ) ) )
-        {
-            return false;
-        }
-
-        $_server = \DreamFactory\Enterprise\Database\Models\Server::create( $_data );
-
-        $this->output->writeln( 'setup: server id <comment>' . $serverId . '</comment> created.' );
-
-        return $_server;
-    }
-
-    /**
-     * Update a server
-     *
-     * @param $serverId
-     *
-     * @return bool
-     */
-    protected function _updateServer( $serverId )
-    {
-        try
-        {
-            $_server = $this->_findServer( $serverId );
-
-            if ( false === ( $_data = $this->_prepareData() ) )
-            {
-                return false;
-            }
-
-            if ( $_server->update( $_data ) )
-            {
-                $this->output->writeln( 'dfe:server: server id <comment>' . $serverId . '</comment> updated.' );
-
-                return true;
-            }
-
-            $this->output->writeln( 'dfe:server: error updating server id <error>' . $serverId . '</error>' );
-
-            return true;
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->error( 'dfe:server: The server-id "' . $serverId . '" is not valid.' );
-
-            return false;
-        }
-        catch ( \Exception $_ex )
-        {
-            $this->error( 'dfe:server: Error updating server record: ' . $_ex->getMessage() );
-
-            return false;
-        }
-    }
-
-    /**
-     * Update a server
-     *
-     * @param $serverId
-     *
-     * @return bool
-     */
-    protected function _deleteServer( $serverId )
-    {
-        try
-        {
-            $_server = $this->_findServer( $serverId );
-
-            if ( $_server->delete() )
-            {
-                $this->output->writeln( 'dfe:server: server id <comment>' . $serverId . '</comment> deleted.' );
-
-                return true;
-            }
-
-            $this->output->writeln( 'dfe:server: error deleting server id <error>' . $serverId . '</error>' );
-
-            return true;
-        }
-        catch ( ModelNotFoundException $_ex )
-        {
-            $this->error( 'dfe:server: The server-id "' . $serverId . '" is not valid.' );
-
-            return false;
-        }
-        catch ( \Exception $_ex )
-        {
-            $this->error( 'dfe:server: Error deleting server record: ' . $_ex->getMessage() );
-
-            return false;
-        }
-    }
 
     /** @inheritdoc */
     protected function getArguments()
@@ -175,12 +56,128 @@ class Server extends ConsoleCommand
         return array_merge(
             parent::getOptions(),
             [
-                ['server-type', 't', InputOption::VALUE_REQUIRED, 'The type of server: "db", "web", or "app"'],
+                ['server-type', 't', InputOption::VALUE_REQUIRED, 'The type of server: ' . implode( ', ', ServerTypes::getDefinedConstants( true ) )],
                 ['mount-id', 'm', InputOption::VALUE_REQUIRED, 'The id of the storage mount for this server'],
                 ['host-name', 'a', InputOption::VALUE_REQUIRED, 'The host name of this server',],
                 ['config', 'c', InputOption::VALUE_REQUIRED, 'JSON-encoded array of configuration data for this server'],
             ]
         );
+    }
+
+    /**
+     * Handle the command
+     *
+     * @return mixed
+     */
+    public function fire()
+    {
+        parent::fire();
+
+        switch ( $_command = trim( strtolower( $this->argument( 'operation' ) ) ) )
+        {
+            case 'create':
+            case 'update':
+            case 'delete':
+                return $this->{'_' . $_command . 'Server'}( $this->argument( 'server-id' ) );
+        }
+
+        throw new \InvalidArgumentException( 'The "' . $_command . '" operation is not valid' );
+    }
+
+    /**
+     * Create a server
+     *
+     * @param $serverId
+     *
+     * @return bool|\DreamFactory\Enterprise\Database\Models\Server
+     */
+    protected function _createServer( $serverId )
+    {
+        if ( false === ( $_data = $this->_prepareData( $serverId ) ) )
+        {
+            return false;
+        }
+
+        $_server = Models\Server::create( $_data );
+
+        $this->concat( 'server id ' )->asComment( $serverId )->flush( ' created.' );
+
+        return $_server;
+    }
+
+    /**
+     * Update a server
+     *
+     * @param $serverId
+     *
+     * @return bool
+     */
+    protected function _updateServer( $serverId )
+    {
+        try
+        {
+            if ( false === ( $_data = $this->_prepareData() ) )
+            {
+                return false;
+            }
+
+            if ( $this->_findServer( $serverId )->update( $_data ) )
+            {
+                $this->concat( 'server id ' )->asComment( $serverId )->flush( ' updated.' );
+
+                return true;
+            }
+
+            $this->writeln( 'error updating server id "' . $serverId . '"', 'error' );
+        }
+        catch ( ModelNotFoundException $_ex )
+        {
+            $this->writeln( 'server-id "' . $serverId . '" is not valid.', 'error' );
+        }
+        catch ( \Exception $_ex )
+        {
+            $this->writeln( 'error updating server record: ' . $_ex->getMessage(), 'error' );
+        }
+
+        return false;
+    }
+
+    /**
+     * Update a server
+     *
+     * @param $serverId
+     *
+     * @return bool
+     */
+    protected function _deleteServer( $serverId )
+    {
+        try
+        {
+            $_server = $this->_findServer( $serverId );
+
+            if ( $_server->delete() )
+            {
+                $this->concat( 'server id ' )->asComment( $serverId )->flush( ' deleted.' );
+
+                return true;
+            }
+
+            $this->writeln( 'error deleting server id "' . $serverId . '"', 'error' );
+
+            return true;
+        }
+        catch ( ModelNotFoundException $_ex )
+        {
+            $this->writeln( 'the server-id "' . $serverId . '" is not valid.', 'error' );
+
+            return false;
+        }
+        catch ( \Exception $_ex )
+        {
+            $this->writeln( 'error deleting server record: ' . $_ex->getMessage(), 'error' );
+
+            return false;
+        }
     }
 
     /**
@@ -201,7 +198,7 @@ class Server extends ConsoleCommand
             {
                 $this->_findServer( $_serverId );
 
-                $this->error( 'dfe:server: The server-id "' . $_serverId . '" already exists.' );
+                $this->writeln( 'the server-id "' . $_serverId . '" already exists.', 'error' );
 
                 return false;
             }
@@ -225,7 +222,7 @@ class Server extends ConsoleCommand
         {
             if ( $create )
             {
-                $this->error( 'dfe:server: The server-type "' . $_serverType . '" is not valid.' );
+                $this->writeln( 'the server-type "' . $_serverType . '" is not valid.', 'error' );
 
                 return false;
             }
@@ -243,7 +240,7 @@ class Server extends ConsoleCommand
         {
             if ( $create )
             {
-                $this->error( 'dfe:server: The mount-id "' . $_mountId . '" does not exist.' );
+                $this->writeln( 'the mount-id "' . $_mountId . '" does not exists.', 'error' );
 
                 return false;
             }
@@ -254,7 +251,7 @@ class Server extends ConsoleCommand
 
         if ( $create && empty( $_host ) )
         {
-            $this->error( 'dfe:server: When creating a new server, you must specify a "host-name".' );
+            $this->writeln( '"host-name" is required.', 'error' );
 
             return false;
         }
@@ -275,7 +272,7 @@ class Server extends ConsoleCommand
             }
             catch ( \Exception $_ex )
             {
-                $this->error( 'dfe:server: The "config" provided does not contain valid JSON.' );
+                $this->writeln( 'the "config" provided does not contain valid JSON.' );
 
                 return false;
             }
