@@ -3,7 +3,7 @@
 //* Application Cache Settings
 //******************************************************************************
 return [
-    'default' => env( 'CACHE_DRIVER', 'redis' ),
+    'default' => env('CACHE_DRIVER', 'redis'),
     'prefix'  => 'dfe',
     'stores'  => [
         'array'     => [

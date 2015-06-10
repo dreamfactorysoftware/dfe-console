@@ -1,7 +1,7 @@
 <?php
 return [
     //  Default Session Driver
-    'driver'          => env( 'SESSION_DRIVER', 'file' ),
+    'driver'          => env('SESSION_DRIVER', 'file'),
     //  Session Lifetime
     'lifetime'        => 120,
     'expire_on_close' => false,

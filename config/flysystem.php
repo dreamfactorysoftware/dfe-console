@@ -7,26 +7,26 @@ return [
         //  Generalized local storage
         'local'            => [
             'driver' => 'local',
-            'path'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
         //  cluster-east-2 hosted storage
         'cluster-east-2'   => [
             'driver' => 'local',
-            'path'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
         //  mount-east-1 hosted storage
         'mount-east-1'     => [
             'driver' => 'local',
-            'path'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
         //  dfe-mount-east-1 hosted storage
         'dfe-mount-east-1' => [
             'driver' => 'local',
-            'path'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
         'mount-local-1'    => [
             'driver' => 'local',
-            'path'   => env( 'DFE_HOSTED_BASE_PATH', '/data/storage' ),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
 
     ],

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 
@@ -11,9 +11,8 @@ return array(
     |
     */
 
-    'filename'  => '_ide_helper',
-    'format'    => 'php',
-
+    'filename'        => '_ide_helper',
+    'format'          => 'php',
     /*
     |--------------------------------------------------------------------------
     | Helper files to include
@@ -25,11 +24,9 @@ return array(
     */
 
     'include_helpers' => false,
-
-    'helper_files' => array(
-        base_path().'/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
+    'helper_files'    => array(
+        base_path() . '/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
     ),
-
     /*
     |--------------------------------------------------------------------------
     | Model locations to include
@@ -43,8 +40,6 @@ return array(
     'model_locations' => array(
         'app',
     ),
-
-
     /*
     |--------------------------------------------------------------------------
     | Extra classes
@@ -54,12 +49,11 @@ return array(
     |
     */
 
-    'extra' => array(
+    'extra'           => array(
         'Eloquent' => array('Illuminate\Database\Eloquent\Builder', 'Illuminate\Database\Query\Builder'),
-        'Session' => array('Illuminate\Session\Store'),
+        'Session'  => array('Illuminate\Session\Store'),
     ),
-
-    'magic' => array(
+    'magic'           => array(
         'Log' => array(
             'debug'     => 'Monolog\Logger::addDebug',
             'info'      => 'Monolog\Logger::addInfo',
@@ -71,7 +65,6 @@ return array(
             'emergency' => 'Monolog\Logger::addEmergency',
         )
     ),
-    
     /*
     |--------------------------------------------------------------------------
     | Interface implementations
@@ -81,8 +74,8 @@ return array(
     | are detected by the helpers, others can be listed below.
     |
     */
-    
-    'interfaces' => array(
+
+    'interfaces'      => array(
         '\Illuminate\Contracts\Auth\Authenticatable' => config('auth.model', 'App\User'),
     )
 

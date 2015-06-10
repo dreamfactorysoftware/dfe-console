@@ -13,18 +13,16 @@ class CreateClusterLimitTable extends Migration
      */
     public function up()
     {
-        if ( !\Schema::hasTable( 'limit_t' ) )
-        {
+        if (!\Schema::hasTable('limit_t')) {
             \Schema::create(
                 'limit_t',
-                function ( Blueprint $table )
-                {
-                    $table->bigIncrements( 'id' );
-                    $table->integer( 'owner_id' )->index();
-                    $table->integer( 'owner_type_nbr' )->index();
-                    $table->mediumText( 'parameters_text' )->nullable();
-                    $table->dateTime( 'create_date' );
-                    $table->timestamp( 'lmod_date' )->default( \DB::raw( 'CURRENT_TIMESTAMP' ) );
+                function (Blueprint $table){
+                    $table->bigIncrements('id');
+                    $table->integer('owner_id')->index();
+                    $table->integer('owner_type_nbr')->index();
+                    $table->mediumText('parameters_text')->nullable();
+                    $table->dateTime('create_date');
+                    $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
                 }
             );
         }
@@ -37,9 +35,8 @@ class CreateClusterLimitTable extends Migration
      */
     public function down()
     {
-        if ( \Schema::hasTable( 'limit_t' ) )
-        {
-            \Schema::drop( 'limit_t' );
+        if (\Schema::hasTable('limit_t')) {
+            \Schema::drop('limit_t');
         }
     }
 

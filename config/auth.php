@@ -13,5 +13,5 @@ return [
         'expire' => 60,
     ],
     //  If true, users may self-register. Otherwise, admins must create users */
-    'open-registration' => env( 'DFE_OPEN_REGISTRATION', false ),
+    'open-registration' => env('DFE_OPEN_REGISTRATION', false),
 ];
