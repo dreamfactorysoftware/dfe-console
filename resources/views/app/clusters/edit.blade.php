@@ -98,17 +98,17 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="row">
-                    <div class="ng-scope">
-                        <div class="ng-scope">
-                            <div class="col-md-2 df-sidebar-nav">
-                                <df-sidebar-nav>
-                                    <div class="">
+                    <div>
+                        <div>
+                            <div class="col-md-2">
+                                <div>
+                                    <div>
                                         <ul class="nav nav-pills nav-stacked visible-md visible-lg">
                                             <li class="active">
-                                                <a class="" href="/{{$prefix}}/clusters">Manage</a>
+                                                <a href="/{{$prefix}}/clusters">Manage</a>
                                             </li>
-                                            <li class="">
-                                                <a class="" href="/{{$prefix}}/clusters/create">Create</a>
+                                            <li>
+                                                <a href="/{{$prefix}}/clusters/create">Create</a>
                                             </li>
                                         </ul>
                                         <div class="hidden-lg hidden-md" id="sidebar-open">
@@ -116,162 +116,111 @@
                                         </div>
 
                                     </div>
-                                </df-sidebar-nav>
+                                </div>
                             </div>
-                            <div class="col-md-10 df-section df-section-3-round" df-fs-height="">
-                                <df-manage-users class="">
+                            <div class="col-md-10">
+
+                                <div>
                                     <div>
-                                        <div class="">
-                                            <df-section-header class="" data-title="'Manage Servers'">
-                                                <div class="df-section-header df-section-all-round">
-                                                    <h4 class="">Edit Cluster</h4>
-                                                </div>
-                                            </df-section-header>
-
-                                            <!--form-->
-
-                                            <form method="POST" action="/{{$prefix}}/clusters/{{$cluster_id}}">
-                                                <input name="_method" type="hidden" value="PUT">
-                                                <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
-                                                <input id="_server_list" name="_server_list" type="hidden" value="">
-                                                <div class="row">
-
-                                                    <div class="col-md-6">
-                                                        <!--form class="" name="create-user"-->
-                                                        <div class="form-group">
-                                                            <label class="control-label" for="cluster_id_text">Name</label>
-                                                            <input id="cluster_id_text"
-                                                                name="cluster_id_text"
-                                                                class="form-control"
-                                                                value="{{$cluster->cluster_id_text}}"
-                                                                type="text"
-                                                                required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label" for="subdomain_text">Fixed DNS Subdomain</label>
-                                                            <input id="subdomain_text"
-                                                                name="subdomain_text"
-                                                                class="form-control"
-                                                                value="{{$cluster->subdomain_text}}"
-                                                                type="text" required>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label" for="max_instances_nbr">Maximum Allowed Instances</label>
-                                                            <input
-                                                                id="max_instances_nbr"
-                                                                name="max_instances_nbr"
-                                                                class="form-control"
-                                                                value="{{$cluster->max_instances_nbr}}"
-                                                                type="number"
-                                                                min="0"
-                                                                max="1000">
-                                                        </div>
-                                                        <!--/form-->
-                                                    </div>
-
-                                                    <div class="col-md-6">
-                                                        <div class="row">
-                                                            <div class="col-xs-12">
-                                                                <label>Assigned Servers</label>
-                                                                <!--div class="well well-sm">
-                                                                    <div class="btn-group btn-group pull-right">
-
-                                                                    </div>
-                                                                    <div class="btn-group btn-group">
-
-                                                                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
-
-                                                                        <div class="btn-group">
-                                                                            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                                                                                <span id="currentPage">Page 1</span> <span class="caret"></span>
-                                                                            </button>
-                                                                            <ul class="dropdown-menu" role="menu" id="tablePages">
-                                                                            </ul>
-                                                                        </div>
-
-                                                                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
-                                                                    </div>
-
-                                                                    <div class="btn-group">
-
-                                                                        <input id="userSearch" class="form-control input-sm" value="" type="text" placeholder="Search Servers...">
-
-                                                                    </div>
-                                                                    <div class="btn-group pull-right">
-                                                                        <button type="button" id="selectedUsersRemove" class="btn btn-default btn-sm glyphicon glyphicon-plus" title="Assign Server" value="Assign" onclick="" style="width: 40px"></button>
-                                                                    </div>
-                                                                </div-->
-                                                            </div>
-                                                        </div>
-
-                                                        <table cellpadding="0"
-                                                            cellspacing="0"
-                                                            border="0"
-                                                            class="table table-responsive table-bordered table-striped table-hover table-condensed"
-                                                            id="serverTable">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th></th>
-                                                                    <th style="text-align: center; vertical-align: middle;"></th>
-                                                                    <th class="" style="text-align: left; vertical-align: middle;">
-                                                                        Server Name
-                                                                    </th>
-                                                                    <th style="text-align: center; vertical-align: middle;">
-                                                                        Type
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-
-                                                        </table>
-
-                                                        <div class="col-md-12">
-
-                                                            <div class="form-inline">
-                                                                <label>Assign Server&nbsp;&nbsp;&nbsp;</label>
-                                                                <select class="form-control" id="server_select">
-                                                                    <option value="" disabled selected>Select Server...</option>
-                                                                    @foreach($server_dropdown as $key => $value)
-                                                                        <option id="{{$value[1]}}">[{{$value[3]}}] {{$value[2]}}</option>
-                                                                    @endforeach
-                                                                </select>&nbsp;&nbsp;
-                                                                <button type="button" class="btn btn-primary" id="addserver">
-                                                                    Assign
-                                                                </button>
-
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-xs-12">
-                                                        <hr>
-                                                        <div class="form-group">
-                                                            <div class="">
-
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    Update
-                                                                </button>
-                                                                <!--button type="button" class="btn btn-primary" onclick="javascript:save();">
-                                                                    Update
-                                                                </button-->&nbsp;&nbsp;
-                                                                <button type="button" class="btn btn-default" onclick="cancel()">
-                                                                    Close
-                                                                </button>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!--/form-->
+                                        <div>
+                                            <div class="nav nav-pills dfe-section-header">
+                                                <h4>Edit Cluster</h4>
+                                            </div>
                                         </div>
 
-                                        </df-user-details>
-                                    </div>
+                                        <form method="POST" action="/{{$prefix}}/clusters/{{$cluster_id}}">
+                                            <input name="_method" type="hidden" value="PUT">
+                                            <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                            <input id="_server_list" name="_server_list" type="hidden" value="">
+                                            <div class="row">
 
-                                </df-manage-users>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="cluster_id_text">Name</label>
+                                                        <input id="cluster_id_text"
+                                                            name="cluster_id_text"
+                                                            class="form-control"
+                                                            value="{{$cluster->cluster_id_text}}"
+                                                            type="text"
+                                                            required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="subdomain_text">Fixed DNS Subdomain</label>
+                                                        <input id="subdomain_text"
+                                                            name="subdomain_text"
+                                                            class="form-control"
+                                                            value="{{$cluster->subdomain_text}}"
+                                                            type="text" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="max_instances_nbr">Maximum Allowed Instances</label>
+                                                        <input
+                                                            id="max_instances_nbr"
+                                                            name="max_instances_nbr"
+                                                            class="form-control"
+                                                            value="{{$cluster->max_instances_nbr}}"
+                                                            type="number"
+                                                            min="0"
+                                                            max="1000">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <label>Assigned Servers</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <table cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-cluster-servers"
+                                                        id="serverTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th></th>
+                                                                <th>Server Name</th>
+                                                                <th>Type</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                    <div class="col-md-12">
+                                                        <div class="form-inline">
+                                                            <label>Assign Server&nbsp;&nbsp;&nbsp;</label>
+                                                            <select class="form-control" id="server_select">
+                                                                <option value="" disabled selected>Select Server...</option>
+                                                                @foreach($server_dropdown as $key => $value)
+                                                                    <option id="{{$value[1]}}">[{{$value[3]}}] {{$value[2]}}</option>
+                                                                @endforeach
+                                                            </select>&nbsp;&nbsp;
+                                                            <button type="button" class="btn btn-primary" id="addserver">
+                                                                Assign
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <hr>
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <button type="submit" class="btn btn-primary">
+                                                                Update
+                                                            </button>
+                                                            &nbsp;&nbsp;
+                                                            <button type="button" class="btn btn-default" onclick="cancel()">
+                                                                Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -369,6 +318,7 @@
 
         table.row(indexes[0]).remove().draw(false);
     }
+
 
     </script>
 

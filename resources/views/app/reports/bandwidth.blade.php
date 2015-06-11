@@ -332,7 +332,7 @@
     <div style="" class="col-md-10">
         <div>
             <div class="">
-                <div class="df-section-header df-section-all-round">
+                <div class="nav nav-pills dfe-section-header">
                     <h4 class="">Bandwidth</h4>
                 </div>
             </div>

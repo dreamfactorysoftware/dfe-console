@@ -100,7 +100,7 @@
                                 <df-manage-users class=""><div>
                                         <div class="">
                                             <df-section-header class="" data-title="'Edit Instance'">
-                                                <div class="df-section-header df-section-all-round">
+                                                <div class="nav nav-pills dfe-section-header">
                                                     <h4 class="">Create Cluster</h4>
                                                 </div>
                                             </df-section-header>
