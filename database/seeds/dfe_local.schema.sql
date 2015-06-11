@@ -698,7 +698,7 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `csa_beforeDelete` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `csa_beforeDelete` BEFORE DELETE ON `cluster_server_asgn_t` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `csa_beforeDelete` BEFORE DELETE ON `cluster_server_asgn_t` FOR EACH ROW BEGIN
 	INSERT INTO `cluster_server_asgn_arch_t`
 		SELECT *
 		FROM `cluster_server_asgn_t`
@@ -715,7 +715,7 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `cluster_beforeDelete` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `cluster_beforeDelete` BEFORE DELETE ON `cluster_t` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `cluster_beforeDelete` BEFORE DELETE ON `cluster_t` FOR EACH ROW BEGIN
 		INSERT INTO `cluster_arch_t` SELECT * FROM `cluster_t` WHERE `id` = old.id;
     END */$$
 
@@ -728,7 +728,7 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `deactivation_beforeDelete` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `deactivation_beforeDelete` BEFORE DELETE ON `deactivation_t` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `deactivation_beforeDelete` BEFORE DELETE ON `deactivation_t` FOR EACH ROW BEGIN
 	INSERT INTO `deactivation_arch_t` SELECT * FROM `deactivation_t` WHERE `id` = old.id;
     END */$$
 
@@ -741,7 +741,7 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `instanceGuest_beforeDelete` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `instanceGuest_beforeDelete` BEFORE DELETE ON `instance_guest_t` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `instanceGuest_beforeDelete` BEFORE DELETE ON `instance_guest_t` FOR EACH ROW BEGIN
 		INSERT INTO `instance_guest_arch_t` SELECT * FROM `instance_guest_t` WHERE `id` = old.id;
     END */$$
 
@@ -754,7 +754,7 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `isa_beforeDelete` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `isa_beforeDelete` BEFORE DELETE ON `instance_server_asgn_t` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `isa_beforeDelete` BEFORE DELETE ON `instance_server_asgn_t` FOR EACH ROW BEGIN
 		INSERT INTO `instance_server_asgn_arch_t`
 
 			SELECT *
@@ -773,7 +773,7 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `instance_afterInsert` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `instance_afterInsert` AFTER INSERT ON `instance_t` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `instance_afterInsert` AFTER INSERT ON `instance_t` FOR EACH ROW BEGIN
 
 	INSERT INTO `deactivation_t`
 		(user_id, instance_id, activate_by_date, create_date )
@@ -791,11 +791,10 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `instance_beforeDelete` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `instance_beforeDelete` BEFORE DELETE ON `instance_t` FOR EACH ROW BEGIN
-		/* Insert into `instance_arch_t` select * from `instance_t` where `id` = old.id; */
-		DELETE from `deactivation_t` where `user_id` = old.user_id and `instance_id` = old.id;
-		/** Delete any keys **/
-		DELETE FROM `app_key_t` WHERE `owner_id` = old.id AND `owner_type_nbr` = 0;
+/*!50003 CREATE */ /*!50003 TRIGGER `instance_beforeDelete` BEFORE DELETE ON `instance_t` FOR EACH ROW BEGIN
+	DELETE from `deactivation_t` where `user_id` = old.user_id and `instance_id` = old.id;
+	DELETE FROM `app_key_t` WHERE `owner_id` = old.id AND `owner_type_nbr` = 1 /* instance */;
+	DELETE FROM `instance_server_asgn_t` WHERE `instance_id` = old.id;
     END */$$
 
 
@@ -807,10 +806,22 @@ DELIMITER $$
 
 /*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `server_beforeDelete` */$$
 
-/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `server_beforeDelete` BEFORE DELETE ON `server_t` FOR EACH ROW BEGIN
+/*!50003 CREATE */ /*!50003 TRIGGER `server_beforeDelete` BEFORE DELETE ON `server_t` FOR EACH ROW BEGIN
 		INSERT INTO `server_arch_t` SELECT * FROM `server_t` WHERE `id` = old.id;
     END */$$
 
+
+DELIMITER ;
+
+/* Trigger structure for table `user_t` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `user_afterDelete` */$$
+
+/*!50003 CREATE */ /*!50003 TRIGGER `user_afterDelete` AFTER DELETE ON `user_t` FOR EACH ROW BEGIN
+	delete from app_key_t where owner_id = old.id and owner_type_nbr = 0 /* user */;
+    END */$$
 
 DELIMITER ;
 

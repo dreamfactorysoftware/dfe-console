@@ -79,9 +79,10 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
             return ['success' => false, 'error' => ['code' => 404, 'message' => 'Instance not found.']];
         }
 
-        return ['success'     => true,
-                'status'      => $_instance->state_nbr,
-                'status_text' => ProvisionStates::prettyNameOf($_instance->state_nbr)
+        return [
+            'success'     => true,
+            'status'      => $_instance->state_nbr,
+            'status_text' => ProvisionStates::prettyNameOf($_instance->state_nbr),
         ];
     }
 
@@ -119,9 +120,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
             $this->_deprovisionStorage($request);
 
             if (!$this->_deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
-                $this->error('Unable to remove instance "' .
-                    $_instance->instance_id_text .
-                    '" after failed provision.');
+                $this->error('Unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.');
             }
 
             return ['success' => false, 'instance' => false, 'log' => $_output, 'result' => $_result];
@@ -168,9 +167,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         $_filesystem = $request->getStorage();
 
         //  Do it!
-        $request->setStorageProvisioner(
-            $_provisioner = Provision::resolveStorage($request->getInstance()->guest_location_nbr)
-        );
+        $request->setStorageProvisioner($_provisioner = Provision::resolveStorage($request->getInstance()->guest_location_nbr));
 
         $_provisioner->provision($request);
 
@@ -233,17 +230,11 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         $_dbName = $_dbConfig['database'];
 
         //  2. Update the instance...
-        $_host =
-            $_name .
-            '.' .
-            config('dfe.provisioning.default-dns-zone') .
-            '.' .
-            config('dfe.provisioning.default-dns-domain');
+        $_host = $_name . '.' . config('dfe.provisioning.default-dns-zone') . '.' . config('dfe.provisioning.default-dns-domain');
 
         //	Update instance with new provision info
         try {
-            $_instance->fill(
-                [
+            $_instance->fill([
                     'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
                     'instance_id_text'   => $_name,
                     'instance_name_text' => $_name,
@@ -260,34 +251,29 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                     'terminate_date'     => null,
                     'provision_ind'      => 1,
                     'deprovision_ind'    => 0,
-                ]
-            );
+                ]);
 
             /**
              * Generate an app key for the instance
              */
-            $_appKey = AppKey::create(
-                [
+            $_appKey = AppKey::create([
                     'key_class_text' => AppKeyClasses::INSTANCE,
                     'owner_id'       => $_instance->id,
                     'owner_type_nbr' => OwnerTypes::INSTANCE,
-                ]
-            );
+                    'server_secret'  => config('dfe.security.console-api-key'),
+                ]);
 
             /** @type Cluster $_cluster */
             $_cluster = Cluster::findOrFail($_instance->cluster_id, ['cluster_id_text']);
 
             //  Collect metadata
-            $_md = new InstanceMetadata(
-                $_instance->instance_id_text,
-                [
+            $_md = new InstanceMetadata($_instance->instance_id_text, [
                     'db'    => [$_name => $_dbConfig],
                     'paths' => [
                         'private-path'       => $_privatePath,
                         'owner-private-path' => $_ownerPrivatePath,
-                        'snapshot-path-name' => $_ownerPrivatePath .
-                            DIRECTORY_SEPARATOR .
-                            config('dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME),
+                        'snapshot-path-name' => $_ownerPrivatePath . DIRECTORY_SEPARATOR . config('dfe.provisioning.snapshot-path-name',
+                                ConsoleDefaults::SNAPSHOT_PATH_NAME),
                     ],
                     'env'   => [
                         'cluster-id'       => $_cluster->cluster_id_text,
@@ -299,33 +285,28 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                         'client-id'        => $_appKey->client_id,
                         'client-secret'    => $_appKey->client_secret,
                     ],
-                ]
-            );
+                ]);
 
             //  Merge in the metadata
             $_instanceData = $_instance->instance_data_text;
             $_instanceData = array_merge($_instanceData, $_md->toArray());
             $_instance->instance_data_text = $_instanceData;
 
-            \DB::transaction(
-                function () use ($_instance, $_host){
-                    /**
-                     * Add guest data if there is a guest record
-                     */
-                    $_instance->guest && $_instance->guest->fill(
-                        [
-                            'base_image_text'   => config('dfe.provisioning.base-image',
-                                ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE),
-                            'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
-                            'vendor_state_text' => 'running',
-                            'public_host_text'  => $_host,
-                        ]
-                    )->save();
+            \DB::transaction(function () use ($_instance, $_host) {
+                /**
+                 * Add guest data if there is a guest record
+                 */
+                $_instance->guest && $_instance->guest->fill([
+                        'base_image_text'   => config('dfe.provisioning.base-image',
+                            ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE),
+                        'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
+                        'vendor_state_text' => 'running',
+                        'public_host_text'  => $_host,
+                    ])->save();
 
-                    //  Save the instance
-                    $_instance->save();
-                }
-            );
+                //  Save the instance
+                $_instance->save();
+            });
 
             //  Try 'n Save the metadata
             try {
@@ -351,9 +332,8 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
             'storage_path'        => $_storagePath,
             'private_path'        => $_privatePath,
             'owner_private_path'  => $_ownerPrivatePath,
-            'snapshot_path'       => $_ownerPrivatePath .
-                DIRECTORY_SEPARATOR .
-                config('dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME),
+            'snapshot_path'       => $_ownerPrivatePath . DIRECTORY_SEPARATOR . config('dfe.provisioning.snapshot-path-name',
+                    ConsoleDefaults::SNAPSHOT_PATH_NAME),
             'db_host'             => $_dbConfig['host'],
             'db_port'             => $_dbConfig['port'],
             'db_name'             => $_dbName,
