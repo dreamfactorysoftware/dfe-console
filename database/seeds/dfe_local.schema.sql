@@ -212,81 +212,39 @@ CREATE TABLE `instance_t` (
 DROP TABLE IF EXISTS `instance_arch_t`;
 
 CREATE TABLE `instance_arch_t` (
-  `id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `vendor_id` int(11) DEFAULT NULL,
-  `vendor_image_id` int(11) NOT NULL DEFAULT '0',
-  `vendor_credentials_id` int(11) DEFAULT NULL,
-  `guest_location_nbr` int(11) NOT NULL DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `guest_location_nbr` int(11) DEFAULT NULL,
+  `environment_id` int(11) DEFAULT NULL,
   `instance_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `app_server_id` int(11) NOT NULL DEFAULT '6',
-  `web_server_id` int(11) NOT NULL DEFAULT '5',
-  `db_server_id` int(11) NOT NULL DEFAULT '4',
-  `db_host_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
-  `db_port_nbr` int(11) NOT NULL DEFAULT '3306',
-  `db_name_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dreamfactory',
+  `instance_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `instance_data_text` mediumtext COLLATE utf8_unicode_ci,
+  `cluster_id` int(11) DEFAULT NULL,
+  `app_server_id` int(11) DEFAULT NULL,
+  `db_server_id` int(11) DEFAULT NULL,
+  `web_server_id` int(11) DEFAULT NULL,
+  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `db_host_text` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `db_port_nbr` int(11) DEFAULT NULL,
+  `db_name_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `db_user_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `db_password_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `cluster_id` int(11) NOT NULL DEFAULT '1',
-  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
-  `flavor_nbr` int(11) NOT NULL DEFAULT '0',
-  `base_image_text` varchar(32) CHARACTER SET utf8 NOT NULL DEFAULT 't1.micro',
-  `instance_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-  `region_text` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  `availability_zone_text` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-  `security_group_text` varchar(1024) CHARACTER SET utf8 DEFAULT NULL,
-  `ssh_key_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `root_device_type_nbr` int(11) NOT NULL DEFAULT '0',
-  `public_host_text` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `public_ip_text` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
-  `private_host_text` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  `private_ip_text` varchar(20) CHARACTER SET utf8 DEFAULT NULL,
   `request_id_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
   `request_date` datetime DEFAULT NULL,
-  `deprovision_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `provision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
   `trial_instance_ind` tinyint(1) NOT NULL DEFAULT '1',
+  `provision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `deprovision_ind` tinyint(1) NOT NULL DEFAULT '0',
   `state_nbr` int(11) NOT NULL DEFAULT '0',
-  `vendor_state_nbr` int(11) DEFAULT NULL,
-  `vendor_state_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
   `ready_state_nbr` int(11) NOT NULL DEFAULT '0',
   `platform_state_nbr` int(11) NOT NULL DEFAULT '0',
-  `environment_id` int(11) NOT NULL DEFAULT '1',
-  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `last_state_date` datetime DEFAULT NULL,
+  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
+  `last_state_date` datetime NOT NULL,
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `terminate_date` datetime DEFAULT NULL,
-  `create_date` datetime DEFAULT NULL,
-  `lmod_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-/*Table structure for table `instance_guest_arch_t` */
-
-DROP TABLE IF EXISTS `instance_guest_arch_t`;
-
-CREATE TABLE `instance_guest_arch_t` (
-  `id` int(11) NOT NULL,
-  `instance_id` int(11) NOT NULL,
-  `vendor_id` int(11) NOT NULL,
-  `vendor_image_id` int(11) NOT NULL,
-  `vendor_credentials_id` int(11) DEFAULT NULL,
-  `flavor_nbr` int(11) NOT NULL,
-  `base_image_text` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `region_text` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `availability_zone_text` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `security_group_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL,
-  `ssh_key_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `root_device_type_nbr` int(11) NOT NULL,
-  `public_host_text` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `public_ip_text` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `private_host_text` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  `private_ip_text` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `state_nbr` int(11) NOT NULL,
-  `state_text` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
+  `lmod_date` timestamp DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `instance_guest_t` */
@@ -318,6 +276,33 @@ CREATE TABLE `instance_guest_t` (
   KEY `ix_instance_guest_instance_id` (`id`),
   KEY `fk_instance_guest_instance_id` (`instance_id`),
   CONSTRAINT `fk_instance_guest_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Table structure for table `instance_guest_arch_t` */
+
+DROP TABLE IF EXISTS `instance_guest_arch_t`;
+
+CREATE TABLE `instance_guest_arch_t` (
+  `id` int(11) NOT NULL,
+  `instance_id` int(11) NOT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
+  `vendor_image_id` int(11) DEFAULT NULL,
+  `vendor_credentials_id` int(11) DEFAULT NULL,
+  `flavor_nbr` int(11) DEFAULT NULL,
+  `base_image_text` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `region_text` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `availability_zone_text` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `security_group_text` varchar(1024) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ssh_key_text` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `root_device_type_nbr` int(11) DEFAULT NULL,
+  `public_host_text` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `public_ip_text` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `private_host_text` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `private_ip_text` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `state_nbr` int(11) DEFAULT NULL,
+  `state_text` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `instance_server_asgn_arch_t` */
@@ -794,7 +779,6 @@ DELIMITER $$
 /*!50003 CREATE */ /*!50003 TRIGGER `instance_beforeDelete` BEFORE DELETE ON `instance_t` FOR EACH ROW BEGIN
 	DELETE from `deactivation_t` where `user_id` = old.user_id and `instance_id` = old.id;
 	DELETE FROM `app_key_t` WHERE `owner_id` = old.id AND `owner_type_nbr` = 1 /* instance */;
-	DELETE FROM `instance_server_asgn_t` WHERE `instance_id` = old.id;
     END */$$
 
 
