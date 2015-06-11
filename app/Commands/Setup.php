@@ -105,15 +105,14 @@ class Setup extends ConsoleCommand
             'default-domain'   => config('dfe.provisioning.default-domain'),
             'signature-method' => config('dfe.signature-method'),
             'storage-root'     => config('dfe.provisioning.storage-root'),
-            'console-api-url'  => $_endpoint = config('dfe.security.console-api-url'),
+            'console-api-url'  => config('dfe.security.console-api-url'),
             'console-api-key'  => $_apiSecret,
             'client-id'        => $_dashboardKey->client_id,
             'client-secret'    => $_dashboardKey->client_secret,
         ]);
 
-        //  Make a console environment
+        //  5.  Make a console environment
         $_config = <<<INI
-DFE_CONSOLE_API_URL={$_endpoint}
 DFE_CONSOLE_API_KEY={$_apiSecret}
 DFE_CONSOLE_API_CLIENT_ID={$_consoleKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_consoleKey->client_secret}
@@ -121,9 +120,8 @@ INI;
 
         $this->_writeFile('console.env', $_config);
 
-        //  Make a dashboard config file...
+        //  6.  Make a dashboard config file...
         $_config = <<<INI
-DFE_CONSOLE_API_URL={$_endpoint}
 DFE_CONSOLE_API_KEY={$_apiSecret}
 DFE_CONSOLE_API_CLIENT_ID={$_dashboardKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_dashboardKey->client_secret}
