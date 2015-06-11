@@ -2,7 +2,7 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class=""> <img src="/img/logo-navbar-194x50.png" alt="DreamFactory Enterprise" class="dfe-topnav-logo-height"> </a>
+                <a class=""> <img src="/theme/standard/img/logo.png" alt="" class="dfe-topnav-logo-height"> </a>
             </div>
             <div class="collapse navbar-collapse" id="">
                 <ul class="nav navbar-nav navbar-right">
