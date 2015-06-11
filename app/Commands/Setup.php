@@ -65,16 +65,14 @@ class Setup extends ConsoleCommand
             \DB::table('service_user_t')->delete();
 
             //  Add our new user
-            $_user = ServiceUser::create(
-                [
-                    'first_name_text' => 'System',
-                    'last_name_text' => 'Administrator',
-                    'nickname_text' => 'Admin',
-                    'email_addr_text' => $this->argument('admin-email'),
-                    'password_text' => \Hash::make($this->option('admin-password')),
-                    'active_ind' => 1,
-                ]
-            );
+            $_user = ServiceUser::create([
+                'first_name_text' => 'System',
+                'last_name_text'  => 'Administrator',
+                'nickname_text'   => 'Admin',
+                'email_addr_text' => $this->argument('admin-email'),
+                'password_text'   => \Hash::make($this->option('admin-password')),
+                'active_ind'      => 1,
+            ]);
 
             if (empty($_user)) {
                 throw new \Exception('Invalid response from user::create');
@@ -102,19 +100,16 @@ class Setup extends ConsoleCommand
         $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret();
 
         //  4. Generate .dfe.cluster.json file
-        ClusterManifest::make(
-            base_path(),
-            [
-                'cluster-id' => config('dfe.cluster-id'),
-                'default-domain' => config('dfe.provisioning.default-domain'),
-                'signature-method' => config('dfe.signature-method'),
-                'storage-root' => config('dfe.provisioning.storage-root'),
-                'console-api-url' => $_endpoint = config('dfe.security.console-api-url'),
-                'console-api-key' => $_apiSecret,
-                'client-id' => null,
-                'client-secret' => null,
-            ]
-        );
+        ClusterManifest::make(base_path('database/dfe'), [
+            'cluster-id'       => config('dfe.cluster-id'),
+            'default-domain'   => config('dfe.provisioning.default-domain'),
+            'signature-method' => config('dfe.signature-method'),
+            'storage-root'     => config('dfe.provisioning.storage-root'),
+            'console-api-url'  => $_endpoint = config('dfe.security.console-api-url'),
+            'console-api-key'  => $_apiSecret,
+            'client-id'        => $_dashboardKey->client_id,
+            'client-secret'    => $_dashboardKey->client_secret,
+        ]);
 
         //  Make a console environment
         $_config = <<<INI
@@ -128,7 +123,6 @@ INI;
 
         //  Make a dashboard config file...
         $_config = <<<INI
-DFE_OPEN_REGISTRATION=true
 DFE_CONSOLE_API_URL={$_endpoint}
 DFE_CONSOLE_API_KEY={$_apiSecret}
 DFE_CONSOLE_API_CLIENT_ID={$_dashboardKey->client_id}
@@ -141,44 +135,38 @@ INI;
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(
-            parent::getArguments(),
-            [
-                ['admin-email', InputArgument::REQUIRED, 'The admin email address.'],
-            ]
-        );
+        return array_merge(parent::getArguments(), [
+            ['admin-email', InputArgument::REQUIRED, 'The admin email address.'],
+        ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(
-            parent::getOptions(),
+        return array_merge(parent::getOptions(), [
+            ['force', null, InputOption::VALUE_NONE, 'Use to force re-initialization of system.'],
+            ['no-manifest', null, InputOption::VALUE_NONE, 'Do not create a manifest file.'],
+            ['no-keys', null, InputOption::VALUE_NONE, 'Do not create initialization keys.'],
             [
-                ['force', null, InputOption::VALUE_NONE, 'Use to force re-initialization of system.'],
-                ['no-manifest', null, InputOption::VALUE_NONE, 'Do not create a manifest file.'],
-                ['no-keys', null, InputOption::VALUE_NONE, 'Do not create initialization keys.'],
-                [
-                    'admin-password',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'The admin account password to use.',
-                    'dfe.admin'
-                ],
-                [
-                    'api-secret',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'The API secret to use. If not specified, one will be generated'
-                ],
-            ]
-        );
+                'admin-password',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The admin account password to use.',
+                'dfe.admin',
+            ],
+            [
+                'api-secret',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'The API secret to use. If not specified, one will be generated',
+            ],
+        ]);
     }
 
     /**
      * @param string $filename The name of the file relative to /database/dfe/
-     * @param mixed $contents
-     * @param bool $jsonEncode
+     * @param mixed  $contents
+     * @param bool   $jsonEncode
      *
      * @return bool
      */
@@ -192,11 +180,8 @@ INI;
             return false;
         }
 
-        return
-            false !== file_put_contents(
-                $_path . DIRECTORY_SEPARATOR . ltrim($filename, DIRECTORY_SEPARATOR),
-                $jsonEncode ? JsonFile::encode($contents) : $contents
-            );
+        return false !== file_put_contents($_path . DIRECTORY_SEPARATOR . ltrim($filename, DIRECTORY_SEPARATOR),
+            $jsonEncode ? JsonFile::encode($contents) : $contents);
     }
 
     /**
@@ -207,7 +192,8 @@ INI;
         $_backupPath = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
         if (!FileSystem::ensurePath($_backupPath)) {
-            $this->writeln('Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.', 'error');
+            $this->writeln('Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.',
+                'error');
 
             return false;
         }
