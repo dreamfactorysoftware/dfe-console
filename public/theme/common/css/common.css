@@ -1,0 +1,265 @@
+.dfe-topnav-logo-height {
+    max-height: 48px;
+}
+
+.dfe-topmenu {
+    margin: 60px 0px 10px 0px;
+}
+
+.dfe-topmenu-pagename {
+    margin-left: 0px;
+    padding: 0;
+    display: inline-block;
+    margin:  0;
+}
+
+.dfe-section-header {
+    text-align: right;
+    color: white;
+    background: #333333;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    padding: 0px 15px 0px;
+}
+
+
+
+.dfe-table-user td:nth-child(1),
+    th:nth-child(1){
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(2),
+    th:nth-child(2){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(3),
+    th:nth-child(3){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(4),
+    th:nth-child(4){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(5),
+    th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(6),
+    th:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.dfe-table-user {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+
+
+
+.dfe-table-server td:nth-child(1),
+th:nth-child(1){
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-server td:nth-child(2),
+th:nth-child(2){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-server td:nth-child(3),
+th:nth-child(3){
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-server td:nth-child(4),
+th:nth-child(4){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-server td:nth-child(5),
+th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-server td:nth-child(6),
+th:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.dfe-table-server {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+
+.dfe-table-cluster td:nth-child(1),
+th:nth-child(1){
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(2),
+th:nth-child(2){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(3),
+th:nth-child(3){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(4),
+th:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(5),
+th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.dfe-table-cluster {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+
+
+.dfe-table-cluster-servers td:nth-child(1),
+th:nth-child(1){
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster-servers td:nth-child(2),
+th:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster-servers td:nth-child(3),
+th:nth-child(3) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.dfe-table-cluster-servers {
+    font-family: "Arial";
+    font-size: 14px;
+    vertical-align: middle;
+    cursor: text;
+}
+
+
+
+
+
+.dfe-table-instance td:nth-child(1),
+th:nth-child(1){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(2),
+th:nth-child(2){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(3),
+th:nth-child(3){
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(4),
+th:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+    width: 85px;
+}
+
+.dfe-table-instance td:nth-child(5),
+th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(6),
+th:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-instance {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+
+
+
+.dfe-table-policy {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+
+
+form {
+    margin-bottom: 0;
+}
+
+
+.table tr {
+    /*cursor: pointer;*/
+}
+
+
+/*
+.dfe-table th:left {
+    text-align: left;
+    vertical-align: middle;
+}
+*/
