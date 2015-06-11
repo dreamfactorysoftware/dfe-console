@@ -118,7 +118,6 @@ class Setup extends ConsoleCommand
 
         //  Make a console environment
         $_config = <<<INI
-DFE_OPEN_REGISTRATION=false
 DFE_CONSOLE_API_URL={$_endpoint}
 DFE_CONSOLE_API_KEY={$_apiSecret}
 DFE_CONSOLE_API_CLIENT_ID={$_consoleKey->client_id}
