@@ -42,9 +42,8 @@ class PolicyController extends ResourceController
 
     public function index()
     {
-        return View::make('app.policies')
-            ->with('prefix', $this->_prefix)
-            ->with('policies', []);//.index');//->with('nerd', $test);
+        return View::make('app.policies')->with('prefix', $this->_prefix)->with('policies',
+                []);//.index');//->with('nerd', $test);
     }
 
 }

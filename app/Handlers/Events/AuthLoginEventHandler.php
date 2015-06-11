@@ -19,11 +19,9 @@ class AuthLoginEventHandler extends BaseEventHandler
      */
     public function handle(ServiceUser $user, $remember)
     {
-        return $user->update(
-            [
+        return $user->update([
                 'last_login_date'    => $user->freshTimestamp(),
-                'last_login_ip_text' => $this->_request->getClientIp()
-            ]
-        );
+                'last_login_ip_text' => $this->_request->getClientIp(),
+            ]);
     }
 }

@@ -28,7 +28,7 @@ class DataController extends FactoryController
     /**
      * @type array These columns will be forced to search on the base table
      */
-    protected $_forcedColumns = array('id', 'create_date', 'lmod_date', 'user_id');
+    protected $_forcedColumns = ['id', 'create_date', 'lmod_date', 'user_id'];
     /**
      * @type string The resource type
      */
@@ -64,7 +64,7 @@ class DataController extends FactoryController
      *
      * @return \Illuminate\Database\Query\Builder|mixed
      */
-    public function _processDataRequest($table, $count, array $columns = array('*'), $builder = null)
+    public function _processDataRequest($table, $count, array $columns = ['*'], $builder = null)
     {
         try {
             $this->_parseDataRequest(null, $columns);
@@ -80,15 +80,11 @@ class DataController extends FactoryController
             }
 
             if ($this->_search && $this->_columns) {
-                $_where = array();
+                $_where = [];
 
                 foreach ($this->_columns as $_column) {
                     if ($_column['searchable']) {
-                        $_name =
-                            !empty($_column['name'])
-                                ? $_column['name']
-                                : (!empty($_column['data']) ? $_column['data']
-                                : null);
+                        $_name = !empty($_column['name']) ? $_column['name'] : (!empty($_column['data']) ? $_column['data'] : null);
 
                         if (!empty($_name)) {
                             //  Add table name?
@@ -145,9 +141,9 @@ class DataController extends FactoryController
 
         //  Parse the columns
         if (empty($this->_columns) && empty($columns)) {
-            $_dataColumns = IfSet::get($_REQUEST, 'columns', array());
+            $_dataColumns = IfSet::get($_REQUEST, 'columns', []);
 
-            $_columns = array();
+            $_columns = [];
 
             foreach ($_dataColumns as $_column) {
                 if (null !== ($_name = IfSet::get($_column, 'data', IfSet::get($_column, 'name')))) {
@@ -160,7 +156,7 @@ class DataController extends FactoryController
             }
         }
 
-        $_sort = array();
+        $_sort = [];
 
         if (is_array($_sortOrder)) {
             foreach ($_sortOrder as $_key => $_value) {
@@ -195,12 +191,12 @@ class DataController extends FactoryController
 
         $totalRows = (integer)($totalRows ?: 0);
 
-        $_response = array(
+        $_response = [
             'draw'            => (integer)IfSet::get($_REQUEST, 'draw'),
             'recordsTotal'    => $totalRows,
             'recordsFiltered' => (integer)($totalFiltered ?: $totalRows),
             'data'            => $this->_prepareResponseData($data),
-        );
+        ];
 
         return \Response::json($_response);
     }
@@ -215,12 +211,12 @@ class DataController extends FactoryController
      */
     protected function _prepareResponseData($data)
     {
-        $_cleaned = array();
+        $_cleaned = [];
 
         /** @type Model[] $data */
         foreach ($data as $_item) {
-            $_values = (is_object($_item) && method_exists($_item, 'getAttributes'))
-                ? $_item->getAttributes() : (array)$_item;
+            $_values = (is_object($_item) && method_exists($_item,
+                    'getAttributes')) ? $_item->getAttributes() : (array)$_item;
 
             if (null !== ($_id = IfSet::get($_values, 'id'))) {
                 $_values['DT_RowId'] = $_id;
@@ -245,7 +241,7 @@ class DataController extends FactoryController
         $algorithm = ConsoleDefaults::SIGNATURE_METHOD,
         $salt = null,
         $rawOutput = false
-    ){
+    ) {
         if (null === $value) {
             return null;
         }

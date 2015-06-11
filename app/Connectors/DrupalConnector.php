@@ -102,7 +102,7 @@ class DrupalConnector extends BaseService
     {
         return [
             $type . '_hash_text'   => sha1(implode($delimiter, $this->_user->toArray()) . microtime(true)),
-            $type . '_expire_time' => time() + DateTimeIntervals::SECONDS_PER_DAY
+            $type . '_expire_time' => time() + DateTimeIntervals::SECONDS_PER_DAY,
         ];
     }
 

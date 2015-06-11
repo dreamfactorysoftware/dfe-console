@@ -1,54 +1,54 @@
 <?php
 return [
     //  Default connection
-    'default' => 'local',
+    'default'     => 'local',
     //  Connections
     'connections' => [
         //  Generalized local storage
-        'local' => [
+        'local'            => [
             'driver' => 'local',
-            'path' => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
         //  cluster-east-2 hosted storage
-        'cluster-east-2' => [
+        'cluster-east-2'   => [
             'driver' => 'local',
-            'path' => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
         //  mount-east-1 hosted storage
-        'mount-east-1' => [
+        'mount-east-1'     => [
             'driver' => 'local',
-            'path' => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
         //  dfe-mount-east-1 hosted storage
         'dfe-mount-east-1' => [
             'driver' => 'local',
-            'path' => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
-        'mount-local-1' => [
+        'mount-local-1'    => [
             'driver' => 'local',
-            'path' => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'path'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
         ],
 
     ],
     //  Cache
-    'cache' => [
-        'foo' => [
-            'driver' => 'illuminate',
+    'cache'       => [
+        'foo'     => [
+            'driver'    => 'illuminate',
             'connector' => null, // null means use default driver
-            'key' => 'foo',
+            'key'       => 'foo',
             // 'ttl'       => 300
         ],
-        'bar' => [
-            'driver' => 'illuminate',
+        'bar'     => [
+            'driver'    => 'illuminate',
             'connector' => 'redis', // config/cache.php
-            'key' => 'bar',
-            'ttl' => 600,
+            'key'       => 'bar',
+            'ttl'       => 600,
         ],
         'adapter' => [
-            'driver' => 'adapter',
+            'driver'  => 'adapter',
             'adapter' => 'local', // as defined in connections
-            'file' => 'flysystem.json',
-            'ttl' => 600,
+            'file'    => 'flysystem.json',
+            'ttl'     => 600,
         ],
     ],
 ];

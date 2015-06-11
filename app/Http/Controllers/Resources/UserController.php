@@ -30,7 +30,7 @@ class UserController extends ResourceController
     {
         parent::__construct();
 
-        $this->_active = array();
+        $this->_active = [];
     }
 
     /**
@@ -62,11 +62,8 @@ class UserController extends ResourceController
 
             $user_data['password_text'] = '1234567890';
 
-            return \View::make('app.users.edit')
-                ->with('user_id', $id)
-                ->with('prefix', $this->_prefix)
-                ->with('user', $user_data)
-                ->with('is_admin', $is_admin);
+            return \View::make('app.users.edit')->with('user_id', $id)->with('prefix', $this->_prefix)->with('user',
+                    $user_data)->with('is_admin', $is_admin);
         } else {
             return 'FAIL';
         }
@@ -228,16 +225,15 @@ class UserController extends ResourceController
         $users_owners = new ServiceUser;
         $users_admins = new User;
 
-        $_columns =
-            [
-                'id',
-                'first_name_text',
-                'last_name_text',
-                'nickname_text',
-                'email_addr_text',
-                'owner_id',
-                'active_ind'
-            ];
+        $_columns = [
+            'id',
+            'first_name_text',
+            'last_name_text',
+            'nickname_text',
+            'email_addr_text',
+            'owner_id',
+            'active_ind',
+        ];
 
         $o_users = $users_owners->take(500)->get($_columns);
         $a_users = $users_admins->take(500)->get($_columns);
@@ -245,19 +241,13 @@ class UserController extends ResourceController
         $o_users_array = json_decode($o_users);
         $a_users_array = json_decode($a_users);
 
-        array_walk(
-            $o_users_array,
-            function (&$o_user_array){
-                $o_user_array->admin = true;
-            }
-        );
+        array_walk($o_users_array, function (&$o_user_array) {
+            $o_user_array->admin = true;
+        });
 
-        array_walk(
-            $a_users_array,
-            function (&$a_user_array){
-                $a_user_array->admin = false;
-            }
-        );
+        array_walk($a_users_array, function (&$a_user_array) {
+            $a_user_array->admin = false;
+        });
 
         $result = array_merge($o_users_array, $a_users_array);
         $result = array_map("unserialize", array_unique(array_map("serialize", $result)));

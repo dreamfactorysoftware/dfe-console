@@ -4,12 +4,12 @@
 //******************************************************************************
 return [
     'hs' => [
-        'name' => 'HubSpot',
+        'name'     => 'HubSpot',
         'referrer' => ['hubspot.com'],
         'commands' => ['register'],
     ],
     'df' => [
-        'name' => 'DreamFactory',
+        'name'     => 'DreamFactory',
         'referrer' => ['dreamfactory.com'],
         'commands' => ['register'],
     ],

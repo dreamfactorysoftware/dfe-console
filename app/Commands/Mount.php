@@ -35,9 +35,7 @@ class Mount extends ConsoleCommand
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(
-            parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 [
                     'operation',
                     InputArgument::REQUIRED,
@@ -47,34 +45,30 @@ class Mount extends ConsoleCommand
                     'mount-id',
                     InputArgument::REQUIRED,
                     'The id of the mount upon which to perform operation',
-                ]
-            ]
-        );
+                ],
+            ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(
-            parent::getOptions(),
-            [
+        return array_merge(parent::getOptions(), [
                 [
                     'mount-type',
                     't',
                     InputOption::VALUE_REQUIRED,
-                    'The type of mount: ' . implode(', ', MountTypes::getDefinedConstants(true))
+                    'The type of mount: ' . implode(', ', MountTypes::getDefinedConstants(true)),
                 ],
                 ['owner-id', null, InputOption::VALUE_REQUIRED, 'The "owner-id" of this mount'],
                 [
                     'owner-type',
                     null,
                     InputOption::VALUE_REQUIRED,
-                    'The type of owner: ' . implode(', ', OwnerTypes::getDefinedConstants(true))
+                    'The type of owner: ' . implode(', ', OwnerTypes::getDefinedConstants(true)),
                 ],
                 ['root-path', 'p', InputOption::VALUE_REQUIRED, 'The "root-path" of the mount',],
                 ['config', 'c', InputOption::VALUE_REQUIRED, 'JSON-encoded array of configuration data for this mount'],
-            ]
-        );
+            ]);
     }
 
     /**

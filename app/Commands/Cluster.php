@@ -55,9 +55,7 @@ class Cluster extends ConsoleCommand
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(
-            parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 [
                     'operation',
                     InputArgument::REQUIRED,
@@ -67,31 +65,27 @@ class Cluster extends ConsoleCommand
                     'cluster-id',
                     InputArgument::REQUIRED,
                     'The id of the cluster upon which to perform operation',
-                ]
-            ]
-        );
+                ],
+            ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(
-            parent::getOptions(),
-            [
+        return array_merge(parent::getOptions(), [
                 //  Create/Update/Delete
                 ['owner-id', null, InputOption::VALUE_REQUIRED, 'The "owner-id" of this cluster'],
                 [
                     'owner-type',
                     null,
                     InputOption::VALUE_REQUIRED,
-                    'The type of owner: ' . implode(', ', OwnerTypes::getDefinedConstants(true))
+                    'The type of owner: ' . implode(', ', OwnerTypes::getDefinedConstants(true)),
                 ],
                 ['subdomain', null, InputOption::VALUE_REQUIRED, 'The subdomain in which this cluster resides'],
                 ['max-instances', 'm', InputOption::VALUE_REQUIRED, 'The maximum number of instances allowed, if any.'],
                 //  Add/Remove
                 ['server-id', null, InputOption::VALUE_REQUIRED, 'The "server-id" to "add" or "remove"'],
-            ]
-        );
+            ]);
     }
 
     /**

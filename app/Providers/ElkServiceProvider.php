@@ -33,11 +33,8 @@ class ElkServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->singleton(
-            static::IOC_NAME,
-            function ($app){
-                return new ElkService($app);
-            }
-        );
+        $this->singleton(static::IOC_NAME, function ($app) {
+            return new ElkService($app);
+        });
     }
 }

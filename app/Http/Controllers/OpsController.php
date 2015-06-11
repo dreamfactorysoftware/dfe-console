@@ -90,51 +90,49 @@ class OpsController extends Controller
          * This has multiple copies of data because it is used by several different systems
          */
 
-        return SuccessPacket::make(
-            array(
-                'id' => $_instance->id,
-                'archived' => $_archived,
-                'deleted' => false,
-                'metadata' => (array)$_instance->instance_data_text,
-                'root-storage-path' => $_rootStoragePath,
-                'storage-path' => $_storagePath,
+        return SuccessPacket::make([
+                'id'                 => $_instance->id,
+                'archived'           => $_archived,
+                'deleted'            => false,
+                'metadata'           => (array)$_instance->instance_data_text,
+                'root-storage-path'  => $_rootStoragePath,
+                'storage-path'       => $_storagePath,
                 'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
-                'private-path' => $_storagePath . DIRECTORY_SEPARATOR . '.private',
-                'home-links' => config('links'),
+                'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
+                'home-links'         => config('links'),
                 //  snake
                 'instance_name_text' => $_instance->instance_name_text,
-                'instance_id_text' => $_instance->instance_id_text,
-                'state_nbr' => $_instance->state_nbr,
-                'vendor_state_nbr' => $_instance->vendor_state_nbr,
-                'vendor_state_text' => $_instance->vendor_state_text,
-                'provision_ind' => (1 == $_instance->provision_ind),
+                'instance_id_text'   => $_instance->instance_id_text,
+                'state_nbr'          => $_instance->state_nbr,
+                'vendor_state_nbr'   => $_instance->vendor_state_nbr,
+                'vendor_state_text'  => $_instance->vendor_state_text,
+                'provision_ind'      => (1 == $_instance->provision_ind),
                 'trial_instance_ind' => (1 == $_instance->trial_instance_ind),
-                'deprovision_ind' => (1 == $_instance->deprovision_ind),
-                'start_date' => (string)$_instance->start_date,
-                'create_date' => (string)$_instance->create_date,
+                'deprovision_ind'    => (1 == $_instance->deprovision_ind),
+                'start_date'         => (string)$_instance->start_date,
+                'create_date'        => (string)$_instance->create_date,
                 //  camel
-                'instanceName' => $_instance->instance_name_text,
-                'instanceId' => $_instance->id,
-                'vendorInstanceId' => $_instance->instance_id_text,
-                'instanceState' => $_instance->state_nbr,
-                'vendorState' => $_instance->vendor_state_nbr,
-                'vendorStateName' => $_instance->vendor_state_text,
-                'provisioned' => (1 == $_instance->provision_ind),
-                'trial' => (1 == $_instance->trial_instance_ind),
-                'deprovisioned' => (1 == $_instance->deprovision_ind),
-                'startDate' => (string)$_instance->start_date,
-                'createDate' => (string)$_instance->create_date,
+                'instanceName'       => $_instance->instance_name_text,
+                'instanceId'         => $_instance->id,
+                'vendorInstanceId'   => $_instance->instance_id_text,
+                'instanceState'      => $_instance->state_nbr,
+                'vendorState'        => $_instance->vendor_state_nbr,
+                'vendorStateName'    => $_instance->vendor_state_text,
+                'provisioned'        => (1 == $_instance->provision_ind),
+                'trial'              => (1 == $_instance->trial_instance_ind),
+                'deprovisioned'      => (1 == $_instance->deprovision_ind),
+                'startDate'          => (string)$_instance->start_date,
+                'createDate'         => (string)$_instance->create_date,
                 //  morse
-                'instance-id' => $_instance->id,
+                'instance-id'        => $_instance->id,
                 'vendor-instance-id' => $_instance->instance_id_text,
-                'instance-name' => $_instance->instance_name_text,
-                'instance-state' => $_instance->state_nbr,
-                'vendor-state' => $_instance->vendor_state_nbr,
-                'vendor-state-name' => $_instance->vendor_state_text,
-                'start-date' => (string)$_instance->start_date,
-                'create-date' => (string)$_instance->create_date,
-            )
-        );
+                'instance-name'      => $_instance->instance_name_text,
+                'instance-state'     => $_instance->state_nbr,
+                'vendor-state'       => $_instance->vendor_state_nbr,
+                'vendor-state-name'  => $_instance->vendor_state_text,
+                'start-date'         => (string)$_instance->start_date,
+                'create-date'        => (string)$_instance->create_date,
+            ]);
     }
 
     /**
@@ -146,7 +144,7 @@ class OpsController extends Controller
     {
         $_owner = $this->_validateOwner($request);
 
-        $_response = array();
+        $_response = [];
 
         $_instances = Instance::userId($_owner->id)->get();
 
@@ -185,7 +183,7 @@ class OpsController extends Controller
                 }
 
                 $_response[$_tag] = [
-                    'id' => $_tag,
+                    'id'        => $_tag,
                     'offerings' => $_offerings,
                 ];
             }
@@ -304,20 +302,25 @@ class OpsController extends Controller
 
     /**
      * Allows partners to post data in a generic way.
-     * @param string $command
+     *
+     * @param string  $command
      * @param Request $request
+     *
      * @return array
      */
     public function postPartner($command, Request $request)
     {
-        if (empty($command))
+        if (empty($command)) {
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
+        }
 
-        if (null === ($_partnerId = $request->input('pid')) || null === ($_partner = config('partners.' . $_partnerId)))
+        if (null === ($_partnerId = $request->input('pid')) || null === ($_partner = config('partners.' . $_partnerId))) {
             return ErrorPacket::create(Response::HTTP_UNAUTHORIZED);
+        }
 
-        if (!in_array($command, IfSet::get($_partner, 'commands', [])))
+        if (!in_array($command, IfSet::get($_partner, 'commands', []))) {
             return ErrorPacket::create(Response::HTTP_FORBIDDEN);
+        }
 
         /**
          * @todo Insert dynamic partner handler here

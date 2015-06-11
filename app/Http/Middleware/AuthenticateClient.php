@@ -65,11 +65,9 @@ class AuthenticateClient
             return ErrorPacket::create(Response::HTTP_UNAUTHORIZED);
         }
 
-        $request->setUserResolver(
-            function () use ($_owner){
-                return $_owner;
-            }
-        );
+        $request->setUserResolver(function () use ($_owner) {
+            return $_owner;
+        });
 
         return $next($request);
     }

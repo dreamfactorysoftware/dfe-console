@@ -51,7 +51,7 @@ class DashboardController extends FactoryController
                 'disk_usage'    => [
                     'available' => 0,
                     'storage'   => 0,
-                ]
+                ],
             ];
 
             \Cache::put('stats.overall', $_stats, static::STATS_CACHE_TTL);
@@ -151,12 +151,7 @@ class DashboardController extends FactoryController
             \Cache::put('stats.global-stats', $_stats, static::STATS_CACHE_TTL);
         }
 
-        return SuccessPacket::make(
-            array_merge(
-                $_stats,
-                $this->anyStats(false)
-            )
-        );
+        return SuccessPacket::make(array_merge($_stats, $this->anyStats(false)));
     }
 
     /**

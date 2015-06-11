@@ -59,15 +59,13 @@ class ClusterController extends ResourceController
 
         $_ids = [];
 
-        $_rows = ClusterServer::join('server_t', 'id', '=', 'server_id')->get(
-            [
+        $_rows = ClusterServer::join('server_t', 'id', '=', 'server_id')->get([
                 'server_t.id',
                 'server_t.server_id_text',
                 'server_t.server_type_id',
                 'server_t.config_text',
-                'cluster_server_asgn_t.cluster_id'
-            ]
-        );
+                'cluster_server_asgn_t.cluster_id',
+            ]);
 
         /** @type Server $_server */
         foreach ($_rows as $_server) {
@@ -135,7 +133,7 @@ HTML;
                         $_server->server_id_text,
                         strtoupper($_serverType),
                         $_label,
-                        $_button
+                        $_button,
                     ];
                 }
 
@@ -145,22 +143,19 @@ HTML;
                     $_server->server_id_text,
                     strtoupper($_serverType),
                     $_label,
-                    $_button
+                    $_button,
                 ];
             }
         }
 
-        return \View::make(
-            'app.clusters.edit',
-            [
+        return \View::make('app.clusters.edit', [
                 'cluster_id'          => $id,
                 'prefix'              => $this->_prefix,
                 'cluster'             => $_cluster,
                 'servers'             => json_encode($_data),
                 'server_dropdown_all' => json_encode($_dropdown_all),
-                'server_dropdown'     => $_dropdown
-            ]
-        );
+                'server_dropdown'     => $_dropdown,
+            ]);
     }
 
     public function update($id)
@@ -179,9 +174,7 @@ HTML;
             $cluster_assigned_servers_array = array_map('intval', explode(',', $servers));
         }
 
-        $cluster_server_list = ClusterServer::where('cluster_id', '=', $id)
-            ->select(['server_id'])
-            ->get();
+        $cluster_server_list = ClusterServer::where('cluster_id', '=', $id)->select(['server_id'])->get();
 
         $server_ids = [];
 
@@ -192,15 +185,13 @@ HTML;
         $servers_remove = array_diff($server_ids, $cluster_assigned_servers_array);
 
         foreach (array_values($servers_remove) as $value) {
-            ClusterServer::where('server_id', '=', intval($value))
-                ->where('cluster_id', '=', intval($id))
-                ->delete();
+            ClusterServer::where('server_id', '=', intval($value))->where('cluster_id', '=', intval($id))->delete();
         }
 
         $servers_add = array_diff($cluster_assigned_servers_array, $server_ids);
 
         foreach (array_values($servers_add) as $value) {
-            $add = array('server_id' => intval($value), 'cluster_id' => intval($id));
+            $add = ['server_id' => intval($value), 'cluster_id' => intval($id)];
             ClusterServer::create($add);
         }
 
@@ -255,11 +246,10 @@ HTML;
 
     public function index()
     {
-        $asgn_clusters =
-            Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')->distinct()->get([
-                'cluster_t.*',
-                'cluster_id'
-            ]);
+        $asgn_clusters = Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')->distinct()->get([
+            'cluster_t.*',
+            'cluster_id',
+        ]);
 
         $excludes = [];
 

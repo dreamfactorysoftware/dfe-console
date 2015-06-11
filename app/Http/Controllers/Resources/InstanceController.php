@@ -38,20 +38,18 @@ class InstanceController extends ResourceController
     protected function _loadData()
     {
         //echo 'here';
-        $_columns =
-            [
-                'instance_t.id',
-                'instance_t.instance_id_text',
-                'cluster_t.cluster_id_text',
-                'instance_t.create_date',
-                'user_t.email_addr_text',
-                'user_t.lmod_date',
-            ];
+        $_columns = [
+            'instance_t.id',
+            'instance_t.instance_id_text',
+            'cluster_t.cluster_id_text',
+            'instance_t.create_date',
+            'user_t.email_addr_text',
+            'user_t.lmod_date',
+        ];
 
         /** @type Builder $_query */
-        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
-            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
-            ->select($_columns);
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')->join('cluster_t',
+                'instance_t.cluster_id', '=', 'cluster_t.id')->select($_columns);
 
         $test = $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
 
@@ -89,16 +87,13 @@ class InstanceController extends ResourceController
         ];
 
         /** @type Builder $_query */
-        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
-            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
-            ->select($_columns)->where('instance_t.id', '=', $id);
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')->join('cluster_t',
+                'instance_t.cluster_id', '=', 'cluster_t.id')->select($_columns)->where('instance_t.id', '=', $id);
 
         $test = $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
 
-        return View::make('app.instances.edit')->with('instance_id', $id)->with('prefix', $this->_prefix)->with(
-            'instance',
-            $test['response'][0]
-        )->with('clusters', $clusters_list);
+        return View::make('app.instances.edit')->with('instance_id', $id)->with('prefix',
+            $this->_prefix)->with('instance', $test['response'][0])->with('clusters', $clusters_list);
     }
 
     /*
@@ -148,20 +143,18 @@ class InstanceController extends ResourceController
     public function index()
     {
 
-        $_columns =
-            [
-                'instance_t.id',
-                'instance_t.instance_id_text',
-                'cluster_t.cluster_id_text',
-                'instance_t.create_date',
-                'user_t.email_addr_text',
-                'user_t.lmod_date',
-            ];
+        $_columns = [
+            'instance_t.id',
+            'instance_t.instance_id_text',
+            'cluster_t.cluster_id_text',
+            'instance_t.create_date',
+            'user_t.email_addr_text',
+            'user_t.lmod_date',
+        ];
 
         /** @type Builder $_query */
-        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
-            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
-            ->select($_columns);
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')->join('cluster_t',
+                'instance_t.cluster_id', '=', 'cluster_t.id')->select($_columns);
 
         $test = $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
 

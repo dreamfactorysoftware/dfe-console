@@ -46,14 +46,13 @@ class ServerController extends ResourceController
      */
     protected function _loadData()
     {
-        $_columns =
-            array(
-                'server_t.id',
-                'server_t.server_id_text',
-                'server_type_t.type_name_text',
-                'server_t.host_text',
-                'server_t.lmod_date'
-            );
+        $_columns = [
+            'server_t.id',
+            'server_t.server_id_text',
+            'server_type_t.type_name_text',
+            'server_t.host_text',
+            'server_t.lmod_date',
+        ];
 
         /** @type Builder $_query */
         $_query = Server::join('server_type_t', 'server_t.server_type_id', '=', 'server_type_t.id')->select($_columns);
@@ -92,12 +91,9 @@ class ServerController extends ResourceController
             $config = json_decode($server_data->config_text, true);
         }
 
-        return View::make('app.servers.edit')->with('server_id', $id)
-            ->with('prefix', $this->_prefix)
-            ->with('server', $server_data)
-            ->with('server_types', $server_types)
-            ->with('clusters', $cluster_names)
-            ->with('config', $config);
+        return View::make('app.servers.edit')->with('server_id', $id)->with('prefix', $this->_prefix)->with('server',
+                $server_data)->with('server_types', $server_types)->with('clusters', $cluster_names)->with('config',
+                $config);
     }
 
     public function update($id)

@@ -28,8 +28,8 @@ CREATE TABLE `app_key_t` (
   `server_secret` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `owner_id` int(11) NOT NULL,
   `owner_type_nbr` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_key_t_client_id_unique` (`client_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS `auth_reset_t`;
 CREATE TABLE `auth_reset_t` (
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY `auth_reset_t_email_addr_text_index` (`email`),
   KEY `auth_reset_t_token_text_index` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -151,6 +151,61 @@ CREATE TABLE `environment_t` (
 /*Data for the table `environment_t` */
 
 insert into `environment_t`(`id`,`user_id`,`environment_name_text`,`create_date`,`lmod_date`) values (1,NULL,'Development',NOW(),NOW()),(2,NULL,'Production',NOW(),NOW());
+
+/*Table structure for table `instance_t` */
+
+DROP TABLE IF EXISTS `instance_t`;
+
+CREATE TABLE `instance_t` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `guest_location_nbr` int(11) NOT NULL DEFAULT '0',
+  `environment_id` int(11) NOT NULL DEFAULT '1',
+  `instance_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `instance_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `instance_data_text` mediumtext COLLATE utf8_unicode_ci,
+  `cluster_id` int(11) NOT NULL DEFAULT '1',
+  `app_server_id` int(11) NOT NULL DEFAULT '6',
+  `db_server_id` int(11) NOT NULL DEFAULT '4',
+  `web_server_id` int(11) NOT NULL DEFAULT '5',
+  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `db_host_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
+  `db_port_nbr` int(11) NOT NULL DEFAULT '3306',
+  `db_name_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dreamfactory',
+  `db_user_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
+  `db_password_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
+  `request_id_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `request_date` datetime DEFAULT NULL,
+  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `trial_instance_ind` tinyint(1) NOT NULL DEFAULT '1',
+  `provision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `deprovision_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `state_nbr` int(11) NOT NULL DEFAULT '0',
+  `ready_state_nbr` int(11) NOT NULL DEFAULT '0',
+  `platform_state_nbr` int(11) NOT NULL DEFAULT '0',
+  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
+  `last_state_date` datetime NOT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `terminate_date` datetime DEFAULT NULL,
+  `create_date` datetime NOT NULL,
+  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ixu_instance_name` (`instance_name_text`),
+  KEY `fk_instance_environment` (`environment_id`),
+  KEY `fk_instance_user_id` (`user_id`),
+  KEY `fk_instance_cluster_id` (`cluster_id`),
+  KEY `fk_instance_app_server_id` (`app_server_id`),
+  KEY `fk_instance_db_server_id` (`db_server_id`),
+  KEY `fk_instance_web_server` (`web_server_id`),
+  KEY `ix_state_date` (`last_state_date`),
+  CONSTRAINT `fk_instance_app_server_id` FOREIGN KEY (`app_server_id`) REFERENCES `server_t` (`id`),
+  CONSTRAINT `fk_instance_cluster_id` FOREIGN KEY (`cluster_id`) REFERENCES `cluster_t` (`id`),
+  CONSTRAINT `fk_instance_db_server_id` FOREIGN KEY (`db_server_id`) REFERENCES `server_t` (`id`),
+  CONSTRAINT `fk_instance_environment` FOREIGN KEY (`environment_id`) REFERENCES `environment_t` (`id`),
+  CONSTRAINT `fk_instance_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`),
+  CONSTRAINT `fk_instance_web_server` FOREIGN KEY (`web_server_id`) REFERENCES `server_t` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `instance_arch_t` */
 
@@ -292,61 +347,6 @@ CREATE TABLE `instance_server_asgn_t` (
   CONSTRAINT `fk_isa_server_id` FOREIGN KEY (`server_id`) REFERENCES `server_t` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-/*Table structure for table `instance_t` */
-
-DROP TABLE IF EXISTS `instance_t`;
-
-CREATE TABLE `instance_t` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `guest_location_nbr` int(11) NOT NULL DEFAULT '0',
-  `environment_id` int(11) NOT NULL DEFAULT '1',
-  `instance_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `instance_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-  `instance_data_text` mediumtext COLLATE utf8_unicode_ci,
-  `cluster_id` int(11) NOT NULL DEFAULT '1',
-  `app_server_id` int(11) NOT NULL DEFAULT '6',
-  `db_server_id` int(11) NOT NULL DEFAULT '4',
-  `web_server_id` int(11) NOT NULL DEFAULT '5',
-  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `db_host_text` varchar(1024) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'localhost',
-  `db_port_nbr` int(11) NOT NULL DEFAULT '3306',
-  `db_name_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dreamfactory',
-  `db_user_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
-  `db_password_text` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT 'dsp_user',
-  `request_id_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
-  `request_date` datetime DEFAULT NULL,
-  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `trial_instance_ind` tinyint(1) NOT NULL DEFAULT '1',
-  `provision_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `deprovision_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `state_nbr` int(11) NOT NULL DEFAULT '0',
-  `ready_state_nbr` int(11) NOT NULL DEFAULT '0',
-  `platform_state_nbr` int(11) NOT NULL DEFAULT '0',
-  `storage_version_nbr` int(11) NOT NULL DEFAULT '0',
-  `last_state_date` datetime NOT NULL,
-  `start_date` datetime DEFAULT NULL,
-  `end_date` datetime DEFAULT NULL,
-  `terminate_date` datetime DEFAULT NULL,
-  `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `ixu_instance_name` (`instance_name_text`),
-  KEY `fk_instance_environment` (`environment_id`),
-  KEY `fk_instance_user_id` (`user_id`),
-  KEY `fk_instance_cluster_id` (`cluster_id`),
-  KEY `fk_instance_app_server_id` (`app_server_id`),
-  KEY `fk_instance_db_server_id` (`db_server_id`),
-  KEY `fk_instance_web_server` (`web_server_id`),
-  KEY `ix_state_date` (`last_state_date`),
-  CONSTRAINT `fk_instance_app_server_id` FOREIGN KEY (`app_server_id`) REFERENCES `server_t` (`id`),
-  CONSTRAINT `fk_instance_cluster_id` FOREIGN KEY (`cluster_id`) REFERENCES `cluster_t` (`id`),
-  CONSTRAINT `fk_instance_db_server_id` FOREIGN KEY (`db_server_id`) REFERENCES `server_t` (`id`),
-  CONSTRAINT `fk_instance_environment` FOREIGN KEY (`environment_id`) REFERENCES `environment_t` (`id`),
-  CONSTRAINT `fk_instance_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`),
-  CONSTRAINT `fk_instance_web_server` FOREIGN KEY (`web_server_id`) REFERENCES `server_t` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 /*Table structure for table `job_fail_t` */
 
 DROP TABLE IF EXISTS `job_fail_t`;
@@ -448,8 +448,8 @@ CREATE TABLE `role_t` (
   `description_text` text COLLATE utf8_unicode_ci NOT NULL,
   `active_ind` tinyint(4) NOT NULL,
   `home_view_text` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `lmod_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `create_date` datetime NOT NULL,
+  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_t_role_name_text_unique` (`role_name_text`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -591,17 +591,19 @@ DROP TABLE IF EXISTS `user_t`;
 
 CREATE TABLE `user_t` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `drupal_id` int(11) DEFAULT NULL,
-  `api_token_text` varchar(128) DEFAULT NULL,
+  `owner_id` int(11) DEFAULT NULL,
+  `owner_type_nbr` int(11) DEFAULT NULL,
+  `external_id` int(11) DEFAULT NULL,
+  `external_password_text` varchar(200) DEFAULT NULL,
+  `admin_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `active_ind` tinyint(1) NOT NULL DEFAULT '1',
   `first_name_text` varchar(64) DEFAULT NULL,
   `last_name_text` varchar(64) DEFAULT NULL,
   `nickname_text` varchar(64) DEFAULT NULL,
   `display_name_text` varchar(128) DEFAULT NULL,
   `email_addr_text` varchar(200) NOT NULL,
   `password_text` varchar(200) NOT NULL COMMENT 'Big cuz it is a hash',
-  `drupal_password_text` varchar(200) DEFAULT NULL,
-  `owner_id` int(11) DEFAULT NULL,
-  `owner_type_nbr` int(11) DEFAULT NULL,
   `company_name_text` varchar(128) DEFAULT NULL,
   `title_text` varchar(128) DEFAULT NULL,
   `city_text` varchar(64) DEFAULT NULL,
@@ -609,7 +611,6 @@ CREATE TABLE `user_t` (
   `country_text` varchar(2) DEFAULT NULL,
   `postal_code_text` varchar(32) DEFAULT NULL,
   `phone_text` varchar(32) DEFAULT NULL,
-  `fax_text` varchar(32) DEFAULT NULL,
   `opt_in_ind` tinyint(1) NOT NULL DEFAULT '1',
   `agree_ind` tinyint(1) NOT NULL DEFAULT '0',
   `valid_email_hash_text` varchar(128) DEFAULT NULL,
@@ -619,10 +620,8 @@ CREATE TABLE `user_t` (
   `recover_hash_expire_time` int(11) DEFAULT NULL,
   `last_login_date` datetime DEFAULT NULL,
   `last_login_ip_text` varchar(64) DEFAULT NULL,
-  `admin_ind` tinyint(1) NOT NULL DEFAULT '0',
   `storage_id_text` varchar(64) NOT NULL,
-  `activate_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `active_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `api_token_text` varchar(128) DEFAULT NULL,
   `remember_token` varchar(128) DEFAULT NULL,
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

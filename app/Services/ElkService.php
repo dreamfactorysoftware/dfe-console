@@ -150,15 +150,15 @@ class ElkService extends BaseService
                     'terms' => [
                         'field' => 'fabric.facility.raw',
                         'size'  => 10,
-                    ]
+                    ],
                 ],
                 'published_on' => [
                     'date_histogram' => [
                         'field'    => '@timestamp',
                         'interval' => $interval,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         if (empty($term)) {
@@ -166,7 +166,7 @@ class ElkService extends BaseService
                 'terms' => [
                     'field' => 'fabric.path.raw',
                     'size'  => 10,
-                ]
+                ],
             ];
 
             if (!empty($facility)) {
@@ -247,7 +247,7 @@ class ElkService extends BaseService
             'from'  => $from,
             'sort'  => [
                 '@timestamp' => [
-                    'order' => 'desc'
+                    'order' => 'desc',
                 ],
             ],
         ];
@@ -291,7 +291,7 @@ class ElkService extends BaseService
             'from'  => 0,
             'sort'  => [
                 '@timestamp' => [
-                    'order' => 'desc'
+                    'order' => 'desc',
                 ],
             ],
         ];

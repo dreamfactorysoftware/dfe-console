@@ -12,7 +12,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        'Symfony\Component\HttpKernel\Exception\HttpException'
+        'Symfony\Component\HttpKernel\Exception\HttpException',
     ];
 
     /**

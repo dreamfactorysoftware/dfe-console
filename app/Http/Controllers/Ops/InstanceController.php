@@ -32,20 +32,18 @@ class InstanceController extends OpsResourceController
      */
     protected function _loadData()
     {
-        $_columns =
-            [
-                'instance_t.id',
-                'instance_t.instance_id_text',
-                'cluster_t.cluster_id_text',
-                'instance_t.create_date',
-                'user_t.email_addr_text',
-                'user_t.lmod_date',
-            ];
+        $_columns = [
+            'instance_t.id',
+            'instance_t.instance_id_text',
+            'cluster_t.cluster_id_text',
+            'instance_t.create_date',
+            'user_t.email_addr_text',
+            'user_t.lmod_date',
+        ];
 
         /** @type Builder $_query */
-        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')
-            ->join('cluster_t', 'instance_t.cluster_id', '=', 'cluster_t.id')
-            ->select($_columns);
+        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')->join('cluster_t',
+                'instance_t.cluster_id', '=', 'cluster_t.id')->select($_columns);
 
         return $this->_processDataRequest('instance_t', Instance::count(), $_columns, $_query);
     }

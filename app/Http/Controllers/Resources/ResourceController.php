@@ -29,7 +29,7 @@ class ResourceController extends DataController
     protected function _loadData()
     {
         try {
-            return $this->_processDataRequest($this->_tableName, call_user_func(array($this->_model, 'count')));
+            return $this->_processDataRequest($this->_tableName, call_user_func([$this->_model, 'count']));
         } catch (\Exception $_ex) {
             throw new BadRequestHttpException($_ex->getMessage());
         }
@@ -57,17 +57,15 @@ class ResourceController extends DataController
      */
     public function create(array $viewData = [])
     {
-        return \View::make(
-            $this->_getResourceView(),
-            array_merge(array('model' => false, 'pageHeader' => 'New ' . ucwords($this->_resource)), $viewData)
-        );
+        return \View::make($this->_getResourceView(),
+            array_merge(['model' => false, 'pageHeader' => 'New ' . ucwords($this->_resource)], $viewData));
     }
 
     /** {@InheritDoc} */
     public function show($id)
     {
         try {
-            return Packet::success(call_user_func(array($this->_model, 'findOrFail'), $id));
+            return Packet::success(call_user_func([$this->_model, 'findOrFail'], $id));
         } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
@@ -77,10 +75,10 @@ class ResourceController extends DataController
     public function edit($id)
     {
         try {
-            $_model = call_user_func(array($this->_model, 'findOrFail'), $id);
+            $_model = call_user_func([$this->_model, 'findOrFail'], $id);
 
             return \View::make($this->_getResourceView(),
-                array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)));
+                ['model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)]);
         } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
@@ -90,10 +88,10 @@ class ResourceController extends DataController
     public function update($id)
     {
         try {
-            $_model = call_user_func(array($this->_model, 'findOrFail'), $id);
+            $_model = call_user_func([$this->_model, 'findOrFail'], $id);
 
             return \View::make($this->_getResourceView(),
-                array('model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)));
+                ['model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)]);
         } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
@@ -103,7 +101,7 @@ class ResourceController extends DataController
     public function destroy($id)
     {
         try {
-            $_model = call_user_func(array($this->_model, 'findOrFail'), $id);
+            $_model = call_user_func([$this->_model, 'findOrFail'], $id);
 
             if (!$_model->delete()) {
                 return ErrorPacket::create(\Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR,
