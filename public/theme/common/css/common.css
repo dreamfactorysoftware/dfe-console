@@ -257,9 +257,15 @@ form {
 }
 
 
-/*
-.dfe-table th:left {
-    text-align: left;
-    vertical-align: middle;
+.sorting {
+    /*background: url('../../../img/sort-both.png') no-repeat center right;*/
 }
-*/
+
+.sorting_asc {
+    background: url('../../../img/sort-asc.png') no-repeat center right;
+}
+
+.sorting_desc {
+    background: url('../../../img/sort-desc.png') no-repeat center right;
+}
+
