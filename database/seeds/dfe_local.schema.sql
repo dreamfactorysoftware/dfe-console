@@ -12,9 +12,9 @@ MySQL - 5.5.43-0ubuntu0.14.04.1 : Database - dfe_local
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`dfe_local` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`dfe_local2` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
-USE `dfe_local`;
+USE `dfe_local2`;
 
 /*Table structure for table `app_key_t` */
 
@@ -244,7 +244,7 @@ CREATE TABLE `instance_arch_t` (
   `end_date` datetime DEFAULT NULL,
   `terminate_date` datetime DEFAULT NULL,
   `create_date` datetime NOT NULL,
-  `lmod_date` timestamp DEFAULT NULL
+  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `instance_guest_t` */
@@ -302,7 +302,7 @@ CREATE TABLE `instance_guest_arch_t` (
   `state_nbr` int(11) DEFAULT NULL,
   `state_text` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
-  `lmod_date` timestamp DEFAULT NULL
+  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `instance_server_asgn_arch_t` */

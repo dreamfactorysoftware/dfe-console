@@ -154,6 +154,7 @@ return [
         'setup'             => [
             /** Necessary directory structure and modes */
             'required-directories' => [
+                'bootstrap/cache',
                 'storage/framework/cache',
                 'storage/framework/sessions',
                 'storage/framework/views',
