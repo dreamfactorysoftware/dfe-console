@@ -95,9 +95,9 @@ class Setup extends ConsoleCommand
         }
 
         //  3. Create console and dashboard API key sets
-        $_consoleKey = AppKey::createKey(0, OwnerTypes::CONSOLE);
-        $_dashboardKey = AppKey::createKey(0, OwnerTypes::DASHBOARD);
         $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret();
+        $_consoleKey = AppKey::createKey(0, OwnerTypes::CONSOLE, ['server_secret' => $_apiSecret]);
+        $_dashboardKey = AppKey::createKey(0, OwnerTypes::DASHBOARD, ['server_secret' => $_apiSecret]);
 
         //  4. Generate .dfe.cluster.json file
         ClusterManifest::make(base_path('database/dfe'), [
