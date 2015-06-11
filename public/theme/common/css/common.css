@@ -24,228 +24,6 @@
 
 
 
-.dfe-table-user td:nth-child(1),
-    th:nth-child(1){
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-user td:nth-child(2),
-    th:nth-child(2){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-user td:nth-child(3),
-    th:nth-child(3){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-user td:nth-child(4),
-    th:nth-child(4){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-user td:nth-child(5),
-    th:nth-child(5) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-user td:nth-child(6),
-    th:nth-child(6) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-
-.dfe-table-user {
-    font-family: "Arial";
-    font-size: 14px;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-
-
-
-
-.dfe-table-server td:nth-child(1),
-th:nth-child(1){
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-server td:nth-child(2),
-th:nth-child(2){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-server td:nth-child(3),
-th:nth-child(3){
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-server td:nth-child(4),
-th:nth-child(4){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-server td:nth-child(5),
-th:nth-child(5) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-server td:nth-child(6),
-th:nth-child(6) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-
-.dfe-table-server {
-    font-family: "Arial";
-    font-size: 14px;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-
-
-.dfe-table-cluster td:nth-child(1),
-th:nth-child(1){
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-cluster td:nth-child(2),
-th:nth-child(2){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-cluster td:nth-child(3),
-th:nth-child(3){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-cluster td:nth-child(4),
-th:nth-child(4) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-cluster td:nth-child(5),
-th:nth-child(5) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-
-.dfe-table-cluster {
-    font-family: "Arial";
-    font-size: 14px;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-
-
-
-.dfe-table-cluster-servers td:nth-child(1),
-th:nth-child(1){
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-cluster-servers td:nth-child(2),
-th:nth-child(2) {
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-cluster-servers td:nth-child(3),
-th:nth-child(3) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-
-.dfe-table-cluster-servers {
-    font-family: "Arial";
-    font-size: 14px;
-    vertical-align: middle;
-    cursor: text;
-}
-
-
-
-
-
-.dfe-table-instance td:nth-child(1),
-th:nth-child(1){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-instance td:nth-child(2),
-th:nth-child(2){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-instance td:nth-child(3),
-th:nth-child(3){
-    text-align: left;
-    vertical-align: middle;
-}
-
-.dfe-table-instance td:nth-child(4),
-th:nth-child(4) {
-    text-align: center;
-    vertical-align: middle;
-    width: 85px;
-}
-
-.dfe-table-instance td:nth-child(5),
-th:nth-child(5) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-instance td:nth-child(6),
-th:nth-child(6) {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dfe-table-instance {
-    font-family: "Arial";
-    font-size: 14px;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-
-
-
-
-.dfe-table-policy {
-    font-family: "Arial";
-    font-size: 14px;
-    cursor: pointer;
-    vertical-align: middle;
-}
-
-
-
 
 form {
     margin-bottom: 0;
@@ -268,4 +46,377 @@ form {
 .sorting_desc {
     background: url('../../../img/sort-desc.png') no-repeat center right;
 }
+
+
+
+
+
+/**********************************************************
+*
+*   Users
+*
+***********************************************************/
+
+
+.dfe-table-user th:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-user th:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user th:nth-child(3) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user th:nth-child(4) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-user th:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(3) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(4) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-user td:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+
+.dfe-table-user {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+/**********************************************************
+*
+*   Servers
+*
+***********************************************************/
+
+
+.dfe-table-server th:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+    width: 125px;
+}
+
+.dfe-table-server th:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+    width: 150px;
+}
+
+.dfe-table-server th:nth-child(3) {
+    text-align: center;
+    vertical-align: middle;
+    width: 105px;
+}
+
+.dfe-table-server th:nth-child(4) {
+    text-align: left;
+    vertical-align: middle;
+    width: 200px;
+}
+
+.dfe-table-server th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+    width: 125px;
+}
+
+.dfe-table-server th:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+    width: 175px;
+}
+
+
+.dfe-table-server td:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+    width: 125px;
+}
+
+.dfe-table-server td:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+    width: 150px;
+}
+
+.dfe-table-server td:nth-child(3) {
+    text-align: center;
+    vertical-align: middle;
+    width: 105px;
+}
+
+.dfe-table-server td:nth-child(4) {
+    text-align: left;
+    vertical-align: middle;
+    width: 200px;
+}
+
+.dfe-table-server td:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+    width: 125px;
+}
+
+.dfe-table-server td:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+    width: 175px;
+}
+
+
+.dfe-table-server {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+
+
+
+/**********************************************************
+*
+*   Clusters
+*
+***********************************************************/
+
+
+.dfe-table-cluster th:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster th:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster th:nth-child(3) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster th:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(3) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster td:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.dfe-table-cluster {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+.dfe-table-cluster-servers th:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster-servers th:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster-servers th:nth-child(3) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster-servers td:nth-child(1) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster-servers td:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-cluster-servers td:nth-child(3) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.dfe-table-cluster-servers {
+    font-family: "Arial";
+    font-size: 14px;
+    vertical-align: middle;
+    cursor: text;
+}
+
+
+
+/**********************************************************
+*
+*   Instances
+*
+***********************************************************/
+
+
+.dfe-table-instance th:nth-child(1) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance th:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance th:nth-child(3) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance th:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+    width: 85px;
+}
+
+.dfe-table-instance th:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-instance th:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(1) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(2) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(3) {
+    text-align: left;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(4) {
+    text-align: center;
+    vertical-align: middle;
+    width: 85px;
+}
+
+.dfe-table-instance td:nth-child(5) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dfe-table-instance td:nth-child(6) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.dfe-table-instance {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
+
+/**********************************************************
+*
+*   Policies
+*
+***********************************************************/
+
+.dfe-table-policy {
+    font-family: "Arial";
+    font-size: 14px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+
 
