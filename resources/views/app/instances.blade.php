@@ -4,21 +4,21 @@
 
 @section('content')
 
-    <div class="col-md-2 df-sidebar-nav">
-        <div class="">
+    <div class="col-md-2">
+        <div>
             <ul class="nav nav-pills nav-stacked visible-md visible-lg">
                 <li class="active">
-                    <a class="" href="/{{$prefix}}/instances">Manage</a>
+                    <a href="/{{$prefix}}/instances">Manage</a>
                 </li>
             </ul>
         </div>
     </div>
 
-    <div style="" class="col-md-10">
+    <div class="col-md-10">
         <div>
-            <div class="">
-                <div class="df-section-header df-section-all-round">
-                    <h4 class="">Manage Instances</h4>
+            <div>
+                <div class="nav nav-pills dfe-section-header">
+                    <h4>Manage Instances</h4>
                 </div>
             </div>
         </div>
@@ -52,55 +52,37 @@
 
 
 
-        <div class="">
+        <div>
             <div class="row">
                 <div class="col-xs-12">
-                    <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed">
+                    <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance">
                         <thead>
-                        <tr>
-                            <th></th>
-                            <th class="" >
-                                Name
-                            </th>
-                            <th class="" style="text-align: center; vertical-align: middle;">
-                                Cluster
-                            </th>
-                            <!--th class="" style="">
-                                Created On
-                            </th-->
-                            <th class="" style="text-align: center; vertical-align: middle;">
-                                Owner Email
-                            </th>
-                            <th class="" style="text-align: center; vertical-align: middle; min-width:85px">
-                                Policy
-                            </th>
-                            <th class="" style="text-align: center; vertical-align: middle;">
-                                Last Modified
-                            </th>
-                            <th class="" style="text-align: center; vertical-align: middle;">
-
-                            </th>
-                        </tr>
-
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Cluster</th>
+                                <th>Owner Email</th>
+                                <th>Policy</th>
+                                <th>Last Modified</th>
+                                <th></th>
+                            </tr>
                         </thead>
                         <tbody>
 
                         @foreach($instances as $key => $value)
                             <tr>
+                                <td></td>
                                 <td>
-
-                                </td>
-                                <td style="text-align: left; vertical-align: middle;">
                                     <input type="hidden" id="instance_id" value="{{ $value->id }}">
                                     {{ $value->instance_id_text }}
                                 </td>
-                                <td style="text-align: left; vertical-align: middle;">{{ $value->cluster_id_text }}</td>
+                                <td>{{ $value->cluster_id_text }}</td>
                                 <!--td style="text-align: left; vertical-align: middle;">{{ $value->create_date }}</td-->
 
-                                <td style="text-align: left; vertical-align: middle;">{{ $value->email_addr_text }}</td>
-                                <td style="text-align: left; vertical-align: middle;"> </td>
-                                <td style="text-align: center; vertical-align: middle;">{{ $value->lmod_date }}</td>
-                                <td style="text-align: center; vertical-align: middle;">
+                                <td>{{ $value->email_addr_text }}</td>
+                                <td> </td>
+                                <td>{{ $value->lmod_date }}</td>
+                                <td>
                                     <input class="btn btn-default btn-xs" type="button" value="Backup">&nbsp;&nbsp;
                                     <input class="btn btn-default btn-xs" type="button" value="Restore">
                                 </td>
