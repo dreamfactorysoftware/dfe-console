@@ -187,6 +187,12 @@ return [
         'console',
         'dashboard',
         'launchpad',
+        'test',
+        'performance_schema',
+        'information_schema',
+        'mysql',
+        'postgresql',
+        'oracle',
         /** icky */
         'feces',
         'fecal',
