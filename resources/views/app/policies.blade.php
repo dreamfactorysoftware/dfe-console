@@ -26,8 +26,8 @@
 
         <div>
             <div class="">
-                <div class="df-section-header df-section-all-round">
-                    <h4 class="">Create Policies</h4>
+                <div class="nav nav-pills dfe-section-header">
+                    <h4 class="">Manage Policies</h4>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
         <div class="">
             <div class="row">
                 <div class="col-xs-12">
-                    <table id="policyTable" class="table table-responsive table-bordered table-striped table-hover table-condensed">
+                    <table id="policyTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-policy">
                         <thead>
                         <tr>
                             <!--th></th-->
