@@ -42,7 +42,7 @@
   ],
   "type":              "project",
   "require":           {
-    "laravel/framework":           "5.0.*",
+    "laravel/framework":           "5.1.*",
     "guzzlehttp/guzzle":           "~4.0",
     "predis/predis":               "~1.1@dev",
     "wpb/string-blade-compiler":   "2.*@dev",
