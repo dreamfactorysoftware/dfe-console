@@ -329,11 +329,11 @@ class OpsController extends Controller
         $_pid = $request->input('pid');
         $_command = strtolower(trim($request->input('command')));
 
+        //  Register our partners
         foreach (config('dfe.allowed-partners', []) as $_partnerId) {
             try {
                 $_partner = \Partner::resolve($_partnerId);
-            } //  Register our partners
-            catch (\InvalidArgumentException $_ex) {
+            } catch (\InvalidArgumentException $_ex) {
                 if (null !== ($_config = config('partner.' . $_partnerId)) && !empty($_config)) {
                     Partner::register($_partnerId, new AlertPartner($_partnerId, $_config));
                 }
