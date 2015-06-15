@@ -18,6 +18,8 @@ return [
     'instance-prefix'  => env('DFE_DEFAULT_INSTANCE_PREFIX'),
     //  The hash algorithm for hashing api keys. Defaults to 'sha256'
     'signature-method' => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
+    //  The list of allowed partners
+    'allowed-partners' => ['vz', 'hs', 'df',],
     //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************

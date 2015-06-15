@@ -37,6 +37,10 @@
     },
     {
       "type": "vcs",
+      "url":  "git@github.com:dreamfactorysoftware/dfe-partner.git"
+    },
+    {
+      "type": "vcs",
       "url":  "git@github.com:dreamfactorysoftware/dfe-audit.git"
     }
   ],
@@ -54,6 +58,7 @@
     "dreamfactory/php-utils":      "*",
     "dreamfactory/console-tools":  "dev-develop as dev-master",
     "dreamfactory/dfe-common":     "dev-develop as dev-master",
+    "dreamfactory/dfe-partner":    "dev-develop as dev-master",
     "dreamfactory/dfe-ops-client": "dev-develop as dev-master",
     "dreamfactory/dfe-storage":    "dev-develop as dev-master",
     "dreamfactory/dfe-database":   "dev-develop as dev-master"

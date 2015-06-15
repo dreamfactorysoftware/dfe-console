@@ -59,6 +59,8 @@ return [
         'DreamFactory\\Enterprise\\Services\\Providers\\SnapshotServiceProvider',
         /** DreamFactory Console (local app) service providers */
         'DreamFactory\\Enterprise\\Console\\Providers\\ElkServiceProvider',
+        /** DreamFactory Partner Services Provider */
+        'DreamFactory\Enterprise\Partner\Providers\PartnerServiceProvider',
         /** 3rd-party Service Providers */
         'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
         'GrahamCampbell\\Flysystem\\FlysystemServiceProvider',
@@ -106,6 +108,7 @@ return [
         'InstanceManager' => 'DreamFactory\\Enterprise\\Services\\Facades\\InstanceManager',
         'InstanceStorage' => 'DreamFactory\\Enterprise\\Services\\Facades\\InstanceStorage',
         'Mounter'         => 'DreamFactory\\Enterprise\\Services\\Facades\\Mounter',
+        'Partner'         => 'DreamFactory\\Enterprise\\Partner\\Facades\\Partner',
         /** Third-party Aliases */
         'Flysystem'       => 'GrahamCampbell\Flysystem\Facades\Flysystem',
     ],
