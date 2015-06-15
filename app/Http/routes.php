@@ -44,21 +44,21 @@
 
 /** Miscellaneous controllers for dashboard functionality */
 \Route::controllers([
-        //'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',
-        'dashboard' => 'DashboardController',
-        'settings'  => 'SettingsController',
-        'auth'      => 'Auth\\AuthController',
-        'password'  => 'Auth\\PasswordController',
-        //'instance'  => 'DreamFactory\\Enterprise\\Services\\Controllers\\InstanceController',
-    ]);
+    //'app'       => 'DreamFactory\\Enterprise\\Console\\Http\\Controllers\\AppController',
+    'dashboard' => 'DashboardController',
+    'settings'  => 'SettingsController',
+    'auth'      => 'Auth\\AuthController',
+    'password'  => 'Auth\\PasswordController',
+    //'instance'  => 'DreamFactory\\Enterprise\\Services\\Controllers\\InstanceController',
+]);
 
 //******************************************************************************
 //* Testing
 //******************************************************************************
 
 \Route::post('form-submit', [
-        'before' => 'csrf',
-        function () {
-            //  validation;
-        },
-    ]);
+    'before' => 'csrf',
+    function () {
+        //  validation;
+    },
+]);
