@@ -61,7 +61,8 @@
     "dreamfactory/dfe-partner":    "dev-develop as dev-master",
     "dreamfactory/dfe-ops-client": "dev-develop as dev-master",
     "dreamfactory/dfe-storage":    "dev-develop as dev-master",
-    "dreamfactory/dfe-database":   "dev-develop as dev-master"
+    "dreamfactory/dfe-database":   "dev-develop as dev-master",
+    "barryvdh/laravel-cors": "0.6.x"
   },
   "require-dev":       {
     "barryvdh/laravel-ide-helper": "~2.0",

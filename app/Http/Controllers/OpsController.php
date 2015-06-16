@@ -91,24 +91,24 @@ class OpsController extends Controller
         $_storagePath = $_instance->getStoragePath();
 
         $_base = [
-            'id'                 => $_instance->id,
-            'archived'           => $_archived,
-            'deleted'            => false,
-            'metadata'           => (array)$_instance->instance_data_text,
-            'root-storage-path'  => $_rootStoragePath,
-            'storage-path'       => $_storagePath,
+            'id' => $_instance->id,
+            'archived' => $_archived,
+            'deleted' => false,
+            'metadata' => (array)$_instance->instance_data_text,
+            'root-storage-path' => $_rootStoragePath,
+            'storage-path' => $_storagePath,
             'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
-            'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
-            'home-links'         => config('links'),
+            'private-path' => $_storagePath . DIRECTORY_SEPARATOR . '.private',
+            'home-links' => config('links'),
             //  morse
-            'instance-id'        => $_instance->instance_name_text,
+            'instance-id' => $_instance->instance_name_text,
             'vendor-instance-id' => $_instance->instance_id_text,
-            'instance-name'      => $_instance->instance_name_text,
-            'instance-state'     => $_instance->state_nbr,
-            'vendor-state'       => $_instance->vendor_state_nbr,
-            'vendor-state-name'  => $_instance->vendor_state_text,
-            'start-date'         => (string)$_instance->start_date,
-            'create-date'        => (string)$_instance->create_date,
+            'instance-name' => $_instance->instance_name_text,
+            'instance-state' => $_instance->state_nbr,
+            'vendor-state' => $_instance->vendor_state_nbr,
+            'vendor-state-name' => $_instance->vendor_state_text,
+            'start-date' => (string)$_instance->start_date,
+            'create-date' => (string)$_instance->create_date,
         ];
 
         switch ($_version) {
@@ -120,27 +120,27 @@ class OpsController extends Controller
                 $_merge = [
                     //  snake
                     'instance_name_text' => $_instance->instance_name_text,
-                    'instance_id_text'   => $_instance->instance_id_text,
-                    'state_nbr'          => $_instance->state_nbr,
-                    'vendor_state_nbr'   => $_instance->vendor_state_nbr,
-                    'vendor_state_text'  => $_instance->vendor_state_text,
-                    'provision_ind'      => (1 == $_instance->provision_ind),
+                    'instance_id_text' => $_instance->instance_id_text,
+                    'state_nbr' => $_instance->state_nbr,
+                    'vendor_state_nbr' => $_instance->vendor_state_nbr,
+                    'vendor_state_text' => $_instance->vendor_state_text,
+                    'provision_ind' => (1 == $_instance->provision_ind),
                     'trial_instance_ind' => (1 == $_instance->trial_instance_ind),
-                    'deprovision_ind'    => (1 == $_instance->deprovision_ind),
-                    'start_date'         => (string)$_instance->start_date,
-                    'create_date'        => (string)$_instance->create_date,
+                    'deprovision_ind' => (1 == $_instance->deprovision_ind),
+                    'start_date' => (string)$_instance->start_date,
+                    'create_date' => (string)$_instance->create_date,
                     //  camel
-                    'instanceName'       => $_instance->instance_name_text,
-                    'instanceId'         => $_instance->id,
-                    'vendorInstanceId'   => $_instance->instance_id_text,
-                    'instanceState'      => $_instance->state_nbr,
-                    'vendorState'        => $_instance->vendor_state_nbr,
-                    'vendorStateName'    => $_instance->vendor_state_text,
-                    'provisioned'        => (1 == $_instance->provision_ind),
-                    'trial'              => (1 == $_instance->trial_instance_ind),
-                    'deprovisioned'      => (1 == $_instance->deprovision_ind),
-                    'startDate'          => (string)$_instance->start_date,
-                    'createDate'         => (string)$_instance->create_date,
+                    'instanceName' => $_instance->instance_name_text,
+                    'instanceId' => $_instance->id,
+                    'vendorInstanceId' => $_instance->instance_id_text,
+                    'instanceState' => $_instance->state_nbr,
+                    'vendorState' => $_instance->vendor_state_nbr,
+                    'vendorStateName' => $_instance->vendor_state_text,
+                    'provisioned' => (1 == $_instance->provision_ind),
+                    'trial' => (1 == $_instance->trial_instance_ind),
+                    'deprovisioned' => (1 == $_instance->deprovision_ind),
+                    'startDate' => (string)$_instance->start_date,
+                    'createDate' => (string)$_instance->create_date,
                 ];
                 break;
         }
@@ -200,7 +200,7 @@ class OpsController extends Controller
                 }
 
                 $_response[$_tag] = [
-                    'id'        => $_tag,
+                    'id' => $_tag,
                     'offerings' => $_offerings,
                 ];
             }
@@ -332,7 +332,7 @@ class OpsController extends Controller
         //  Register our partners
         foreach (config('dfe.allowed-partners', []) as $_partnerId) {
             try {
-                $_partner = \Partner::resolve($_partnerId);
+                Partner::resolve($_partnerId);
             } catch (\InvalidArgumentException $_ex) {
                 if (null !== ($_config = config('partner.' . $_partnerId)) && !empty($_config)) {
                     Partner::register($_partnerId, new AlertPartner($_partnerId, $_config));
@@ -356,7 +356,7 @@ class OpsController extends Controller
                     break;
 
                 default:
-                    $_response = \Partner::request($_pid, $request);
+                    $_response = Partner::request($_pid, $request);
                     break;
             }
 
@@ -421,10 +421,12 @@ class OpsController extends Controller
             $_user = User::create(
                 [
                     'first_name_text' => $_first,
-                    'last_name_text'  => $_last,
+                    'last_name_text' => $_last,
                     'email_addr_text' => $_email,
-                    'nickname_text'   => $request->input('nickname', $_first),
-                    'password_text'   => $_password,
+                    'nickname_text' => $request->input('nickname', $_first),
+                    'password_text' => $_password,
+                    'phone_text' => $request->input('phone'),
+                    'company_text' => $request->input('company', $_first),
                 ]
             );
 
