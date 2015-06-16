@@ -5,8 +5,8 @@
 
 //  Main page
 \Route::group(['middleware' => 'auth'], function () {
-    \Route::get('/', 'HomeController@index');
-    \Route::get('home', 'HomeController@index');
+    \Route::get('/', 'Resources\\HomeController@index');
+    \Route::get('home', 'Resources\\HomeController@index');
 });
 
 //******************************************************************************
