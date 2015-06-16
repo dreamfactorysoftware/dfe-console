@@ -5,16 +5,7 @@
 
 @section('content')
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.min.js"></script>
-
     <script>
-
-        $(document).on('change', 'input:radio[id^="period_"]', function (event) {
-            var period_id = event.currentTarget.id;
-            drawChart(getChartId(), '', 0, 0, period_id);
-        });
-
 
         $(document).on('click', 'button:button[id^="api_clusters_"]', function (event) {
 
@@ -30,8 +21,6 @@
             $('#chartType').val(selected_id);
 
             var selectedType = $('.selectedType').text().trim();
-
-            loadChartSelect(selected_id);
 
             var date_from = $('#datepicker_from').val();
             var date_to = $('#datepicker_to').val();
@@ -62,8 +51,6 @@
 
             var selectedType = $('.selectedType').text().trim();
 
-            loadChartSelect(selected_id);
-
             var date_from = $('#datepicker_from').val();
             var date_to = $('#datepicker_to').val();
 
@@ -83,7 +70,6 @@
 
             if(selected_tab == 'chart_type_clusters'){
                 $("#chartCategory").val('clusters');
-                $('.selectedChart').text('Select Chart...');
                 $("#datepicker_from").val('Date From');
                 $("#datepicker_to").val('Date To');
                 clear_target = 'api_instances_';
@@ -92,7 +78,6 @@
 
             if(selected_tab == 'chart_type_instances'){
                 $("#chartCategory").val('instances');
-                $('.selectedChart').text('Select Chart...');
                 $("#datepicker_from").val('Date From');
                 $("#datepicker_to").val('Date To');
                 clear_target = 'api_clusters_';
@@ -106,8 +91,6 @@
         });
 
         $( document ).ready(function() {
-
-            loadChartSelect('api_clusters_all');
 
             $('.dropdown-charts').delegate('li', 'click', function ()
             {
@@ -152,60 +135,14 @@
                     selectedChart = '';
 
                 if((d1 == 'Invalid Date') || (d2 == 'Invalid Date'))
-                    drawChart(chartType, selectedChart, selectedType, 0, 0, '');
+                    drawChart(chartType, 0, 0, '');
                 else
-                    drawChart(chartType, selectedChart, selectedType, d1.toISOString(), d2.toISOString(), '');
+                    drawChart(chartType, d1.toISOString(), d2.toISOString(), '');
 
             });
 
         });
 
-
-
-        function loadChartSelect(id){
-
-            var dd_array = [];
-
-            if(id == 'api_clusters_all')
-                dd_array = eval({!!$clusters!!});
-
-            if(id == 'api_instances_endpoints')
-                dd_array = eval({!!$endpoints!!});
-
-            if(id == 'api_instances_roles')
-                dd_array = eval({!!$roles!!});
-
-            if(id == 'api_instances_ids')
-                dd_array = eval({!!$instance_ids!!});
-
-            if(id == 'api_instances_applications')
-                dd_array = eval({!!$applications!!});
-
-            if(id == 'api_instances_users')
-                dd_array = eval({!!$users!!});
-
-            $('.selectedChart').text('Select Chart...');
-
-            var aList = $('ul#charts');
-            aList.empty();
-
-            $.each(dd_array, function(i)
-            {
-                aList.append('<li><a href=#>' + dd_array[i] + '</a></li>');
-            });
-
-
-        }
-
-        function getPeriod(){
-
-            var id = '';
-            $( "#chart_period  input:radio[id^='period_']:checked" ).each(function( i ) {
-                id = this.id;
-            });
-
-            return id;
-        }
 
 
         function getChartId(){
@@ -225,16 +162,7 @@
         }
 
 
-        function getChartType(){
-
-            var tab = $('#chart_type_tabs .active').text();
-            var chart_type = 'chart_type_' + tab.toLowerCase();
-
-            return chart_type;
-        }
-
-
-        function drawChart(type, chart, charttypes, date_from, date_to, period){
+        function drawChart(type, date_from, date_to, period){
 
             var _from = 'now/y';
             var _to = 'now';
@@ -265,60 +193,35 @@
                 _to = "'" + date_to + "'";
             }
 
-
-
-
-            var ctype = charttypes.toLowerCase();
-
-            //ctype = ctype.replace(/^[a-z0-9]+$/i, '');
-
-
-            var tstamp = Date.now();
-
             if(type === 'api_clusters_all')
-                if(chart)
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:%27cluster.id:%22" + chart + "%22%27,vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:1),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
-                else
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
-
-
-            if(type === 'api_instances_applications'){
-                if(chart)
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-calls-by-Applications?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:'app_name:" + chart + "',vis:(aggs:!((id:'2',params:(),schema:metric,type:count),(id:'4',params:(field:app_name,order:desc,orderBy:'2',size:1),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))&ts=" + tstamp;
-                else
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-calls-by-Applications?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'2',params:(),schema:metric,type:count),(id:'4',params:(field:app_name,order:desc,orderBy:'2',size:10),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))&ts=" + tstamp;
+            {
+                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
-            if(type === 'api_instances_endpoints'){
-                if(chart)
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-calls-by-endpoints?embed&_g=%28time:%28from:" + _from + ",mode:quick,to:" + _to + "%29%29&_a=%28filters:!%28%29,linked:!f,query:%27path_info.raw:%22" + chart + "%22%27,vis:%28aggs:!%28%28id:%271%27,params:%28%29,schema:metric,type:count%29,%28id:%272%27,params:%28field:path_info.raw,order:desc,orderBy:%271%27,size:10%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:" + ctype + "%29%29";
-                    //_chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-calls-by-endpoints?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'" + chart + "')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:path_info.raw,order:desc,orderBy:'1',size:1),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
-                else
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-calls-by-endpoints?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:path_info.raw,order:desc,orderBy:'1',size:10),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
+            if(type === 'api_instances_applications')
+            {
+                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-calls-by-Applications?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:app_name,order:desc,orderBy:%272%27,size:10%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&_g=%28time:%28from:" + _from + ",mode:quick,to:" + _to + "%29%29";
             }
 
-            if(type === 'api_instances_ids'){
-                if(chart)
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-Instance-Id?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:%27dfe.instance_id:%22" + chart + "%22%27,vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:dfe.instance_id,order:desc,orderBy:'1',size:1),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
-                else
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-Instance-Id?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:dfe.instance_id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
+            if(type === 'api_instances_endpoints')
+            {
+                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-calls-by-endpoints?embed&_g=%28time:%28from:" + _from + ",mode:quick,to:" + _to + "%29%29&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}%27%29%29,vis:%28aggs:!%28%28id:%271%27,params:%28%29,schema:metric,type:count%29,%28id:%272%27,params:%28field:path_info.raw,order:desc,orderBy:%271%27,size:10%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29";
             }
 
-            if(type === 'api_instances_users'){
-                if(chart)
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-User-Name?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:%27user.email:%22" + chart + "%22%27,vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:user.email,order:desc,orderBy:'1',size:1),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
-                else
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-User-Name?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:user.email,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
+            if(type === 'api_instances_ids')
+            {
+                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-Instance-Id?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:dfe.instance_id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
-            if(type === 'api_instances_roles'){
-                if(chart)
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-User-Roles?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:%27user.session.public.role.raw:%22" + chart + "%22%27,vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:user.session.public.role,order:desc,orderBy:'1',size:1),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
-                else
-                    _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-User-Roles?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:user.session.public.role,order:desc,orderBy:'1',size:10),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:" + ctype + "))";
+            if(type === 'api_instances_users')
+            {
+                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-User-Name?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:user.email,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
-            console.log(_chart);
+            if(type === 'api_instances_roles')
+            {
+                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-Calls-by-User-Roles?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:user.session.public.role,order:desc,orderBy:'1',size:10),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
+            }
 
             $('#iframe_chart').attr('src', _chart);
 
@@ -370,8 +273,6 @@
 
                             <div role="tabpanel" class="tab-pane active" id="clusters">
                                 <button id="api_clusters_all" type="button" class="btn btn-default btn-sm btn-info">All Clusters</button>&nbsp;&nbsp;
-                                <!--button id="api_clusters_1" type="button" class="btn btn-default btn-sm" disabled="disabled">Cluster One</button>&nbsp;&nbsp;
-                                <button id="api_clusters_2" type="button" class="btn btn-default btn-sm" disabled="disabled">Cluster Two</button-->&nbsp;&nbsp;
                             </div>
                             <div role="tabpanel" class="tab-pane" id="instances">
                                 <button id="api_instances_endpoints" type="button" class="btn btn-default btn-sm">Endpoints</button>&nbsp;&nbsp;
@@ -379,15 +280,10 @@
                                 <button id="api_instances_ids" type="button" class="btn btn-default btn-sm">Instance Ids</button>&nbsp;&nbsp;
                                 <button id="api_instances_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
                                 <button id="api_instances_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
-                                <!--button id="api_instances_owner" type="button" class="btn btn-default btn-sm" disabled="disabled">Owner</button>&nbsp;&nbsp;
-                                <button id="api_instances_userendpoints" type="button" class="btn btn-default btn-sm" disabled="disabled">User Endpoints</button>&nbsp;&nbsp;
-                                <button id="api_instances_userapplications" type="button" class="btn btn-default btn-sm" disabled="disabled">User Applications</button-->&nbsp;&nbsp;
-
                             </div>
                         </div>
 
                         <br>
-
                                 <div class="well well-sm" style="height: 50px">
 
                                     <div class="btn-group pull-right" data-toggle="buttons" id="chart_period">
@@ -405,44 +301,22 @@
                                     </div>
 
                                     <div class="btn-group pull-left" role="group">
-                                        <div style="width: 50px">&nbsp; </div>
+                                        <div style="width: 50px">&nbsp;</div>
                                     </div>
 
                                     <div class="btn-group pull-left" role="group">
-                                        <button type="button" class="btn btn-default btn-sm dropdown-toggle selectedChart" data-toggle="dropdown" aria-expanded="false">
-                                            Select Chart...
-                                        </button>
-                                        <button class="btn btn-default btn-sm dropdown-toggle fa fa-caret-down" data-toggle="dropdown"></button>
-                                        <ul class="dropdown-menu dropdown-charts" role="menu" id="charts">
 
-                                        </ul>
                                     </div>
 
                                     <div class="btn-group pull-left" role="group">
                                         <div style="width: 50px">&nbsp; </div>
-                                    </div>
-
-                                    <div class="btn-group pull-left" role="group">
-                                        <button type="button" class="btn btn-default btn-sm dropdown-toggle selectedType" data-toggle="dropdown" aria-expanded="false" disabled="disabled">
-                                            Histogram
-                                        </button>
-                                        <button class="btn btn-default btn-sm dropdown-toggle fa fa-caret-down" data-toggle="dropdown" disabled="disabled"></button>
-                                        <ul class="dropdown-menu dropdown-charttypes" role="menu">
-                                            <li><a href="#">Histogram</a></li>
-                                            <li><a href="#">Line</a></li>
-                                            <li><a href="#">Area</a></li>
-                                        </ul>
                                     </div>
                                 </div>
-
                         <br>
 
                     </div>
-                    <iframe id="iframe_chart" src="http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:now%2Fy,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))" frameborder="0" width="100%" height="100%"></iframe>
-
-                    <!--iframe src="{!! HTML::entities('http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=%28time:%28from:now%2Fy,mode:quick,to:now%29%29&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27*%27%29%29,vis:%28aggs:!%28%28id:%271%27,params:%28%29,schema:metric,type:count%29,%28id:%272%27,params:%28field:path_info.raw,order:desc,orderBy:%271%27,size:10%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29') !!}" frameborder="0" width="100%" height="100%"></iframe-->
+                    <iframe id="iframe_chart" src="http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:now%2Fy,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))" frameborder="0" width="100%" height="100%"></iframe>
                     <br><br>
-
                 </div>
             </div>
         </div>
@@ -474,7 +348,8 @@
             $datepicker_to.pikaday('show').pikaday('nextMonth');
         });
 
-        $('#set_datespan').click(function(){
+        $('#set_datespan').click(function()
+        {
 
             var date_from = $('#datepicker_from').val();
             var date_to = $('#datepicker_to').val();
@@ -482,33 +357,13 @@
             var d1 = new Date(date_from);
             var d2 = new Date(date_to);
 
-            var diff = Math.abs(d2 -d1);
-
-            var selectedChart = $('.selectedChart').text();
-            var selectedType = $('.selectedType').text().trim();
-
-            if(selectedChart == 'Select Chart...')
-                selectedChart = '';
-
             if((d1 == 'Invalid Date') || (d2 == 'Invalid Date'))
-                drawChart(getChartId(), selectedChart, selectedType, 0, 0, '');
+                drawChart(getChartId(), 0, 0, '');
             else
-                drawChart(getChartId(), selectedChart, selectedType, d1.toISOString(), d2.toISOString(), '');
-
-                //drawChart(getChartId(), selectedChart, selectedType, d1.toISOString(), d2.toISOString(), '');
-
+                drawChart(getChartId(), d1.toISOString(), d2.toISOString(), '');
         });
 
     </script>
-
-
-
-
-
-
-
-
-
 
 
 @stop
