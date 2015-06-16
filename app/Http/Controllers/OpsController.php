@@ -1,10 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
@@ -418,16 +420,36 @@ class OpsController extends Controller
 
         //  Create a user account
         try {
-            $_user = User::create(
-                [
-                    'first_name_text' => $_first,
-                    'last_name_text' => $_last,
-                    'email_addr_text' => $_email,
-                    'nickname_text' => $request->input('nickname', $_first),
-                    'password_text' => $_password,
-                    'phone_text' => $request->input('phone'),
-                    'company_name_text' => $request->input('company', $_first),
-                ]
+            $_user = \DB::transaction(
+                function () use ($request, $_first, $_last, $_email, $_password) {
+                    $_user = User::create(
+                        [
+                            'first_name_text' => $_first,
+                            'last_name_text' => $_last,
+                            'email_addr_text' => $_email,
+                            'nickname_text' => $request->input('nickname', $_first),
+                            'password_text' => bcrypt($_password),
+                            'phone_text' => $request->input('phone'),
+                            'company_name_text' => $request->input('company', $_first),
+                        ]
+                    );
+
+                    $_appKey = AppKey::create(
+                        array(
+                            'key_class_text' => AppKeyClasses::USER,
+                            'owner_id' => $_user->id,
+                            'owner_type_nbr' => OwnerTypes::USER,
+                            'server_secret' => config('dfe.security.console-api-key'),
+                        )
+                    );
+
+                    //  Update the user with the key info and activate
+                    $_user->api_token_text = $_appKey->client_id;
+                    $_user->active_ind = 1;
+                    $_user->save();
+
+                    return $_user;
+                }
             );
 
             $_values = $_user->toArray();

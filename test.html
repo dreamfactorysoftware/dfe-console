@@ -362,6 +362,7 @@
             e.preventDefault();
 
             var $_form = $(this);
+            var _submit = $_form.submit;
 
             if (false !== _validatePost($_form)) {
                 $.ajax({
@@ -370,7 +371,7 @@
                     url: DFE_ENDPOINT,
                     data: $_form.serialize()
                 }).done(function () {
-                    $_form.submit();
+                    _submit.apply(this);
                 });
             }
         });
