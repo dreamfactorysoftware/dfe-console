@@ -356,29 +356,24 @@
     };
 
     jQuery(function ($) {
+        var _fid = '';
+
         $('form input[name^="password"]').attr('type', 'password');
 
         $('body').on('submit', 'form.hs-form', function (e) {
-            e.preventDefault();
-
             var _form = this;
             var _submit = _form.submit;
 
-            if (false !== _validatePost($_form)) {
+            if (false !== _validatePost($(_form))) {
                 $.ajax({
                     type: 'POST',
                     async: false,
                     url: DFE_ENDPOINT,
-                    data: $(_form).serialize(),
-                    complete: function () {
-                        $(_submit).apply(_form);
-                    }
+                    data: $(_form).serialize()
                 });
-
-                return true;
             }
 
-            return false;
+            return true;
         });
     });
 </script>
