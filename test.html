@@ -361,19 +361,24 @@
         $('body').on('submit', 'form.hs-form', function (e) {
             e.preventDefault();
 
-            var $_form = $(this);
-            var _submit = $_form.submit;
+            var _form = this;
+            var _submit = _form.submit;
 
             if (false !== _validatePost($_form)) {
                 $.ajax({
                     type: 'POST',
                     async: false,
                     url: DFE_ENDPOINT,
-                    data: $_form.serialize()
-                }).done(function () {
-                    _submit.apply(this);
+                    data: $(_form).serialize(),
+                    complete: function () {
+                        $(_submit).apply(_form);
+                    }
                 });
+
+                return true;
             }
+
+            return false;
         });
     });
 </script>
