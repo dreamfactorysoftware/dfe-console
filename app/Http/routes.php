@@ -14,7 +14,7 @@
 //******************************************************************************
 
 \Route::group(['prefix' => 'v1', 'middleware' => 'auth'], function () {
-    //\Route::resource( 'dashboard', 'DashboardController' );
+    \Route::resource('home', 'Resources\\HomeController' );
     \Route::resource('users', 'Resources\\UserController');
     \Route::resource('servers', 'Resources\\ServerController');
     \Route::resource('clusters', 'Resources\\ClusterController');

@@ -2,7 +2,7 @@
 
 $menu = array();
 
-array_push($menu, array('id' => 0,  'link' => 'dashboard',     'name' => 'Home'));
+array_push($menu, array('id' => 0,  'link' => 'home',     'name' => 'Home'));
 array_push($menu, array('id' => 1,  'link' => 'users',          'name' => 'Users'));
 array_push($menu, array('id' => 2,  'link' => 'servers',        'name' => 'Servers'));
 array_push($menu, array('id' => 3,  'link' => 'clusters',       'name' => 'Clusters'));
