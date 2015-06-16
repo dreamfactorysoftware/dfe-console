@@ -13,10 +13,10 @@ if (!function_exists('__dfe_bootstrap')) {
         $_app = new Illuminate\Foundation\Application(realpath(dirname(__DIR__)));
 
         //  Bind our default services
-        $_app->singleton('Illuminate\Contracts\Http\Kernel', 'DreamFactory\Enterprise\Console\Http\Kernel');
-        $_app->singleton('Illuminate\Contracts\Console\Kernel', 'DreamFactory\Enterprise\Console\Console\Kernel');
+        $_app->singleton('Illuminate\Contracts\Http\Kernel', 'DreamFactory\Enterprise\Dashboard\Http\Kernel');
+        $_app->singleton('Illuminate\Contracts\Console\Kernel', 'DreamFactory\Enterprise\Dashboard\Console\Kernel');
         $_app->singleton('Illuminate\Contracts\Debug\ExceptionHandler',
-            'DreamFactory\Enterprise\Console\Exceptions\Handler');
+            'DreamFactory\Enterprise\Dashboard\Exceptions\Handler');
 
         //  Return the app
         return $_app;

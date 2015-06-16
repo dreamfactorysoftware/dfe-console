@@ -3,9 +3,9 @@
 //* Application Autoloader
 //******************************************************************************
 
-if (!function_exists('__dfe_autoload')) {
-    define('LARAVEL_START', microtime(true));
+define('LARAVEL_START', microtime(true));
 
+if (!function_exists('__dfe_autoload')) {
     /**
      * Bootstrap DFE
      *
@@ -17,13 +17,10 @@ if (!function_exists('__dfe_autoload')) {
         $_basePath = dirname(__DIR__);
         require $_basePath . '/vendor/autoload.php';
 
-        //  Laravel 5.0
+        //  Laravel 5.1
         if (file_exists(__DIR__ . '/cache/compiled.php')) {
             /** @noinspection PhpIncludeInspection */
             require __DIR__ . '/cache/compiled.php';
-        } elseif (file_exists($_basePath . '/storage/framework/compiled.php')) {
-            /** @noinspection PhpIncludeInspection */
-            require $_basePath . '/storage/framework/compiled.php';
         }
 
         return true;
@@ -31,4 +28,3 @@ if (!function_exists('__dfe_autoload')) {
 }
 
 return __dfe_autoload();
-
