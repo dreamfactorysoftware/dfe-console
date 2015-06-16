@@ -426,7 +426,7 @@ class OpsController extends Controller
                     'nickname_text' => $request->input('nickname', $_first),
                     'password_text' => $_password,
                     'phone_text' => $request->input('phone'),
-                    'company_text' => $request->input('company', $_first),
+                    'company_name_text' => $request->input('company', $_first),
                 ]
             );
 
