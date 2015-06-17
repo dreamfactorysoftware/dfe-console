@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="OpsControllerTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
+    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Http\Controllers\OpsControllerTest" file="$PROJECT_DIR$/tests/Http/Controllers/OpsControllerTest.php" scope="Class" />
+    <method />
+  </configuration>
+</component>

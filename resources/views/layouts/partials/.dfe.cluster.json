@@ -1,0 +1,10 @@
+{
+	"cluster-id":       "{{ $clusterId or null }}",
+	"default-domain":   "{{ $defaultDomain or null }}",
+	"signature-method": "{{ $signatureMethod or 'sha256 }}",
+	"storage-root":     "{{ $storageRoot or '/data/storage'' }}",
+	"console-api-url":  "{{ $consoleApiUrl or null }}",
+	"console-api-key":  "{{ $consoleApiKey or null }}",
+	"client-id":        "{{ $clientId or null }}",
+	"client-secret":    "{{ $clientSecret or null }}"
+}

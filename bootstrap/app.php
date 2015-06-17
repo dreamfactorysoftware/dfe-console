@@ -1,55 +1,26 @@
 <?php
+//******************************************************************************
+//* Application Bootstrap
+//******************************************************************************
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
+if (!function_exists('__dfe_bootstrap')) {
+    /**
+     * @return \Illuminate\Foundation\Application
+     */
+    function __dfe_bootstrap()
+    {
+        //  Create the app
+        $_app = new Illuminate\Foundation\Application(realpath(dirname(__DIR__)));
 
-$app = new Illuminate\Foundation\Application(
-    realpath( __DIR__ . '/../' )
-);
+        //  Bind our default services
+        $_app->singleton('Illuminate\Contracts\Http\Kernel', 'DreamFactory\Enterprise\Console\Http\Kernel');
+        $_app->singleton('Illuminate\Contracts\Console\Kernel', 'DreamFactory\Enterprise\Console\Console\Kernel');
+        $_app->singleton('Illuminate\Contracts\Debug\ExceptionHandler',
+            'DreamFactory\Enterprise\Console\Exceptions\Handler');
 
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-|
-| Next, we need to bind some important interfaces into the container so
-| we will be able to resolve them when needed. The kernels serve the
-| incoming requests to this application from both the web and CLI.
-|
-*/
+        //  Return the app
+        return $_app;
+    }
+}
 
-$app->singleton(
-    'Illuminate\Contracts\Http\Kernel',
-    'App\Http\Kernel'
-);
-
-$app->singleton(
-    'Illuminate\Contracts\Console\Kernel',
-    'App\Console\Kernel'
-);
-
-$app->singleton(
-    'Illuminate\Contracts\Debug\ExceptionHandler',
-    'App\Exceptions\Handler'
-);
-
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-|
-| This script returns the application instance. The instance is given to
-| the calling script so we can separate the building of the instances
-| from the actual running of the application and sending responses.
-|
-*/
-
-return $app;
+return __dfe_bootstrap();

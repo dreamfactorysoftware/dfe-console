@@ -549,14 +549,14 @@ function svgEnabled() {
 /**
  * Creates a new chart
  *
- * @param string type       The drawing type for the main data
+ * @param string type       The drawing type for the partials data
  * @param array data        Data to render in the chart
  * @param string selector   CSS Selector for the parent element for the chart
  * @param object options    Optional. See `defaults` for options
  *
  * Examples:
  *    var data = {
- *        "main": [
+ *        "partials": [
  *          {
  *            "data": [
  *              {
@@ -681,7 +681,7 @@ xChart.visutils = _visutils;
 
 _.defaults(xChart.prototype, {
   /**
-   * Set or change the drawing type for the main data.
+   * Set or change the drawing type for the partials data.
    *
    * @param string type   Must be an available drawing type
    *
@@ -720,7 +720,7 @@ _.defaults(xChart.prototype, {
       nData = _.clone(data);
 
     if (!data.hasOwnProperty('main')) {
-      throw 'No "main" key found in given chart data.';
+      throw 'No "partials" key found in given chart data.';
     }
 
     switch (data.type) {

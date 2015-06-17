@@ -19,24 +19,7 @@ function _loadData(url) {
 	if (_type && _type.length) {
 		EnterpriseServer.populateTable(_type);
 	}
-
-	_setActiveItem();
 }
-
-/**
- * Adds the active class to the active menu item...
- * @private
- */
-var _setActiveItem = function() {
-	var _uri = window.top.location.hash.replace(/^#/, '');
-
-	if (!_uri || !_uri.length) {
-		_uri = '/app/dashboard';
-	}
-
-	$('.nav.main-menu li').removeClass('active');
-	$('.main-menu a[href="' + _uri + '"]').parent('li').addClass('active');
-};
 
 //******************************************************************************
 //* DocReady
@@ -74,7 +57,12 @@ jQuery(function($) {
 	});
 
 	//	Turn on page header tooltips
-	$('[data-toggle="tooltip"]').tooltip();
+	$('[data-toggle="tooltip"]').tooltip({
+		delay: {
+			show: 500,
+			hide: 100
+		}
+	});
 
 	//	Load page data...
 	_loadData();

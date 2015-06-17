@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Behat">
+    <behat_settings>
+      <BehatSettings behat_path="$PROJECT_DIR$" />
+    </behat_settings>
+  </component>
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="dfe-console.local" id="d0c8cff4-a18f-4a6e-8351-8d4ca1477e32" name="dfe-console.local" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/opt/dreamfactory/dfe/dfe-console" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-common" remote-root="/opt/dreamfactory/dfe/dfe-common" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/fabric-db" remote-root="/opt/dreamfactory/lib/fabric-db" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+  <component name="PhpStepFilterConfiguration" skip_magic_methods="true">
+    <option name="skippedFunctions">
+      <list>
+        <option value="Illuminate\Pipeline\Pipeline-&gt;then" />
+        <option value="Illuminate\Foundation\AliasLoader-&gt;load" />
+        <option value="Composer\Autoload\ClassLoader-&gt;loadClass" />
+        <option value="Composer\Autoload\ClassLoader-&gt;findFile" />
+        <option value="Composer\Autoload\ClassLoader-&gt;findFileWithExtension" />
+        <option value="Composer\Autoload\includeFile" />
+        <option value="app" />
+        <option value="Illuminate\Database\Eloquent\Model-&gt;__get" />
+        <option value="Illuminate\Support\Facades\Queue::getFacadeAccessor" />
+        <option value="config" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings load_method="CUSTOM_LOADER" bootstrap_file_path="$PROJECT_DIR$/phpunit.xml" configuration_file_path="$PROJECT_DIR$/phpunit.xml" custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" phpunit_phar_path="" use_configuration_file="true" />
+    </phpunit_settings>
+  </component>
+</project>

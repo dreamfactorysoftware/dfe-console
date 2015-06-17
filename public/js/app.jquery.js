@@ -24,7 +24,7 @@ var _options = {
  * @private
  */
 var _wait = function(stop) {
-	if ( stop ) {
+	if (stop) {
 		$('span#background-activity').addClass('hide');
 		$('body').css({cursor: 'default'});
 
@@ -46,17 +46,27 @@ var notify = function(style, options) {
 	var $_element = $('form:visible');
 	var _message;
 
-	if ( 'Success!' == options.title ) {
-		_message = '<div id="success-message" class="alert alert-block alert-success"><button type="button" class= "close" data-dismiss="alert">×</button><h4>' + options.title + '</h4>' + options.text + '</div>';
+	if ('Success!' == options.title) {
+		_message =
+			'<div id="success-message" class="alert alert-block alert-success"><button type="button" class= "close" data-dismiss="alert">×</button><h4>' +
+			options.title +
+			'</h4>' +
+			options.text +
+			'</div>';
 	} else {
-		_message = '<div id="failure-message" class="alert alert-block alert-error"><button type="button" class= "close" data-dismiss="alert">×</button><h4>' + options.title + '</h4>' + options.text + '</div>';
+		_message =
+			'<div id="failure-message" class="alert alert-block alert-error"><button type="button" class= "close" data-dismiss="alert">×</button><h4>' +
+			options.title +
+			'</h4>' +
+			options.text +
+			'</div>';
 	}
 
-	if ( $_element.length ) {
+	if ($_element.length) {
 		$_element.before(_message);
 	} else {
 		$_element = $('h1.ui-generated-header');
-		if ( !$_element.length ) {
+		if (!$_element.length) {
 			return;
 		}
 		$_element.after(_message);
@@ -95,7 +105,7 @@ var _unhighlightError = function(element, errorClass) {
 var _addBreadcrumbButton = function(text, url, type, modal) {
 	var dataToggle;
 
-	if ( modal ) {
+	if (modal) {
 		dataToggle = 'data-toggle="modal"';
 	}
 
@@ -116,7 +126,7 @@ $(function() {
 	});
 
 	//	Popovers
-	if ( $.fn.popover ) {
+	if ($.fn.popover) {
 		$('.auto-link-help').popover({
 			placement: 'right',
 			trigger:   'hover',
@@ -130,7 +140,7 @@ $(function() {
 	/**
 	 * Clear any alerts after configured time
 	 */
-	if ( _options.alertHideDelay ) {
+	if (_options.alertHideDelay) {
 		window.setTimeout(function() {
 			$('div.alert').not('.alert-fixed').fadeTo(500, 0).slideUp(500, function() {
 				$(this).remove();

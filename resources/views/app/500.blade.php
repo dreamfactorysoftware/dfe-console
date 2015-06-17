@@ -1,21 +1,25 @@
-@extends('layouts.main')
-
-@section('body-class'){{ "body-404" }}@stop
+@extends('layouts.app')
 
 @section('content')
     <div class="row">
-        <div class="col-xs-12 text-center page-404 error-wrapper">
-            <img src="/img/bg-planet.png" />
+        <div class="col-md-12 error-content">
+            <div class="error-heading">
+                <h3 class="page-header">We're terribly sorry, but...</h3>
 
-            <br /><br />
+                <div class="hr"></div>
+            </div>
 
-            <h1>Error 500</h1>
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <div class="panel-title">System Error</div>
+                </div>
 
-            <h2>I n t e r n a l &nbsp; S e r v e r &nbsp; E r r o r</h2>
+                <div class="panel-body">
+                    <p>Whatever you tried to access is not working properly. The powers that be have been notified.</p>
 
-            <p>Whatever you did caused an error. It could be broken or something far more sinister. The engineers have been alerted and will contact you should they need further information.</p>
-
-            <p><a href="/">Go Home</a></p>
+                    <p><a href="/app/dashboard">Go Home</a></p>
+                </div>
+            </div>
         </div>
     </div>
 @stop

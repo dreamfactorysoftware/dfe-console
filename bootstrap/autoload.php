@@ -1,35 +1,30 @@
 <?php
+//******************************************************************************
+//* Application Autoloader
+//******************************************************************************
 
 define('LARAVEL_START', microtime(true));
 
-/*
-|--------------------------------------------------------------------------
-| Register The Composer Auto Loader
-|--------------------------------------------------------------------------
-|
-| Composer provides a convenient, automatically generated class loader
-| for our application. We just need to utilize it! We'll require it
-| into the script here so that we do not have to worry about the
-| loading of any our classes "manually". Feels great to relax.
-|
-*/
+if (!function_exists('__dfe_autoload')) {
+    /**
+     * Bootstrap DFE
+     *
+     * @return bool
+     */
+    function __dfe_autoload()
+    {
+        //  Register The Composer Auto Loader
+        $_basePath = dirname(__DIR__);
+        require $_basePath . '/vendor/autoload.php';
 
-require __DIR__.'/../vendor/autoload.php';
+        //  Laravel 5.1
+        if (file_exists(__DIR__ . '/cache/compiled.php')) {
+            /** @noinspection PhpIncludeInspection */
+            require __DIR__ . '/cache/compiled.php';
+        }
 
-/*
-|--------------------------------------------------------------------------
-| Include The Compiled Class File
-|--------------------------------------------------------------------------
-|
-| To dramatically increase your application's performance, you may use a
-| compiled class file which contains all of the classes commonly used
-| by a request. The Artisan "optimize" is used to create this file.
-|
-*/
-
-$compiledPath = __DIR__.'/../storage/framework/compiled.php';
-
-if (file_exists($compiledPath))
-{
-	require $compiledPath;
+        return true;
+    }
 }
+
+return __dfe_autoload();

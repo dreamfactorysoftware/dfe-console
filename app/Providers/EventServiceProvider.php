@@ -1,32 +1,19 @@
-<?php namespace App\Providers;
+<?php namespace DreamFactory\Enterprise\Console\Providers;
 
-use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
-class EventServiceProvider extends ServiceProvider {
+class EventServiceProvider extends ServiceProvider
+{
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
 
-	/**
-	 * The event handler mappings for the application.
-	 *
-	 * @var array
-	 */
-	protected $listen = [
-		'event.name' => [
-			'EventListener',
-		],
-	];
-
-	/**
-	 * Register any other events for your application.
-	 *
-	 * @param  \Illuminate\Contracts\Events\Dispatcher  $events
-	 * @return void
-	 */
-	public function boot(DispatcherContract $events)
-	{
-		parent::boot($events);
-
-		//
-	}
-
+    /**
+     * @var array The event handler mappings for the application.
+     */
+    protected $listen = [
+        'auth.login' => [
+            'DreamFactory\Enterprise\Console\Handlers\Events\AuthLoginEventHandler',
+        ],
+    ];
 }

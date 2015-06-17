@@ -770,7 +770,7 @@
     };
 
   }(window, document, Chartist));;/**
-   * The Chartist line chart can be used to draw Line or Scatter charts. If used in the browser you can access the global `Chartist` namespace where you find the `Line` function as a main entry point.
+   * The Chartist line chart can be used to draw Line or Scatter charts. If used in the browser you can access the global `Chartist` namespace where you find the `Line` function as a partials entry point.
    *
    * For examples on how to use the line chart please check the examples of the `Chartist.Line` method.
    *

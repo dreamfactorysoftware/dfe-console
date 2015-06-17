@@ -1,9 +1,13 @@
-<?php namespace App\Http;
+<?php
+namespace DreamFactory\Enterprise\Console\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
 
     /**
      * The application's global HTTP middleware stack.
@@ -16,6 +20,7 @@ class Kernel extends HttpKernel
         'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
         'Illuminate\Session\Middleware\StartSession',
         'Illuminate\View\Middleware\ShareErrorsFromSession',
+        'Barryvdh\Cors\Middleware\HandleCors',
     ];
 
     /**
@@ -24,10 +29,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'       => 'App\Http\Middleware\Authenticate',
-        'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-        'csrf'       => 'App\Http\Middleware\VerifyCsrfToken',
-        'guest'      => 'App\Http\Middleware\RedirectIfAuthenticated',
+        'auth'            => 'DreamFactory\Enterprise\Console\Http\Middleware\Authenticate',
+        'auth.basic'      => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
+        'auth.client'     => 'DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient',
+        'csrf'            => 'DreamFactory\Enterprise\Console\Http\Middleware\VerifyCsrfToken',
+        'guest'           => 'DreamFactory\Enterprise\Console\Http\Middleware\RedirectIfAuthenticated',
+        'dfe.api-logging' => 'DreamFactory\Enterprise\Console\Http\Middleware\ApiLogger',
     ];
-
 }

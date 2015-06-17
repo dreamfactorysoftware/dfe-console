@@ -1,38 +1,45 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use DreamFactory\Enterprise\Common\Http\Controllers\Auth\CommonAuthController;
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
 
-class AuthController extends Controller {
+class AuthController extends CommonAuthController
+{
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
 
-	/*
-	|--------------------------------------------------------------------------
-	| Registration & Login Controller
-	|--------------------------------------------------------------------------
-	|
-	| This controller handles the registration of new users, as well as the
-	| authentication of existing users. By default, this controller uses
-	| a simple trait to add these behaviors. Why don't you explore it?
-	|
-	*/
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array $data
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validator(array $data)
+    {
+        return \Validator::make($data, [
+            'first_name_text' => 'required|max:64',
+            'last_name_text'  => 'required|max:64',
+            'email_addr_text' => 'required|email|max:320|unique:service_user_t',
+            'password_text'   => 'required|confirmed|min:6',
+        ]);
+    }
 
-	use AuthenticatesAndRegistersUsers;
-
-	/**
-	 * Create a new authentication controller instance.
-	 *
-	 * @param  \Illuminate\Contracts\Auth\Guard  $auth
-	 * @param  \Illuminate\Contracts\Auth\Registrar  $registrar
-	 * @return void
-	 */
-	public function __construct(Guard $auth, Registrar $registrar)
-	{
-		$this->auth = $auth;
-		$this->registrar = $registrar;
-
-		$this->middleware('guest', ['except' => 'getLogout']);
-	}
-
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array $data
+     *
+     * @return User
+     */
+    public function create(array $data)
+    {
+        return ServiceUser::create([
+            'first_name_text' => $data['first_name_text'],
+            'last_name_text'  => $data['last_name_text'],
+            'email_addr_text' => $data['email_addr_text'],
+            'password_text'   => bcrypt($data['password_text']),
+        ]);
+    }
 }

@@ -1,4 +1,8 @@
-@extends('layouts.main')
+@extends('layouts.app')
+
+{{-- @formatter:off --}}
+@section('page-title'){{"Groups"}}@overwrite
+{{-- @formatter:on --}}
 
 @section('content')
     @include('app._page-header',array('pageName' => 'Groups', 'buttons' => array('new'=>array('icon'=>'plus','color'=>'success')) ) )

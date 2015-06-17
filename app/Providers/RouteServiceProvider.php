@@ -1,19 +1,20 @@
-<?php namespace App\Providers;
+<?php namespace DreamFactory\Enterprise\Console\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Routing\Router;
 
 class RouteServiceProvider extends ServiceProvider
 {
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
 
-    /**
-     * This namespace is applied to the controller routes in your routes file.
-     *
-     * In addition, it is set as the URL generator's root namespace.
-     *
-     * @var string
-     */
-    protected $namespace = null;//'App\Http\Controllers';
+    /** @inheritdoc */
+    protected $namespace = 'DreamFactory\\Enterprise\\Console\\Http\\Controllers';
+
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -22,11 +23,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot( Router $router )
+    public function boot(Router $router)
     {
-        parent::boot( $router );
-
-        //
+        parent::boot($router);
     }
 
     /**
@@ -36,15 +35,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function map( Router $router )
+    public function map(Router $router)
     {
-        $router->group(
-            ['namespace' => $this->namespace],
-            function ( $router )
-            {
-                require app_path( 'Http/routes.php' );
-            }
-        );
+        $router->group(['namespace' => $this->namespace], function ($router) {
+            /** @noinspection PhpIncludeInspection */
+            require app_path('Http/routes.php');
+        });
     }
 
 }
