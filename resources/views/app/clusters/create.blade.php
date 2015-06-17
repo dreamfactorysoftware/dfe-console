@@ -7,7 +7,6 @@
     <script type='text/javascript'>
 
     $(document).ready(function() {
-        //$('#')
 
     });
 
@@ -61,16 +60,6 @@
                                                             placeholder=".pasture.farm.com"
                                                             type="text">
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label>Maximum Allowed Instances</label>
-                                                        <input class="form-control"
-                                                               name="max_instances_nbr"
-                                                               type="number"
-                                                               min="0"
-                                                               max="1000"
-                                                               value="0">
-                                                    </div>
-
                                                 </div>
 
                                                 <div class="col-md-6">

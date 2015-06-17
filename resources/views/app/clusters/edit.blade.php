@@ -30,68 +30,7 @@
         $('#_server_list').val(out);
     }
 
-    function save() {
 
-        var table_data = $('#serverTable').DataTable().rows().data();
-        //var out = [];
-        var out = '';
-
-        for (var i = 0; i < table_data.length; i++) {
-            //out.push(table_data[i][0]);
-            out += table_data[i][0] + ',';
-        }
-
-        out = out.replace(/(^,)|(,$)/g, "")
-
-        var formData = {
-
-            cluster_name_text:          $('#cluster_id_text').val(),
-            cluster_subdomain_text:     $('#cluster_subdomain_text').val(),
-            cluster_instancecount_text: $('#cluster_instancecount_text').val(),
-            cluster_assigned_servers:   out
-
-        };
-        console.log(formData);
-        /**/
-        $.ajax({
-            url:     "/{{$prefix}}/clusters/{{$cluster_id}}",
-            type:    "PUT",
-            data:    formData,
-            success: function(data, textStatus, jqXHR) {
-                //data - response from server
-                //window.location = '/{{$prefix}}/clusters';
-            },
-            error:   function(jqXHR, textStatus, errorThrown) {
-                //console.log(textStatus);
-            }
-        });
-
-    }
-
-    /*
-     // $(document).ready(function() {
-     $("#system_admin").click(function () {
-     if ($('#system_admin').is(':checked')) {
-     $('#instance_manage').removeAttr("disabled");
-     $('#instance_policy').removeAttr("disabled");
-
-     } else {
-     $('#instance_manage').attr("disabled", true);
-     $('#instance_policy').attr("disabled", true);
-     }
-     });
-
-     $('#set_password').click(function () {
-     if ($('#set_password').is(':checked')) {
-     $('#set_password_form').show();
-
-     } else {
-     $('#set_password_form').hide();
-
-     }
-     });
-     // });
-     */
     </script>
 
     <div class="container-fluid">
@@ -151,17 +90,6 @@
                                                             class="form-control"
                                                             value="{{$cluster->subdomain_text}}"
                                                             type="text" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label" for="max_instances_nbr">Maximum Allowed Instances</label>
-                                                        <input
-                                                            id="max_instances_nbr"
-                                                            name="max_instances_nbr"
-                                                            class="form-control"
-                                                            value="{{$cluster->max_instances_nbr}}"
-                                                            type="number"
-                                                            min="0"
-                                                            max="1000">
                                                     </div>
                                                 </div>
 
