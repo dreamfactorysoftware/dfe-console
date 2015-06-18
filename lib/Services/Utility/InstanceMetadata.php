@@ -452,4 +452,14 @@ class InstanceMetadata implements Jsonable, Arrayable
         return $this;
     }
 
+    /** @inheritdoc */
+    public function getMetadataFilename()
+    {
+        return
+            config('dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME) .
+            DIRECTORY_SEPARATOR .
+            $this->get('instance-id') .
+            '.json';
+    }
+
 }
