@@ -1,5 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Contracts;
 
+use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
+
 /**
  * Something that maintains the content and quality of a snapshot
  */
@@ -10,19 +12,17 @@ interface SnapshotCustodian
     //******************************************************************************
 
     /**
-     * @param string $key
-     * @param mixed  $default
-     *
-     * @return mixed
+     * @return InstanceMetadata
      */
-    public function getMetadata($key = null, $default = null);
+    public function getMetadata();
 
     /**
-     * @param string $key
-     * @param mixed  $value
+     * @param \DreamFactory\Enterprise\Services\Utility\InstanceMetadata $metadata
      *
      * @return $this
+     * @internal param array $array The metadata array
+     *
      */
-    public function setMetadata($key, $value = null);
+    public function setMetadata(InstanceMetadata $metadata);
 
 }
