@@ -7,8 +7,6 @@ use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 return [
     //  The relative path under the local private file system. Resolves to "/path/to/storage/.private/[storage-path]"
     'storage-path'   => 'snapshots',
-    //  The prefix, if any, to place before the timestamp when building the snapshot file name
-    'id-prefix'      => 'dfe',
     //  Scripts used by the snapshot service are defined here
     'script'         => [
         //  Where the cluster MySQL snapshot script is located
@@ -17,7 +15,7 @@ return [
         'user'     => env('DFE_SCRIPT_USER', 'dfadmin'),
     ],
     //  The value to place in the meta data's "type" field
-    'metadata-type'  => 'dfe.snapshot',
+    'metadata-type'  => 'application/dreamfactory',
     //  The base URL for linking to snapshots
     'hash-link-base' => 'https://download.enterprise.dreamfactory.com',
     //  The number of days to keep snapshots before removing them from storage
@@ -29,9 +27,9 @@ return [
     //  Templates used by the snapshot service
     'templates'      => [
         //  File name templates
-        'snapshot-file-name' => '{snapshot-prefix}.snapshot.zip',
-        'storage-file-name'  => 'storage.zip',
-        'db-file-name'       => 'database.sql',
+        'snapshot-file-name' => '{snapshot-prefix}.zip',
+        'storage-file-name'  => '{instance-id}.storage.zip',
+        'db-file-name'       => '{instance-id}.sql',
         'metadata-file-name' => 'snapshot.json',
         //  Metadata guts template
         'metadata'           => [

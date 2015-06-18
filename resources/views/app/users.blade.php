@@ -3,6 +3,8 @@
 @extends('layouts.main')
 
 @section('content')
+
+
     <div class="col-md-2">
         <div >
             <ul class="nav nav-pills nav-stacked visible-md visible-lg">
@@ -55,6 +57,9 @@
                     </div>
                     <div class="btn-group">
                         <input id="userSearch" class="form-control input-sm" value="" type="text" placeholder="Search Users...">
+                    </div>
+                    <div class="btn-group pull-right">
+                        <button type="button" id="refresh" class="btn btn-default btn-sm fa fa-fw fa-refresh" title="Reset sorting" value="" style="width: 40px"></button>
                     </div>
                 </div>
             </div>
@@ -122,5 +127,11 @@
     </div>
 
     <script type="text/javascript" src="../../../js/blade-scripts/users/users.js"></script>
+
+    <script>
+
+
+
+    </script>
 @stop
 

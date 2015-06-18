@@ -92,6 +92,13 @@ $('#selectedUsersRemove').click(function(){
 });
 
 
+$('#refresh').click(function(){
+    table.state.clear();
+    localStorage.removeItem('Users_' + window.location.pathname);
+    window.location.reload();
+});
+
+
 var tableRowIndex = null;
 var tableColIndex = null;
 
@@ -106,7 +113,15 @@ var table = $('#userTable').DataTable({
             "targets": [0],
             "visible": false
         }
-    ]
+    ],
+    "bStateSave": true,
+    "fnStateSave": function (oSettings, oData) {
+        localStorage.setItem('Users_' + window.location.pathname, JSON.stringify(oData));
+    },
+    "fnStateLoad": function (oSettings) {
+        var data = localStorage.getItem('Users_' + window.location.pathname);
+        return JSON.parse(data);
+    }
 });
 
 
@@ -134,8 +149,6 @@ $('#userTable tbody').on( 'click', 'tr', function () {
         else
             user_type = 'user';
 
-        console.log(user_admin);
-
          if(tableColIndex > 1)
              window.location = 'users/' + user_id + '/edit?user_type=' + user_type;
     }
@@ -153,17 +166,7 @@ $('#userTable tbody').on( 'click', 'td', function () {
 
 
 
-var table = $('#userTable').DataTable();
-var info = table.page.info();
-
-$("div.toolbar").html('');
-
-if($('#tableInfo').html() === '')
-    $('#tableInfo').html('Showing Users ' + (info.start + 1) + ' to ' + info.end + ' of ' + info.recordsTotal);
-
-
-$('#_next').on( 'click', function () {
-
+function _nextPage(){
     table.page( 'next' ).draw( false );
 
     if((table.page.info().page + 1) === table.page.info().pages){
@@ -175,11 +178,11 @@ $('#_next').on( 'click', function () {
     }
 
     $('#currentPage').html('Page ' + (table.page.info().page + 1));
-    $('#tableInfo').html('Showing Users ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsTotal);
-} );
 
-$('#_prev').on( 'click', function () {
+    setTableInfo();
+}
 
+function _prevPage(){
     table.page( 'previous' ).draw( false );
 
     if(table.page.info().page === 0)
@@ -192,8 +195,33 @@ $('#_prev').on( 'click', function () {
         $('#_next').prop('disabled', false);
 
     $('#currentPage').html('Page ' + (table.page.info().page + 1));
-    $('#tableInfo').html('Showing Users ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsTotal);
+
+    setTableInfo();
+}
+
+function _gotoPage(page){
+    selectPage(page);
+}
+
+
+var table = $('#userTable').DataTable();
+var info = table.page.info();
+
+$("div.toolbar").html('');
+
+if($('#tableInfo').html() === '')
+    setTableInfo();
+
+
+$('#_next').on( 'click', function () {
+    _nextPage();
+} );
+
+$('#_prev').on( 'click', function () {
+    _prevPage();
 });
+
+
 
 function selectPage(page) {
 
@@ -212,13 +240,46 @@ function selectPage(page) {
     if((page + 1) === table.page.info().pages)
         $('#_next').prop('disabled', true);
 
-    $('#tableInfo').html('Showing Users ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsTotal);
+    setTableInfo();
 }
+
+
+
+function setTableInfo(){
+    $('#tableInfo').html('Showing Users ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsDisplay);
+}
+
+
+function updatePageDropdown(){
+
+    $('#tablePages').empty();
+
+    for(var i = 0; i < table.page.info().pages; i++){
+        $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
+    }
+
+    if(table.page.info().page === 0)
+        $('#_prev').prop('disabled', true);
+
+    if((table.page.info().page + 1) < table.page.info().pages)
+        $('#_next').prop('disabled', false);
+
+    if(table.page.info().page > 0)
+        $('#_prev').prop('disabled', false);
+
+    if((table.page.info().page + 1) === table.page.info().pages)
+        $('#_next').prop('disabled', true);
+}
+
+
 
 function filterGlobal () {
     $('#userTable').DataTable().search(
         $('#userSearch').val()
     ).draw();
+
+    updatePageDropdown();
+    setTableInfo();
 }
 
 $( document ).ready(function() {
@@ -239,6 +300,10 @@ $( document ).ready(function() {
         $('#userSearch').on( 'keyup click', function () {
             filterGlobal();
         } );
+
+        updatePageDropdown();
+        selectPage(info.page);
+        $('#userSearch').val(table.search());
     }
 });
 

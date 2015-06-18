@@ -49,7 +49,12 @@
                         <div class="btn-group">
                                 <button type="button" id="selectedServersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected servers" value="delete" style="width: 40px"></button>
                         </div>
-                        <div style="clear: both"></div>
+                        <div class="btn-group">
+                            <input id="serverSearch" class="form-control input-sm" value="" type="text" placeholder="Search Servers...">
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button type="button" id="refresh" class="btn btn-default btn-sm fa fa-fw fa-refresh" title="Reset sorting" value="" style="width: 40px"></button>
+                        </div>
                     </div>
                 </div>
             </form>

@@ -29,4 +29,8 @@ class ConsoleDefaults
     const DEFAULT_HANDLER_NAMESPACE = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\';
     /** @type string The name of the cluster manifest file */
     const CLUSTER_MANIFEST_FILE = '.dfe.cluster.json';
+    /**
+     * @type string The type of compression to use when making exports
+     */
+    const DEFAULT_DATA_COMPRESSOR = 'zip';
 }

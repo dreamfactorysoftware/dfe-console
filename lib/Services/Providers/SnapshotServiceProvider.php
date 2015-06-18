@@ -28,13 +28,6 @@ class SnapshotServiceProvider extends BaseServiceProvider
      */
     const IOC_NAME = 'dfe.snapshot';
 
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /** @inheritdoc */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\SnapshotService';
-
     //********************************************************************************
     //* Public Methods
     //********************************************************************************
