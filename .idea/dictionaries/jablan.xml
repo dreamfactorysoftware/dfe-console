@@ -2,11 +2,15 @@
   <dictionary name="jablan">
     <words>
       <w>aight</w>
+      <w>arrayable</w>
       <w>authenticatable</w>
       <w>bcrypt</w>
       <w>binlogging</w>
       <w>binlogs</w>
       <w>bootstrappers</w>
+      <w>checkin</w>
+      <w>checkins</w>
+      <w>chouts</w>
       <w>console's</w>
       <w>csrf</w>
       <w>datadir</w>
