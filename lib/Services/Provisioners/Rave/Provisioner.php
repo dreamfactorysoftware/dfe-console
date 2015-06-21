@@ -1,6 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
+use DreamFactory\Enterprise\Common\Enums\ManifestTypes;
+use DreamFactory\Enterprise\Common\Support\Metadata;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
@@ -18,7 +20,6 @@ use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisionerOffering;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Services\Utility\InstanceMetadata;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
@@ -235,47 +236,52 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
         //	Update instance with new provision info
         try {
             $_instance->fill([
-                    'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
-                    'instance_id_text'   => $_name,
-                    'instance_name_text' => $_name,
-                    'db_host_text'       => $_dbConfig['host'],
-                    'db_port_nbr'        => $_dbConfig['port'],
-                    'db_name_text'       => $_dbName,
-                    'db_user_text'       => $_dbUser,
-                    'db_password_text'   => $_dbPassword,
-                    'ready_state_nbr'    => 0, //   Admin Required
-                    'state_nbr'          => ProvisionStates::PROVISIONED,
-                    'platform_state_nbr' => 0, //   Not Activated
-                    'start_date'         => date('c'),
-                    'end_date'           => null,
-                    'terminate_date'     => null,
-                    'provision_ind'      => 1,
-                    'deprovision_ind'    => 0,
-                ]);
+                'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
+                'instance_id_text'   => $_name,
+                'instance_name_text' => $_name,
+                'db_host_text'       => $_dbConfig['host'],
+                'db_port_nbr'        => $_dbConfig['port'],
+                'db_name_text'       => $_dbName,
+                'db_user_text'       => $_dbUser,
+                'db_password_text'   => $_dbPassword,
+                'ready_state_nbr'    => 0, //   Admin Required
+                'state_nbr'          => ProvisionStates::PROVISIONED,
+                'platform_state_nbr' => 0, //   Not Activated
+                'start_date'         => date('c'),
+                'end_date'           => null,
+                'terminate_date'     => null,
+                'provision_ind'      => 1,
+                'deprovision_ind'    => 0,
+            ]);
 
             /**
              * Generate an app key for the instance
              */
             $_appKey = AppKey::create([
-                    'key_class_text' => AppKeyClasses::INSTANCE,
-                    'owner_id'       => $_instance->id,
-                    'owner_type_nbr' => OwnerTypes::INSTANCE,
-                    'server_secret'  => config('dfe.security.console-api-key'),
-                ]);
+                'key_class_text' => AppKeyClasses::INSTANCE,
+                'owner_id'       => $_instance->id,
+                'owner_type_nbr' => OwnerTypes::INSTANCE,
+                'server_secret'  => config('dfe.security.console-api-key'),
+            ]);
 
             /** @type Cluster $_cluster */
             $_cluster = Cluster::findOrFail($_instance->cluster_id, ['cluster_id_text']);
 
             //  Collect metadata
-            $_md = new InstanceMetadata($_instance->instance_id_text, [
-                    'db'    => [$_name => $_dbConfig],
-                    'paths' => [
+            $_md = new Metadata($_instance->getOwnerPrivateStorageMount(),
+                [],
+                $_instance->instance_name_text . '.json');
+
+            $_md->set('db', [$_name => $_dbConfig])
+                ->set('paths',
+                    [
                         'private-path'       => $_privatePath,
                         'owner-private-path' => $_ownerPrivatePath,
                         'snapshot-path-name' => $_ownerPrivatePath . DIRECTORY_SEPARATOR . config('dfe.provisioning.snapshot-path-name',
                                 ConsoleDefaults::SNAPSHOT_PATH_NAME),
-                    ],
-                    'env'   => [
+                    ])
+                ->set('env',
+                    [
                         'cluster-id'       => $_cluster->cluster_id_text,
                         'default-domain'   => config('dfe.provisioning.default-domain'),
                         'signature-method' => config('dfe.signature-method'),
@@ -284,12 +290,11 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                         'console-api-key'  => config('dfe.security.console-api-key'),
                         'client-id'        => $_appKey->client_id,
                         'client-secret'    => $_appKey->client_secret,
-                    ],
-                ]);
+                    ]);
 
             //  Merge in the metadata
             $_instanceData = $_instance->instance_data_text;
-            $_instanceData = array_merge($_instanceData, $_md->toArray());
+            $_instanceData[ManifestTypes::METADATA] = $_md->toArray();
             $_instance->instance_data_text = $_instanceData;
 
             \DB::transaction(function () use ($_instance, $_host) {
@@ -297,12 +302,12 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                  * Add guest data if there is a guest record
                  */
                 $_instance->guest && $_instance->guest->fill([
-                        'base_image_text'   => config('dfe.provisioning.base-image',
-                            ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE),
-                        'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
-                        'vendor_state_text' => 'running',
-                        'public_host_text'  => $_host,
-                    ])->save();
+                    'base_image_text'   => config('dfe.provisioning.base-image',
+                        ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE),
+                    'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
+                    'vendor_state_text' => 'running',
+                    'public_host_text'  => $_host,
+                ])->save();
 
                 //  Save the instance
                 $_instance->save();
@@ -310,7 +315,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
 
             //  Try 'n Save the metadata
             try {
-                $_md->save($request->getStorage());
+                $_md->write();
             } catch (\Exception $_ex) {
                 \Log::error('Exception saving instance metadata: ' . $_ex->getMessage());
             }
