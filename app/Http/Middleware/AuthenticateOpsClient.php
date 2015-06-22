@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Middleware;
 
 use Closure;
+use DreamFactory\Enterprise\Common\Http\Middleware\BaseMiddleware;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\VerifiesSignatures;
@@ -13,16 +14,16 @@ use Illuminate\Http\Response;
  * Authenticates inbound API requests from the dashboard, etc.
  * Packets are signed/sent by "dreamfactory/dfe-ops-client" package.
  */
-class AuthenticateOpsClient
+class AuthenticateOpsClient extends BaseMiddleware
 {
     //******************************************************************************
     //* Constants
     //******************************************************************************
 
     /**
-     * @type string Prepended to log entries
+     * @type string My alias in the ioc and for logging
      */
-    const TAG = '[auth.dfe-ops-client]';
+    const ALIAS = 'auth.dfe-ops-client';
 
     //******************************************************************************
     //* Traits
@@ -49,7 +50,7 @@ class AuthenticateOpsClient
 
         //  Just plain ol' bad...
         if (empty($_token) || empty($_clientId)) {
-            \Log::error(static::TAG . ' bad request: no token or client-id present');
+            $this->error('bad request: no token or client-id present');
 
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
         }
@@ -58,13 +59,13 @@ class AuthenticateOpsClient
             $_key = AppKey::where('client_id', $_clientId)->firstOrFail();
             $this->_setSigningCredentials($_clientId, $_key->client_secret);
         } catch (\Exception $_ex) {
-            \Log::error(static::TAG . ' forbidden: invalid "client-id" [' . $_clientId . ']');
+            $this->error('forbidden: invalid "client-id" [' . $_clientId . ']');
 
             return ErrorPacket::create(Response::HTTP_FORBIDDEN, 'Invalid "client-id"');
         }
 
         if (!$this->_verifySignature($_token, $_clientId, $_key->client_secret)) {
-            \Log::error(static::TAG . ' bad request: signature verification fail');
+            $this->error('bad request: signature verification fail');
 
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
         }
@@ -72,7 +73,7 @@ class AuthenticateOpsClient
         try {
             $_owner = $this->_locateOwner($_key->owner_id, $_key->owner_type_nbr);
         } catch (ModelNotFoundException $_ex) {
-            \Log::error(static::TAG . ' unauthorized: invalid "user" assigned to akt#' . $_key->id);
+            $this->error('unauthorized: invalid "user" assigned to akt#' . $_key->id);
 
             return ErrorPacket::create(Response::HTTP_UNAUTHORIZED);
         }
@@ -81,6 +82,8 @@ class AuthenticateOpsClient
             return $_owner;
         });
 
-        return $next($request);
+        //$this->debug('token validated for client "' . $_clientId . '"');
+
+        return parent::handle($request, $next);
     }
 }
