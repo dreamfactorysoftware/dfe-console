@@ -9,8 +9,21 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class AuthenticateClient
+/**
+ * Authenticates inbound API requests from the dashboard, etc.
+ * Packets are signed/sent by "dreamfactory/dfe-ops-client" package.
+ */
+class AuthenticateOpsClient
 {
+    //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string Prepended to log entries
+     */
+    const TAG = '[auth.dfe-ops-client]';
+
     //******************************************************************************
     //* Traits
     //******************************************************************************
@@ -36,23 +49,22 @@ class AuthenticateClient
 
         //  Just plain ol' bad...
         if (empty($_token) || empty($_clientId)) {
-            \Log::error('[auth.client] bad request: no token or client-id present');
+            \Log::error(static::TAG . ' bad request: no token or client-id present');
 
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
         }
 
-        /** @type AppKey $_key */
         try {
             $_key = AppKey::where('client_id', $_clientId)->firstOrFail();
             $this->_setSigningCredentials($_clientId, $_key->client_secret);
         } catch (\Exception $_ex) {
-            \Log::error('[auth.client] forbidden: invalid "client-id" [' . $_clientId . ']');
+            \Log::error(static::TAG . ' forbidden: invalid "client-id" [' . $_clientId . ']');
 
             return ErrorPacket::create(Response::HTTP_FORBIDDEN, 'Invalid "client-id"');
         }
 
         if (!$this->_verifySignature($_token, $_clientId, $_key->client_secret)) {
-            \Log::error('[auth.client] bad request: signature verification fail');
+            \Log::error(static::TAG . ' bad request: signature verification fail');
 
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
         }
@@ -60,7 +72,7 @@ class AuthenticateClient
         try {
             $_owner = $this->_locateOwner($_key->owner_id, $_key->owner_type_nbr);
         } catch (ModelNotFoundException $_ex) {
-            \Log::error('[auth.client] unauthorized: invalid "user" assigned to akt#' . $_key->id);
+            \Log::error(static::TAG . ' unauthorized: invalid "user" assigned to akt#' . $_key->id);
 
             return ErrorPacket::create(Response::HTTP_UNAUTHORIZED);
         }
@@ -71,5 +83,4 @@ class AuthenticateClient
 
         return $next($request);
     }
-
 }
