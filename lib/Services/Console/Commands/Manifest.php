@@ -96,7 +96,7 @@ class Manifest extends Command
                     'show',
                     's',
                     InputOption::VALUE_NONE,
-                    'If specified, show the contents of an installation\'s manifest.'
+                    'If specified, show the contents of an installation\'s manifest.',
                 ],
                 ['owner-id', null, InputOption::VALUE_REQUIRED, 'The owner id for the manifest key if not 0', 0],
                 [
@@ -104,7 +104,7 @@ class Manifest extends Command
                     null,
                     InputOption::VALUE_REQUIRED,
                     'The owner type for the manifest key if not "dashboard"',
-                    'dashboard'
+                    'dashboard',
                 ],
             ]
         );

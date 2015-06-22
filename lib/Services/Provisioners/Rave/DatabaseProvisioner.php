@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
+<?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
@@ -8,6 +7,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -155,7 +155,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
         $_config =
             array_merge(
                 is_scalar($_server->config_text)
-                    ? $this->_jsonDecode($_server->config_text, true)
+                    ? Json::decode($_server->config_text, true)
                     : (array)$_server->config_text,
                 $_skeleton,
                 ['db-server-id' => $_dbServer,]

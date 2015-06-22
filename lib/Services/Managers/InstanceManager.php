@@ -204,7 +204,7 @@ class InstanceManager extends BaseManager implements Factory
         try {
             $_cluster = static::_lookupCluster($clusterId);
             $_servers = static::_lookupClusterServers($_cluster->id);
-            \Log::debug('Servers: ' . print_r($_servers, true));
+            //\Log::debug('Servers: ' . print_r($_servers, true));
 
             $_serverIds = $this->_extractServerIds($_servers);
 
