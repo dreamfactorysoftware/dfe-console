@@ -38,7 +38,7 @@ return [
         'Illuminate\\Translation\\TranslationServiceProvider',
         'Illuminate\\Validation\\ValidationServiceProvider',
         'Illuminate\\View\\ViewServiceProvider',
-        /** Application Service Providers... */
+            /** Application Service Providers... */
         'DreamFactory\\Enterprise\\Console\\Providers\\AppServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\BusServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\ConfigServiceProvider',
