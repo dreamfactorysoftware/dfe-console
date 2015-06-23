@@ -301,27 +301,46 @@ class ServerController extends ResourceController
 
     public function destroy($ids)
     {
+        try {
+            $id_array = [];
 
-        $id_array = [];
+            if ($ids == 'multi') {
+                $params = Input::all();
+                $selected = $params['_selected'];
+                $id_array = explode(',', $selected);
+            } else {
+                $id_array = explode(',', $ids);
+            }
 
-        if ($ids == 'multi') {
-            $params = Input::all();
-            $selected = $params['_selected'];
-            $id_array = explode(',', $selected);
-        } else {
-            $id_array = explode(',', $ids);
+            foreach ($id_array as $id) {
+                Server::find($id)->delete();
+                ClusterServer::where('server_id', '=', intval($id))->delete();
+            }
+
+            if(count($id_array) > 1) {
+                $result_text = 'The servers were deleted successfully!';
+            }
+            else
+            {
+                $result_text = 'The server was deleted successfully!';
+            }
+
+            $result_status = 'alert-success';
+
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/servers';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
         }
-
-        foreach ($id_array as $id) {
-            Server::find($id)->delete();
-            ClusterServer::where('server_id', '=', intval($id))->delete();
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Please try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/servers')->withInput();
         }
-
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/servers';
-
-        return Redirect::to($_redirect);
     }
 
     public function index()
