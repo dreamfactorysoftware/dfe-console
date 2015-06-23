@@ -61,6 +61,14 @@
         </div>
 
         <div>
+
+            @if(Session::has('flash_message'))
+                <div class="alert {{ Session::get('flash_type') }}">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ Session::get('flash_message') }}
+                </div>
+            @endif
+
             <div class="row">
                 <div class="col-xs-12">
                     <table id="serverTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-server">
