@@ -1,6 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use Session;
+use Validator;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
 use DreamFactory\Enterprise\Database\Models\Server;
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
+
 
 class ServerController extends ResourceController
 {
@@ -99,94 +102,245 @@ class ServerController extends ResourceController
     public function update($id)
     {
 
-        $test = Input::all();
+        $input = Input::all();
 
-        $type = $test['server_type_select'];
-        $test1 = $test['config'][$type];
-        $test['config_text'] = $test1;
+        $type = $input['server_type_select'];
+        $input_config = $input['config'][$type];
+        $input['config_text'] = $input_config;
 
         if ($type == 'db') {
-            $test['server_type_id'] = 1;
+            $input['server_type_id'] = 1;
         }
         if ($type == 'web') {
-            $test['server_type_id'] = 2;
+            $input['server_type_id'] = 2;
         }
         if ($type == 'app') {
-            $test['server_type_id'] = 3;
+            $input['server_type_id'] = 3;
         }
 
-        unset($test['_method']);
-        unset($test['_token']);
-        unset($test['config']);
-        unset($test['server_type_select']);
 
-        $server = Server::find($id);
-        $server->update($test);
+        $validator = Validator::make($input, [
+            'server_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'host_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
+            'config.'.$type.'.port' => array('Regex:/^[0-9]+$/'),
+            'config.'.$type.'.username' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'config.'.$type.'.driver' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'config.'.$type.'.default-database-name' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            //'config.'.$type.'.access_token' => array('Regex:/^[0-9]+$/')
+        ]);
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/servers';
+        if ($validator->fails()) {
 
-        return Redirect::to($_redirect);
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach($messages as $key => $value){
+                switch ($key) {
+
+                    case 'server_id_text':
+                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    case 'host_text':
+                        $flash_message = 'Host format is invalid (use http/https://subdomain.domain.tld)';
+                        break;
+                    case 'config.'.$type.'.port':
+                        $flash_message = 'Port must be an integer and larger than 0';
+                        break;
+                    case 'config.'.$type.'.username':
+                        $flash_message = 'User Name contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    case 'config.'.$type.'.driver':
+                        $flash_message = 'Driver contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    case 'config.'.$type.'.default-database-name':
+                        $flash_message = 'Default Database Name contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    /*
+                    case 'config.'.$type.'.access_token':
+                        $flash_message = 'Port must be an integer and larger than 0';
+                        break;
+                    */
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/servers/'.$id.'/edit')->withInput();
+        }
+
+        unset($input['_method']);
+        unset($input['_token']);
+        unset($input['config']);
+        unset($input['server_type_select']);
+
+        try{
+
+            $server = Server::find($id);
+            $server->update($input);
+
+            $result_text = 'The server "'.$input['server_id_text'].'" was successfully updated!';
+            $result_status = 'alert-success';
+
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/servers';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/servers/'.$id.'/edit')->withInput();
+        }
     }
 
     public function store()
     {
+        $input = Input::all();
 
-        $test = Input::all();
-
-        $type = $test['server_type_select'];
-        $test1 = $test['config'][$type];
-        $test['config_text'] = $test1;
+        $type = $input['server_type_select'];
+        $input_config = $input['config'][$type];
+        $input['config_text'] = $input_config;
 
         if ($type == 'db') {
-            $test['server_type_id'] = 1;
+            $input['server_type_id'] = 1;
         }
         if ($type == 'web') {
-            $test['server_type_id'] = 2;
+            $input['server_type_id'] = 2;
         }
         if ($type == 'app') {
-            $test['server_type_id'] = 3;
+            $input['server_type_id'] = 3;
         }
 
-        unset($test['_method']);
-        unset($test['_token']);
-        unset($test['config']);
-        unset($test['server_type_select']);
+        $validator = Validator::make($input, [
+            'server_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'host_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
+            'config.'.$type.'.port' => array('Regex:/^[0-9]+$/'),
+            'config.'.$type.'.username' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'config.'.$type.'.driver' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'config.'.$type.'.default-database-name' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            //'config.'.$type.'.access_token' => array('Regex:/^[0-9]+$/')
+        ]);
 
-        $create_server = new Server();
-        $create_server->create($test);
+        if ($validator->fails()) {
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/servers';
+            $messages = $validator->messages()->getMessages();
 
-        return Redirect::to($_redirect);
+            $flash_message = '';
+
+            foreach($messages as $key => $value){
+                switch ($key) {
+
+                    case 'server_id_text':
+                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    case 'host_text':
+                        $flash_message = 'Host format is invalid (use subdomain.domain.tld)';
+                        break;
+                    case 'config.'.$type.'.port':
+                        $flash_message = 'Port must be an integer and larger than 0';
+                        break;
+                    case 'config.'.$type.'.username':
+                        $flash_message = 'User Name contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    case 'config.'.$type.'.driver':
+                        $flash_message = 'Driver contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    case 'config.'.$type.'.default-database-name':
+                        $flash_message = 'Default Database Name contain invalid characters (use a-z, A-Z, . and -)';
+                        break;
+                    /*
+                    case 'config.'.$type.'.access_token':
+                        $flash_message = 'Port must be an integer and larger than 0';
+                        break;
+                    */
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/servers/create')->withInput();
+        }
+
+        unset($input['_method']);
+        unset($input['_token']);
+        unset($input['config']);
+        unset($input['server_type_select']);
+
+        try{
+
+            $create_server = new Server();
+            $create_server->create($input);
+
+            $result_text = 'The server "'.$input['server_id_text'].'" was created successfully!';
+            $result_status = 'alert-success';
+
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/servers';
+
+            return Redirect::to($_redirect)
+            ->with('flash_message', $result_text)
+            ->with('flash_type', $result_status);
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/servers/create')->withInput();
+        }
     }
 
     public function destroy($ids)
     {
+        try {
+            $id_array = [];
 
-        $id_array = [];
+            if ($ids == 'multi') {
+                $params = Input::all();
+                $selected = $params['_selected'];
+                $id_array = explode(',', $selected);
+            } else {
+                $id_array = explode(',', $ids);
+            }
 
-        if ($ids == 'multi') {
-            $params = Input::all();
-            $selected = $params['_selected'];
-            $id_array = explode(',', $selected);
-        } else {
-            $id_array = explode(',', $ids);
+            foreach ($id_array as $id) {
+                Server::find($id)->delete();
+                ClusterServer::where('server_id', '=', intval($id))->delete();
+            }
+
+            if(count($id_array) > 1) {
+                $result_text = 'The servers were deleted successfully!';
+            }
+            else
+            {
+                $result_text = 'The server was deleted successfully!';
+            }
+
+            $result_status = 'alert-success';
+
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/servers';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
         }
-
-        foreach ($id_array as $id) {
-            Server::find($id)->delete();
-            ClusterServer::where('server_id', '=', intval($id))->delete();
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Please try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/servers')->withInput();
         }
-
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/servers';
-
-        return Redirect::to($_redirect);
     }
 
     public function index()
@@ -204,6 +358,13 @@ class ServerController extends ResourceController
         $result = array_merge(json_decode($asgn_servers), json_decode($not_asgn_servers));
 
         return View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $result);
+    }
+
+
+
+    protected function _validate(){
+
+
     }
 
 }

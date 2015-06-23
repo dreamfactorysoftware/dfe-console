@@ -35,10 +35,13 @@
                                         <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
                                         <div class="row">
                                             <div class="col-md-6">
+                                                @if(Session::has('flash_message'))
+                                                    <p class="alert {{ Session::get('flash_type') }}">{{ Session::get('flash_message') }}</p>
+                                                @endif
                                                 <form name="create-user">
                                                 <div class="form-group">
                                                     <label>Name</label>
-                                                    <input id="server_name_text" name="server_id_text" value="{{$server->server_id_text}}" class="form-control" placeholder="Enter email address." readonly>
+                                                    <input id="server_name_text" name="server_id_text" @if (Input::old('server_id_text')) value="{{ Input::old('server_id_text') }}" @else value="{{ $server->server_id_text }}" @endif class="form-control" placeholder="Enter email address.">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Type</label>
@@ -50,29 +53,29 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Host</label>
-                                                    <input id="server_host_text" name="host_text" value="{{$server->host_text}}" class="form-control" placeholder="Enter last name." type="text">
+                                                    <input id="server_host_text" name="host_text" @if (Input::old('host_text')) value="{{ Input::old('host_text') }}" @else value="{{$server->host_text}}" @endif class="form-control" placeholder="Enter last name." type="text">
                                                 </div>
 
                                                 <div id="server_type_db" style="display: none;">
                                                     <div class="form-group">
                                                         <label>Port</label>
-                                                        <input id="db_port_text" name="config[db][port]" class="form-control" value="{{ $config['port'] or '' }}" type="text">
+                                                        <input id="db_port_text" name="config[db][port]" class="form-control" @if (Input::old('config.db.port')) value="{{ Input::old('config.db.port') }}" @else value="{{ $config['port'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>User Name</label>
-                                                        <input id="db_username_text" name="config[db][username]" class="form-control" value="{{ $config['username'] or '' }}" type="text">
+                                                        <input id="db_username_text" name="config[db][username]" class="form-control" @if (Input::old('config.db.username')) value="{{ Input::old('config.db.username') }}" @else value="{{ $config['username'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Password</label>
-                                                        <input id="db_password_text" name="config[db][password]" class="form-control" value="{{ $config['password'] or '' }}" type="password">
+                                                        <input id="db_password_text" name="config[db][password]" class="form-control" @if (Input::old('config.db.password')) value="{{ Input::old('config.db.password') }}" @else value="{{ $config['password'] or '' }}" @endif type="password">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Driver</label>
-                                                        <input id="db_driver_text" name="config[db][driver]" class="form-control" value="{{ $config['driver'] or '' }}" type="text">
+                                                        <input id="db_driver_text" name="config[db][driver]" class="form-control" @if (Input::old('config.db.driver')) value="{{ Input::old('config.db.driver') }}" @else value="{{ $config['driver'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Default Database Name</label>
-                                                        <input id="db_default_db_name_text" name="config[db][default-database-name]" class="form-control" value="{{ $config['default-database-name'] or '' }}" type="text">
+                                                        <input id="db_default_db_name_text" name="config[db][default-database-name]" class="form-control" @if (Input::old('config.db.default-database-name')) value="{{ Input::old('config.db.default-database-name') }}" @else value="{{ $config['default-database-name'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Server Assignment</label><br>
@@ -84,7 +87,7 @@
                                                 <div id="server_type_web" style="display: none;">
                                                     <div class="form-group">
                                                         <label>Port</label>
-                                                        <input id="web_port_text" name="config[web][port]" class="form-control" value="{{ $config['port'] or '' }}" type="text">
+                                                        <input id="web_port_text" name="config[web][port]" class="form-control" @if (Input::old('config.web.port')) value="{{ Input::old('config.web.port') }}" @else value="{{ $config['port'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Scheme</label>
@@ -96,11 +99,11 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>User Name</label>
-                                                        <input id="web_username_text" name="config[web][username]" class="form-control" value="{{ $config['username'] or '' }}" type="text">
+                                                        <input id="web_username_text" name="config[web][username]" class="form-control" @if (Input::old('config.web.username')) value="{{ Input::old('config.web.username') }}" @else value="{{ $config['username'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Password</label>
-                                                        <input id="web_password_text" name="config[web][password]" class="form-control" value="{{ $config['password'] or '' }}" type="password">
+                                                        <input id="web_password_text" name="config[web][password]" class="form-control" @if (Input::old('config.web.password')) value="{{ Input::old('config.web.password') }}" @else value="{{ $config['password'] or '' }}" @endif type="password">
                                                     </div>
                                                 </div>
 
@@ -108,7 +111,7 @@
                                                 <div id="server_type_app" style="display: none;">
                                                     <div class="form-group">
                                                         <label>Port</label>
-                                                        <input id="app_port_text" name="config[app][port]" class="form-control" value="{{ $config['port'] or '' }}" type="text">
+                                                        <input id="app_port_text" name="config[app][port]" class="form-control" @if (Input::old('config.app.port')) value="{{ Input::old('config.app.port') }}" @else value="{{ $config['port'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Scheme</label>
@@ -120,15 +123,15 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>User Name</label>
-                                                        <input id="app_username_text" name="config[app][username]" class="form-control" value="{{ $config['username'] or '' }}" type="text">
+                                                        <input id="app_username_text" name="config[app][username]" class="form-control" @if (Input::old('config.app.username')) value="{{ Input::old('config.app.username') }}" @else value="{{ $config['username'] or '' }}" @endif type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Password</label>
-                                                        <input id="app_password_text" name="config[app][password]" class="form-control" value="{{ $config['password'] or '' }}" type="password">
+                                                        <input id="app_password_text" name="config[app][password]" class="form-control" @if (Input::old('config.app.password')) value="{{ Input::old('config.app.password') }}" @else value="{{ $config['username'] or '' }}" @endif type="password">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Access Token</label>
-                                                        <input id="app_accesstoken_text" name="config[app][access_token]" class="form-control" value="{{ $config['access_token'] or '' }}" type="password">
+                                                        <input id="app_accesstoken_text" name="config[app][access_token]" class="form-control" @if (Input::old('config.app.access_token')) value="{{ Input::old('config.app.access_token') }}" @else value="{{ $config['access_token'] or '' }}" @endif type="password">
                                                     </div>
                                                 </div>
                                             </div>
