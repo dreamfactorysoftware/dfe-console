@@ -55,7 +55,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         'api-url'          => null,
         'api-key'          => null,
         'client-id'        => null,
-        'client-secret'    => null
+        'client-secret'    => null,
     ];
     /**
      * @type string A prefix for notification subjects
@@ -106,19 +106,19 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
 
         //  Save results...
         $_instance = $request->getInstance();
-        $_data = $_instance->instance_data_text;
-        $_data['.provisioning'] = $_result;
+        $_data = $_instance->instance_data_text ?: [];
+
+        !isset($_data['_operations']) && ($_data['_operations'] = []);
+        $_data['_operations'][date('c')] = $_result;
         $_instance->update(['instance_data_text' => $_data]);
 
         //  Send notification
         $_guest = $_instance->guest;
         $_host =
-            $_guest
+            ($_guest && $_guest->public_host_text)
                 ? $_guest->public_host_text
-                : $_instance->instance_id_text . '.' .
-                config('dfe.provisioning.default-dns-zone') .
-                '.' .
-                config('dfe.provisioning.default-dns-domain');
+                : $_instance->instance_id_text . '.' . trim(config('dfe.provisioning.default-dns-zone'), '.') .
+                '.' . trim(config('dfe.provisioning.default-dns-domain'), '.');
 
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
@@ -213,7 +213,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
             \Mail::send(
                 'emails.generic',
                 $data,
-                function ($message) use ($instance, $subject){
+                function ($message) use ($instance, $subject) {
                     /** @var Message $message */
                     $message
                         ->to($instance->user->email_addr_text,

@@ -17,6 +17,12 @@ use Illuminate\Http\Response;
 class AuthenticateOpsClient extends BaseMiddleware
 {
     //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup, VerifiesSignatures;
+
+    //******************************************************************************
     //* Constants
     //******************************************************************************
 
@@ -24,12 +30,6 @@ class AuthenticateOpsClient extends BaseMiddleware
      * @type string My alias in the ioc and for logging
      */
     const ALIAS = 'auth.dfe-ops-client';
-
-    //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-    use EntityLookup, VerifiesSignatures;
 
     //******************************************************************************
     //* Methods
@@ -57,7 +57,7 @@ class AuthenticateOpsClient extends BaseMiddleware
 
         try {
             $_key = AppKey::where('client_id', $_clientId)->firstOrFail();
-            $this->_setSigningCredentials($_clientId, $_key->client_secret);
+            $this->setSigningCredentials($_clientId, $_key->client_secret);
         } catch (\Exception $_ex) {
             $this->error('forbidden: invalid "client-id" [' . $_clientId . ']');
 
