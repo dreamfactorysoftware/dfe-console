@@ -100,6 +100,8 @@ function post_dreamfactory($fn, $ln, $em, $ph, $co, $pw)
     $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
     @curl_close($ch);
 
+    _log('df post ' . $status_code . ': ' . print_r($response, true));
+
     return $status_code;
 }
 
@@ -135,19 +137,21 @@ function post_hubspot($fn, $ln, $em, $ph, $co)
     curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
     curl_setopt($ch, CURLOPT_URL, $endpoint);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded',]);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_HEADER, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+    $data = curl_exec($ch);
     $response = @curl_exec($ch);
     $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-    if (302 == $status_code) {
-        //  find redirect url
-        $new_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+    _log('hs post ' . $status_code . ': ' . print_r($response, true));
 
-        _log('redirect 302: ' . $new_url);
+    if (400 > $status_code) {
+        $_headers = _parseHeaders($data);
 
-        if (!empty($new_url)) {
-            header('Location: ' . $new_url);
+        if (isset($_headers['location'])) {
+            _log('* hs redirect ' . $status_code . ': ' . $_headers['location']);
+            header('Location: ' . $_headers['location']);
             die();
         }
     }
@@ -169,4 +173,22 @@ function test_input($data)
 function _log($message)
 {
     error_log($message . PHP_EOL, 3, __DIR__ . '/log');
+}
+
+function _parseHeaders($headers)
+{
+    $_result = [];
+    $_fields = explode("\r\n", preg_replace('/\x0D\x0A[\x09\x20]+/', ' ', $headers));
+    foreach ($_fields as $_field) {
+        if (preg_match('/([^:]+): (.+)/m', $_field, $_match)) {
+            $_match[1] = strtolower(trim($_match[1]));
+            if (isset($_result[$_match[1]])) {
+                $_result[$_match[1]] = [$_result[$_match[1]], $_match[2]];
+            } else {
+                $_result[$_match[1]] = trim($_match[2]);
+            }
+        }
+    }
+
+    return $_result;
 }

@@ -29,6 +29,10 @@ require __DIR__ . '/form-logic.php';
             font-family: "Open Sans", "Droid Sans", Arial, sans-serif;
         }
 
+        .navbar-inverse {
+            background-color: #000000;
+        }
+
         .navbar-title-row {
             margin-top: 10px;
         }
