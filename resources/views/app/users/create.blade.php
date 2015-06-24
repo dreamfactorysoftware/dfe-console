@@ -33,21 +33,24 @@
                                     <form id="user_form" name="create-user" method="POST" action="/{{$prefix}}/users">
                                         <div class="row">
                                             <div class="col-md-6">
+                                                @if(Session::has('flash_message'))
+                                                    <p class="alert {{ Session::get('flash_type') }}">{{ Session::get('flash_message') }}</p>
+                                                @endif
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input id="email_addr_text" name="email_addr_text" value="" class="form-control" placeholder="Enter email address." type="email" required>
+                                                    <input id="email_addr_text" name="email_addr_text" class="form-control" placeholder="Enter email address." type="email" value="{{ Input::old('email_addr_text') }}" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>First Name</label>
-                                                    <input id="first_name_text" name="first_name_text" value="" class="form-control" placeholder="Enter first name." type="text" required>
+                                                    <input id="first_name_text" name="first_name_text" class="form-control" placeholder="Enter first name." type="text" value="{{ Input::old('first_name_text') }}" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Last Name</label>
-                                                    <input id="last_name_text" name="last_name_text" value="" class="form-control" placeholder="Enter last name." type="text" required>
+                                                    <input id="last_name_text" name="last_name_text" class="form-control" placeholder="Enter last name." type="text" value="{{ Input::old('last_name_text') }}" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Nickname</label>
-                                                    <input id="nickname_text" name="nickname_text" value="" class="form-control" placeholder="Enter nickname." type="text" required>
+                                                    <input id="nickname_text" name="nickname_text" class="form-control" placeholder="Enter nickname." type="text" value="{{ Input::old('nickname_text') }}" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <div id="">

@@ -44,13 +44,17 @@
                                         <form name="create-user" method="POST" action="/{{$prefix}}/clusters">
                                             <div class="row">
                                                 <div class="col-md-6">
+                                                    @if(Session::has('flash_message'))
+                                                        <p class="alert {{ Session::get('flash_type') }}">{{ Session::get('flash_message') }}</p>
+                                                    @endif
                                                     <div class="form-group">
                                                         <label>Name</label>
                                                         <input id="cluster_id_text"
                                                             name="cluster_id_text"
                                                             class="form-control"
                                                             placeholder="cluster-[zone]-[#]"
-                                                            type="text">
+                                                            type="text"
+                                                            value="{{ Input::old('cluster_id_text') }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>DNS Subdomain</label>
@@ -58,7 +62,8 @@
                                                             name="subdomain_text"
                                                             class="form-control"
                                                             placeholder=".pasture.farm.com"
-                                                            type="text">
+                                                            type="text"
+                                                            value="{{ Input::old('subdomain_text') }}">
                                                     </div>
                                                 </div>
 

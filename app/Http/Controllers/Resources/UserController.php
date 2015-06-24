@@ -1,9 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use Session;
+use Validator;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
+
 
 class UserController extends ResourceController
 {
@@ -75,6 +78,44 @@ class UserController extends ResourceController
         $user = null;
         $user_data = Input::all();
 
+        $validator = Validator::make($user_data, [
+            'email_addr_text' => array('Regex:/^[0-9a-zA-Z]+([0-9a-zA-Z]*[-._+])*[0-9a-zA-Z]+@[0-9a-zA-Z]+([-.][0-9a-zA-Z]+)*([0-9a-zA-Z]*[.])[a-zA-Z]{2,6}$/i'),
+            'first_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'last_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'nickname_text' => array('Regex:/^[a-z0-9 .\-]+$/i')
+        ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach($messages as $key => $value){
+                switch ($key) {
+
+                    case 'email_addr_text':
+                        $flash_message = 'Email format is invalid (use abc@domain.tld)';
+                        break;
+                    case 'first_name_text':
+                        $flash_message = 'First Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'last_name_text':
+                        $flash_message = 'Last Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'nickname_text':
+                        $flash_message = 'Nickname contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/users/create')->withInput();
+        }
+
         if (array_key_exists('system_admin', $user_data)) {
             $is_system_admin = 1;
         }
@@ -97,13 +138,27 @@ class UserController extends ResourceController
         $user->last_name_text = $user_data['last_name_text'];
         $user->nickname_text = $user_data['nickname_text'];
 
-        $user->save();
+        try{
+            $user->save();
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/users';
+            $result_text = 'The user "'.$user_data['first_name_text'].' '.$user_data['last_name_text'].'" was created successfully!';
+            $result_status = 'alert-success';
 
-        return Redirect::to($_redirect);
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/users';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/users/create')->withInput();
+        }
+
     }
 
     public function update($id)
@@ -116,6 +171,61 @@ class UserController extends ResourceController
             $is_system_admin = $user_data['user_type'];
         }
 
+
+        $validator = Validator::make($user_data, [
+            'email_addr_text' => array('Regex:/^[0-9a-zA-Z]+([0-9a-zA-Z]*[-._+])*[0-9a-zA-Z]+@[0-9a-zA-Z]+([-.][0-9a-zA-Z]+)*([0-9a-zA-Z]*[.])[a-zA-Z]{2,6}$/i'),
+            'first_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'last_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'nickname_text' => array('Regex:/^[a-z0-9 .\-]+$/i')
+        ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach($messages as $key => $value){
+                switch ($key) {
+
+                    case 'email_addr_text':
+                        $flash_message = 'Email format is invalid (use abc@domain.tld)';
+                        break;
+                    case 'first_name_text':
+                        $flash_message = 'First Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'last_name_text':
+                        $flash_message = 'Last Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'nickname_text':
+                        $flash_message = 'Nickname contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+
+            $_redirect = '/v1/users/'.$id.'/edit?user_type=';
+
+            if($is_system_admin) {
+                $_redirect .= 'admin';
+            }
+            else
+            {
+                $_redirect .= 'user';
+            }
+
+            return redirect($_redirect)->withInput();
+        }
+
+
+        if (array_key_exists('user_type', $user_data)) {
+            $is_system_admin = $user_data['user_type'];
+        }
+
         if ($id != $user_data['user_auth']) {
             if (array_key_exists('active_ind', $user_data)) {
                 $user_data['active_ind'] = 1;
@@ -123,25 +233,7 @@ class UserController extends ResourceController
                 $user_data['active_ind'] = 0;
             }
         }
-        /*
-                if ( array_key_exists( 'instance_manage_ind', $user_data ) )
-                {
-                    $user_data['instance_manage_ind'] = 1;
-                }
-                else
-                {
-                    $user_data['instance_manage_ind'] = 0;
-                }
 
-                if ( array_key_exists( 'instance_policy_ind', $user_data ) )
-                {
-                    $user_data['instance_policy_ind'] = 1;
-                }
-                else
-                {
-                    $user_data['instance_policy_ind'] = 0;
-                }
-        */
         if ($is_system_admin != '') {
             $user = ServiceUser::where('email_addr_text', '=', $user_data['email_addr_text'])->first();
 
@@ -178,46 +270,90 @@ class UserController extends ResourceController
         unset($user_data['instance_manage_ind']);
         unset($user_data['instance_policy_ind']);
 
-        $user = $users->find($id);
-        $user->update($user_data);
+        try{
+            $user = $users->find($id);
+            $user->update($user_data);
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/users';
+            $result_text = 'The user "'.$user_data['first_name_text'].' '.$user_data['last_name_text'].'" was updated successfully!';
+            $result_status = 'alert-success';
 
-        return \Redirect::to($_redirect);
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/users';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            Session::flash('flash_type', 'alert-danger');
+
+            $_redirect = '/v1/users/'.$id.'/edit?user_type=';
+
+            if($is_system_admin) {
+                $_redirect .= 'admin';
+            }
+            else
+            {
+                $_redirect .= 'user';
+            }
+
+            return redirect($_redirect)->withInput();
+        }
     }
 
     public function destroy($ids)
     {
         $user_data = \Input::all();
-        $a_users = new ServiceUser;
-        $o_users = new User;
+        $id_array = [];
 
-        if ($ids != 'multi') {
-            if ($user_data['user_type'] != "") {
-                $a_users->find($ids)->delete();
-            } else {
-                $o_users->find($ids)->delete();
-            }
-        } else {
-            $id_array = explode(',', $user_data['_selectedIds']);
-            $type_array = explode(',', $user_data['_selectedTypes']);
+        try {
 
-            foreach ($id_array as $i => $id) {
-                if ($type_array[$i] != "") {
-                    $a_users->find($id_array[$i])->delete();
+            if ($ids != 'multi') {
+                if ($user_data['user_type'] != "") {
+                    ServiceUser::find($ids)->delete();
                 } else {
-                    $o_users->find($id_array[$i])->delete();
+                    User::find($ids)->delete();
+                }
+            } else {
+                $id_array = explode(',', $user_data['_selectedIds']);
+                $type_array = explode(',', $user_data['_selectedTypes']);
+
+                foreach ($id_array as $i => $id) {
+                    if ($type_array[$i] != "") {
+                        ServiceUser::find($id_array[$i])->delete();
+                    } else {
+                        User::find($id_array[$i])->delete();
+                    }
                 }
             }
+
+            if(count($id_array) > 1) {
+                $result_text = 'The users were deleted successfully!';
+            }
+            else
+            {
+                $result_text = 'The user was deleted successfully!';
+            }
+
+            $result_status = 'alert-success';
+
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/users';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
         }
-
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/users';
-
-        return \Redirect::to($_redirect);
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Please try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/users')->withInput();
+        }
     }
 
     public function index()
