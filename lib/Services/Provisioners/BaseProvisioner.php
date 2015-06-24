@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Library\Utility\JsonFile;
@@ -204,7 +205,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         //  Put instance ID into the correct place
         isset($data['instance']) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        return audit($data, $level, ($deprovisioning ? 'de' : null) . 'provision');
+        return Audit::log($data, $level, app('request'), ($deprovisioning ? 'de' : null) . 'provision');
     }
 
     /**
