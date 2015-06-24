@@ -56,7 +56,7 @@ class AuthenticateOpsClient extends BaseMiddleware
         }
 
         try {
-            $_key = AppKey::where('client_id', $_clientId)->firstOrFail();
+            $_key = AppKey::byClientId($_clientId)->firstOrFail();
             $this->setSigningCredentials($_clientId, $_key->client_secret);
         } catch (\Exception $_ex) {
             $this->error('forbidden: invalid "client-id" [' . $_clientId . ']');
@@ -78,7 +78,7 @@ class AuthenticateOpsClient extends BaseMiddleware
             return ErrorPacket::create(Response::HTTP_UNAUTHORIZED);
         }
 
-        $request->setUserResolver(function () use ($_owner) {
+        $request->setUserResolver(function () use ($_owner){
             return $_owner;
         });
 
