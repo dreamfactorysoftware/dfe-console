@@ -44,7 +44,7 @@ class AuthenticateClient
         /** @type AppKey $_key */
         try {
             $_key = AppKey::where('client_id', $_clientId)->firstOrFail();
-            $this->_setSigningCredentials($_clientId, $_key->client_secret);
+            $this->setSigningCredentials($_clientId, $_key->client_secret);
         } catch (\Exception $_ex) {
             \Log::error('[auth.client] forbidden: invalid "client-id" [' . $_clientId . ']');
 
