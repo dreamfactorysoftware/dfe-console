@@ -123,6 +123,13 @@ function selectPage(page) {
 }
 
 $( document ).ready(function() {
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
     if(info) {
         for (var i = 0; i < info.pages; i++) {
             $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')

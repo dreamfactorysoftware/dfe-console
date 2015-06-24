@@ -283,6 +283,12 @@ function filterGlobal () {
 }
 
 $( document ).ready(function() {
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 
     $("#new_password").keyup(checkPasswordMatch);
     $("#retype_new_password").keyup(checkPasswordMatch);
