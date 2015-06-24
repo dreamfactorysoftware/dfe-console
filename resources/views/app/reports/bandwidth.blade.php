@@ -137,32 +137,32 @@
 
             if(type === 'bandwidth_clusters_all')
             {
-                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Clusters?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'4',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
+                _chart = "//kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Clusters?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'4',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
             if(type === 'bandwidth_instances_applications')
             {
-                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Applications?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:app_name,order:desc,orderBy:'1',size:15),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
+                _chart = "//kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Applications?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:app_name,order:desc,orderBy:'1',size:15),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
             if(type === 'bandwidth_instances_endpoints')
             {
-                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Endpoints?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:path_info.raw,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))"
+                _chart = "//kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Endpoints?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:path_info.raw,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))"
             }
 
             if(type === 'bandwidth_instances_ids')
             {
-                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Instance?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:dfe.instance_id,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
+                _chart = "//kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Instance?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:dfe.instance_id,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
             if(type === 'bandwidth_instances_users')
             {
-                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-User-Name?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:user.email,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
+                _chart = "//kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-User-Name?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:user.email,order:desc,orderBy:'1',size:5),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
             if(type === 'bandwidth_instances_roles')
             {
-                _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-User-Roles?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:user.session.public.role,order:desc,orderBy:'1',size:15),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
+                _chart = "//kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-User-Roles?embed&_g=(time:(from:" + _from + ",mode:quick,to:" + _to + "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(field:content_length),schema:metric,type:sum),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(field:user.session.public.role,order:desc,orderBy:'1',size:15),schema:group,type:terms)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))";
             }
 
             $('#iframe_chart').attr('src', _chart);
@@ -249,7 +249,7 @@
                         <br>
 
                     </div>
-                    <iframe id="iframe_chart" src="http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Clusters?embed&_g=(time:(from:now%2Fy,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))" frameborder="0" width="100%" height="100%"></iframe>
+                    <iframe id="iframe_chart" src="//kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Bandwidth-by-Clusters?embed&_g=(time:(from:now%2Fy,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))" frameborder="0" width="100%" height="100%"></iframe>
 
                     <br><br>
 
@@ -258,30 +258,29 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link href="../../static/plugins/pikaday/pikaday.css" rel="stylesheet">
     <script type="text/javascript" src="../../static/plugins/pikaday/pikaday.js"></script>
     <script type="text/javascript" src="../../static/plugins/pikaday/pikaday.jquery.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <script>
         var settings = {
-            firstDay: 1,
-            minDate: new Date('2000-01-01'),
-            maxDate: new Date('2020-12-31'),
-            yearRange: [2000,2020],
-            format: 'DD-MM-YY'
+            firstDay: 1
+            //minDate: new Date('2000-01-01'),
+            //maxDate: new Date('2020-12-31'),
+            //yearRange: [2000,2020],
+            //format: 'DD-MM-YY'
         };
 
-        var $datepicker_from = $('#datepicker_from').pikaday(settings);
+        var datepicker_from = $('#datepicker_from').pikaday(settings);
 
         $('#datepicker_from').click(function(){
-            $datepicker_from.pikaday('show').pikaday('nextMonth');
+            datepicker_from.pikaday('show');//.pikaday('nextMonth');
         });
 
-        var $datepicker_to = $('#datepicker_to').pikaday(settings);
+        var datepicker_to = $('#datepicker_to').pikaday(settings);
 
         $('#datepicker_to').click(function(){
-            $datepicker_to.pikaday('show').pikaday('nextMonth');
+            datepicker_to.pikaday('show');//.pikaday('nextMonth');
         });
 
         $('#set_datespan').click(function(){
