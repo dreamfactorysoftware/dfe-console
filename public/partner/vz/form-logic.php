@@ -117,7 +117,7 @@ function post_hubspot($fn, $ln, $em, $ph, $co)
         'ipAddress'   => $ip_addr,
         'pageUrl'     => 'verizon.dreamfactory.com',
         'pageName'    => 'DreamFactory on Verizon Cloud',
-        'redirectUrl' => 'https://dashboard.vz.dreamfactory.com/',
+        'redirectUrl' => 'https://dashboard.vz.dreamfactory.com/?pid=vz',
     ];
     $hs_context_json = json_encode($hs_context);
 
