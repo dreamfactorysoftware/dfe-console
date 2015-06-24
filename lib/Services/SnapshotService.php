@@ -10,7 +10,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
-use DreamFactory\Library\Utility\WorkingSpace;
+use DreamFactory\Library\Utility\WorkPath;
 use Illuminate\Support\Facades\Log;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Config;
@@ -23,6 +23,15 @@ use League\Flysystem\ZipArchive\ZipArchiveAdapter;
  */
 class SnapshotService extends BaseService
 {
+    //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string
+     */
+    const SNAPSHOT_NAME_PATTERN = '{snapshot-id}.snapshot.{compressor}';
+
     //******************************************************************************
     //* Traits
     //******************************************************************************
@@ -53,18 +62,18 @@ class SnapshotService extends BaseService
             $_fsSource = $_instance->getStorageMount();
 
             //  Make our temp path...
-            $_tempPath = $this->getWorkPath($_instance->getRootStorageMount(), $_instance->instance_id_text);
+            $_workPath = WorkPath::make($_fsSource, $_instanceName);
 
-            //  Snapshot name
-            $_id = implode('.', [Inflector::neutralize($_instanceName), $_stamp]);
-            $_snapshotName = $_id . '.' . ConsoleDefaults::DEFAULT_DATA_COMPRESSOR;
+            //  Snapshot id & name
+            $_snapshotId = $_stamp . '.' . Inflector::neutralize($_instanceName);
+            $_snapshotFilename = $_snapshotId . '.snapshot.' . ConsoleDefaults::DEFAULT_DATA_COMPRESSOR;
 
             //  Start building our metadata array
             $_metadata = array_merge(
                 [
-                    'id'                         => $_id,
+                    'id'                         => $_snapshotId,
                     'type'                       => config('snapshot.metadata-type', 'application/json'),
-                    'snapshot-prefix'            => $_id,
+                    'snapshot-prefix'            => $_snapshotId,
                     'contents-storage-timestamp' => (int)time(),
                     'contents-db-timestamp'      => (int)time(),
                 ],
@@ -85,19 +94,19 @@ class SnapshotService extends BaseService
 
             //  Archive storage
             if (!$this->_archivePath($_fsSource,
-                $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'])
+                $_workPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'])
             ) {
                 throw new \RuntimeException('Unable to archive source file system. Aborting.');
             }
 
             //  Mount snapshot and stuff the new files in it
-            $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_tempPath . DIRECTORY_SEPARATOR . $_zipFileName));
+            $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . DIRECTORY_SEPARATOR . $_zipFileName));
             $this->_moveWorkFileToArchive($_fsSnapshot,
-                $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball']);
+                $_workPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball']);
 
             //  Pull a database backup...
             if (!$this->_dumpDatabase($_instance,
-                $_tempPath . DIRECTORY_SEPARATOR . $_metadata['contents-db-dumpfile'],
+                $_workPath . DIRECTORY_SEPARATOR . $_metadata['contents-db-dumpfile'],
                 $_fsSnapshot)
             ) {
                 throw new \RuntimeException('Unable to dump source database. Aborting.');
@@ -114,7 +123,7 @@ class SnapshotService extends BaseService
             //  Stuff it in the snapshot
             $this->_moveWorkFileToArchive(
                 $fsDestination ?: InstanceStorage::getSnapshotMount($_instance),
-                $_tempPath . DIRECTORY_SEPARATOR . $_zipFileName
+                $_workPath . DIRECTORY_SEPARATOR . $_zipFileName
             );
 
             return $_md;
@@ -137,8 +146,8 @@ class SnapshotService extends BaseService
         //        $_instance = $this->_validateInstance( $instanceId );
         //
         //        //	1. Grab the tarball...
-        //        $_tempPath = $this->_getTempFilesystem( $_workFile );
-        //        $_workPath = $_tempPath . DIRECTORY_SEPARATOR . $_workFile;
+        //        $_workPath = $this->_getTempFilesystem( $_workFile );
+        //        $_workPath = $_workPath . DIRECTORY_SEPARATOR . $_workFile;
         //
         //        file_put_contents( $_workPath, file_get_contents( $this->download( $instanceId, $snapshot, true ) ) );
         //
@@ -149,7 +158,7 @@ class SnapshotService extends BaseService
         //        {
         //            $_import->extractTo( dirname( $_workPath ) );
         //
-        //            if ( false === ( $_snapshot = json_decode( file_get_contents( $_tempPath . '/snapshot.json' ) ) ) )
+        //            if ( false === ( $_snapshot = json_decode( file_get_contents( $_workPath . '/snapshot.json' ) ) ) )
         //            {
         //                throw new RestException( HttpResponse::BadRequest, 'Invalid snapshot "' . $snapshot . '"' );
         //            }
@@ -158,7 +167,7 @@ class SnapshotService extends BaseService
         //        {
         //            $this->error( 'Error extracting snapshot tarball: ' . $_ex->getMessage() );
         //
-        //            $this->_killTempDirectory( $_tempPath );
+        //            $this->_killTempDirectory( $_workPath );
         //
         //            return false;
         //        }
@@ -167,7 +176,7 @@ class SnapshotService extends BaseService
         //        $_backup = static::create( $instanceId, true );
         //
         //        //	3. Install snapshot storage files
-        //        $_command = 'cd ' . $this->getStoragePath() . '; rm -rf ./*; /bin/tar zxf ' . $_tempPath . DIRECTORY_SEPARATOR . $_snapshot->storage->tarball . ' ./';
+        //        $_command = 'cd ' . $this->getStoragePath() . '; rm -rf ./*; /bin/tar zxf ' . $_workPath . DIRECTORY_SEPARATOR . $_snapshot->storage->tarball . ' ./';
         //        $_result = exec( $_command, $_output, $_return );
         //
         //        if ( 0 != $_return )
@@ -176,7 +185,7 @@ class SnapshotService extends BaseService
         //                'Error importing storage directory of dsp "' . $instanceId . '": ' . $_result . ' (' . $_return . ')' . PHP_EOL . $_command . PHP_EOL
         //            );
         //            Log::error( implode( PHP_EOL, $_output ) );
-        //            $this->_killTempDirectory( $_tempPath );
+        //            $this->_killTempDirectory( $_workPath );
         //
         //            return false;
         //        }
@@ -208,7 +217,7 @@ class SnapshotService extends BaseService
         //                'Error restoring mysql dump of dsp "' . $instanceId . '": ' . $_result . ' (' . $_return . ')' . PHP_EOL . $_command . PHP_EOL
         //            );
         //            Log::error( implode( PHP_EOL, $_output ) );
-        //            $this->_killTempDirectory( $_tempPath );
+        //            $this->_killTempDirectory( $_workPath );
         //
         //            //@TODO need to restore snapshot taken at the beginning cuz we sucked at this...
         //
@@ -220,7 +229,7 @@ class SnapshotService extends BaseService
         ////		//	5. Import mysql data
         ////
         ////		$_command
-        ////			= 'cd ' . $_tempPath . '; ' .
+        ////			= 'cd ' . $_workPath . '; ' .
         ////			'gunzip ' . $_snapshot->mysql->tarball . '; ' .
         ////			'mysql -u ' . $_db->username . ' -p' . $_db->password . ' -h ' . DSP::DEFAULT_DSP_SERVER . ' --database=' .
         ////			$_instance->db_name_text . ' < mysql.' . $snapshot . '.sql';
@@ -242,7 +251,7 @@ class SnapshotService extends BaseService
         ////				$_instance
         ////			);
         ////
-        ////			$this->_killTempDirectory( $_tempPath );
+        ////			$this->_killTempDirectory( $_workPath );
         ////
         ////			return false;
         ////		}
@@ -255,7 +264,7 @@ class SnapshotService extends BaseService
         ////		$_import->addFromString( 'snapshot.json', json_encode( $_snapshot ) );
         //
         //        //	7. Cleanup
-        //        $this->_killTempDirectory( $_tempPath );
+        //        $this->_killTempDirectory( $_workPath );
         //
         //        //	Import complete!!!
         //        return true;
@@ -443,21 +452,4 @@ class SnapshotService extends BaseService
         return false;
     }
 
-    /**
-     * Return the work directory
-     *
-     * @param \League\Flysystem\Filesystem $filesystem
-     * @param string                       $tag
-     *
-     * @return string
-     * @internal param null|string $append
-     *
-     */
-    protected function getWorkPath(Filesystem $filesystem, $tag)
-    {
-        //  Get some working space
-        $_ws = WorkingSpace::make($filesystem, $tag);
-
-        return $_ws;
-    }
 }
