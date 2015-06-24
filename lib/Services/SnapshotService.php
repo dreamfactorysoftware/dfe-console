@@ -447,31 +447,17 @@ class SnapshotService extends BaseService
      * Return the work directory
      *
      * @param \League\Flysystem\Filesystem $filesystem
-     * @param string|null                  $append
+     * @param string                       $tag
      *
      * @return string
+     * @internal param null|string $append
+     *
      */
-    protected function getWorkPath(Filesystem $filesystem, $append = null)
+    protected function getWorkPath(Filesystem $filesystem, $tag)
     {
         //  Get some working space
-        $_ws = WorkingSpace::make(Seminal2
-        )
+        $_ws = WorkingSpace::make($filesystem, $tag);
 
-        $_path = rtrim(
-                sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . 'tmp',
-                DIRECTORY_SEPARATOR
-            ) .
-            ($append
-                ? DIRECTORY_SEPARATOR . ltrim($append, DIRECTORY_SEPARATOR)
-                : null
-            );
-
-        !is_dir($_path) && mkdir($_path, 0777, true);
-
-        if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
-            throw new \RuntimeException('Cannot create temporary work space "' . $_path . '". Aborting.');
-        }
-
-        return $_path;
+        return $_ws;
     }
 }
