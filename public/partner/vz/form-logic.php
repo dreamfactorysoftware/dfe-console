@@ -81,20 +81,23 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
 function post_dreamfactory($fn, $ln, $em, $ph, $co, $pw)
 {
-    $str_post = 'firstname=' . urlencode($fn)
-        . '&lastname=' . urlencode($ln)
-        . '&email=' . urlencode($em)
-        . '&phone=' . urlencode($ph)
-        . '&company=' . urlencode($co)
-        . '&password=' . urlencode($pw);
+    $_postData = [
+        'pid'       => 'vz',
+        'command'   => 'register',
+        'firstname' => $fn,
+        'lastname'  => $ln,
+        'email'     => $em,
+        'company'   => $co,
+        'password'  => $pw,
+    ];
 
     $endpoint = 'https://console.vz.dreamfactory.com/api/v1/ops/partner';
 
     $ch = @curl_init();
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($_postData,JSON_UNESCAPED_SLASHES));
     curl_setopt($ch, CURLOPT_URL, $endpoint);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded',]);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json',]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = @curl_exec($ch);
     $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -192,4 +195,3 @@ function _parseHeaders($headers)
 
     return $_result;
 }
-gggoo
