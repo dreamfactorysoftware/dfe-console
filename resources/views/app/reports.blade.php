@@ -322,30 +322,29 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link href="../static/plugins/pikaday/pikaday.css" rel="stylesheet">
     <script type="text/javascript" src="../static/plugins/pikaday/pikaday.js"></script>
     <script type="text/javascript" src="../static/plugins/pikaday/pikaday.jquery.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
     <script>
         var settings = {
-            firstDay: 1,
-            minDate: new Date('2000-01-01'),
-            maxDate: new Date('2020-12-31'),
-            yearRange: [2000,2020],
-            format: 'DD-MM-YY'
+            firstDay: 1
+            //minDate: new Date('2000-01-01'),
+            //maxDate: new Date('2020-12-31'),
+            //yearRange: [2000,2020],
+            //format: 'DD-MM-YY'
         };
 
-        var $datepicker_from = $('#datepicker_from').pikaday(settings);
+        var datepicker_from = $('#datepicker_from').pikaday(settings);
 
         $('#datepicker_from').click(function(){
-            $datepicker_from.pikaday('show').pikaday('nextMonth');
+            datepicker_from.pikaday('show');//.pikaday('nextMonth');
         });
 
-        var $datepicker_to = $('#datepicker_to').pikaday(settings);
+        var datepicker_to = $('#datepicker_to').pikaday(settings);
 
         $('#datepicker_to').click(function(){
-            $datepicker_to.pikaday('show').pikaday('nextMonth');
+            datepicker_to.pikaday('show');//.pikaday('nextMonth');
         });
 
         $('#set_datespan').click(function()
