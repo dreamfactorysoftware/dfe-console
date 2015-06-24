@@ -74,12 +74,15 @@
                                             <div class="row">
 
                                                 <div class="col-md-6">
+                                                    @if(Session::has('flash_message'))
+                                                        <p class="alert {{ Session::get('flash_type') }}">{{ Session::get('flash_message') }}</p>
+                                                    @endif
                                                     <div class="form-group">
                                                         <label class="control-label" for="cluster_id_text">Name</label>
                                                         <input id="cluster_id_text"
                                                             name="cluster_id_text"
                                                             class="form-control"
-                                                            value="{{$cluster->cluster_id_text}}"
+                                                            @if (Input::old('cluster_id_text')) value="{{ Input::old('cluster_id_text') }}" @else value="{{ $cluster->cluster_id_text or '' }}" @endif
                                                             type="text"
                                                             required>
                                                     </div>
@@ -88,7 +91,7 @@
                                                         <input id="subdomain_text"
                                                             name="subdomain_text"
                                                             class="form-control"
-                                                            value="{{$cluster->subdomain_text}}"
+                                                            @if (Input::old('subdomain_text')) value="{{ Input::old('subdomain_text') }}" @else value="{{ $cluster->subdomain_text or '' }}" @endif
                                                             type="text" required>
                                                     </div>
                                                 </div>

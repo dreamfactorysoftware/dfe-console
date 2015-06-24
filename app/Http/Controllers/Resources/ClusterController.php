@@ -1,6 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use Session;
+use Validator;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
@@ -162,12 +164,44 @@ HTML;
     {
         $cluster_data = Input::all();
 
+        $validator = Validator::make($cluster_data, [
+            'cluster_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'subdomain_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i")
+        ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach($messages as $key => $value){
+                switch ($key) {
+
+                    case 'cluster_id_text':
+                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'subdomain_text':
+                        $flash_message = 'Host format is invalid (use subdomain.domain.tld)';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/clusters/'.$id.'/edit')->withInput();
+        }
+
         $servers = $cluster_data['_server_list'];
 
         unset($cluster_data['_method']);
         unset($cluster_data['_token']);
         unset($cluster_data['_server_list']);
 
+
+        try {
         $cluster_assigned_servers_array = [];
 
         if ($servers != '') {
@@ -198,50 +232,124 @@ HTML;
         $cluster = Cluster::find($id);
         $cluster->update($cluster_data);
 
+            $result_text = 'The server "'.$cluster_data['cluster_id_text'].'" was updated successfully!';
+            $result_status = 'alert-success';
+
         $_redirect = '/';
         $_redirect .= $this->_prefix;
         $_redirect .= '/clusters';
 
-        return Redirect::to($_redirect);
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/clusters/'.$id.'/edit')->withInput();
+        }
     }
 
     public function store()
     {
-        $create_cluster = new Cluster;
-
         $input = Input::all();
 
-        $create_cluster->create($input);
+        $validator = Validator::make($input, [
+            'cluster_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
+            'subdomain_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
+        ]);
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/clusters';
+        if ($validator->fails()) {
 
-        return Redirect::to($_redirect);
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach($messages as $key => $value){
+                switch ($key) {
+
+                    case 'cluster_id_text':
+                        $flash_message = 'Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'subdomain_text':
+                        $flash_message = 'DNS Subdomain format is invalid (use subdomain.domain.tld)';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/clusters/create')->withInput();
+        }
+
+        try{
+            $create_cluster = new Cluster;
+            $create_cluster->create($input);
+
+            $result_text = 'The cluster "'.$input['cluster_id_text'].'" was created successfully!';
+            $result_status = 'alert-success';
+
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/clusters';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/clusters/create')->withInput();
+        }
     }
 
     public function destroy($ids)
     {
-        $id_array = [];
+        try {
+            $id_array = [];
 
-        if ($ids == 'multi') {
-            $params = Input::all();
-            $selected = $params['_selected'];
-            $id_array = explode(',', $selected);
-        } else {
-            $id_array = explode(',', $ids);
+            if ($ids == 'multi') {
+                $params = Input::all();
+                $selected = $params['_selected'];
+                $id_array = explode(',', $selected);
+            } else {
+                $id_array = explode(',', $ids);
+            }
+
+            foreach ($id_array as $id) {
+                Cluster::find($id)->delete();
+                ClusterServer::where('cluster_id', '=', intval($id))->delete();
+            }
+
+            if(count($id_array) > 1) {
+                $result_text = 'The clusters were deleted successfully!';
+            }
+            else
+            {
+                $result_text = 'The cluster was deleted successfully!';
+            }
+
+            $result_status = 'alert-success';
+
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/clusters';
+
+            return Redirect::to($_redirect)
+                ->with('flash_message', $result_text)
+                ->with('flash_type', $result_status);
         }
-
-        foreach ($id_array as $id) {
-            Cluster::find($id)->delete();
-            ClusterServer::where('cluster_id', '=', intval($id))->delete();
+        catch (\Illuminate\Database\QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Please try again.');
+            Session::flash('flash_type', 'alert-danger');
+            return redirect('/v1/servers')->withInput();
         }
-
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/clusters';
-
-        return Redirect::to($_redirect);
     }
 
     public function index()

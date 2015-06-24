@@ -39,21 +39,24 @@
                                         <input name="user_auth" type="hidden" id="user_auth" value="{{ Auth::user()->id }}">
                                         <div class="row">
                                             <div class="col-md-6">
+                                                @if(Session::has('flash_message'))
+                                                    <p class="alert {{ Session::get('flash_type') }}">{{ Session::get('flash_message') }}</p>
+                                                @endif
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input id="email_addr_text" name="email_addr_text" value="{{$user->email_addr_text}}" class="form-control" placeholder="Enter email address." type="email" required>
+                                                    <input id="email_addr_text" name="email_addr_text" @if (Input::old('email_addr_text')) value="{{ Input::old('email_addr_text') }}" @else value="{{$user->email_addr_text}}" @endif class="form-control" placeholder="Enter email address." type="email" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>First Name</label>
-                                                    <input id="first_name_text" name="first_name_text" value="{{$user->first_name_text}}" class="form-control" placeholder="Enter first name." type="text" required>
+                                                    <input id="first_name_text" name="first_name_text" @if (Input::old('first_name_text')) value="{{ Input::old('first_name_text') }}" @else value="{{$user->first_name_text}}" @endif class="form-control" placeholder="Enter first name." type="text" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Last Name</label>
-                                                    <input id="last_name_text" name="last_name_text" value="{{$user->last_name_text}}" class="form-control" placeholder="Enter last name." type="text" required>
+                                                    <input id="last_name_text" name="last_name_text" @if (Input::old('last_name_text')) value="{{ Input::old('last_name_text') }}" @else value="{{$user->last_name_text}}" @endif class="form-control" placeholder="Enter last name." type="text" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Nickname</label>
-                                                    <input id="nickname_text" name="nickname_text" value="{{$user->nickname_text}}" class="form-control" placeholder="Enter nickname." type="text" required>
+                                                    <input id="nickname_text" name="nickname_text" @if (Input::old('nickname_text')) value="{{ Input::old('nickname_text') }}" @else value="{{$user->nickname_text}}" @endif class="form-control" placeholder="Enter nickname." type="text" required>
                                                 </div>
                                                 <div class="form-group">
                                                     <div id="set_password_form">

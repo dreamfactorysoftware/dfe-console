@@ -122,7 +122,7 @@ class ServerController extends ResourceController
         $validator = Validator::make($input, [
             'server_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'host_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
-            'config.'.$type.'.port' => array('Regex:/^[0-9]+$/'),
+            'config.'.$type.'.port' => array('Regex:/^[1-9][0-9]*$/'),
             'config.'.$type.'.username' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.driver' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.default-database-name' => array('Regex:/^[a-z0-9 .\-]+$/i'),
@@ -139,22 +139,22 @@ class ServerController extends ResourceController
                 switch ($key) {
 
                     case 'server_id_text':
-                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'host_text':
-                        $flash_message = 'Host format is invalid (use http/https://subdomain.domain.tld)';
+                        $flash_message = 'Host format is invalid (use subdomain.domain.tld)';
                         break;
                     case 'config.'.$type.'.port':
                         $flash_message = 'Port must be an integer and larger than 0';
                         break;
                     case 'config.'.$type.'.username':
-                        $flash_message = 'User Name contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'User Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.'.$type.'.driver':
-                        $flash_message = 'Driver contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'Driver contain invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.'.$type.'.default-database-name':
-                        $flash_message = 'Default Database Name contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'Default Database Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     /*
                     case 'config.'.$type.'.access_token':
@@ -181,7 +181,7 @@ class ServerController extends ResourceController
             $server = Server::find($id);
             $server->update($input);
 
-            $result_text = 'The server "'.$input['server_id_text'].'" was successfully updated!';
+            $result_text = 'The server "'.$input['server_id_text'].'" was updated successfully!';
             $result_status = 'alert-success';
 
             $_redirect = '/';
@@ -221,7 +221,7 @@ class ServerController extends ResourceController
         $validator = Validator::make($input, [
             'server_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'host_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
-            'config.'.$type.'.port' => array('Regex:/^[0-9]+$/'),
+            'config.'.$type.'.port' => array('Regex:/^[1-9][0-9]*$/'),
             'config.'.$type.'.username' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.driver' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.default-database-name' => array('Regex:/^[a-z0-9 .\-]+$/i'),
@@ -238,7 +238,7 @@ class ServerController extends ResourceController
                 switch ($key) {
 
                     case 'server_id_text':
-                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'host_text':
                         $flash_message = 'Host format is invalid (use subdomain.domain.tld)';
@@ -247,13 +247,13 @@ class ServerController extends ResourceController
                         $flash_message = 'Port must be an integer and larger than 0';
                         break;
                     case 'config.'.$type.'.username':
-                        $flash_message = 'User Name contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'User Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.'.$type.'.driver':
-                        $flash_message = 'Driver contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'Driver contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.'.$type.'.default-database-name':
-                        $flash_message = 'Default Database Name contain invalid characters (use a-z, A-Z, . and -)';
+                        $flash_message = 'Default Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     /*
                     case 'config.'.$type.'.access_token':
