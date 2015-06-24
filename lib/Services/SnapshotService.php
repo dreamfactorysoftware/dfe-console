@@ -10,6 +10,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
+use DreamFactory\Library\Utility\WorkingSpace;
 use Illuminate\Support\Facades\Log;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Config;
@@ -52,7 +53,7 @@ class SnapshotService extends BaseService
             $_fsSource = $_instance->getStorageMount();
 
             //  Make our temp path...
-            $_tempPath = $this->getWorkPath($_instanceName);
+            $_tempPath = $this->getWorkPath($_instance->getRootStorageMount(), $_instance->instance_id_text);
 
             //  Snapshot name
             $_id = implode('.', [Inflector::neutralize($_instanceName), $_stamp]);
@@ -445,12 +446,17 @@ class SnapshotService extends BaseService
     /**
      * Return the work directory
      *
-     * @param string|null $append
+     * @param \League\Flysystem\Filesystem $filesystem
+     * @param string|null                  $append
      *
      * @return string
      */
-    protected function getWorkPath($append = null)
+    protected function getWorkPath(Filesystem $filesystem, $append = null)
     {
+        //  Get some working space
+        $_ws = WorkingSpace::make(Seminal2
+        )
+
         $_path = rtrim(
                 sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . 'tmp',
                 DIRECTORY_SEPARATOR
