@@ -122,7 +122,7 @@ class ServerController extends ResourceController
         $validator = Validator::make($input, [
             'server_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'host_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
-            'config.'.$type.'.port' => array('Regex:/^[0-9]+$/'),
+            'config.'.$type.'.port' => array('Regex:/^[1-9][0-9]*$/'),
             'config.'.$type.'.username' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.driver' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.default-database-name' => array('Regex:/^[a-z0-9 .\-]+$/i'),
@@ -221,7 +221,7 @@ class ServerController extends ResourceController
         $validator = Validator::make($input, [
             'server_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'host_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
-            'config.'.$type.'.port' => array('Regex:/^[0-9]+$/'),
+            'config.'.$type.'.port' => array('Regex:/^[1-9][0-9]*$/'),
             'config.'.$type.'.username' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.driver' => array('Regex:/^[a-z0-9 .\-]+$/i'),
             'config.'.$type.'.default-database-name' => array('Regex:/^[a-z0-9 .\-]+$/i'),
