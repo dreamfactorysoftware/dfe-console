@@ -73,9 +73,8 @@ if ('POST' == $_SERVER['REQUEST_METHOD']) {
 
     if ($firstNameErr == '' and $emailErr == '' and $lastNameErr == '') {
         if ($passwordErr == '' and $phoneErr == '' and $companyErr == '' and $confirmErr == '') {
-            if (post_hubspot($firstname, $lastname, $email, $phone, $company) == 204) {
-                post_dreamfactory($firstname, $lastname, $email, $phone, $company, $password);
-            }
+            post_dreamfactory($firstname, $lastname, $email, $phone, $company, $password);
+            post_hubspot($firstname, $lastname, $email, $phone, $company);
         }
     }
 }
@@ -92,15 +91,11 @@ function post_dreamfactory($fn, $ln, $em, $ph, $co, $pw)
     $endpoint = 'https://console.vz.dreamfactory.com/api/v1/ops/partner';
 
     $ch = @curl_init();
-    @curl_setopt($ch, CURLOPT_POST, true);
-    @curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
-    @curl_setopt($ch, CURLOPT_URL, $endpoint);
-    @curl_setopt($ch,
-        CURLOPT_HTTPHEADER,
-        [
-            'Content-Type: application/x-www-form-urlencoded',
-        ]);
-    @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
+    curl_setopt($ch, CURLOPT_URL, $endpoint);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded',]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = @curl_exec($ch);
     $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
     @curl_close($ch);
@@ -119,7 +114,7 @@ function post_hubspot($fn, $ln, $em, $ph, $co)
         'pageName'    => 'DreamFactory on Verizon Cloud',
         'redirectUrl' => 'https://dashboard.vz.dreamfactory.com/?pid=vz',
     ];
-    $hs_context_json = json_encode($hs_context);
+    $hs_context_json = json_encode($hs_context, JSON_UNESCAPED_SLASHES);
 
     $str_post = 'firstname=' . urlencode($fn)
         . '&lastname=' . urlencode($ln)
@@ -135,18 +130,28 @@ function post_hubspot($fn, $ln, $em, $ph, $co)
 
     $endpoint = 'https://forms.hubspot.com/uploads/form/v2/247169/d48b5b8e-2274-488b-9448-156965d38048';
 
-    $ch = @curl_init();
-    @curl_setopt($ch, CURLOPT_POST, true);
-    @curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
-    @curl_setopt($ch, CURLOPT_URL, $endpoint);
-    @curl_setopt($ch,
-        CURLOPT_HTTPHEADER,
-        [
-            'Content-Type: application/x-www-form-urlencoded',
-        ]);
-    @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
+    curl_setopt($ch, CURLOPT_URL, $endpoint);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded',]);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = @curl_exec($ch);
     $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if (302 == $status_code) {
+        //  find redirect url
+        $new_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+
+        _log('redirect 302: ' . $new_url);
+
+        if (!empty($new_url)) {
+            header('Location: ' . $new_url);
+            die();
+        }
+    }
+
     @curl_close($ch);
 
     return $status_code;
@@ -159,4 +164,9 @@ function test_input($data)
     $data = htmlspecialchars($data);
 
     return $data;
+}
+
+function _log($message)
+{
+    error_log($message . PHP_EOL, 3, __DIR__ . '/log');
 }
