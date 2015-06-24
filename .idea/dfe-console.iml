@@ -70,6 +70,5 @@
     <orderEntry type="library" name="dataTables.bootstrap" level="application" />
     <orderEntry type="library" name="jquery.validate" level="application" />
     <orderEntry type="library" name="jquery.validate" level="application" />
-    <orderEntry type="library" name="underscore-DefinitelyTyped" level="application" />
   </component>
 </module>
