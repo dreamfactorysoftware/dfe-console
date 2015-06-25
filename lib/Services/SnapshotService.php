@@ -3,19 +3,15 @@
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
-use DreamFactory\Library\Utility\WorkPath;
-use Illuminate\Support\Facades\Log;
 use League\Flysystem\Adapter\Local;
-use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
-use League\Flysystem\FilesystemInterface;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
 /**
@@ -46,67 +42,60 @@ class SnapshotService extends BaseService
      * Creates a snapshot of a fabric-hosted instance
      *
      * @param string     $instanceId
-     * @param Filesystem $fsDestination
+     * @param Filesystem $destination
      * @param int        $keepDays The number of days to keep the snapshot
      *
      * @return array
      * @throws \Exception
      */
-    public function create($instanceId, Filesystem $fsDestination = null, $keepDays = 30)
+    public function create($instanceId, Filesystem $destination = null, $keepDays = 30)
     {
         try {
             //  Build our "mise en place", as it were...
             $_stamp = date('YmdHis');
             $_instance = $this->_findInstance($instanceId);
             $_instanceName = $_instance->instance_name_text;
-            $_fsSource = $_instance->getStorageMount();
+            $_source = $_instance->getStorageMount();
 
             //  Make our temp path...
-            $_workPath = WorkPath::make($_fsSource, $_instanceName);
+            $_workPath = $this->_getTempFilesystem($_instance->id . '_' . $_stamp, true);
 
             //  Snapshot id & name
             $_snapshotId = $_stamp . '.' . Inflector::neutralize($_instanceName);
-            $_snapshotFilename = $_snapshotId . '.snapshot.' . ConsoleDefaults::DEFAULT_DATA_COMPRESSOR;
 
-            //  Start building our metadata array
-            $_metadata = array_merge(
-                [
-                    'id'                         => $_snapshotId,
-                    'type'                       => config('snapshot.metadata-type', 'application/json'),
-                    'snapshot-prefix'            => $_snapshotId,
-                    'contents-storage-timestamp' => (int)time(),
-                    'contents-db-timestamp'      => (int)time(),
-                ],
-                $_instance->getMetadata()
-            );
+            //  Start building our snapshot metadata array
+            $_metadata = [
+                'id'              => $_snapshotId,
+                'type'            => config('snapshot.metadata-type', 'application/json'),
+                'snapshot-prefix' => $_snapshotId,
+                'timestamp'       => $_stamp,
+            ];
 
-            $_zipFileName = $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
+            $_metadata['name'] =
+                $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
 
-            $_metadata['contents-storage-zipball'] =
-            $_storageZipName = $this->_getConfigValue('snapshot.templates.storage-file-name', $_metadata);
+            $_metadata['storage-export'] =
+                $this->_getConfigValue('snapshot.templates.storage-file-name', $_metadata);
 
-            $_metadata['contents-db-dumpfile'] = $this->_getConfigValue('snapshot.templates.db-file-name', $_metadata);
-            $_metadata['hash'] = $_hash = RouteHashing::create($_zipFileName, $keepDays);
-            $_metadata['link'] = rtrim(
-                    config('snapshot.hash_link_base'),
-                    ' ' . DIRECTORY_SEPARATOR
-                ) . DIRECTORY_SEPARATOR . $_hash;
+            $_metadata['database-export'] =
+                $this->_getConfigValue('snapshot.templates.db-file-name', $_metadata);
+
+            $_metadata['hash'] = RouteHashing::create($_metadata['name'], $keepDays);
+            $_metadata['link'] = rtrim(config('snapshot.hash_link_base'), ' /') . '/' . $_metadata['hash'];
 
             //  Archive storage
-            if (!$this->_archivePath($_fsSource,
-                $_workPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball'])
-            ) {
+            if (!$this->_archivePath($_source, $_workPath . DIRECTORY_SEPARATOR . $_metadata['storage-export'])) {
                 throw new \RuntimeException('Unable to archive source file system. Aborting.');
             }
 
             //  Mount snapshot and stuff the new files in it
-            $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . DIRECTORY_SEPARATOR . $_zipFileName));
+            $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . DIRECTORY_SEPARATOR . $_metadata['name']));
             $this->_moveWorkFileToArchive($_fsSnapshot,
-                $_workPath . DIRECTORY_SEPARATOR . $_metadata['contents-storage-zipball']);
+                $_workPath . DIRECTORY_SEPARATOR . $_metadata['storage-export']);
 
             //  Pull a database backup...
             if (!$this->_dumpDatabase($_instance,
-                $_workPath . DIRECTORY_SEPARATOR . $_metadata['contents-db-dumpfile'],
+                $_workPath . DIRECTORY_SEPARATOR . $_metadata['database-export'],
                 $_fsSnapshot)
             ) {
                 throw new \RuntimeException('Unable to dump source database. Aborting.');
@@ -115,20 +104,21 @@ class SnapshotService extends BaseService
             $_md = $this->_getConfigValue('snapshot.templates.metadata', $_metadata);
 
             //  Put it in the snapshot...
-            $_fsSnapshot->put('snapshot.json', JsonFile::encode($_md));
+            $_manifest = new SnapshotManifest($_fsSnapshot, array_merge($_md, $_metadata));
+            $_manifest->write();
 
-            //  Unset to close file
+            //  Unset to close file(s)
             unset($_fsSnapshot);
 
             //  Stuff it in the snapshot
             $this->_moveWorkFileToArchive(
-                $fsDestination ?: InstanceStorage::getSnapshotMount($_instance),
-                $_workPath . DIRECTORY_SEPARATOR . $_zipFileName
+                $destination ?: InstanceStorage::getSnapshotMount($_instance),
+                $_workPath . DIRECTORY_SEPARATOR . $_metadata['name']
             );
 
             return $_md;
         } catch (\Exception $_ex) {
-            Log::error('Exception thrown during snapshot: ' . $_ex->getMessage());
+            \Log::error('Exception thrown during snapshot: ' . $_ex->getMessage());
             throw $_ex;
         }
     }
@@ -271,19 +261,30 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param string $base Optional path in which to create the temporary directory
+     * @param string $tag      Unique identifier for temp space
+     * @param bool   $pathOnly If true, only the path is returned.
      *
-     * @return Filesystem
+     * @return \League\Flysystem\Filesystem|string
      */
-    protected function _getTempFilesystem($base = null)
+    protected function _getTempFilesystem($tag, $pathOnly = false)
     {
+        $_root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . $tag;
+
+        if (!mkdir($_root, 0777, true)) {
+            throw new \RuntimeException('Unable to create working directory "' . $_root . '". Aborting.');
+        }
+
+        if ($pathOnly) {
+            return $_root;
+        }
+
         //  Set our temp base
-        return new Filesystem(new Local($base ?: sys_get_temp_dir()));
+        return new Filesystem(new Local($_root));
     }
 
     /**
-     * @param \Illuminate\Contracts\Filesystem\Filesystem|FilesystemInterface $source  The source file system to archive
-     * @param string                                                          $zipPath The full zip file name
+     * @param Filesystem $source  The source file system to archive
+     * @param string     $zipPath The full zip file name
      *
      * @return bool
      */
@@ -312,9 +313,9 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param Instance            $instance
-     * @param string              $dumpFile
-     * @param FilesystemInterface $zip
+     * @param Instance   $instance
+     * @param string     $dumpFile
+     * @param Filesystem $zip
      *
      * @return bool
      * @throws NotImplementedException
@@ -425,14 +426,13 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param Filesystem   $filesystem
-     * @param string       $source
-     * @param string       $destination
-     * @param array|Config $config
+     * @param Filesystem $filesystem
+     * @param string     $source
+     * @param string     $destination
      *
      * @return bool
      */
-    protected function _writeStream($filesystem, $source, $destination, $config = [])
+    protected function _writeStream($filesystem, $source, $destination)
     {
         if (false !== ($_fd = fopen($source, 'r'))) {
             //  Fallback gracefully if no stream support
@@ -441,7 +441,7 @@ class SnapshotService extends BaseService
             } elseif (method_exists($filesystem->getAdapter(), 'writeStream')) {
                 $_result = $filesystem->getAdapter()->writeStream($destination, $_fd, $filesystem->getConfig());
             } else {
-                $_result = $filesystem->put($destination, $source);
+                $_result = $filesystem->put($destination, file_get_contents($source));
             }
 
             fclose($_fd);

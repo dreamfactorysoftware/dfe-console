@@ -277,7 +277,7 @@ class Provisioner extends BaseProvisioner implements HasOfferings, OfferingProvi
                     [
                         'private-path'       => $_privatePath,
                         'owner-private-path' => $_ownerPrivatePath,
-                        'snapshot-path-name' => $_ownerPrivatePath . DIRECTORY_SEPARATOR . config('dfe.provisioning.snapshot-path-name',
+                        'snapshot-path' => $_ownerPrivatePath . DIRECTORY_SEPARATOR . config('dfe.provisioning.snapshot-path-name',
                                 ConsoleDefaults::SNAPSHOT_PATH_NAME),
                     ])
                 ->set('env',

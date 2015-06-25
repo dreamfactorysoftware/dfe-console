@@ -95,7 +95,7 @@ function post_dreamfactory($fn, $ln, $em, $ph, $co, $pw)
 
     $ch = @curl_init();
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($_postData,JSON_UNESCAPED_SLASHES));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($_postData, JSON_UNESCAPED_SLASHES));
     curl_setopt($ch, CURLOPT_URL, $endpoint);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json',]);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -110,34 +110,39 @@ function post_dreamfactory($fn, $ln, $em, $ph, $co, $pw)
 
 function post_hubspot($fn, $ln, $em, $ph, $co)
 {
-    $hubspotutk = $_COOKIE['hubspotutk'];
-    $ip_addr = $_SERVER['REMOTE_ADDR'];
     $hs_context = [
-        'hutk'        => $hubspotutk,
-        'ipAddress'   => $ip_addr,
+        'hutk'        => $_COOKIE['hubspotutk'],
+        'ipAddress'   => $_SERVER['REMOTE_ADDR'],
         'pageUrl'     => 'verizon.dreamfactory.com',
         'pageName'    => 'DreamFactory on Verizon Cloud',
         'redirectUrl' => 'https://dashboard.vz.dreamfactory.com/?pid=vz',
     ];
-    $hs_context_json = json_encode($hs_context, JSON_UNESCAPED_SLASHES);
 
-    $str_post = 'firstname=' . urlencode($fn)
-        . '&lastname=' . urlencode($ln)
-        . '&email=' . urlencode($em)
-        . '&phone=' . urlencode($ph)
-        . '&company=' . urlencode($co)
-        . '&mobile_lead=' . urlencode('No')
-        . '&installation_source=' . urlencode('Verizon')
-        . '&website_lead_source=' . urlencode('verizon.dreamfactory.com')
-        . '&local_installation=' . urlencode('No')
-        . '&local_installation_skipped=' . urlencode('No')
-        . '&hs_context=' . urlencode($hs_context_json);
+    $_postData = [
+        'firstname'                  => $fn,
+        'lastname'                   => $ln,
+        'email'                      => $em,
+        'company'                    => $co,
+        'phone'                      => $ph,
+        'mobile_lead'                => 'No',
+        'installation_source'        => 'Verizon',
+        'website_lead_source'        => 'verizon.dreamfactory.com',
+        'local_installation'         => 'No',
+        'local_installation_skipped' => 'No',
+        'hs_context'                 => json_encode($hs_context, JSON_UNESCAPED_SLASHES),
+    ];
 
     $endpoint = 'https://forms.hubspot.com/uploads/form/v2/247169/d48b5b8e-2274-488b-9448-156965d38048';
 
+    $_postFields = [];
+
+    foreach ($_postData as $_key => $_value) {
+        $_postFields[] = $_key . '=' . urlencode($_value);
+    }
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, implode('&', $_postFields));
     curl_setopt($ch, CURLOPT_URL, $endpoint);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded',]);
     curl_setopt($ch, CURLOPT_HEADER, true);
