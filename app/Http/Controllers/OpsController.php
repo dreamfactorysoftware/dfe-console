@@ -371,7 +371,7 @@ class OpsController extends Controller
             \Log::error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
-            return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
+            return ErrorPacket::create(Response::HTTP_BAD_REQUEST, $_ex);
         }
     }
 
@@ -419,6 +419,18 @@ class OpsController extends Controller
             throw new \InvalidArgumentException('Email address invalid');
         }
 
+        //  See if we know this cat...
+        if (null !== ($_user = User::byEmail($_email)->first())) {
+            //  Existing user found, don't add to database...
+            $_values = $_user->toArray();
+            unset($_values['password_text'], $_values['external_password_text']);
+
+            \Log::info('existing user attempting registration through partner api',
+                ['channel' => 'ops.partner', 'user' => $_values]);
+
+            return $_user;
+        }
+
         //  Create a user account
         try {
             $_user = \DB::transaction(
@@ -431,7 +443,7 @@ class OpsController extends Controller
                             'nickname_text'     => $request->input('nickname', $_first),
                             'password_text'     => bcrypt($_password),
                             'phone_text'        => $request->input('phone'),
-                            'company_name_text' => $request->input('company', $_first),
+                            'company_name_text' => $request->input('company'),
                         ]
                     );
 
@@ -465,7 +477,8 @@ class OpsController extends Controller
                 $_message = substr($_message, 0, $_pos);
             }
 
-            \Log::error('database error creating user from partner post: ' . $_message, ['channel' => 'ops.partner']);
+            \Log::error('database error creating user from partner post: ' . $_message,
+                ['channel' => 'ops.partner']);
 
             throw new RegistrationException($_message, $_ex->getCode(), $_ex);
         }
