@@ -183,11 +183,9 @@ class OpsController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     *
      * @return array
      */
-    public function postProvisioners(Request $request)
+    public function postProvisioners()
     {
         try {
             $_response = [];
