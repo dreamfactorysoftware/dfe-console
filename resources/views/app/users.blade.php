@@ -79,12 +79,12 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Nickname</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Status</th>
+                        <th style="max-width: 100px"></th>
+                        <th style="min-width: 175px">Name</th>
+                        <th style="min-width: 125px">Nickname</th>
+                        <th style="min-width: 175px">Email</th>
+                        <th style="min-width: 150px">Role</th>
+                        <th style="min-width: 100px">Status</th>
                     </tr>
                     </thead>
                     <tbody>
