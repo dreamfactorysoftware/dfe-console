@@ -55,43 +55,45 @@
         <div>
             <div class="row">
                 <div class="col-xs-12">
-                    <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Name</th>
-                                <th>Cluster</th>
-                                <th>Owner Email</th>
-                                <th>Policy</th>
-                                <th>Last Modified</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div class="panel panel-default">
+                        <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Cluster</th>
+                                    <th>Owner Email</th>
+                                    <th>Policy</th>
+                                    <th>Last Modified</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                        @foreach($instances as $key => $value)
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <input type="hidden" id="instance_id" value="{{ $value->id }}">
-                                    {{ $value->instance_id_text }}
-                                </td>
-                                <td>{{ $value->cluster_id_text }}</td>
-                                <!--td style="text-align: left; vertical-align: middle;">{{ $value->create_date }}</td-->
+                            @foreach($instances as $key => $value)
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <input type="hidden" id="instance_id" value="{{ $value->id }}">
+                                        {{ $value->instance_id_text }}
+                                    </td>
+                                    <td>{{ $value->cluster_id_text }}</td>
+                                    <!--td style="text-align: left; vertical-align: middle;">{{ $value->create_date }}</td-->
 
-                                <td>{{ $value->email_addr_text }}</td>
-                                <td> </td>
-                                <td>{{ $value->lmod_date }}</td>
-                                <td>
-                                    <input class="btn btn-default btn-xs" type="button" value="Backup">&nbsp;&nbsp;
-                                    <input class="btn btn-default btn-xs" type="button" value="Restore">
-                                </td>
-                            </tr>
+                                    <td>{{ $value->email_addr_text }}</td>
+                                    <td> </td>
+                                    <td>{{ $value->lmod_date }}</td>
+                                    <td>
+                                        <input class="btn btn-default btn-xs" type="button" value="Backup">&nbsp;&nbsp;
+                                        <input class="btn btn-default btn-xs" type="button" value="Restore">
+                                    </td>
+                                </tr>
 
-                        @endforeach
+                            @endforeach
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                     <span id="tableInfo"></span>
                     <br><br><br><br>
                 </div>
