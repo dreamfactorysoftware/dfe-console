@@ -76,11 +76,11 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th></th>
-                                <th>Name</th>
-                                <th>Sub-Domain</th>
-                                <th>Status</th>
-                                <th>Last Modified</th>
+                                <th style="max-width: 100px"></th>
+                                <th style="min-width: 175px">Name</th>
+                                <th style="min-width: 175px">Sub-Domain</th>
+                                <th style="min-width: 125px">Status</th>
+                                <th style="min-width: 175px">Last Modified</th>
                             </tr>
                         </thead>
                         <tbody>

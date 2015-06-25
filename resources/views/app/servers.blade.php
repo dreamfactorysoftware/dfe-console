@@ -75,12 +75,12 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th></th>
-                                <th>Name</th>
-                                <th>Type</th>
-                                <th>Host</th>
-                                <th>Status</th>
-                                <th>Last Modified</th>
+                                <th style="max-width: 100px"></th>
+                                <th style="min-width: 125px">Name</th>
+                                <th style="min-width: 100px">Type</th>
+                                <th style="min-width: 175px">Host</th>
+                                <th style="min-width: 125px">Status</th>
+                                <th style="min-width: 175px">Last Modified</th>
                             </tr>
                         </thead>
                         <tbody>
