@@ -75,57 +75,59 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-user" id="userTable">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th style="max-width: 100px"></th>
-                        <th style="min-width: 175px">Name</th>
-                        <th style="min-width: 125px">Nickname</th>
-                        <th style="min-width: 175px">Email</th>
-                        <th style="min-width: 150px">Role</th>
-                        <th style="min-width: 100px">Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($users as $key => $value)
+                <div class="panel panel-default">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-user" id="userTable">
+                        <thead>
                         <tr>
-                            <td>
-                                <input type="hidden" id="user_id" value="{{ $value->id }}">
-                                <input type="hidden" id="user_type" value="{{ $value->admin }}">
-                            </td>
-                            <td style="height: 25px" id="actionColumn">
-                                <form method="POST" action="/{{$prefix}}/users/{{$value->id}}" id="single_delete_{{ $value->id }}_{{ $value->admin }}">
-                                    <input type="hidden" id="user_id" name="user_id" value="{{ $value->id }}">
-                                    <input type="hidden" id="user_type" name="user_type" value="{{ $value->admin }}">
-                                    <input name="_method" type="hidden" value="DELETE">
-                                    <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
-
-                                    @if( Auth::user()->id != $value->id )
-                                        <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}" id="user_checkbox_{{ $value->id }}">&nbsp;&nbsp;
-                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')" value="delete" style="width: 25px" ></button>
-                                    @endif
-                                </form>
-                            </td>
-                            <td>{{ $value->first_name_text }} {{ $value->last_name_text }}</td>
-                            <td>{{ $value->nickname_text }}</td>
-                            <td>{{ $value->email_addr_text }}</td>
-
-                            @if($value->admin == 0)
-                                <td><span class="label label-info" id="user_type">DSP Owner</span></td>
-                            @else
-                                <td><span class="label label-primary" id="user_type">System Administrator</span></td>
-                            @endif
-
-                            @if($value->active_ind == 0)
-                                <td><span class="label label-warning">Not Active</span></td>
-                            @else
-                                <td><span class="label label-success">Active</span></td>
-                            @endif
+                            <th></th>
+                            <th style="max-width: 100px"></th>
+                            <th style="min-width: 175px">Name</th>
+                            <th style="min-width: 125px">Nickname</th>
+                            <th style="min-width: 175px">Email</th>
+                            <th style="min-width: 150px">Role</th>
+                            <th style="min-width: 100px">Status</th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        @foreach($users as $key => $value)
+                            <tr>
+                                <td>
+                                    <input type="hidden" id="user_id" value="{{ $value->id }}">
+                                    <input type="hidden" id="user_type" value="{{ $value->admin }}">
+                                </td>
+                                <td style="height: 25px" id="actionColumn">
+                                    <form method="POST" action="/{{$prefix}}/users/{{$value->id}}" id="single_delete_{{ $value->id }}_{{ $value->admin }}">
+                                        <input type="hidden" id="user_id" name="user_id" value="{{ $value->id }}">
+                                        <input type="hidden" id="user_type" name="user_type" value="{{ $value->admin }}">
+                                        <input name="_method" type="hidden" value="DELETE">
+                                        <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+
+                                        @if( Auth::user()->id != $value->id )
+                                            <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}" id="user_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')" value="delete" style="width: 25px" ></button>
+                                        @endif
+                                    </form>
+                                </td>
+                                <td>{{ $value->first_name_text }} {{ $value->last_name_text }}</td>
+                                <td>{{ $value->nickname_text }}</td>
+                                <td>{{ $value->email_addr_text }}</td>
+
+                                @if($value->admin == 0)
+                                    <td><span class="label label-info" id="user_type">DSP Owner</span></td>
+                                @else
+                                    <td><span class="label label-primary" id="user_type">System Administrator</span></td>
+                                @endif
+
+                                @if($value->active_ind == 0)
+                                    <td><span class="label label-warning">Not Active</span></td>
+                                @else
+                                    <td><span class="label label-success">Active</span></td>
+                                @endif
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
                 <span id="tableInfo"></span>
                 <br><br><br><br>
             </div>

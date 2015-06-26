@@ -72,60 +72,62 @@
             @endif
             <div class="row">
                 <div class="col-xs-12">
-                    <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-cluster" id="clusterTable">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th style="max-width: 100px"></th>
-                                <th style="min-width: 175px">Name</th>
-                                <th style="min-width: 175px">Sub-Domain</th>
-                                <th style="min-width: 125px">Status</th>
-                                <th style="min-width: 175px">Last Modified</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($clusters as $key => $value)
-                            <tr>
-                                <td>
-                                    <input type="hidden" id="cluster_id" value="{{ $value->id }}">
-                                </td>
-                                <td id="actionColumn">
-                                    <div>
-                                        <form method="POST" action="/{{$prefix}}/clusters/{{$value->id}}" id="single_delete_{{ $value->id }}">
-                                            <input type="hidden" id="cluster_id" value="{{ $value->id }}">
+                    <div class="panel panel-default">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-cluster" id="clusterTable">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="max-width: 100px"></th>
+                                    <th style="min-width: 175px">Name</th>
+                                    <th style="min-width: 175px">Sub-Domain</th>
+                                    <th style="min-width: 125px">Status</th>
+                                    <th style="min-width: 175px">Last Modified</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($clusters as $key => $value)
+                                <tr>
+                                    <td>
+                                        <input type="hidden" id="cluster_id" value="{{ $value->id }}">
+                                    </td>
+                                    <td id="actionColumn">
+                                        <div>
+                                            <form method="POST" action="/{{$prefix}}/clusters/{{$value->id}}" id="single_delete_{{ $value->id }}">
+                                                <input type="hidden" id="cluster_id" value="{{ $value->id }}">
 
-                                            <input name="_method" type="hidden" value="DELETE">
-                                            <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                                <input name="_method" type="hidden" value="DELETE">
+                                                <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
 
-                                            @if (array_key_exists('cluster_id', $value))
-                                                <div class="tooltip-wrapper"  data-title="Cluster In Use - Delete Disabled">
-                                                    <input type="checkbox" disabled>&nbsp;&nbsp;
-                                                    <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled style="width: 25px" ></button>
-                                                </div>
-                                            @else
-                                                <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
-                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
-                                            @endif
+                                                @if (array_key_exists('cluster_id', $value))
+                                                    <div class="tooltip-wrapper"  data-title="Cluster In Use - Delete Disabled">
+                                                        <input type="checkbox" disabled>&nbsp;&nbsp;
+                                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled style="width: 25px" ></button>
+                                                    </div>
+                                                @else
+                                                    <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}">&nbsp;&nbsp;
+                                                    <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
+                                                @endif
 
-                                        </form>
-                                    </div>
-                                </td>
-                                <td>{{ $value->cluster_id_text }}</td>
-                                <td>{{ $value->subdomain_text }}</td>
+                                            </form>
+                                        </div>
+                                    </td>
+                                    <td>{{ $value->cluster_id_text }}</td>
+                                    <td>{{ $value->subdomain_text }}</td>
 
-                                <td>
-                                    @if ( array_key_exists( 'cluster_id', $value ) )
-                                        <span class="label label-warning">In Use</span>
-                                    @else
-                                        <span class="label label-success">Not In Use</span>
-                                    @endif
-                                </td>
+                                    <td>
+                                        @if ( array_key_exists( 'cluster_id', $value ) )
+                                            <span class="label label-warning">In Use</span>
+                                        @else
+                                            <span class="label label-success">Not In Use</span>
+                                        @endif
+                                    </td>
 
-                                <td>{{ $value->lmod_date }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
+                                    <td>{{ $value->lmod_date }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     <span id="tableInfo"></span>
                     <br><br><br><br>
                 </div>
