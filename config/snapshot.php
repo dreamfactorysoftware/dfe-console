@@ -29,7 +29,7 @@ return [
         //  File name templates
         'snapshot-file-name' => '{snapshot-prefix}.zip',
         'storage-file-name'  => '{instance-id}.storage.zip',
-        'db-file-name'       => '{instance-id}.sql',
+        'db-file-name'       => '{instance-id}.database.sql',
         'metadata-file-name' => 'snapshot.json',
         //  Metadata guts template
         'metadata'           => [
@@ -50,7 +50,5 @@ return [
             'storage-export'      => '{storage-export}',
             'database-export'     => '{database-export}',
         ],
-        'imports'            => [],
-        'exports'            => [],
     ],
 ];
