@@ -26,17 +26,17 @@ class RegisterJob extends JobCommand
     /**
      * @type string The owner of the entity
      */
-    protected $_ownerId;
+    protected $ownerId;
     /**
      * @type int The type of owner
      */
-    protected $_ownerType = OwnerTypes::USER;
+    protected $ownerType = OwnerTypes::USER;
     /**
      * @type \stdClass
      */
-    protected $_ownerInfo;
+    protected $ownerInfo;
     /** @type string Our handler */
-    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\RegisterHandler';
+    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\RegisterHandler';
 
     //******************************************************************************
     //* Methods
@@ -51,10 +51,13 @@ class RegisterJob extends JobCommand
     public function __construct($ownerId, $ownerType)
     {
         //  Make sure we have a good types
-        $this->_ownerInfo = OwnerTypes::getOwner($ownerId, $ownerType);
+        $this->ownerInfo = OwnerTypes::getOwner($ownerId, $ownerType);
 
-        $this->_ownerId = $this->_ownerInfo->id;
-        $this->_ownerType = $this->_ownerInfo->type;
+        $this->ownerId = $ownerId;
+        $this->ownerType =
+            (is_numeric($ownerType) && OwnerTypes::contains($ownerType))
+                ? $ownerType
+                : OwnerTypes::defines($ownerType, true);
     }
 
     /**
@@ -62,7 +65,7 @@ class RegisterJob extends JobCommand
      */
     public function getOwnerId()
     {
-        return $this->_ownerId;
+        return $this->ownerId;
     }
 
     /**
@@ -70,7 +73,7 @@ class RegisterJob extends JobCommand
      */
     public function getOwnerType()
     {
-        return $this->_ownerType;
+        return $this->ownerType;
     }
 
     /**
@@ -78,11 +81,11 @@ class RegisterJob extends JobCommand
      */
     public function getOwnerTypeName()
     {
-        return OwnerTypes::prettyNameOf($this->_ownerType);
+        return OwnerTypes::prettyNameOf($this->ownerType);
     }
 
     public function getOwnerInfo()
     {
-        return $this->_ownerInfo;
+        return $this->ownerInfo;
     }
 }

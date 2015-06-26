@@ -15,5 +15,5 @@ class DeprovisionJob extends BaseInstanceJob
     //******************************************************************************
 
     /** @type string Our handler */
-    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\DeprovisionHandler';
+    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\DeprovisionHandler';
 }

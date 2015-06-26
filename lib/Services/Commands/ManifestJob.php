@@ -16,21 +16,21 @@ class ManifestJob extends BaseEnterpriseJob
     /**
      * @type string The absolute path to the output file
      */
-    protected $_outputFile;
+    protected $outputFile;
     /**
      * @type bool
      */
-    protected $_createManifest = true;
+    protected $createManifest = true;
     /**
      * @type bool
      */
-    protected $_showManifest = false;
+    protected $showManifest = false;
     /**
      * @type bool
      */
-    protected $_noKeys = false;
+    protected $noKeys = false;
     /** @type string Our handler */
-    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ManifestHandler';
+    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ManifestHandler';
 
     //******************************************************************************
     //* Methods
@@ -41,7 +41,7 @@ class ManifestJob extends BaseEnterpriseJob
      */
     public function getOutputFile()
     {
-        return $this->_outputFile;
+        return $this->outputFile;
     }
 
     /**
@@ -51,14 +51,14 @@ class ManifestJob extends BaseEnterpriseJob
      */
     public function setOutputFile($outputFile)
     {
-        $this->_outputFile = $outputFile;
+        $this->outputFile = $outputFile;
 
         return $this;
     }
 
     public function createManifest()
     {
-        return $this->_createManifest;
+        return $this->createManifest;
     }
 
     /**
@@ -68,14 +68,14 @@ class ManifestJob extends BaseEnterpriseJob
      */
     public function setCreateManifest($createManifest)
     {
-        $this->_createManifest = $createManifest;
+        $this->createManifest = $createManifest;
 
         return $this;
     }
 
     public function showManifest()
     {
-        return $this->_showManifest;
+        return $this->showManifest;
     }
 
     /**
@@ -85,7 +85,7 @@ class ManifestJob extends BaseEnterpriseJob
      */
     public function setShowManifest($showManifest)
     {
-        $this->_showManifest = $showManifest;
+        $this->showManifest = $showManifest;
 
         return $this;
     }
@@ -95,7 +95,7 @@ class ManifestJob extends BaseEnterpriseJob
      */
     public function noKeys()
     {
-        return $this->_noKeys;
+        return $this->noKeys;
     }
 
     /**
@@ -105,7 +105,7 @@ class ManifestJob extends BaseEnterpriseJob
      */
     public function setNoKeys($noKeys = false)
     {
-        $this->_noKeys = $noKeys;
+        $this->noKeys = $noKeys;
 
         return $this;
     }

@@ -18,13 +18,13 @@ class NotifyJob extends JobCommand
     /**
      * @type string $_view
      */
-    protected $_view;
+    protected $view;
     /**
      * @type array
      */
-    protected $_data = [];
+    protected $data = [];
     /** @type string Our handler */
-    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\NotifyHandler';
+    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\NotifyHandler';
 
     //******************************************************************************
     //* Methods
@@ -38,8 +38,8 @@ class NotifyJob extends JobCommand
      */
     public function __construct($view, $data = [])
     {
-        $this->_view = $view;
-        $this->_data = $data;
+        $this->view = $view;
+        $this->data = $data;
     }
 
     /**
@@ -47,7 +47,7 @@ class NotifyJob extends JobCommand
      */
     public function getView()
     {
-        return $this->_view;
+        return $this->view;
     }
 
     /**
@@ -55,6 +55,6 @@ class NotifyJob extends JobCommand
      */
     public function getData()
     {
-        return $this->_data;
+        return $this->data;
     }
 }

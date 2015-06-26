@@ -15,5 +15,5 @@ class ProvisionJob extends BaseInstanceJob
     //******************************************************************************
 
     /** @type string Our handler */
-    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ProvisionHandler';
+    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ProvisionHandler';
 }
