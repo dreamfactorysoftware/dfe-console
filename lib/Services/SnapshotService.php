@@ -7,7 +7,8 @@ use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
+use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
 use League\Flysystem\Adapter\Local;
@@ -50,77 +51,76 @@ class SnapshotService extends BaseService
      */
     public function create($instanceId, Filesystem $destination = null, $keepDays = 30)
     {
-        try {
-            //  Build our "mise en place", as it were...
-            $_stamp = date('YmdHis');
-            $_instance = $this->_findInstance($instanceId);
-            $_instanceName = $_instance->instance_name_text;
-            $_source = $_instance->getStorageMount();
+        //  Build our "mise en place", as it were...
+        $_stamp = date('YmdHis');
+        $_instance = $this->_findInstance($instanceId);
+        $_instanceName = $_instance->instance_name_text;
 
-            //  Make our temp path...
-            $_workPath = $this->_getTempFilesystem($_instance->id . '_' . $_stamp, true);
+        //  Create the snapshot ID
+        $_snapshotId = $_stamp . '.' . Inflector::neutralize($_instanceName);
 
-            //  Snapshot id & name
-            $_snapshotId = $_stamp . '.' . Inflector::neutralize($_instanceName);
+        //  Start building our snapshot metadata array
+        $_metadata = [
+            'id'                  => $_snapshotId,
+            'type'                => config('snapshot.metadata-type', 'application/json'),
+            'snapshot-prefix'     => $_snapshotId,
+            'timestamp'           => $_stamp,
+            'instance-id'         => $_instance->instance_id_text,
+            'cluster-id'          => $_instance->cluster_id,
+            'db-server-id'        => $_instance->db_server_id,
+            'web-server-id'       => $_instance->web_server_id,
+            'app-server-id'       => $_instance->app_server_id,
+            'owner-id'            => $_instance->user->id,
+            'owner-email-address' => $_instance->user->email_addr_text,
+            'owner-storage-key'   => $_instance->user->storage_id_text,
+            'storage-key'         => $_instance->storage_id_text,
 
-            //  Start building our snapshot metadata array
-            $_metadata = [
-                'id'              => $_snapshotId,
-                'type'            => config('snapshot.metadata-type', 'application/json'),
-                'snapshot-prefix' => $_snapshotId,
-                'timestamp'       => $_stamp,
-            ];
+        ];
 
-            $_metadata['name'] =
-                $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
+        $_metadata['name'] =
+            $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
 
-            $_metadata['storage-export'] =
-                $this->_getConfigValue('snapshot.templates.storage-file-name', $_metadata);
+        $_metadata['storage-export'] =
+            $this->_getConfigValue('snapshot.templates.storage-file-name', $_metadata);
 
-            $_metadata['database-export'] =
-                $this->_getConfigValue('snapshot.templates.db-file-name', $_metadata);
+        $_metadata['database-export'] =
+            $this->_getConfigValue('snapshot.templates.db-file-name', $_metadata);
 
-            $_metadata['hash'] = RouteHashing::create($_metadata['name'], $keepDays);
-            $_metadata['link'] = rtrim(config('snapshot.hash_link_base'), ' /') . '/' . $_metadata['hash'];
+        $_metadata['hash'] = RouteHashing::create($_metadata['name'], $keepDays);
+        $_metadata['link'] = rtrim(config('snapshot.hash_link_base'), ' /') . '/' . $_metadata['hash'];
 
-            //  Archive storage
-            if (!$this->_archivePath($_source, $_workPath . DIRECTORY_SEPARATOR . $_metadata['storage-export'])) {
-                throw new \RuntimeException('Unable to archive source file system. Aborting.');
-            }
+        //  Make our temp path...
+        $_workPath =
+            $this->_getTempFilesystem($_instance->instance_id_text . '.' . microtime(true),
+                true) . DIRECTORY_SEPARATOR;
 
-            //  Mount snapshot and stuff the new files in it
-            $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . DIRECTORY_SEPARATOR . $_metadata['name']));
-            $this->_moveWorkFileToArchive($_fsSnapshot,
-                $_workPath . DIRECTORY_SEPARATOR . $_metadata['storage-export']);
+        //  Create the snapshot archive and stuff it full of goodies
+        $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . $_metadata['name']));
 
-            //  Pull a database backup...
-            if (!$this->_dumpDatabase($_instance,
-                $_workPath . DIRECTORY_SEPARATOR . $_metadata['database-export'],
-                $_fsSnapshot)
-            ) {
-                throw new \RuntimeException('Unable to dump source database. Aborting.');
-            }
-
-            $_md = $this->_getConfigValue('snapshot.templates.metadata', $_metadata);
-
-            //  Put it in the snapshot...
-            $_manifest = new SnapshotManifest($_fsSnapshot, array_merge($_md, $_metadata));
-            $_manifest->write();
-
-            //  Unset to close file(s)
-            unset($_fsSnapshot);
-
-            //  Stuff it in the snapshot
-            $this->_moveWorkFileToArchive(
-                $destination ?: InstanceStorage::getSnapshotMount($_instance),
-                $_workPath . DIRECTORY_SEPARATOR . $_metadata['name']
-            );
-
-            return $_md;
-        } catch (\Exception $_ex) {
-            \Log::error('Exception thrown during snapshot: ' . $_ex->getMessage());
-            throw $_ex;
+        //  Create a zip file of the storage directory
+        if (!$this->_archivePath($_instance->getStorageMount(), $_workPath . $_metadata['storage-export'])) {
+            throw new \RuntimeException('Unable to archive source file system. Aborting.');
         }
+
+        //  Add storage zipball to the archive
+        $this->moveWorkFile($_fsSnapshot, $_workPath . $_metadata['storage-export']);
+
+        //  Pull a database backup...
+        if (!$this->exportDatabase($_instance, $_workPath . $_metadata['database-export'])) {
+            throw new \RuntimeException('Unable to dump source database. Aborting.');
+        }
+
+        //  Add the export to the snapshot
+        $this->moveWorkFile($_fsSnapshot, $_workPath . $_metadata['database-export']);
+
+        //  Create a snapshot manifesto
+        SnapshotManifest::create($_metadata, config('snapshot.metadata-file-name'), $_fsSnapshot);
+
+        //  Unset to close file(s)
+        unset($_fsSnapshot);
+
+        //  Stuff it in the snapshot
+        $this->moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_metadata['name']);
     }
 
     /**
@@ -286,94 +286,55 @@ class SnapshotService extends BaseService
      * @param Filesystem $source  The source file system to archive
      * @param string     $zipPath The full zip file name
      *
-     * @return bool
+     * @return bool|string
      */
     protected function _archivePath($source, $zipPath)
     {
-        $zip = new Filesystem(new ZipArchiveAdapter($zipPath));
+        $_archive = new Filesystem(new ZipArchiveAdapter($zipPath));
 
         try {
             foreach ($source->listContents('', true) as $_file) {
                 if ($_file['type'] == 'dir') {
-                    $zip->createDir($_file['path']);
+                    $_archive->createDir($_file['path']);
                 } elseif ($_file['type'] == 'link') {
-                    $zip->put($_file['path'], $_file['target']);
+                    $_archive->put($_file['path'], $_file['target']);
                 } elseif ($_file['type'] == 'file') {
-                    file_exists($_file['path']) && $this->_writeStream($zip, $_file['path'], $_file['path']);
+                    file_exists($_file['path']) && $this->_writeStream($_archive, $_file['path'], $_file['path']);
                 }
             }
 
             //  Flush zip to disk
-            $zip = null;
+            $_archive = null;
 
-            return true;
+            return $zipPath;
         } catch (\Exception $_ex) {
             return false;
         }
     }
 
     /**
-     * @param Instance   $instance
-     * @param string     $dumpFile
-     * @param Filesystem $zip
+     * @param Instance $instance
+     * @param string   $dumpFile
      *
-     * @return bool
-     * @throws NotImplementedException
+     * @return mixed
+     * @throws \DreamFactory\Enterprise\Common\Exceptions\NotImplementedException
      */
-    protected function _dumpDatabase($instance, $dumpFile, $zip)
+    protected function exportDatabase($instance, $dumpFile)
     {
         if ($instance->guest_location_nbr != GuestLocations::DFE_CLUSTER) {
             throw new NotImplementedException();
         }
 
-        try {
-            //  This script automatically gzips the resultant file...
-            $_command = str_replace(PHP_EOL, null, `which mysqldump`);
-            $_template = $_command . ' --compress --delayed-insert {options} >' . $dumpFile;
-            $_port = $instance->db_port_nbr;
-            $_name = $instance->db_name_text;
+        $_service = Provision::getPortabilityProvider($instance->guest_location_nbr);
 
-            $_options = [
-                '--host=' . escapeshellarg($instance->db_host_text),
-                '--user=' . escapeshellarg($instance->db_user_text),
-                '--password=' . escapeshellarg($instance->db_password_text),
-                '--databases ' . escapeshellarg($_name),
-            ];
-
-            if (!empty($_port)) {
-                $_options[] = '--port=' . $_port;
-            }
-
-            $_command = str_replace('{options}', implode(' ', $_options), $_template);
-            $_result = exec($_command, $_output, $_return);
-
-            if (0 != $_return) {
-                throw new \RuntimeException('Error while dumping database of instance id "' .
-                    $instance->instance_id_text .
-                    '".');
-            }
-
-            $this->_writeStream($zip, $dumpFile, basename($dumpFile));
-
-            //  Clear up some junk
-            unset($_command, $_result, $_output, $_return);
-
-            //  Try and delete...
-            if (false === @unlink($dumpFile)) {
-                $this->warning('Failed to remove work file "' . $dumpFile . '" after database dump.');
-            }
-
-            return true;
-        } catch (\Exception $_ex) {
-            return false;
-        }
+        return $_service->export(new ProvisioningRequest($instance), $dumpFile);
     }
 
     /**
      * @param Filesystem|\Illuminate\Contracts\Filesystem\Filesystem $archive
      * @param string                                                 $workFile
      */
-    protected function _moveWorkFileToArchive($archive, $workFile = null)
+    protected function moveWorkFile($archive, $workFile = null)
     {
         if ($this->_writeStream($archive, $workFile, basename($workFile))) {
             unlink($workFile);

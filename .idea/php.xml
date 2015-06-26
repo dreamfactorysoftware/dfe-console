@@ -16,6 +16,7 @@
       </server>
     </servers>
   </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="5.5.0" />
   <component name="PhpStepFilterConfiguration" skip_magic_methods="true">
     <option name="skippedFunctions">
       <list>

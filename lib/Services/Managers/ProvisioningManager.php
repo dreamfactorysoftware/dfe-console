@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Managers;
 
+use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
@@ -65,6 +66,18 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
+     * Returns an instance of the portability provisioner for the specified host, if any
+     *
+     * @param string $name
+     *
+     * @return Portability
+     */
+    public function getPortabilityProvider($name = null)
+    {
+        return $this->resolvePortability($name);
+    }
+
+    /**
      * Get the default provisioner
      *
      * @return string
@@ -121,6 +134,31 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     public function resolveDatabase($tag)
     {
         return $this->resolve($tag, 'db');
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return Portability|null
+     */
+    public function resolvePortability($tag)
+    {
+        //  If db is portable, return it
+        $_service = $this->resolveDatabase($tag);
+
+        if ($_service instanceof Portability) {
+            return $_service;
+        }
+
+        //  Storage portable?
+        $_service = $this->resolveStorage($tag);
+
+        if ($_service instanceof Portability) {
+            return $_service;
+        }
+
+        //  Nada
+        return null;
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
+use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
@@ -11,7 +12,7 @@ use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DatabaseProvisioner extends BaseService implements ResourceProvisioner
+class DatabaseProvisioner extends BaseService implements Portability, ResourceProvisioner
 {
     //******************************************************************************
     //* Traits
@@ -131,7 +132,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
             'password'  => 'dfe_user',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => ''
+            'prefix'    => '',
         ];
 
         //  Let's go!
@@ -220,7 +221,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
         $_creds = [
             'database' => $_dbName,
             'username' => $_dbUser,
-            'password' => sha1(microtime(true) . $_seed . $_dbUser . microtime(true))
+            'password' => sha1(microtime(true) . $_seed . $_dbUser . microtime(true)),
         ];
 
         return $_creds;
@@ -264,7 +265,7 @@ MYSQL
             }
 
             return $db->transaction(
-                function () use ($db, $databaseToDrop){
+                function () use ($db, $databaseToDrop) {
                     $_result = $db->statement('SET FOREIGN_KEY_CHECKS = 0');
                     $_result && $_result = $db->statement('DROP DATABASE `' . $databaseToDrop . '`');
                     $_result && $db->statement('SET FOREIGN_KEY_CHECKS = 1');
@@ -299,7 +300,7 @@ MYSQL
     protected function _grantPrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
-            function () use ($db, $creds, $fromServer){
+            function () use ($db, $creds, $fromServer) {
                 //  Create users
                 $_users = $this->_getDatabaseUsers($creds, $fromServer);
 
@@ -337,7 +338,7 @@ MYSQL
     protected function _revokePrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
-            function () use ($db, $creds, $fromServer){
+            function () use ($db, $creds, $fromServer) {
                 //  Create users
                 $_users = $this->_getDatabaseUsers($creds, $fromServer);
 
@@ -397,4 +398,42 @@ MYSQL
             '\'' . $creds['username'] . '\'@\'localhost\'',
         ];
     }
+
+    /** @inheritdoc */
+    public function import($request, $from, $options = [])
+    {
+    }
+
+    /** @inheritdoc */
+    public function export($request, $to, $options = [])
+    {
+        $_instance = $request->getInstance();
+
+        //  This script automatically gzips the resultant file...
+        $_command = str_replace(PHP_EOL, null, `which mysqldump`);
+        $_template = $_command . ' --compress --delayed-insert {options} >' . $to;
+        $_port = $_instance->db_port_nbr;
+        $_name = $_instance->db_name_text;
+
+        $_options = [
+            '--host=' . escapeshellarg($_instance->db_host_text),
+            '--user=' . escapeshellarg($_instance->db_user_text),
+            '--password=' . escapeshellarg($_instance->db_password_text),
+            '--databases ' . escapeshellarg($_name),
+        ];
+
+        if (!empty($_port)) {
+            $_options[] = '--port=' . $_port;
+        }
+
+        $_command = str_replace('{options}', implode(' ', $_options), $_template);
+        exec($_command, $_output, $_return);
+
+        if (0 != $_return) {
+            throw new \RuntimeException(
+                'Error while dumping database of instance id "' . $_instance->instance_id_text . '".'
+            );
+        }
+    }
+
 }
