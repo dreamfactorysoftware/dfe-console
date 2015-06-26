@@ -98,7 +98,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         }
 
         if (!$this->getLumberjackPrefix()) {
-            $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . $this->getProvisionerId());
+            $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
         }
     }
 
@@ -225,7 +225,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
             \Mail::send(
                 'emails.generic',
                 $data,
-                function ($message) use ($instance, $subject) {
+                function ($message) use ($instance, $subject){
                     /** @var Message $message */
                     $message
                         ->to($instance->user->email_addr_text,

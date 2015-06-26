@@ -66,11 +66,11 @@ class SnapshotService extends BaseService
             'snapshot-prefix'     => $_snapshotId,
             'timestamp'           => $_stamp,
             'instance-id'         => $_instance->instance_id_text,
-            'cluster-id'          => $_instance->cluster_id,
-            'db-server-id'        => $_instance->db_server_id,
-            'web-server-id'       => $_instance->web_server_id,
-            'app-server-id'       => $_instance->app_server_id,
-            'owner-id'            => $_instance->user->id,
+            'cluster-id'          => (int)$_instance->cluster_id,
+            'db-server-id'        => (int)$_instance->db_server_id,
+            'web-server-id'       => (int)$_instance->web_server_id,
+            'app-server-id'       => (int)$_instance->app_server_id,
+            'owner-id'            => (int)$_instance->user->id,
             'owner-email-address' => $_instance->user->email_addr_text,
             'owner-storage-key'   => $_instance->user->storage_id_text,
             'storage-key'         => $_instance->storage_id_text,
@@ -106,18 +106,18 @@ class SnapshotService extends BaseService
         $this->moveWorkFile($_fsSnapshot, $_workPath . $_metadata['storage-export']);
 
         //  Pull a database backup...
-        if (!$this->exportDatabase($_instance, $_workPath . $_metadata['database-export'])) {
-            throw new \RuntimeException('Unable to dump source database. Aborting.');
+        try {
+            $this->exportDatabase($_instance, $_workPath . $_metadata['database-export']);
+        } catch (\Exception $_ex) {
+            throw new \RuntimeException('Unable to dump source database: ' . $_ex->getMessage());
         }
 
         //  Add the export to the snapshot
         $this->moveWorkFile($_fsSnapshot, $_workPath . $_metadata['database-export']);
 
         //  Create a snapshot manifesto
-        SnapshotManifest::create($_metadata, config('snapshot.metadata-file-name'), $_fsSnapshot);
-
-        //  Unset to close file(s)
-        unset($_fsSnapshot);
+        $_manifest = new SnapshotManifest($_metadata, config('snapshot.metadata-file-name'), $_fsSnapshot);
+        $_manifest->write();
 
         //  Stuff it in the snapshot
         $this->moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_metadata['name']);
