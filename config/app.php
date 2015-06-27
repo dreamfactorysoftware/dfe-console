@@ -8,7 +8,7 @@ return [
     'timezone'        => 'America/New_York',
     'locale'          => 'en',
     'fallback_locale' => 'en',
-    'key'             => env('APP_KEY', 'ngv?hS"qNs5:~Gn%]R(_NCRS#1{l?s@/'),
+    'key'             => env('APP_KEY'),
     'cipher'          => MCRYPT_RIJNDAEL_128,
     'log'             => 'single',
     //******************************************************************************
@@ -38,7 +38,7 @@ return [
         'Illuminate\\Translation\\TranslationServiceProvider',
         'Illuminate\\Validation\\ValidationServiceProvider',
         'Illuminate\\View\\ViewServiceProvider',
-            /** Application Service Providers... */
+        /** Application Service Providers... */
         'DreamFactory\\Enterprise\\Console\\Providers\\AppServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\BusServiceProvider',
         'DreamFactory\\Enterprise\\Console\\Providers\\ConfigServiceProvider',

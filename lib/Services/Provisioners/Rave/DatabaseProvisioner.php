@@ -1,23 +1,25 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
+<?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
+use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DatabaseProvisioner extends BaseService implements ResourceProvisioner
+class DatabaseProvisioner extends BaseService implements Portability, ResourceProvisioner
 {
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, Archivist;
 
     //******************************************************************************
     //* Methods
@@ -131,7 +133,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
             'password'  => 'dfe_user',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
-            'prefix'    => ''
+            'prefix'    => '',
         ];
 
         //  Let's go!
@@ -155,7 +157,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
         $_config =
             array_merge(
                 is_scalar($_server->config_text)
-                    ? $this->_jsonDecode($_server->config_text, true)
+                    ? Json::decode($_server->config_text, true)
                     : (array)$_server->config_text,
                 $_skeleton,
                 ['db-server-id' => $_dbServer,]
@@ -220,7 +222,7 @@ class DatabaseProvisioner extends BaseService implements ResourceProvisioner
         $_creds = [
             'database' => $_dbName,
             'username' => $_dbUser,
-            'password' => sha1(microtime(true) . $_seed . $_dbUser . microtime(true))
+            'password' => sha1(microtime(true) . $_seed . $_dbUser . microtime(true)),
         ];
 
         return $_creds;
@@ -264,7 +266,7 @@ MYSQL
             }
 
             return $db->transaction(
-                function () use ($db, $databaseToDrop){
+                function () use ($db, $databaseToDrop) {
                     $_result = $db->statement('SET FOREIGN_KEY_CHECKS = 0');
                     $_result && $_result = $db->statement('DROP DATABASE `' . $databaseToDrop . '`');
                     $_result && $db->statement('SET FOREIGN_KEY_CHECKS = 1');
@@ -299,7 +301,7 @@ MYSQL
     protected function _grantPrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
-            function () use ($db, $creds, $fromServer){
+            function () use ($db, $creds, $fromServer) {
                 //  Create users
                 $_users = $this->_getDatabaseUsers($creds, $fromServer);
 
@@ -337,7 +339,7 @@ MYSQL
     protected function _revokePrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
-            function () use ($db, $creds, $fromServer){
+            function () use ($db, $creds, $fromServer) {
                 //  Create users
                 $_users = $this->_getDatabaseUsers($creds, $fromServer);
 
@@ -396,5 +398,52 @@ MYSQL
             '\'' . $creds['username'] . '\'@\'' . $fromServer . '\'',
             '\'' . $creds['username'] . '\'@\'localhost\'',
         ];
+    }
+
+    /** @inheritdoc */
+    public function import($request, $from, $options = [])
+    {
+    }
+
+    /** @inheritdoc */
+    public function export($request, $to, $options = [])
+    {
+        //  Add file extension if missing
+        $to = $this->ensureFileSuffix('.sql', $to);
+
+        $_instance = $request->getInstance();
+
+        $_command = str_replace(PHP_EOL, null, `which mysqldump`);
+        $_template = $_command . ' --compress --delayed-insert {options} >' . $to;
+        $_port = $_instance->db_port_nbr;
+        $_name = $_instance->db_name_text;
+
+        $_options = [
+            '--host=' . escapeshellarg($_instance->db_host_text),
+            '--user=' . escapeshellarg($_instance->db_user_text),
+            '--password=' . escapeshellarg($_instance->db_password_text),
+            '--databases ' . escapeshellarg($_name),
+        ];
+
+        if (!empty($_port)) {
+            $_options[] = '--port=' . $_port;
+        }
+
+        $_command = str_replace('{options}', implode(' ', $_options), $_template);
+        exec($_command, $_output, $_return);
+
+        if (0 != $_return) {
+            $this->error('Error while dumping database of instance id "' . $_instance->instance_id_text . '".');
+
+            return false;
+        }
+
+        return basename($to);
+    }
+
+    /** @inheritdoc */
+    public function getProvisionerId()
+    {
+        return Provisioner::PROVISIONER_ID;
     }
 }

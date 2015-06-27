@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Instance;
@@ -16,7 +17,7 @@ use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Commands\ExportJob;
 use DreamFactory\Enterprise\Services\Commands\ImportJob;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
-use DreamFactory\Enterprise\Services\Contracts\HasOfferings;
+use DreamFactory\Enterprise\Services\Contracts\ProvidesOfferings;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -58,7 +59,7 @@ class OpsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth.client', ['except' => 'postPartner',]);
+        $this->middleware(AuthenticateOpsClient::ALIAS, ['except' => 'postPartner',]);
     }
 
     /**
@@ -93,24 +94,24 @@ class OpsController extends Controller
         $_storagePath = $_instance->getStoragePath();
 
         $_base = [
-            'id' => $_instance->id,
-            'archived' => $_archived,
-            'deleted' => false,
-            'metadata' => (array)$_instance->instance_data_text,
-            'root-storage-path' => $_rootStoragePath,
-            'storage-path' => $_storagePath,
+            'id'                 => $_instance->id,
+            'archived'           => $_archived,
+            'deleted'            => false,
+            'metadata'           => (array)$_instance->instance_data_text,
+            'root-storage-path'  => $_rootStoragePath,
+            'storage-path'       => $_storagePath,
             'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
-            'private-path' => $_storagePath . DIRECTORY_SEPARATOR . '.private',
-            'home-links' => config('links'),
+            'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
+            'home-links'         => config('links'),
             //  morse
-            'instance-id' => $_instance->instance_name_text,
+            'instance-id'        => $_instance->instance_name_text,
             'vendor-instance-id' => $_instance->instance_id_text,
-            'instance-name' => $_instance->instance_name_text,
-            'instance-state' => $_instance->state_nbr,
-            'vendor-state' => $_instance->vendor_state_nbr,
-            'vendor-state-name' => $_instance->vendor_state_text,
-            'start-date' => (string)$_instance->start_date,
-            'create-date' => (string)$_instance->create_date,
+            'instance-name'      => $_instance->instance_name_text,
+            'instance-state'     => $_instance->state_nbr,
+            'vendor-state'       => $_instance->vendor_state_nbr,
+            'vendor-state-name'  => $_instance->vendor_state_text,
+            'start-date'         => (string)$_instance->start_date,
+            'create-date'        => (string)$_instance->create_date,
         ];
 
         switch ($_version) {
@@ -122,27 +123,27 @@ class OpsController extends Controller
                 $_merge = [
                     //  snake
                     'instance_name_text' => $_instance->instance_name_text,
-                    'instance_id_text' => $_instance->instance_id_text,
-                    'state_nbr' => $_instance->state_nbr,
-                    'vendor_state_nbr' => $_instance->vendor_state_nbr,
-                    'vendor_state_text' => $_instance->vendor_state_text,
-                    'provision_ind' => (1 == $_instance->provision_ind),
+                    'instance_id_text'   => $_instance->instance_id_text,
+                    'state_nbr'          => $_instance->state_nbr,
+                    'vendor_state_nbr'   => $_instance->vendor_state_nbr,
+                    'vendor_state_text'  => $_instance->vendor_state_text,
+                    'provision_ind'      => (1 == $_instance->provision_ind),
                     'trial_instance_ind' => (1 == $_instance->trial_instance_ind),
-                    'deprovision_ind' => (1 == $_instance->deprovision_ind),
-                    'start_date' => (string)$_instance->start_date,
-                    'create_date' => (string)$_instance->create_date,
+                    'deprovision_ind'    => (1 == $_instance->deprovision_ind),
+                    'start_date'         => (string)$_instance->start_date,
+                    'create_date'        => (string)$_instance->create_date,
                     //  camel
-                    'instanceName' => $_instance->instance_name_text,
-                    'instanceId' => $_instance->id,
-                    'vendorInstanceId' => $_instance->instance_id_text,
-                    'instanceState' => $_instance->state_nbr,
-                    'vendorState' => $_instance->vendor_state_nbr,
-                    'vendorStateName' => $_instance->vendor_state_text,
-                    'provisioned' => (1 == $_instance->provision_ind),
-                    'trial' => (1 == $_instance->trial_instance_ind),
-                    'deprovisioned' => (1 == $_instance->deprovision_ind),
-                    'startDate' => (string)$_instance->start_date,
-                    'createDate' => (string)$_instance->create_date,
+                    'instanceName'       => $_instance->instance_name_text,
+                    'instanceId'         => $_instance->id,
+                    'vendorInstanceId'   => $_instance->instance_id_text,
+                    'instanceState'      => $_instance->state_nbr,
+                    'vendorState'        => $_instance->vendor_state_nbr,
+                    'vendorStateName'    => $_instance->vendor_state_text,
+                    'provisioned'        => (1 == $_instance->provision_ind),
+                    'trial'              => (1 == $_instance->trial_instance_ind),
+                    'deprovisioned'      => (1 == $_instance->deprovision_ind),
+                    'startDate'          => (string)$_instance->start_date,
+                    'createDate'         => (string)$_instance->create_date,
                 ];
                 break;
         }
@@ -182,11 +183,9 @@ class OpsController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     *
      * @return array
      */
-    public function postProvisioners(Request $request)
+    public function postProvisioners()
     {
         try {
             $_response = [];
@@ -195,14 +194,14 @@ class OpsController extends Controller
             foreach ($_provisioners as $_tag => $_provisioner) {
                 $_offerings = false;
 
-                if ($_provisioner instanceof HasOfferings) {
+                if ($_provisioner instanceof ProvidesOfferings) {
                     foreach ($_provisioner->getOfferings() as $_name => $_config) {
                         $_offerings[$_name] = $_config;
                     }
                 }
 
                 $_response[$_tag] = [
-                    'id' => $_tag,
+                    'id'        => $_tag,
                     'offerings' => $_offerings,
                 ];
             }
@@ -370,7 +369,7 @@ class OpsController extends Controller
             \Log::error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
-            return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
+            return ErrorPacket::create(Response::HTTP_BAD_REQUEST, $_ex);
         }
     }
 
@@ -381,7 +380,7 @@ class OpsController extends Controller
      */
     protected function _validateOwner(Request $request)
     {
-        /** auth.client middleware registers a user resolver with the request for us */
+        /** middleware registers a user resolver with the request for us */
         $_owner = $request->user();
 
         if (empty($_owner)) {
@@ -418,29 +417,41 @@ class OpsController extends Controller
             throw new \InvalidArgumentException('Email address invalid');
         }
 
+        //  See if we know this cat...
+        if (null !== ($_user = User::byEmail($_email)->first())) {
+            //  Existing user found, don't add to database...
+            $_values = $_user->toArray();
+            unset($_values['password_text'], $_values['external_password_text']);
+
+            \Log::info('existing user attempting registration through partner api',
+                ['channel' => 'ops.partner', 'user' => $_values]);
+
+            return $_user;
+        }
+
         //  Create a user account
         try {
             $_user = \DB::transaction(
                 function () use ($request, $_first, $_last, $_email, $_password) {
                     $_user = User::create(
                         [
-                            'first_name_text' => $_first,
-                            'last_name_text' => $_last,
-                            'email_addr_text' => $_email,
-                            'nickname_text' => $request->input('nickname', $_first),
-                            'password_text' => bcrypt($_password),
-                            'phone_text' => $request->input('phone'),
-                            'company_name_text' => $request->input('company', $_first),
+                            'first_name_text'   => $_first,
+                            'last_name_text'    => $_last,
+                            'email_addr_text'   => $_email,
+                            'nickname_text'     => $request->input('nickname', $_first),
+                            'password_text'     => bcrypt($_password),
+                            'phone_text'        => $request->input('phone'),
+                            'company_name_text' => $request->input('company'),
                         ]
                     );
 
                     $_appKey = AppKey::create(
-                        array(
+                        [
                             'key_class_text' => AppKeyClasses::USER,
-                            'owner_id' => $_user->id,
+                            'owner_id'       => $_user->id,
                             'owner_type_nbr' => OwnerTypes::USER,
-                            'server_secret' => config('dfe.security.console-api-key'),
-                        )
+                            'server_secret'  => config('dfe.security.console-api-key'),
+                        ]
                     );
 
                     //  Update the user with the key info and activate
@@ -464,7 +475,8 @@ class OpsController extends Controller
                 $_message = substr($_message, 0, $_pos);
             }
 
-            \Log::error('database error creating user from partner post: ' . $_message, ['channel' => 'ops.partner']);
+            \Log::error('database error creating user from partner post: ' . $_message,
+                ['channel' => 'ops.partner']);
 
             throw new RegistrationException($_message, $_ex->getCode(), $_ex);
         }

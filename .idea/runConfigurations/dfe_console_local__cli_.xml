@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dfe-console.local (cli)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:setup --force jerryablan@dreamfactory.com">
+  <configuration default="false" name="dfe-console.local (cli)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:register 1 user">
     <RunnerSettings RunnerId="PhpScriptDebugRunner" />
     <ConfigurationWrapper RunnerId="PhpScriptDebugRunner" />
     <method />

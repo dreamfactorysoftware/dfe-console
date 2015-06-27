@@ -11,11 +11,15 @@
         <path_mappings>
           <mapping local-root="$PROJECT_DIR$" remote-root="/opt/dreamfactory/dfe/dfe-console" />
           <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-common" remote-root="/opt/dreamfactory/dfe/dfe-common" />
-          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/fabric-db" remote-root="/opt/dreamfactory/lib/fabric-db" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-database" remote-root="/opt/dreamfactory/dfe/dfe-database" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-ops-client" remote-root="/opt/dreamfactory/dfe/dfe-ops-client" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-partner" remote-root="/opt/dreamfactory/dfe/dfe-partner" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-storage" remote-root="/opt/dreamfactory/dfe/dfe-storage" />
         </path_mappings>
       </server>
     </servers>
   </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="5.5.0" />
   <component name="PhpStepFilterConfiguration" skip_magic_methods="true">
     <option name="skippedFunctions">
       <list>

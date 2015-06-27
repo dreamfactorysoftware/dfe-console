@@ -1,6 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http;
 
+use DreamFactory\Enterprise\Common\Http\Middleware\ApiLogger;
+use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -29,11 +31,11 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'            => 'DreamFactory\Enterprise\Console\Http\Middleware\Authenticate',
-        'auth.basic'      => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
-        'auth.client'     => 'DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateClient',
-        'csrf'            => 'DreamFactory\Enterprise\Console\Http\Middleware\VerifyCsrfToken',
-        'guest'           => 'DreamFactory\Enterprise\Console\Http\Middleware\RedirectIfAuthenticated',
-        'dfe.api-logging' => 'DreamFactory\Enterprise\Console\Http\Middleware\ApiLogger',
+        'auth'                       => 'DreamFactory\Enterprise\Console\Http\Middleware\Authenticate',
+        'auth.basic'                 => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
+        AuthenticateOpsClient::ALIAS => 'DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient',
+        'csrf'                       => 'DreamFactory\Enterprise\Console\Http\Middleware\VerifyCsrfToken',
+        'guest'                      => 'DreamFactory\Enterprise\Console\Http\Middleware\RedirectIfAuthenticated',
+        ApiLogger::ALIAS             => 'DreamFactory\Enterprise\Common\Http\Middleware\ApiLogger',
     ];
 }

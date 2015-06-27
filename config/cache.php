@@ -16,7 +16,7 @@ return [
         ],
         'file'      => [
             'driver' => 'file',
-            'path'   => storage_path() . '/framework/cache',
+            'path'   => __DIR__ . '/../bootstrap/cache',
         ],
         'memcached' => [
             'driver'  => 'memcached',

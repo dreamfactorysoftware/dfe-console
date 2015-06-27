@@ -1,10 +1,14 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
+use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
+use DreamFactory\Library\Utility\Exceptions\FileSystemException;
+use DreamFactory\Library\Utility\FileSystem;
 
 /**
  * DreamFactory Enterprise(tm) and Services Platform File System
@@ -32,13 +36,13 @@ use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
  */
-class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
+class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Portability
 {
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation;
+    use InstanceValidation, Archivist;
 
     //******************************************************************************
     //* Members
@@ -84,6 +88,8 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
      *
      * @param ProvisioningRequest $request
      * @param array               $options
+     *
+     * @throws \Exception
      */
     protected function _createInstanceStorage($request, $options = [])
     {
@@ -172,6 +178,29 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     }
 
     /** @inheritdoc */
+    public function import($request, $from, $options = [])
+    {
+    }
+
+    /** @inheritdoc */
+    public function export($request, $to, $options = [])
+    {
+        $_instance = $request->getInstance();
+        $_source = $_instance->getStorageMount();
+
+        //  Make sure the output file is copacetic
+        $_path = dirname($to);
+        $_file = basename($to);
+
+        if (!FileSystem::ensurePath($_path)) {
+            throw new FileSystemException('Unable to write to export file "' . $to . '".');
+        }
+
+        //  Create our zip container
+        return $this->archiveTree($_source, $_path . DIRECTORY_SEPARATOR . $_file);
+    }
+
+    /** @inheritdoc */
     public function getPrivatePath($append = null)
     {
         return $this->_privatePath .
@@ -218,5 +247,15 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware
     public function getStorageMap()
     {
         return $this->_storageMap;
+    }
+
+    /**
+     * Returns the id, config key, or short name, of this provisioner.
+     *
+     * @return string The id of this provisioner
+     */
+    public function getProvisionerId()
+    {
+        return Provisioner::PROVISIONER_ID;
     }
 }

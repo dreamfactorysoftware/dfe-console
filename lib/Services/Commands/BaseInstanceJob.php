@@ -25,11 +25,11 @@ abstract class BaseInstanceJob extends JobCommand
     /**
      * @type Instance
      */
-    protected $_instanceId;
+    protected $instanceId;
     /**
      * @type array
      */
-    protected $_options = [];
+    protected $options = [];
 
     //******************************************************************************
     //* Methods
@@ -43,8 +43,8 @@ abstract class BaseInstanceJob extends JobCommand
      */
     public function __construct($instanceId, $options = [])
     {
-        $this->_instanceId = $instanceId;
-        $this->_options = $options;
+        $this->instanceId = $instanceId;
+        $this->options = $options;
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class BaseInstanceJob extends JobCommand
      */
     public function getInstanceId()
     {
-        return $this->_instanceId;
+        return $this->instanceId;
     }
 
     /**
@@ -60,6 +60,6 @@ abstract class BaseInstanceJob extends JobCommand
      */
     public function getOptions()
     {
-        return $this->_options;
+        return $this->options;
     }
 }

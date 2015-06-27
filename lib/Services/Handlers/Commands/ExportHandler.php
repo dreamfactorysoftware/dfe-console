@@ -2,6 +2,7 @@
 namespace DreamFactory\Enterprise\Services\Handlers\Commands;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Common\Traits\Lumberjack;
 use DreamFactory\Enterprise\Services\Commands\ExportJob;
 use DreamFactory\Enterprise\Services\Facades\Snapshot;
 
@@ -14,7 +15,7 @@ class ExportHandler
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, Lumberjack;
 
     //******************************************************************************
     //* Methods
@@ -29,7 +30,7 @@ class ExportHandler
      */
     public function handle(ExportJob $command)
     {
-        \Log::debug('dfe: ExportJob - begin');
+        $this->setLumberjackPrefix('dfe.export');
 
         $_start = microtime(true);
 
@@ -37,29 +38,23 @@ class ExportHandler
             //  Get the instance
             $_instance = $this->_findInstance($command->getInstanceId());
         } catch (\Exception $_ex) {
-            \Log::error('dfe: ExportJob - failure, invalid instance "' . $command->getInstanceId() . '".');
+            $this->error('invalid instance "' . $command->getInstanceId() . '".');
 
             return false;
         }
 
         try {
             $_result = Snapshot::create($_instance->instance_id_text);
-            $_elapsed = microtime(true) - $_start;
-
-            \Log::debug('  * completed in ' . number_format($_elapsed, 4) . 's');
-            \Log::debug('dfe: ExportJob - complete: ' . print_r($_result, true));
-
             $command->setResult($_result);
-
-            return $_result;
         } catch (\Exception $_ex) {
-            $_elapsed = microtime(true) - $_start;
-            \Log::debug('  * completed in ' . number_format($_elapsed, 4) . 's');
-            \Log::error('  * exception: ' . $_ex->getMessage());
-            \Log::debug('dfe: ExportJob - fail');
-
-            return false;
+            $_result = false;
+            $this->error('exception during export: ' . $_ex->getMessage());
         }
+
+        $_elapsed = microtime(true) - $_start;
+        $this->debug('export complete in ' . number_format($_elapsed, 4) . 's');
+
+        return $_result;
     }
 
 }

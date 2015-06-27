@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
+use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
@@ -10,6 +11,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
+use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Mail\Message;
@@ -32,7 +34,11 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     /**
      * @type string This is the "facility" passed along to the auditing system for reporting
      */
-    const DEFAULT_FACILITY = 'dfe-provision';
+    const DEFAULT_FACILITY = ProvisioningServiceProvider::IOC_NAME;
+    /**
+     * @type string Your provisioner id
+     */
+    const PROVISIONER_ID = false;
 
     //******************************************************************************
     //* Traits
@@ -47,7 +53,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     /**
      * @type array The default cluster environment file template.
      */
-    protected static $_envTemplate = [
+    protected static $envTemplate = [
         'cluster-id'       => null,
         'default-domain'   => null,
         'signature-method' => ConsoleDefaults::SIGNATURE_METHOD,
@@ -55,12 +61,12 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         'api-url'          => null,
         'api-key'          => null,
         'client-id'        => null,
-        'client-secret'    => null
+        'client-secret'    => null,
     ];
     /**
      * @type string A prefix for notification subjects
      */
-    protected $_subjectPrefix;
+    protected $subjectPrefix;
 
     //******************************************************************************
     //* Methods
@@ -85,8 +91,12 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     {
         parent::boot();
 
-        if (empty($this->_subjectPrefix)) {
-            $this->_subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
+        if (empty($this->subjectPrefix)) {
+            $this->subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
+        }
+
+        if (!$this->getLumberjackPrefix()) {
+            $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
         }
     }
 
@@ -101,24 +111,24 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
             $_result['elapsed'] = $_elapsed;
         }
 
-        $this->_logProvision(['elapsed' => $_elapsed, 'result' => $_result]);
+        $this->audit(['elapsed' => $_elapsed, 'result' => $_result]);
         $request->setResult($_result);
 
         //  Save results...
         $_instance = $request->getInstance();
-        $_data = $_instance->instance_data_text;
-        $_data['.provisioning'] = $_result;
+        $_data = $_instance->instance_data_text ?: [];
+
+        !isset($_data['_operations']) && ($_data['_operations'] = []);
+        $_data['_operations'][date('c')] = $_result;
         $_instance->update(['instance_data_text' => $_data]);
 
         //  Send notification
         $_guest = $_instance->guest;
         $_host =
-            $_guest
+            ($_guest && $_guest->public_host_text)
                 ? $_guest->public_host_text
-                : $_instance->instance_id_text . '.' .
-                config('dfe.provisioning.default-dns-zone') .
-                '.' .
-                config('dfe.provisioning.default-dns-domain');
+                : $_instance->instance_id_text . '.' . trim(config('dfe.provisioning.default-dns-zone'), '.') .
+                '.' . trim(config('dfe.provisioning.default-dns-domain'), '.');
 
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
@@ -156,7 +166,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
             $_result['elapsed'] = $_elapsed;
         }
 
-        $this->_logProvision(['elapsed' => $_elapsed, 'result' => $_result]);
+        $this->audit(['elapsed' => $_elapsed, 'result' => $_result]);
         $request->setResult($_result);
 
         //  Send notification
@@ -188,12 +198,12 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      *
      * @return bool
      */
-    protected function _logProvision($data = [], $level = AuditLevels::INFO, $deprovisioning = false)
+    protected function audit($data = [], $level = AuditLevels::INFO, $deprovisioning = false)
     {
         //  Put instance ID into the correct place
         isset($data['instance']) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        return Audit::log($data, $level, app('request'), (($deprovisioning ? 'de' : null) . 'provision'));
+        return Audit::log($data, $level, app('request'), ($deprovisioning ? 'de' : null) . 'provision');
     }
 
     /**
@@ -205,15 +215,15 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      */
     protected function _notify($instance, $subject, array $data)
     {
-        if (!empty($this->_subjectPrefix)) {
-            $subject = $this->_subjectPrefix . ' ' . trim(str_replace($this->_subjectPrefix, null, $subject));
+        if (!empty($this->subjectPrefix)) {
+            $subject = $this->subjectPrefix . ' ' . trim(str_replace($this->subjectPrefix, null, $subject));
         }
 
         $_result =
             \Mail::send(
                 'emails.generic',
                 $data,
-                function ($message) use ($instance, $subject){
+                function ($message) use ($instance, $subject) {
                     /** @var Message $message */
                     $message
                         ->to($instance->user->email_addr_text,
@@ -239,7 +249,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      */
     protected function _writeEnvironmentFile($filename, array $env, $filesystem = null, $mergeDefaults = true)
     {
-        $_data = $mergeDefaults ? array_merge(static::$_envTemplate, $env) : $env;
+        $_data = $mergeDefaults ? array_merge(static::$envTemplate, $env) : $env;
 
         if (null !== $filesystem) {
             return $filesystem->put($filename, JsonFile::encode($_data));
@@ -250,4 +260,13 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         return true;
     }
 
+    /** @inheritdoc */
+    public function getProvisionerId()
+    {
+        if (!static::PROVISIONER_ID) {
+            throw new NotImplementedException('No provisioner id has been set.');
+        }
+
+        return static::PROVISIONER_ID;
+    }
 }

@@ -1,13 +1,25 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Managers;
 
+use DreamFactory\Enterprise\Common\Contracts\Portability;
+use DreamFactory\Enterprise\Common\Contracts\PortabilityAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
+use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 
-class ProvisioningManager extends BaseManager implements ResourceProvisionerAware
+class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortabilityAware
 {
+    //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type int The number of minutes to keep things cached
+     */
+    const CACHE_TTL = 5;
+
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -29,7 +41,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     {
         $_provisioners = [];
 
-        if (null !== ($_list = config('dfe.provisioners.hosts'))) {
+        if (null !== ($_list = config('provisioners.hosts'))) {
             foreach ($_list as $_tag => $_config) {
                 if (null !== ($_provisioner = $this->getProvisioner($_tag))) {
                     $_provisioners[$_tag] = $_provisioner;
@@ -64,6 +76,27 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         return $this->resolveDatabase($name);
     }
 
+    /** @inheritdoc */
+    public function getPortableServices($name = null)
+    {
+        $name = GuestLocations::resolve($name ?: $this->getDefaultProvisioner());
+
+        $_services = [];
+        $_list = config('provisioners.hosts.' . $name . '.provides', []);
+
+        //  Spin through the services
+        foreach ($_list as $_key => $_definition) {
+            if (PortableTypes::contains($_key)) {
+                if (($_service = $this->resolve($name, $_key)) instanceof Portability) {
+                    $_services[$_key] = $_service;
+                }
+            }
+        }
+
+        //  Return the array
+        return $_services;
+    }
+
     /**
      * Get the default provisioner
      *
@@ -71,7 +104,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function getDefaultProvisioner()
     {
-        return config('dfe.provisioners.default');
+        return config('provisioners.default');
     }
 
     /**
@@ -87,9 +120,11 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         try {
             return parent::resolve($_key);
         } catch (\InvalidArgumentException $_ex) {
+            //  Ignored
         }
 
-        $_class = config('dfe.provisioners.hosts.' . $_key);
+        $_namespace = config('provisioners.hosts.' . $tag . '.namespace');
+        $_class = ($_namespace ? $_namespace . '\\' : null) . config('provisioners.hosts.' . $_key);
 
         if (empty($_class)) {
             \Log::notice('Requested provisioner "' . $_key . '" is not valid.');
@@ -97,8 +132,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
             return null;
         }
 
-        $_provisioner = new $_class($this->app);
-        $this->manage($_key, $_provisioner);
+        $this->manage($_key, $_provisioner = new $_class($this->app));
 
         return $_provisioner;
     }
@@ -110,7 +144,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function resolveStorage($tag)
     {
-        return $this->resolve($tag, 'storage');
+        return $this->resolve($tag, PortableTypes::STORAGE);
     }
 
     /**
@@ -120,23 +154,49 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function resolveDatabase($tag)
     {
-        return $this->resolve($tag, 'db');
+        return $this->resolve($tag, PortableTypes::DATABASE);
+    }
+
+    /**
+     * @param string $tag
+     *
+     * @return Portability|null
+     */
+    public function resolvePortability($tag)
+    {
+        //  If db is portable, return it
+        $_service = $this->resolveDatabase($tag);
+
+        if ($_service instanceof Portability) {
+            return $_service;
+        }
+
+        //  Storage portable?
+        $_service = $this->resolveStorage($tag);
+
+        if ($_service instanceof Portability) {
+            return $_service;
+        }
+
+        //  Nada
+        return null;
     }
 
     /**
      * @param string $tag
      * @param string $subkey
+     * @param string $connector The config key connector from $tag to $subkey
      *
      * @return mixed
      */
-    protected function _buildTag($tag, $subkey = null)
+    protected function _buildTag(&$tag, $subkey = null, $connector = '.provides.')
     {
-        $tag = GuestLocations::resolve($tag ?: $this->getDefaultProvisioner());
+        $tag = trim(GuestLocations::resolve($tag ?: $this->getDefaultProvisioner()));
 
         if (null === $subkey) {
-            $subkey = 'instance';
+            $subkey = PortableTypes::INSTANCE;
         }
 
-        return $tag . '.' . $subkey;
+        return $tag . $connector . $subkey;
     }
 }

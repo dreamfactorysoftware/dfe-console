@@ -15,5 +15,5 @@ class ExportJob extends BaseInstanceJob
     //******************************************************************************
 
     /** @type string Our handler */
-    protected $_handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ExportHandler';
+    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\ExportHandler';
 }

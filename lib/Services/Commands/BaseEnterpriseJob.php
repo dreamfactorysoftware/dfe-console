@@ -34,23 +34,23 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
     /**
      * @type string|int The id of the cluster
      */
-    protected $_clusterId;
+    protected $clusterId;
     /**
      * @type string|int The id of the web server
      */
-    protected $_serverId;
+    protected $serverId;
     /**
      * @type int An OwnerTypes enum
      */
-    protected $_serverType;
+    protected $serverType;
     /**
      * @type int
      */
-    protected $_ownerId;
+    protected $ownerId;
     /**
      * @type int
      */
-    protected $_ownerType;
+    protected $ownerType;
 
     //******************************************************************************
     //* Methods
@@ -63,8 +63,8 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function __construct($clusterId = null, $serverId = null, $serverType = null)
     {
-        $this->_clusterId = $clusterId ?: config('dfe.provisioning.default-cluster-id');
-        $this->_serverId = $serverId ?: config('dfe.provisioning.default-db-server-id');
+        $this->clusterId = $clusterId ?: config('dfe.provisioning.default-cluster-id');
+        $this->serverId = $serverId ?: config('dfe.provisioning.default-db-server-id');
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function getClusterId()
     {
-        return $this->_clusterId;
+        return $this->clusterId;
     }
 
     /**
@@ -83,7 +83,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
     public function setClusterId($clusterId)
     {
         $_cluster = static::_lookupCluster($clusterId);
-        $this->_clusterId = $_cluster->cluster_id_text;
+        $this->clusterId = $_cluster->cluster_id_text;
 
         return $this;
     }
@@ -93,7 +93,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function getServerId()
     {
-        return $this->_serverId;
+        return $this->serverId;
     }
 
     /**
@@ -104,7 +104,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
     public function setServerId($serverId)
     {
         $_server = static::_lookupServer($serverId);
-        $this->_serverId = $_server->server_id_text;
+        $this->serverId = $_server->server_id_text;
 
         return $this;
     }
@@ -114,7 +114,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function getServerType()
     {
-        return $this->_serverType;
+        return $this->serverType;
     }
 
     /**
@@ -124,7 +124,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function setServerType($serverType = ServerTypes::WEB)
     {
-        $this->_serverType = ServerTypes::contains($serverType, true) ?: ServerTypes::WEB;
+        $this->serverType = ServerTypes::contains($serverType, true) ?: ServerTypes::WEB;
     }
 
     /**
@@ -132,7 +132,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function getOwnerId()
     {
-        return $this->_ownerId;
+        return $this->ownerId;
     }
 
     /**
@@ -142,7 +142,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function setOwnerId($ownerId)
     {
-        $this->_ownerId = $ownerId;
+        $this->ownerId = $ownerId;
 
         return $this;
     }
@@ -152,7 +152,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function getOwnerType()
     {
-        return $this->_ownerType;
+        return $this->ownerType;
     }
 
     /**
@@ -162,7 +162,7 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
      */
     public function setOwnerType($ownerType = OwnerTypes::USER)
     {
-        $this->_ownerType =
+        $this->ownerType =
             (is_numeric($ownerType) && OwnerTypes::contains($ownerType))
                 ? $ownerType
                 : OwnerTypes::defines($ownerType, true);
@@ -173,13 +173,13 @@ abstract class BaseEnterpriseJob extends JobCommand implements EnterpriseJob
     /** @inheritdoc */
     public function getCluster($clusterId = null)
     {
-        return static::_lookupCluster($clusterId ?: $this->_clusterId);
+        return static::_lookupCluster($clusterId ?: $this->clusterId);
     }
 
     /** @inheritdoc */
     public function getServer($serverId = null)
     {
-        return static::_lookupServer($serverId ?: $this->_serverId);
+        return static::_lookupServer($serverId ?: $this->serverId);
     }
 
 }
