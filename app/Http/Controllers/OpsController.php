@@ -17,7 +17,7 @@ use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Commands\ExportJob;
 use DreamFactory\Enterprise\Services\Commands\ImportJob;
 use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
-use DreamFactory\Enterprise\Services\Contracts\HasOfferings;
+use DreamFactory\Enterprise\Services\Contracts\ProvidesOfferings;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -194,7 +194,7 @@ class OpsController extends Controller
             foreach ($_provisioners as $_tag => $_provisioner) {
                 $_offerings = false;
 
-                if ($_provisioner instanceof HasOfferings) {
+                if ($_provisioner instanceof ProvidesOfferings) {
                     foreach ($_provisioner->getOfferings() as $_name => $_config) {
                         $_offerings[$_name] = $_config;
                     }

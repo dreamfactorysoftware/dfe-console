@@ -67,10 +67,6 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      * @type string A prefix for notification subjects
      */
     protected $subjectPrefix;
-    /**
-     * @type array The offerings of this provisioner
-     */
-    protected $offerings = false;
 
     //******************************************************************************
     //* Methods

@@ -74,15 +74,8 @@ class SnapshotService extends BaseService
 
         ];
 
-        $_metadata['name'] =
-            $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
-
-        $_metadata['storage-export'] =
-            $this->_getConfigValue('snapshot.templates.storage-file-name', $_metadata);
-
-        $_metadata['database-export'] =
-            $this->_getConfigValue('snapshot.templates.db-file-name', $_metadata);
-
+        //  Build our link hash
+        $_metadata['name'] = $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
         $_metadata['hash'] = RouteHashing::create($_metadata['name'], $keepDays);
         $_metadata['link'] = rtrim(config('snapshot.hash_link_base'), ' /') . '/' . $_metadata['hash'];
 
@@ -92,7 +85,7 @@ class SnapshotService extends BaseService
         //  Create the snapshot archive and stuff it full of goodies
         $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . $_metadata['name']));
 
-        //  Grab the provisioner
+        //  Grab the list of portable services from the provisioner
         $_services = Provision::getPortableServices($_instance->guest_location_nbr);
 
         try {
@@ -101,6 +94,7 @@ class SnapshotService extends BaseService
                 $_request = new ProvisioningRequest($_instance);
 
                 if (false !== ($_outfile = $_service->export($_request, $_to))) {
+                    $_metadata[$_type . '-export'] = $_outfile;
                     $this->moveWorkFile($_fsSnapshot, $_workPath . $_outfile);
                 }
             }

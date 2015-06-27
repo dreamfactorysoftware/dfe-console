@@ -189,7 +189,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
         $_source = $_instance->getStorageMount();
 
         //  Make sure the output file is copacetic
-        $_path = dirname(realpath($to));
+        $_path = dirname($to);
         $_file = basename($to);
 
         if (!FileSystem::ensurePath($_path)) {
@@ -197,11 +197,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
         }
 
         //  Create our zip container
-        if (false === ($_file = $this->archiveTree($_source, $_path . DIRECTORY_SEPARATOR . $_file))) {
-            return false;
-        }
-
-        return $_path . DIRECTORY_SEPARATOR . $_file;
+        return $this->archiveTree($_source, $_path . DIRECTORY_SEPARATOR . $_file);
     }
 
     /** @inheritdoc */

@@ -42,6 +42,16 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
     //******************************************************************************
 
     /**
+     * Make sure our trait gets booted
+     */
+    public function boot()
+    {
+        parent::boot();
+
+        $this->bootTrait();
+    }
+
+    /**
      * Get the current status of a provisioning request
      *
      * @param Instance $instance

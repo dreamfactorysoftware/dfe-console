@@ -414,7 +414,6 @@ MYSQL
         $_instance = $request->getInstance();
 
         $_command = str_replace(PHP_EOL, null, `which mysqldump`);
-        //  The --compress option automatically gzips the resultant file...
         $_template = $_command . ' --compress --delayed-insert {options} >' . $to;
         $_port = $_instance->db_port_nbr;
         $_name = $_instance->db_name_text;

@@ -81,14 +81,8 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     {
         $name = GuestLocations::resolve($name ?: $this->getDefaultProvisioner());
 
-        $_services = \Cache::get('dfe.provisioning-manager.portable-services.' . $name);
-
-        if (!empty($_services)) {
-            return $_services;
-        }
-
         $_services = [];
-        $_list = config('provisioners.hosts.' . $name, []);
+        $_list = config('provisioners.hosts.' . $name . '.provides', []);
 
         //  Spin through the services
         foreach ($_list as $_key => $_definition) {
@@ -98,8 +92,6 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
                 }
             }
         }
-
-        \Cache::put('dfe.provisioning-manager.portable-services.' . $name, $_services, static::CACHE_TTL);
 
         //  Return the array
         return $_services;
@@ -131,7 +123,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
             //  Ignored
         }
 
-        $_namespace = config('provisioners.host.' . $tag . '.namespace');
+        $_namespace = config('provisioners.hosts.' . $tag . '.namespace');
         $_class = ($_namespace ? $_namespace . '\\' : null) . config('provisioners.hosts.' . $_key);
 
         if (empty($_class)) {
@@ -193,17 +185,18 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     /**
      * @param string $tag
      * @param string $subkey
+     * @param string $connector The config key connector from $tag to $subkey
      *
      * @return mixed
      */
-    protected function _buildTag($tag, $subkey = null)
+    protected function _buildTag(&$tag, $subkey = null, $connector = '.provides.')
     {
-        $tag = GuestLocations::resolve($tag ?: $this->getDefaultProvisioner());
+        $tag = trim(GuestLocations::resolve($tag ?: $this->getDefaultProvisioner()));
 
         if (null === $subkey) {
             $subkey = PortableTypes::INSTANCE;
         }
 
-        return $tag . '.provides.' . $subkey;
+        return $tag . $connector . $subkey;
     }
 }

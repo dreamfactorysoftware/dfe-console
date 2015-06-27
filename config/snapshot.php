@@ -27,28 +27,7 @@ return [
     //  Templates used by the snapshot service
     'templates'      => [
         //  File name templates
-        'snapshot-file-name' => '{snapshot-prefix}.zip',
-        'storage-file-name'  => '{instance-id}.storage.zip',
-        'db-file-name'       => '{instance-id}.database.sql',
+        'snapshot-file-name' => '{id}.zip',
         'metadata-file-name' => 'snapshot.json',
-        //  Metadata guts template
-        'metadata'           => [
-            'id'                  => '{id}',
-            'type'                => '{type}',
-            'hash'                => '{hash}',
-            'link'                => '{link}',
-            'timestamp'           => '{timestamp}',
-            'instance-id'         => '{instance-id}',
-            'cluster-id'          => '{cluster-id}',
-            'db-server-id'        => '{db-server-id}',
-            'app-server-id'       => '{app-server-id}',
-            'web-server-id'       => '{web-server-id}',
-            'owner-id'            => '{owner-id}',
-            'owner-email-address' => '{owner-email-address}',
-            'owner-storage-key'   => '{owner-storage-key}',
-            'storage-key'         => '{storage-key}',
-            'storage-export'      => '{storage-export}',
-            'database-export'     => '{database-export}',
-        ],
     ],
 ];
