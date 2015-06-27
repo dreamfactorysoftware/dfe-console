@@ -35,62 +35,6 @@ return [
         'themes'            => ['auth' => 'darkly', 'page' => 'flatly'],
     ],
     //******************************************************************************
-    //* The provisioners available from this console
-    //******************************************************************************
-    'provisioners'     => [
-        //  The default provisioner
-        'default' => 'rave',
-        //  The provisioners, or "hosts" of our instances, or "guests".
-        'hosts'   => [
-            /** RAVE = DSP2 */
-            'rave' => [
-                /********************************************************************************
-                 * Each provisioner has a main "instance" provisioning class. In addition there
-                 * are two sub-provisioners required.
-                 *
-                 * The first is "storage" which is the class responsible for instance storage
-                 * provisioning.
-                 *
-                 * The second is "db", or the class/service responsible for instance database
-                 * provisioning.
-                 *
-                 * Currently, all three are required. However, even though required, no actions
-                 * need to be performed (if unnecessary, for example).
-                 ********************************************************************************/
-                //  The main provisioner of the instance
-                'instance'  => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave\\Provisioner',
-                //  The instance's storage provisioner
-                'storage'   => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave\\StorageProvisioner',
-                //  The instance's database provisioner
-                'db'        => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave\\DatabaseProvisioner',
-                /********************************************************************************
-                 * Provisioners may have "offerings" or options that dictate certain features of
-                 * the available guest(s). Selecting a version for instance (as below). It can be
-                 * used for anything and provides an automatic UI in the Dashboard for user selection.
-                 ********************************************************************************/
-                /** Our offerings */
-                'offerings' => [
-                    //  An "id" for this offering
-                    'instance-version' => [
-                        //  The display (label) name to show on the UI
-                        'name'       => 'Version',
-                        //  Any text you wish displayed below the selection (i.e. help text, explanation, etc.)
-                        'help-block' => 'If you wish, you may choose a different version of the DSP to provision.',
-                        //  The item in the below list of items to pre-select for the user.
-                        'suggested'  => '1.10.x-dev',
-                        //  The list of items to show for this offering.
-                        'items'      => [
-                            '1.10.x-dev' => [
-                                'document-root' => '/var/www/_releases/dsp-core/1.9.x-dev/web',
-                                'description'   => 'DSP v1.10.x-dev',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ],
-    ],
-    //******************************************************************************
     //* Provisioning Defaults
     //******************************************************************************
     'provisioning'     => [

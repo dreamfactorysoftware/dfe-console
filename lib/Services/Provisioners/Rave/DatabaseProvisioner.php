@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
@@ -18,7 +19,7 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, Archivist;
 
     //******************************************************************************
     //* Methods
@@ -407,10 +408,13 @@ MYSQL
     /** @inheritdoc */
     public function export($request, $to, $options = [])
     {
+        //  Add file extension if missing
+        $to = $this->ensureFileSuffix('.sql', $to);
+
         $_instance = $request->getInstance();
 
-        //  This script automatically gzips the resultant file...
         $_command = str_replace(PHP_EOL, null, `which mysqldump`);
+        //  The --compress option automatically gzips the resultant file...
         $_template = $_command . ' --compress --delayed-insert {options} >' . $to;
         $_port = $_instance->db_port_nbr;
         $_name = $_instance->db_name_text;
@@ -430,10 +434,17 @@ MYSQL
         exec($_command, $_output, $_return);
 
         if (0 != $_return) {
-            throw new \RuntimeException(
-                'Error while dumping database of instance id "' . $_instance->instance_id_text . '".'
-            );
+            $this->error('Error while dumping database of instance id "' . $_instance->instance_id_text . '".');
+
+            return false;
         }
+
+        return basename($to);
     }
 
+    /** @inheritdoc */
+    public function getProvisionerId()
+    {
+        return Provisioner::PROVISIONER_ID;
+    }
 }

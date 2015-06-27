@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
+use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
@@ -34,6 +35,10 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      * @type string This is the "facility" passed along to the auditing system for reporting
      */
     const DEFAULT_FACILITY = ProvisioningServiceProvider::IOC_NAME;
+    /**
+     * @type string Your provisioner id
+     */
+    const PROVISIONER_ID = false;
 
     //******************************************************************************
     //* Traits
@@ -62,17 +67,14 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      * @type string A prefix for notification subjects
      */
     protected $subjectPrefix;
+    /**
+     * @type array The offerings of this provisioner
+     */
+    protected $offerings = false;
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
-
-    /**
-     * Returns the id, or short name, of this provisioner
-     *
-     * @return string The provisioner id
-     */
-    abstract protected function getProvisionerId();
 
     /**
      * @param ProvisioningRequest|mixed $request
@@ -225,7 +227,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
             \Mail::send(
                 'emails.generic',
                 $data,
-                function ($message) use ($instance, $subject){
+                function ($message) use ($instance, $subject) {
                     /** @var Message $message */
                     $message
                         ->to($instance->user->email_addr_text,
@@ -262,4 +264,13 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         return true;
     }
 
+    /** @inheritdoc */
+    public function getProvisionerId()
+    {
+        if (!static::PROVISIONER_ID) {
+            throw new NotImplementedException('No provisioner id has been set.');
+        }
+
+        return static::PROVISIONER_ID;
+    }
 }

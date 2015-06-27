@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Facades;
+<?php namespace DreamFactory\Enterprise\Services\Facades;
 
 use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
@@ -12,7 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static ResourceProvisioner getStorageProvisioner(string $name = null)
  * @method static ResourceProvisioner getDatabaseProvisioner(string $name = null)
  * @method static string getDefaultProvisioner()
- * @method static Portability getPortabilityProvider(string $name = null)
+ * @method static array|Portability[] getPortableServices(string $name = null)
  * @method static ResourceProvisioner resolve(string $name)
  * @method static ResourceProvisioner resolveStorage(string $name)
  */

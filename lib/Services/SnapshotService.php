@@ -1,17 +1,14 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
-use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
+use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Inflector;
 use DreamFactory\Library\Utility\JsonFile;
-use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
@@ -33,7 +30,7 @@ class SnapshotService extends BaseService
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, Archivist;
 
     //*************************************************************************
     //* Methods
@@ -90,37 +87,47 @@ class SnapshotService extends BaseService
         $_metadata['link'] = rtrim(config('snapshot.hash_link_base'), ' /') . '/' . $_metadata['hash'];
 
         //  Make our temp path...
-        $_workPath =
-            $this->_getTempFilesystem($_instance->instance_id_text . '.' . microtime(true),
-                true) . DIRECTORY_SEPARATOR;
+        $_workPath = $this->getWorkPath($_snapshotId, true) . DIRECTORY_SEPARATOR;
 
         //  Create the snapshot archive and stuff it full of goodies
         $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . $_metadata['name']));
 
-        //  Create a zip file of the storage directory
-        if (!$this->_archivePath($_instance->getStorageMount(), $_workPath . $_metadata['storage-export'])) {
-            throw new \RuntimeException('Unable to archive source file system. Aborting.');
-        }
+        //  Grab the provisioner
+        $_services = Provision::getPortableServices($_instance->guest_location_nbr);
 
-        //  Add storage zipball to the archive
-        $this->moveWorkFile($_fsSnapshot, $_workPath . $_metadata['storage-export']);
-
-        //  Pull a database backup...
         try {
-            $this->exportDatabase($_instance, $_workPath . $_metadata['database-export']);
-        } catch (\Exception $_ex) {
-            throw new \RuntimeException('Unable to dump source database: ' . $_ex->getMessage());
-        }
+            foreach ($_services as $_type => $_service) {
+                $_to = $_workPath . $_snapshotId . '.' . $_type;
+                $_request = new ProvisioningRequest($_instance);
 
-        //  Add the export to the snapshot
-        $this->moveWorkFile($_fsSnapshot, $_workPath . $_metadata['database-export']);
+                if (false !== ($_outfile = $_service->export($_request, $_to))) {
+                    $this->moveWorkFile($_fsSnapshot, $_workPath . $_outfile);
+                }
+            }
+        } catch (\Exception $_ex) {
+            //  Delete the temp path...
+            $_fsSnapshot = null;
+            $this->deleteWorkPath($_snapshotId);
+
+            return false;
+        }
 
         //  Create a snapshot manifesto
         $_manifest = new SnapshotManifest($_metadata, config('snapshot.metadata-file-name'), $_fsSnapshot);
         $_manifest->write();
 
-        //  Stuff it in the snapshot
+        //  Close up the files
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_fsSnapshot->getAdapter()->getArchive()->close();
+        $_fsSnapshot = null;
+
+        //  Move the snapshot archive into the "snapshots" private storage area
         $this->moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_metadata['name']);
+
+        //  Cleanup
+        $this->deleteWorkPath($_snapshotId);
+
+        return true;
     }
 
     /**
@@ -261,89 +268,6 @@ class SnapshotService extends BaseService
     }
 
     /**
-     * @param string $tag      Unique identifier for temp space
-     * @param bool   $pathOnly If true, only the path is returned.
-     *
-     * @return \League\Flysystem\Filesystem|string
-     */
-    protected function _getTempFilesystem($tag, $pathOnly = false)
-    {
-        $_root = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'dfe' . DIRECTORY_SEPARATOR . $tag;
-
-        if (!mkdir($_root, 0777, true)) {
-            throw new \RuntimeException('Unable to create working directory "' . $_root . '". Aborting.');
-        }
-
-        if ($pathOnly) {
-            return $_root;
-        }
-
-        //  Set our temp base
-        return new Filesystem(new Local($_root));
-    }
-
-    /**
-     * @param Filesystem $source  The source file system to archive
-     * @param string     $zipPath The full zip file name
-     *
-     * @return bool|string
-     */
-    protected function _archivePath($source, $zipPath)
-    {
-        $_archive = new Filesystem(new ZipArchiveAdapter($zipPath));
-
-        try {
-            foreach ($source->listContents('', true) as $_file) {
-                if ($_file['type'] == 'dir') {
-                    $_archive->createDir($_file['path']);
-                } elseif ($_file['type'] == 'link') {
-                    $_archive->put($_file['path'], $_file['target']);
-                } elseif ($_file['type'] == 'file') {
-                    file_exists($_file['path']) && $this->_writeStream($_archive, $_file['path'], $_file['path']);
-                }
-            }
-
-            //  Flush zip to disk
-            $_archive = null;
-
-            return $zipPath;
-        } catch (\Exception $_ex) {
-            return false;
-        }
-    }
-
-    /**
-     * @param Instance $instance
-     * @param string   $dumpFile
-     *
-     * @return mixed
-     * @throws \DreamFactory\Enterprise\Common\Exceptions\NotImplementedException
-     */
-    protected function exportDatabase($instance, $dumpFile)
-    {
-        if ($instance->guest_location_nbr != GuestLocations::DFE_CLUSTER) {
-            throw new NotImplementedException();
-        }
-
-        $_service = Provision::getPortabilityProvider($instance->guest_location_nbr);
-
-        return $_service->export(new ProvisioningRequest($instance), $dumpFile);
-    }
-
-    /**
-     * @param Filesystem|\Illuminate\Contracts\Filesystem\Filesystem $archive
-     * @param string                                                 $workFile
-     */
-    protected function moveWorkFile($archive, $workFile = null)
-    {
-        if ($this->_writeStream($archive, $workFile, basename($workFile))) {
-            unlink($workFile);
-        }
-
-        return;
-    }
-
-    /**
      * Pulls a config value and applies replacements with automatic json conversion of non-strings
      *
      * @param string $key
@@ -385,32 +309,4 @@ class SnapshotService extends BaseService
 
         return $_setting;
     }
-
-    /**
-     * @param Filesystem $filesystem
-     * @param string     $source
-     * @param string     $destination
-     *
-     * @return bool
-     */
-    protected function _writeStream($filesystem, $source, $destination)
-    {
-        if (false !== ($_fd = fopen($source, 'r'))) {
-            //  Fallback gracefully if no stream support
-            if (method_exists($filesystem, 'writeStream')) {
-                $_result = $filesystem->writeStream($destination, $_fd, []);
-            } elseif (method_exists($filesystem->getAdapter(), 'writeStream')) {
-                $_result = $filesystem->getAdapter()->writeStream($destination, $_fd, $filesystem->getConfig());
-            } else {
-                $_result = $filesystem->put($destination, file_get_contents($source));
-            }
-
-            fclose($_fd);
-
-            return $_result;
-        }
-
-        return false;
-    }
-
 }
