@@ -5,16 +5,15 @@ use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
+use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Library\Utility\JsonFile;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Mail\Message;
 
 /**
  * A base class for all provisioners
@@ -44,7 +43,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation, LockingService, TemplateEmailQueueing;
+    use InstanceValidation, LockingService, TemplateEmailQueueing, Notifier;
 
     //******************************************************************************
     //* Members
@@ -63,10 +62,6 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         'client-id'        => null,
         'client-secret'    => null,
     ];
-    /**
-     * @type string A prefix for notification subjects
-     */
-    protected $subjectPrefix;
 
     //******************************************************************************
     //* Methods
@@ -91,12 +86,12 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     {
         parent::boot();
 
-        if (empty($this->subjectPrefix)) {
-            $this->subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
-        }
-
         if (!$this->getLumberjackPrefix()) {
             $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
+        }
+
+        if (empty($this->subjectPrefix)) {
+            $this->subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
         }
     }
 
@@ -149,7 +144,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
 
         $_subject = $_result['success'] ? 'Instance launch successful' : 'Instance launch failure';
 
-        $this->_notify($_instance, $_subject, $_data);
+        $this->notifyInstanceOwner($_instance, $_subject, $_data);
 
         return $_result;
     }
@@ -186,7 +181,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
 
         $_subject = $_result['success'] ? 'Instance shutdown successful' : 'Instance shutdown failure';
 
-        $this->_notify($_instance, $_subject, $_data);
+        $this->notifyInstanceOwner($_instance, $_subject, $_data);
 
         return $_result;
     }
@@ -204,37 +199,6 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         isset($data['instance']) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
         return Audit::log($data, $level, app('request'), ($deprovisioning ? 'de' : null) . 'provision');
-    }
-
-    /**
-     * @param Instance $instance
-     * @param string   $subject
-     * @param array    $data
-     *
-     * @return int The number of recipients mailed
-     */
-    protected function _notify($instance, $subject, array $data)
-    {
-        if (!empty($this->subjectPrefix)) {
-            $subject = $this->subjectPrefix . ' ' . trim(str_replace($this->subjectPrefix, null, $subject));
-        }
-
-        $_result =
-            \Mail::send(
-                'emails.generic',
-                $data,
-                function ($message) use ($instance, $subject) {
-                    /** @var Message $message */
-                    $message
-                        ->to($instance->user->email_addr_text,
-                            $instance->user->first_name_text . ' ' . $instance->user->last_name_text)
-                        ->subject($subject);
-                }
-            );
-
-        $this->debug('  * provisioner: notification sent to ' . $instance->user->email_addr_text);
-
-        return $_result;
     }
 
     /**
