@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
-use DreamFactory\Enterprise\Services\Commands\ExportJob;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -61,7 +61,7 @@ class Export extends Command
     protected function getOptions()
     {
         return [
-            ['destination', 'd', InputOption::VALUE_OPTIONAL, 'The path to where you would like the export placed.']
+            ['destination', 'd', InputOption::VALUE_OPTIONAL, 'The path to where you would like the export placed.'],
         ];
     }
 

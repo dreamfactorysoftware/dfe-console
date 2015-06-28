@@ -1,8 +1,8 @@
-<?php namespace DreamFactory\Enterprise\Services\Commands;
+<?php namespace DreamFactory\Enterprise\Services\Jobs;
 
-use DreamFactory\Enterprise\Common\Commands\JobCommand;
+use DreamFactory\Enterprise\Common\Jobs\BaseJob;
 
-class NotifyJob extends JobCommand
+class NotifyJob extends BaseJob
 {
     //******************************************************************************
     //* Constants
@@ -23,8 +23,6 @@ class NotifyJob extends JobCommand
      * @type array
      */
     protected $data = [];
-    /** @type string Our handler */
-    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\NotifyHandler';
 
     //******************************************************************************
     //* Methods

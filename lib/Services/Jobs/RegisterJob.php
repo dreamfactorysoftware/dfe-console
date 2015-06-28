@@ -1,10 +1,10 @@
-<?php namespace DreamFactory\Enterprise\Services\Commands;
+<?php namespace DreamFactory\Enterprise\Services\Jobs;
 
-use DreamFactory\Enterprise\Common\Commands\JobCommand;
+use DreamFactory\Enterprise\Common\Jobs\BaseJob;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 
-class RegisterJob extends JobCommand
+class RegisterJob extends BaseJob
 {
     //******************************************************************************
     //* Constants
@@ -35,8 +35,6 @@ class RegisterJob extends JobCommand
      * @type \stdClass
      */
     protected $ownerInfo;
-    /** @type string Our handler */
-    protected $handlerClass = 'DreamFactory\\Enterprise\\Services\\Handlers\\Commands\\RegisterHandler';
 
     //******************************************************************************
     //* Methods

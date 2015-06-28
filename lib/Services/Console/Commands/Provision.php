@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
+use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

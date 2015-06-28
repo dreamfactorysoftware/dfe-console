@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
-use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
+use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Queue;
 use Symfony\Component\Console\Input\InputArgument;
@@ -39,7 +39,7 @@ class Deprovision extends Command
     public function fire()
     {
         return
-            Queue::push(new DeprovisionJob($this->argument('instance-id')));
+            \Queue::push(new DeprovisionJob($this->argument('instance-id')));
     }
 
     /**

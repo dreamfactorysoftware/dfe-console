@@ -6,8 +6,12 @@ use DreamFactory\Enterprise\Common\Contracts\PortabilityAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
+use DreamFactory\Enterprise\Common\Jobs\ExportJob;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Commands\ImportJob;
+use DreamFactory\Enterprise\Services\Provisioners\PortabilityRequest;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortabilityAware
 {
@@ -19,6 +23,12 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      * @type int The number of minutes to keep things cached
      */
     const CACHE_TTL = 5;
+
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
 
     //******************************************************************************
     //* Methods
@@ -74,6 +84,44 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     public function getDatabaseProvisioner($name = null)
     {
         return $this->resolveDatabase($name);
+    }
+
+    /**
+     * @param \DreamFactory\Enterprise\Services\Commands\ImportJob $job
+     *
+     * @return array
+     */
+    public function import(ImportJob $job)
+    {
+        $_instance = $this->_findInstance($job->getInstanceId());
+        $_services = $this->getPortableServices($_instance->guest_location_nbr);
+        $_imports = [];
+
+        foreach ($_services as $_type => $_service) {
+            $_request = PortabilityRequest::createImport($_instance, $job);
+            $_imports[$_type] = $_service->import($_request, $_request->getFrom());
+        }
+
+        return $_imports;
+    }
+
+    /**
+     * @param \DreamFactory\Enterprise\Common\Jobs\ExportJob $job
+     *
+     * @return array
+     */
+    public function export(ExportJob $job)
+    {
+        $_instance = $this->_findInstance($job->getInstanceId());
+        $_services = $this->getPortableServices($_instance->guest_location_nbr);
+        $_exports = [];
+
+        foreach ($_services as $_type => $_service) {
+            $_request = PortabilityRequest::createExport($_instance, $job);
+            $_exports[$_type] = $_service->export($_request, $_request->getTo());
+        }
+
+        return $_exports;
     }
 
     /** @inheritdoc */

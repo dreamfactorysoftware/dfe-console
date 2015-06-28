@@ -11,7 +11,7 @@ use DreamFactory\Enterprise\Database\Models\Snapshot;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Inflector;
-use DreamFactory\Library\Utility\JsonFile;
+use DreamFactory\Library\Utility\Json;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
@@ -72,7 +72,9 @@ class SnapshotService extends BaseService
         //  Build our link hash
         $_metadata['name'] = $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
         $_metadata['hash'] = RouteHashing::create($_metadata['name'], $keepDays);
-        $_metadata['link'] = rtrim(config('snapshot.hash_link_base'), ' /') . '/' . $_metadata['hash'];
+        $_metadata['link'] = '//' . str_replace(['http://', 'https://', '//'],
+                null,
+                rtrim(config('snapshot.hash-link-base'), ' /')) . '/' . $_metadata['hash'];
 
         //  Make our temp path...
         $_workPath = $this->getWorkPath($_snapshotId, true) . DIRECTORY_SEPARATOR;
@@ -84,15 +86,15 @@ class SnapshotService extends BaseService
         $_services = Provision::getPortableServices($_instance->guest_location_nbr);
 
         try {
-            /**
-             * Call each of the provisioner's portable services and
-             * add the resultant export to the master export file
-             */
+            //  Loop through the returned service list
             foreach ($_services as $_type => $_service) {
                 //  The portability service will append the appropriate suffix for the type of export
                 $_to = $_workPath . $_snapshotId . '.' . $_type;
                 $_request = new ProvisioningRequest($_instance);
 
+                /**
+                 * Call each of the portable services and add the resultant export to the master export file
+                 */
                 if (false !== ($_outfile = $_service->export($_request, $_to))) {
                     $_metadata[$_type . '-export'] = $_outfile;
                     $this->moveWorkFile($_fsSnapshot, $_workPath . $_outfile);
@@ -106,8 +108,7 @@ class SnapshotService extends BaseService
 
                 //  Close up the files
                 /** @noinspection PhpUndefinedMethodInspection */
-                $_fsSnapshot->getAdapter()->getArchive()->close();
-                $_fsSnapshot = null;
+                $this->flushZipArchive($_fsSnapshot);
 
                 //  Move the snapshot archive into the "snapshots" private storage area
                 $this->moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_metadata['name']);
@@ -306,10 +307,8 @@ HTML
         $_setting = config($key);
 
         if (is_array($_setting)) {
-            if (false === ($_setting = JsonFile::encode($_setting))) {
-                throw new \InvalidArgumentException('The value at key "' .
-                    $key .
-                    '" is not a string or a jsonable array.');
+            if (false === ($_setting = Json::encode($_setting))) {
+                throw new \InvalidArgumentException('The value at key "' . $key . '" is not a string or a jsonable array.');
             }
 
             $_stringified = true;
@@ -329,7 +328,7 @@ HTML
         }
 
         if ($_stringified) {
-            $_setting = JsonFile::decode($_setting);
+            $_setting = Json::decode($_setting);
         }
 
         return $_setting;

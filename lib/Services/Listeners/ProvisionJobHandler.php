@@ -1,18 +1,17 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Handlers\Commands;
+<?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 
 /**
  * Processes queued provision requests
  */
-class ProvisionHandler
+class ProvisionJobHandler
 {
     //******************************************************************************
     //* Traits

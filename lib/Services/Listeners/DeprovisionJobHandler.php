@@ -1,22 +1,15 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Handlers\Commands;
+<?php namespace DreamFactory\Enterprise\Services\Listeners;
 
-use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
+use DreamFactory\Enterprise\Common\Listeners\BaseListener;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 
 /**
  * Processes queued deprovision requests
  */
-class DeprovisionHandler
+class DeprovisionJobHandler extends BaseListener
 {
-    //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-    use EntityLookup;
-
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -30,14 +23,16 @@ class DeprovisionHandler
      */
     public function handle(DeprovisionJob $command)
     {
+        $this->setLumberjackPrefix('dfe.deprovision');
+
         $_options = $command->getOptions();
-        \Log::debug('dfe: DeprovisionJob - begin');
+        $this->debug('>>> deprovision "' . $command->getInstanceId() . '" request received');
 
         try {
             //  Find the instance
             $_instance = $this->_findInstance($command->getInstanceId());
         } catch (\Exception $_ex) {
-            \Log::error('dfe: DeprovisionJob - failure, instance not found.');
+            $this->error('deprovision request failure: instance not found.');
 
             return false;
         }
@@ -52,19 +47,19 @@ class DeprovisionHandler
             $_result = $_provisioner->deprovision(new ProvisioningRequest($_instance, null, true), $_options);
 
             if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
-                \Log::debug('  * completed in ' . number_format($_result['elapsed'], 4) . 's');
+                $this->debug('deprovision request complete in ' . number_format($_result['elapsed'], 4) . 's');
             }
 
-            \Log::debug('dfe: DeprovisionJob - complete');
+            $this->debug('<<< deprovision "' . $command->getInstanceId() . '" request SUCCESS');
 
             $command->setResult($_result);
 
             return $_result;
         } catch (\Exception $_ex) {
-            \Log::error('dfe: DeprovisionJob - failure, exception during deprovisioning: ' . $_ex->getMessage());
+            $this->error('deprovision "' . $command->getInstanceId() . '" request exception: ' . $_ex->getMessage());
         }
 
-        \Log::debug('dfe: DeprovisionJob - fail');
+        $this->debug('<<< deprovision "' . $command->getInstanceId() . '" request FAILURE');
 
         return false;
     }

@@ -1,25 +1,17 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Handlers\Commands;
+<?php namespace DreamFactory\Enterprise\Services\Listeners;
 
+use DreamFactory\Enterprise\Common\Listeners\BaseListener;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
-use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Common\Traits\Lumberjack;
 use DreamFactory\Enterprise\Database\Models\AppKey;
-use DreamFactory\Enterprise\Services\Commands\RegisterJob;
+use DreamFactory\Enterprise\Services\Jobs\RegisterJob;
 use Illuminate\Http\Response;
 
 /**
- * Processes queued registration requests
+ * Handles registration requests
  */
-class RegisterHandler
+class RegisterJobHandler extends BaseListener
 {
-    //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-    use EntityLookup, Lumberjack;
-
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -42,7 +34,7 @@ class RegisterHandler
             $_owner = $command->getOwnerInfo();
 
             //  Generate the key
-            $_key = AppKey::createKey($command->getOwnerId(), $command->getOwnerType(), ['server_secret' => $_key]);
+            $_key = AppKey::createKey($_owner->id, $_owner->owner_type_nbr, ['server_secret' => $_key]);
 
             $this->debug('successfully created app key "' . $_key->client_id . '"');
 

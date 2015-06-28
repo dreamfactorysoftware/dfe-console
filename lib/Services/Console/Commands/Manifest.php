@@ -7,7 +7,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
-use DreamFactory\Enterprise\Services\Commands\ManifestJob;
+use DreamFactory\Enterprise\Services\Jobs\ManifestJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,8 +51,7 @@ class Manifest extends Command
         );
 
         $this->_job
-            ->setOutput($this->output)
-            ->setInput($this->input)
+            ->setInputOutput($this->input, $this->output)
             ->setOwnerId($this->option('owner-id'))
             ->setOwnerType($this->option('owner-type'))
             ->setShowManifest($this->option('show'))

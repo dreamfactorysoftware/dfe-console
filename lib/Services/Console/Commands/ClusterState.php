@@ -35,9 +35,11 @@ class ClusterState extends Command
      */
     protected function getArguments()
     {
-        return [
-            ['cluster-id', InputArgument::REQUIRED, 'The cluster id'],
-        ];
+        return array_merge(
+            parent::getArguments(),
+            [
+                ['cluster-id', InputArgument::REQUIRED, 'The cluster id'],
+            ]);
     }
 
 }

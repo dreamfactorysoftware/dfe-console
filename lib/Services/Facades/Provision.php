@@ -2,6 +2,8 @@
 
 use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
+use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static string getDefaultProvisioner()
  * @method static array|Portability[] getPortableServices(string $name = null)
  * @method static ResourceProvisioner resolve(string $name)
+ * @method static array import(ImportJob $job)
+ * @method static array export(ExportJob $job)
  * @method static ResourceProvisioner resolveStorage(string $name)
  */
 class Provision extends Facade

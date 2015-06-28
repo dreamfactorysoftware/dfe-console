@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
-use DreamFactory\Enterprise\Services\Commands\ImportJob;
+use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 
