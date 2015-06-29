@@ -79,10 +79,10 @@ class UserController extends ResourceController
         $user_data = Input::all();
 
         $validator = Validator::make($user_data, [
-            'email_addr_text' => array('Regex:/^[0-9a-zA-Z]+([0-9a-zA-Z]*[-._+])*[0-9a-zA-Z]+@[0-9a-zA-Z]+([-.][0-9a-zA-Z]+)*([0-9a-zA-Z]*[.])[a-zA-Z]{2,6}$/i'),
-            'first_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
-            'last_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
-            'nickname_text' => array('Regex:/^[a-z0-9 .\-]+$/i')
+            'email_addr_text' => 'required|email',
+            'first_name_text' => 'required|string',
+            'last_name_text' => 'required|string',
+            'nickname_text' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -153,9 +153,19 @@ class UserController extends ResourceController
                 ->with('flash_type', $result_status);
         }
         catch (\Illuminate\Database\QueryException $e) {
-            //$res_text = $e->getMessage();
-            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
-            Session::flash('flash_type', 'alert-danger');
+            $res_text = strtolower($e->getMessage());
+
+            if (strpos($res_text, 'duplicate entry') !== FALSE)
+            {
+                Session::flash('flash_message', 'Email is already in use.');
+                Session::flash('flash_type', 'alert-danger');
+            }
+            else
+            {
+                Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+                Session::flash('flash_type', 'alert-danger');
+            }
+
             return redirect('/v1/users/create')->withInput();
         }
 
@@ -171,12 +181,11 @@ class UserController extends ResourceController
             $is_system_admin = $user_data['user_type'];
         }
 
-
         $validator = Validator::make($user_data, [
-            'email_addr_text' => array('Regex:/^[0-9a-zA-Z]+([0-9a-zA-Z]*[-._+])*[0-9a-zA-Z]+@[0-9a-zA-Z]+([-.][0-9a-zA-Z]+)*([0-9a-zA-Z]*[.])[a-zA-Z]{2,6}$/i'),
-            'first_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
-            'last_name_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
-            'nickname_text' => array('Regex:/^[a-z0-9 .\-]+$/i')
+            'email_addr_text' => 'required|email',
+            'first_name_text' => 'required|string',
+            'last_name_text' => 'required|string',
+            'nickname_text' => 'required|string',
         ]);
 
         if ($validator->fails()) {

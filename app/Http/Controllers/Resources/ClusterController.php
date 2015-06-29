@@ -165,8 +165,8 @@ HTML;
         $cluster_data = Input::all();
 
         $validator = Validator::make($cluster_data, [
-            'cluster_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
-            'subdomain_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i")
+            'cluster_id_text' => 'required|string',
+            'subdomain_text' => array("required", "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i")
         ]);
 
         if ($validator->fails()) {
@@ -193,6 +193,7 @@ HTML;
             Session::flash('flash_type', 'alert-danger');
             return redirect('/v1/clusters/'.$id.'/edit')->withInput();
         }
+
 
         $servers = $cluster_data['_server_list'];
 
@@ -256,8 +257,8 @@ HTML;
         $input = Input::all();
 
         $validator = Validator::make($input, [
-            'cluster_id_text' => array('Regex:/^[a-z0-9 .\-]+$/i'),
-            'subdomain_text' => array("Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
+            'cluster_id_text' => 'required|string',
+            'subdomain_text' => array("required", "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i")
         ]);
 
         if ($validator->fails()) {
