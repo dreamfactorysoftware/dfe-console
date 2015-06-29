@@ -1,4 +1,4 @@
-@extends('emails.layout');
+@extends('emails.layout')
 {{--
 
  This is a generic blade for generating emails.
@@ -12,7 +12,6 @@
  $supportEmail        The email address for customer support
 
 --}}
-
 @section('contentBody')
     <div style="padding: 10px;">
         <p>

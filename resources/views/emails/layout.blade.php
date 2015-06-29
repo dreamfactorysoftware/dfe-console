@@ -17,9 +17,9 @@
 
         body {
             background-color: #dfdfdf;
-            padding:          0;
-            margin:           0 auto;
+            padding:          5px;
             width:            100%;
+            margin:           0 auto;
         }
 
         table {
@@ -50,81 +50,82 @@
         }
     </style>
 </head>
-<body style="background-color:#DFDFDF; padding:0; margin: 0 auto; width:100%;">
+<body style="background-color:#DFDFDF; padding:5px; margin: 0 auto; width:100%;">
 <table border="0"
-    cellspacing="0"
-    cellpadding="0"
-    style="width:600px !important; font-family: Roboto, 'Open Sans', Helvetica, Arial, sans-serif; margin:0 auto; padding:0;"
-    width="600">
+       cellspacing="0"
+       cellpadding="0"
+       style="width:600px !important; font-family: Roboto, 'Open Sans', Helvetica, Arial, sans-serif; margin:0 auto; padding:0;"
+       width="600">
     <tbody>
-        <tr>
-            <td align="left" valign="middle" style="margin: 10px 0; padding: 10px 0 15px;">
-                <a style="text-decoration:none; cursor:pointer; border:none; display:block; height:29px; width:100%;"
-                    target="_blank"
-                    href="//dashboard.cloud.dreamfactory.com"><img src="http://dreamfactory.com/images/email-logo-215x29.png"
-                        width="215"
-                        height="29"
-                        alt="DreamFactory"
-                        style="border:none;text-decoration:none;" /></a>
-            </td>
-        </tr>
+    <tr>
+        <td align="left" valign="middle" style="margin: 10px 0; padding: 10px 0 15px;">
+            <a style="text-decoration:none; cursor:pointer; border:none; display:block; height:29px; width:100%;"
+               target="_blank"
+               href="//dashboard.cloud.dreamfactory.com"><img src="http://dreamfactory.com/images/email-logo-215x29.png"
+                                                              width="215"
+                                                              height="29"
+                                                              alt="DreamFactory"
+                                                              style="border:none;text-decoration:none;" /></a>
+        </td>
+    </tr>
     </tbody>
 </table>
 
 <table cellspacing="0"
-    cellpadding="0"
-    style="border-radius: 4px; background-color: #ffffff; font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; margin: 0 auto; border: 1px solid #ccc;"
-    width="600"
-    bgcolor="#FFFFFF">
+       cellpadding="0"
+       style="border-radius: 4px; background-color: #ffffff; font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; margin: 0 auto; border: 1px solid #ccc;"
+       width="600"
+       bgcolor="#FFFFFF">
     <tbody>
-        <tr>
-            <td style="padding:0;margin:0;" align="left">
-                <table
+    <tr>
+        <td style="padding:0;margin:0;" align="left">
+            <table
                     cellspacing="0"
                     cellpadding="0"
                     style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; "
                     width="100%">
-                    <tbody>
-                        <tr>
-                            <td style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif;color:#333333;">
-                                <h2 class="content-header">{{ $contentHeader }}</h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif;color:#333333;">
-                                <div class="content-body">
-                                    @yield('contentBody')
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
+                <tbody>
+                <tr>
+                    <td style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif;color:#333333;">
+                        <h2 class="content-header">{{ $contentHeader }}</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif;color:#333333;">
+                        <div class="content-body">
+                            @yield('contentBody')
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
     </tbody>
 </table>
 
 <table border="0"
-    cellspacing="0"
-    cellpadding="0"
-    style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; margin: 0 auto; padding: 0;margin-top:10px;"
-    width="600"
-    class="responsive">
+       cellspacing="0"
+       cellpadding="0"
+       style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; margin: 10px auto 0; padding: 0;"
+       width="600"
+       class="responsive">
     <tbody>
-        <tr>
-            <td style="font-size: 8pt;color: #aaa; padding: 0 5px;">
-                <p>
-                    You received this email because you used the <a href="//www.dreamfactory.com/"
-                        alt=""
-                        target="_blank">DreamFactory Enterprise&trade;</a> Dashboard. This system will never use your email address other than to communicate with you about your system usage.
-                </p>
+    <tr>
+        <td style="font-size: 8pt;color: #aaa; padding: 0 5px;">
+            <p>
+                You received this email because you used the <a href="//www.dreamfactory.com/" alt target="_blank">DreamFactory
+                    Enterprise&trade;</a>
+                Dashboard. This system will never use your email address other than to communicate with you about your
+                system usage.
+            </p>
 
-                <p>If you need further assistance or have questions, please email <a
+            <p>If you need further assistance or have questions, please email <a
                         style="color:#0077B5;text-decoration:none;"
                         target="_blank"
                         href="mailto:support@dreamfactory.com">DreamFactory Support</a>.</p>
-            </td>
-        </tr>
+        </td>
+    </tr>
     </tbody>
 </table>
 
