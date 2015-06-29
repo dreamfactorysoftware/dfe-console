@@ -6,11 +6,11 @@ use DreamFactory\Enterprise\Common\Contracts\PortabilityAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
-use DreamFactory\Enterprise\Common\Jobs\ExportJob;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Services\Commands\ImportJob;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
+use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Provisioners\PortabilityRequest;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortabilityAware
@@ -87,7 +87,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Services\Commands\ImportJob $job
+     * @param ImportJob $job
      *
      * @return array
      */
@@ -106,7 +106,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Common\Jobs\ExportJob $job
+     * @param ExportJob $job
      *
      * @return array
      */

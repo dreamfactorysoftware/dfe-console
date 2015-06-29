@@ -1,8 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 
 class ProvisionTest extends \TestCase
 {
@@ -23,14 +23,13 @@ class ProvisionTest extends \TestCase
             'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
         ];
 
-        if ( null !== ( $_instance = Instance::byNameOrId( $_instanceId )->first() ) )
-        {
+        /** @var Instance $_instance */
+        if (null !== ($_instance = Instance::byNameOrId($_instanceId)->first())) {
             $_instance->delete();
         }
 
-        $_job = new ProvisionJob( $_instanceId, $_payload );
+        $_job = new ProvisionJob($_instanceId, $_payload);
 
-        $_result = \Queue::push( $_job );
-
+        $_result = \Queue::push($_job);
     }
 }

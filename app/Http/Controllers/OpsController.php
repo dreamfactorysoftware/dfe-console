@@ -13,12 +13,12 @@ use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Partner\AlertPartner;
 use DreamFactory\Enterprise\Partner\Facades\Partner;
-use DreamFactory\Enterprise\Services\Commands\DeprovisionJob;
-use DreamFactory\Enterprise\Services\Commands\ExportJob;
-use DreamFactory\Enterprise\Services\Commands\ImportJob;
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Services\Contracts\ProvidesOfferings;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
+use DreamFactory\Enterprise\Services\Jobs\ImportJob;
+use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -366,7 +366,12 @@ class OpsController extends Controller
             $_payload = $request->input();
             unset($_payload['password']);
 
-            \Log::error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
+            \Log::error('failed request for partner id "' .
+                $_pid .
+                '": ' .
+                $_ex->getCode() .
+                ' - ' .
+                $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST, $_ex);
@@ -432,7 +437,7 @@ class OpsController extends Controller
         //  Create a user account
         try {
             $_user = \DB::transaction(
-                function () use ($request, $_first, $_last, $_email, $_password) {
+                function () use ($request, $_first, $_last, $_email, $_password){
                     $_user = User::create(
                         [
                             'first_name_text'   => $_first,
