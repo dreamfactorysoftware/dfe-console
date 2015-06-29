@@ -207,7 +207,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
         $_instance = $request->getInstance();
         $_name = $_instance->instance_name_text;
 
-        $this->debug('provisioning instance "' . $_name . '"');
+        $this->debug('>>> provisioning instance "' . $_name . '"');
 
         $_storageProvisioner = $request->getStorageProvisioner();
         $_privatePath = $_storageProvisioner->getPrivatePath();
@@ -296,7 +296,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
         //  Fire off a "provisioned" event...
         \Event::fire('dfe.provisioned', [$this, $request, $_md]);
 
-        $this->info('provisioning of instance "' . $_name . '" complete');
+        $this->info('<<< provisioning of instance "' . $_name . '" complete');
 
         return $_md->toArray();
     }
