@@ -191,6 +191,7 @@ function updatePageDropdown(){
     $('#tablePages').empty();
 
     for(var i = 0; i < table.page.info().pages; i++){
+        $('#currentPage').text('Page 1');
         $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
     }
 
