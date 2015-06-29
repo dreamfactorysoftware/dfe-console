@@ -97,7 +97,7 @@
                                                     <div id="server_type_db" style="display: none;">
                                                         <div class="form-group">
                                                             <label>Port</label>
-                                                            <input id="db_port_text" name="config[db][port]" class="form-control" placeholder="Enter port." value="{{ Input::old('config.db.port') }}" type="number">
+                                                            <input id="db_port_text" name="config[db][port]" class="form-control" placeholder="Enter port." value="{{ Input::old('config.db.port') }}" type="text">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>User Name</label>
