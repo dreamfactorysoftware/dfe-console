@@ -8,12 +8,12 @@ use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
-use DreamFactory\Library\Utility\JsonFile;
-use Illuminate\Contracts\Filesystem\Filesystem;
 
 /**
  * A base class for all provisioners
@@ -72,34 +72,53 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      *
      * @return mixed
      */
-    abstract protected function _doProvision($request);
+    abstract protected function doProvision($request);
 
     /**
      * @param ProvisioningRequest|mixed $request
      *
      * @return mixed
      */
-    abstract protected function _doDeprovision($request);
+    abstract protected function doDeprovision($request);
 
     /** @inheritdoc */
     public function boot()
     {
         parent::boot();
 
-        if (!$this->getLumberjackPrefix()) {
-            $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
-        }
+        $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
 
         if (empty($this->subjectPrefix)) {
             $this->subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
         }
     }
 
+    /**
+     * Get the current status of an instance
+     *
+     * @param Instance $instance
+     *
+     * @return array
+     */
+    public function status($instance)
+    {
+        /** @var Instance $_instance */
+        if (null === ($_instance = Instance::find($instance->id))) {
+            return ['success' => false, 'error' => ['code' => 404, 'message' => 'Instance not found.']];
+        }
+
+        return [
+            'success'     => true,
+            'status'      => $_instance->state_nbr,
+            'status_text' => ProvisionStates::prettyNameOf($_instance->state_nbr),
+        ];
+    }
+
     /** @inheritdoc */
     public function provision($request, $options = [])
     {
         $_timestamp = microtime(true);
-        $_result = $this->_doProvision($request);
+        $_result = $this->doProvision($request);
         $_elapsed = microtime(true) - $_timestamp;
 
         if (is_array($_result)) {
@@ -153,7 +172,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     public function deprovision($request, $options = [])
     {
         $_timestamp = microtime(true);
-        $_result = $this->_doDeprovision($request);
+        $_result = $this->doDeprovision($request);
         $_elapsed = microtime(true) - $_timestamp;
         $_instance = $request->getInstance();
 
@@ -167,19 +186,14 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         //  Send notification
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
-            'headTitle'     => $_result ? 'Shutdown Complete' : 'Shutdown Failure',
-            'contentHeader' => $_result ? 'Your instance has retired' : 'Your instance was not retired',
+            'headTitle'     => $_result ? 'Retirement Complete' : 'Retirement Failure',
+            'contentHeader' => $_result ? 'Your instance has been retired' : 'Your instance is not quite retired',
             'emailBody'     => $_result
-                ?
-                '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' .
-                'has been retired.  A snapshot may be available in the dashboard under <strong>Snapshots</strong>.</p>'
-                :
-                '<p>Your instance <strong>' .
-                $_instance->instance_name_text .
-                '</strong> shutdown was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
+                ? '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> has been retired.  A snapshot may be available in the dashboard, under <strong>Snapshots</strong>.</p>'
+                : '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> retirement was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
         ];
 
-        $_subject = $_result['success'] ? 'Instance shutdown successful' : 'Instance shutdown failure';
+        $_subject = $_result['success'] ? 'Instance retirement successful' : 'Instance retirement failure';
 
         $this->notifyInstanceOwner($_instance, $_subject, $_data);
 
@@ -199,29 +213,6 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         isset($data['instance']) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
         return Audit::log($data, $level, app('request'), ($deprovisioning ? 'de' : null) . 'provision');
-    }
-
-    /**
-     * @param string|Filesystem $filename      The absolute (relative if $filesystem supplied) location to write the
-     *                                         environment file
-     * @param array             $env           The data to add to the default template
-     * @param Filesystem        $filesystem    An optional file system to write the file. If null, the file is written
-     *                                         locally
-     * @param bool              $mergeDefaults If false, only the data in $env is written out
-     *
-     * @return bool
-     */
-    protected function _writeEnvironmentFile($filename, array $env, $filesystem = null, $mergeDefaults = true)
-    {
-        $_data = $mergeDefaults ? array_merge(static::$envTemplate, $env) : $env;
-
-        if (null !== $filesystem) {
-            return $filesystem->put($filename, JsonFile::encode($_data));
-        }
-
-        JsonFile::encodeFile($filename, $_data);
-
-        return true;
     }
 
     /** @inheritdoc */

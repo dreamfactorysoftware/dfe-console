@@ -1,137 +1,109 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
-use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use Illuminate\Contracts\Filesystem\Filesystem;
+use DreamFactory\Enterprise\Common\Traits\HasResults;
+use Illuminate\Http\Request;
 
 class ProvisioningResponse
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use HasResults;
+
     //******************************************************************************
     //* Members
     //******************************************************************************
 
     /**
-     * @type Instance The instance to provision
+     * @type bool Self-describing
      */
-    protected $_instance;
+    protected $success = false;
     /**
-     * @type Filesystem The instance's local file system
+     * @type mixed|null The output, if any, of the provisioning request
      */
-    protected $_storage;
+    protected $output;
     /**
-     * @type bool True if this is a DE-provision
+     * @type ProvisioningRequest The original request
      */
-    protected $_deprovision = false;
-    /**
-     * @type bool True if the $request should be forced
-     */
-    protected $_forced = false;
-    /**
-     * @type ResourceProvisioner|PrivatePathAware
-     */
-    protected $_storageProvisioner;
+    protected $request;
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
-     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     * @param Filesystem                                        $storage
-     * @param bool                                              $deprovision
-     * @param bool                                              $force
+     * Success response factory
+     *
+     * @param Request    $request
+     * @param mixed|null $results Any results produced
+     * @param mixed|null $output
+     *
+     * @return static
      */
-    public function __construct(Instance $instance, Filesystem $storage = null, $deprovision = false, $force = false)
+    public static function success($request, $results = null, $output = null)
     {
-        $this->_instance = $instance;
-        $this->_storage = $storage;
-        $this->_deprovision = $deprovision;
-        $this->_forced = $force;
+        return new static($request, true, $results, $output);
     }
 
     /**
-     * @return Instance
+     * Failure response factory
+     *
+     * @param Request    $request
+     * @param mixed|null $results Any results produced
+     * @param mixed|null $output
+     *
+     * @return static
+     */
+    public static function failure($request, $results = null, $output = null)
+    {
+        return new static($request, false, $results, $output);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param bool                     $success
+     * @param mixed|null               $results Any results produced
+     * @param mixed|null               $output
+     */
+    protected function __construct(Request $request, $success, $results = null, $output = null)
+    {
+        $this->success = !!$success;
+        $this->request = $request;
+        $this->output = $output;
+
+        $this->setResult($results);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSuccess()
+    {
+        return $this->success;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * @return ProvisioningRequest
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return \DreamFactory\Enterprise\Database\Models\Instance
      */
     public function getInstance()
     {
-        return $this->_instance;
-    }
-
-    /**
-     * @param bool $createIfNull
-     *
-     * @return \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    public function getStorage($createIfNull = true)
-    {
-        //  Use requested file system if one...
-        if (null === $this->_storage && $createIfNull) {
-            $this->setStorage(
-                $_storage = $this->getInstance()->getRootStorageMount()
-            );
-        }
-
-        return $this->_storage;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isDeprovision()
-    {
-        return $this->_deprovision;
-    }
-
-    /**
-     * @param Filesystem $storage
-     *
-     * @return ProvisioningRequest
-     */
-    public function setStorage(Filesystem $storage)
-    {
-        $this->_storage = $storage;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isForced()
-    {
-        return $this->_forced;
-    }
-
-    /**
-     * @param boolean $forced
-     *
-     * @return ProvisioningRequest
-     */
-    public function setForced($forced)
-    {
-        $this->_forced = $forced;
-
-        return $this;
-    }
-
-    /**
-     * @return ResourceProvisioner|PrivatePathAware
-     */
-    public function getStorageProvisioner()
-    {
-        return $this->_storageProvisioner;
-    }
-
-    /**
-     * @param ResourceProvisioner $storageProvisioner
-     *
-     * @return ProvisioningRequest
-     */
-    public function setStorageProvisioner($storageProvisioner)
-    {
-        $this->_storageProvisioner = $storageProvisioner;
-
-        return $this;
+        return $this->request->getInstance();
     }
 }

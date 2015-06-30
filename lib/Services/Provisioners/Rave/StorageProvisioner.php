@@ -3,9 +3,11 @@
 use DreamFactory\Enterprise\Common\Contracts\Portability;
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use DreamFactory\Library\Utility\FileSystem;
@@ -36,7 +38,7 @@ use DreamFactory\Library\Utility\FileSystem;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
  */
-class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Portability
+class StorageProvisioner extends BaseService implements ResourceProvisioner, PrivatePathAware, Portability
 {
     //******************************************************************************
     //* Traits
@@ -51,36 +53,62 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
     /**
      * @type string The instance's private path
      */
-    protected $_privatePath = null;
+    protected $privatePath = null;
     /**
      * @type string The user's private path
      */
-    protected $_ownerPrivatePath = null;
+    protected $ownerPrivatePath = null;
     /**
      * @type bool Indicates if the storage I govern is hosted or standalone
      */
-    protected $_hostedStorage = true;
+    protected $hostedStorage = true;
     /**
      * @type array The map of storage segments
      */
-    protected $_storageMap = [];
+    protected $storageMap = [];
 
-    //*************************************************************************
+    //******************************************************************************
     //* Methods
-    //*************************************************************************
+    //******************************************************************************
+
+    /** @inheritdoc */
+    public function boot()
+    {
+        parent::boot();
+
+        $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
+    }
+
+    /**
+     * @return array
+     */
+    public function getStorageMap()
+    {
+        return $this->storageMap;
+    }
+
+    /**
+     * Returns the id, config key, or short name, of this provisioner.
+     *
+     * @return string The id of this provisioner
+     */
+    public function getProvisionerId()
+    {
+        return InstanceProvisioner::PROVISIONER_ID;
+    }
 
     /** @inheritdoc */
     public function provision($request, $options = [])
     {
         //  Make structure
-        $this->_createInstanceStorage($request, $options);
+        $this->createInstanceStorage($request, $options);
     }
 
     /** @inheritdoc */
     public function deprovision($request, $options = [])
     {
         //  '86 structure
-        $this->_removeInstanceStorage($request, $options);
+        $this->removeInstanceStorage($request, $options);
     }
 
     /**
@@ -91,7 +119,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
      *
      * @throws \Exception
      */
-    protected function _createInstanceStorage($request, $options = [])
+    protected function createInstanceStorage($request, $options = [])
     {
         //  Wipe existing stuff
         $_instance = $request->getInstance();
@@ -140,8 +168,8 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
         \Log::debug('      * private path:       ' . $_privatePath);
         \Log::debug('      * owner private path: ' . $_ownerPrivatePath);
 
-        $this->_privatePath = $_privatePath;
-        $this->_ownerPrivatePath = $_ownerPrivatePath;
+        $this->privatePath = $_privatePath;
+        $this->ownerPrivatePath = $_ownerPrivatePath;
     }
 
     /**
@@ -152,7 +180,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
      *
      * @return bool
      */
-    protected function _removeInstanceStorage($request, $options = [])
+    protected function removeInstanceStorage($request, $options = [])
     {
         $_instance = $request->getInstance();
         $_filesystem = $request->getStorage();
@@ -160,19 +188,18 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
 
         //  I'm not sure how hard this tries to delete the directory
         if (!$_filesystem->has($_storagePath)) {
-            \Log::notice('    * provisioner: unable to stat storage path');
-            \Log::notice('      * not deleting storage area "' . $_storagePath . '"');
+            $this->notice('unable to stat storage path "' . $_storagePath . '". not deleting!');
 
             return false;
         }
 
         if (!$_filesystem->deleteDir($_storagePath)) {
-            \Log::error('    * provisioner: error removing storage area "' . $_storagePath . '"');
+            $this->error('error deleting storage area "' . $_storagePath . '"');
 
             return false;
         }
 
-        \Log::debug('    * provisioner: instance storage removed');
+        $this->debug('storage area "' . $_storagePath . '" removed');
 
         return true;
     }
@@ -203,7 +230,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
     /** @inheritdoc */
     public function getPrivatePath($append = null)
     {
-        return $this->_privatePath .
+        return $this->privatePath .
         ($append ? DIRECTORY_SEPARATOR . ltrim($append, DIRECTORY_SEPARATOR . ' ') : $append);
     }
 
@@ -211,7 +238,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
     public function getOwnerPrivatePath($append = null)
     {
         //  I hate doing this, but it will make this service more streamlined...
-        return ($this->_hostedStorage ? $this->_ownerPrivatePath : $this->getPrivatePath()) .
+        return ($this->hostedStorage ? $this->ownerPrivatePath : $this->getPrivatePath()) .
         ($append ? DIRECTORY_SEPARATOR . ltrim($append, DIRECTORY_SEPARATOR . ' ') : $append);
     }
 
@@ -226,7 +253,7 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
      */
     public function isHostedStorage()
     {
-        return $this->_hostedStorage;
+        return $this->hostedStorage;
     }
 
     /**
@@ -236,26 +263,9 @@ class StorageProvisioner implements ResourceProvisioner, PrivatePathAware, Porta
      */
     public function setHostedStorage($hostedStorage)
     {
-        $this->_hostedStorage = $hostedStorage;
+        $this->hostedStorage = $hostedStorage;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getStorageMap()
-    {
-        return $this->_storageMap;
-    }
-
-    /**
-     * Returns the id, config key, or short name, of this provisioner.
-     *
-     * @return string The id of this provisioner
-     */
-    public function getProvisionerId()
-    {
-        return Provisioner::PROVISIONER_ID;
-    }
 }

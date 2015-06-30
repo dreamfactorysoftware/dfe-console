@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
+use DreamFactory\Enterprise\Common\Contracts\SelfAware;
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Enums\OperationalStates;
@@ -20,7 +21,7 @@ use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
+class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings, SelfAware
 {
     //******************************************************************************
     //* Constants
@@ -52,33 +53,12 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
     }
 
     /**
-     * Get the current status of a provisioning request
-     *
-     * @param Instance $instance
-     *
-     * @return array
-     */
-    public function status(Instance $instance)
-    {
-        /** @var Instance $_instance */
-        if (null === ($_instance = Instance::find($instance->id))) {
-            return ['success' => false, 'error' => ['code' => 404, 'message' => 'Instance not found.']];
-        }
-
-        return [
-            'success'     => true,
-            'status'      => $_instance->state_nbr,
-            'status_text' => ProvisionStates::prettyNameOf($_instance->state_nbr),
-        ];
-    }
-
-    /**
      * @param ProvisioningRequest $request
      * @param array               $options
      *
      * @return array
      */
-    protected function _doProvision($request, $options = [])
+    protected function doProvision($request, $options = [])
     {
         $_output = [];
         $_success = $_result = false;
@@ -89,10 +69,10 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
 
         try {
             //  Provision storage and fill in the request
-            $this->_provisionStorage($request, $options);
+            $this->provisionStorage($request, $options);
 
             //  And the instance
-            $_result = $this->_provisionInstance($request, $options);
+            $_result = $this->provisionInstance($request, $options);
             $_instance = $_instance->fresh();
             $_success = true;
         } catch (\Exception $_ex) {
@@ -103,10 +83,10 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
             //  Force-kill anything we made before blowing up
             $request->setForced(true);
 
-            $this->_deprovisionStorage($request);
+            $this->deprovisionStorage($request);
 
-            if (!$this->_deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
-                $this->error('Unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.');
+            if (!$this->deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
+                $this->error('* unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.');
             }
         }
 
@@ -124,7 +104,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
      *
      * @return array
      */
-    protected function _doDeprovision($request, $options = [])
+    protected function doDeprovision($request, $options = [])
     {
         $_output = [];
         $_success = $_result = false;
@@ -134,7 +114,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
         $_instance->updateState(ProvisionStates::DEPROVISIONING);
 
         try {
-            $_result = $this->_deprovisionInstance($request, $options);
+            $_result = $this->deprovisionInstance($request, $options);
             $_success = true;
         } catch (\Exception $_ex) {
             $_instance->updateState(ProvisionStates::DEPROVISIONING_ERROR);
@@ -154,9 +134,9 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
      *
      * @return Filesystem
      */
-    protected function _provisionStorage($request, $options = [])
+    protected function provisionStorage($request, $options = [])
     {
-        $this->debug('-> provisioning storage');
+        $this->debug('>>> provisioning storage');
 
         //  Use requested file system if one...
         $_filesystem = $request->getStorage();
@@ -166,7 +146,8 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
             $_provisioner = Provision::resolveStorage($request->getInstance()->guest_location_nbr));
 
         $_provisioner->provision($request);
-        $this->debug('-> provisioning storage - complete');
+
+        $this->debug('<<< provisioning storage - complete');
 
         return $_filesystem;
     }
@@ -177,9 +158,9 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
      *
      * @return bool
      */
-    protected function _deprovisionStorage($request, $options = [])
+    protected function deprovisionStorage($request, $options = [])
     {
-        $this->debug('-> deprovisioning storage');
+        $this->debug('>>> deprovisioning storage');
 
         //  Use requested file system if one...
         $_filesystem = $request->getStorage();
@@ -187,7 +168,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
         //  Do it!
         Provision::resolveStorage($request->getInstance()->guest_location_nbr)->deprovision($request);
 
-        $this->debug('-> deprovisioning storage - complete');
+        $this->debug('<<< deprovisioning storage - complete');
 
         return $_filesystem;
     }
@@ -199,7 +180,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
      * @return array
      * @throws ProvisioningException
      */
-    protected function _provisionInstance($request, $options = [])
+    protected function provisionInstance($request, $options = [])
     {
         $_storagePath = null;
 
@@ -308,7 +289,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
      * @return bool
      * @throws ProvisioningException
      */
-    protected function _deprovisionInstance($request, $options = [])
+    protected function deprovisionInstance($request, $options = [])
     {
         $_instance = $request->getInstance();
         $_keepDatabase = IfSet::get($options, 'keep-database', false);
@@ -324,8 +305,14 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
             }
         }
 
-        if (!$_instance->delete()) {
-            throw new \RuntimeException('Instance row deletion failed.');
+        try {
+            if (!$_instance->delete()) {
+                throw new \RuntimeException('Instance row deletion failed.');
+            }
+        } catch (\Exception $_ex) {
+            $this->error('* exception while deleting instance row: ' . $_ex->getMessage());
+
+            return false;
         }
 
         //  Fire off a "shutdown" event...
@@ -354,4 +341,5 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings
             ]
         );
     }
+
 }

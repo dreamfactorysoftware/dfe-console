@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DeprovisionTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
-    <TestRunner class="DreamFactory\Enterprise\Services\Tests\Commands\DeprovisionTest" file="$PROJECT_DIR$/tests/Services/Commands/DeprovisionTest.php" scope="Class" />
+    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Services\Commands\DeprovisionTest" file="$PROJECT_DIR$/tests/Services/Commands/DeprovisionTest.php" scope="Class" />
     <method />
   </configuration>
 </component>

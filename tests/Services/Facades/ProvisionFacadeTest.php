@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Provisioners\Rave\Provisioner;
+use DreamFactory\Enterprise\Services\Provisioners\Rave\InstanceProvisioner;
 use DreamFactory\Enterprise\Services\Provisioners\Rave\StorageProvisioner;
 
 class ProvisionFacadeTest extends \TestCase
@@ -30,7 +30,7 @@ class ProvisionFacadeTest extends \TestCase
         $this->assertTrue( $_provisioner instanceof ResourceProvisioner );
 
         $_provisioner = Provision::getProvisioner( 'rave' );
-        $this->assertTrue( $_provisioner instanceof Provisioner );
+        $this->assertTrue( $_provisioner instanceof InstanceProvisioner );
 
         $_provisioner = Provision::getStorageProvisioner( 'rave' );
         $this->assertTrue( $_provisioner instanceof StorageProvisioner );

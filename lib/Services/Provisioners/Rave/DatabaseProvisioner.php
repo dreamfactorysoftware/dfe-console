@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
+use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Connection;
@@ -25,6 +26,14 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
     //* Methods
     //******************************************************************************
 
+    /** @inheritdoc */
+    public function boot()
+    {
+        parent::boot();
+
+        $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
+    }
+
     /**
      * @param ProvisioningRequest $request
      * @param array               $options
@@ -34,8 +43,6 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
      */
     public function provision($request, $options = [])
     {
-        $this->debug('    * rave: provision database - begin');
-
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
 
@@ -43,36 +50,38 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
             throw new \InvalidArgumentException('Please assign the instance to a database server before provisioning database resources.');
         }
 
-        //  Get a connection to the instance's database server 
-        list($_db, $_rootConfig, $_rootServer) = $this->_getRootDatabaseConnection($_instance);
+        //  Get a connection to the instance's database server
+        list($_db, $_rootConfig, $_rootServer) = $this->getRootDatabaseConnection($_instance);
 
         //  1. Create a random user and password for the instance
-        $_creds = $this->_generateSchemaCredentials($_instance);
+        $_creds = $this->generateSchemaCredentials($_instance);
+
+        $this->debug('>>> provisioning database "' . $_creds['database'] . '"');
 
         try {
             //	1. Create database
-            if (false === $this->_createDatabase($_db, $_creds)) {
+            if (false === $this->createDatabase($_db, $_creds)) {
                 try {
                     $this->deprovision($request);
                 } catch (\Exception $_ex) {
-                    $this->notice('Unable to remove remnants of failed provisioning for instance "' .
-                        $_instance->instance_id_text);
+                    $this->notice('Unable to eradicate Klingons from planet "' . $_creds['database'] . '" after deprovisioning.');
                 }
 
                 return false;
             }
 
             //	2. Grant privileges
-            $_result = $this->_grantPrivileges($_db, $_creds, $_instance->webServer->host_text);
+            $_result = $this->grantPrivileges($_db, $_creds, $_instance->webServer->host_text);
 
             if (false === $_result) {
                 try {
                     //	Try and get rid of the database we created
-                    $this->_dropDatabase($_db, $_creds['database']);
+                    $this->dropDatabase($_db, $_creds['database']);
                 } catch (\Exception $_ex) {
+                    //  Ignored, what can we do?
                 }
 
-                $this->error('    * rave: provision database - incomplete/fail');
+                $this->debug('<<< provisioning database "' . $_creds['database'] . '" FAILURE');
 
                 return false;
             }
@@ -82,7 +91,7 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
             throw new ProvisioningException($_ex->getMessage(), $_ex->getCode());
         }
 
-        $this->debug('    * rave: provision database - complete');
+        $this->info('<<< provisioning database "' . $_creds['database'] . '" SUCCESS');
 
         return array_merge($_rootConfig, $_creds);
     }
@@ -99,23 +108,72 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
     {
         $_instance = $request->getInstance();
 
+        $this->debug('>>> deprovisioning database "' . $_instance->db_name_text . '"');
+
         //  Get a connection to the instance's database server
-        list($_db, $_rootConfig, $_rootServer) = $this->_getRootDatabaseConnection($_instance);
+        list($_db, $_rootConfig, $_rootServer) = $this->getRootDatabaseConnection($_instance);
 
         try {
             //	Try and get rid of the database we created
-            if (!$this->_dropDatabase($_db, $_instance->db_name_text)) {
+            if (!$this->dropDatabase($_db, $_instance->db_name_text)) {
                 throw new ProvisioningException('Unable to delete database "' . $_instance->db_name_text . '".');
             }
         } catch (\Exception $_ex) {
-            $this->error('    * rave: deprovision database > incomplete/fail: ' . $_ex->getMessage());
+            $this->error('<<< deprovisioning database "' . $_instance->db_name_text . '" FAILURE: ' . $_ex->getMessage());
 
             return false;
         }
 
-        $this->debug('    * rave: deprovision database > dropped "' . $_instance->db_name_text . '".');
+        $this->info('<<< deprovisioning database "' . $_instance->db_name_text . '" SUCCESS');
 
         return true;
+    }
+
+    /** @inheritdoc */
+    public function import($request, $from, $options = [])
+    {
+    }
+
+    /** @inheritdoc */
+    public function export($request, $to, $options = [])
+    {
+        //  Add file extension if missing
+        $to = $this->ensureFileSuffix('.sql', $to);
+
+        $_instance = $request->getInstance();
+
+        $_command = str_replace(PHP_EOL, null, `which mysqldump`);
+        $_template = $_command . ' --compress --delayed-insert {options} >' . $to;
+        $_port = $_instance->db_port_nbr;
+        $_name = $_instance->db_name_text;
+
+        $_options = [
+            '--host=' . escapeshellarg($_instance->db_host_text),
+            '--user=' . escapeshellarg($_instance->db_user_text),
+            '--password=' . escapeshellarg($_instance->db_password_text),
+            '--databases ' . escapeshellarg($_name),
+        ];
+
+        if (!empty($_port)) {
+            $_options[] = '--port=' . $_port;
+        }
+
+        $_command = str_replace('{options}', implode(' ', $_options), $_template);
+        exec($_command, $_output, $_return);
+
+        if (0 != $_return) {
+            $this->error('Error while dumping database of instance id "' . $_instance->instance_id_text . '".');
+
+            return false;
+        }
+
+        return basename($to);
+    }
+
+    /** @inheritdoc */
+    public function getProvisionerId()
+    {
+        return InstanceProvisioner::PROVISIONER_ID;
     }
 
     /**
@@ -123,7 +181,7 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
      *
      * @return Connection
      */
-    protected function _getRootDatabaseConnection(Instance $instance)
+    protected function getRootDatabaseConnection(Instance $instance)
     {
         static $_skeleton = [
             'host'      => 'localhost',
@@ -183,12 +241,12 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
      * @return array
      * @throws SchemaExistsException
      */
-    protected function _generateSchemaCredentials(Instance $instance)
+    protected function generateSchemaCredentials(Instance $instance)
     {
         $_tries = 0;
 
         $_dbUser = null;
-        $_dbName = $this->_generateDatabaseName($instance);
+        $_dbName = $this->generateDatabaseName($instance);
         $_seed = $_dbName . env('APP_KEY') . $instance->instance_name_text;
 
         //  Make sure our user name is unique...
@@ -234,7 +292,7 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
      *
      * @return bool
      */
-    protected function _createDatabase($db, array $creds)
+    protected function createDatabase($db, array $creds)
     {
         try {
             $_dbName = $creds['database'];
@@ -245,7 +303,7 @@ CREATE DATABASE IF NOT EXISTS `{$_dbName}`
 MYSQL
             );
         } catch (\Exception $_ex) {
-            $this->error('    * provisioner: create database - failure: ' . $_ex->getMessage());
+            $this->error('* create database - failure: ' . $_ex->getMessage());
 
             return false;
         }
@@ -258,19 +316,21 @@ MYSQL
      * @return bool
      *
      */
-    protected function _dropDatabase($db, $databaseToDrop)
+    protected function dropDatabase($db, $databaseToDrop)
     {
         try {
             if (empty($databaseToDrop)) {
                 return true;
             }
 
+            $this->debug('dropping database "' . $databaseToDrop . '"');
+
             return $db->transaction(
                 function () use ($db, $databaseToDrop) {
                     $_result = $db->statement('SET FOREIGN_KEY_CHECKS = 0');
                     $_result && $_result = $db->statement('DROP DATABASE `' . $databaseToDrop . '`');
                     $_result && $db->statement('SET FOREIGN_KEY_CHECKS = 1');
-                    $this->debug('    * provisioner: database dropped > ' . $databaseToDrop);
+                    $this->debug('database "' . $databaseToDrop . '" dropped.');
 
                     return $_result;
                 }
@@ -280,12 +340,12 @@ MYSQL
 
             //  If the database is already gone, don't cause an error, but note it.
             if (false !== stripos($_message, 'general error: 1008')) {
-                $this->info('    * provisioner: drop database - semi-successful: ' . $_message);
+                $this->info('* drop database - not performed. database does not exist.');
 
                 return true;
             }
 
-            $this->error('    * provisioner: drop database - failure: ' . $_message);
+            $this->error('* drop database - failure: ' . $_message);
 
             return false;
         }
@@ -298,12 +358,12 @@ MYSQL
      *
      * @return bool
      */
-    protected function _grantPrivileges($db, $creds, $fromServer)
+    protected function grantPrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
             function () use ($db, $creds, $fromServer) {
                 //  Create users
-                $_users = $this->_getDatabaseUsers($creds, $fromServer);
+                $_users = $this->getDatabaseUsers($creds, $fromServer);
 
                 try {
                     foreach ($_users as $_user) {
@@ -321,7 +381,7 @@ MYSQL
                     //	Grants for instance database
                     return true;
                 } catch (\Exception $_ex) {
-                    $this->error('    * provisioner: issue grants - failure: ' . $_ex->getMessage());
+                    $this->error('* issue grants - failure: ' . $_ex->getMessage());
 
                     return false;
                 }
@@ -336,12 +396,12 @@ MYSQL
      *
      * @return bool
      */
-    protected function _revokePrivileges($db, $creds, $fromServer)
+    protected function revokePrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
             function () use ($db, $creds, $fromServer) {
                 //  Create users
-                $_users = $this->_getDatabaseUsers($creds, $fromServer);
+                $_users = $this->getDatabaseUsers($creds, $fromServer);
 
                 try {
                     foreach ($_users as $_user) {
@@ -349,22 +409,22 @@ MYSQL
                         if (!($_result =
                             $db->statement('REVOKE ALL PRIVILEGES ON ' . $creds['database'] . '.* FROM ' . $_user))
                         ) {
-                            \Log::error('    * provisioner: error revoking privileges from "' . $_user . '"');
+                            $this->error('* error revoking privileges from "' . $_user . '"');
                             continue;
                         }
 
-                        $this->debug('    * provisioner: grants revoked - complete');
+                        $this->debug('grants revoked - complete');
 
                         if (!($_result = $db->statement('DROP USER ' . $_user))) {
-                            \Log::error('    * provisioner: error dropping user "' . $_user . '"');
+                            $this->error('* error dropping user "' . $_user . '"');
                         }
 
-                        $_result && $this->debug('    * provisioner: users dropped > ', $_users);
+                        $_result && $this->debug('users dropped > ', $_users);
                     }
 
                     return true;
                 } catch (\Exception $_ex) {
-                    $this->error('    * provisioner: revoke grants - failure: ' . $_ex->getMessage());
+                    $this->error('revoke grants - failure: ' . $_ex->getMessage());
 
                     return false;
                 }
@@ -379,7 +439,7 @@ MYSQL
      *
      * @return string
      */
-    protected function _generateDatabaseName(Instance $instance)
+    protected function generateDatabaseName(Instance $instance)
     {
         return str_replace('-', '_', $instance->instance_name_text);
     }
@@ -392,58 +452,11 @@ MYSQL
      *
      * @return array
      */
-    protected function _getDatabaseUsers($creds, $fromServer)
+    protected function getDatabaseUsers($creds, $fromServer)
     {
         return [
             '\'' . $creds['username'] . '\'@\'' . $fromServer . '\'',
             '\'' . $creds['username'] . '\'@\'localhost\'',
         ];
-    }
-
-    /** @inheritdoc */
-    public function import($request, $from, $options = [])
-    {
-    }
-
-    /** @inheritdoc */
-    public function export($request, $to, $options = [])
-    {
-        //  Add file extension if missing
-        $to = $this->ensureFileSuffix('.sql', $to);
-
-        $_instance = $request->getInstance();
-
-        $_command = str_replace(PHP_EOL, null, `which mysqldump`);
-        $_template = $_command . ' --compress --delayed-insert {options} >' . $to;
-        $_port = $_instance->db_port_nbr;
-        $_name = $_instance->db_name_text;
-
-        $_options = [
-            '--host=' . escapeshellarg($_instance->db_host_text),
-            '--user=' . escapeshellarg($_instance->db_user_text),
-            '--password=' . escapeshellarg($_instance->db_password_text),
-            '--databases ' . escapeshellarg($_name),
-        ];
-
-        if (!empty($_port)) {
-            $_options[] = '--port=' . $_port;
-        }
-
-        $_command = str_replace('{options}', implode(' ', $_options), $_template);
-        exec($_command, $_output, $_return);
-
-        if (0 != $_return) {
-            $this->error('Error while dumping database of instance id "' . $_instance->instance_id_text . '".');
-
-            return false;
-        }
-
-        return basename($to);
-    }
-
-    /** @inheritdoc */
-    public function getProvisionerId()
-    {
-        return Provisioner::PROVISIONER_ID;
     }
 }

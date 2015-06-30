@@ -14,17 +14,16 @@ class DeprovisionTest extends \TestCase
      */
     public function testDeprovision()
     {
-        $_instanceId = 'dfe-test-case';
+        $_instanceId = 'leela';
 
         $_payload = [
             'instance-id'        => $_instanceId,
-            'owner-id'           => 1,
+            'owner-id'           => 22,
             'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
         ];
 
-        $_job = new DeprovisionJob( $_instanceId, $_payload );
+        $_job = new DeprovisionJob($_instanceId, $_payload);
 
-        $_result = \Queue::push( $_job );
-
+        $_result = \Queue::push($_job);
     }
 }

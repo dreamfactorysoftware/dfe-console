@@ -23,8 +23,6 @@ class DeprovisionJobHandler extends BaseListener
      */
     public function handle(DeprovisionJob $command)
     {
-        $this->setLumberjackPrefix('dfe.deprovision');
-
         $_options = $command->getOptions();
         $this->debug('>>> deprovision "' . $command->getInstanceId() . '" request received');
 
@@ -46,7 +44,7 @@ class DeprovisionJobHandler extends BaseListener
 
             $_result = $_provisioner->deprovision(new ProvisioningRequest($_instance, null, true), $_options);
 
-            if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
+            if (is_array($_result) && isset($_result['elapsed'])) {
                 $this->debug('deprovision request complete in ' . number_format($_result['elapsed'], 4) . 's');
             }
 
