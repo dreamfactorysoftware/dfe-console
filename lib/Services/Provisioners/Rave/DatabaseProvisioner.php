@@ -132,6 +132,19 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
     /** @inheritdoc */
     public function import($request, $from, $options = [])
     {
+        $_instance = $request->getInstance();
+
+        if (!file_exists($from)) {
+            throw new \InvalidArgumentException('$from file "' . $from . '" missing or unreadable.');
+        }
+
+        /** @type Connection $_db */
+        list($_db, $_rootConfig, $_rootServer) = $this->getRootDatabaseConnection($_instance);
+
+        $this->dropDatabase($_db, $_instance->db_name_text);
+        $this->createDatabase($_db, $_instance->db_name_text);
+
+        return $_db->statement('source ' . $from);
     }
 
     /** @inheritdoc */

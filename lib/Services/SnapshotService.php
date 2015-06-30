@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
+use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
@@ -71,6 +72,7 @@ class SnapshotService extends BaseService
             'id'                  => $_snapshotId,
             'name'                => $_snapshotName,
             'timestamp'           => $_stamp,
+            'guest-location'      => $_instance->guest_location_nbr,
             'instance-id'         => $_instance->instance_id_text,
             'cluster-id'          => (int)$_instance->cluster_id,
             'db-server-id'        => (int)$_instance->db_server_id,
@@ -125,6 +127,7 @@ class SnapshotService extends BaseService
                     'snapshot_id_text' => $_snapshotId,
                     'public_ind'       => true,
                     'public_url_text'  => $_routeLink,
+                    'manifest_text'    => $_manifest->toArray(),
                     'expire_date'      => $_routeHash->expire_date,
                 ]);
 
@@ -160,137 +163,101 @@ HTML
     /**
      * Given an instance and a snapshot ID, replace the data with that of the snapshot.
      *
-     * @param string|int $instanceId
-     * @param string     $snapshot
+     * @param string $snapshotId
      *
      * @return bool
      */
-    public function restore($instanceId, $snapshot)
+    public function restore($snapshotId)
     {
-        //        $_instance = $this->_validateInstance( $instanceId );
-        //
-        //        //	1. Grab the tarball...
-        //        $_workPath = $this->_getTempFilesystem( $_workFile );
-        //        $_workPath = $_workPath . DIRECTORY_SEPARATOR . $_workFile;
-        //
-        //        file_put_contents( $_workPath, file_get_contents( $this->download( $instanceId, $snapshot, true ) ) );
-        //
-        //        //	2. Crack it open and get the goodies
-        //        $_import = new \PharData( $_workPath );
-        //
-        //        try
-        //        {
-        //            $_import->extractTo( dirname( $_workPath ) );
-        //
-        //            if ( false === ( $_snapshot = json_decode( file_get_contents( $_workPath . '/snapshot.json' ) ) ) )
-        //            {
-        //                throw new RestException( HttpResponse::BadRequest, 'Invalid snapshot "' . $snapshot . '"' );
-        //            }
-        //        }
-        //        catch ( \Exception $_ex )
-        //        {
-        //            $this->error( 'Error extracting snapshot tarball: ' . $_ex->getMessage() );
-        //
-        //            $this->_killTempDirectory( $_workPath );
-        //
-        //            return false;
-        //        }
-        //
-        //        //	2. Make a snapshot of the existing data first (backup)
-        //        $_backup = static::create( $instanceId, true );
-        //
-        //        //	3. Install snapshot storage files
-        //        $_command = 'cd ' . $this->getStoragePath() . '; rm -rf ./*; /bin/tar zxf ' . $_workPath . DIRECTORY_SEPARATOR . $_snapshot->storage->tarball . ' ./';
-        //        $_result = exec( $_command, $_output, $_return );
-        //
-        //        if ( 0 != $_return )
-        //        {
-        //            Log::error(
-        //                'Error importing storage directory of dsp "' . $instanceId . '": ' . $_result . ' (' . $_return . ')' . PHP_EOL . $_command . PHP_EOL
-        //            );
-        //            Log::error( implode( PHP_EOL, $_output ) );
-        //            $this->_killTempDirectory( $_workPath );
-        //
-        //            return false;
-        //        }
-        //
-        //        //	4. Drop old, Create new database for snapshot mysql data
-        //        $_db = Pii::db( 'db.cumulus' );
-        //
-        //        if ( Provisioners::DREAMFACTORY_ENTERPRISE == $_instance->guest_location_nbr )
-        //        {
-        //            $_command
-        //                = 'sudo -u dfadmin /opt/dreamfactory/fabric/cerberus/config/scripts/restore_snapshot_mysql.sh ' .
-        //                $_instance->db_name_text .
-        //                ' ' .
-        //                $_workPath;
-        //        }
-        //        else
-        //        {
-        ////			$_command
-        ////				= '/usr/bin/ssh ' . static::DEFAULT_SSH_OPTIONS . ' dfadmin@' . $_instanceName . DSP::DEFAULT_DSP_SUB_DOMAIN .
-        ////				' \'mysqldump --delayed-insert -e -u ' . $_instance->db_user_text . ' -p' . $_instance->db_password_text . ' ' .
-        ////				$_instance->db_name_text . '\' | gzip -c >' . $_workPath;
-        //        }
-        //
-        //        $_result = exec( $_command, $_output, $_return );
-        //
-        //        if ( 0 != $_return )
-        //        {
-        //            Log::error(
-        //                'Error restoring mysql dump of dsp "' . $instanceId . '": ' . $_result . ' (' . $_return . ')' . PHP_EOL . $_command . PHP_EOL
-        //            );
-        //            Log::error( implode( PHP_EOL, $_output ) );
-        //            $this->_killTempDirectory( $_workPath );
-        //
-        //            //@TODO need to restore snapshot taken at the beginning cuz we sucked at this...
-        //
-        //            return false;
-        //        }
-        //
-        //        Log::debug( 'MySQL dump restored: ' . $_workFile );
-        ////
-        ////		//	5. Import mysql data
-        ////
-        ////		$_command
-        ////			= 'cd ' . $_workPath . '; ' .
-        ////			'gunzip ' . $_snapshot->mysql->tarball . '; ' .
-        ////			'mysql -u ' . $_db->username . ' -p' . $_db->password . ' -h ' . DSP::DEFAULT_DSP_SERVER . ' --database=' .
-        ////			$_instance->db_name_text . ' < mysql.' . $snapshot . '.sql';
-        ////
-        ////		$_result = exec( $_command, $_output, $_return );
-        ////
-        ////		if ( 0 != $_return )
-        ////		{
-        ////			Log::error( 'Error importing mysql dump of dsp "' . $instanceId . '": ' . $_result . ' (' . $_return . ')' . PHP_EOL . $_command . PHP_EOL );
-        ////			Log::error( implode( PHP_EOL, $_output ) );
-        ////
-        ////			//	Roll everything back...
-        ////			$_service->deprovision(
-        ////				array(
-        ////					 'name'        => $_instanceName,
-        ////					 'storage_key' => $_instance->storage_id_text
-        ////				),
-        ////				true,
-        ////				$_instance
-        ////			);
-        ////
-        ////			$this->_killTempDirectory( $_workPath );
-        ////
-        ////			return false;
-        ////		}
-        ////
-        ////		//	6.	Update snapshot with import info
-        ////		$_snapshot->imports[] = array(
-        ////			'timestamp' => date( 'c' ),
-        ////		);
-        ////
-        ////		$_import->addFromString( 'snapshot.json', json_encode( $_snapshot ) );
-        //
-        //        //	7. Cleanup
-        //        $this->_killTempDirectory( $_workPath );
-        //
-        //        //	Import complete!!!
-        //        return true;
+        //  Mount the snapshot
+        $_workPath = $this->getWorkPath('restore.' . $snapshotId) . DIRECTORY_SEPARATOR;
+        $_fsSnapshot = $this->mountSnapshot($snapshotId, $_workPath);
+        $_workFile = $_workPath . config('snapshot.metadata-file-name');
+
+        //  Reconstitute the manifest and grab the services
+        $_snapshot = SnapshotManifest::create(json_decode($_workFile));
+        $_services = \Provision::getPortableServices($_snapshot->get('guest-location'));
+
+        //  Try and locate the instance
+        $_instanceId = $_snapshot->get('instance-id');
+        if (false === ($_instance = $this->_locateInstance($_instanceId))) {
+            throw new \InvalidArgumentException('Instance "' . $_instanceId . '" is not eligible to be an import target.');
+        }
+
+        $_request = new ProvisioningRequest($_instance);
+        $_result = [];
+
+        foreach ($_fsSnapshot->listContents() as $_item) {
+            //  Find the exports in the snapshot
+            if (false !== ($_pos = stripos('-export.', $_item['file']))) {
+                if (!PortableTypes::has($_type = substr($_item['file'], 0, $_pos))) {
+                    continue;
+                }
+
+                if (array_key_exists($_type, $_services)) {
+                    /** @noinspection PhpUndefinedMethodInspection */
+                    $_result[$_type] =
+                        $_services[$_type]->import($_request, $_workPath . DIRECTORY_SEPARATOR . $_item['file']);
+                }
+            }
+        }
+
+        return $_result;
+    }
+
+    /**
+     * Locates and mounts a snapshot
+     *
+     * @param string      $snapshotId
+     * @param string|null $workPath
+     *
+     * @return Filesystem|string If $workPath is specified, the Filesystem is returned, otherwise the path to the extracted files.
+     */
+    protected function mountSnapshot($snapshotId, $workPath = null)
+    {
+        $_workPath = $workPath ?: $this->getWorkPath($snapshotId);
+
+        $_model = $this->_findSnapshot($snapshotId);
+        $_url = 'http://' . str_ireplace(['http://', 'https://', '//', '://'], null, $_model->public_url_text);
+        $_workFile = $_workPath . DIRECTORY_SEPARATOR . $_model->snapshot_id_text . '.zip';
+
+        if (!$this->download($_url, $_workFile)) {
+            throw new \InvalidArgumentException('Error downloading snapshot "' . $snapshotId . '"');
+        }
+
+        $_zip = new \ZipArchive();
+        $_zip->open($_workFile);
+        $_zip->extractTo($_workPath);
+        $_zip->close();
+        $_zip = null;
+
+        //  Delete our work file, leaving contents only
+        @unlink($_workFile);
+
+        return $workPath ? $_workPath : new Filesystem(new ZipArchiveAdapter($_workFile));
+    }
+
+    /**
+     * Downloads a file from $url and stores in $path
+     *
+     * @param string $url
+     * @param string $path
+     *
+     * @return bool
+     */
+    protected function download($url, $path)
+    {
+        if (false !== ($_source = fopen($url, 'rb')) && false !== ($_target = fopen($path, 'wb'))) {
+            while (!feof($$_source)) {
+                fwrite($_target, fread($_source, 1024 * 8), 8192);
+            }
+
+            fclose($_source);
+            fclose($_target);
+
+            return true;
+        }
+
+        return false;
     }
 }

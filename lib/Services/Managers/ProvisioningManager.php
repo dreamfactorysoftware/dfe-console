@@ -124,7 +124,14 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         return $_exports;
     }
 
-    /** @inheritdoc */
+    /**
+     * Returns an array of the portability providers for this provisioner. If
+     * no sub-provisioners are portable, an empty array will be returned.
+     *
+     * @param string $name The provisioner id. If null, the default provisioner is used.
+     *
+     * @return Portability[] An array of portability services keyed by PortableTypes
+     */
     public function getPortableServices($name = null)
     {
         $name = GuestLocations::resolve($name ?: $this->getDefaultProvisioner());

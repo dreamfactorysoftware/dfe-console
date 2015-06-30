@@ -10,7 +10,8 @@ use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
-use DreamFactory\Library\Utility\FileSystem;
+use League\Flysystem\Filesystem;
+use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
 /**
  * DreamFactory Enterprise(tm) and Services Platform File System
@@ -207,6 +208,26 @@ class StorageProvisioner extends BaseService implements ResourceProvisioner, Pri
     /** @inheritdoc */
     public function import($request, $from, $options = [])
     {
+        $_instance = $request->getInstance();
+        $_target = $_instance->getStorageMount();
+
+        if (!($from instanceof Filesystem)) {
+            $from = new Filesystem(new ZipArchiveAdapter($from));
+        }
+
+        //  If "clean" == true, storage is wiped clean before restore
+        if (true === array_get($options, 'clean', false)) {
+            $_target->deleteDir('./');
+        }
+
+        //  Extract the files
+        $_restored = [];
+
+        foreach ($from->listContents() as $_file) {
+            $_restored[$_file['file']] = $_target->put($_file['file'], $from->read($_file['file']));
+        }
+
+        return $_restored;
     }
 
     /** @inheritdoc */
@@ -219,7 +240,7 @@ class StorageProvisioner extends BaseService implements ResourceProvisioner, Pri
         $_path = dirname($to);
         $_file = basename($to);
 
-        if (!FileSystem::ensurePath($_path)) {
+        if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
             throw new FileSystemException('Unable to write to export file "' . $to . '".');
         }
 
