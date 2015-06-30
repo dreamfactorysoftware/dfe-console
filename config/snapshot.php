@@ -14,8 +14,6 @@ return [
         //  Which user to impersonate when running script
         'user'     => env('DFE_SCRIPT_USER', 'dfadmin'),
     ],
-    //  The value to place in the meta data's "type" field
-    'metadata-type'  => 'application/dreamfactory',
     //  The base URL for linking to snapshots
     'hash-link-base' => 'https://download.enterprise.dreamfactory.com',
     //  The number of days to keep snapshots before removing them from storage
@@ -26,8 +24,8 @@ return [
     'trash-path'     => env('DFE_SNAPSHOT_TRASH_PATH', EnterpriseDefaults::DEFAULT_TRASH_PATH),
     //  Templates used by the snapshot service
     'templates'      => [
-        //  File name templates
-        'snapshot-file-name' => '{id}.zip',
+        /** File names:  The token "{id}" can be used in the names and will be replaced with snapshot id when used. */
+        'snapshot-file-name' => '{id}.snapshot.zip',
         'metadata-file-name' => 'snapshot.json',
     ],
 ];

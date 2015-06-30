@@ -11,7 +11,6 @@ use DreamFactory\Enterprise\Database\Models\Snapshot;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Inflector;
-use DreamFactory\Library\Utility\Json;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
@@ -46,17 +45,31 @@ class SnapshotService extends BaseService
         //  Build our "mise en place", as it were...
         $_success = false;
         $_stamp = date('YmdHis');
-        $_instance = $this->_findInstance($instanceId);
-        $_instanceName = $_instance->instance_name_text;
 
         //  Create the snapshot ID
+        $_instance = $this->_findInstance($instanceId);
+        $_instanceName = $_instance->instance_name_text;
         $_snapshotId = $_stamp . '.' . Inflector::neutralize($_instanceName);
 
-        //  Start building our metadata array
-        $_metadata = [
+        $_snapshotName = str_replace('{id}', $_snapshotId, config('snapshot.templates.snapshot-file-name'));
+
+        //  Make our temp path...
+        $_workPath = $this->getWorkPath($_snapshotId, true) . DIRECTORY_SEPARATOR;
+
+        //  Create the snapshot archive and stuff it full of goodies
+        $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . $_snapshotName));
+
+        //  Get a route hash...
+        $_routeHash = RouteHashing::create($_snapshotName, $keepDays);
+        $_routeLink = '//' .
+            str_replace(['http://', 'https://', '//'],
+                null,
+                rtrim(config('snapshot.hash-link-base'), ' /')) . '/' . $_routeHash;
+
+        //  Create our manifest
+        $_manifest = new SnapshotManifest([
             'id'                  => $_snapshotId,
-            'type'                => config('snapshot.metadata-type', 'application/json'),
-            'snapshot-prefix'     => $_snapshotId,
+            'name'                => $_snapshotName,
             'timestamp'           => $_stamp,
             'instance-id'         => $_instance->instance_id_text,
             'cluster-id'          => (int)$_instance->cluster_id,
@@ -67,20 +80,9 @@ class SnapshotService extends BaseService
             'owner-email-address' => $_instance->user->email_addr_text,
             'owner-storage-key'   => $_instance->user->storage_id_text,
             'storage-key'         => $_instance->storage_id_text,
-        ];
-
-        //  Build our link hash
-        $_metadata['name'] = $this->_getConfigValue('snapshot.templates.snapshot-file-name', $_metadata);
-        $_metadata['hash'] = RouteHashing::create($_metadata['name'], $keepDays);
-        $_metadata['link'] = '//' . str_replace(['http://', 'https://', '//'],
-                null,
-                rtrim(config('snapshot.hash-link-base'), ' /')) . '/' . $_metadata['hash'];
-
-        //  Make our temp path...
-        $_workPath = $this->getWorkPath($_snapshotId, true) . DIRECTORY_SEPARATOR;
-
-        //  Create the snapshot archive and stuff it full of goodies
-        $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . $_metadata['name']));
+            'hash'                => $_routeHash,
+            'link'                => $_routeLink,
+        ], config('snapshot.metadata-file-name'), $_fsSnapshot);
 
         //  Grab the list of portable services from the provisioner
         $_services = Provision::getPortableServices($_instance->guest_location_nbr);
@@ -102,8 +104,7 @@ class SnapshotService extends BaseService
             }
 
             try {
-                //  Create our snapshot manifesto
-                $_manifest = new SnapshotManifest($_metadata, config('snapshot.metadata-file-name'), $_fsSnapshot);
+                //  Write our snapshot manifesto
                 $_manifest->write();
 
                 //  Close up the files
@@ -111,10 +112,10 @@ class SnapshotService extends BaseService
                 $this->flushZipArchive($_fsSnapshot);
 
                 //  Move the snapshot archive into the "snapshots" private storage area
-                $this->moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_metadata['name']);
+                $this->moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_snapshotName);
 
                 //  Generate a record for the dashboard
-                $_routeHash = RouteHash::byHash($_metadata['hash'])->first();
+                $_routeHash = RouteHash::byHash($_routeHash)->first();
 
                 //  Create our snapshot record
                 Snapshot::create([
@@ -123,7 +124,7 @@ class SnapshotService extends BaseService
                     'route_hash_id'    => $_routeHash->id,
                     'snapshot_id_text' => $_snapshotId,
                     'public_ind'       => true,
-                    'public_url_text'  => $_metadata['link'],
+                    'public_url_text'  => $_routeLink,
                     'expire_date'      => $_routeHash->expire_date,
                 ]);
 
@@ -136,7 +137,7 @@ class SnapshotService extends BaseService
                         'contentHeader' => 'Your export has completed',
                         'emailBody'     => <<<HTML
 <p>Your export has been created successfully.  You can download it for up to {$keepDays} days by going to
-<a href="{$_metadata['link']}">{$_metadata['link']}</a> from any browser.</p>
+<a href="{$_routeLink}" target="_blank">{$_routeLink}</a> from any browser.</p>
 HTML
                         ,
                     ]);
@@ -291,46 +292,5 @@ HTML
         //
         //        //	Import complete!!!
         //        return true;
-    }
-
-    /**
-     * Pulls a config value and applies replacements with automatic json conversion of non-strings
-     *
-     * @param string $key
-     * @param array  $replacements
-     *
-     * @return string
-     */
-    protected function _getConfigValue($key, $replacements)
-    {
-        $_stringified = false;
-        $_setting = config($key);
-
-        if (is_array($_setting)) {
-            if (false === ($_setting = Json::encode($_setting))) {
-                throw new \InvalidArgumentException('The value at key "' . $key . '" is not a string or a jsonable array.');
-            }
-
-            $_stringified = true;
-        }
-
-        //  Surround keys with squiggles
-        if (!empty($replacements)) {
-            $_values = [];
-            foreach ($replacements as $_key => $_value) {
-                if (!is_array($_value) && !is_object($_value)) {
-                    $_key = '{' . $_key . '}';
-                    $_values[$_key] = $_value;
-                }
-            }
-
-            $_setting = str_replace(array_keys($_values), array_values($_values), $_setting);
-        }
-
-        if ($_stringified) {
-            $_setting = Json::decode($_setting);
-        }
-
-        return $_setting;
     }
 }
