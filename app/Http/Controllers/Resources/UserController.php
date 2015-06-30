@@ -83,6 +83,7 @@ class UserController extends ResourceController
             'first_name_text' => 'required|string',
             'last_name_text' => 'required|string',
             'nickname_text' => 'required|string',
+            'new_password' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -95,16 +96,19 @@ class UserController extends ResourceController
                 switch ($key) {
 
                     case 'email_addr_text':
-                        $flash_message = 'Email format is invalid (use abc@domain.tld)';
+                        $flash_message = 'Email is blank or format is invalid (use abc@domain.tld)';
                         break;
                     case 'first_name_text':
-                        $flash_message = 'First Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'First Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'last_name_text':
-                        $flash_message = 'Last Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Last Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'nickname_text':
-                        $flash_message = 'Nickname contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Nickname is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'new_password':
+                        $flash_message = 'Password is blank or contains invalid characters';
                         break;
                 }
 
@@ -186,6 +190,7 @@ class UserController extends ResourceController
             'first_name_text' => 'required|string',
             'last_name_text' => 'required|string',
             'nickname_text' => 'required|string',
+            'new_password' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -198,7 +203,7 @@ class UserController extends ResourceController
                 switch ($key) {
 
                     case 'email_addr_text':
-                        $flash_message = 'Email format is invalid (use abc@domain.tld)';
+                        $flash_message = 'Email is blank or format is invalid (use abc@domain.tld)';
                         break;
                     case 'first_name_text':
                         $flash_message = 'First Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
@@ -208,6 +213,9 @@ class UserController extends ResourceController
                         break;
                     case 'nickname_text':
                         $flash_message = 'Nickname contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'new_password':
+                        $flash_message = 'Password is blank or contains invalid characters';
                         break;
                 }
 

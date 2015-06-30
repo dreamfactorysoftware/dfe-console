@@ -79,11 +79,11 @@
                                                     @endif
                                                     <div class="form-group">
                                                         <label>Name</label>
-                                                        <input id="server_id_text" name="server_id_text" class="form-control" placeholder="Enter server name." type="name" value="{{ Input::old('server_id_text') }}" required>
+                                                        <input id="server_id_text" name="server_id_text" class="form-control" placeholder="Enter server name." type="name" value="{{ Input::old('server_id_text') }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Type</label>
-                                                        <select class="form-control" id="server_type_select" name="server_type_select" required>
+                                                        <select class="form-control" id="server_type_select" name="server_type_select">
                                                             <option value="">Select type</option>
                                                             @foreach ($server_types as $server_type)
                                                                 <option id="{{$server_type['id']}}" @if (Input::old('server_type_select') == $server_type['type_name_text']) selected="selected" @endif>{{$server_type['type_name_text']}}</option>
@@ -92,7 +92,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Host</label>
-                                                        <input id="host_text" name="host_text" class="form-control" placeholder="Enter host." type="text" value="{{ Input::old('host_text') }}" required>
+                                                        <input id="host_text" name="host_text" class="form-control" placeholder="Enter host." type="text" value="{{ Input::old('host_text') }}">
                                                     </div>
                                                     <div id="server_type_db" style="display: none;">
                                                         <div class="form-group">
@@ -129,7 +129,7 @@
                                                         <div class="form-group">
                                                             <label>Scheme</label>
                                                             <select id="web_scheme_text" name="config[web][scheme]" class="form-control">
-                                                                <option value="" disabled selected>Select scheme</option>
+                                                                <option value="" selected>Select scheme</option>
                                                                 <option value="http" @if (Input::old('config.web.scheme') == 'http') selected="selected" @endif>HTTP</option>
                                                                 <option value="https" @if (Input::old('config.web.scheme') == 'https') selected="selected" @endif>HTTPS</option>
                                                             </select>
@@ -151,7 +151,7 @@
                                                         <div class="form-group">
                                                             <label>Scheme</label>
                                                             <select id="app_scheme_text" name="config[app][scheme]" class="form-control">
-                                                                <option value="" disabled selected>Select scheme</option>
+                                                                <option value="" selected>Select scheme</option>
                                                                 <option value="http" @if (Input::old('config.app.scheme') == 'http') selected="selected" @endif>HTTP</option>
                                                                 <option value="https" @if (Input::old('config.app.scheme') == 'https') selected="selected" @endif>HTTPS</option>
                                                             </select>

@@ -83,8 +83,7 @@
                                                             name="cluster_id_text"
                                                             class="form-control"
                                                             @if (Input::old('cluster_id_text')) value="{{ Input::old('cluster_id_text') }}" @else value="{{ $cluster->cluster_id_text or '' }}" @endif
-                                                            type="text"
-                                                            required>
+                                                            type="text">
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label" for="subdomain_text">Fixed DNS Subdomain</label>
@@ -92,7 +91,7 @@
                                                             name="subdomain_text"
                                                             class="form-control"
                                                             @if (Input::old('subdomain_text')) value="{{ Input::old('subdomain_text') }}" @else value="{{ $cluster->subdomain_text or '' }}" @endif
-                                                            type="text" required>
+                                                            type="text">
                                                     </div>
                                                 </div>
 
@@ -117,6 +116,7 @@
                                                             </tr>
                                                         </thead>
                                                     </table>
+
                                                     <div class="col-md-12">
                                                         <div class="form-inline">
                                                             <label>Assign Server&nbsp;&nbsp;&nbsp;</label>
