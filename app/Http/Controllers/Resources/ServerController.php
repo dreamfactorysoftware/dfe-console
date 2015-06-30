@@ -104,28 +104,16 @@ class ServerController extends ResourceController
 
         $input = Input::all();
 
-        $type = $input['server_type_select'];
-        $input_config = $input['config'][$type];
-        $input['config_text'] = $input_config;
-
-        if ($type == 'db') {
-            $input['server_type_id'] = 1;
-        }
-        if ($type == 'web') {
-            $input['server_type_id'] = 2;
-        }
-        if ($type == 'app') {
-            $input['server_type_id'] = 3;
-        }
-
         $validator = Validator::make($input, [
-            'server_id_text' => 'required|string',
+            'server_id_text' => 'required|string|min:1',
+            'server_type_select' => 'required|string|min:1',
             'host_text' => array("required", "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
-            'config.'.$type.'.port' => 'sometimes|required|numeric|min:1',
-            'config.'.$type.'.username' => 'sometimes|required|string',
-            'config.'.$type.'.driver' => 'sometimes|required|string',
-            'config.'.$type.'.default-database-name' => 'sometimes|required|string',
-            //'config.'.$type.'.access_token' => array('Regex:/^[0-9]+$/')
+            'config.'.$input['server_type_select'].'.port' => 'sometimes|required|numeric|min:1',
+            'config.'.$input['server_type_select'].'.scheme' => 'sometimes|required|string|min:1',
+            'config.'.$input['server_type_select'].'.username' => 'sometimes|required|string',
+            'config.'.$input['server_type_select'].'.driver' => 'sometimes|required|string',
+            'config.'.$input['server_type_select'].'.default-database-name' => 'sometimes|required|string',
+            'config.'.$input['server_type_select'].'.access_token' => 'sometimes|required|string|min:1'
         ]);
 
         if ($validator->fails()) {
@@ -138,46 +126,65 @@ class ServerController extends ResourceController
                 switch ($key) {
 
                     case 'server_id_text':
-                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'server_type_select':
+                        $flash_message = 'Type is not selected';
                         break;
                     case 'host_text':
                         $flash_message = 'Host format is invalid (use subdomain.domain.tld)';
                         break;
-                    case 'config.'.$type.'.port':
+                    case 'config.'.$input['server_type_select'].'.port':
                         $flash_message = 'Port must be an integer and larger than 0';
                         break;
-                    case 'config.'.$type.'.username':
-                        $flash_message = 'User Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
+                    case 'config.'.$input['server_type_select'].'.scheme':
+                        $flash_message = 'Scheme is not selected';
                         break;
-                    case 'config.'.$type.'.driver':
-                        $flash_message = 'Driver contain invalid characters (use a-z, A-Z, 0-9, . and -)';
+                    case 'config.'.$input['server_type_select'].'.username':
+                        $flash_message = 'User Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
-                    case 'config.'.$type.'.default-database-name':
-                        $flash_message = 'Default Database Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
+                    case 'config.'.$input['server_type_select'].'.driver':
+                        $flash_message = 'Driver is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
-                    /*
-                    case 'config.'.$type.'.access_token':
-                        $flash_message = 'Port must be an integer and larger than 0';
+                    case 'config.'.$input['server_type_select'].'.default-database-name':
+                        $flash_message = 'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
-                    */
+                    case 'config.'.$input['server_type_select'].'.access_token':
+                        $flash_message = 'Access Token is blank or contains invalid characters';
+                        break;
+
                 }
 
                 break;
             }
 
-
-
             Session::flash('flash_message', $flash_message);
             Session::flash('flash_type', 'alert-danger');
-            return redirect('/v1/servers/'.$id.'/edit')->withInput();
+            return redirect('/v1/servers/create')->withInput();
         }
 
-        unset($input['_method']);
-        unset($input['_token']);
-        unset($input['config']);
-        unset($input['server_type_select']);
 
         try{
+            $input = Input::all();
+
+            $type = $input['server_type_select'];
+            $input_config = $input['config'][$type];
+            $input['config_text'] = $input_config;
+
+            if ($type == 'db') {
+                $input['server_type_id'] = 1;
+            }
+            if ($type == 'web') {
+                $input['server_type_id'] = 2;
+            }
+            if ($type == 'app') {
+                $input['server_type_id'] = 3;
+            }
+
+            unset($input['_method']);
+            unset($input['_token']);
+            unset($input['config']);
+            unset($input['server_type_select']);
 
             $server = Server::find($id);
             $server->update($input);
@@ -204,29 +211,19 @@ class ServerController extends ResourceController
     public function store()
     {
         $input = Input::all();
+        $type = 0;
 
-        $type = $input['server_type_select'];
-        $input_config = $input['config'][$type];
-        $input['config_text'] = $input_config;
-
-        if ($type == 'db') {
-            $input['server_type_id'] = 1;
-        }
-        if ($type == 'web') {
-            $input['server_type_id'] = 2;
-        }
-        if ($type == 'app') {
-            $input['server_type_id'] = 3;
-        }
 
         $validator = Validator::make($input, [
-            'server_id_text' => 'required|string',
+            'server_id_text' => 'required|string|min:1',
+            'server_type_select' => 'required|string|min:1',
             'host_text' => array("required", "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i"),
-            'config.'.$type.'.port' => 'sometimes|required|numeric|min:1',
-            'config.'.$type.'.username' => 'sometimes|required|string',
-            'config.'.$type.'.driver' => 'sometimes|required|string',
-            'config.'.$type.'.default-database-name' => 'sometimes|required|string',
-            //'config.'.$type.'.access_token' => array('Regex:/^[0-9]+$/')
+            'config.'.$input['server_type_select'].'.port' => 'sometimes|required|numeric|min:1',
+            'config.'.$input['server_type_select'].'.scheme' => 'sometimes|required|string|min:1',
+            'config.'.$input['server_type_select'].'.username' => 'sometimes|required|string',
+            'config.'.$input['server_type_select'].'.driver' => 'sometimes|required|string',
+            'config.'.$input['server_type_select'].'.default-database-name' => 'sometimes|required|string',
+            'config.'.$input['server_type_select'].'.access_token' => 'sometimes|required|string|min:1'
         ]);
 
         if ($validator->fails()) {
@@ -239,28 +236,33 @@ class ServerController extends ResourceController
                 switch ($key) {
 
                     case 'server_id_text':
-                        $flash_message = 'Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'server_type_select':
+                        $flash_message = 'Type is not selected';
                         break;
                     case 'host_text':
                         $flash_message = 'Host format is invalid (use subdomain.domain.tld)';
                         break;
-                    case 'config.'.$type.'.port':
+                    case 'config.'.$input['server_type_select'].'.port':
                         $flash_message = 'Port must be an integer and larger than 0';
                         break;
-                    case 'config.'.$type.'.username':
-                        $flash_message = 'User Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                    case 'config.'.$input['server_type_select'].'.scheme':
+                        $flash_message = 'Scheme is not selected';
                         break;
-                    case 'config.'.$type.'.driver':
-                        $flash_message = 'Driver contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                    case 'config.'.$input['server_type_select'].'.username':
+                        $flash_message = 'User Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
-                    case 'config.'.$type.'.default-database-name':
-                        $flash_message = 'Default Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                    case 'config.'.$input['server_type_select'].'.driver':
+                        $flash_message = 'Driver is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
-                    /*
-                    case 'config.'.$type.'.access_token':
-                        $flash_message = 'Port must be an integer and larger than 0';
+                    case 'config.'.$input['server_type_select'].'.default-database-name':
+                        $flash_message = 'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
-                    */
+                    case 'config.'.$input['server_type_select'].'.access_token':
+                        $flash_message = 'Access Token is blank or contains invalid characters';
+                        break;
+
                 }
 
                 break;
@@ -271,12 +273,27 @@ class ServerController extends ResourceController
             return redirect('/v1/servers/create')->withInput();
         }
 
-        unset($input['_method']);
-        unset($input['_token']);
-        unset($input['config']);
-        unset($input['server_type_select']);
-
         try{
+            $input = Input::all();
+
+            $type = $input['server_type_select'];
+            $input_config = $input['config'][$type];
+            $input['config_text'] = $input_config;
+
+            if ($type == 'db') {
+                $input['server_type_id'] = 1;
+            }
+            if ($type == 'web') {
+                $input['server_type_id'] = 2;
+            }
+            if ($type == 'app') {
+                $input['server_type_id'] = 3;
+            }
+
+            unset($input['_method']);
+            unset($input['_token']);
+            unset($input['config']);
+            unset($input['server_type_select']);
 
             $create_server = new Server();
             $create_server->create($input);

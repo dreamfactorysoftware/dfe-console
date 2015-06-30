@@ -179,10 +179,10 @@ HTML;
                 switch ($key) {
 
                     case 'cluster_id_text':
-                        $flash_message = 'Name contain invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Name is blank or contain invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'subdomain_text':
-                        $flash_message = 'Host format is invalid (use subdomain.domain.tld)';
+                        $flash_message = 'Host is blank or format is invalid (use subdomain.domain.tld)';
                         break;
                 }
 
@@ -271,10 +271,10 @@ HTML;
                 switch ($key) {
 
                     case 'cluster_id_text':
-                        $flash_message = 'Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'subdomain_text':
-                        $flash_message = 'DNS Subdomain format is invalid (use subdomain.domain.tld)';
+                        $flash_message = 'DNS Subdomain is blank or format is invalid (use subdomain.domain.tld)';
                         break;
                 }
 
