@@ -245,7 +245,7 @@ class StorageProvisioner extends BaseService implements ResourceProvisioner, Pri
         }
 
         //  Create our zip container
-        return $this->archiveTree($_source, $_path . DIRECTORY_SEPARATOR . $_file);
+        return static::archiveTree($_source, $_path . DIRECTORY_SEPARATOR . $_file);
     }
 
     /** @inheritdoc */

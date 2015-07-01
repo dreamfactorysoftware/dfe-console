@@ -24,7 +24,7 @@ class SnapshotService extends BaseService
     //* Traits
     //******************************************************************************
 
-    use EntityLookup, Archivist, Notifier;
+    use Archivist, EntityLookup, Notifier;
 
     //*************************************************************************
     //* Methods
@@ -55,7 +55,7 @@ class SnapshotService extends BaseService
         $_snapshotName = str_replace('{id}', $_snapshotId, config('snapshot.templates.snapshot-file-name'));
 
         //  Make our temp path...
-        $_workPath = $this->getWorkPath($_snapshotId, true) . DIRECTORY_SEPARATOR;
+        $_workPath = static::getWorkPath($_snapshotId, true) . DIRECTORY_SEPARATOR;
 
         //  Create the snapshot archive and stuff it full of goodies
         $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . $_snapshotName));
@@ -101,7 +101,7 @@ class SnapshotService extends BaseService
                  */
                 if (false !== ($_outfile = $_service->export($_request, $_to))) {
                     $_metadata[$_type . '-export'] = $_outfile;
-                    $this->moveWorkFile($_fsSnapshot, $_workPath . $_outfile);
+                    static::moveWorkFile($_fsSnapshot, $_workPath . $_outfile);
                 }
             }
 
@@ -114,7 +114,7 @@ class SnapshotService extends BaseService
                 $this->flushZipArchive($_fsSnapshot);
 
                 //  Move the snapshot archive into the "snapshots" private storage area
-                $this->moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_snapshotName);
+                static::moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_snapshotName);
 
                 //  Generate a record for the dashboard
                 $_routeHash = RouteHash::byHash($_routeHash)->first();
@@ -151,11 +151,10 @@ HTML
             }
         } catch (\Exception $_ex) {
             $this->error('exception during sub-provisioner export call: ' . $_ex->getMessage());
-        }
-        finally {
+        } finally {
             //  Cleanup
             $_fsSnapshot = null;
-            $this->deleteWorkPath($_snapshotId);
+            static::deleteWorkPath($_snapshotId);
         }
 
         return $_success;
@@ -171,7 +170,7 @@ HTML
     public function restore($snapshotId)
     {
         //  Mount the snapshot
-        $_workPath = $this->getWorkPath('restore.' . $snapshotId) . DIRECTORY_SEPARATOR;
+        $_workPath = static::getWorkPath('restore.' . $snapshotId) . DIRECTORY_SEPARATOR;
         $_fsSnapshot = $this->mountSnapshot($snapshotId, $_workPath);
         $_workFile = $_workPath . config('snapshot.metadata-file-name');
 
@@ -218,7 +217,7 @@ HTML
      */
     protected function mountSnapshot($snapshotId, $workPath = null)
     {
-        $_workPath = $workPath ?: $this->getWorkPath($snapshotId);
+        $_workPath = $workPath ?: static::getWorkPath($snapshotId);
 
         $_model = $this->_findSnapshot($snapshotId);
         $_url = 'http://' . str_ireplace(['http://', 'https://', '//', '://'], null, $_model->public_url_text);
