@@ -221,7 +221,7 @@ HTML
         $_url = 'http://' . str_ireplace(['http://', 'https://', '//', '://'], null, $_model->public_url_text);
         $_workFile = $_workPath . DIRECTORY_SEPARATOR . $_model->snapshot_id_text . '.zip';
 
-        if (!$this->download($_url, $_workFile)) {
+        if (!$this->getSnapshotFromUrl($_url, $_workFile)) {
             throw new \InvalidArgumentException('Error downloading snapshot "' . $snapshotId . '"');
         }
 
@@ -245,7 +245,7 @@ HTML
      *
      * @return bool
      */
-    protected function download($url, $path)
+    protected function getSnapshotFromUrl($url, $path)
     {
         if (false !== ($_source = fopen($url, 'rb')) && false !== ($_target = fopen($path, 'wb'))) {
             while (!feof($$_source)) {

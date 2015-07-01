@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Enterprise\Services\Facades\InstanceStorage;
+use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
 use Illuminate\Filesystem\FilesystemAdapter;
 
 class InstanceStorageServiceTest extends \TestCase
