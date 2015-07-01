@@ -321,6 +321,7 @@ class ServerController extends ResourceController
     {
         try {
             $id_array = [];
+            $server_names = [];
 
             if ($ids == 'multi') {
                 $params = Input::all();
@@ -331,16 +332,31 @@ class ServerController extends ResourceController
             }
 
             foreach ($id_array as $id) {
-                Server::find($id)->delete();
+                $server = Server::where('id', '=', $id);
+                $server_name = $server->get(['server_id_text']);
+                array_push($server_names, '"'.$server_name[0]->server_id_text.'"');
+                $server->delete();
                 ClusterServer::where('server_id', '=', intval($id))->delete();
             }
 
-            if(count($id_array) > 1) {
-                $result_text = 'The servers were deleted successfully!';
+            if(count($id_array) > 1)
+            {
+                $servers = '';
+                foreach ($server_names as $i => $name)
+                {
+                    $servers .= $name;
+
+                    if (count($server_names) > $i + 1)
+                    {
+                        $servers .= ', ';
+                    }
+                }
+
+                $result_text = 'The servers '.$servers.' were deleted successfully!';
             }
             else
             {
-                $result_text = 'The server was deleted successfully!';
+                $result_text = 'The server '.$server_names[0].' was deleted successfully!';
             }
 
             $result_status = 'alert-success';

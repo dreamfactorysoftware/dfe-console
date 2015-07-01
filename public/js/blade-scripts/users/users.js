@@ -32,7 +32,6 @@ function initUserEditSet(status){
 }
 
 
-
 function systemAdminClick(){
 
     var status = $("#system_admin").is(':checked');
@@ -42,10 +41,6 @@ function systemAdminClick(){
     else
         $("#advancedUserOptions").show();
 }
-
-
-
-
 
 
 function removeUser(id, name, type) {
@@ -64,16 +59,20 @@ $('#selectedUsersRemove').click(function(){
 
     var deleteArrayIds = [];
     var deleteArrayTypes = [];
+    var deleteNames = '';
 
     $('input[type=checkbox]').each(function () {
 
         var val = this.value.split(',');
 
         if(this.checked){
+            deleteNames += '"' + this.name + '", ';
             deleteArrayIds.push(val[0]);
             deleteArrayTypes.push(val[1]);
         }
     });
+
+    deleteNames = deleteNames.substring(0, deleteNames.length - 2);
 
     if(!deleteArrayIds.length){
         alert('No User(s) Selected!');
@@ -83,7 +82,7 @@ $('#selectedUsersRemove').click(function(){
     $('#_selectedIds').val(deleteArrayIds);
     $('#_selectedTypes').val(deleteArrayTypes);
 
-    if(confirm('Remove Selected Users?')){
+    if(confirm('Remove Selected Users ' + deleteNames + ' ?')){
         $('#multi_delete').submit();
         return true;
     }

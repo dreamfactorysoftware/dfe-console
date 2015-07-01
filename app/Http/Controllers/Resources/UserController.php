@@ -326,33 +326,62 @@ class UserController extends ResourceController
         $user_data = \Input::all();
         $id_array = [];
 
+        $user_names = [];
+
         try {
 
             if ($ids != 'multi') {
                 if ($user_data['user_type'] != "") {
-                    ServiceUser::find($ids)->delete();
+                    $user = ServiceUser::where('id', '=', $ids);
+                    $user_name = $user->get(['first_name_text', 'last_name_text']);
+                    array_push($user_names, '"'.$user_name[0]->first_name_text.' '.$user_name[0]->last_name_text.'"');
+                    $user->delete();
                 } else {
-                    User::find($ids)->delete();
+                    $user = User::where('id', '=', $ids);
+                    $user_name = $user->get(['first_name_text', 'last_name_text']);
+                    array_push($user_names, '"'.$user_name[0]->first_name_text.' '.$user_name[0]->last_name_text.'"');
+                    $user->delete();
                 }
             } else {
                 $id_array = explode(',', $user_data['_selectedIds']);
                 $type_array = explode(',', $user_data['_selectedTypes']);
 
+
+
                 foreach ($id_array as $i => $id) {
-                    if ($type_array[$i] != "") {
-                        ServiceUser::find($id_array[$i])->delete();
-                    } else {
-                        User::find($id_array[$i])->delete();
+                    if ($type_array[$i] != "")
+                    {
+                        $user = ServiceUser::where('id', '=', $id);
+                        $user_name = $user->get(['first_name_text', 'last_name_text']);
+                        array_push($user_names, '"'.$user_name[0]->first_name_text.' '.$user_name[0]->last_name_text.'"');
+                        $user->delete();
+                    } else
+                    {
+                        $user = User::where('id', '=', $id);
+                        $user_name = $user->get(['first_name_text', 'last_name_text']);
+                        array_push($user_names, '"'.$user_name[0]->first_name_text.' '.$user_name[0]->last_name_text.'"');
+                        $user->delete();
                     }
                 }
             }
 
             if(count($id_array) > 1) {
-                $result_text = 'The users were deleted successfully!';
+                $names = '';
+                foreach ($user_names as $i => $name)
+                {
+                    $names .= $name;
+
+                    if (count($user_names) > $i + 1)
+                    {
+                        $names .= ', ';
+                    }
+                }
+
+                $result_text = 'The users '.$names.' were deleted successfully!';
             }
             else
             {
-                $result_text = 'The user was deleted successfully!';
+                $result_text = 'The user '.$user_names[0].' was deleted successfully!';
             }
 
             $result_status = 'alert-success';
@@ -367,7 +396,7 @@ class UserController extends ResourceController
         }
         catch (\Illuminate\Database\QueryException $e) {
             //$res_text = $e->getMessage();
-            Session::flash('flash_message', 'An error occurred! Please try again.');
+            Session::flash('flash_message', 'Error! One or more users can\'t be deleted because a resource is assigned to the user(s). ');
             Session::flash('flash_type', 'alert-danger');
             return redirect('/v1/users')->withInput();
         }
@@ -388,8 +417,8 @@ class UserController extends ResourceController
             'active_ind',
         ];
 
-        $o_users = $users_owners->take(500)->get($_columns);
-        $a_users = $users_admins->take(500)->get($_columns);
+        $o_users = $users_owners->get($_columns);
+        $a_users = $users_admins->get($_columns);
 
         $o_users_array = json_decode($o_users);
         $a_users_array = json_decode($a_users);

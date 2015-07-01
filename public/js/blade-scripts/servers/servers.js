@@ -232,12 +232,17 @@ function removeServer(id, name) {
 $('#selectedServersRemove').click(function(){
 
     var deleteArray = [];
+    var deleteNames = '';
 
-    $('input[type=checkbox]').each(function () {
-
+    $('input[type=checkbox]').each(function (event) {
         if(this.checked)
+        {
+            deleteNames += '"' + this.name + '", ';
             deleteArray.push(this.value);
+        }
     });
+
+    deleteNames = deleteNames.substring(0, deleteNames.length - 2);
 
     if(!deleteArray.length){
         alert('No Server(s) Selected!');
@@ -246,7 +251,7 @@ $('#selectedServersRemove').click(function(){
 
     $('#_selected').val(deleteArray);
 
-    if(confirm('Remove Selected Servers?')){
+    if(confirm('Remove Selected Servers ' + deleteNames + ' ?')){
         $('#multi_delete').submit();
         return true;
     }

@@ -313,6 +313,7 @@ HTML;
     {
         try {
             $id_array = [];
+            $cluster_names = [];
 
             if ($ids == 'multi') {
                 $params = Input::all();
@@ -323,16 +324,31 @@ HTML;
             }
 
             foreach ($id_array as $id) {
-                Cluster::find($id)->delete();
-                ClusterServer::where('cluster_id', '=', intval($id))->delete();
+                $cluster = Cluster::where('id', '=', $id);
+                $cluster_name = $cluster->get(['cluster_id_text']);
+                array_push($cluster_names, '"'.$cluster_name[0]->cluster_id_text.'"');
+                $cluster->delete();
+                ClusterServer::where('server_id', '=', intval($id))->delete();
             }
 
-            if(count($id_array) > 1) {
-                $result_text = 'The clusters were deleted successfully!';
+            if(count($id_array) > 1)
+            {
+                $clusters = '';
+                foreach ($cluster_names as $i => $name)
+                {
+                    $clusters .= $name;
+
+                    if (count($cluster_names) > $i + 1)
+                    {
+                        $clusters .= ', ';
+                    }
+                }
+
+                $result_text = 'The servers '.$clusters.' were deleted successfully!';
             }
             else
             {
-                $result_text = 'The cluster was deleted successfully!';
+                $result_text = 'The server '.$cluster_names[0].' was deleted successfully!';
             }
 
             $result_status = 'alert-success';
@@ -346,10 +362,10 @@ HTML;
                 ->with('flash_type', $result_status);
         }
         catch (\Illuminate\Database\QueryException $e) {
-            //$res_text = $e->getMessage();
+            //$res_text = $e->getMessage(); 
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
-            return redirect('/v1/servers')->withInput();
+            return redirect('/v1/clusters')->withInput();
         }
     }
 

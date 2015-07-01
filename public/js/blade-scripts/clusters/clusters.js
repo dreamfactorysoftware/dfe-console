@@ -186,12 +186,18 @@ function removeCluster(id, name) {
 $('#selectedClustersRemove').click(function(){
 
     var deleteArray = [];
+    var deleteNames = '';
 
     $('input[type=checkbox]').each(function () {
 
         if(this.checked)
+        {
+            deleteNames += '"' + this.name + '", ';
             deleteArray.push(this.value);
+        }
     });
+
+    deleteNames = deleteNames.substring(0, deleteNames.length - 2);
 
     if(!deleteArray.length){
         alert('No Cluster(s) Selected!');
@@ -200,15 +206,13 @@ $('#selectedClustersRemove').click(function(){
 
     $('#_selected').val(deleteArray);
 
-    if(confirm('Remove Selected Clusters?')){
+    if(confirm('Remove Selected Clusters ' + deleteNames + ' ?')){
         $('#multi_delete').submit();
         return true;
     }
     else
         return false;
 });
-
-
 
 
 $( document ).ready(function() {
