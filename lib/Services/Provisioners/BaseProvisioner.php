@@ -3,15 +3,14 @@
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\Notifier;
-use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 
@@ -43,7 +42,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation, LockingService, TemplateEmailQueueing, Notifier;
+    use InstanceValidation, LockingService, Notifier;
 
     //******************************************************************************
     //* Members
@@ -189,8 +188,12 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
             'headTitle'     => $_result ? 'Retirement Complete' : 'Retirement Failure',
             'contentHeader' => $_result ? 'Your instance has been retired' : 'Your instance is not quite retired',
             'emailBody'     => $_result
-                ? '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> has been retired.  A snapshot may be available in the dashboard, under <strong>Snapshots</strong>.</p>'
-                : '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> retirement was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
+                ? '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> has been retired.  A snapshot may be available in the dashboard, under <strong>Snapshots</strong>.</p>'
+                : '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> retirement was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
         ];
 
         $_subject = $_result['success'] ? 'Instance retirement successful' : 'Instance retirement failure';
@@ -212,7 +215,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         //  Put instance ID into the correct place
         isset($data['instance']) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        return Audit::log($data, $level, app('request'), ($deprovisioning ? 'de' : null) . 'provision');
+        return \Audit::log($data, $level, app('request'), ($deprovisioning ? 'de' : null) . 'provision');
     }
 
     /** @inheritdoc */

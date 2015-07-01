@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
@@ -13,7 +14,6 @@ use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Partner\AlertPartner;
 use DreamFactory\Enterprise\Partner\Facades\Partner;
-use DreamFactory\Enterprise\Services\Contracts\ProvidesOfferings;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
@@ -194,7 +194,7 @@ class OpsController extends Controller
             foreach ($_provisioners as $_tag => $_provisioner) {
                 $_offerings = false;
 
-                if ($_provisioner instanceof ProvidesOfferings) {
+                if ($_provisioner instanceof OfferingsAware) {
                     foreach ($_provisioner->getOfferings() as $_name => $_config) {
                         $_offerings[$_name] = $_config;
                     }

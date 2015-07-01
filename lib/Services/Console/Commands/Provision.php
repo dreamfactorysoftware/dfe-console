@@ -53,16 +53,17 @@ class Provision extends Command
      */
     protected function getArguments()
     {
-        return [
-            ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
-            ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
+        return array_merge(parent::getArguments(),
             [
-                'guest-location',
-                InputArgument::OPTIONAL,
-                'The location of the new instance. Values: 1 = DFE, 2 = AWS, or 3 = Azure.',
-                config('dfe.provisioning.default-guest-location')
-            ],
-        ];
+                ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
+                ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
+                [
+                    'guest-location',
+                    InputArgument::OPTIONAL,
+                    'The location of the new instance. Values: 1 = DFE, 2 = AWS, or 3 = Azure.',
+                    config('dfe.provisioning.default-guest-location'),
+                ],
+            ]);
     }
 
     /**
@@ -72,28 +73,34 @@ class Provision extends Command
      */
     protected function getOptions()
     {
-        return [
+        return array_merge(parent::getArguments(),
             [
-                'cluster-id',
-                'c',
-                InputOption::VALUE_OPTIONAL,
-                'The cluster-id where this instance should be placed.',
-                config('dfe.provisioning.default-cluster-id')
-            ],
-            ['restart', 'r', InputOption::VALUE_NONE, 'If specified, an existing stopped instance will be restarted.'],
-            [
-                'trial',
-                't',
-                InputOption::VALUE_NONE,
-                'If specified, sets the trial flag to TRUE on the provisioned instance.'
-            ],
-            [
-                'tag',
-                'a',
-                InputOption::VALUE_OPTIONAL,
-                'The key to use for retrieving this instance from the manager. Defaults to the instance name.'
-            ]
-        ];
+                [
+                    'cluster-id',
+                    'c',
+                    InputOption::VALUE_OPTIONAL,
+                    'The cluster-id where this instance should be placed.',
+                    config('dfe.provisioning.default-cluster-id'),
+                ],
+                [
+                    'restart',
+                    'r',
+                    InputOption::VALUE_NONE,
+                    'If specified, an existing stopped instance will be restarted.',
+                ],
+                [
+                    'trial',
+                    't',
+                    InputOption::VALUE_NONE,
+                    'If specified, sets the trial flag to TRUE on the provisioned instance.',
+                ],
+                [
+                    'tag',
+                    'a',
+                    InputOption::VALUE_OPTIONAL,
+                    'The key to use for retrieving this instance from the manager. Defaults to the instance name.',
+                ],
+            ]);
     }
 
 }

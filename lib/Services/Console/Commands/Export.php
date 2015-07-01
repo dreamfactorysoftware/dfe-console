@@ -31,14 +31,7 @@ class Export extends Command
      */
     public function fire()
     {
-        return \Queue::push(
-            new ExportJob(
-                $this->argument('instance-id'),
-                [
-                    'destination' => $this->option('destination'),
-                ]
-            )
-        );
+        return \Queue::push(new ExportJob($this->argument('instance-id'), $this->option('destination')));
     }
 
     /**
@@ -48,9 +41,10 @@ class Export extends Command
      */
     protected function getArguments()
     {
-        return [
-            ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
-        ];
+        return array_merge(parent::getArguments(),
+            [
+                ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
+            ]);
     }
 
     /**
@@ -60,9 +54,15 @@ class Export extends Command
      */
     protected function getOptions()
     {
-        return [
-            ['destination', 'd', InputOption::VALUE_OPTIONAL, 'The path to where you would like the export placed.'],
-        ];
+        return array_merge(parent::getOptions(),
+            [
+                [
+                    'destination',
+                    'd',
+                    InputOption::VALUE_OPTIONAL,
+                    'The path to where you would like the export placed.',
+                ],
+            ]);
     }
 
 }

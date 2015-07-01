@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Queue;
 use Symfony\Component\Console\Input\InputArgument;
 
 class Deprovision extends Command
@@ -49,9 +48,10 @@ class Deprovision extends Command
      */
     protected function getArguments()
     {
-        return [
-            ['instance-id', InputArgument::REQUIRED, 'The name of the instance to deprovision'],
-        ];
+        return array_merge(parent::getArguments(),
+            [
+                ['instance-id', InputArgument::REQUIRED, 'The name of the instance to deprovision'],
+            ]);
     }
 
 }

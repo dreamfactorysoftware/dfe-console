@@ -1,7 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Enums\ServerTypes;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Server;
@@ -51,9 +51,8 @@ class Manifest extends Command
         );
 
         $this->_job
-            ->setInputOutput($this->input, $this->output)
-            ->setOwnerId($this->option('owner-id'))
-            ->setOwnerType($this->option('owner-type'))
+            ->setInput($this->input)->setOutput($this->output)
+            ->setOwner($this->option('owner-id'), $this->option('owner-type'))
             ->setShowManifest($this->option('show'))
             ->setCreateManifest($this->option('create'))
             ->setNoKeys($this->option('no-keys'));
@@ -142,7 +141,7 @@ class Manifest extends Command
      */
     public function getOwner()
     {
-        return $this->_locateOwner($this->_job->getOwnerId(), $this->_job->getOwnerType());
+        return $this->_locateOwner($this->_job->getOwner()->id, $this->_job->getOwnerType());
     }
 
 }

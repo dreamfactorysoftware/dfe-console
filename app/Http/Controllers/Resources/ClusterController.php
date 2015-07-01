@@ -1,16 +1,16 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use Session;
-use Validator;
+use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
 use DreamFactory\Enterprise\Database\Models\Server;
-use DreamFactory\Enterprise\Services\Enums\ServerTypes;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
+use Session;
+use Validator;
 
 class ClusterController extends ResourceController
 {
@@ -62,12 +62,12 @@ class ClusterController extends ResourceController
         $_ids = [];
 
         $_rows = ClusterServer::join('server_t', 'id', '=', 'server_id')->get([
-                'server_t.id',
-                'server_t.server_id_text',
-                'server_t.server_type_id',
-                'server_t.config_text',
-                'cluster_server_asgn_t.cluster_id',
-            ]);
+            'server_t.id',
+            'server_t.server_id_text',
+            'server_t.server_type_id',
+            'server_t.config_text',
+            'cluster_server_asgn_t.cluster_id',
+        ]);
 
         /** @type Server $_server */
         foreach ($_rows as $_server) {
@@ -150,13 +150,14 @@ HTML;
             }
         }
 
-        return \View::make('app.clusters.edit', [
-                'cluster_id'          => $id,
-                'prefix'              => $this->_prefix,
-                'cluster'             => $_cluster,
-                'servers'             => json_encode($_data),
+        return \View::make('app.clusters.edit',
+            [
+                'cluster_id' => $id,
+                'prefix' => $this->_prefix,
+                'cluster' => $_cluster,
+                'servers' => json_encode($_data),
                 'server_dropdown_all' => json_encode($_dropdown_all),
-                'server_dropdown'     => $_dropdown,
+                'server_dropdown' => $_dropdown,
             ]);
     }
 
@@ -164,10 +165,14 @@ HTML;
     {
         $cluster_data = Input::all();
 
-        $validator = Validator::make($cluster_data, [
-            'cluster_id_text' => 'required|string',
-            'subdomain_text' => array("required", "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i")
-        ]);
+        $validator = Validator::make($cluster_data,
+            [
+                'cluster_id_text' => 'required|string',
+                'subdomain_text'  => [
+                    "required",
+                    "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
+                ],
+            ]);
 
         if ($validator->fails()) {
 
@@ -175,7 +180,7 @@ HTML;
 
             $flash_message = '';
 
-            foreach($messages as $key => $value){
+            foreach ($messages as $key => $value) {
                 switch ($key) {
 
                     case 'cluster_id_text':
@@ -191,9 +196,9 @@ HTML;
 
             Session::flash('flash_message', $flash_message);
             Session::flash('flash_type', 'alert-danger');
-            return redirect('/v1/clusters/'.$id.'/edit')->withInput();
-        }
 
+            return redirect('/v1/clusters/' . $id . '/edit')->withInput();
+        }
 
         $servers = $cluster_data['_server_list'];
 
@@ -201,54 +206,53 @@ HTML;
         unset($cluster_data['_token']);
         unset($cluster_data['_server_list']);
 
-
         try {
-        $cluster_assigned_servers_array = [];
+            $cluster_assigned_servers_array = [];
 
-        if ($servers != '') {
-            $cluster_assigned_servers_array = array_map('intval', explode(',', $servers));
-        }
+            if ($servers != '') {
+                $cluster_assigned_servers_array = array_map('intval', explode(',', $servers));
+            }
 
-        $cluster_server_list = ClusterServer::where('cluster_id', '=', $id)->select(['server_id'])->get();
+            $cluster_server_list = ClusterServer::where('cluster_id', '=', $id)->select(['server_id'])->get();
 
-        $server_ids = [];
+            $server_ids = [];
 
-        foreach ($cluster_server_list as $value) {
-            array_push($server_ids, intval($value->server_id));
-        }
+            foreach ($cluster_server_list as $value) {
+                array_push($server_ids, intval($value->server_id));
+            }
 
-        $servers_remove = array_diff($server_ids, $cluster_assigned_servers_array);
+            $servers_remove = array_diff($server_ids, $cluster_assigned_servers_array);
 
-        foreach (array_values($servers_remove) as $value) {
-            ClusterServer::where('server_id', '=', intval($value))->where('cluster_id', '=', intval($id))->delete();
-        }
+            foreach (array_values($servers_remove) as $value) {
+                ClusterServer::where('server_id', '=', intval($value))->where('cluster_id', '=', intval($id))->delete();
+            }
 
-        $servers_add = array_diff($cluster_assigned_servers_array, $server_ids);
+            $servers_add = array_diff($cluster_assigned_servers_array, $server_ids);
 
-        foreach (array_values($servers_add) as $value) {
-            $add = ['server_id' => intval($value), 'cluster_id' => intval($id)];
-            ClusterServer::create($add);
-        }
+            foreach (array_values($servers_add) as $value) {
+                $add = ['server_id' => intval($value), 'cluster_id' => intval($id)];
+                ClusterServer::create($add);
+            }
 
-        $cluster = Cluster::find($id);
-        $cluster->update($cluster_data);
+            $cluster = Cluster::find($id);
+            $cluster->update($cluster_data);
 
-            $result_text = 'The server "'.$cluster_data['cluster_id_text'].'" was updated successfully!';
+            $result_text = 'The server "' . $cluster_data['cluster_id_text'] . '" was updated successfully!';
             $result_status = 'alert-success';
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/clusters';
+            $_redirect = '/';
+            $_redirect .= $this->_prefix;
+            $_redirect .= '/clusters';
 
             return Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
-        }
-        catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
-            return redirect('/v1/clusters/'.$id.'/edit')->withInput();
+
+            return redirect('/v1/clusters/' . $id . '/edit')->withInput();
         }
     }
 
@@ -256,10 +260,14 @@ HTML;
     {
         $input = Input::all();
 
-        $validator = Validator::make($input, [
-            'cluster_id_text' => 'required|string',
-            'subdomain_text' => array("required", "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i")
-        ]);
+        $validator = Validator::make($input,
+            [
+                'cluster_id_text' => 'required|string',
+                'subdomain_text'  => [
+                    "required",
+                    "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
+                ],
+            ]);
 
         if ($validator->fails()) {
 
@@ -267,7 +275,7 @@ HTML;
 
             $flash_message = '';
 
-            foreach($messages as $key => $value){
+            foreach ($messages as $key => $value) {
                 switch ($key) {
 
                     case 'cluster_id_text':
@@ -283,14 +291,15 @@ HTML;
 
             Session::flash('flash_message', $flash_message);
             Session::flash('flash_type', 'alert-danger');
+
             return redirect('/v1/clusters/create')->withInput();
         }
 
-        try{
+        try {
             $create_cluster = new Cluster;
             $create_cluster->create($input);
 
-            $result_text = 'The cluster "'.$input['cluster_id_text'].'" was created successfully!';
+            $result_text = 'The cluster "' . $input['cluster_id_text'] . '" was created successfully!';
             $result_status = 'alert-success';
 
             $_redirect = '/';
@@ -300,11 +309,11 @@ HTML;
             return Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
-        }
-        catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
+
             return redirect('/v1/clusters/create')->withInput();
         }
     }
@@ -326,29 +335,24 @@ HTML;
             foreach ($id_array as $id) {
                 $cluster = Cluster::where('id', '=', $id);
                 $cluster_name = $cluster->get(['cluster_id_text']);
-                array_push($cluster_names, '"'.$cluster_name[0]->cluster_id_text.'"');
+                array_push($cluster_names, '"' . $cluster_name[0]->cluster_id_text . '"');
                 $cluster->delete();
                 ClusterServer::where('server_id', '=', intval($id))->delete();
             }
 
-            if(count($id_array) > 1)
-            {
+            if (count($id_array) > 1) {
                 $clusters = '';
-                foreach ($cluster_names as $i => $name)
-                {
+                foreach ($cluster_names as $i => $name) {
                     $clusters .= $name;
 
-                    if (count($cluster_names) > $i + 1)
-                    {
+                    if (count($cluster_names) > $i + 1) {
                         $clusters .= ', ';
                     }
                 }
 
-                $result_text = 'The servers '.$clusters.' were deleted successfully!';
-            }
-            else
-            {
-                $result_text = 'The server '.$cluster_names[0].' was deleted successfully!';
+                $result_text = 'The servers ' . $clusters . ' were deleted successfully!';
+            } else {
+                $result_text = 'The server ' . $cluster_names[0] . ' was deleted successfully!';
             }
 
             $result_status = 'alert-success';
@@ -360,11 +364,11 @@ HTML;
             return Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
-        }
-        catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             //$res_text = $e->getMessage(); 
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
+
             return redirect('/v1/clusters')->withInput();
         }
     }

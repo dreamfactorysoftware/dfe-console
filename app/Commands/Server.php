@@ -1,10 +1,10 @@
 <?php namespace DreamFactory\Enterprise\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
+use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
 use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Enums\ServerTypes;
 use DreamFactory\Enterprise\Database\Models;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;

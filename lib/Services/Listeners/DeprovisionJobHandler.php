@@ -1,9 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
-use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 
 /**
  * Processes queued deprovision requests

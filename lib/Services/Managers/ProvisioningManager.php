@@ -7,11 +7,11 @@ use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
+use DreamFactory\Enterprise\Common\Provisioners\PortabilityRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
-use DreamFactory\Enterprise\Services\Provisioners\PortabilityRequest;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortabilityAware
 {

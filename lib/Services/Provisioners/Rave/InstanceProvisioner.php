@@ -1,9 +1,11 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
+use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Contracts\SelfAware;
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Enums\OperationalStates;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\HasOfferings;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
@@ -12,16 +14,14 @@ use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Services\Contracts\ProvidesOfferings;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
-use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings, SelfAware
+class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, SelfAware
 {
     //******************************************************************************
     //* Constants
@@ -41,16 +41,6 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings, 
     //******************************************************************************
     //* Methods
     //******************************************************************************
-
-    /**
-     * Make sure our trait gets booted
-     */
-    public function boot()
-    {
-        parent::boot();
-
-        $this->bootTrait();
-    }
 
     /**
      * @param ProvisioningRequest $request
@@ -86,7 +76,9 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings, 
             $this->deprovisionStorage($request);
 
             if (!$this->deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
-                $this->error('* unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.');
+                $this->error('* unable to remove instance "' .
+                    $_instance->instance_id_text .
+                    '" after failed provision.');
             }
         }
 
@@ -99,8 +91,8 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings, 
     }
 
     /**
-     * @param \DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest $request
-     * @param array                                                              $options
+     * @param ProvisioningRequest $request
+     * @param array               $options
      *
      * @return array
      */
@@ -248,7 +240,7 @@ class InstanceProvisioner extends BaseProvisioner implements ProvidesOfferings, 
             $_instance->setMetadata($_md);
             $_host = $this->getFullyQualifiedDomainName($_name);
 
-            \DB::transaction(function () use ($_instance, $_host) {
+            \DB::transaction(function () use ($_instance, $_host){
                 /**
                  * Add guest data if there is a guest record
                  */

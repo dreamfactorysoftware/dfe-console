@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
@@ -10,7 +11,6 @@ use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Database\Models\RouteHash;
 use DreamFactory\Enterprise\Database\Models\Snapshot;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Provisioners\ProvisioningRequest;
 use DreamFactory\Library\Utility\Inflector;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
@@ -151,7 +151,8 @@ HTML
             }
         } catch (\Exception $_ex) {
             $this->error('exception during sub-provisioner export call: ' . $_ex->getMessage());
-        } finally {
+        }
+        finally {
             //  Cleanup
             $_fsSnapshot = null;
             $this->deleteWorkPath($_snapshotId);
@@ -181,7 +182,9 @@ HTML
         //  Try and locate the instance
         $_instanceId = $_snapshot->get('instance-id');
         if (false === ($_instance = $this->_locateInstance($_instanceId))) {
-            throw new \InvalidArgumentException('Instance "' . $_instanceId . '" is not eligible to be an import target.');
+            throw new \InvalidArgumentException('Instance "' .
+                $_instanceId .
+                '" is not eligible to be an import target.');
         }
 
         $_request = new ProvisioningRequest($_instance);
