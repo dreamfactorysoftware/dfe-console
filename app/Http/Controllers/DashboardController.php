@@ -1,10 +1,10 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Enums\ElkIntervals;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
-use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
-use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
-use DreamFactory\Enterprise\Console\Services\ElkService;
+use DreamFactory\Enterprise\Common\Providers\ElkServiceProvider;
+use DreamFactory\Enterprise\Common\Services\ElkService;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;

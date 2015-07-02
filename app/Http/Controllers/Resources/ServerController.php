@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use Illuminate\Database\QueryException;
 use Session;
 use Validator;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
@@ -200,7 +201,7 @@ class ServerController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         }
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
@@ -309,7 +310,7 @@ class ServerController extends ResourceController
             ->with('flash_message', $result_text)
             ->with('flash_type', $result_status);
         }
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
@@ -369,7 +370,7 @@ class ServerController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         }
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');

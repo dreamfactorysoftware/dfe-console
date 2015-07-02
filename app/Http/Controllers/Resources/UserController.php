@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use Illuminate\Database\QueryException;
 use Session;
 use Validator;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
@@ -156,7 +157,7 @@ class UserController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         }
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             $res_text = strtolower($e->getMessage());
 
             if (strpos($res_text, 'duplicate entry') !== FALSE)
@@ -302,7 +303,7 @@ class UserController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         }
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
@@ -394,7 +395,7 @@ class UserController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         }
-        catch (\Illuminate\Database\QueryException $e) {
+        catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'Error! One or more users can\'t be deleted because a resource is assigned to the user(s). ');
             Session::flash('flash_type', 'alert-danger');
