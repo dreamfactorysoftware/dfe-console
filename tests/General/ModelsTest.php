@@ -6,10 +6,14 @@ class ModelsTest extends \TestCase
 {
     public function testOne()
     {
+        /** @type Cluster $_cluster */
         $_cluster = Cluster::byNameOrId('cluster-east-1')->firstOrFail();
+        $_assigns = $_cluster->assignedServers();
 
-        if ($_cluster->servers) {
-            foreach ($_cluster->servers as $_server) {
+        foreach ($_assigns as $_assign) {
+            if ($_assign->server) {
+                $_server = $_assign->server;
+
                 if ($_server->mount) {
                     $_mount = $_server->mount;
                 }
