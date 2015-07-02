@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Http\Controllers\Auth\CommonAuthController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\User;
 
 class AuthController extends CommonAuthController
 {

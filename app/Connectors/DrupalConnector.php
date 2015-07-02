@@ -1,7 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Connectors;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Database\Models\Auth\User;
+use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 
 class DrupalConnector extends BaseService
@@ -42,6 +42,8 @@ class DrupalConnector extends BaseService
      */
     public function __construct(User $user, $hashPasswords = true)
     {
+        parent::__construct();
+
         $this->_user = $user;
         $this->_hashingEnabled = $hashPasswords;
     }

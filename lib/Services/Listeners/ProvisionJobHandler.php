@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
+use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;

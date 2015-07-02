@@ -1,14 +1,6 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use Illuminate\Support\Facades\View;
-//use Illuminate\Html\HtmlServiceProvider;
-use Illuminate\Html\FormFacade;
-
-use DreamFactory\Enterprise\Database\Models\Cluster;
-
-
-
 class ReportController extends ResourceController
 {
     //******************************************************************************
@@ -24,10 +16,9 @@ class ReportController extends ResourceController
 
     protected $_prefix = 'v1';
 
-
     public function index()
     {
-        return View::make('app.reports')
+        return \View::make('app.reports')
             ->with('prefix', $this->_prefix)
             ->with('type', 'cluster-east-2');
     }
@@ -35,12 +26,11 @@ class ReportController extends ResourceController
     public function show($id)
     {
 
-        return View::make('app.reports.bandwidth')
+        return \View::make('app.reports.bandwidth')
             ->with('prefix', $this->_prefix)
             ->with('type', 'cluster-east-2');
     }
 
 }
-
 
 ?>

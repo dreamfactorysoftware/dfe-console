@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
 use DreamFactory\Enterprise\Database\Models\Server;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
@@ -247,7 +248,7 @@ HTML;
             return Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
@@ -309,7 +310,7 @@ HTML;
             return Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
@@ -364,7 +365,7 @@ HTML;
             return Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             //$res_text = $e->getMessage(); 
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
