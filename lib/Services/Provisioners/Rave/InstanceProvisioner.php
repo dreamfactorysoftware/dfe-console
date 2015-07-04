@@ -1,11 +1,10 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
-use DreamFactory\Enterprise\Common\Contracts\SelfAware;
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Enums\OperationalStates;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\HasOfferings;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
@@ -21,7 +20,7 @@ use DreamFactory\Enterprise\Services\Provisioners\BaseProvisioner;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
-class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, SelfAware
+class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
 {
     //******************************************************************************
     //* Constants
@@ -43,12 +42,11 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
     //******************************************************************************
 
     /**
-     * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param ProvisionServiceRequest $request
      *
      * @return array
      */
-    protected function doProvision($request, $options = [])
+    protected function doProvision($request)
     {
         $_output = [];
         $_success = $_result = false;
@@ -59,10 +57,10 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
 
         try {
             //  Provision storage and fill in the request
-            $this->provisionStorage($request, $options);
+            $this->provisionStorage($request);
 
             //  And the instance
-            $_result = $this->provisionInstance($request, $options);
+            $_result = $this->provisionInstance($request);
             $_instance = $_instance->fresh();
             $_success = true;
         } catch (\Exception $_ex) {
@@ -91,8 +89,8 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
     }
 
     /**
-     * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param ProvisionServiceRequest $request
+     * @param array                   $options
      *
      * @return array
      */
@@ -121,12 +119,11 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
     }
 
     /**
-     * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param ProvisionServiceRequest $request
      *
      * @return Filesystem
      */
-    protected function provisionStorage($request, $options = [])
+    protected function provisionStorage($request)
     {
         $this->debug('>>> provisioning storage');
 
@@ -145,12 +142,11 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
     }
 
     /**
-     * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param ProvisionServiceRequest $request
      *
      * @return bool
      */
-    protected function deprovisionStorage($request, $options = [])
+    protected function deprovisionStorage($request)
     {
         $this->debug('>>> deprovisioning storage');
 
@@ -166,13 +162,12 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
     }
 
     /**
-     * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param ProvisionServiceRequest $request
      *
      * @return array
      * @throws ProvisioningException
      */
-    protected function provisionInstance($request, $options = [])
+    protected function provisionInstance($request)
     {
         $_storagePath = null;
 
@@ -240,7 +235,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
             $_instance->setMetadata($_md);
             $_host = $this->getFullyQualifiedDomainName($_name);
 
-            \DB::transaction(function () use ($_instance, $_host){
+            \DB::transaction(function () use ($_instance, $_host) {
                 /**
                  * Add guest data if there is a guest record
                  */
@@ -275,8 +270,8 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
     }
 
     /**
-     * @param ProvisioningRequest $request
-     * @param array               $options ['keep-database'=>true|false]
+     * @param ProvisionServiceRequest $request
+     * @param array                   $options ['keep-database'=>true|false]
      *
      * @return bool
      * @throws ProvisioningException
@@ -333,5 +328,4 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware, Sel
             ]
         );
     }
-
 }

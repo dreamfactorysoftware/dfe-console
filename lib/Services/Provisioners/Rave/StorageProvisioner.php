@@ -1,14 +1,10 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
-use DreamFactory\Enterprise\Common\Contracts\Portability;
-use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
-use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Contracts\PortableData;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
-use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
@@ -39,84 +35,47 @@ use League\Flysystem\ZipArchive\ZipArchiveAdapter;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
  */
-class StorageProvisioner extends BaseService implements ResourceProvisioner, PrivatePathAware, Portability
+class StorageProvisioner extends BaseStorageProvisioner implements PortableData
+
 {
+    //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string My ID!
+     */
+    const PROVISIONER_ID = 'rave';
+
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation, Archivist;
-
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /**
-     * @type string The instance's private path
-     */
-    protected $privatePath = null;
-    /**
-     * @type string The user's private path
-     */
-    protected $ownerPrivatePath = null;
-    /**
-     * @type bool Indicates if the storage I govern is hosted or standalone
-     */
-    protected $hostedStorage = true;
-    /**
-     * @type array The map of storage segments
-     */
-    protected $storageMap = [];
+    use InstanceValidation, Archivist, HasPrivatePaths;
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    /** @inheritdoc */
-    public function boot()
-    {
-        parent::boot();
-
-        $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
-    }
-
-    /**
-     * @return array
-     */
-    public function getStorageMap()
-    {
-        return $this->storageMap;
-    }
-
-    /**
-     * Returns the id, config key, or short name, of this provisioner.
-     *
-     * @return string The id of this provisioner
-     */
-    public function getProvisionerId()
-    {
-        return InstanceProvisioner::PROVISIONER_ID;
-    }
-
-    /** @inheritdoc */
-    public function provision($request, $options = [])
+    /**@inheritdoc */
+    protected function doProvision($request)
     {
         //  Make structure
-        $this->createInstanceStorage($request, $options);
+        $this->createInstanceStorage($request);
     }
 
     /** @inheritdoc */
-    public function deprovision($request, $options = [])
+    protected function doDeprovision($request)
     {
         //  '86 structure
-        $this->removeInstanceStorage($request, $options);
+        return $this->removeInstanceStorage($request);
     }
 
     /**
      * Create storage structure in $filesystem
      *
-     * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param ProvisionServiceRequest $request
+     * @param array                   $options
      *
      * @throws \Exception
      */
@@ -176,8 +135,8 @@ class StorageProvisioner extends BaseService implements ResourceProvisioner, Pri
     /**
      * Delete storage of an instance
      *
-     * @param ProvisioningRequest $request
-     * @param array               $options
+     * @param ProvisionServiceRequest $request
+     * @param array                   $options
      *
      * @return bool
      */
@@ -206,87 +165,48 @@ class StorageProvisioner extends BaseService implements ResourceProvisioner, Pri
     }
 
     /** @inheritdoc */
-    public function import($request, $from, $options = [])
+    public function import($request)
     {
         $_instance = $request->getInstance();
-        $_target = $_instance->getStorageMount();
+        $_mount = $_instance->getStorageMount();
+        $_target = $request->getTarget();
 
-        if (!($from instanceof Filesystem)) {
-            $from = new Filesystem(new ZipArchiveAdapter($from));
+        if (!($_mount instanceof Filesystem)) {
+            $_mount = new Filesystem(new ZipArchiveAdapter($_mount));
         }
 
         //  If "clean" == true, storage is wiped clean before restore
-        if (true === array_get($options, 'clean', false)) {
+        if (true === $request->get('clean', false)) {
             $_target->deleteDir('./');
         }
 
         //  Extract the files
         $_restored = [];
 
-        foreach ($from->listContents() as $_file) {
-            $_restored[$_file['file']] = $_target->put($_file['file'], $from->read($_file['file']));
+        foreach ($_mount->listContents() as $_file) {
+            $_restored[$_file['file']] = $_target->put($_file['file'], $_mount->read($_file['file']));
         }
 
         return $_restored;
     }
 
     /** @inheritdoc */
-    public function export($request, $to, $options = [])
+    public function export($request)
     {
         $_instance = $request->getInstance();
-        $_source = $_instance->getStorageMount();
+        $_mount = $_instance->getStorageMount();
+        $_target = $request->getTarget();
 
         //  Make sure the output file is copacetic
-        $_path = dirname($to);
-        $_file = basename($to);
+        $_path = dirname($_target);
+        $_file = basename($_target);
 
         if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
-            throw new FileSystemException('Unable to write to export file "' . $to . '".');
+            throw new FileSystemException('Unable to write to export file "' . $_target . '".');
         }
 
         //  Create our zip container
-        return static::archiveTree($_source, $_path . DIRECTORY_SEPARATOR . $_file);
-    }
-
-    /** @inheritdoc */
-    public function getPrivatePath($append = null)
-    {
-        return $this->privatePath .
-        ($append ? DIRECTORY_SEPARATOR . ltrim($append, DIRECTORY_SEPARATOR . ' ') : $append);
-    }
-
-    /** @inheritdoc */
-    public function getOwnerPrivatePath($append = null)
-    {
-        //  I hate doing this, but it will make this service more streamlined...
-        return ($this->hostedStorage ? $this->ownerPrivatePath : $this->getPrivatePath()) .
-        ($append ? DIRECTORY_SEPARATOR . ltrim($append, DIRECTORY_SEPARATOR . ' ') : $append);
-    }
-
-    /** @inheritdoc */
-    public function getOwnerHash(Instance $instance)
-    {
-        return $instance->user->getHash();
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isHostedStorage()
-    {
-        return $this->hostedStorage;
-    }
-
-    /**
-     * @param boolean $hostedStorage
-     *
-     * @return $this
-     */
-    public function setHostedStorage($hostedStorage)
-    {
-        $this->hostedStorage = $hostedStorage;
-
-        return $this;
+        return static::archiveTree($_mount, $_path . DIRECTORY_SEPARATOR . $_file);
     }
 
 }

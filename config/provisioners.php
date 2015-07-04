@@ -28,7 +28,7 @@ return [
              * However, even though the methods are required to exist by the contract, they
              * may have empty method bodies and do nothing.
              *
-             * Any of these "resource" sub-provisioners may implement the "Portability"
+             * Any of these "resource" sub-provisioners may implement the "PortableData"
              * interface, making them available for import/export services from the console and
              * dashboard. The "rave" provisioner does this and offers import/export services
              * through the provisioning sub-system.

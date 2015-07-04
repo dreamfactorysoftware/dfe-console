@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
-use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;
@@ -55,7 +55,7 @@ class ProvisionJobHandler
                 throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_result = $_provisioner->provision(new ProvisioningRequest($_instance), $_options);
+            $_result = $_provisioner->provision(new ProvisionServiceRequest($_instance), $_options);
 
             if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
                 \Log::info('provisioning - success, completed in ' . number_format($_result['elapsed'], 4) . 's');

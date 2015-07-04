@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
@@ -94,7 +94,7 @@ class SnapshotService extends BaseService
             foreach ($_services as $_type => $_service) {
                 //  The portability service will append the appropriate suffix for the type of export
                 $_to = $_workPath . $_snapshotId . '.' . $_type;
-                $_request = new ProvisioningRequest($_instance);
+                $_request = new ProvisionServiceRequest($_instance);
 
                 /**
                  * Call each of the portable services and add the resultant export to the master export file
@@ -186,7 +186,7 @@ HTML
                 '" is not eligible to be an import target.');
         }
 
-        $_request = new ProvisioningRequest($_instance);
+        $_request = new ProvisionServiceRequest($_instance);
         $_result = [];
 
         foreach ($_fsSnapshot->listContents() as $_item) {

@@ -12,7 +12,6 @@ use DreamFactory\Enterprise\Database\Models\InstanceGuest;
 use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
-use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -120,11 +119,11 @@ class InstanceManager extends BaseManager implements Factory
 
         try {
             //  Basic checks...
-            if (null === ($_ownerId = IfSet::get($options, 'owner-id'))) {
+            if (null === ($_ownerId = array_get($options, 'owner-id'))) {
                 throw new \InvalidArgumentException('No "owner-id" given. Cannot create instance.');
             }
 
-            if (null == ($_ownerType = IfSet::get($options, 'owner-type'))) {
+            if (null == ($_ownerType = array_get($options, 'owner-type'))) {
                 $_ownerType = OwnerTypes::USER;
             }
 
@@ -135,8 +134,8 @@ class InstanceManager extends BaseManager implements Factory
             }
 
             //  Validate the cluster and pull component ids
-            $_guestLocation = IfSet::get($options, 'guest-location', config('dfe.provisioning.default-guest-location'));
-            $_clusterId = IfSet::get($options, 'cluster-id', config('dfe.provisioning.default-cluster-id'));
+            $_guestLocation = array_get($options, 'guest-location', config('dfe.provisioning.default-guest-location'));
+            $_clusterId = array_get($options, 'cluster-id', config('dfe.provisioning.default-cluster-id'));
             $_clusterConfig = $this->_getServersForCluster($_clusterId);
             $_ownerId = $_owner->id;
 
@@ -150,18 +149,18 @@ class InstanceManager extends BaseManager implements Factory
                 'app_server_id'      => $_clusterConfig['app-server-id'],
                 'web_server_id'      => $_clusterConfig['web-server-id'],
                 'state_nbr'          => ProvisionStates::CREATED,
-                'trial_instance_ind' => IfSet::get($options, 'trial', false) ? 1 : 0,
+                'trial_instance_ind' => !!array_get($options, 'trial', false),
             ];
 
             $_guestAttributes = [
                 'instance_id'           => null,
                 'vendor_id'             => $_guestLocation,
-                'vendor_image_id'       => IfSet::get(
+                'vendor_image_id'       => array_get(
                     $options,
                     'vendor-image-id',
                     config('dfe.provisioning.default-vendor-image-id')
                 ),
-                'vendor_credentials_id' => IfSet::get(
+                'vendor_credentials_id' => array_get(
                     $options,
                     'vendor-credentials-id',
                     config('dfe.provisioning.default-vendor-credentials-id')
@@ -170,19 +169,16 @@ class InstanceManager extends BaseManager implements Factory
 
             //  Write it out
             return \DB::transaction(
-                function () use ($_ownerId, $_attributes, $_guestAttributes){
-                    \Log::debug('    * creating instance for user id#' . $_ownerId);
-
+                function () use ($_ownerId, $_attributes, $_guestAttributes) {
                     $_instance = Instance::create($_attributes);
+                    $this->debug('created instance row id#' . $_instance->id);
 
-                    \Log::debug('      * created, id#' . $_instance->id);
-
-                    $_guest = InstanceGuest::create(array_merge($_guestAttributes, ['instance_id' => $_instance->id]));
-
-                    \Log::debug('      * guest created, id#' . $_guest->id);
+                    $_guestAttributes['instance_id'] = $_instance->id;
+                    $_guest = InstanceGuest::create($_guestAttributes);
+                    $this->debug('created guest row id#' . $_guest->id);
 
                     if (!$_instance || !$_guest) {
-                        throw new \RuntimeException('    ! instance create fail');
+                        throw new \RuntimeException('Instance creation failed');
                     }
 
                     return $_instance;
@@ -204,7 +200,7 @@ class InstanceManager extends BaseManager implements Factory
         try {
             $_cluster = static::_lookupCluster($clusterId);
             $_servers = static::_lookupClusterServers($_cluster->id);
-            //\Log::debug('Servers: ' . print_r($_servers, true));
+            //$this->debug('Servers: ' . print_r($_servers, true));
 
             $_serverIds = $this->_extractServerIds($_servers);
 
@@ -233,16 +229,16 @@ class InstanceManager extends BaseManager implements Factory
         foreach ($_list as $_typeId => $_typeName) {
             $_types[$_typeId] = false;
 
-            if (null === ($_server = IfSet::get($servers, $_typeId))) {
+            if (null === ($_server = array_get($servers, $_typeId))) {
                 continue;
             }
 
-            if (null !== ($_id = IfSet::get($_server, '.id'))) {
+            if (null !== ($_id = array_get($_server, '.id'))) {
                 $_types[$_typeId] = $_id;
                 continue;
             }
 
-            if (null !== ($_ids = IfSet::get($_server, '.ids'))) {
+            if (null !== ($_ids = array_get($_server, '.ids'))) {
                 if (is_array($_ids) && !empty($_ids)) {
                     $_types[$_typeId] = $_ids[0];
                     continue;

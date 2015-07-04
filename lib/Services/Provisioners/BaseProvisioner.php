@@ -1,9 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Common\Contracts\VirtualProvisioner;
 use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\Notifier;
@@ -23,7 +23,7 @@ use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
  *
  * @todo Move all english text to templates
  */
-abstract class BaseProvisioner extends BaseService implements ResourceProvisioner
+abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
 {
     //******************************************************************************
     //* Constants
@@ -67,14 +67,14 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     //******************************************************************************
 
     /**
-     * @param ProvisioningRequest|mixed $request
+     * @param ProvisionServiceRequest|mixed $request
      *
      * @return mixed
      */
     abstract protected function doProvision($request);
 
     /**
-     * @param ProvisioningRequest|mixed $request
+     * @param ProvisionServiceRequest|mixed $request
      *
      * @return mixed
      */
@@ -114,7 +114,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     }
 
     /** @inheritdoc */
-    public function provision($request, $options = [])
+    public function provision($request)
     {
         $_timestamp = microtime(true);
         $_result = $this->doProvision($request);
@@ -168,7 +168,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     }
 
     /** @inheritdoc */
-    public function deprovision($request, $options = [])
+    public function deprovision($request)
     {
         $_timestamp = microtime(true);
         $_result = $this->doDeprovision($request);

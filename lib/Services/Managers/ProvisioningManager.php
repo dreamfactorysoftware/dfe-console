@@ -1,19 +1,22 @@
 <?php
 namespace DreamFactory\Enterprise\Services\Managers;
 
-use DreamFactory\Enterprise\Common\Contracts\Portability;
-use DreamFactory\Enterprise\Common\Contracts\PortabilityAware;
+use DreamFactory\Enterprise\Common\Contracts\PortableData;
+use DreamFactory\Enterprise\Common\Contracts\PortableProvisionerAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
-use DreamFactory\Enterprise\Common\Provisioners\PortabilityRequest;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
+use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 
-class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortabilityAware
+class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortableProvisionerAware
 {
     //******************************************************************************
     //* Constants
@@ -87,50 +90,12 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
-     * @param ImportJob $job
-     *
-     * @return array
-     */
-    public function import(ImportJob $job)
-    {
-        $_instance = $this->_findInstance($job->getInstanceId());
-        $_services = $this->getPortableServices($_instance->guest_location_nbr);
-        $_imports = [];
-
-        foreach ($_services as $_type => $_service) {
-            $_request = PortabilityRequest::createImport($_instance, $job);
-            $_imports[$_type] = $_service->import($_request, $_request->getFrom());
-        }
-
-        return $_imports;
-    }
-
-    /**
-     * @param ExportJob $job
-     *
-     * @return array
-     */
-    public function export(ExportJob $job)
-    {
-        $_instance = $this->_findInstance($job->getInstanceId());
-        $_services = $this->getPortableServices($_instance->guest_location_nbr);
-        $_exports = [];
-
-        foreach ($_services as $_type => $_service) {
-            $_request = PortabilityRequest::createExport($_instance, $job);
-            $_exports[$_type] = $_service->export($_request, $_request->getTo());
-        }
-
-        return $_exports;
-    }
-
-    /**
      * Returns an array of the portability providers for this provisioner. If
      * no sub-provisioners are portable, an empty array will be returned.
      *
      * @param string $name The provisioner id. If null, the default provisioner is used.
      *
-     * @return Portability[] An array of portability services keyed by PortableTypes
+     * @return PortableData[] An array of portability services keyed by PortableTypes
      */
     public function getPortableServices($name = null)
     {
@@ -142,7 +107,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         //  Spin through the services
         foreach ($_list as $_key => $_definition) {
             if (PortableTypes::contains($_key)) {
-                if (($_service = $this->resolve($name, $_key)) instanceof Portability) {
+                if (($_service = $this->resolve($name, $_key)) instanceof PortableData) {
                     $_services[$_key] = $_service;
                 }
             }
@@ -215,26 +180,77 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     /**
      * @param string $tag
      *
-     * @return Portability|null
+     * @return PortableData|null
      */
     public function resolvePortability($tag)
     {
         //  If db is portable, return it
         $_service = $this->resolveDatabase($tag);
 
-        if ($_service instanceof Portability) {
+        if ($_service instanceof PortableData) {
             return $_service;
         }
 
         //  Storage portable?
         $_service = $this->resolveStorage($tag);
 
-        if ($_service instanceof Portability) {
+        if ($_service instanceof PortableData) {
             return $_service;
         }
 
         //  Nada
         return null;
+    }
+
+    /** @inheritdoc */
+    public function provision(ProvisionJob $job)
+    {
+        return $this->resolve($job->getInstance()->guest_location_nbr)
+            ->provision(ProvisionServiceRequest::createProvision($job->getInstance()));
+    }
+
+    /** @inheritdoc */
+    public function deprovision(DeprovisionJob $job)
+    {
+        return $this->resolve($job->getInstance()->guest_location_nbr)
+            ->deprovision(ProvisionServiceRequest::createDeprovision($job->getInstance()));
+    }
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function import(ImportJob $job)
+    {
+        $_instance = $this->_findInstance($job->getInstanceId());
+        $_services = $this->getPortableServices($_instance->guest_location_nbr);
+        $_imports = [];
+
+        foreach ($_services as $_type => $_service) {
+            $_imports[$_type] = $_service->import(PortableServiceRequest::createImport($_instance, $job->getTarget()));
+        }
+
+        return $_imports;
+    }
+
+    /**
+     * @param ExportJob $job
+     *
+     * @return array
+     */
+    public function export(ExportJob $job)
+    {
+        $_instance = $this->_findInstance($job->getInstanceId());
+        $_services = $this->getPortableServices($_instance->guest_location_nbr);
+        $_exports = [];
+
+        foreach ($_services as $_type => $_service) {
+            $_exports[$_type] =
+                $_service->export(PortableServiceRequest::createExport($_instance, $job->getTarget()));
+        }
+
+        return $_exports;
     }
 
     /**
