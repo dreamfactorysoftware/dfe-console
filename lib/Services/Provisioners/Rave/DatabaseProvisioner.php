@@ -1,20 +1,18 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
-use DreamFactory\Enterprise\Common\Contracts\Portability;
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisioningRequest;
+use DreamFactory\Enterprise\Common\Contracts\PortableData;
+use DreamFactory\Enterprise\Common\Contracts\VirtualProvisioner;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
-use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DatabaseProvisioner extends BaseService implements Portability, ResourceProvisioner
+class DatabaseProvisioner extends BaseService implements VirtualProvisioner, PortableData
 {
     //******************************************************************************
     //* Traits
@@ -27,21 +25,7 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
     //******************************************************************************
 
     /** @inheritdoc */
-    public function boot()
-    {
-        parent::boot();
-
-        $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
-    }
-
-    /**
-     * @param ProvisioningRequest $request
-     * @param array               $options
-     *
-     * @return bool
-     * @throws ProvisioningException
-     */
-    public function provision($request, $options = [])
+    public function provision($request)
     {
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
@@ -98,15 +82,8 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
         return array_merge($_rootConfig, $_creds);
     }
 
-    /**
-     * @param ProvisioningRequest $request
-     * @param array               $options
-     *
-     * @return bool
-     * @throws ProvisioningException
-     * @throws SchemaExistsException
-     */
-    public function deprovision($request, $options = [])
+    /** @inheritdoc */
+    public function deprovision($request)
     {
         $_instance = $request->getInstance();
 
@@ -135,28 +112,28 @@ class DatabaseProvisioner extends BaseService implements Portability, ResourcePr
     }
 
     /** @inheritdoc */
-    public function import($request, $from, $options = [])
+    public function import($request)
     {
         $_instance = $request->getInstance();
 
-        if (!file_exists($from)) {
-            throw new \InvalidArgumentException('$from file "' . $from . '" missing or unreadable.');
+        if (!file_exists($_from = $request->getTarget())) {
+            throw new \InvalidArgumentException('$from file "' . $_from . '" missing or unreadable.');
         }
 
         /** @type Connection $_db */
-        list($_db, $_rootConfig, $_rootServer) = $this->getRootDatabaseConnection($_instance);
+        list($_db, ,) = $this->getRootDatabaseConnection($_instance);
 
         $this->dropDatabase($_db, $_instance->db_name_text);
         $this->createDatabase($_db, $_instance->db_name_text);
 
-        return $_db->statement('source ' . $from);
+        return $_db->statement('source ' . $_from);
     }
 
     /** @inheritdoc */
-    public function export($request, $to, $options = [])
+    public function export($request)
     {
         //  Add file extension if missing
-        $to = static::ensureFileSuffix('.sql', $to);
+        $to = static::ensureFileSuffix('.sql', $request->getTarget());
 
         $_instance = $request->getInstance();
 

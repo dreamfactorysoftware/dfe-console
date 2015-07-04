@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
-use DreamFactory\Enterprise\Common\Provisioners\PortabilityRequest;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -31,9 +31,12 @@ class Import extends Command
      */
     public function fire()
     {
-        $_request = new PortabilityRequest($this->argument('instance-id'), $this->argument('snapshot-id'));
+        $_request = new PortableServiceRequest($this->argument('instance-id'), $this->argument('snapshot-id'));
 
-        return \Queue::push(new ImportJob($_request, $this->argument('instance-id'), null, $this->argument('snapshot')));
+        return \Queue::push(new ImportJob($_request,
+            $this->argument('instance-id'),
+            null,
+            $this->argument('snapshot')));
     }
 
     /**
