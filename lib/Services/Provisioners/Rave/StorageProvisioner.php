@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
+use DreamFactory\Enterprise\Services\Provisioners\BaseStorageProvisioner;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
@@ -48,12 +49,6 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
     const PROVISIONER_ID = 'rave';
 
     //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-    use InstanceValidation, Archivist, HasPrivatePaths;
-
-    //******************************************************************************
     //* Methods
     //******************************************************************************
 
@@ -75,11 +70,10 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
      * Create storage structure in $filesystem
      *
      * @param ProvisionServiceRequest $request
-     * @param array                   $options
      *
      * @throws \Exception
      */
-    protected function createInstanceStorage($request, $options = [])
+    protected function createInstanceStorage($request)
     {
         //  Wipe existing stuff
         $_instance = $request->getInstance();
@@ -136,11 +130,10 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
      * Delete storage of an instance
      *
      * @param ProvisionServiceRequest $request
-     * @param array                   $options
      *
      * @return bool
      */
-    protected function removeInstanceStorage($request, $options = [])
+    protected function removeInstanceStorage($request)
     {
         $_instance = $request->getInstance();
         $_filesystem = $request->getStorage();

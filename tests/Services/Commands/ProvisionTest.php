@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 
@@ -19,7 +20,8 @@ class ProvisionTest extends \TestCase
 
         $_payload = [
             'instance-id'        => $_instanceId,
-            'owner-id'           => 1,
+            'owner-id'           => 22,
+            'owner-type'         => OwnerTypes::USER,
             'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
         ];
 

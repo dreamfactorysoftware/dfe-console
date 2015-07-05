@@ -1,18 +1,17 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
-use DreamFactory\Enterprise\Common\Contracts\VirtualProvisioner;
-use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
+use DreamFactory\Enterprise\Services\Provisioners\BaseDatabaseProvisioner;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class DatabaseProvisioner extends BaseService implements VirtualProvisioner, PortableData
+class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableData
 {
     //******************************************************************************
     //* Traits
@@ -25,7 +24,7 @@ class DatabaseProvisioner extends BaseService implements VirtualProvisioner, Por
     //******************************************************************************
 
     /** @inheritdoc */
-    public function provision($request)
+    protected function doProvision($request)
     {
         $_instance = $request->getInstance();
         $_serverId = $_instance->db_server_id;
@@ -83,7 +82,7 @@ class DatabaseProvisioner extends BaseService implements VirtualProvisioner, Por
     }
 
     /** @inheritdoc */
-    public function deprovision($request)
+    protected function doDeprovision($request)
     {
         $_instance = $request->getInstance();
 
@@ -163,12 +162,6 @@ class DatabaseProvisioner extends BaseService implements VirtualProvisioner, Por
         }
 
         return basename($to);
-    }
-
-    /** @inheritdoc */
-    public function getProvisionerId()
-    {
-        return InstanceProvisioner::PROVISIONER_ID;
     }
 
     /**

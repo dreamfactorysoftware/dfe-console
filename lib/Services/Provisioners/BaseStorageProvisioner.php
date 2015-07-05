@@ -1,4 +1,4 @@
-<?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
+<?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\HostedStorageAware;
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;

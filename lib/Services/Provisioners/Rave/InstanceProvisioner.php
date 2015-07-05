@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Common\Enums\OperationalStates;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\HasOfferings;
+use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
@@ -35,17 +36,13 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
     //* Traits
     //******************************************************************************
 
-    use EntityLookup, HasOfferings;
+    use EntityLookup, HasPrivatePaths, HasOfferings;
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    /**
-     * @param ProvisionServiceRequest $request
-     *
-     * @return array
-     */
+    /** @inheritdoc */
     protected function doProvision($request)
     {
         $_output = [];
@@ -88,12 +85,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
         ];
     }
 
-    /**
-     * @param ProvisionServiceRequest $request
-     * @param array                   $options
-     *
-     * @return array
-     */
+    /** @inheritdoc */
     protected function doDeprovision($request, $options = [])
     {
         $_output = [];
@@ -178,8 +170,8 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
         $this->debug('>>> provisioning instance "' . $_name . '"');
 
         $_storageProvisioner = $request->getStorageProvisioner();
-        $_privatePath = $_storageProvisioner->getPrivatePath();
-        $_ownerPrivatePath = $_storageProvisioner->getOwnerPrivatePath();
+        $this->setPrivatePath($_privatePath = $_storageProvisioner->getPrivatePath());
+        $this->setOwnerPrivatePath($_ownerPrivatePath = $_storageProvisioner->getOwnerPrivatePath());
 
         //	1. Provision the database
         $_dbService = Provision::getDatabaseProvisioner($_instance->guest_location_nbr);
