@@ -140,8 +140,8 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
         $_host =
             ($_guest && $_guest->public_host_text)
                 ? $_guest->public_host_text
-                : $_instance->instance_id_text . '.' . trim(config('dfe.provisioning.default-dns-zone'), '.') .
-                '.' . trim(config('dfe.provisioning.default-dns-domain'), '.');
+                : $_instance->instance_id_text . '.' . trim(config('provisioning.default-dns-zone'), '.') .
+                '.' . trim(config('provisioning.default-dns-domain'), '.');
 
         $_data = [
             'firstName'     => $_instance->user->first_name_text,

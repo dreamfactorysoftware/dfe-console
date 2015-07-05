@@ -45,7 +45,7 @@ class Setup extends ConsoleCommand
     {
         parent::fire();
 
-        $this->_config = config('dfe.commands.setup');
+        $this->_config = config('commands.setup');
 
         //  1. Make sure it's a clean install
         if (0 != ServiceUser::count()) {
@@ -86,7 +86,7 @@ class Setup extends ConsoleCommand
         }
 
         //  2. Check permissions and required directories
-        $_paths = config('dfe.commands.setup.required-directories', []);
+        $_paths = config('commands.setup.required-directories', []);
 
         foreach ($_paths as $_path) {
             if (!FileSystem::ensurePath($_path)) {
@@ -102,9 +102,9 @@ class Setup extends ConsoleCommand
         //  4. Generate .dfe.cluster.json file
         ClusterManifest::make(base_path('database/dfe'), [
             'cluster-id'       => config('dfe.cluster-id'),
-            'default-domain'   => config('dfe.provisioning.default-domain'),
+            'default-domain'   => config('provisioning.default-domain'),
             'signature-method' => config('dfe.signature-method'),
-            'storage-root'     => config('dfe.provisioning.storage-root'),
+            'storage-root'     => config('provisioning.storage-root'),
             'console-api-url'  => config('dfe.security.console-api-url'),
             'console-api-key'  => $_apiSecret,
             'client-id'        => $_dashboardKey->client_id,

@@ -68,9 +68,9 @@ class ManifestJobHandler
                         base_path(),
                         [
                             'cluster-id'       => config('dfe.cluster-id'),
-                            'default-domain'   => config('dfe.provisioning.default-domain'),
+                            'default-domain'   => config('provisioning.default-domain'),
                             'signature-method' => config('dfe.signature-method'),
-                            'storage-root'     => config('dfe.provisioning.storage-root'),
+                            'storage-root'     => config('provisioning.storage-root'),
                             'console-api-url'  => config('dfe.security.console-api-url'),
                             'console-api-key'  => config('dfe.security.console-api-key'),
                             'client-id'        => !$_key ? null : $_key->client_id,

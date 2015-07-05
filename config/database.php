@@ -1,4 +1,7 @@
 <?php
+//******************************************************************************
+//* Database configuration
+//******************************************************************************
 return [
     'fetch'       => PDO::FETCH_CLASS,
     'default'     => 'dfe-local',
@@ -7,6 +10,7 @@ return [
     //* Connections
     //******************************************************************************
     'connections' => [
+        /** dfe-local is the main console/dashboard database */
         'dfe-local' => [
             'driver'    => env('DB_DRIVER', 'mysql'),
             'host'      => env('DB_HOST', 'localhost'),

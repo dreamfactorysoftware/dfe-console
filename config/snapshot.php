@@ -1,12 +1,13 @@
 <?php
 //******************************************************************************
-//* Snapshot Service Configuration
+//* DFE Console snapshot service configuration
 //******************************************************************************
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 return [
     //  The relative path under the local private file system. Resolves to "/path/to/storage/.private/[storage-path]"
-    'storage-path'   => 'snapshots',
+    'storage-path'   => ConsoleDefaults::SNAPSHOT_PATH_NAME,
     //  Scripts used by the snapshot service are defined here
     'script'         => [
         //  Where the cluster MySQL snapshot script is located

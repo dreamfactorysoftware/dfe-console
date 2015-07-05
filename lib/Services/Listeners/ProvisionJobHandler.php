@@ -48,7 +48,7 @@ class ProvisionJobHandler
         }
 
         try {
-            $_guest = IfSet::get($_options, 'guest-location-nbr', config('dfe.provisioning.default-guest-location'));
+            $_guest = IfSet::get($_options, 'guest-location-nbr', config('provisioning.default-guest-location'));
             $_provisioner = Provision::getProvisioner($_guest);
 
             if (empty($_provisioner)) {

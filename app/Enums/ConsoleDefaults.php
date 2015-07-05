@@ -35,4 +35,16 @@ class ConsoleDefaults
      * @type string The type of compression to use when making exports
      */
     const DEFAULT_DATA_COMPRESSOR = EnterpriseDefaults::DEFAULT_DATA_COMPRESSOR;
+    /**
+     * @type string The default required storage paths
+     */
+    const DEFAULT_REQUIRED_STORAGE_PATHS = EnterpriseDefaults::DEFAULT_REQUIRED_STORAGE_PATHS;
+    /**
+     * @type string The default required private paths
+     */
+    const DEFAULT_REQUIRED_PRIVATE_PATHS = EnterpriseDefaults::DEFAULT_REQUIRED_PRIVATE_PATHS;
+    /**
+     * @type string The default required private paths
+     */
+    const DEFAULT_REQUIRED_OWNER_PRIVATE_PATHS = EnterpriseDefaults::DEFAULT_REQUIRED_OWNER_PRIVATE_PATHS;
 }

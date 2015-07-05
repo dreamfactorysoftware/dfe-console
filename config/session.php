@@ -1,4 +1,7 @@
 <?php
+//******************************************************************************
+//* DFE Console session configuration
+//******************************************************************************
 return [
     //  Default Session Driver
     'driver'          => env('SESSION_DRIVER', 'file'),
@@ -8,7 +11,7 @@ return [
     //  Session Encryption
     'encrypt'         => false,
     //  Session File Location
-    'files'           => storage_path() . '/framework/sessions',
+    'files'           => realpath(base_path('bootstrap/cache/sessions')),
     //  Session Database Connection
     'connection'      => null,
     //  Session Database Table
@@ -16,7 +19,7 @@ return [
     //  Session Sweeping Lottery
     'lottery'         => [2, 100],
     //  Session Cookie Name
-    'cookie'          => 'dfe-console-session',
+    'cookie'          => 'dfe-console',
     //  Session Cookie Path
     'path'            => '/',
     //  Session Cookie Domain

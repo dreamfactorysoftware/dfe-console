@@ -99,17 +99,17 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
             !$_filesystem->has($_ownerPrivatePath) && $_filesystem->createDir($_ownerPrivatePath);
 
             //  Now ancillary sub-directories
-            foreach (config('dfe.provisioning.public-paths', []) as $_path) {
+            foreach (config('provisioning.public-paths', []) as $_path) {
                 !$_filesystem->has($_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path) &&
                 $_filesystem->createDir($_check);
             }
 
-            foreach (config('dfe.provisioning.private-paths', []) as $_path) {
+            foreach (config('provisioning.private-paths', []) as $_path) {
                 !$_filesystem->has($_check = $_privatePath . DIRECTORY_SEPARATOR . $_path) &&
                 $_filesystem->createDir($_check);
             }
 
-            foreach (config('dfe.provisioning.owner-private-paths', []) as $_path) {
+            foreach (config('provisioning.owner-private-paths', []) as $_path) {
                 !$_filesystem->has($_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path) &&
                 $_filesystem->createDir($_check);
             }

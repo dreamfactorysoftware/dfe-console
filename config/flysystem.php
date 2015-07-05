@@ -1,4 +1,7 @@
 <?php
+//******************************************************************************
+//* Flysystems used by DFE Console (takes precedence over filesystems.php)
+//******************************************************************************
 return [
     //  Default connection
     'default'     => 'local',

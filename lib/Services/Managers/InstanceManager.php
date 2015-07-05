@@ -134,8 +134,8 @@ class InstanceManager extends BaseManager implements Factory
             }
 
             //  Validate the cluster and pull component ids
-            $_guestLocation = array_get($options, 'guest-location', config('dfe.provisioning.default-guest-location'));
-            $_clusterId = array_get($options, 'cluster-id', config('dfe.provisioning.default-cluster-id'));
+            $_guestLocation = array_get($options, 'guest-location', config('provisioning.default-guest-location'));
+            $_clusterId = array_get($options, 'cluster-id', config('provisioning.default-cluster-id'));
             $_clusterConfig = $this->_getServersForCluster($_clusterId);
             $_ownerId = $_owner->id;
 
@@ -158,12 +158,12 @@ class InstanceManager extends BaseManager implements Factory
                 'vendor_image_id'       => array_get(
                     $options,
                     'vendor-image-id',
-                    config('dfe.provisioning.default-vendor-image-id')
+                    config('provisioning.default-vendor-image-id')
                 ),
                 'vendor_credentials_id' => array_get(
                     $options,
                     'vendor-credentials-id',
-                    config('dfe.provisioning.default-vendor-credentials-id')
+                    config('provisioning.default-vendor-credentials-id')
                 ),
             ];
 

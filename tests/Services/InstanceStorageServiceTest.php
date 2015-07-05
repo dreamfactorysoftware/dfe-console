@@ -54,8 +54,8 @@ class InstanceStorageServiceTest extends \TestCase
         $_instance = $this->_findInstance( 'dfe-test-case' );
 
         $_instanceId = $_instance->instance_id_text;
-        $_private = config( 'dfe.provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME );
-        $_snapshot = config( 'dfe.provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME );
+        $_private = config( 'provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME );
+        $_snapshot = config( 'provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME );
 
         $this->assertEquals(
             static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_instanceId,

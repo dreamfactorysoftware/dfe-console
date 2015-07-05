@@ -219,7 +219,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
                         'owner-private-path' => $_ownerPrivatePath,
                         'snapshot-path'      => $_ownerPrivatePath .
                             DIRECTORY_SEPARATOR .
-                            config('dfe.provisioning.snapshot-path-name',
+                            config('provisioning.snapshot-path-name',
                                 ConsoleDefaults::SNAPSHOT_PATH_NAME),
                     ]);
 
@@ -232,7 +232,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
                  * Add guest data if there is a guest record
                  */
                 $_instance->guest && $_instance->guest->fill([
-                    'base_image_text'   => config('dfe.provisioning.base-image',
+                    'base_image_text'   => config('provisioning.base-image',
                         ConsoleDefaults::DFE_CLUSTER_BASE_IMAGE),
                     'vendor_state_nbr'  => ProvisionStates::PROVISIONED,
                     'vendor_state_text' => 'running',
@@ -315,8 +315,8 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             '.',
             [
                 trim($name, '. '),
-                trim(config('dfe.provisioning.default-dns-zone'), '. '),
-                trim(config('dfe.provisioning.default-dns-domain'), '. '),
+                trim(config('provisioning.default-dns-zone'), '. '),
+                trim(config('provisioning.default-dns-domain'), '. '),
             ]
         );
     }

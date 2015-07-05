@@ -61,7 +61,7 @@ class Provision extends Command
                     'guest-location',
                     InputArgument::OPTIONAL,
                     'The location of the new instance. Values: 1 = DFE, 2 = AWS, or 3 = Azure.',
-                    config('dfe.provisioning.default-guest-location'),
+                    config('provisioning.default-guest-location'),
                 ],
             ]);
     }
@@ -80,7 +80,7 @@ class Provision extends Command
                     'c',
                     InputOption::VALUE_OPTIONAL,
                     'The cluster-id where this instance should be placed.',
-                    config('dfe.provisioning.default-cluster-id'),
+                    config('provisioning.default-cluster-id'),
                 ],
                 [
                     'restart',

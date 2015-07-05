@@ -16,7 +16,7 @@ class ProvisioningServiceProvider extends BaseServiceProvider
     /**
      * @type string The name of the service in the IoC
      */
-    const IOC_NAME = 'dfe.provisioning';
+    const IOC_NAME = 'provisioning';
 
     //******************************************************************************
     //* Methods
