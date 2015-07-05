@@ -1,7 +1,8 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use DreamFactory\Enterprise\Common\Facades\Packet;
+use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
+use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\Model;
@@ -11,44 +12,36 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * a base controller with AJAX data handling methods
  */
-class DataController extends FactoryController
+abstract class DataController extends FactoryController
 {
     //******************************************************************************
     //* Members
     //******************************************************************************
 
     /**
-     * @type string
-     */
-    protected $_search;
-    /**
      * @type array
      */
-    protected $_columns;
+    protected $columns;
     /**
      * @type array These columns will be forced to search on the base table
      */
-    protected $_forcedColumns = ['id', 'create_date', 'lmod_date', 'user_id'];
+    protected $forcedColumns = ['id', 'create_date', 'lmod_date', 'user_id'];
     /**
      * @type string The resource type
      */
-    protected $_resource = null;
+    protected $resource = null;
     /**
      * @type string The name of the table
      */
-    protected $_tableName = null;
+    protected $tableName = null;
     /**
      * @type int The number of rows
      */
-    protected $_rowCount = null;
+    protected $rowCount = null;
     /**
      * @type string The name of the model
      */
-    protected $_model = null;
-    /**
-     * @type string A prefix prepended to outbound API requests
-     */
-    protected $_apiPrefix = null;
+    protected $model = null;
 
     //******************************************************************************
     //* Methods
@@ -64,35 +57,39 @@ class DataController extends FactoryController
      *
      * @return \Illuminate\Database\Query\Builder|mixed
      */
-    public function _processDataRequest($table, $count, array $columns = ['*'], $builder = null)
+    public function processDataRequest($table, $count, array $columns = ['*'], $builder = null)
     {
         try {
-            $this->_parseDataRequest(null, $columns);
+            $this->parseDataRequest(null, $columns);
 
             /** @type Builder $_table */
             $_table = $builder ?: \DB::table($table);
             $_table->select($columns);
 
-            if (!empty($this->_order)) {
-                foreach ($this->_order as $_column => $_direction) {
+            if (!empty($this->order)) {
+                foreach ($this->order as $_column => $_direction) {
                     $_table->orderByRaw($_column . ' ' . $_direction);
                 }
             }
 
-            if ($this->_search && $this->_columns) {
+            if ($this->search && $this->columns) {
                 $_where = [];
 
-                foreach ($this->_columns as $_column) {
+                foreach ($this->columns as $_column) {
                     if ($_column['searchable']) {
-                        $_name = !empty($_column['name']) ? $_column['name'] : (!empty($_column['data']) ? $_column['data'] : null);
+                        $_name =
+                            !empty($_column['name'])
+                                ? $_column['name']
+                                : (!empty($_column['data']) ? $_column['data']
+                                : null);
 
                         if (!empty($_name)) {
                             //  Add table name?
-                            if (in_array($_name, $this->_forcedColumns)) {
+                            if (in_array($_name, $this->forcedColumns)) {
                                 $_name = $table . '.' . $_name;
                             }
 
-                            $_where[] = $_name . ' LIKE \'%' . $this->_search . '%\'';
+                            $_where[] = $_name . ' LIKE \'%' . $this->search . '%\'';
                         }
                     }
                 }
@@ -104,18 +101,18 @@ class DataController extends FactoryController
                 return $_table;
             }
 
-            if (!empty($this->_limit)) {
-                if (!empty($this->_skip)) {
-                    $_table->skip($this->_skip);
+            if (!empty($this->limit)) {
+                if (!empty($this->skip)) {
+                    $_table->skip($this->skip);
                 }
 
-                $_table->take($this->_limit);
+                $_table->take($this->limit);
             }
 
             /** @type array|Model $_response */
             $_response = $_table->get();
 
-            return $this->_respond($_response, $count, 0);
+            return $this->respond($_response, $count, 0);
         } catch (\Exception $_ex) {
             throw new BadRequestHttpException($_ex->getMessage());
         }
@@ -127,32 +124,32 @@ class DataController extends FactoryController
      * @param int|string $defaultSort Default sort column name or number
      * @param array      $columns
      */
-    protected function _parseDataRequest($defaultSort = null, array &$columns = null)
+    protected function parseDataRequest($defaultSort = null, array &$columns = null)
     {
-        $this->_dtRequest = isset($_REQUEST, $_REQUEST['length']);
-        $this->_skip = IfSet::get($_REQUEST, 'start', 0);
-        $this->_limit = IfSet::get($_REQUEST, 'length', static::DEFAULT_PER_PAGE);
-        $this->_order = $defaultSort;
-        $this->_search = trim(str_replace('\'', null, IfSet::getDeep($_REQUEST, 'search', 'value')));
+        $this->setDataTables(isset($_REQUEST, $_REQUEST['length']));
+        $this->setSkip(array_get($_REQUEST, 'start', 0));
+        $this->limit = array_get($_REQUEST, 'length', EnterpriseDefaults::DEFAULT_ITEMS_PER_PAGE);
+        $this->order = $defaultSort;
+        $this->search = trim(str_replace('\'', null, IfSet::getDeep($_REQUEST, 'search', 'value')));
 
-        if (null === ($_sortOrder = IfSet::get($_REQUEST, 'order'))) {
+        if (null === ($_sortOrder = array_get($_REQUEST, 'order'))) {
             return;
         }
 
         //  Parse the columns
-        if (empty($this->_columns) && empty($columns)) {
-            $_dataColumns = IfSet::get($_REQUEST, 'columns', []);
+        if (empty($this->columns) && empty($columns)) {
+            $_dataColumns = array_get($_REQUEST, 'columns', []);
 
             $_columns = [];
 
             foreach ($_dataColumns as $_column) {
-                if (null !== ($_name = IfSet::get($_column, 'data', IfSet::get($_column, 'name')))) {
+                if (null !== ($_name = array_get($_column, 'data', array_get($_column, 'name')))) {
                     $_columns[] = $_name;
                 }
             }
 
             if (!empty($_columns)) {
-                $this->_columns = $columns = $_columns;
+                $this->columns = $columns = $_columns;
             }
         }
 
@@ -161,15 +158,15 @@ class DataController extends FactoryController
         if (is_array($_sortOrder)) {
             foreach ($_sortOrder as $_key => $_value) {
                 if (isset($_value['column'])) {
-                    $_sort[($_value['column'] + 1)] = IfSet::get($_value, 'dir', 'ASC');
+                    $_sort[($_value['column'] + 1)] = array_get($_value, 'dir', 'ASC');
                 }
             }
         } elseif (is_string($_sortOrder)) {
-            $this->_order = $_sort[$_sortOrder] = IfSet::get($_REQUEST, 'dir', 'ASC');
+            $this->order = $_sort[$_sortOrder] = array_get($_REQUEST, 'dir', 'ASC');
         }
 
         if (!empty($_sort)) {
-            $this->_order = $_sort;
+            $this->order = $_sort;
         }
     }
 
@@ -182,20 +179,18 @@ class DataController extends FactoryController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function _respond($data, $totalRows = null, $totalFiltered = null)
+    protected function respond($data, $totalRows = null, $totalFiltered = null)
     {
         //  Don't wrap if there are no totals
-        if (!$this->_dtRequest || (null === $totalRows && null === $totalFiltered)) {
-            return Packet::success($data);
+        if (!$this->dataTables || (null === $totalRows && null === $totalFiltered)) {
+            return SuccessPacket::make($data);
         }
 
-        $totalRows = (integer)($totalRows ?: 0);
-
         $_response = [
-            'draw'            => (integer)IfSet::get($_REQUEST, 'draw'),
-            'recordsTotal'    => $totalRows,
-            'recordsFiltered' => (integer)($totalFiltered ?: $totalRows),
-            'data'            => $this->_prepareResponseData($data),
+            'draw'            => (int)array_get($_REQUEST, 'draw'),
+            'recordsTotal'    => (int)($totalRows ?: 0),
+            'recordsFiltered' => (int)($totalFiltered ?: $totalRows),
+            'data'            => $this->prepareResponseData($data),
         ];
 
         return \Response::json($_response);
@@ -209,16 +204,18 @@ class DataController extends FactoryController
      *
      * @return array
      */
-    protected function _prepareResponseData($data)
+    protected function prepareResponseData($data)
     {
         $_cleaned = [];
 
         /** @type Model[] $data */
         foreach ($data as $_item) {
-            $_values = (is_object($_item) && method_exists($_item,
-                    'getAttributes')) ? $_item->getAttributes() : (array)$_item;
+            $_values =
+                (is_object($_item) && method_exists($_item, 'getAttributes'))
+                    ? $_item->getAttributes()
+                    : (array)$_item;
 
-            if (null !== ($_id = IfSet::get($_values, 'id'))) {
+            if (null !== ($_id = array_get($_values, 'id'))) {
                 $_values['DT_RowId'] = $_id;
             }
 
@@ -236,37 +233,12 @@ class DataController extends FactoryController
      *
      * @return null|string
      */
-    protected function _hashValue(
-        $value,
-        $algorithm = ConsoleDefaults::SIGNATURE_METHOD,
-        $salt = null,
-        $rawOutput = false
-    ) {
+    protected function hashValue($value, $algorithm = ConsoleDefaults::SIGNATURE_METHOD, $salt = null, $rawOutput = false)
+    {
         if (null === $value) {
             return null;
         }
 
         return hash($algorithm, $value, $salt . $rawOutput);
     }
-
-    /**
-     * @return string
-     */
-    public function getApiPrefix()
-    {
-        return $this->_apiPrefix;
-    }
-
-    /**
-     * @param string $apiPrefix
-     *
-     * @return DataController
-     */
-    public function setApiPrefix($apiPrefix)
-    {
-        $this->_apiPrefix = $apiPrefix;
-
-        return $this;
-    }
-
 }

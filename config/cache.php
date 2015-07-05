@@ -16,7 +16,7 @@ return [
         ],
         'file'      => [
             'driver' => 'file',
-            'path'   => realpath(base_path('bootstrap/cache')),
+            'path'   => __DIR__ . '/../bootstrap/cache',
         ],
         'memcached' => [
             'driver'  => 'memcached',

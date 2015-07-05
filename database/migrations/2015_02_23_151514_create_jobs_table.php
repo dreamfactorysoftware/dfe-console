@@ -19,7 +19,7 @@ class CreateJobsTable extends Migration
         if (!\Schema::hasTable('job_t')) {
             \Schema::create(
                 'job_t',
-                function (Blueprint $table){
+                function (Blueprint $table) {
                     $table->bigIncrements('id');
                     $table->string('queue');
                     $table->text('payload');

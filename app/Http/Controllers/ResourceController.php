@@ -1,14 +1,13 @@
 <?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 use DreamFactory\Enterprise\Common\Facades\Packet;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
-use DreamFactory\Enterprise\Console\Http\Controllers\DataController;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class ResourceController extends DataController
+abstract class ResourceController extends DataController
 {
     //******************************************************************************
     //* Members
@@ -17,7 +16,7 @@ class ResourceController extends DataController
     /**
      * @type string The view name to render
      */
-    protected $_resourceView;
+    protected $resourceView;
 
     //******************************************************************************
     //* Methods
@@ -26,10 +25,10 @@ class ResourceController extends DataController
     /**
      * @return \Illuminate\Database\Query\Builder|mixed
      */
-    protected function _loadData()
+    protected function loadData()
     {
         try {
-            return $this->_processDataRequest($this->_tableName, call_user_func([$this->_model, 'count']));
+            return $this->processDataRequest($this->tableName, call_user_func([$this->model, 'count']));
         } catch (\Exception $_ex) {
             throw new BadRequestHttpException($_ex->getMessage());
         }
@@ -42,7 +41,7 @@ class ResourceController extends DataController
      */
     public function index()
     {
-        return $this->_loadData();
+        return $this->loadData();
     }
 
     /** {@InheritDoc} */
@@ -57,15 +56,19 @@ class ResourceController extends DataController
      */
     public function create(array $viewData = [])
     {
-        return \View::make($this->_getResourceView(),
-            array_merge(['model' => false, 'pageHeader' => 'New ' . ucwords($this->_resource)], $viewData));
+        return $this->renderView($this->_getResourceView(),
+            $viewData,
+            [
+                'model'      => false,
+                'pageHeader' => 'New ' . ucwords($this->resource),
+            ]);
     }
 
     /** {@InheritDoc} */
     public function show($id)
     {
         try {
-            return Packet::success(call_user_func([$this->_model, 'findOrFail'], $id));
+            return Packet::success(call_user_func([$this->model, 'findOrFail'], $id));
         } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
@@ -75,10 +78,14 @@ class ResourceController extends DataController
     public function edit($id)
     {
         try {
-            $_model = call_user_func([$this->_model, 'findOrFail'], $id);
+            $_model = call_user_func([$this->model, 'findOrFail'], $id);
 
-            return \View::make($this->_getResourceView(),
-                ['model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)]);
+            return $this->renderView($this->_getResourceView(),
+                [
+                    'model'      => $_model,
+                    'pageHeader' => 'Edit ' . ucwords($this->resource),
+                ]
+            );
         } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
@@ -88,10 +95,10 @@ class ResourceController extends DataController
     public function update($id)
     {
         try {
-            $_model = call_user_func([$this->_model, 'findOrFail'], $id);
+            $_model = call_user_func([$this->model, 'findOrFail'], $id);
 
-            return \View::make($this->_getResourceView(),
-                ['model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->_resource)]);
+            return $this->renderView($this->_getResourceView(),
+                ['model' => $_model, 'pageHeader' => 'Edit ' . ucwords($this->resource)]);
         } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
@@ -101,7 +108,7 @@ class ResourceController extends DataController
     public function destroy($id)
     {
         try {
-            $_model = call_user_func([$this->_model, 'findOrFail'], $id);
+            $_model = call_user_func([$this->model, 'findOrFail'], $id);
 
             if (!$_model->delete()) {
                 return ErrorPacket::create(\Illuminate\Http\Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -119,6 +126,26 @@ class ResourceController extends DataController
      */
     protected function _getResourceView()
     {
-        return $this->_resourceView ?: 'app.forms.' . $this->_resource;
+        return $this->resourceView ?: 'app.forms.' . $this->resource;
+    }
+
+    /**
+     * Builds a redirect url including any prefix
+     *
+     * @param string      $type
+     * @param string|null $append Additional segments to add to url
+     * @param bool|true   $usePrefix
+     *
+     * @return string
+     */
+    protected function makeRedirectUrl($type, $append = null, $usePrefix = true)
+    {
+        $_parts = [];
+
+        $usePrefix && $_parts[] = $this->getUiPrefix();
+        $_parts[] = trim($type, ' /');
+        $append && $_parts[] = ltrim($append, ' /');
+
+        return '/' . implode('/', $_parts);
     }
 }

@@ -3,33 +3,17 @@ namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
+use DreamFactory\Enterprise\Database\Exceptions\EnterpriseDatabaseException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
 use DreamFactory\Enterprise\Database\Models\Server;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\View;
 use Session;
 use Validator;
 
 class ClusterController extends ResourceController
 {
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /** @type string */
-    protected $_tableName = 'cluster_t';
-    /** @type string */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Cluster';
-    /** @type string */
-    protected $_resource = 'cluster';
-    /**
-     * @type string
-     */
-    protected $_prefix = 'v1';
-
     //******************************************************************************
     //* Traits
     //******************************************************************************
@@ -37,15 +21,24 @@ class ClusterController extends ResourceController
     use EntityLookup;
 
     //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /** @type string */
+    protected $tableName = 'cluster_t';
+    /** @type string */
+    protected $model = 'DreamFactory\\Enterprise\\Database\\Models\\Cluster';
+    /** @type string */
+    protected $resource = 'cluster';
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    /**
-     * @return mixed
-     */
+    /** @inheritdoc */
     public function create(array $viewData = [])
     {
-        return \View::make('app.clusters.create', ['prefix' => $this->_prefix]);
+        return $this->renderView('app.clusters.create');
     }
 
     /**
@@ -55,10 +48,9 @@ class ClusterController extends ResourceController
      */
     public function edit($id)
     {
-        $_contexts = [ServerTypes::DB => 'primary', ServerTypes::WEB => 'success', ServerTypes::APP => 'warning'];
-
         $_cluster = $this->_findCluster($id);
         $_clusterServers = $this->_clusterServers($_cluster->id);
+        $_contexts = config('dfe.ui.button-contexts');
 
         $_ids = [];
 
@@ -95,12 +87,13 @@ class ClusterController extends ResourceController
             $_serverType = strtoupper(ServerTypes::nameOf($_type, false));
 
             foreach ($_servers as $_server) {
+                $_serverId = $_server->id;
                 $_label = <<<HTML
 <div><span class="label label-{$_contexts[$_type]}">{$_serverType}</span></div>
 HTML;
 
                 $_button = <<<HTML
-<button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_" onclick="removeServer({$_server->id});" value="delete" style="width: 25px"></button>
+<button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_" onclick="removeServer('{$_serverId}');" value="delete" style="width: 25px"></button>
 HTML;
 
                 $_data[] = [
@@ -119,6 +112,7 @@ HTML;
             $_index2 = 0;
 
             foreach ($_servers_all as $_server) {
+                $_serverId = $_server->id;
                 $_serverType = strtoupper(ServerTypes::nameOf($_type = $_server->server_type_id, false));
 
                 $_label = <<<HTML
@@ -126,7 +120,7 @@ HTML;
 HTML;
 
                 $_button = <<<HTML
-<button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_" onclick="removeServer({$_server->id});" value="delete" style="width: 25px"></button>
+<button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_" onclick="removeServer('{$_serverId}');" value="delete" style="width: 25px"></button>
 HTML;
 
                 if (!in_array(intval($_server->id), $_ids)) {
@@ -151,33 +145,34 @@ HTML;
             }
         }
 
-        return \View::make('app.clusters.edit',
+        return $this->renderView('app.clusters.edit',
             [
-                'cluster_id' => $id,
-                'prefix' => $this->_prefix,
-                'cluster' => $_cluster,
-                'servers' => json_encode($_data),
+                'cluster_id'          => $id,
+                'cluster'             => $_cluster,
+                'servers'             => json_encode($_data),
                 'server_dropdown_all' => json_encode($_dropdown_all),
-                'server_dropdown' => $_dropdown,
+                'server_dropdown'     => $_dropdown,
             ]);
     }
 
     public function update($id)
     {
-        $cluster_data = Input::all();
+        $cluster_data = \Input::all();
 
-        $validator = Validator::make($cluster_data,
+        $_validator = Validator::make(
+            $cluster_data,
             [
                 'cluster_id_text' => 'required|string',
                 'subdomain_text'  => [
-                    "required",
+                    'required',
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-            ]);
+            ]
+        );
 
-        if ($validator->fails()) {
+        if ($_validator->fails()) {
 
-            $messages = $validator->messages()->getMessages();
+            $messages = $_validator->messages()->getMessages();
 
             $flash_message = '';
 
@@ -198,7 +193,7 @@ HTML;
             Session::flash('flash_message', $flash_message);
             Session::flash('flash_type', 'alert-danger');
 
-            return redirect('/v1/clusters/' . $id . '/edit')->withInput();
+            return redirect($this->makeRedirectUrl('clusters', $id . '/edit'))->withInput();
         }
 
         $servers = $cluster_data['_server_list'];
@@ -210,7 +205,7 @@ HTML;
         try {
             $cluster_assigned_servers_array = [];
 
-            if ($servers != '') {
+            if (!empty($servers)) {
                 $cluster_assigned_servers_array = array_map('intval', explode(',', $servers));
             }
 
@@ -235,33 +230,29 @@ HTML;
                 ClusterServer::create($add);
             }
 
-            $cluster = Cluster::find($id);
-            $cluster->update($cluster_data);
+            if (!Cluster::find($id)->update($cluster_data)) {
+                throw new EnterpriseDatabaseException('Unable to update cluster "' . $id . '"');
+            }
 
             $result_text = 'The server "' . $cluster_data['cluster_id_text'] . '" was updated successfully!';
             $result_status = 'alert-success';
 
-            $_redirect = '/';
-            $_redirect .= $this->_prefix;
-            $_redirect .= '/clusters';
-
-            return Redirect::to($_redirect)
-                ->with('flash_message', $result_text)
-                ->with('flash_type', $result_status);
+            return \Redirect::to($this->makeRedirectUrl('clusters',
+                ['flash_message' => $result_text, 'flash_type' => $result_status]));
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
-            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
-            Session::flash('flash_type', 'alert-danger');
+            \Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            \Session::flash('flash_type', 'alert-danger');
 
-            return redirect('/v1/clusters/' . $id . '/edit')->withInput();
+            return redirect('/' . $this->getUiPrefix() . '/clusters/' . $id . '/edit')->withInput();
         }
     }
 
     public function store()
     {
-        $input = Input::all();
+        $_input = \Input::all();
 
-        $validator = Validator::make($input,
+        $_validator = Validator::make($_input,
             [
                 'cluster_id_text' => 'required|string',
                 'subdomain_text'  => [
@@ -270,9 +261,9 @@ HTML;
                 ],
             ]);
 
-        if ($validator->fails()) {
+        if ($_validator->fails()) {
 
-            $messages = $validator->messages()->getMessages();
+            $messages = $_validator->messages()->getMessages();
 
             $flash_message = '';
 
@@ -298,16 +289,16 @@ HTML;
 
         try {
             $create_cluster = new Cluster;
-            $create_cluster->create($input);
+            $create_cluster->create($_input);
 
-            $result_text = 'The cluster "' . $input['cluster_id_text'] . '" was created successfully!';
+            $result_text = 'The cluster "' . $_input['cluster_id_text'] . '" was created successfully!';
             $result_status = 'alert-success';
 
             $_redirect = '/';
-            $_redirect .= $this->_prefix;
+            $_redirect .= $this->getUiPrefix();
             $_redirect .= '/clusters';
 
-            return Redirect::to($_redirect)
+            return \Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         } catch (QueryException $e) {
@@ -322,11 +313,10 @@ HTML;
     public function destroy($ids)
     {
         try {
-            $id_array = [];
             $cluster_names = [];
 
             if ($ids == 'multi') {
-                $params = Input::all();
+                $params = \Input::all();
                 $selected = $params['_selected'];
                 $id_array = explode(',', $selected);
             } else {
@@ -359,10 +349,10 @@ HTML;
             $result_status = 'alert-success';
 
             $_redirect = '/';
-            $_redirect .= $this->_prefix;
+            $_redirect .= $this->getUiPrefix();
             $_redirect .= '/clusters';
 
-            return Redirect::to($_redirect)
+            return \Redirect::to($_redirect)
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         } catch (QueryException $e) {
@@ -376,22 +366,21 @@ HTML;
 
     public function index()
     {
-        $asgn_clusters = Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')->distinct()->get([
-            'cluster_t.*',
-            'cluster_id',
-        ]);
+        $_clusters = Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')
+            ->distinct()
+            ->get(['cluster_t.*', 'cluster_id',]);
 
-        $excludes = [];
+        $_excluded = [];
 
-        foreach ($asgn_clusters as $obj) {
-            array_push($excludes, $obj->id);
+        foreach ($_clusters as $_cluster) {
+            $_excluded[] = $_cluster->id;
         }
 
-        $not_asgn_clusters = Cluster::whereNotIn('id', $excludes)->get();
+        $_notAssigned = Cluster::whereNotIn('id', $_excluded)->get();
 
-        $result = array_merge(json_decode($asgn_clusters), json_decode($not_asgn_clusters));
+        $result = array_merge(json_decode($_clusters), json_decode($_notAssigned));
 
-        return View::make('app.clusters')->with('prefix', $this->_prefix)->with('clusters', $result);
+        return $this->renderView('app.clusters', ['clusters' => $result]);
     }
 
 }

@@ -47,4 +47,8 @@ class ConsoleDefaults
      * @type string The default required private paths
      */
     const DEFAULT_REQUIRED_OWNER_PRIVATE_PATHS = EnterpriseDefaults::DEFAULT_REQUIRED_OWNER_PRIVATE_PATHS;
+    /**
+     * @type string
+     */
+    const UI_PREFIX = 'v1';
 }

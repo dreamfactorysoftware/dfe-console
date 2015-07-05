@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
-use DreamFactory\Enterprise\Console\Http\Controllers\Resources\ResourceController;
+use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 
 class OpsResourceController extends ResourceController

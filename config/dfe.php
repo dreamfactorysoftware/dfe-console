@@ -4,6 +4,7 @@
 //******************************************************************************
 
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
+use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 
 return [
     //******************************************************************************
@@ -30,6 +31,17 @@ return [
          * You may also install other compatible themes and use them as well.
          */
         'themes'            => ['auth' => 'darkly', 'page' => 'flatly'],
+    ],
+    //******************************************************************************
+    //* UI Settings
+    //******************************************************************************
+    'ui'               => [
+        'prefix'          => 'v1',
+        'button-contexts' => [
+            ServerTypes::DB  => 'primary',
+            ServerTypes::WEB => 'success',
+            ServerTypes::APP => 'warning',
+        ],
     ],
     //******************************************************************************
     //* Console API Keys

@@ -1,23 +1,19 @@
-
-@include('layouts.partials.topmenu',array('pageName' => 'Instances', 'prefix' => $prefix))
-
+@include('layouts.partials.topmenu',['pageName' => 'Instances', 'prefix' => $prefix])
 @extends('layouts.main')
 
 @section('content')
-
     <script type='text/javascript'>
 
         $( document ).ready(function() {
             //$('#')
             var txt = "{{ $instance->cluster_id_text }}";
-            $('#cluster_select option')
+            $('#cluster_select')
+                    .find('option')
                     .filter(function() { return $.trim( $(this).text() ) == txt; })
-                    .attr('selected',true);
+                    .attr('selected','selected');
 
 
         });
-
-
 
         function save(){
             var  formData = {
@@ -155,7 +151,6 @@
                                         </div>
                                         </df-user-details>
                                     </div>
-
                                 </df-manage-users>
                             </div>
                         </div>
@@ -165,9 +160,7 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="../../../js/blade-scripts/instances/instances.js"></script>
-
-
+    <script type="text/javascript" src="/js/blade-scripts/instances/instances.js"></script>
 @stop
 
 

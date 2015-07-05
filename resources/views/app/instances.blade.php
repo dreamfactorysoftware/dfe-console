@@ -1,4 +1,4 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Instances', 'prefix' => $prefix))
+@include('layouts.partials.topmenu',['pageName' => 'Instances', 'prefix' => $prefix])
 
 @extends('layouts.main')
 
@@ -32,7 +32,7 @@
                     </div>
                     <div class="btn-group btn-group">
 
-                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
+                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
@@ -42,7 +42,7 @@
                             </ul>
                         </div>
 
-                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
+                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
                     </div>
                     <div style="clear: both"></div>
                 </div>
@@ -70,19 +70,19 @@
                             </thead>
                             <tbody>
 
-                            @foreach($instances as $key => $value)
+                            @foreach($instances as $_instance)
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <input type="hidden" id="instance_id" value="{{ $value->id }}">
-                                        {{ $value->instance_id_text }}
+                                        <input type="hidden" id="instance_id" value="{{ $_instance->id }}">
+                                        {{ $_instance->instance_id_text }}
                                     </td>
-                                    <td>{{ $value->cluster_id_text }}</td>
-                                    <!--td style="text-align: left; vertical-align: middle;">{{ $value->create_date }}</td-->
+                                    <td>{{ $_instance->cluster->cluster_id_text }}</td>
+                                    <!--td style="text-align: left; vertical-align: middle;">{{ $_instance->create_date }}</td-->
 
-                                    <td>{{ $value->email_addr_text }}</td>
+                                    <td>{{ $_instance->user->email_addr_text }}</td>
                                     <td> </td>
-                                    <td>{{ $value->lmod_date }}</td>
+                                    <td>{{ $_instance->lmod_date }}</td>
                                     <td>
                                         <input class="btn btn-default btn-xs" type="button" value="Backup">&nbsp;&nbsp;
                                         <input class="btn btn-default btn-xs" type="button" value="Restore">
@@ -101,6 +101,6 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="../js/blade-scripts/instances/instances.js"></script>
+    <script type="text/javascript" src="/js/blade-scripts/instances/instances.js"></script>
 @stop
 

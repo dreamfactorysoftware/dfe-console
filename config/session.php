@@ -11,7 +11,7 @@ return [
     //  Session Encryption
     'encrypt'         => false,
     //  Session File Location
-    'files'           => realpath(base_path('bootstrap/cache/sessions')),
+    'files'           => __DIR__ . '/../bootstrap/cache/sessions',
     //  Session Database Connection
     'connection'      => null,
     //  Session Database Table

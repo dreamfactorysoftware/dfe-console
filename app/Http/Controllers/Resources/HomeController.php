@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 
 class HomeController extends ResourceController
 {
@@ -7,16 +8,10 @@ class HomeController extends ResourceController
     //* Methods
     //******************************************************************************
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->_active = [];
-    }
-
+    /** @inheritdoc */
     public function index()
     {
-        return \View::make('app.home')->with('prefix', 'v1');
+        return $this->renderView('app.home');
     }
 
 }
