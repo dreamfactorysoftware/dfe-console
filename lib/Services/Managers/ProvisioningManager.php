@@ -228,7 +228,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         $_imports = [];
 
         foreach ($_services as $_type => $_service) {
-            $_imports[$_type] = $_service->import(PortableServiceRequest::createImport($_instance, $job->getTarget()));
+            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance, $job->getTarget()));
         }
 
         return $_imports;
@@ -247,7 +247,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
 
         foreach ($_services as $_type => $_service) {
             $_exports[$_type] =
-                $_service->export(PortableServiceRequest::createExport($_instance, $job->getTarget()));
+                $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
         }
 
         return $_exports;
