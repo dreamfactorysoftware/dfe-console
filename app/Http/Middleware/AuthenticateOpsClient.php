@@ -64,7 +64,7 @@ class AuthenticateOpsClient extends BaseMiddleware
             return ErrorPacket::create(Response::HTTP_FORBIDDEN, 'Invalid "client-id"');
         }
 
-        if (!$this->_verifySignature($_token, $_clientId, $_key->client_secret)) {
+        if (!$this->verifySignature($_token, $_clientId, $_key->client_secret)) {
             $this->error('bad request: signature verification fail');
 
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST);
