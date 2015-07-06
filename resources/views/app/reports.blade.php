@@ -299,6 +299,7 @@
 
             var selected = $('#selected_' + type).html();
             var search_val = $('#selected_' + type).attr('value');
+            var search_string = '';
 
             var period = $('#current_period_' + type).html();
 
@@ -318,7 +319,13 @@
             else
                 return;
 
-            var _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}%20AND%20" + search_param + ":" + search_val + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:host,order:desc,orderBy:%272%27,size:10%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;//_g=%28time:%28from:now%2Fy,mode:quick,to:now%29%29";
+            if(search_val !== '*')
+            {
+                search_string = "%20AND%20" + search_param + ":" + search_val;
+            }
+
+            var _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:host,order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;//_g=%28time:%28from:now%2Fy,mode:quick,to:now%29%29";
+
             $('#iframe_chart').attr('src', _chart);
         });
 
@@ -353,7 +360,15 @@
                 _to = moment(date_to, 'MM/DD/YYYY').endOf('day').format();
             }
 
-            return "_g=(time:(from:'" + _from + "',mode:quick,to:'" + _to + "'))";
+            if(_from === 'now-30d')
+            {
+                return "_g=(time:(from:'" + _from + "',mode:quick,to:'" + _to + "'))";
+            }
+            else
+            {
+                return "_g=(time:(from:'" + _from + "',mode:absolute,to:'" + _to + "'))";
+            }
+
         }
 
 
