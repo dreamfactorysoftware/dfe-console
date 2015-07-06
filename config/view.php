@@ -8,6 +8,6 @@ return [
         realpath(base_path('resources/views')),
     ],
     //  Compiled View Path
-    'compiled' => __DIR__ . '/../bootstrap/cache/views',
+    'compiled' => base_path() . '/bootstrap/cache/views',
 
 ];
