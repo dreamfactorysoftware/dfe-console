@@ -90,19 +90,18 @@ class OpsController extends BaseController
             $_archived = true;
         }
 
-        $_rootStoragePath = $_instance->getRootStoragePath();
-        $_storagePath = $_instance->getStoragePath();
+        $_baseStoragePath = $_instance->getRootStoragePath();
 
         $_base = [
             'id'                 => $_instance->id,
             'archived'           => $_archived,
             'deleted'            => false,
             'metadata'           => (array)$_instance->instance_data_text,
-            'root-storage-path'  => $_rootStoragePath,
-            'storage-path'       => $_storagePath,
-            'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
-            'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
-            'home-links'         => config('links'),
+            'root-storage-path'  => $_baseStoragePath,
+            'storage-path'       => $_instance->getStoragePath(),
+            'owner-private-path' => $_instance->getOwnerPrivatePath(),
+            'private-path'       => $_instance->getPrivatePath(),
+            'home-links'         => config('links', []),
             //  morse
             'instance-id'        => $_instance->instance_name_text,
             'vendor-instance-id' => $_instance->instance_id_text,
@@ -366,12 +365,7 @@ class OpsController extends BaseController
             $_payload = $request->input();
             unset($_payload['password']);
 
-            $this->error('failed request for partner id "' .
-                $_pid .
-                '": ' .
-                $_ex->getCode() .
-                ' - ' .
-                $_ex->getMessage(),
+            $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return ErrorPacket::create(Response::HTTP_BAD_REQUEST, $_ex);
@@ -436,37 +430,31 @@ class OpsController extends BaseController
 
         //  Create a user account
         try {
-            $user = \DB::transaction(
-                function () use ($request, $_first, $_last, $_email, $_password) {
-                    $user = User::create(
-                        [
-                            'first_name_text'   => $_first,
-                            'last_name_text'    => $_last,
-                            'email_addr_text'   => $_email,
-                            'nickname_text'     => $request->input('nickname', $_first),
-                            'password_text'     => bcrypt($_password),
-                            'phone_text'        => $request->input('phone'),
-                            'company_name_text' => $request->input('company'),
-                        ]
-                    );
+            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password) {
+                $user = User::create([
+                    'first_name_text'   => $_first,
+                    'last_name_text'    => $_last,
+                    'email_addr_text'   => $_email,
+                    'nickname_text'     => $request->input('nickname', $_first),
+                    'password_text'     => bcrypt($_password),
+                    'phone_text'        => $request->input('phone'),
+                    'company_name_text' => $request->input('company'),
+                ]);
 
-                    $_appKey = AppKey::create(
-                        [
-                            'key_class_text' => AppKeyClasses::USER,
-                            'owner_id'       => $user->id,
-                            'owner_type_nbr' => OwnerTypes::USER,
-                            'server_secret'  => config('dfe.security.console-api-key'),
-                        ]
-                    );
+                $_appKey = AppKey::create([
+                    'key_class_text' => AppKeyClasses::USER,
+                    'owner_id'       => $user->id,
+                    'owner_type_nbr' => OwnerTypes::USER,
+                    'server_secret'  => config('dfe.security.console-api-key'),
+                ]);
 
-                    //  Update the user with the key info and activate
-                    $user->api_token_text = $_appKey->client_id;
-                    $user->active_ind = 1;
-                    $user->save();
+                //  Update the user with the key info and activate
+                $user->api_token_text = $_appKey->client_id;
+                $user->active_ind = 1;
+                $user->save();
 
-                    return $user;
-                }
-            );
+                return $user;
+            });
 
             $_values = $user->toArray();
             unset($_values['password_text'], $_values['external_password_text']);
