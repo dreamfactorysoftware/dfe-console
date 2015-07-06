@@ -1,6 +1,9 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\User;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 
 
@@ -29,9 +32,9 @@ class ReportController extends ResourceController
 
     public function index()
     {
-        $clusters = \Cluster::all();
-        $users = \User::all();
-        $instances = \Instance::all();
+        $clusters = Cluster::all();
+        $users = User::all();
+        $instances = Instance::all();
 
         return \View::make('app.reports')
             ->with('prefix', $this->_prefix)
