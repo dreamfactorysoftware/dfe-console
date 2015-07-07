@@ -498,7 +498,11 @@ class OpsController extends BaseController
         if ($httpCode instanceof \Exception) {
             $_ex = $httpCode;
             $httpCode = $_ex->getCode();
-            $message = $message ?: $httpCode->getMessage();
+            !$message && $message = $_ex->getMessage();
+        } elseif ($message instanceof \Exception) {
+            $_ex = $message;
+            !$httpCode && $httpCode = $_ex->getCode();
+            $message = $_ex->getMessage();
         }
 
         return ErrorPacket::make(false, $contents, $httpCode ?: Response::HTTP_NOT_FOUND, $message);
