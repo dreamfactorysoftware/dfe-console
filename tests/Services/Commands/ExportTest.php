@@ -10,7 +10,7 @@ class ExportTest extends \TestCase
 
     public function testExport()
     {
-        $_instanceId = 'bender';
+        $_instanceId = 'dfe-test-case';
 
         $_job = new ExportJob($_instanceId);
 
