@@ -8,5 +8,5 @@ return [
         realpath(base_path('resources/views')),
     ],
     //  Compiled View Path
-    'compiled' => base_path() . '/storage/framework/views',
+    'compiled' => storage_path('/framework/views'),
 ];

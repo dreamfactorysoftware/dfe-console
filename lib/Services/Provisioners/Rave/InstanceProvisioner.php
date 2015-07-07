@@ -207,9 +207,6 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
                 'server_secret'  => config('dfe.security.console-api-key'),
             ]);
 
-            //  Update the instance's metadata
-            $_instance->refreshMetadata();
-
             //  Create the guest row...
             $_host = $this->getFullyQualifiedDomainName($_name);
 
@@ -237,7 +234,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
 
         $this->info('<<< provisioning of instance "' . $_name . '" complete');
 
-        return $_instance->getMetadata(false);
+        return $_instance->getMetadata();
     }
 
     /**
