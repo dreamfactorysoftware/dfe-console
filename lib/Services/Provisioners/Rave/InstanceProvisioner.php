@@ -237,7 +237,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
 
         $this->info('<<< provisioning of instance "' . $_name . '" complete');
 
-        return $_md->toArray();
+        return $_instance->getMetadata(false);
     }
 
     /**
