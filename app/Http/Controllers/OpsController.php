@@ -283,6 +283,10 @@ class OpsController extends BaseController
     public function postImport(Request $request)
     {
         try {
+            $_instanceId = $request->input('instance-id');
+            $_instance = $this->_findInstance($_instanceId);
+
+            $_job = new ImportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
             $_payload = $request->input();
             $_job = new ImportJob($request->input('instance-id'), $_payload);
             \Queue::push($_job);
@@ -305,8 +309,10 @@ class OpsController extends BaseController
     public function postExport(Request $request)
     {
         try {
-            $_payload = $request->input();
-            $_job = new ExportJob($request->input('instance-id'), $_payload);
+            $_instanceId = $request->input('instance-id');
+            $_instance = $this->_findInstance($_instanceId);
+
+            $_job = new ExportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
             \Queue::push($_job);
 
             return $this->success($_job->getResult());
