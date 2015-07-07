@@ -78,13 +78,13 @@ class OpsController extends BaseController
             $_instance = $this->_findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
-                return ErrorPacket::create(Response::HTTP_NOT_FOUND,
+                return $this->failure(Response::HTTP_NOT_FOUND,
                     'Instance not found, invalid owner (' . $_owner->id . ').');
             }
         } catch (\Exception $_ex) {
             //  Check the deleted instances
             if (null === ($_instance = InstanceArchive::byNameOrId($_id)->first())) {
-                return ErrorPacket::create(Response::HTTP_NOT_FOUND, 'Instance not found.');
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
 
             $_archived = true;
@@ -115,7 +115,7 @@ class OpsController extends BaseController
 
         switch ($_version) {
             case 2:     //  v2 is base
-                $_merge = [];
+                $_merge = null;
                 break;
 
             default:    //  All else is original + base
@@ -151,7 +151,7 @@ class OpsController extends BaseController
          * This has multiple copies of data because it is used by several different systems
          */
 
-        return SuccessPacket::make(array_merge($_base, $_merge));
+        return $this->success(array_merge($_base, $_merge ?: []));
     }
 
     /**
@@ -178,7 +178,7 @@ class OpsController extends BaseController
             }
         }
 
-        return SuccessPacket::make($_response);
+        return $this->success($_response);
     }
 
     /**
@@ -205,9 +205,9 @@ class OpsController extends BaseController
                 ];
             }
 
-            return SuccessPacket::make($_response);
+            return $this->success($_response);
         } catch (\Exception $_ex) {
-            return ErrorPacket::create($_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -240,14 +240,14 @@ class OpsController extends BaseController
                     throw new \RuntimeException('The provisioning information is incomplete. Bailing.');
                 }
 
-                return SuccessPacket::make($_result['instance']);
+                return $this->success($_result['instance']);
             } catch (ModelNotFoundException $_ex) {
                 throw new \Exception('Instance not found after provisioning.');
             }
         } catch (\Exception $_ex) {
             $this->error('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -265,11 +265,11 @@ class OpsController extends BaseController
             $_job = new DeprovisionJob($request->input('instance-id'), $_payload);
             \Queue::push($_job);
 
-            return SuccessPacket::make($_job->getResult());
+            return $this->success($_job->getResult());
         } catch (\Exception $_ex) {
             $this->debug('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -287,11 +287,11 @@ class OpsController extends BaseController
             $_job = new ImportJob($request->input('instance-id'), $_payload);
             \Queue::push($_job);
 
-            return SuccessPacket::make($_job->getResult());
+            return $this->success($_job->getResult());
         } catch (\Exception $_ex) {
             $this->error('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -309,11 +309,11 @@ class OpsController extends BaseController
             $_job = new ExportJob($request->input('instance-id'), $_payload);
             \Queue::push($_job);
 
-            return SuccessPacket::make($_job->getResult());
+            return $this->success($_job->getResult());
         } catch (\Exception $_ex) {
             $this->error('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -347,7 +347,7 @@ class OpsController extends BaseController
                 $this->error('request with invalid command "' . $_command . '"',
                     ['channel' => 'ops.partner', 'allowed' => $_allowed, 'payload' => $request->input()]);
 
-                return ErrorPacket::create(Response::HTTP_FORBIDDEN);
+                return $this->failure(Response::HTTP_FORBIDDEN);
             }
 
             switch ($_command) {
@@ -360,7 +360,7 @@ class OpsController extends BaseController
                     break;
             }
 
-            return SuccessPacket::make($_response);
+            return $this->success($_response);
         } catch (\Exception $_ex) {
             $_payload = $request->input();
             unset($_payload['password']);
@@ -368,7 +368,7 @@ class OpsController extends BaseController
             $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
-            return ErrorPacket::create(Response::HTTP_BAD_REQUEST, $_ex);
+            return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
         }
     }
 
@@ -473,5 +473,34 @@ class OpsController extends BaseController
 
             throw new RegistrationException($_message, $_ex->getCode(), $_ex);
         }
+    }
+
+    /**
+     * @param mixed|null $contents
+     * @param int|null   $httpCode
+     *
+     * @return array
+     */
+    protected function success($contents, $httpCode = Response::HTTP_OK)
+    {
+        return SuccessPacket::make(true, $contents, $httpCode);
+    }
+
+    /**
+     * @param int|\Exception $httpCode
+     * @param string|null    $message
+     * @param mixed|null     $contents
+     *
+     * @return array
+     */
+    protected function failure($httpCode, $message = null, $contents = null)
+    {
+        if ($httpCode instanceof \Exception) {
+            $_ex = $httpCode;
+            $httpCode = $_ex->getCode();
+            $message = $message ?: $httpCode->getMessage();
+        }
+
+        return ErrorPacket::make(false, $contents, $httpCode ?: Response::HTTP_NOT_FOUND, $message);
     }
 }
