@@ -208,23 +208,8 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
                 'server_secret'  => config('dfe.security.console-api-key'),
             ]);
 
-            //  Collect metadata
-            $_md = Instance::makeMetadata($_instance, true);
-
-            //  Update the things we've provisioned...
-            $_md->set('db', [$_name => $_dbConfig])
-                ->set('paths',
-                    [
-                        'private-path'       => $_privatePath,
-                        'owner-private-path' => $_ownerPrivatePath,
-                        'snapshot-path'      => $_ownerPrivatePath .
-                            DIRECTORY_SEPARATOR .
-                            config('provisioning.snapshot-path-name',
-                                ConsoleDefaults::SNAPSHOT_PATH_NAME),
-                    ]);
-
             //  Update the instance's metadata
-            $_instance->setMetadata($_md);
+            $_instance->setMetadata($_md = Instance::makeMetadata($_instance, true));
             $_host = $this->getFullyQualifiedDomainName($_name);
 
             \DB::transaction(function () use ($_instance, $_host) {

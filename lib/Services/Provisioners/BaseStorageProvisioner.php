@@ -119,7 +119,7 @@ abstract class BaseStorageProvisioner extends BaseService implements HostedStora
     /** @inheritdoc */
     public function getOwnerHash(Instance $instance)
     {
-        return $instance->user->getHash();
+        return $instance->user && $instance->user->getHash() || null;
     }
 
     /**

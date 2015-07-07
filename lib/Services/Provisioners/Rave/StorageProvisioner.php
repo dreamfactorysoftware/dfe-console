@@ -1,10 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
-use DreamFactory\Enterprise\Common\Traits\Archivist;
-use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;
-use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Provisioners\BaseStorageProvisioner;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use League\Flysystem\Filesystem;
@@ -55,26 +51,6 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
     /**@inheritdoc */
     protected function doProvision($request)
     {
-        //  Make structure
-        $this->createInstanceStorage($request);
-    }
-
-    /** @inheritdoc */
-    protected function doDeprovision($request)
-    {
-        //  '86 structure
-        return $this->removeInstanceStorage($request);
-    }
-
-    /**
-     * Create storage structure in $filesystem
-     *
-     * @param ProvisionServiceRequest $request
-     *
-     * @throws \Exception
-     */
-    protected function createInstanceStorage($request)
-    {
         //  Wipe existing stuff
         $_instance = $request->getInstance();
         $_filesystem = $request->getStorage();
@@ -114,26 +90,20 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
                 $_filesystem->createDir($_check);
             }
         } catch (\Exception $_ex) {
-            \Log::error('Error creating directory structure: ' . $_ex->getMessage());
+            $this->error('! error creating directory structure: ' . $_ex->getMessage());
             throw $_ex;
         }
 
-        \Log::debug('    * provisioner: instance storage created');
-        \Log::debug('      * private path:       ' . $_privatePath);
-        \Log::debug('      * owner private path: ' . $_ownerPrivatePath);
+        $this->debug('instance "' . $_instance->instance_id_text . '"storage created');
+        $this->debug('        private: ' . $_privatePath);
+        $this->debug('  owner private: ' . $_ownerPrivatePath);
 
         $this->privatePath = $_privatePath;
         $this->ownerPrivatePath = $_ownerPrivatePath;
     }
 
-    /**
-     * Delete storage of an instance
-     *
-     * @param ProvisionServiceRequest $request
-     *
-     * @return bool
-     */
-    protected function removeInstanceStorage($request)
+    /** @inheritdoc */
+    protected function doDeprovision($request)
     {
         $_instance = $request->getInstance();
         $_filesystem = $request->getStorage();
@@ -141,18 +111,18 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
 
         //  I'm not sure how hard this tries to delete the directory
         if (!$_filesystem->has($_storagePath)) {
-            $this->notice('unable to stat storage path "' . $_storagePath . '". not deleting!');
+            $this->notice('! unable to stat storage path "' . $_storagePath . '". not deleting!');
 
             return false;
         }
 
         if (!$_filesystem->deleteDir($_storagePath)) {
-            $this->error('error deleting storage area "' . $_storagePath . '"');
+            $this->error('! error deleting storage area "' . $_storagePath . '"');
 
             return false;
         }
 
-        $this->debug('storage area "' . $_storagePath . '" removed');
+        $this->debug('instance "' . $_instance->instance_id_text . '"storage removed');
 
         return true;
     }

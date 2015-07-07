@@ -96,7 +96,7 @@ class OpsController extends BaseController
             'id'                 => $_instance->id,
             'archived'           => $_archived,
             'deleted'            => false,
-            'metadata'           => (array)$_instance->instance_data_text,
+            'metadata'           => Instance::makeMetadata($_instance),
             'root-storage-path'  => $_baseStoragePath,
             'storage-path'       => $_instance->getStoragePath(),
             'owner-private-path' => $_instance->getOwnerPrivatePath(),
