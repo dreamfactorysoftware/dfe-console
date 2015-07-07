@@ -13,7 +13,6 @@ use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Database\Models\AppKey;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
@@ -209,7 +208,9 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             ]);
 
             //  Update the instance's metadata
-            $_instance->setMetadata($_md = Instance::makeMetadata($_instance, true));
+            $_instance->refreshMetadata();
+
+            //  Create the guest row...
             $_host = $this->getFullyQualifiedDomainName($_name);
 
             \DB::transaction(function () use ($_instance, $_host) {
@@ -227,19 +228,12 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
                 //  Save the instance
                 $_instance->save();
             });
-
-            //  Try 'n save the metadata
-            try {
-                $_md->write();
-            } catch (\Exception $_ex) {
-                $this->error('Exception saving instance metadata: ' . $_ex->getMessage());
-            }
         } catch (\Exception $_ex) {
             throw new \RuntimeException('Error updating instance data: ' . $_ex->getMessage());
         }
 
         //  Fire off a "provisioned" event...
-        \Event::fire('dfe.provisioned', [$this, $request, $_md]);
+        \Event::fire('dfe.provisioned', [$this, $request, $_instance->getMetadata()]);
 
         $this->info('<<< provisioning of instance "' . $_name . '" complete');
 
