@@ -168,9 +168,9 @@
                             </div>
                             <div role="tabpanel" class="tab-pane" id="instances">
                                 <button id="instance_type_endpoints" type="button" class="btn btn-default btn-sm btn-info">Endpoints</button>&nbsp;&nbsp;
-                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;
-                                <button id="instance_type_applications" type="button" class="btn btn-default btn-sm" disabled>Applications</button>&nbsp;&nbsp;
-                                <button id="instance_type_users" type="button" class="btn btn-default btn-sm" disabled>Users</button>&nbsp;&nbsp;
+                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm">Roles</button>&nbsp;&nbsp;
+                                <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
+                                <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
 
                                 <div>
                                     <br>
@@ -332,6 +332,21 @@
                             search_type = 'Api-calls-by-endpoints';
                             search_param = 'dfe.instance_id';
                             search_field = 'path_info.raw';
+                            break;
+                        case 'instance_type_users':
+                            search_type = 'Api-Calls-by-User-Name';
+                            search_param = 'dfe.instance_id';
+                            search_field = 'user.public.email';
+                            break;
+                        case 'instance_type_applications':
+                            search_type = 'Api-calls-by-Applications';
+                            search_param = 'dfe.instance_id';
+                            search_field = 'app_name';
+                            break;
+                        case 'instance_type_roles':
+                            search_type = 'Api-Calls-by-User-Roles';
+                            search_param = 'dfe.instance_id';
+                            search_field = 'user.cached.role.name';
                             break;
                         default:
                             break;
