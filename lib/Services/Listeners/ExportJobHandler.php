@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
+use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 
 /**
@@ -15,7 +16,7 @@ class ExportJobHandler extends BaseListener
     /**
      * Handle a provisioning request
      *
-     * @param ExportJob $job
+     * @param \DreamFactory\Enterprise\Services\Jobs\ExportJob $job
      *
      * @return mixed
      *
@@ -29,7 +30,7 @@ class ExportJobHandler extends BaseListener
         $this->debug('>>> export "' . $job->getInstanceId() . '" request received');
 
         try {
-            $job->setResult($_result = \Provision::export($job));
+            $job->setResult($_result = Provision::export($job));
             $this->debug('<<< export "' . $job->getInstanceId() . '" request SUCCESS');
         } catch (\Exception $_ex) {
             $this->error('<<< export "' . $job->getInstanceId() . '" request FAILURE: ' . $_ex->getMessage());
