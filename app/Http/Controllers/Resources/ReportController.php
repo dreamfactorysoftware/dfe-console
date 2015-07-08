@@ -25,8 +25,15 @@ class ReportController extends ResourceController
 
     public function show($id)
     {
+        $clusters = Cluster::all();
+        $users = User::all();
+        $instances = Instance::all();
+
         return \View::make('app.reports.bandwidth')
             ->with('prefix', $this->_prefix)
+            ->with('clusters', $clusters)
+            ->with('users', $users)
+            ->with('instances', $instances)
             ->with('type', 'cluster-east-2');
     }
 
