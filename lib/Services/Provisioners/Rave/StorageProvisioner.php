@@ -33,7 +33,6 @@ use League\Flysystem\ZipArchive\ZipArchiveAdapter;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
  */
 class StorageProvisioner extends BaseStorageProvisioner implements PortableData
-
 {
     //******************************************************************************
     //* Constants
@@ -159,17 +158,30 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
         $_instance = $request->getInstance();
         $_mount = $_instance->getStorageMount();
         $_target = $request->getTarget();
+        $_tag = date('YmdHis') . '.' . $_instance->instance_id_text;
 
-        //  Make sure the output file is copacetic
-        $_path = dirname($_target);
-        $_file = basename($_target);
+        if (empty($_target)) {
+            $_path = $this->getWorkPath($_tag, true);
+            $_file = $_tag;
+        } else {
+            //  Make sure the output file is copacetic
+            $_path = dirname($_target);
+            $_file = basename($_target);
 
-        if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
-            throw new FileSystemException('Unable to write to export file "' . $_target . '".');
+            if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
+                throw new FileSystemException('Unable to write to export file "' . $_target . '".');
+            }
         }
 
         //  Create our zip container
-        return static::archiveTree($_mount, $_path . DIRECTORY_SEPARATOR . $_file);
+        $_file = static::archiveTree($_mount, $_path . DIRECTORY_SEPARATOR . $_file);
+
+        //  Copy it over to the snapshot area
+        $this->writeStream($_instance->getSnapshotMount(), $_path . DIRECTORY_SEPARATOR . $_file, $_file);
+        $this->deleteWorkPath($_tag);
+
+        //  The name of the file in the snapshot mount
+        return $_file;
     }
 
 }
