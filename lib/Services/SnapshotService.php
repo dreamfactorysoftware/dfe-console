@@ -83,6 +83,7 @@ class SnapshotService extends BaseService
 
         //  Get a route hash...
         $_routeHash = RouteHashing::create($_snapshotName, $keepDays);
+
         $_routeLink = config('snapshot.hash-link-protocol', 'https') . '://' .
             str_replace(['http://', 'https://', '//'],
                 null,
