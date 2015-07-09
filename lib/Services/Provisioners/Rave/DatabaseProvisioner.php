@@ -134,13 +134,7 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
         $_instance = $request->getInstance();
         $_tag = date('YmdHis') . '.' . $_instance->instance_id_text;
         $_workPath = $this->getWorkPath($_tag, true);
-
-        //  Add file extension if missing
-        if (null === ($_target = $request->getTarget()) || !is_string($_target)) {
-            $_target = $_tag . '.database.sql';
-        }
-
-        $_target = static::ensureFileSuffix('.sql', $_target);
+        $_target = $_tag . '.database.sql';
 
         $_command = str_replace(PHP_EOL, null, `which mysqldump`);
         $_template =

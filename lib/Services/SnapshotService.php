@@ -177,7 +177,8 @@ HTML
     public function restore($snapshotId)
     {
         //  Mount the snapshot
-        $_workPath = static::getWorkPath('restore.' . $snapshotId) . DIRECTORY_SEPARATOR;
+        $_tag = 'restore.' . $snapshotId;
+        $_workPath = static::getWorkPath($_tag) . DIRECTORY_SEPARATOR;
         $_fsSnapshot = $this->mountSnapshot($snapshotId, $_workPath);
         $_workFile = $_workPath . config('snapshot.metadata-file-name');
 
@@ -188,6 +189,7 @@ HTML
         //  Try and locate the instance
         $_instanceId = $_snapshot->get('instance-id');
         if (false === ($_instance = $this->_locateInstance($_instanceId))) {
+            static::deleteWorkPath($_tag);
             throw new \InvalidArgumentException('Instance "' .
                 $_instanceId .
                 '" is not eligible to be an import target.');

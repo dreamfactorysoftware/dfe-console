@@ -1,7 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
-use DreamFactory\Enterprise\Common\Exceptions\DiskException;
 use DreamFactory\Enterprise\Services\Provisioners\BaseStorageProvisioner;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
@@ -157,27 +156,15 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
     {
         $_instance = $request->getInstance();
         $_mount = $_instance->getStorageMount();
-        $_target = $request->getTarget();
         $_tag = date('YmdHis') . '.' . $_instance->instance_id_text;
-
-        if (empty($_target)) {
-            $_path = $this->getWorkPath($_tag, true);
-            $_file = $_tag;
-        } else {
-            //  Make sure the output file is copacetic
-            $_path = dirname($_target);
-            $_file = basename($_target);
-
-            if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
-                throw new DiskException('Unable to write to export file "' . $_target . '".');
-            }
-        }
+        $_workPath = $this->getWorkPath($_tag, true);
+        $_target = $_tag . '.storage.zip';
 
         //  Create our zip container
-        $_file = static::archiveTree($_mount, $_path . DIRECTORY_SEPARATOR . $_file);
+        $_file = static::archiveTree($_mount, $_workPath . DIRECTORY_SEPARATOR . $_target);
 
         //  Copy it over to the snapshot area
-        $this->writeStream($_instance->getSnapshotMount(), $_path . DIRECTORY_SEPARATOR . $_file, $_file);
+        $this->writeStream($_instance->getSnapshotMount(), $_workPath . DIRECTORY_SEPARATOR . $_target, $_target);
         $this->deleteWorkPath($_tag);
 
         //  The name of the file in the snapshot mount
