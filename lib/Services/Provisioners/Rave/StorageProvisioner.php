@@ -1,8 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
+use DreamFactory\Enterprise\Common\Exceptions\DiskException;
 use DreamFactory\Enterprise\Services\Provisioners\BaseStorageProvisioner;
-use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
@@ -169,7 +169,7 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
             $_file = basename($_target);
 
             if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
-                throw new FileSystemException('Unable to write to export file "' . $_target . '".');
+                throw new DiskException('Unable to write to export file "' . $_target . '".');
             }
         }
 

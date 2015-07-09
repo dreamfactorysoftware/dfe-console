@@ -236,7 +236,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     /**
      * @param \DreamFactory\Enterprise\Services\Jobs\ExportJob $job
      *
-     * @return array
+     * @return array The list of files in the instance's snapshot mount that were created.
      */
     public function export(ExportJob $job)
     {
@@ -244,9 +244,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         $_services = $this->getPortableServices($_instance->guest_location_nbr);
         $_exports = [];
 
+        //  Allow each service to export individually, collecting the output
         foreach ($_services as $_type => $_service) {
-            $_exports[$_type] =
-                $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
+            $_exports[$_type] = $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
         }
 
         return $_exports;
