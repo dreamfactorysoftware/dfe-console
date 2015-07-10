@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
@@ -57,7 +56,7 @@ abstract class DataController extends FactoryController
      *
      * @return \Illuminate\Database\Query\Builder|mixed
      */
-    public function processDataRequest($table, $count, array $columns = ['*'], $builder = null)
+    public function processDataRequest($table, $count, array $columns = ['*'], Builder $builder = null)
     {
         try {
             $this->parseDataRequest(null, $columns);

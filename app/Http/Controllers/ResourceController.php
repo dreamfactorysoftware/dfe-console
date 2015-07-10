@@ -140,11 +140,9 @@ abstract class ResourceController extends DataController
      */
     protected function makeRedirectUrl($type, $append = null, $usePrefix = true)
     {
-        $_parts = [];
-
-        $usePrefix && $_parts[] = $this->getUiPrefix();
+        $_parts = $usePrefix ? [$this->getUiPrefix()] : [];
         $_parts[] = trim($type, ' /');
-        $append && $_parts[] = ltrim($append, ' /');
+        is_string($append) && !empty($append) && $_parts[] = ltrim($append, ' /');
 
         return '/' . implode('/', $_parts);
     }
