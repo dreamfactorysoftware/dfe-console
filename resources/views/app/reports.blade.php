@@ -61,7 +61,7 @@
                                             <ul class="dropdown-menu" aria-labelledby="select_type_cluster" id="select_type_list_cluster">
 
                                                 @foreach($clusters as $i => $cluster)
-                                                    <li id="{{$cluster->id}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
+                                                    <li id="{{$cluster->cluster_id_text}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
                                                 @endforeach
                                             </ul>
                                         </div>
