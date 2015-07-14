@@ -61,7 +61,7 @@
                                             <ul class="dropdown-menu" aria-labelledby="select_type_cluster" id="select_type_list_cluster">
 
                                                 @foreach($clusters as $i => $cluster)
-                                                    <li id="{{$cluster->id}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
+                                                    <li id="{{$cluster->cluster_id_text}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -304,13 +304,22 @@
             var search_type = '';
             var search_param = '';
             var search_field = '';
+            var search_meas = '';
+            var search_yaxis = '';
             var no_select = '';
+
+            // Common settings
+            search_yaxis = 'field:content_length';
+            search_meas = ',type:sum';
+
 
             if (type === 'cluster')
             {
                 search_type = 'Bandwidth-by-Clusters';
-                search_param = 'cluster.id';//'dfe.cluster_id';
-                search_field =   'host';
+                search_param = 'dfe.cluster_id';
+                search_field =   'dfe.cluster_id';
+                //search_meas = ',type:count';
+                //search_yaxis = 'field:content_length';
                 no_select = 'Select Cluster and click Submit again.';
             }
             else if (type === 'instanceowner')
@@ -318,6 +327,8 @@
                 search_type = 'Bandwidth-by-User-Name';
                 search_param = 'dfe.instance_owner_id';
                 search_field = 'host';
+                //search_meas = ',type:content_length';
+                //search_yaxis = 'field:content_length';
                 no_select = 'Select Instance Owner and click Submit again.';
             }
             else if (type === 'instance')
@@ -332,21 +343,25 @@
                             search_type = 'Bandwidth-by-Endpoints';
                             search_param = 'dfe.instance_id';
                             search_field = 'path_info.raw';
+                            //search_meas = 'content_length';
                             break;
                         case 'instance_type_users':
                             search_type = 'Bandwidth-by-User-Name';
                             search_param = 'dfe.instance_id';
                             search_field = 'user.public.email';
+                            //search_meas = 'content_length';
                             break;
                         case 'instance_type_applications':
                             search_type = 'Bandwidth-by-Applications';
                             search_param = 'dfe.instance_id';
                             search_field = 'app_name';
+                            //search_meas = 'content_length';
                             break;
                         case 'instance_type_roles':
                             search_type = 'Bandwidth-by-User-Roles';
                             search_param = 'dfe.instance_id';
                             search_field = 'user.cached.role.name';
+                            //search_meas = 'content_length';
                             break;
                         default:
                             break;
