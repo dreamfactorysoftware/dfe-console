@@ -211,7 +211,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="datepickers_instances" hidden="hidden">
+                                    <div id="datepickers_instance" hidden="hidden">
                                         <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
 
                                         <div class="pull-left" role="group" id="datepickers">
@@ -503,6 +503,18 @@
 
         $('#datepicker_to_instanceowner').click(function() {
             datepicker_to_instanceowner.pikaday('show');//.pikaday('nextMonth');
+        });
+
+        var datepicker_from_instance = $('#datepicker_from_instance').pikaday(settings);
+
+        $('#datepicker_from_instance').click(function(){
+            datepicker_from_instance.pikaday('show');
+        });
+
+        var datepicker_to_instance = $('#datepicker_to_instance').pikaday(settings);
+
+        $('#datepicker_to_instance').click(function() {
+            datepicker_to_instance.pikaday('show');
         });
 
 
