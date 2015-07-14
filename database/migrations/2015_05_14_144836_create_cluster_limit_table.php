@@ -18,9 +18,11 @@ class CreateClusterLimitTable extends Migration
                 'limit_t',
                 function (Blueprint $table){
                     $table->bigIncrements('id');
-                    $table->integer('owner_id')->index();
-                    $table->integer('owner_type_nbr')->index();
-                    $table->mediumText('parameters_text')->nullable();
+                    $table->integer('cluster_id')->index();
+                    $table->integer('instance_id')->index();
+                    $table->string('limit_key_text');
+                    $table->integer('limit_value')->default(0);
+                    $table->integer('period_value')->default(0);
                     $table->dateTime('create_date');
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
                 }
