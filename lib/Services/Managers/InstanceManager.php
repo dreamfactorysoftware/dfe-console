@@ -140,14 +140,14 @@ class InstanceManager extends BaseManager implements Factory
             $_ownerId = $_owner->id;
 
             $_attributes = [
-                'user_id'            => $_ownerId,
+                'user_id'            => (int)$_ownerId,
                 'instance_id_text'   => $_sanitized,
                 'instance_name_text' => $_sanitized,
                 'guest_location_nbr' => $_guestLocation,
-                'cluster_id'         => $_clusterConfig['cluster-id'],
-                'db_server_id'       => $_clusterConfig['db-server-id'],
-                'app_server_id'      => $_clusterConfig['app-server-id'],
-                'web_server_id'      => $_clusterConfig['web-server-id'],
+                'cluster_id'         => (int)$_clusterConfig['cluster-id'],
+                'db_server_id'       => (int)$_clusterConfig['db-server-id'],
+                'app_server_id'      => (int)$_clusterConfig['app-server-id'],
+                'web_server_id'      => (int)$_clusterConfig['web-server-id'],
                 'state_nbr'          => ProvisionStates::CREATED,
                 'trial_instance_ind' => !!array_get($options, 'trial', false),
             ];

@@ -6,7 +6,6 @@ use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
-use DreamFactory\Library\Utility\IfSet;
 
 /**
  * Processes queued provision requests
@@ -48,14 +47,14 @@ class ProvisionJobHandler
         }
 
         try {
-            $_guest = IfSet::get($_options, 'guest-location-nbr', config('provisioning.default-guest-location'));
+            $_guest = array_get($_options, 'guest-location-nbr', config('provisioning.default-guest-location'));
             $_provisioner = Provision::getProvisioner($_guest);
 
             if (empty($_provisioner)) {
                 throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_result = $_provisioner->provision(new ProvisionServiceRequest($_instance), $_options);
+            $_result = $_provisioner->provision(new ProvisionServiceRequest($_instance));
 
             if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
                 \Log::info('provisioning - success, completed in ' . number_format($_result['elapsed'], 4) . 's');

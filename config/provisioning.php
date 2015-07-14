@@ -10,7 +10,7 @@ return [
     //* Storage & storage layout options/settings
     //******************************************************************************
     //  The root path of where instances' data will live
-    'storage-root'                => env('DFE_HOSTED_BASE_PATH', base_path()),
+    'storage-root'                => env('DFE_HOSTED_BASE_PATH', storage_path()),
     //  Either "static" or "dynamic"
     'storage-zone-type'           => env('DFE_STORAGE_ZONE_TYPE', 'static'),
     //  The "static" storage zone

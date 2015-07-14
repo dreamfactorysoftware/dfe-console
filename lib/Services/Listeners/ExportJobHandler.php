@@ -1,6 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
+use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Facades\Snapshot;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 
 /**
@@ -9,30 +11,36 @@ use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 class ExportJobHandler extends BaseListener
 {
     //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /** @inheritdoc */
+    const LOG_PREFIX = 'dfe.export';
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
      * Handle a provisioning request
      *
-     * @param ExportJob $job
+     * @param \DreamFactory\Enterprise\Services\Jobs\ExportJob $job
      *
      * @return mixed
      *
      */
     public function handle(ExportJob $job)
     {
-        $this->setLumberjackPrefix('dfe.export');
-
         $_start = microtime(true);
+        $_instanceId = $job->getInstanceId();
 
-        $this->debug('>>> export "' . $job->getInstanceId() . '" request received');
+        $this->debug('>>> export "' . $_instanceId . '" request received');
 
         try {
-            $job->setResult($_result = \Provision::export($job));
-            $this->debug('<<< export "' . $job->getInstanceId() . '" request SUCCESS');
+            $job->setResult($_result = Snapshot::createFromExports($job->getInstance(), Provision::export($job)));
+            $this->debug('<<< export "' . $_instanceId . '" request SUCCESS');
         } catch (\Exception $_ex) {
-            $this->error('<<< export "' . $job->getInstanceId() . '" request FAILURE: ' . $_ex->getMessage());
+            $this->error('<<< export "' . $_instanceId . '" request FAILURE: ' . $_ex->getMessage());
             $_result = false;
         }
 

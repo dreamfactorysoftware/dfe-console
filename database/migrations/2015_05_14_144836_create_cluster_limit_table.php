@@ -1,5 +1,6 @@
 <?php
 
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -16,7 +17,7 @@ class CreateClusterLimitTable extends Migration
         if (!\Schema::hasTable('limit_t')) {
             \Schema::create(
                 'limit_t',
-                function (Blueprint $table){
+                function (Blueprint $table) {
                     $table->bigIncrements('id');
                     $table->integer('cluster_id')->index();
                     $table->integer('instance_id')->index();

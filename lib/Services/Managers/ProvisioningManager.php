@@ -3,7 +3,6 @@ namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
 use DreamFactory\Enterprise\Common\Contracts\PortableProvisionerAware;
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
@@ -40,7 +39,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     /**
      * @param string $name
      *
-     * @return ResourceProvisioner
+     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
      */
     public function getProvisioner($name = null)
     {
@@ -48,7 +47,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
-     * @return ResourceProvisioner[]
+     * @return array|\DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner[]
      */
     public function getProvisioners()
     {
@@ -70,7 +69,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @param string $name
      *
-     * @return ResourceProvisioner
+     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
      */
     public function getStorageProvisioner($name = null)
     {
@@ -82,7 +81,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @param string $name
      *
-     * @return ResourceProvisioner
+     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
      */
     public function getDatabaseProvisioner($name = null)
     {
@@ -95,7 +94,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @param string $name The provisioner id. If null, the default provisioner is used.
      *
-     * @return PortableData[] An array of portability services keyed by PortableTypes
+     * @return array|\DreamFactory\Enterprise\Common\Contracts\PortableData[] An array of portability services keyed by PortableTypes
      */
     public function getPortableServices($name = null)
     {
@@ -131,7 +130,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      * @param string $tag
      * @param string $subkey
      *
-     * @return ResourceProvisioner
+     * @return \DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner
      */
     public function resolve($tag, $subkey = null)
     {
@@ -180,7 +179,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     /**
      * @param string $tag
      *
-     * @return PortableData|null
+     * @return \DreamFactory\Enterprise\Common\Contracts\PortableData|null
      */
     public function resolvePortability($tag)
     {
@@ -235,9 +234,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
-     * @param ExportJob $job
+     * @param \DreamFactory\Enterprise\Services\Jobs\ExportJob $job
      *
-     * @return array
+     * @return array The list of files in the instance's snapshot mount that were created.
      */
     public function export(ExportJob $job)
     {
@@ -245,9 +244,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         $_services = $this->getPortableServices($_instance->guest_location_nbr);
         $_exports = [];
 
+        //  Allow each service to export individually, collecting the output
         foreach ($_services as $_type => $_service) {
-            $_exports[$_type] =
-                $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
+            $_exports[$_type] = $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
         }
 
         return $_exports;

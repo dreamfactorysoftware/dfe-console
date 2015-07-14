@@ -131,13 +131,14 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
     /** @inheritdoc */
     public function export($request)
     {
-        //  Add file extension if missing
-        $to = static::ensureFileSuffix('.sql', $request->getTarget());
-
         $_instance = $request->getInstance();
+        $_tag = date('YmdHis') . '.' . $_instance->instance_id_text;
+        $_workPath = $this->getWorkPath($_tag, true);
+        $_target = $_tag . '.database.sql';
 
         $_command = str_replace(PHP_EOL, null, `which mysqldump`);
-        $_template = $_command . ' --compress --delayed-insert {options} >' . $to;
+        $_template =
+            $_command . ' --compress --delayed-insert {options} >' . ($_workPath . DIRECTORY_SEPARATOR . $_target);
         $_port = $_instance->db_port_nbr;
         $_name = $_instance->db_name_text;
 
@@ -161,7 +162,12 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
             return false;
         }
 
-        return basename($to);
+        //  Copy it over to the snapshot area
+        $this->writeStream($_instance->getSnapshotMount(), $_workPath . DIRECTORY_SEPARATOR . $_target, $_target);
+        $this->deleteWorkPath($_tag);
+
+        //  The name of the file in the snapshot mount
+        return $_target;
     }
 
     /**

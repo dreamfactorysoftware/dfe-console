@@ -1,12 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
-use DreamFactory\Enterprise\Common\Traits\Archivist;
-use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;
-use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Provisioners\BaseStorageProvisioner;
-use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
@@ -37,7 +32,6 @@ use League\Flysystem\ZipArchive\ZipArchiveAdapter;
  * /data/storage/ec2.us-east-1a/33/33f58e59068f021c975a1cac49c7b6818de9df5831d89677201b9c3bd98ee1ed/bender/.private/scripts.user
  */
 class StorageProvisioner extends BaseStorageProvisioner implements PortableData
-
 {
     //******************************************************************************
     //* Constants
@@ -54,26 +48,6 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
 
     /**@inheritdoc */
     protected function doProvision($request)
-    {
-        //  Make structure
-        $this->createInstanceStorage($request);
-    }
-
-    /** @inheritdoc */
-    protected function doDeprovision($request)
-    {
-        //  '86 structure
-        return $this->removeInstanceStorage($request);
-    }
-
-    /**
-     * Create storage structure in $filesystem
-     *
-     * @param ProvisionServiceRequest $request
-     *
-     * @throws \Exception
-     */
-    protected function createInstanceStorage($request)
     {
         //  Wipe existing stuff
         $_instance = $request->getInstance();
@@ -114,26 +88,20 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
                 $_filesystem->createDir($_check);
             }
         } catch (\Exception $_ex) {
-            \Log::error('Error creating directory structure: ' . $_ex->getMessage());
+            $this->error('! error creating directory structure: ' . $_ex->getMessage());
             throw $_ex;
         }
 
-        \Log::debug('    * provisioner: instance storage created');
-        \Log::debug('      * private path:       ' . $_privatePath);
-        \Log::debug('      * owner private path: ' . $_ownerPrivatePath);
+        $this->debug('instance "' . $_instance->instance_id_text . '"storage created');
+        $this->debug('        private: ' . $_privatePath);
+        $this->debug('  owner private: ' . $_ownerPrivatePath);
 
         $this->privatePath = $_privatePath;
         $this->ownerPrivatePath = $_ownerPrivatePath;
     }
 
-    /**
-     * Delete storage of an instance
-     *
-     * @param ProvisionServiceRequest $request
-     *
-     * @return bool
-     */
-    protected function removeInstanceStorage($request)
+    /** @inheritdoc */
+    protected function doDeprovision($request)
     {
         $_instance = $request->getInstance();
         $_filesystem = $request->getStorage();
@@ -141,18 +109,18 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
 
         //  I'm not sure how hard this tries to delete the directory
         if (!$_filesystem->has($_storagePath)) {
-            $this->notice('unable to stat storage path "' . $_storagePath . '". not deleting!');
+            $this->notice('! unable to stat storage path "' . $_storagePath . '". not deleting!');
 
             return false;
         }
 
         if (!$_filesystem->deleteDir($_storagePath)) {
-            $this->error('error deleting storage area "' . $_storagePath . '"');
+            $this->error('! error deleting storage area "' . $_storagePath . '"');
 
             return false;
         }
 
-        $this->debug('storage area "' . $_storagePath . '" removed');
+        $this->debug('instance "' . $_instance->instance_id_text . '"storage removed');
 
         return true;
     }
@@ -188,18 +156,19 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
     {
         $_instance = $request->getInstance();
         $_mount = $_instance->getStorageMount();
-        $_target = $request->getTarget();
-
-        //  Make sure the output file is copacetic
-        $_path = dirname($_target);
-        $_file = basename($_target);
-
-        if (!\DreamFactory\Library\Utility\FileSystem::ensurePath($_path)) {
-            throw new FileSystemException('Unable to write to export file "' . $_target . '".');
-        }
+        $_tag = date('YmdHis') . '.' . $_instance->instance_id_text;
+        $_workPath = $this->getWorkPath($_tag, true);
+        $_target = $_tag . '.storage.zip';
 
         //  Create our zip container
-        return static::archiveTree($_mount, $_path . DIRECTORY_SEPARATOR . $_file);
+        $_file = static::archiveTree($_mount, $_workPath . DIRECTORY_SEPARATOR . $_target);
+
+        //  Copy it over to the snapshot area
+        $this->writeStream($_instance->getSnapshotMount(), $_workPath . DIRECTORY_SEPARATOR . $_target, $_target);
+        $this->deleteWorkPath($_tag);
+
+        //  The name of the file in the snapshot mount
+        return $_file;
     }
 
 }

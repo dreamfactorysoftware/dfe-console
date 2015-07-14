@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
+use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
@@ -8,9 +9,12 @@ use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Notifier;
+use DreamFactory\Enterprise\Common\Utility\Disk;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\RouteHash;
 use DreamFactory\Enterprise\Database\Models\Snapshot;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Library\Utility\Inflector;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
@@ -25,6 +29,15 @@ class SnapshotService extends BaseService
     //******************************************************************************
 
     use Archivist, EntityLookup, Notifier;
+
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type string The working directory being used
+     */
+    protected $workPath;
 
     //*************************************************************************
     //* Methods
@@ -41,69 +54,115 @@ class SnapshotService extends BaseService
      * @return array
      * @throws \Exception
      */
-    public function create($instanceId, Filesystem $destination = null, $keepDays = 30)
+    public function create($instanceId, Filesystem $destination = null, $keepDays = EnterpriseDefaults::SNAPSHOT_DAYS_TO_KEEP)
+    {
+        //  Create the snapshot ID
+        $_instance = $this->_findInstance($instanceId);
+
+        return static::createFromExports(
+            $_instance,
+            Provision::export(new ExportJob($instanceId)),
+            $destination,
+            $keepDays
+        );
+    }
+
+    /**
+     * @param string $exportId
+     * @param string $filename
+     * @param array  $manifest
+     * @param int    $keepDays
+     *
+     * @return array
+     */
+    protected function createExportArchive($exportId, $exportName, array $manifest = [], $keepDays = EnterpriseDefaults::SNAPSHOT_DAYS_TO_KEEP)
+    {
+        list($_hash, $_link) = $this->createDownloadHash($exportName, $keepDays);
+        $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($this->workPath . $exportName));
+
+        //  Create our manifest
+        $_manifest = new SnapshotManifest(
+            array_merge(
+                $manifest,
+                [
+                    'id'   => $exportId,
+                    'name' => $exportName,
+                    'hash' => $_hash,
+                    'link' => $_link,
+                ]
+            ),
+            config('snapshot.metadata-file-name'),
+            $_fsSnapshot
+        );
+
+        return [$_fsSnapshot, $_manifest, $_hash, $_link];
+    }
+
+    /**
+     * @param array                        $files
+     * @param \League\Flysystem\Filesystem $archive
+     *
+     * @return array
+     */
+    protected function addFilesToArchive(array $files, Filesystem $archive)
+    {
+        $_added = [];
+
+        foreach ($files as $_type => $_export) {
+            $_added[$_type . '-export'] = $_export;
+            static::moveWorkFile($archive, $$this->workPath . $_export);
+        }
+
+        return $_added;
+    }
+
+    /**
+     * Creates an export of a instance
+     *
+     * @param Instance   $instance    The instance of the exports
+     * @param array      $exports     Array of files to include in the snapshot
+     * @param Filesystem $destination The destination upon which to place the export. Currently unused
+     *                                If null, the instance's snapshot storage area is used.
+     * @param int        $keepDays    The number of days to keep the snapshot
+     *
+     * @return array
+     */
+    public function createFromExports(Instance $instance, array $exports, Filesystem $destination = null, $keepDays = EnterpriseDefaults::SNAPSHOT_DAYS_TO_KEEP)
     {
         //  Build our "mise en place", as it were...
         $_success = false;
         $_stamp = date('YmdHis');
 
         //  Create the snapshot ID
-        $_instance = $this->_findInstance($instanceId);
-        $_instanceName = $_instance->instance_name_text;
-        $_snapshotId = $_stamp . '.' . Inflector::neutralize($_instanceName);
-
+        $_snapshotId = $_stamp . '.' . Inflector::neutralize($instance->instance_name_text);
         $_snapshotName = str_replace('{id}', $_snapshotId, config('snapshot.templates.snapshot-file-name'));
 
-        //  Make our temp path...
-        $_workPath = static::getWorkPath($_snapshotId, true) . DIRECTORY_SEPARATOR;
+        //  Set up the temp dir
+        $this->setWorkPath($instance->getSnapshotPath());
 
         //  Create the snapshot archive and stuff it full of goodies
-        $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($_workPath . $_snapshotName));
-
-        //  Get a route hash...
-        $_routeHash = RouteHashing::create($_snapshotName, $keepDays);
-        $_routeLink = '//' .
-            str_replace(['http://', 'https://', '//'],
-                null,
-                rtrim(config('snapshot.hash-link-base'), ' /')) . '/' . $_routeHash;
-
-        //  Create our manifest
-        $_manifest = new SnapshotManifest([
-            'id'                  => $_snapshotId,
-            'name'                => $_snapshotName,
-            'timestamp'           => $_stamp,
-            'guest-location'      => $_instance->guest_location_nbr,
-            'instance-id'         => $_instance->instance_id_text,
-            'cluster-id'          => (int)$_instance->cluster_id,
-            'db-server-id'        => (int)$_instance->db_server_id,
-            'web-server-id'       => (int)$_instance->web_server_id,
-            'app-server-id'       => (int)$_instance->app_server_id,
-            'owner-id'            => (int)$_instance->user->id,
-            'owner-email-address' => $_instance->user->email_addr_text,
-            'owner-storage-key'   => $_instance->user->storage_id_text,
-            'storage-key'         => $_instance->storage_id_text,
-            'hash'                => $_routeHash,
-            'link'                => $_routeLink,
-        ], config('snapshot.metadata-file-name'), $_fsSnapshot);
-
-        //  Grab the list of portable services from the provisioner
-        $_services = Provision::getPortableServices($_instance->guest_location_nbr);
+        /** @var SnapshotManifest $_manifest */
+        list($_fsSnapshot, $_manifest, $_routeHash, $_routeLink) = $this->createExportArchive(
+            $_snapshotId,
+            $_snapshotName,
+            [
+                'timestamp'           => $_stamp,
+                'guest-location'      => $instance->guest_location_nbr,
+                'instance-id'         => $instance->instance_id_text,
+                'cluster-id'          => (int)$instance->cluster_id,
+                'db-server-id'        => (int)$instance->db_server_id,
+                'web-server-id'       => (int)$instance->web_server_id,
+                'app-server-id'       => (int)$instance->app_server_id,
+                'owner-id'            => (int)$instance->user->id,
+                'owner-email-address' => $instance->user->email_addr_text,
+                'owner-storage-key'   => $instance->user->storage_id_text,
+                'storage-key'         => $instance->storage_id_text,
+            ],
+            $keepDays
+        );
 
         try {
-            //  Loop through the returned service list
-            foreach ($_services as $_type => $_service) {
-                //  The portability service will append the appropriate suffix for the type of export
-                $_to = $_workPath . $_snapshotId . '.' . $_type;
-                $_request = new ProvisionServiceRequest($_instance);
-
-                /**
-                 * Call each of the portable services and add the resultant export to the master export file
-                 */
-                if (false !== ($_outfile = $_service->export($_request, $_to))) {
-                    $_metadata[$_type . '-export'] = $_outfile;
-                    static::moveWorkFile($_fsSnapshot, $_workPath . $_outfile);
-                }
-            }
+            $this->addFilesToArchive($exports, $_fsSnapshot);
 
             try {
                 //  Write our snapshot manifesto
@@ -113,29 +172,25 @@ class SnapshotService extends BaseService
                 /** @noinspection PhpUndefinedMethodInspection */
                 $this->flushZipArchive($_fsSnapshot);
 
-                //  Move the snapshot archive into the "snapshots" private storage area
-                static::moveWorkFile($destination ?: $_instance->getSnapshotMount(), $_workPath . $_snapshotName);
-
                 //  Generate a record for the dashboard
                 $_routeHash = RouteHash::byHash($_routeHash)->first();
 
                 //  Create our snapshot record
                 Snapshot::create([
-                    'user_id'          => $_instance->user_id,
-                    'instance_id'      => $_instance->id,
+                    'user_id'          => $instance->user_id,
+                    'instance_id'      => $instance->id,
                     'route_hash_id'    => $_routeHash->id,
                     'snapshot_id_text' => $_snapshotId,
                     'public_ind'       => true,
                     'public_url_text'  => $_routeLink,
-                    'manifest_text'    => $_manifest->toArray(),
                     'expire_date'      => $_routeHash->expire_date,
                 ]);
 
                 //  Let the user know...
-                $this->notifyInstanceOwner($_instance,
+                $this->notifyInstanceOwner($instance,
                     'Instance export successful',
                     [
-                        'firstName'     => $_instance->user->first_name_text,
+                        'firstName'     => $instance->user->first_name_text,
                         'headTitle'     => 'Export Complete',
                         'contentHeader' => 'Your export has completed',
                         'emailBody'     => <<<HTML
@@ -154,7 +209,6 @@ HTML
         } finally {
             //  Cleanup
             $_fsSnapshot = null;
-            static::deleteWorkPath($_snapshotId);
         }
 
         return $_success;
@@ -170,7 +224,8 @@ HTML
     public function restore($snapshotId)
     {
         //  Mount the snapshot
-        $_workPath = static::getWorkPath('restore.' . $snapshotId) . DIRECTORY_SEPARATOR;
+        $_tag = 'restore.' . $snapshotId;
+        $_workPath = static::getWorkPath($_tag) . DIRECTORY_SEPARATOR;
         $_fsSnapshot = $this->mountSnapshot($snapshotId, $_workPath);
         $_workFile = $_workPath . config('snapshot.metadata-file-name');
 
@@ -181,6 +236,7 @@ HTML
         //  Try and locate the instance
         $_instanceId = $_snapshot->get('instance-id');
         if (false === ($_instance = $this->_locateInstance($_instanceId))) {
+            static::deleteWorkPath($_tag);
             throw new \InvalidArgumentException('Instance "' .
                 $_instanceId .
                 '" is not eligible to be an import target.');
@@ -261,5 +317,15 @@ HTML
         }
 
         return false;
+    }
+
+    /**
+     * @param string|null $append
+     *
+     * @throws \DreamFactory\Enterprise\Common\Exceptions\DiskException
+     */
+    protected function setWorkPath($append = null)
+    {
+        $this->workPath = Disk::path([config('provisioning.storage-root'), $append]) . DIRECTORY_SEPARATOR;
     }
 }

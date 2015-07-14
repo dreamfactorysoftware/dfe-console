@@ -78,31 +78,30 @@ class OpsController extends BaseController
             $_instance = $this->_findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
-                return ErrorPacket::create(Response::HTTP_NOT_FOUND,
+                return $this->failure(Response::HTTP_NOT_FOUND,
                     'Instance not found, invalid owner (' . $_owner->id . ').');
             }
         } catch (\Exception $_ex) {
             //  Check the deleted instances
             if (null === ($_instance = InstanceArchive::byNameOrId($_id)->first())) {
-                return ErrorPacket::create(Response::HTTP_NOT_FOUND, 'Instance not found.');
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
 
             $_archived = true;
         }
 
-        $_rootStoragePath = $_instance->getRootStoragePath();
-        $_storagePath = $_instance->getStoragePath();
+        $_baseStoragePath = $_instance->getRootStoragePath();
 
         $_base = [
             'id'                 => $_instance->id,
             'archived'           => $_archived,
             'deleted'            => false,
-            'metadata'           => (array)$_instance->instance_data_text,
-            'root-storage-path'  => $_rootStoragePath,
-            'storage-path'       => $_storagePath,
-            'owner-private-path' => $_rootStoragePath . DIRECTORY_SEPARATOR . '.private',
-            'private-path'       => $_storagePath . DIRECTORY_SEPARATOR . '.private',
-            'home-links'         => config('links'),
+            'metadata'           => Instance::makeMetadata($_instance),
+            'root-storage-path'  => $_baseStoragePath,
+            'storage-path'       => $_instance->getStoragePath(),
+            'owner-private-path' => $_instance->getOwnerPrivatePath(),
+            'private-path'       => $_instance->getPrivatePath(),
+            'home-links'         => config('links', []),
             //  morse
             'instance-id'        => $_instance->instance_name_text,
             'vendor-instance-id' => $_instance->instance_id_text,
@@ -116,7 +115,7 @@ class OpsController extends BaseController
 
         switch ($_version) {
             case 2:     //  v2 is base
-                $_merge = [];
+                $_merge = null;
                 break;
 
             default:    //  All else is original + base
@@ -152,7 +151,7 @@ class OpsController extends BaseController
          * This has multiple copies of data because it is used by several different systems
          */
 
-        return SuccessPacket::make(array_merge($_base, $_merge));
+        return $this->success(array_merge($_base, $_merge ?: []));
     }
 
     /**
@@ -179,7 +178,7 @@ class OpsController extends BaseController
             }
         }
 
-        return SuccessPacket::make($_response);
+        return $this->success($_response);
     }
 
     /**
@@ -206,9 +205,9 @@ class OpsController extends BaseController
                 ];
             }
 
-            return SuccessPacket::make($_response);
+            return $this->success($_response);
         } catch (\Exception $_ex) {
-            return ErrorPacket::create($_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -241,14 +240,14 @@ class OpsController extends BaseController
                     throw new \RuntimeException('The provisioning information is incomplete. Bailing.');
                 }
 
-                return SuccessPacket::make($_result['instance']);
+                return $this->success($_result['instance']);
             } catch (ModelNotFoundException $_ex) {
                 throw new \Exception('Instance not found after provisioning.');
             }
         } catch (\Exception $_ex) {
             $this->error('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -266,11 +265,11 @@ class OpsController extends BaseController
             $_job = new DeprovisionJob($request->input('instance-id'), $_payload);
             \Queue::push($_job);
 
-            return SuccessPacket::make($_job->getResult());
+            return $this->success($_job->getResult());
         } catch (\Exception $_ex) {
             $this->debug('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -284,15 +283,19 @@ class OpsController extends BaseController
     public function postImport(Request $request)
     {
         try {
+            $_instanceId = $request->input('instance-id');
+            $_instance = $this->_findInstance($_instanceId);
+
+            $_job = new ImportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
             $_payload = $request->input();
             $_job = new ImportJob($request->input('instance-id'), $_payload);
             \Queue::push($_job);
 
-            return SuccessPacket::make($_job->getResult());
+            return $this->success($_job->getResult());
         } catch (\Exception $_ex) {
             $this->error('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -306,15 +309,17 @@ class OpsController extends BaseController
     public function postExport(Request $request)
     {
         try {
-            $_payload = $request->input();
-            $_job = new ExportJob($request->input('instance-id'), $_payload);
+            $_instanceId = $request->input('instance-id');
+            $_instance = $this->_findInstance($_instanceId);
+
+            $_job = new ExportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
             \Queue::push($_job);
 
-            return SuccessPacket::make($_job->getResult());
+            return $this->success($_job->getResult());
         } catch (\Exception $_ex) {
             $this->error('Queuing error: ' . $_ex->getMessage());
 
-            return ErrorPacket::make(null, $_ex->getCode() ?: Response::HTTP_INTERNAL_SERVER_ERROR, $_ex);
+            return $this->failure($_ex);
         }
     }
 
@@ -348,7 +353,7 @@ class OpsController extends BaseController
                 $this->error('request with invalid command "' . $_command . '"',
                     ['channel' => 'ops.partner', 'allowed' => $_allowed, 'payload' => $request->input()]);
 
-                return ErrorPacket::create(Response::HTTP_FORBIDDEN);
+                return $this->failure(Response::HTTP_FORBIDDEN);
             }
 
             switch ($_command) {
@@ -361,20 +366,15 @@ class OpsController extends BaseController
                     break;
             }
 
-            return SuccessPacket::make($_response);
+            return $this->success($_response);
         } catch (\Exception $_ex) {
             $_payload = $request->input();
             unset($_payload['password']);
 
-            $this->error('failed request for partner id "' .
-                $_pid .
-                '": ' .
-                $_ex->getCode() .
-                ' - ' .
-                $_ex->getMessage(),
+            $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
-            return ErrorPacket::create(Response::HTTP_BAD_REQUEST, $_ex);
+            return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
         }
     }
 
@@ -436,37 +436,31 @@ class OpsController extends BaseController
 
         //  Create a user account
         try {
-            $user = \DB::transaction(
-                function () use ($request, $_first, $_last, $_email, $_password) {
-                    $user = User::create(
-                        [
-                            'first_name_text'   => $_first,
-                            'last_name_text'    => $_last,
-                            'email_addr_text'   => $_email,
-                            'nickname_text'     => $request->input('nickname', $_first),
-                            'password_text'     => bcrypt($_password),
-                            'phone_text'        => $request->input('phone'),
-                            'company_name_text' => $request->input('company'),
-                        ]
-                    );
+            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password) {
+                $user = User::create([
+                    'first_name_text'   => $_first,
+                    'last_name_text'    => $_last,
+                    'email_addr_text'   => $_email,
+                    'nickname_text'     => $request->input('nickname', $_first),
+                    'password_text'     => bcrypt($_password),
+                    'phone_text'        => $request->input('phone'),
+                    'company_name_text' => $request->input('company'),
+                ]);
 
-                    $_appKey = AppKey::create(
-                        [
-                            'key_class_text' => AppKeyClasses::USER,
-                            'owner_id'       => $user->id,
-                            'owner_type_nbr' => OwnerTypes::USER,
-                            'server_secret'  => config('dfe.security.console-api-key'),
-                        ]
-                    );
+                $_appKey = AppKey::create([
+                    'key_class_text' => AppKeyClasses::USER,
+                    'owner_id'       => $user->id,
+                    'owner_type_nbr' => OwnerTypes::USER,
+                    'server_secret'  => config('dfe.security.console-api-key'),
+                ]);
 
-                    //  Update the user with the key info and activate
-                    $user->api_token_text = $_appKey->client_id;
-                    $user->active_ind = 1;
-                    $user->save();
+                //  Update the user with the key info and activate
+                $user->api_token_text = $_appKey->client_id;
+                $user->active_ind = 1;
+                $user->save();
 
-                    return $user;
-                }
-            );
+                return $user;
+            });
 
             $_values = $user->toArray();
             unset($_values['password_text'], $_values['external_password_text']);
@@ -485,5 +479,38 @@ class OpsController extends BaseController
 
             throw new RegistrationException($_message, $_ex->getCode(), $_ex);
         }
+    }
+
+    /**
+     * @param mixed|null $contents
+     * @param int|null   $httpCode
+     *
+     * @return array
+     */
+    protected function success($contents, $httpCode = Response::HTTP_OK)
+    {
+        return SuccessPacket::make(true, $contents, $httpCode);
+    }
+
+    /**
+     * @param int|\Exception $httpCode
+     * @param string|null    $message
+     * @param mixed|null     $contents
+     *
+     * @return array
+     */
+    protected function failure($httpCode, $message = null, $contents = null)
+    {
+        if ($httpCode instanceof \Exception) {
+            $_ex = $httpCode;
+            $httpCode = $_ex->getCode();
+            !$message && $message = $_ex->getMessage();
+        } elseif ($message instanceof \Exception) {
+            $_ex = $message;
+            !$httpCode && $httpCode = $_ex->getCode();
+            $message = $_ex->getMessage();
+        }
+
+        return ErrorPacket::make(false, $contents, $httpCode ?: Response::HTTP_NOT_FOUND, $message);
     }
 }
