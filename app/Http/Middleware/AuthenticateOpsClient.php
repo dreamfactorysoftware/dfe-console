@@ -38,8 +38,8 @@ class AuthenticateOpsClient extends BaseMiddleware
     /**
      * Authenticate an incoming request.f
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
      *
      * @return mixed
      */

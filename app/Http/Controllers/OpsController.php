@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
@@ -7,6 +8,7 @@ use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Common\Traits\Versioned;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
@@ -25,13 +27,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class OpsController extends BaseController
+class OpsController extends BaseController implements IsVersioned
 {
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, Versioned;
 
     //*************************************************************************
     //* Members
@@ -71,7 +73,6 @@ class OpsController extends BaseController
     {
         $_archived = false;
         $_id = $request->input('id');
-        $_version = $request->input('version');
 
         try {
             $_owner = $this->_validateOwner($request);
@@ -113,7 +114,7 @@ class OpsController extends BaseController
             'create-date'        => (string)$_instance->create_date,
         ];
 
-        switch ($_version) {
+        switch ($this->getRequestedVersion($request)) {
             case 2:     //  v2 is base
                 $_merge = null;
                 break;
@@ -287,8 +288,6 @@ class OpsController extends BaseController
             $_instance = $this->_findInstance($_instanceId);
 
             $_job = new ImportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
-            $_payload = $request->input();
-            $_job = new ImportJob($request->input('instance-id'), $_payload);
             \Queue::push($_job);
 
             return $this->success($_job->getResult());
@@ -371,7 +370,12 @@ class OpsController extends BaseController
             $_payload = $request->input();
             unset($_payload['password']);
 
-            $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
+            $this->error('failed request for partner id "' .
+                $_pid .
+                '": ' .
+                $_ex->getCode() .
+                ' - ' .
+                $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
@@ -436,7 +440,7 @@ class OpsController extends BaseController
 
         //  Create a user account
         try {
-            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password) {
+            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
                 $user = User::create([
                     'first_name_text'   => $_first,
                     'last_name_text'    => $_last,
