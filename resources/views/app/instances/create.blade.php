@@ -1,10 +1,6 @@
-
 @include('layouts.partials.topmenu',array('pageName' => 'Instances', 'prefix' => $prefix))
-
 @extends('layouts.main')
-
 @section('content')
-
     <script type='text/javascript'>
 
         $( document ).ready(function() {
