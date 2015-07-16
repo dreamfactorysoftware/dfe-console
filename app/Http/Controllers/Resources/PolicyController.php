@@ -1,6 +1,7 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Library\Fabric\Database\Models\Deploy;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use Illuminate\Support\Facades\View;
