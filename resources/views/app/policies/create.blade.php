@@ -53,6 +53,47 @@
                                                         </div>
 
                                                         <div class="form-group">
+                                                            <label>Cluster</label>
+                                                            <select class="form-control" id="cluster_select" name="cluster_select">
+                                                                <option value="">Select cluster</option>
+                                                                @foreach ($clusters as $cluster)
+                                                                    <option id="{{$cluster['id']}}" @if (Input::old('cluster_select') == $cluster['cluster_id_text']) selected="selected" @endif>{{$cluster['cluster_id_text']}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>Instance</label>
+                                                            <select class="form-control" id="instance_select" name="instance_select">
+                                                                <option value="">Select instance</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>Users (optional)</label>
+                                                            <select class="form-control" id="instance_select" name="instance_select">
+                                                                <option value="">Select instance</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>Roles (optional)</label>
+                                                            <select class="form-control" id="instance_select" name="instance_select">
+                                                                <option value="">Select instance</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>Services (optional)</label>
+                                                            <select class="form-control" id="instance_select" name="instance_select">
+                                                                <option value="">Select instance</option>
+                                                            </select>
+                                                        </div>
+
+
+
+
+                                                        <!--div class="form-group">
                                                             <label>Description</label>
                                                             <textarea class="form-control" rows="3" id="description_text" placeholder="Enter policy description." required></textarea>
                                                         </div>
@@ -81,7 +122,7 @@
                                                             <div class="col-md-2">
                                                                 <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text">
                                                             </div>
-                                                        </div>
+                                                        </div-->
 
 
                                                     </div>
@@ -90,7 +131,7 @@
 
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label>Per Instance Limits</label>
+                                                            <label>Limits</label>
                                                             <div role="tabpanel">
 
                                                                 <!-- Nav tabs -->
@@ -218,166 +259,6 @@
                                                                         </div>
                                                                     </div>
                                                                     <div role="tabpanel" class="tab-pane" id="instance_limit_30day">
-                                                                        <div class="form-group" style="text-align: center; vertical-align: middle; height: 125px;">
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label>Per User Limits</label>
-                                                            <div role="tabpanel">
-
-                                                                <!-- Nav tabs -->
-                                                                <ul class="nav nav-tabs" role="tablist">
-                                                                    <li role="presentation" class="active"><a href="#user_limit_min" aria-controls="home" role="tab" data-toggle="tab">Minute</a></li>
-                                                                    <li role="presentation"><a href="#user_limit_hour" aria-controls="profile" role="tab" data-toggle="tab">Hour</a></li>
-                                                                    <li role="presentation"><a href="#user_limit_day" aria-controls="messages" role="tab" data-toggle="tab">Day</a></li>
-                                                                    <li role="presentation"><a href="#user_limit_7day" aria-controls="settings" role="tab" data-toggle="tab">7 Day</a></li>
-                                                                    <li role="presentation"><a href="#user_limit_30day" aria-controls="settings" role="tab" data-toggle="tab">30 Day</a></li>
-                                                                </ul>
-
-                                                                <!-- Tab panes -->
-                                                                <div class="tab-content">
-                                                                    <div role="tabpanel" class="tab-pane active" id="user_limit_min">
-                                                                        <div class="form-group" style="text-align: center; vertical-align: middle; height: 125px;">
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                    <div role="tabpanel" class="tab-pane" id="user_limit_hour">
-                                                                        <div class="form-group" style="text-align: center; vertical-align: middle; height: 125px;">
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div role="tabpanel" class="tab-pane" id="user_limit_day">
-                                                                        <div class="form-group" style="text-align: center; vertical-align: middle; height: 125px;">
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div role="tabpanel" class="tab-pane" id="user_limit_7day">
-                                                                        <div class="form-group" style="text-align: center; vertical-align: middle; height: 125px;">
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div><br></div>
-                                                                            <div class="row">
-                                                                                <div class="col-md-2">
-                                                                                    <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text"></td>
-                                                                                </div>
-                                                                                <div class="col-md-2">
-                                                                                    Maximum
-                                                                                </div>
-                                                                                <div class="col-md-6">
-                                                                                    <input type="text" class="form-control" style="width: auto">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div role="tabpanel" class="tab-pane" id="user_limit_30day">
                                                                         <div class="form-group" style="text-align: center; vertical-align: middle; height: 125px;">
                                                                             <div><br></div>
                                                                             <div class="row">
