@@ -1,9 +1,10 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
-
+use DreamFactory\Library\Fabric\Database\Models\Deploy;
 use DreamFactory\Enterprise\Database\Models\Cluster;
+use Illuminate\Support\Facades\View;
+
 
 class PolicyController extends ResourceController
 {
@@ -20,6 +21,22 @@ class PolicyController extends ResourceController
 
     protected $_prefix = 'v1';
 
+    public function store()
+    {
+    }
+
+    public function edit($id)
+    {
+    }
+
+    public function update($id)
+    {
+    }
+
+    public function destroy($ids)
+    {
+    }
+
     public function create(array $viewData = [])
     {
         $clusters = new Cluster();
@@ -31,6 +48,12 @@ class PolicyController extends ResourceController
 
     public function index()
     {
-        return \View::make('app.policies')->with('prefix', $this->_prefix)->with('policies', []);
+
+        return View::make('app.policies')
+            ->with('prefix', $this->_prefix)
+            ->with('policies', []);
     }
+
 }
+
+?>

@@ -18,10 +18,10 @@
                                     <div class="">
                                         <ul class="nav nav-pills nav-stacked visible-md visible-lg">
                                             <li class="">
-                                                <a class="" href="/{{$prefix}}/policies">Manage</a>
+                                                <a class="" href="{{ URL::action('Resources\\PolicyController@index') }}">Manage</a>
                                             </li>
                                             <li class="active">
-                                                <a class="" href="/{{$prefix}}/policies/create">Create</a>
+                                                <a class="" href="{{ URL::action('Resources\\PolicyController@create') }}">Create</a>
                                             </li>
                                         </ul>
                                         <div class="hidden-lg hidden-md" id="sidebar-open">
@@ -47,10 +47,10 @@
                                                 <!--form class="" name="create-user"-->
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <div class="form-group">
+                                                        <!--div class="form-group">
                                                             <label>Name</label>
                                                             <input id="server_id_text" name="server_id_text" class="form-control" placeholder="Enter server name." type="name" required>
-                                                        </div>
+                                                        </div-->
 
                                                         <div class="form-group">
                                                             <label>Cluster</label>
@@ -70,6 +70,13 @@
                                                         </div>
 
                                                         <div class="form-group">
+                                                            <label>Services (optional)</label>
+                                                            <select class="form-control" id="instance_select" name="instance_select">
+                                                                <option value="">Select instance</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group">
                                                             <label>Users (optional)</label>
                                                             <select class="form-control" id="instance_select" name="instance_select">
                                                                 <option value="">Select instance</option>
@@ -82,51 +89,7 @@
                                                                 <option value="">Select instance</option>
                                                             </select>
                                                         </div>
-
-                                                        <div class="form-group">
-                                                            <label>Services (optional)</label>
-                                                            <select class="form-control" id="instance_select" name="instance_select">
-                                                                <option value="">Select instance</option>
-                                                            </select>
-                                                        </div>
-
-
-
-
-                                                        <!--div class="form-group">
-                                                            <label>Description</label>
-                                                            <textarea class="form-control" rows="3" id="description_text" placeholder="Enter policy description." required></textarea>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <br>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-2">
-                                                                Default
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text">
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <br>
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <div class="col-md-2">
-                                                                Active
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <input id="db_multi_asgn_text" class="" type="checkbox" id="db_multi_asgn_text">
-                                                            </div>
-                                                        </div-->
-
-
                                                     </div>
-
 
 
                                                     <div class="col-md-6">
@@ -320,6 +283,29 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+
+
+    $(document.body).on('change','#cluster_select',function() {
+
+        var cluster_id = $(this).children(":selected").attr("id");
+
+        $.get( "{!!   URL::action('Ops\\PolicyController@getInstances')!!}/" + cluster_id, function( data ) {
+
+            $('#instance_select').empty();
+            $('#instance_select').append("<option value=''>Select instance</option>");
+
+            for ( var instance in data )
+            {
+                $('#instance_select').append("<option value='" + data[instance]['id'] + "'>[DB] " + data[instance]['instance_name_text'] + "</option>");
+            }
+        });
+    });
+
+
+    </script>
 
 
 @stop
