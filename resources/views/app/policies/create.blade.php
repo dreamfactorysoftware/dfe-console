@@ -299,7 +299,7 @@
 
             for ( var instance in data )
             {
-                $('#instance_select').append("<option value='" + data[instance]['id'] + "'>[DB] " + data[instance]['instance_name_text'] + "</option>");
+                $('#instance_select').append("<option value='" + data[instance]['id'] + "'>" + data[instance]['instance_name_text'] + "</option>");
             }
         });
     });
