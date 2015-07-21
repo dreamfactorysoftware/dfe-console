@@ -35,6 +35,7 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 \Route::group(['prefix' => 'api/v1', 'middleware' => 'log.dfe-ops-api',],
     function () {
         \Route::controller('ops', 'OpsController');
+        \Route::controller('policies', 'Ops\\PolicyController');
 
         \Route::resource('users', 'Ops\\UserController');
         \Route::resource('service-users', 'Ops\\ServiceUserController');

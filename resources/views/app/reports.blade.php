@@ -61,7 +61,7 @@
                                             <ul class="dropdown-menu" aria-labelledby="select_type_cluster" id="select_type_list_cluster">
 
                                                 @foreach($clusters as $i => $cluster)
-                                                    <li id="{{$cluster->id}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
+                                                    <li id="{{$cluster->cluster_id_text}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -211,7 +211,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="datepickers_instances" hidden="hidden">
+                                    <div id="datepickers_instance" hidden="hidden">
                                         <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
 
                                         <div class="pull-left" role="group" id="datepickers">
@@ -310,14 +310,14 @@
             {
                 search_type = 'Api-By-Clusters';
                 search_param = 'dfe.cluster_id';
-                search_field = 'host';
+                search_field = 'dfe.instance_id';
                 no_select = 'Select Cluster and click Submit again.';
             }
             else if (type === 'instanceowner')
             {
                 search_type = 'Api-Calls-by-User-Name';
                 search_param = 'dfe.instance_owner_id';
-                search_field = 'host';
+                search_field = 'app_name';
                 no_select = 'Select Instance Owner and click Submit again.';
             }
             else if (type === 'instance')
@@ -374,9 +374,11 @@
                 return;
             }
 
-            // Good one - keep it
             var _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:" + search_field + ",order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;
-            
+
+            // Good one - keep it
+            //var _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:" + search_field + ",order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;
+
             $('#iframe_chart').attr('src', _chart);
         });
 
@@ -501,6 +503,18 @@
 
         $('#datepicker_to_instanceowner').click(function() {
             datepicker_to_instanceowner.pikaday('show');//.pikaday('nextMonth');
+        });
+
+        var datepicker_from_instance = $('#datepicker_from_instance').pikaday(settings);
+
+        $('#datepicker_from_instance').click(function(){
+            datepicker_from_instance.pikaday('show');
+        });
+
+        var datepicker_to_instance = $('#datepicker_to_instance').pikaday(settings);
+
+        $('#datepicker_to_instance').click(function() {
+            datepicker_to_instance.pikaday('show');
         });
 
 
