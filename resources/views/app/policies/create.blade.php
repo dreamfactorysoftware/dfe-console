@@ -72,16 +72,32 @@
 
                                                     <div class="form-group">
                                                         <label>Services (optional)</label>
-                                                        <select class="form-control" id="instance_select" name="instance_select">
-                                                            <option value="">Select service</option>
-                                                        </select>
+                                                        <div class="row">
+                                                            <div class="col-md-1" style="margin-top: 7px; text-align: center;">
+                                                                <input id="" class="" type="checkbox" disabled></td>
+                                                            </div>
+
+                                                            <div class="col-md-11">
+                                                                <select class="form-control" id="service_select" name="service_select" disabled>
+                                                                    <option value="">Select user</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>Users (optional)</label>
-                                                        <select class="form-control" id="instance_select" name="instance_select">
-                                                            <option value="">Select user</option>
-                                                        </select>
+                                                        <div class="row">
+                                                            <div class="col-md-1" style="margin-top: 7px; text-align: center;">
+                                                                <input id="" class="" type="checkbox" disabled></td>
+                                                            </div>
+
+                                                            <div class="col-md-11">
+                                                                <select class="form-control" id="user_select" name="user_select" disabled>
+                                                                    <option value="">Select user</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
