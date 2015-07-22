@@ -18,6 +18,12 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group(['prefix' => ConsoleDefaults::UI_PREFIX, 'middleware' => 'auth'],
     function () {
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/policies/cluster-instances/{clusterId}',
+            'Resources\\PolicyController@getClusterInstances');
+    });
+
+\Route::group(['prefix' => ConsoleDefaults::UI_PREFIX, 'middleware' => 'auth'],
+    function () {
         \Route::resource('home', 'Resources\\HomeController');
         \Route::resource('users', 'Resources\\UserController');
         \Route::resource('servers', 'Resources\\ServerController');

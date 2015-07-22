@@ -1,14 +1,18 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
-use DreamFactory\Library\Fabric\Database\Models\Deploy;
 use DreamFactory\Enterprise\Database\Models\Cluster;
-use Illuminate\Support\Facades\View;
-
+use DreamFactory\Enterprise\Database\Models\Instance;
 
 class PolicyController extends ResourceController
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
+
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -16,45 +20,59 @@ class PolicyController extends ResourceController
     /** @type string */
     protected $_tableName = 'policy_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\Policy';
+    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Limit';
     /** @type string */
     protected $_resource = 'policy';
-
+    /**
+     * @type string
+     */
     protected $_prefix = 'v1';
 
-    public function store()
-    {
-    }
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
 
-    public function edit($id)
-    {
-    }
-
-    public function update($id)
-    {
-    }
-
-    public function destroy($ids)
-    {
-    }
-
+    /**
+     * @param array $viewData
+     *
+     * @return \Illuminate\View\View
+     */
     public function create(array $viewData = [])
     {
-        $clusters = new Cluster();
-        $clusters_list = $clusters->all();
-
-        return \View::make('app.policies.create', ['prefix' => $this->_prefix])
-            ->with('clusters', $clusters_list);
+        return \View::make(
+            'app.policies.create',
+            [
+                'prefix'   => $this->_prefix,
+                'clusters' => Cluster::all(),
+            ]
+        );
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
-
-        return View::make('app.policies')
-            ->with('prefix', $this->_prefix)
-            ->with('policies', []);
+        return
+            \View::make('app.policies',
+                [
+                    'prefix'   => $this->_prefix,
+                    'policies' => [],
+                ]
+            );
     }
 
-}
+    /**
+     * @param string|int $clusterId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|Instance[]
+     */
+    public function getClusterInstances($clusterId)
+    {
+        $_cluster = $this->_findCluster($clusterId);
 
-?>
+        return Instance::byClusterId($_cluster->id)
+            ->orderBy('instance_name_text')
+            ->get(['id', 'instance_name_text',]);
+    }
+}
