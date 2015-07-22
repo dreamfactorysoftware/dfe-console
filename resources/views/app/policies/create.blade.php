@@ -41,88 +41,73 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="control-group">
-                            <div class="controls">
-                                <label><input type="checkbox" /> A checkbox</label>
-                            </div>
-                        </div>
-                    </div>
-                    <label>Services (optional)</label>
-                    <select class="form-control" id="instance_select" name="instance_select">
-                        <option value="">Select service</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Users (optional)</label>
-                    <select class="form-control" id="instance_select" name="instance_select">
-                        <option value="">Select user</option>
-                    </select>
-                </div>
-            </div>
-
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Limits</label>
-
-                    <div role="tabpanel">
-
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist" id="period">
-                            <li role="presentation" class="active"><a href="#instance_limit_min"
-                                                                      aria-controls="min"
-                                                                      role="tab"
-                                                                      data-toggle="tab"
-                                                                      id="min">Minute</a></li>
-                            <li role="presentation"><a href="#instance_limit_hour"
-                                                       aria-controls="hour"
-                                                       role="tab"
-                                                       data-toggle="tab"
-                                                       id="hour">Hour</a></li>
-                            <li role="presentation"><a href="#instance_limit_day"
-                                                       aria-controls="day"
-                                                       role="tab"
-                                                       data-toggle="tab"
-                                                       id="day">Day</a></li>
-                            <li role="presentation"><a href="#instance_limit_7day"
-                                                       aria-controls="week"
-                                                       role="tab"
-                                                       data-toggle="tab"
-                                                       id="week">7 Day</a></li>
-                            <li role="presentation"><a href="#instance_limit_30day"
-                                                       aria-controls="month"
-                                                       role="tab"
-                                                       data-toggle="tab"
-                                                       id="month">30 Day</a></li>
-                        </ul>
-
-                        <div><br></div>
+                        <label>Services (optional)</label>
                         <div class="row">
-                            <div class="col-md-4">
-                                &nbsp;&nbsp;Maximum Requests:
+                            <div class="col-md-1" style="margin-top: 7px; text-align: center;">
+                                <input id="" class="" type="checkbox" disabled>
                             </div>
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" style="width: auto">
+
+                            <div class="col-md-11">
+                                <select class="form-control" id="service_select" name="service_select" disabled>
+                                    <option value="">Select user</option>
+                                </select>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Users (optional)</label>
+                        <div class="row">
+                            <div class="col-md-1" style="margin-top: 7px; text-align: center;">
+                                <input id="" class="" type="checkbox" disabled></td>
+                            </div>
+
+                            <div class="col-md-11">
+                                <select class="form-control" id="user_select" name="user_select" disabled>
+                                    <option value="">Select user</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Limits</label>
+                        <div role="tabpanel">
+
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist" id="period">
+                                <li role="presentation" class="active"><a href="#instance_limit_min" aria-controls="min" role="tab" data-toggle="tab" id="min">Minute</a></li>
+                                <li role="presentation"><a href="#instance_limit_hour" aria-controls="hour" role="tab" data-toggle="tab" id="hour">Hour</a></li>
+                                <li role="presentation"><a href="#instance_limit_day" aria-controls="day" role="tab" data-toggle="tab" id="day">Day</a></li>
+                                <li role="presentation"><a href="#instance_limit_7day" aria-controls="week" role="tab" data-toggle="tab" id="week">7 Day</a></li>
+                                <li role="presentation"><a href="#instance_limit_30day" aria-controls="month" role="tab" data-toggle="tab" id="month">30 Day</a></li>
+                            </ul>
+
+                            <div><br></div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    &nbsp;&nbsp;Maximum Requests:
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" style="width: auto">
+                                </div>
+                            </div>
 
 
+                        </div>
                     </div>
                 </div>
             </div>
-
 
             <div class="row">
                 <div class="col-xs-12">
                     <hr>
                     <div class="form-group">
                         <div class="">
-                            <button type="button" class="btn btn-primary">Create</button>
-                            &nbsp;&nbsp;
-                            <button type="button" class="btn btn-default">
-                                Close
-                            </button>
+                            <button type="button" class="btn btn-primary">Create</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-default">Close</button>
                         </div>
                     </div>
                 </div>
