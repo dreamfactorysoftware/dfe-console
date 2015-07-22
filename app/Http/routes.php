@@ -16,21 +16,20 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 //* Resource Controllers
 //******************************************************************************
 
-\Route::group(['prefix' => ConsoleDefaults::UI_PREFIX, 'middleware' => 'auth'],
+\Route::group(
+    [
+        'prefix'     => ConsoleDefaults::UI_PREFIX,
+        'namespace'  => 'Resources',
+        'middleware' => 'auth',
+    ],
     function () {
-        \Route::get(ConsoleDefaults::UI_PREFIX . '/policies/cluster-instances/{clusterId}',
-            'Resources\\PolicyController@getClusterInstances');
-    });
-
-\Route::group(['prefix' => ConsoleDefaults::UI_PREFIX, 'middleware' => 'auth'],
-    function () {
-        \Route::resource('home', 'Resources\\HomeController');
-        \Route::resource('users', 'Resources\\UserController');
-        \Route::resource('servers', 'Resources\\ServerController');
-        \Route::resource('clusters', 'Resources\\ClusterController');
-        \Route::resource('instances', 'Resources\\InstanceController');
-        \Route::resource('policies', 'Resources\\PolicyController');
-        \Route::resource('reports', 'Resources\\ReportController');
+        \Route::resource('home', 'HomeController');
+        \Route::resource('users', 'UserController');
+        \Route::resource('servers', 'ServerController');
+        \Route::resource('clusters', 'ClusterController');
+        \Route::resource('instances', 'InstanceController');
+        \Route::resource('policies', 'PolicyController');
+        \Route::resource('reports', 'ReportController');
     });
 
 //******************************************************************************
@@ -38,21 +37,32 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 //******************************************************************************
 
 /** Ops controller for operational api */
-\Route::group(['prefix' => 'api/v1', 'middleware' => 'log.dfe-ops-api',],
-    function () {
-        \Route::controller('ops', 'OpsController');
-        \Route::controller('policies', 'Ops\\PolicyController');
+if (true === config('dfe.enable-console-api', false)) {
+    \Route::group(
+        [
+            'prefix'     => 'api/v1',
+            'middleware' => 'log.dfe-ops-api',
+        ],
+        function () {
+            \Route::controller('ops', 'OpsController');
 
-        \Route::resource('users', 'Ops\\UserController');
-        \Route::resource('service-users', 'Ops\\ServiceUserController');
-        \Route::resource('servers', 'Ops\\ServerController');
-        \Route::resource('clusters', 'Ops\\ClusterController');
-        \Route::resource('instances', 'Ops\\InstanceController');
-        \Route::resource('mounts', 'Ops\\MountController');
-        \Route::resource('app-keys', 'Ops\\AppKeyController');
-        \Route::resource('instances', 'Ops\\InstanceController');
-        \Route::resource('policies', 'Ops\\PolicyController');
-    });
+            \Route::group(
+                [
+                    'namespace' => 'Ops',
+                ],
+                function () {
+                    \Route::resource('users', 'UserController');
+                    \Route::resource('service-users', 'ServiceUserController');
+                    \Route::resource('servers', 'ServerController');
+                    \Route::resource('clusters', 'ClusterController');
+                    \Route::resource('instances', 'InstanceController');
+                    \Route::resource('mounts', 'MountController');
+                    \Route::resource('app-keys', 'AppKeyController');
+                    \Route::resource('instances', 'InstanceController');
+                    \Route::resource('policies', 'PolicyController');
+                });
+        });
+}
 
 /** Miscellaneous controllers for dashboard functionality */
 \Route::controllers([

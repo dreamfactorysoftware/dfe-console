@@ -42,6 +42,7 @@
 
                     <div class="form-group">
                         <label>Services (optional)</label>
+
                         <div class="row">
                             <div class="col-md-1" style="margin-top: 7px; text-align: center;">
                                 <input id="" class="" type="checkbox" disabled>
@@ -57,6 +58,7 @@
 
                     <div class="form-group">
                         <label>Users (optional)</label>
+
                         <div class="row">
                             <div class="col-md-1" style="margin-top: 7px; text-align: center;">
                                 <input id="" class="" type="checkbox" disabled></td>
@@ -74,15 +76,36 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>Limits</label>
+
                         <div role="tabpanel">
 
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist" id="period">
-                                <li role="presentation" class="active"><a href="#instance_limit_min" aria-controls="min" role="tab" data-toggle="tab" id="min">Minute</a></li>
-                                <li role="presentation"><a href="#instance_limit_hour" aria-controls="hour" role="tab" data-toggle="tab" id="hour">Hour</a></li>
-                                <li role="presentation"><a href="#instance_limit_day" aria-controls="day" role="tab" data-toggle="tab" id="day">Day</a></li>
-                                <li role="presentation"><a href="#instance_limit_7day" aria-controls="week" role="tab" data-toggle="tab" id="week">7 Day</a></li>
-                                <li role="presentation"><a href="#instance_limit_30day" aria-controls="month" role="tab" data-toggle="tab" id="month">30 Day</a></li>
+                                <li role="presentation" class="active"><a href="#instance_limit_min"
+                                                                          aria-controls="min"
+                                                                          role="tab"
+                                                                          data-toggle="tab"
+                                                                          id="min">Minute</a></li>
+                                <li role="presentation"><a href="#instance_limit_hour"
+                                                           aria-controls="hour"
+                                                           role="tab"
+                                                           data-toggle="tab"
+                                                           id="hour">Hour</a></li>
+                                <li role="presentation"><a href="#instance_limit_day"
+                                                           aria-controls="day"
+                                                           role="tab"
+                                                           data-toggle="tab"
+                                                           id="day">Day</a></li>
+                                <li role="presentation"><a href="#instance_limit_7day"
+                                                           aria-controls="week"
+                                                           role="tab"
+                                                           data-toggle="tab"
+                                                           id="week">7 Day</a></li>
+                                <li role="presentation"><a href="#instance_limit_30day"
+                                                           aria-controls="month"
+                                                           role="tab"
+                                                           data-toggle="tab"
+                                                           id="month">30 Day</a></li>
                             </ul>
 
                             <div><br></div>
@@ -106,7 +129,8 @@
                     <hr>
                     <div class="form-group">
                         <div class="">
-                            <button type="button" class="btn btn-primary">Create</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-primary">Create</button>
+                            &nbsp;&nbsp;
                             <button type="button" class="btn btn-default">Close</button>
                         </div>
                     </div>
@@ -119,28 +143,28 @@
         jQuery(function ($) {
             $('.policy-form').on('change', '#cluster_id', function (e) {
                 var $_select = $('#instance_select');
-                var _clusterId = $('option:selected', this).val();
+                var _clusterId = $('option:selected', this).val().toString();
 
                 if (!_clusterId) {
                     alert('Invalid cluster selected.');
                     return false;
                 }
 
-                $.get({url: '/{{ $prefix }}/policies/cluster-instances/' + encodeURIComponent(_clusterId), dataType: 'json', async: false})
-                        .done(function (data) {
-                            var _item;
+                var _url = '/api/v1/ops/cluster/' + encodeURIComponent(_clusterId) + '/instances';
 
-                            $_select.empty().append('<option value>Select One...</option>');
+                $.get(_url).done(function (data) {
+                    var _item;
 
-                            $.each(data, function (item) {
-                                var _id = ( item && item.hasOwnProperty('instance_name_text') ? item.instance_name_text : null );
-                                $_select.append('<option value="' + _id + '">' + _id + '</option>');
-                            });
-                        })
-                        .fail(function (xhr, status) {
-                            $_select.empty().append('<option value>Reload Please!</option>');
-                            alert('The current list of instances unavailable.\\n\\n' + '(' + status + ')');
-                        });
+                    $_select.empty().append('<option value>Select One...</option>');
+
+                    $.each(data, function (item) {
+                        var _id = ( item && item.hasOwnProperty('instance_name_text') ? item.instance_name_text : null );
+                        $_select.append('<option value="' + _id + '">' + _id + '</option>');
+                    });
+                }).fail(function (xhr, status) {
+                    $_select.empty().append('<option value>Reload Please!</option>');
+                    alert('The current list of instances unavailable.\\n\\n' + '(' + status + ')');
+                });
             });
 
             //@todo what is this doing?

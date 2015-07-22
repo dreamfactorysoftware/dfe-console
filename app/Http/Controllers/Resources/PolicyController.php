@@ -67,12 +67,14 @@ class PolicyController extends ResourceController
      *
      * @return \Illuminate\Database\Eloquent\Collection|Instance[]
      */
-    public function getClusterInstances($clusterId)
+    public function instances($clusterId)
     {
         $_cluster = $this->_findCluster($clusterId);
 
-        return Instance::byClusterId($_cluster->id)
-            ->orderBy('instance_name_text')
-            ->get(['id', 'instance_name_text',]);
+        return response()->json(
+            Instance::byClusterId($_cluster->id)
+                ->orderBy('instance_name_text')
+                ->get(['id', 'instance_name_text',])
+        );
     }
 }
