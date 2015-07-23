@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
-class HomeController extends FactoryController
+class HomeController extends ResourceController
 {
     //******************************************************************************
     //* Methods
@@ -13,12 +13,12 @@ class HomeController extends FactoryController
      */
     public function index()
     {
-        return $this->renderView(
-            'app.dashboard',
+        //  Fill up the expected defaults...
+        return $this->renderView('app.home',
             [
-                '_trail'  => null,
-                '_active' => ['instances' => 0, 'servers' => 0, 'users' => 0, 'clusters' => 0],
-                'prefix'  => ConsoleDefaults::UI_PREFIX,
+                'prefix'   => ConsoleDefaults::UI_PREFIX,
+                'resource' => null,
+                'title'    => null,
             ]
         );
     }

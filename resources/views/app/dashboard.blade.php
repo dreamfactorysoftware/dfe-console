@@ -1,7 +1,5 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Dashboard'))
-
 @extends('layouts.main')
-
+@include('layouts.partials.topmenu',array('pageName' => 'Dashboard'))
 @section('content')
     <div class="col-md-12">
     <div class="row">

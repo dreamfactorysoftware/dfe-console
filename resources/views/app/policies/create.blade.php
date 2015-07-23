@@ -1,32 +1,22 @@
 @include('layouts.partials.topmenu')
 @extends('layouts.main')
 @section('content')
-    @include('layouts.partials.sidebar-menu',['resource'=>'servers'])
+    @include('layouts.partials.sidebar-menu',['resource'=>'policies'])
 
-    <div class="col-md-10 df-section df-section-3-round">
-        <div class="df-section-header" data-title="'Manage Servers'">
-            <div class="nav nav-pills dfe-section-header">
-                <h4 class="">Create Policy</h4>
-            </div>
-        </div>
+    <div class="col-xs-11 col-sm-10 col-md-10">
+        @include('layouts.partials.context-header',['resource'=>'policies','title' => 'New Policy'])
 
         <form class="policy-form" method="POST" action="/{{$prefix}}/policies">
             <input name="_method" type="hidden" value="POST">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input name="limit_period" id="limit_period" type="hidden" value="min">
 
-            <!--form class="" name="create-user"-->
             <div class="row">
                 <div class="col-md-6">
-                    <!--div class="form-group">
-                        <label>Name</label>
-                        <input id="server_id_text" name="server_id_text" class="form-control" placeholder="Enter server name." type="name" required>
-                    </div-->
-
                     <div class="form-group">
                         <label for="cluster_id">Cluster</label>
                         <select class="form-control" id="cluster_id" name="cluster_id">
-                            <option value>Select One...</option>
+                            <option value="0">All Clusters</option>
                             @foreach ($clusters as $_cluster)
                                 <option value="{{ $_cluster['cluster_id_text'] }}" {{ Input::old('cluster_id') == $_cluster['cluster_id_text'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
                             @endforeach
@@ -34,9 +24,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="instance_select">Instance</label>
-                        <select class="form-control" id="instance_select" name="instance_select">
-                            <option value>Select One...</option>
+                        <label for="instance_name_text">Instance</label>
+                        <select class="form-control"
+                                id="instance_name_text"
+                                name="instance_name_text"
+                                disabled="disabled">
+                            <option value>All Instances</option>
                         </select>
                     </div>
 
@@ -61,7 +54,7 @@
 
                         <div class="row">
                             <div class="col-md-1" style="margin-top: 7px; text-align: center;">
-                                <input id="" class="" type="checkbox" disabled></td>
+                                <input id="" class="" type="checkbox" disabled>
                             </div>
 
                             <div class="col-md-11">
@@ -108,16 +101,12 @@
                                                            id="month">30 Day</a></li>
                             </ul>
 
-                            <div><br></div>
                             <div class="row">
-                                <div class="col-md-4">
-                                    &nbsp;&nbsp;Maximum Requests:
-                                </div>
+                                <div class="col-md-4">Maximum Requests:</div>
                                 <div class="col-md-6">
                                     <input type="text" class="form-control" style="width: auto">
                                 </div>
                             </div>
-
 
                         </div>
                     </div>
@@ -125,12 +114,11 @@
             </div>
 
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-12 col-sm-12 col-md-12">
                     <hr>
                     <div class="form-group">
                         <div class="">
                             <button type="button" class="btn btn-primary">Create</button>
-                            &nbsp;&nbsp;
                             <button type="button" class="btn btn-default">Close</button>
                         </div>
                     </div>
@@ -142,28 +130,37 @@
     <script>
         jQuery(function ($) {
             $('.policy-form').on('change', '#cluster_id', function (e) {
-                var $_select = $('#instance_select');
+                var $_select = $('#instance_name_text');
+                var $_spinner = $('.label-spinner');
                 var _clusterId = $('option:selected', this).val().toString();
 
-                if (!_clusterId) {
-                    alert('Invalid cluster selected.');
+                if (!_clusterId || 0 == _clusterId) {
+                    $_select.empty().append('<option value="0" selected="selected">All Instances</option>').attr('disabled', 'disabled');
                     return false;
                 }
 
-                var _url = '/api/v1/ops/cluster/' + encodeURIComponent(_clusterId) + '/instances';
+                $_spinner.addClass('fa-spin').removeClass('hidden');
 
-                $.get(_url).done(function (data) {
+                $.get('/v1/cluster/instances/' + encodeURIComponent(_clusterId)).done(function (data) {
                     var _item;
 
-                    $_select.empty().append('<option value>Select One...</option>');
+                    $_select.empty();
 
-                    $.each(data, function (item) {
-                        var _id = ( item && item.hasOwnProperty('instance_name_text') ? item.instance_name_text : null );
-                        $_select.append('<option value="' + _id + '">' + _id + '</option>');
-                    });
+                    if (!data || !data.length) {
+                        $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
+                    } else {
+                        $.each(data, function (item) {
+                            var _id = ( item && item.hasOwnProperty('instance_name_text') ? item.instance_name_text : null );
+                            $_select.append('<option value="' + _id + '">' + _id + '</option>');
+                        });
+
+                        $_select.removeAttr('disabled').focus();
+                    }
                 }).fail(function (xhr, status) {
-                    $_select.empty().append('<option value>Reload Please!</option>');
-                    alert('The current list of instances unavailable.\\n\\n' + '(' + status + ')');
+                    $_select.append('<option value="" selected="selected">Please Reload Page</option>').attr('disabled', 'disabled');
+                    alert('The current list of instances unavailable.\n\n' + '(' + status + ')');
+                }).always(function () {
+                    $_spinner.removeClass('fa-spin').addClass('hidden');
                 });
             });
 

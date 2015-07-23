@@ -8,8 +8,10 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group(['middleware' => 'auth'],
     function () {
-        \Route::get('/', 'Resources\\HomeController@index');
-        \Route::get('home', 'Resources\\HomeController@index');
+        \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => '/', 'uses' => 'HomeController@index']);
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/home', ['as' => 'home', 'uses' => 'HomeController@index']);
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/instances/{clusterId}',
+            'Resources\\ClusterController@getInstances');
     });
 
 //******************************************************************************
@@ -23,7 +25,6 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
         'middleware' => 'auth',
     ],
     function () {
-        \Route::resource('home', 'HomeController');
         \Route::resource('users', 'UserController');
         \Route::resource('servers', 'ServerController');
         \Route::resource('clusters', 'ClusterController');

@@ -52,6 +52,12 @@ form {
     vertical-align: middle;
 }
 
+.label-spinner {
+    margin-right: 4px;
+    color:        rgba(255, 142, 55, 0.81);
+    display:      inline-block;
+}
+
 #page-content {
     padding: 8px 0;
 }

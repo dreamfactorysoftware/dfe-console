@@ -3,7 +3,6 @@
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Models\Cluster;
-use DreamFactory\Enterprise\Database\Models\Instance;
 
 class PolicyController extends ResourceController
 {
@@ -61,20 +60,5 @@ class PolicyController extends ResourceController
                 ]
             );
     }
-
-    /**
-     * @param string|int $clusterId
-     *
-     * @return \Illuminate\Database\Eloquent\Collection|Instance[]
-     */
-    public function instances($clusterId)
-    {
-        $_cluster = $this->_findCluster($clusterId);
-
-        return response()->json(
-            Instance::byClusterId($_cluster->id)
-                ->orderBy('instance_name_text')
-                ->get(['id', 'instance_name_text',])
-        );
-    }
 }
+

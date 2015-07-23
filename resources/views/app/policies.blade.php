@@ -4,9 +4,7 @@
     @include('layouts.partials.sidebar-menu',['resource'=>'policies'])
 
     <div class="col-xs-11 col-sm-10 col-md-10">
-        <div class="nav dfe-section-header">
-            <h4>Manage Policies</h4>
-        </div>
+        @include('layouts.partials.context-header',['resource'=>'policies','title' => 'Policy Manager'])
 
     <!-- Tool Bar -->
     <div class="row">
@@ -41,6 +39,7 @@
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
+            <!-- @todo I'm not quite sure how to react to this. Please fix. GHA 2015-07-23 -->
             <table id="policyTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-policy">
                 <thead>
                 <tr>

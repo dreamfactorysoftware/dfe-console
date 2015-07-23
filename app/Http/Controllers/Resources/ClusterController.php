@@ -35,6 +35,33 @@ class ClusterController extends ResourceController
     //* Methods
     //******************************************************************************
 
+    /**
+     * Returns an array of the instances assigned to a cluster
+     *
+     * @param int|string $clusterId The cluster ID
+     *
+     * @return array
+     */
+    public function getInstances($clusterId)
+    {
+        $_instances = [];
+
+        $_servers = $this->_clusterServers($clusterId);
+
+        /** @type Server $_server */
+        foreach ($_servers[ServerTypes::WEB] as $_server) {
+            if (!empty($_deployed = $_server->instances())) {
+                foreach ($_deployed as $_instance) {
+                    $_instances[$_instance->id] = $_instance->instance_name_text;
+                }
+            }
+        }
+
+        $this->debug('found ' . count($_instances) . ' instance(s)');
+
+        return $_instances;
+    }
+
     /** @inheritdoc */
     public function create(array $viewData = [])
     {
