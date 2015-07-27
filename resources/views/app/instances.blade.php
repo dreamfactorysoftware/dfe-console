@@ -1,27 +1,10 @@
-@include('layouts.partials.topmenu',['pageName' => 'Instances', 'prefix' => $prefix])
-
 @extends('layouts.main')
-
+@include('layouts.partials.topmenu',['pageName' => 'Instances', 'prefix' => $prefix])
 @section('content')
+    @include('layouts.partials.sidebar-menu',['resource'=>'instances'])
 
-    <div class="col-md-2">
-        <div>
-            <ul class="nav nav-pills nav-stacked visible-md visible-lg">
-                <li class="active">
-                    <a href="/{{$prefix}}/instances">Manage</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="col-md-10">
-        <div>
-            <div>
-                <div class="nav nav-pills dfe-section-header">
-                    <h4>Manage Instances</h4>
-                </div>
-            </div>
-        </div>
+    <div class="col-xs-11 col-sm-10 col-md-10">
+        @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Instance Manager'])
 
         <!-- Tool Bar -->
         <div class="row">
@@ -48,9 +31,6 @@
                 </div>
             </div>
         </div>
-
-
-
 
         <div>
             <div class="row">
