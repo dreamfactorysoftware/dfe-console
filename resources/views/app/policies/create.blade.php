@@ -1,5 +1,5 @@
-@include('layouts.partials.topmenu')
 @extends('layouts.main')
+@include('layouts.partials.topmenu')
 @section('content')
     @include('layouts.partials.sidebar-menu',['resource'=>'policies'])
 

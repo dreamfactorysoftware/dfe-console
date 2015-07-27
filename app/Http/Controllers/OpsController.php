@@ -22,7 +22,6 @@ use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
-use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -228,20 +227,7 @@ class OpsController extends BaseController implements IsVersioned
             \Queue::push($_job);
 
             try {
-                $_instance = $this->_findInstance($_job->getInstanceId());
-                $_data = $_instance->instance_data_text;
-                $_result = IfSet::get($_data, '.provisioning');
-                unset($_data['.provisioning']);
-
-                if (!$_instance->update(['instance_data_text' => $_data])) {
-                    throw new \RuntimeException('Unable to update instance row.');
-                }
-
-                if (!isset($_result['instance'])) {
-                    throw new \RuntimeException('The provisioning information is incomplete. Bailing.');
-                }
-
-                return $this->success($_result['instance']);
+                return $this->success($this->_findInstance($_job->getInstanceId()));
             } catch (ModelNotFoundException $_ex) {
                 throw new \Exception('Instance not found after provisioning.');
             }
