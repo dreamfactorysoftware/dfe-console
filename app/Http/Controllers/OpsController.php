@@ -78,8 +78,7 @@ class OpsController extends BaseController implements IsVersioned
             $_instance = $this->_findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
-                return $this->failure(Response::HTTP_NOT_FOUND,
-                    'Instance not found, invalid owner (' . $_owner->id . ').');
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
         } catch (\Exception $_ex) {
             //  Check the deleted instances
@@ -426,7 +425,7 @@ class OpsController extends BaseController implements IsVersioned
 
         //  Create a user account
         try {
-            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
+            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password) {
                 $user = User::create([
                     'first_name_text'   => $_first,
                     'last_name_text'    => $_last,

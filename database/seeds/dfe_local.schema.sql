@@ -331,14 +331,19 @@ DROP TABLE IF EXISTS `limit_t`;
 
 CREATE TABLE `limit_t` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `owner_id` int(11) NOT NULL,
-  `owner_type_nbr` int(11) NOT NULL,
-  `parameters_text` mediumtext COLLATE utf8_unicode_ci,
+  `cluster_id` int(11) NOT NULL,
+  `instance_id` int(11) NOT NULL,
+  `limit_key_text` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `limit_nbr` int(11) DEFAULT NULL,
+  `period_nbr` int(11) DEFAULT NULL,
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `limit_t_owner_id_index` (`owner_id`),
-  KEY `limit_t_owner_type_nbr_index` (`owner_type_nbr`)
+  UNIQUE KEY `ux_limit_cluster_instance_key` (`cluster_id`,`instance_id`,`limit_key_text`),
+  KEY `limit_t_cluster_id_index` (`cluster_id`),
+  KEY `limit_t_instance_id_index` (`instance_id`),
+  CONSTRAINT `fk_limit_cluster_id` FOREIGN KEY (`cluster_id`) REFERENCES `cluster_t` (`id`),
+  CONSTRAINT `fk_limit_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `migration_t` */

@@ -46,24 +46,7 @@ return [
              * the available guest(s). Selecting a version for instance (as below). It can be
              * used for anything and provides an automatic UI in the Dashboard for user selection.
              ********************************************************************************/
-            'offerings' => [
-                //  An "id" for this offering
-                'instance-version' => [
-                    //  The display (label) name to show on the UI
-                    'name'       => 'Version',
-                    //  Any text you wish displayed below the selection (i.e. help text, explanation, etc.)
-                    'help-block' => 'If you wish, you may choose a different version of the DSP to provision.',
-                    //  The item in the below list of items to pre-select for the user.
-                    'suggested'  => '1.10.x-dev',
-                    //  The list of items to show for this offering.
-                    'items'      => [
-                        '1.10.x-dev' => [
-                            'document-root' => '/var/www/_releases/dsp-core/1.10.x-dev/web',
-                            'description'   => 'DSP v1.10.x-dev',
-                        ],
-                    ],
-                ],
-            ],
+            'offerings' => [],
         ],
     ],
 ];
