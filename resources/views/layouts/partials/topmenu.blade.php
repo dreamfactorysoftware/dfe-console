@@ -12,7 +12,7 @@ if (!isset($pageName) || empty($pageName)) {
 }
 
 $_linkPrefix = '/' . ConsoleDefaults::UI_PREFIX . '/';
-$_resources = ['Home', 'Servers', 'Clusters', 'Users', 'Instances', 'Policies', 'Reports'];
+$_resources = ['Home', 'Servers', 'Clusters', 'Users', 'Instances', 'Limits', 'Reports'];
 ?>
 <div class="dfe-topmenu">
     <div class="container-fluid">
