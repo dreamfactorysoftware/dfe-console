@@ -1,10 +1,12 @@
 @extends('layouts.main')
 @include('layouts.partials.topmenu',['pageName' => 'Instances', 'prefix' => $prefix])
 @section('content')
-    @include('layouts.partials.sidebar-menu',['resource'=>'instances'])
+
+    <div class="col-xs-1 col-sm-2 col-md-2 df-sidebar-nav"></div>
 
     <div class="col-xs-11 col-sm-10 col-md-10">
         @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Instance Manager'])
+
 
         <!-- Tool Bar -->
         <div class="row">
@@ -27,7 +29,12 @@
 
                         <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
                     </div>
-                    <div style="clear: both"></div>
+                    <div class="btn-group">
+                        <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="Search Instances...">
+                    </div>
+                    <div class="btn-group pull-right">
+                        <button type="button" id="refresh" class="btn btn-default btn-sm fa fa-fw fa-refresh" title="Reset sorting" value="" style="width: 40px"></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,7 +52,6 @@
                                     <th>Owner Email</th>
                                     <th>Policy</th>
                                     <th>Last Modified</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,10 +69,6 @@
                                     <td>{{ $_instance->user->email_addr_text }}</td>
                                     <td> </td>
                                     <td>{{ $_instance->lmod_date }}</td>
-                                    <td>
-                                        <input class="btn btn-default btn-xs" type="button" value="Backup">&nbsp;&nbsp;
-                                        <input class="btn btn-default btn-xs" type="button" value="Restore">
-                                    </td>
                                 </tr>
 
                             @endforeach
