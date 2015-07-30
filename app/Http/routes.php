@@ -7,10 +7,11 @@
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group(['middleware' => 'auth'],
-    function (){
+    function () {
         \Route::get('/', ['uses' => 'HomeController@index']);
         \Route::get('home', ['uses' => 'HomeController@index']);
-        \Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/instances/{clusterId}',
+
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/{clusterId}/instances',
             'Resources\\ClusterController@getInstances');
     });
 
@@ -18,13 +19,12 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 //* Resource Controllers
 //******************************************************************************
 
-\Route::group(
-    [
-        'prefix'     => ConsoleDefaults::UI_PREFIX,
-        'namespace'  => 'Resources',
-        'middleware' => 'auth',
-    ],
-    function (){
+\Route::group([
+    'prefix'     => ConsoleDefaults::UI_PREFIX,
+    'namespace'  => 'Resources',
+    'middleware' => 'auth',
+],
+    function () {
         \Route::resource('users', 'UserController');
         \Route::resource('servers', 'ServerController');
         \Route::resource('clusters', 'ClusterController');
@@ -39,12 +39,11 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 /** Ops controller for operational api */
 if (true === config('dfe.enable-console-api', false)) {
-    \Route::group(
-        [
-            'prefix'     => 'api/v1',
-            'middleware' => 'log.dfe-ops-api',
-        ],
-        function (){
+    \Route::group([
+        'prefix'     => 'api/v1',
+        'middleware' => 'log.dfe-ops-api',
+    ],
+        function () {
             \Route::controller('ops', 'OpsController');
 
             \Route::resource('users', 'Ops\\UserController');
@@ -71,12 +70,10 @@ if (true === config('dfe.enable-console-api', false)) {
 //* Testing
 //******************************************************************************
 
-\Route::post(
-    'form-submit',
+\Route::post('form-submit',
     [
         'before' => 'csrf',
-        function (){
+        function () {
             //  validation;
         },
-    ]
-);
+    ]);
