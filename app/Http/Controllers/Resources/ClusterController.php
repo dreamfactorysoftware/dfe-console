@@ -45,12 +45,13 @@ class ClusterController extends ResourceController
     public function getInstances($clusterId)
     {
         $_cluster = $this->_findCluster($clusterId);
-        $_rows = Instance::where('cluster_id', $_cluster->id);
+        $_rows = Instance::byClusterId($_cluster->id)->get(['id', 'instance_name_text']);
 
         $_response = [];
 
+        /** @type Instance $_instance */
         foreach ($_rows as $_instance) {
-            $_response[$_instance->id] = $_instance->instance_name_text;
+            $_response[] = ['id' => $_instance->id, 'name' => $_instance->instance_name_text];
         }
 
         $this->debug('found ' . count($_response) . ' instance(s)');

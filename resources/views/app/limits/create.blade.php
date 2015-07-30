@@ -139,12 +139,11 @@
 
                     $_select.empty();
 
-                    if (!data || !data.length) {
+                    if (!$.isArray(data)) {
                         $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
                     } else {
-                        $.each(data, function (item) {
-                            var _id = ( item && item.hasOwnProperty('instance_name_text') ? item.instance_name_text : null );
-                            $_select.append('<option value="' + _id + '">' + _id + '</option>');
+                        $.each(data, function (index, item) {
+                            $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
                         });
 
                         $_select.removeAttr('disabled').focus();
