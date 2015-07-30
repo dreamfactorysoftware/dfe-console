@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Exceptions\EnterpriseDatabaseException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Server;
 use Illuminate\Database\QueryException;
 use Session;
@@ -43,22 +44,18 @@ class ClusterController extends ResourceController
      */
     public function getInstances($clusterId)
     {
-        $_instances = [];
+        $_cluster = $this->_findCluster($clusterId);
+        $_rows = Instance::where('cluster_id', $_cluster->id);
 
-        $_servers = $this->_clusterServers($clusterId);
+        $_response = [];
 
-        /** @type Server $_server */
-        foreach ($_servers[ServerTypes::WEB] as $_serverId => $_server) {
-            if (!empty($_deployed = $_server->instances())) {
-                foreach ($_deployed as $_instance) {
-                    $_instances[$_instance->id] = $_instance->instance_name_text;
-                }
-            }
+        foreach ($_rows as $_instance) {
+            $_response[$_instance->id] = $_instance->instance_name_text;
         }
 
-        $this->debug('found ' . count($_instances) . ' instance(s)');
+        $this->debug('found ' . count($_response) . ' instance(s)');
 
-        return $_instances;
+        return $_response;
     }
 
     /** @inheritdoc */
