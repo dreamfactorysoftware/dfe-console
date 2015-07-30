@@ -49,5 +49,4 @@ class ExportJobHandler extends BaseListener
 
         return $_result;
     }
-
 }

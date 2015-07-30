@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -18,7 +19,7 @@ class Export extends Command
     /**
      * @type string Command description
      */
-    protected $description = 'Creates an importable snapshot of an instance';
+    protected $description = 'Create a portable instance export';
 
     //******************************************************************************
     //* Methods
@@ -31,7 +32,10 @@ class Export extends Command
      */
     public function fire()
     {
-        return \Queue::push(new ExportJob($this->argument('instance-id'), $this->option('destination')));
+        $_request = PortableServiceRequest::makeExport($this->argument('instance-id'),
+            $this->option('destination'));
+
+        return \Queue::push(new ExportJob($_request));
     }
 
     /**
@@ -43,7 +47,7 @@ class Export extends Command
     {
         return array_merge(parent::getArguments(),
             [
-                ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
+                ['instance-id', InputArgument::REQUIRED, 'The instance to export'],
             ]);
     }
 
@@ -60,7 +64,7 @@ class Export extends Command
                     'destination',
                     'd',
                     InputOption::VALUE_OPTIONAL,
-                    'The path to where you would like the export placed.',
+                    'The path to place the export file.',
                 ],
             ]);
     }

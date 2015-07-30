@@ -18,7 +18,7 @@ class Provision extends Command
     /**
      * @type string Command description
      */
-    protected $description = 'Provisions a new DSP';
+    protected $description = 'Provision a new instance';
 
     //******************************************************************************
     //* Methods
@@ -31,19 +31,14 @@ class Provision extends Command
      */
     public function fire()
     {
-        return \Queue::push(
-            new ProvisionJob(
-                $this->argument('instance-id'),
-                [
-                    'guest-location' => $this->argument('guest-location'),
-                    'owner-id'       => $this->argument('owner-id'),
-                    'cluster-id'     => $this->option('cluster-id'),
-                    'restart'        => $this->option('restart'),
-                    'trial'          => $this->option('trial'),
-                    'tag'            => $this->option('tag'),
-                ]
-            )
-        );
+        return \Queue::push(new ProvisionJob($this->argument('instance-id'), [
+            'guest-location' => $this->argument('guest-location'),
+            'owner-id'       => $this->argument('owner-id'),
+            'cluster-id'     => $this->option('cluster-id'),
+            'restart'        => $this->option('restart'),
+            'trial'          => $this->option('trial'),
+            'tag'            => $this->option('tag'),
+        ]));
     }
 
     /**
@@ -79,20 +74,14 @@ class Provision extends Command
                     'cluster-id',
                     'c',
                     InputOption::VALUE_OPTIONAL,
-                    'The cluster-id where this instance should be placed.',
+                    'The cluster where this instance is to be placed.',
                     config('provisioning.default-cluster-id'),
                 ],
                 [
                     'restart',
                     'r',
                     InputOption::VALUE_NONE,
-                    'If specified, an existing stopped instance will be restarted.',
-                ],
-                [
-                    'trial',
-                    't',
-                    InputOption::VALUE_NONE,
-                    'If specified, sets the trial flag to TRUE on the provisioned instance.',
+                    'If specified, the existing stopped instance will be restarted.',
                 ],
                 [
                     'tag',
@@ -100,7 +89,12 @@ class Provision extends Command
                     InputOption::VALUE_OPTIONAL,
                     'The key to use for retrieving this instance from the manager. Defaults to the instance name.',
                 ],
+                [
+                    'trial',
+                    't',
+                    InputOption::VALUE_NONE,
+                    'Deprecated and ignored.',
+                ],
             ]);
     }
-
 }

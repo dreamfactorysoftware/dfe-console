@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class Deprovision extends Command
 {
@@ -24,7 +25,7 @@ class Deprovision extends Command
     /**
      * @type string Command description
      */
-    protected $description = 'Deprovisions, or shuts down, a running DSP';
+    protected $description = 'Deprovisions, or shuts down, a running instance';
 
     //******************************************************************************
     //* Methods
@@ -37,8 +38,8 @@ class Deprovision extends Command
      */
     public function fire()
     {
-        return
-            \Queue::push(new DeprovisionJob($this->argument('instance-id')));
+        return \Queue::push(new DeprovisionJob($this->argument('instance-id'),
+            ['cluster-id' => $this->option('cluster-id'),]));
     }
 
     /**
@@ -50,8 +51,26 @@ class Deprovision extends Command
     {
         return array_merge(parent::getArguments(),
             [
-                ['instance-id', InputArgument::REQUIRED, 'The name of the instance to deprovision'],
+                ['instance-id', InputArgument::REQUIRED, 'The instance to deprovision'],
             ]);
     }
 
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return array_merge(parent::getArguments(),
+            [
+                [
+                    'cluster-id',
+                    'c',
+                    InputOption::VALUE_OPTIONAL,
+                    'The cluster containing the instance',
+                    config('provisioning.default-cluster-id'),
+                ],
+            ]);
+    }
 }
