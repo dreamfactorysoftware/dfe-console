@@ -45,7 +45,7 @@
                                         <div class="">
                                             <df-section-header class="" data-title="'Manage Servers'">
                                                 <div class="nav nav-pills dfe-section-header">
-                                                    <h4 class="">Create Policy</h4>
+                                                    <h4 class="">Create Limit</h4>
                                                 </div>
                                             </df-section-header>
 
