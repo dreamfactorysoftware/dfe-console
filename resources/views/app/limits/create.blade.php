@@ -134,7 +134,7 @@
 
                 $_spinner.addClass('fa-spin').removeClass('hidden');
 
-                $.get('/v1/cluster/instances/' + encodeURIComponent(_clusterId)).done(function (data) {
+                $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                     var _item;
 
                     $_select.empty();
