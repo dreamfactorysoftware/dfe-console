@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
@@ -50,7 +49,7 @@ class ClusterController extends ResourceController
 
         /** @type Server $_server */
         foreach ($_servers[ServerTypes::WEB] as $_server) {
-            if (!empty($_deployed = $_server->instances())) {
+            if (!empty($_deployed = $_server->server->instances())) {
                 foreach ($_deployed as $_instance) {
                     $_instances[$_instance->id] = $_instance->instance_name_text;
                 }
@@ -186,16 +185,14 @@ HTML;
     {
         $cluster_data = \Input::all();
 
-        $_validator = Validator::make(
-            $cluster_data,
+        $_validator = Validator::make($cluster_data,
             [
                 'cluster_id_text' => 'required|string',
                 'subdomain_text'  => [
                     'required',
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-            ]
-        );
+            ]);
 
         if ($_validator->fails()) {
 
@@ -325,9 +322,7 @@ HTML;
             $_redirect .= $this->getUiPrefix();
             $_redirect .= '/clusters';
 
-            return \Redirect::to($_redirect)
-                ->with('flash_message', $result_text)
-                ->with('flash_type', $result_status);
+            return \Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
@@ -379,9 +374,7 @@ HTML;
             $_redirect .= $this->getUiPrefix();
             $_redirect .= '/clusters';
 
-            return \Redirect::to($_redirect)
-                ->with('flash_message', $result_text)
-                ->with('flash_type', $result_status);
+            return \Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
         } catch (QueryException $e) {
             //$res_text = $e->getMessage(); 
             Session::flash('flash_message', 'An error occurred! Please try again.');
@@ -393,9 +386,10 @@ HTML;
 
     public function index()
     {
-        $_clusters = Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')
-            ->distinct()
-            ->get(['cluster_t.*', 'cluster_id',]);
+        $_clusters = Cluster::join('cluster_server_asgn_t', 'cluster_id', '=', 'id')->distinct()->get([
+            'cluster_t.*',
+            'cluster_id',
+        ]);
 
         $_excluded = [];
 
