@@ -7,16 +7,16 @@ use DreamFactory\Enterprise\Database\Models\Cluster;
 use Illuminate\Support\Facades\View;
 
 
-class PolicyController extends ResourceController
+class LimitController extends ResourceController
 {
     //******************************************************************************
     //* Members
     //******************************************************************************
 
     /** @type string */
-    protected $_tableName = 'policy_t';
+    protected $_tableName = 'limit_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Library\\Fabric\\Database\\Models\\Deploy\\Policy';
+    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Limit';
     /** @type string */
     protected $_resource = 'policy';
 
@@ -43,16 +43,16 @@ class PolicyController extends ResourceController
         $clusters = new Cluster();
         $clusters_list = $clusters->all();
 
-        return \View::make('app.policies.create', ['prefix' => $this->_prefix])
+        return \View::make('app.limits.create', ['prefix' => $this->_prefix])
             ->with('clusters', $clusters_list);
     }
 
     public function index()
     {
 
-        return View::make('app.policies')
+        return View::make('app.limits')
             ->with('prefix', $this->_prefix)
-            ->with('policies', []);
+            ->with('limits', []);
     }
 
 }

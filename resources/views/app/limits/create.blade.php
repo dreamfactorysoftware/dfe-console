@@ -1,4 +1,4 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Policies', 'prefix' => $prefix))
+@include('layouts.partials.topmenu',array('pageName' => 'Limits', 'prefix' => $prefix))
 
 @extends('layouts.main')
 
@@ -292,7 +292,7 @@
 
         var cluster_id = $(this).children(":selected").attr("id");
 
-        $.get( "{!!   URL::action('Ops\\PolicyController@getInstances')!!}/" + cluster_id, function( data ) {
+        $.get( "{!!   URL::action('Ops\\LimitController@getInstances')!!}/" + cluster_id, function( data ) {
 
             $('#instance_select').empty();
             $('#instance_select').append("<option value=''>Select instance</option>");

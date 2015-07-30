@@ -23,7 +23,7 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
         \Route::resource('servers', 'Resources\\ServerController');
         \Route::resource('clusters', 'Resources\\ClusterController');
         \Route::resource('instances', 'Resources\\InstanceController');
-        \Route::resource('policies', 'Resources\\PolicyController');
+        \Route::resource('limits', 'Resources\\PolicyController');
         \Route::resource('reports', 'Resources\\ReportController');
     });
 
@@ -35,7 +35,7 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 \Route::group(['prefix' => 'api/v1', 'middleware' => 'log.dfe-ops-api',],
     function () {
         \Route::controller('ops', 'OpsController');
-        \Route::controller('policies', 'Ops\\PolicyController');
+        \Route::controller('limits', 'Ops\\LimitController');
 
         \Route::resource('users', 'Ops\\UserController');
         \Route::resource('service-users', 'Ops\\ServiceUserController');
@@ -45,7 +45,7 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
         \Route::resource('mounts', 'Ops\\MountController');
         \Route::resource('app-keys', 'Ops\\AppKeyController');
         \Route::resource('instances', 'Ops\\InstanceController');
-        \Route::resource('policies', 'Ops\\PolicyController');
+        \Route::resource('limits', 'Ops\\PolicyController');
     });
 
 /** Miscellaneous controllers for dashboard functionality */

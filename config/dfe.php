@@ -18,6 +18,8 @@ return [
     'signature-method' => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
     //  The list of allowed partners
     'allowed-partners' => ['vz', 'hs', 'df',],
+    'default-domain' => env('DFE_DEFAULT_DOMAIN', '.dreamfactory.com'),
+    'default-domain-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL','https'),
     //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************

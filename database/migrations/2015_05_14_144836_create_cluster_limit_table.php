@@ -25,6 +25,7 @@ class CreateClusterLimitTable extends Migration
                     $table->integer('limit_value')->default(0);
                     $table->integer('period_value')->default(0);
                     $table->dateTime('create_date');
+                    $table->boolean('is_active')->default(1);
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
                 }
             );

@@ -7,7 +7,7 @@ array_push($menu, array('id' => 1,  'link' => 'users',          'name' => 'Users
 array_push($menu, array('id' => 2,  'link' => 'servers',        'name' => 'Servers'));
 array_push($menu, array('id' => 3,  'link' => 'clusters',       'name' => 'Clusters'));
 array_push($menu, array('id' => 4,  'link' => 'instances',      'name' => 'Instances'));
-array_push($menu, array('id' => 5,  'link' => 'policies',       'name' => 'Policies'));
+array_push($menu, array('id' => 5,  'link' => 'limits',       'name' => 'Limits'));
 array_push($menu, array('id' => 5,  'link' => 'reports',        'name' => 'Reports'));
 
 ?>
