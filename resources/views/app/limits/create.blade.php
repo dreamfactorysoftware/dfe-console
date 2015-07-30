@@ -1,12 +1,12 @@
 @extends('layouts.main')
 @include('layouts.partials.topmenu')
 @section('content')
-    @include('layouts.partials.sidebar-menu',['resource'=>'policies'])
+    @include('layouts.partials.sidebar-menu',['resource'=>'limits'])
 
     <div class="col-xs-11 col-sm-10 col-md-10">
-        @include('layouts.partials.context-header',['resource'=>'policies','title' => 'New Policy'])
+        @include('layouts.partials.context-header',['resource'=>'limits','title' => 'New Limit'])
 
-        <form class="policy-form" method="POST" action="/{{$prefix}}/policies">
+        <form class="policy-form" method="POST" action="/{{$prefix}}/limits">
             <input name="_method" type="hidden" value="POST">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input name="limit_period" id="limit_period" type="hidden" value="min">
@@ -40,6 +40,14 @@
                             <div class="col-md-1" style="margin-top: 7px; text-align: center;">
                                 <input id="" class="" type="checkbox" disabled>
                             </div>
+                            <div class="col-md-10 df-section df-section-3-round" df-fs-height="">
+                                <df-manage-users class=""><div>
+                                        <div class="">
+                                            <df-section-header class="" data-title="'Manage Servers'">
+                                                <div class="nav nav-pills dfe-section-header">
+                                                    <h4 class="">Create Limit</h4>
+                                                </div>
+                                            </df-section-header>
 
                             <div class="col-md-11">
                                 <select class="form-control" id="service_select" name="service_select" disabled>
@@ -49,21 +57,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Users (optional)</label>
-
-                        <div class="row">
-                            <div class="col-md-1" style="margin-top: 7px; text-align: center;">
-                                <input id="" class="" type="checkbox" disabled>
-                            </div>
-
-                            <div class="col-md-11">
-                                <select class="form-control" id="user_select" name="user_select" disabled>
-                                    <option value="">Select user</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="col-md-6">

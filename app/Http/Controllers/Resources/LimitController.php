@@ -4,7 +4,8 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 
-class PolicyController extends ResourceController
+
+class LimitController extends ResourceController
 {
     //******************************************************************************
     //* Traits
@@ -17,7 +18,7 @@ class PolicyController extends ResourceController
     //******************************************************************************
 
     /** @type string */
-    protected $_tableName = 'policy_t';
+    protected $_tableName = 'limit_t';
     /** @type string */
     protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Limit';
     /** @type string */
@@ -39,7 +40,7 @@ class PolicyController extends ResourceController
     public function create(array $viewData = [])
     {
         return \View::make(
-            'app.policies.create',
+            'app.limits.create',
             [
                 'prefix'   => $this->_prefix,
                 'clusters' => Cluster::all(),
@@ -53,10 +54,10 @@ class PolicyController extends ResourceController
     public function index()
     {
         return
-            \View::make('app.policies',
+            \View::make('app.limits',
                 [
                     'prefix'   => $this->_prefix,
-                    'policies' => [],
+                    'limits' => [],
                 ]
             );
     }

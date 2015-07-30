@@ -17,7 +17,10 @@ return [
     //  The hash algorithm for hashing api keys. Defaults to 'sha256'
     'signature-method'   => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
     //  The list of allowed partners
-    'allowed-partners'   => ['vz', 'hs', 'df',],
+    'allowed-partners' => ['vz', 'hs', 'df',],
+    'default-domain' => env('DFE_DEFAULT_DOMAIN', '.dreamfactory.com'),
+    'default-domain-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL','https'),
+
     //  Set this to FALSE to disallow contact with this console via the Ops API
     'enable-console-api' => true,
     //******************************************************************************

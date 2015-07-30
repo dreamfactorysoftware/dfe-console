@@ -29,7 +29,7 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
         \Route::resource('servers', 'ServerController');
         \Route::resource('clusters', 'ClusterController');
         \Route::resource('instances', 'InstanceController');
-        \Route::resource('policies', 'PolicyController');
+        \Route::resource('limits', 'LimitController');
         \Route::resource('reports', 'ReportController');
     });
 
@@ -55,7 +55,7 @@ if (true === config('dfe.enable-console-api', false)) {
             \Route::resource('mounts', 'Ops\\MountController');
             \Route::resource('app-keys', 'Ops\\AppKeyController');
             \Route::resource('instances', 'Ops\\InstanceController');
-            \Route::resource('policies', 'Ops\\PolicyController');
+            \Route::resource('limits', 'Ops\\LimitController');
         });
 }
 
