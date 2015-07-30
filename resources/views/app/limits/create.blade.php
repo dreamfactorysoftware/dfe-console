@@ -1,5 +1,3 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Limits', 'prefix' => $prefix))
-
 @extends('layouts.main')
 @include('layouts.partials.topmenu')
 @section('content')
