@@ -26,82 +26,53 @@
                     <div class="form-group">
                         <label for="instance_name_text">Instance</label>
                         <select class="form-control"
-                                id="instance_name_text"
-                                name="instance_name_text"
+                                id="instance_id"
+                                name="instance_id"
                                 disabled="disabled">
                             <option value>All Instances</option>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label>Services (optional)</label>
-
-                        <div class="row">
-                            <div class="col-md-1" style="margin-top: 7px; text-align: center;">
-                                <input id="" class="" type="checkbox" disabled>
-                            </div>
-                            <div class="col-md-10 df-section df-section-3-round" df-fs-height="">
-                                <df-manage-users class=""><div>
-                                        <div class="">
-                                            <df-section-header class="" data-title="'Manage Servers'">
-                                                <div class="nav nav-pills dfe-section-header">
-                                                    <h4 class="">Create Limit</h4>
-                                                </div>
-                                            </df-section-header>
-
-                            <div class="col-md-11">
-                                <select class="form-control" id="service_select" name="service_select" disabled>
-                                    <option value="">Select user</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-
+                
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>Limits</label>
+                        <label for="service_id">Service</label>
+                        <select class="form-control"
+                                id="service_id"
+                                name="service_id"
+                                disabled="disabled">
+                            <option value>All Services</option>
+                        </select>
+                    </div>
 
-                        <div role="tabpanel">
-
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs" role="tablist" id="period">
-                                <li role="presentation" class="active"><a href="#instance_limit_min"
-                                                                          aria-controls="min"
-                                                                          role="tab"
-                                                                          data-toggle="tab"
-                                                                          id="min">Minute</a></li>
-                                <li role="presentation"><a href="#instance_limit_hour"
-                                                           aria-controls="hour"
-                                                           role="tab"
-                                                           data-toggle="tab"
-                                                           id="hour">Hour</a></li>
-                                <li role="presentation"><a href="#instance_limit_day"
-                                                           aria-controls="day"
-                                                           role="tab"
-                                                           data-toggle="tab"
-                                                           id="day">Day</a></li>
-                                <li role="presentation"><a href="#instance_limit_7day"
-                                                           aria-controls="week"
-                                                           role="tab"
-                                                           data-toggle="tab"
-                                                           id="week">7 Day</a></li>
-                                <li role="presentation"><a href="#instance_limit_30day"
-                                                           aria-controls="month"
-                                                           role="tab"
-                                                           data-toggle="tab"
-                                                           id="month">30 Day</a></li>
-                            </ul>
-
-                            <div class="row">
-                                <div class="col-md-4">Maximum Requests:</div>
-                                <div class="col-md-6">
-                                    <input type="text" class="form-control" style="width: auto">
-                                </div>
-                            </div>
-
-                        </div>
+                    <div class="form-group">
+                        <label for="user_id">User</label>
+                        <select class="form-control"
+                                id="user_id"
+                                name="user_id"
+                                disabled="disabled">
+                            <option value>All Users</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-md-12">
+                    <hr/>
+                    
+                    <div class="form-group">
+                        <label for="period_nbr">Time Period</label>
+                        <select class="form-control"
+                                id="period_nbr"
+                                name="period_nbr">
+                            @foreach ($limitPeriods as $_periodName => $_period)
+                                <option value="{{ $_period }}" {{ Input::old('period_nbr') == $_period ? 'selected="selected"' : null }}>{{ $_periodName }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                        
+                    <div class="form-group">
+                        <label for="limit_nbr">Limit for Period</label>
+                        <input type="number" class="form-control" id="limit_nbr" name="limit_nbr">
                     </div>
                 </div>
             </div>
@@ -122,9 +93,12 @@
 
     <script>
         jQuery(function ($) {
-            $('.policy-form').on('change', '#cluster_id', function (e) {
-                var $_select = $('#instance_name_text');
-                var $_spinner = $('.label-spinner');
+            var $_form = $('.policy-form');
+            var $_spinner = $('.label-spinner');
+
+            //  Cluster selection
+            $_form.on('change', '#cluster_id', function (e) {
+                var $_select = $('#instance_id');
                 var _clusterId = $('option:selected', this).val().toString();
 
                 if (!_clusterId || 0 == _clusterId) {
@@ -156,9 +130,59 @@
                 });
             });
 
-            //@todo what is this doing?
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                $('#limit_period').val(e.target.id);
+            //  Instance selection
+            $_form.on('change', '#instance_id', function (e) {
+                var $_select = $('#service_id');
+                var _instanceId = $('option:selected', this).val().toString();
+
+                if (!_instanceId || 0 == _instanceId) {
+                    $_select.empty().append('<option value="0" selected="selected">All Services</option>').attr('disabled', 'disabled');
+                    return false;
+                }
+
+                $_spinner.addClass('fa-spin').removeClass('hidden');
+
+                $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/services').done(function (data) {
+                    var _item;
+
+                    $_select.empty();
+
+                    if (!$.isArray(data)) {
+                        $_select.append('<option value="" selected="selected">No Services</option>').attr('disabled', 'disabled');
+                    } else {
+                        $.each(data, function (index, item) {
+                            $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
+                        });
+
+                        $_select.removeAttr('disabled').focus();
+                    }
+                }).fail(function (xhr, status) {
+                    $_select.append('<option value="" selected="selected">Please Reload Page</option>').attr('disabled', 'disabled');
+                    alert('The current list of services is not available.\n\n' + '(' + status + ')');
+                }).always(function () {
+                    $_spinner.removeClass('fa-spin').addClass('hidden');
+                });
+
+                $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
+                    var _item, $_select = $('#user_id');
+
+                    $_select.empty();
+
+                    if (!$.isArray(data)) {
+                        $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
+                    } else {
+                        $.each(data, function (index, item) {
+                            $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
+                        });
+
+                        $_select.removeAttr('disabled').focus();
+                    }
+                }).fail(function (xhr, status) {
+                    $_select.append('<option value="" selected="selected">Please Reload Page</option>').attr('disabled', 'disabled');
+                    alert('The current list of users is not available.\n\n' + '(' + status + ')');
+                }).always(function () {
+                    $_spinner.removeClass('fa-spin').addClass('hidden');
+                });
             });
         });
     </script>

@@ -13,6 +13,10 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
         \Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/{clusterId}/instances',
             'Resources\\ClusterController@getInstances');
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/services',
+            'Resources\\LimitController@getInstanceServices');
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/users',
+            'Resources\\LimitController@getInstanceUsers');
     });
 
 //******************************************************************************

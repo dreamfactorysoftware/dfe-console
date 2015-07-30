@@ -1,5 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Database\Models\Instance;
+
 class LimitController extends OpsResourceController
 {
     //******************************************************************************
@@ -13,31 +16,26 @@ class LimitController extends OpsResourceController
     /** @type string */
     protected $_resource = 'policy';
 
-    protected $_prefix = 'v1';
-
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
     use EntityLookup;
 
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
 
-    public function getInstances($cluster_id)
+    /**
+     * @param string|int $clusterId
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getInstances($clusterId)
     {
-
-        return Instance::where('cluster_id', '=', $cluster_id)
-            ->orderBy('instance_t.instance_name_text')
-            ->get(['id', 'instance_name_text']);
-
+        return Instance::byClusterId($clusterId)->orderBy('instance_name_text')->get([
+            'id',
+            'instance_name_text',
+        ]);
     }
-
-    public function getServices($instance_id)
-    {
-        $_instance = Instance::ByNameOrId($instance_id);
-
-        $_url = $_instance->buildInstanceUrl();
-
-
-    }
-
 }
