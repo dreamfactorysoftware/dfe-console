@@ -57,21 +57,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Users (optional)</label>
-
-                        <div class="row">
-                            <div class="col-md-1" style="margin-top: 7px; text-align: center;">
-                                <input id="" class="" type="checkbox" disabled>
-                            </div>
-
-                            <div class="col-md-11">
-                                <select class="form-control" id="user_select" name="user_select" disabled>
-                                    <option value="">Select user</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="col-md-6">
