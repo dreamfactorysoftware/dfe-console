@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @include('layouts.partials.topmenu')
 @section('content')
-    @include('layouts.partials.sidebar-menu',['resource'=>'policies'])
+    @include('layouts.partials.sidebar-menu',['resource'=>'limits'])
 
     <div class="col-xs-11 col-sm-10 col-md-10">
         @include('layouts.partials.context-header',['resource'=>'policies','title' => 'Policy Manager'])
