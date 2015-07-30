@@ -48,8 +48,8 @@ class ClusterController extends ResourceController
         $_servers = $this->_clusterServers($clusterId);
 
         /** @type Server $_server */
-        foreach ($_servers[ServerTypes::WEB] as $_server) {
-            if (!empty($_deployed = $_server->server->instances())) {
+        foreach ($_servers[ServerTypes::WEB] as $_serverId => $_server) {
+            if (!empty($_deployed = $_server->instances())) {
                 foreach ($_deployed as $_instance) {
                     $_instances[$_instance->id] = $_instance->instance_name_text;
                 }
