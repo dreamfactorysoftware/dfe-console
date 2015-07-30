@@ -168,7 +168,7 @@
                             </div>
                             <div role="tabpanel" class="tab-pane" id="instances">
                                 <button id="instance_type_endpoints" type="button" class="btn btn-default btn-sm btn-info">Endpoints</button>&nbsp;&nbsp;
-                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm">Roles</button>&nbsp;&nbsp;
+                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;
                                 <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
                                 <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
 
@@ -315,20 +315,16 @@
 
             if (type === 'cluster')
             {
-                search_type = 'Bandwidth-by-Clusters';
+                search_type = 'Bandwidth-Clusters';
                 search_param = 'dfe.cluster_id';
-                search_field =   'dfe.cluster_id';
-                //search_meas = ',type:count';
-                //search_yaxis = 'field:content_length';
+                search_field =   'dfe.instance_id';
                 no_select = 'Select Cluster and click Submit again.';
             }
             else if (type === 'instanceowner')
             {
-                search_type = 'Bandwidth-by-User-Name';
+                search_type = 'Bandwidth-Instance-Owners';
                 search_param = 'dfe.instance_owner_id';
-                search_field = 'host';
-                //search_meas = ',type:content_length';
-                //search_yaxis = 'field:content_length';
+                search_field = 'app_name';
                 no_select = 'Select Instance Owner and click Submit again.';
             }
             else if (type === 'instance')
@@ -340,28 +336,24 @@
                     switch (chart_type)
                     {
                         case 'instance_type_endpoints':
-                            search_type = 'Bandwidth-by-Endpoints';
+                            search_type = 'Bandwidth-Endpoints';
                             search_param = 'dfe.instance_id';
                             search_field = 'path_info.raw';
-                            //search_meas = 'content_length';
                             break;
                         case 'instance_type_users':
-                            search_type = 'Bandwidth-by-User-Name';
+                            search_type = 'Bandwidth-Users';
                             search_param = 'dfe.instance_id';
-                            search_field = 'user.public.email';
-                            //search_meas = 'content_length';
+                            search_field = 'dfe.instance_owner_id';
                             break;
                         case 'instance_type_applications':
-                            search_type = 'Bandwidth-by-Applications';
+                            search_type = 'Bandwidth-Applications';
                             search_param = 'dfe.instance_id';
                             search_field = 'app_name';
-                            //search_meas = 'content_length';
                             break;
                         case 'instance_type_roles':
                             search_type = 'Bandwidth-by-User-Roles';
                             search_param = 'dfe.instance_id';
                             search_field = 'user.cached.role.name';
-                            //search_meas = 'content_length';
                             break;
                         default:
                             break;

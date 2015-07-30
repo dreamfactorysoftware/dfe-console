@@ -1,4 +1,4 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Clusters', 'prefix' => $prefix))
+@include('layouts.partials.topmenu', ['pageName' => 'Clusters'])
 
 @extends('layouts.main')
 

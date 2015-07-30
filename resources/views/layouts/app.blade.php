@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('page-title', 'Welcome!') | DreamFactory Enterprise&trade;</title>
     @section('head-theme')
-        <link href="/vendor/dfe-common/static/bootswatch-3.3.4/flatly.min.css" rel="stylesheet">
+        <link href="/vendor/dfe-common/static/bootswatch-3.3.5/flatly.min.css" rel="stylesheet">
     @show
     <link href="/static/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
@@ -42,22 +42,24 @@
             <ul class="list-inline">
                 <li>
                     <a target="_blank"
-                        href="http://facebook.com/dfsoftwareinc"><i class="fa fa fa-facebook-square fa-2x"></i></a>
+                       href="http://facebook.com/dfsoftwareinc"><i class="fa fa fa-facebook-square fa-2x"></i></a>
                 </li>
                 <li>
                     <a target="_blank"
-                        href="https://twitter.com/dfsoftwareinc"><i class="fa fa-twitter-square fa-2x"></i></a>
+                       href="https://twitter.com/dfsoftwareinc"><i class="fa fa-twitter-square fa-2x"></i></a>
                 </li>
                 <li>
                     <a target="_blank"
-                        href="http://dreamfactorysoftware.github.io/"><i class="fa fa-github-square fa-2x"></i></a>
+                       href="http://dreamfactorysoftware.github.io/"><i class="fa fa-github-square fa-2x"></i></a>
                 </li>
             </ul>
         </div>
         <div class="clearfix"></div>
         <p>
-            <span class="pull-left hidden-xs hidden-sm">DreamFactory Enterprise&trade; Console<small style="margin-left: 5px;font-size: 9px;">({{ config('dfe.common.display-version', 'renegade') }})</small></span>
-            <span class="pull-right">&copy; DreamFactory Software, Inc. 2012-<?php echo date( 'Y' ); ?>.&nbsp;All Rights Reserved.</span>
+            <span class="pull-left hidden-xs hidden-sm">DreamFactory Enterprise&trade; Console<small style="margin-left: 5px;font-size: 9px;">
+                    ({{ config('dfe.common.display-version', 'renegade') }})
+                </small></span>
+            <span class="pull-right">&copy; DreamFactory Software, Inc. 2012-<?php echo date('Y'); ?>.&nbsp;All Rights Reserved.</span>
         </p>
     </div>
 </div>

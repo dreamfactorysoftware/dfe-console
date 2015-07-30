@@ -1,6 +1,5 @@
 <?php
 
-use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -22,11 +21,16 @@ class CreateClusterLimitTable extends Migration
                     $table->integer('cluster_id')->index();
                     $table->integer('instance_id')->index();
                     $table->string('limit_key_text');
-                    $table->integer('limit_value')->default(0);
-                    $table->integer('period_value')->default(0);
+                    $table->integer('limit_nbr')->nullable();
+                    $table->integer('period_nbr')->nullable();;
                     $table->dateTime('create_date');
                     $table->boolean('is_active')->default(1);
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
+
+                    //  Indices
+                    $table->foreign('cluster_id', 'fk_limit_cluster_id')->references('id')->on('cluster_t');
+                    $table->foreign('instance_id', 'fk_limit_instance_id')->references('id')->on('instance_t');
+                    $table->unique(['cluster_id', 'instance_id', 'limit_key_text'], 'ux_limit_cluster_instance_key');
                 }
             );
         }

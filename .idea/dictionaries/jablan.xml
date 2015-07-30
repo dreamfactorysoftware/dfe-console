@@ -18,6 +18,7 @@
       <w>dfac</w>
       <w>dfdsp</w>
       <w>eprovision</w>
+      <w>favicons</w>
       <w>firstname</w>
       <w>flysystems</w>
       <w>gzips</w>
@@ -36,6 +37,7 @@
       <w>myisam</w>
       <w>mysqld</w>
       <w>packetized</w>
+      <w>pagename</w>
       <w>pesce's</w>
       <w>predis</w>
       <w>printf</w>
@@ -46,6 +48,8 @@
       <w>stooids</w>
       <w>stoopids</w>
       <w>stringified</w>
+      <w>topmenu</w>
+      <w>topnav</w>
       <w>unassign</w>
       <w>worky</w>
     </words>

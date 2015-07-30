@@ -168,7 +168,7 @@
                             </div>
                             <div role="tabpanel" class="tab-pane" id="instances">
                                 <button id="instance_type_endpoints" type="button" class="btn btn-default btn-sm btn-info">Endpoints</button>&nbsp;&nbsp;
-                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm">Roles</button>&nbsp;&nbsp;
+                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;
                                 <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
                                 <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
 
@@ -308,14 +308,14 @@
 
             if (type === 'cluster')
             {
-                search_type = 'Api-By-Clusters';
+                search_type = 'API-Calls-Clusters';
                 search_param = 'dfe.cluster_id';
                 search_field = 'dfe.instance_id';
                 no_select = 'Select Cluster and click Submit again.';
             }
             else if (type === 'instanceowner')
             {
-                search_type = 'Api-Calls-by-User-Name';
+                search_type = 'API-Calls-Instance-Owners';
                 search_param = 'dfe.instance_owner_id';
                 search_field = 'app_name';
                 no_select = 'Select Instance Owner and click Submit again.';
@@ -329,17 +329,17 @@
                     switch (chart_type)
                     {
                         case 'instance_type_endpoints':
-                            search_type = 'Api-calls-by-endpoints';
+                            search_type = 'API-Calls-Endpoints';
                             search_param = 'dfe.instance_id';
                             search_field = 'path_info.raw';
                             break;
                         case 'instance_type_users':
-                            search_type = 'Api-Calls-by-User-Name';
+                            search_type = 'API-Calls-Users';
                             search_param = 'dfe.instance_id';
-                            search_field = 'user.public.email';
+                            search_field = 'dfe.instance_owner_id';
                             break;
                         case 'instance_type_applications':
-                            search_type = 'Api-calls-by-Applications';
+                            search_type = 'API-Calls-Applications';
                             search_param = 'dfe.instance_id';
                             search_field = 'app_name';
                             break;

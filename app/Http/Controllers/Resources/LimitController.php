@@ -1,14 +1,18 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
-use DreamFactory\Library\Fabric\Database\Models\Deploy;
 use DreamFactory\Enterprise\Database\Models\Cluster;
-use Illuminate\Support\Facades\View;
 
 
 class LimitController extends ResourceController
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
+
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -19,42 +23,43 @@ class LimitController extends ResourceController
     protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Limit';
     /** @type string */
     protected $_resource = 'policy';
-
+    /**
+     * @type string
+     */
     protected $_prefix = 'v1';
 
-    public function store()
-    {
-    }
+    //******************************************************************************
+    //* Methods
+    //******************************************************************************
 
-    public function edit($id)
-    {
-    }
-
-    public function update($id)
-    {
-    }
-
-    public function destroy($ids)
-    {
-    }
-
+    /**
+     * @param array $viewData
+     *
+     * @return \Illuminate\View\View
+     */
     public function create(array $viewData = [])
     {
-        $clusters = new Cluster();
-        $clusters_list = $clusters->all();
-
-        return \View::make('app.limits.create', ['prefix' => $this->_prefix])
-            ->with('clusters', $clusters_list);
+        return \View::make(
+            'app.limits.create',
+            [
+                'prefix'   => $this->_prefix,
+                'clusters' => Cluster::all(),
+            ]
+        );
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
-
-        return View::make('app.limits')
-            ->with('prefix', $this->_prefix)
-            ->with('limits', []);
+        return
+            \View::make('app.limits',
+                [
+                    'prefix'   => $this->_prefix,
+                    'limits' => [],
+                ]
+            );
     }
-
 }
 
-?>

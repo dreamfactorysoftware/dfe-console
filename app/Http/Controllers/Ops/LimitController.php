@@ -1,16 +1,6 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
-use DreamFactory\Library\Fabric\Database\Models\Deploy;
-use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Library\Utility\Curl;
-use DreamFactory\Enterprise\Database\Models\Instance;
-
-use Illuminate\Support\Facades\View;
-use Illuminate\Routing\Controller;
-
-
-class LimitController extends Controller //ResourceController
+class LimitController extends OpsResourceController
 {
     //******************************************************************************
     //* Members
@@ -51,5 +41,3 @@ class LimitController extends Controller //ResourceController
     }
 
 }
-
-?>

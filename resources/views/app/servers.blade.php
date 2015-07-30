@@ -1,59 +1,39 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Servers', 'prefix' => $prefix))
-
+@include('layouts.partials.topmenu')
 @extends('layouts.main')
-
 @section('content')
+    @include('layouts.partials.sidebar-menu',['resource'=>'servers'])
 
-    <div class="col-md-2 df-sidebar-nav">
-        <div>
-            <ul class="nav nav-pills nav-stacked visible-md visible-lg">
-                <li class="active">
-                    <a href="/{{$prefix}}/servers">Manage</a>
-                </li>
-                <li>
-                    <a href="/{{$prefix}}/servers/create">Create</a>
-                </li>
-            </ul>
+    <div class="col-xs-11 col-sm-10 col-md-10">
+        <div class="nav dfe-section-header">
+            <h4>Manage Servers</h4>
         </div>
-    </div>
 
-    <div class="col-md-10">
-        <div>
-            <div>
-                <div class="nav nav-pills dfe-section-header">
-                    <h4>Manage Servers</h4>
-                </div>
-            </div>
-        </div>
         <div class="row">
             <form method="POST" action="/{{$prefix}}/servers/multi" id="multi_delete">
                 <input name="_method" type="hidden" value="DELETE">
                 <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
                 <input name="_selected" id="_selected" type="hidden" value="">
-                <div class="col-xs-12">
+                <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="well well-sm">
-                        <div class="btn-group btn-group pull-right">
-
-                        </div>
-                        <div class="btn-group btn-group">
-                            <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                                    <span id="currentPage">Page 1</span> <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu" id="tablePages">
-                                </ul>
+                        <div class="btn-group" role="group">
+                            <button type="button" disabled="disabled" class="btn btn-default btn-sm" id="_prev"><i class="fa fa-fw fa-backward"></i></button>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span id="currentPage">Page 1</span>&nbsp;<span class="caret"></span></button>
+                                <ul class="dropdown-menu" role="menu" id="tablePages"></ul>
                             </div>
-                            <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
+                            <button type="button" disabled="disabled" class="btn btn-default btn-sm" id="_next"><i class="fa fa-fw fa-forward"></i></button>
                         </div>
+
                         <div class="btn-group">
-                                <button type="button" id="selectedServersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected servers" value="delete" style="width: 40px"></button>
+                            <button type="button" id="selectedServersRemove" disabled="disabled" class="btn btn-default btn-sm" title="Delete selected servers" value="delete"><i class="fa fa-fw fa-trash"></i></button>
                         </div>
+
                         <div class="btn-group">
-                            <input id="serverSearch" class="form-control input-sm" value="" type="text" placeholder="Search Servers...">
+                            <input id="serverSearch" class="form-control input-sm" type="text" placeholder="search">
                         </div>
+
                         <div class="btn-group pull-right">
-                            <button type="button" id="refresh" class="btn btn-default btn-sm fa fa-fw fa-refresh" title="Reset sorting" value="" style="width: 40px"></button>
+                            <button type="button" id="refresh" class="btn btn-default btn-sm" title="Reset sorting"><i class="fa fa-fw fa-refresh"></i></button>
                         </div>
                     </div>
                 </div>
@@ -101,7 +81,7 @@
                                                 </div>
                                             @else
                                                 <input type="checkbox" value="{{ $value->id }}" id="server_checkbox_{{ $value->id }}" name="{{ $value->server_id_text }}">&nbsp;&nbsp;
-                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeServer({{ $value->id }}, '{{ $value->server_id_text }}')" value="delete" style="width: 25px" ></button>
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeServer('{{ $value->id }}', '{{ $value->server_id_text }}')" value="delete" style="width: 25px" ></button>
                                             @endif
                                         </form>
                                     </td>
@@ -145,13 +125,5 @@
         </div>
     </div>
 
-    <script type="text/javascript" src="../js/blade-scripts/servers/servers.js"></script>
-
-    <style>
-        .tooltip-wrapper {
-            display: inline-block;
-        }
-
-    </style>
+    <script type="text/javascript" src="/js/blade-scripts/servers/servers.js"></script>
 @stop
-

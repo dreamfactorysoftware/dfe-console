@@ -7,24 +7,30 @@
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group(['middleware' => 'auth'],
-    function () {
-        \Route::get('/', 'Resources\\HomeController@index');
-        \Route::get('home', 'Resources\\HomeController@index');
+    function (){
+        \Route::get('/', ['uses' => 'HomeController@index']);
+        \Route::get('home', ['uses' => 'HomeController@index']);
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/instances/{clusterId}',
+            'Resources\\ClusterController@getInstances');
     });
 
 //******************************************************************************
 //* Resource Controllers
 //******************************************************************************
 
-\Route::group(['prefix' => ConsoleDefaults::UI_PREFIX, 'middleware' => 'auth'],
-    function () {
-        \Route::resource('home', 'Resources\\HomeController');
-        \Route::resource('users', 'Resources\\UserController');
-        \Route::resource('servers', 'Resources\\ServerController');
-        \Route::resource('clusters', 'Resources\\ClusterController');
-        \Route::resource('instances', 'Resources\\InstanceController');
-        \Route::resource('limits', 'Resources\\PolicyController');
-        \Route::resource('reports', 'Resources\\ReportController');
+\Route::group(
+    [
+        'prefix'     => ConsoleDefaults::UI_PREFIX,
+        'namespace'  => 'Resources',
+        'middleware' => 'auth',
+    ],
+    function (){
+        \Route::resource('users', 'UserController');
+        \Route::resource('servers', 'ServerController');
+        \Route::resource('clusters', 'ClusterController');
+        \Route::resource('instances', 'InstanceController');
+        \Route::resource('limits', 'LimitController');
+        \Route::resource('reports', 'ReportController');
     });
 
 //******************************************************************************
@@ -32,21 +38,26 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 //******************************************************************************
 
 /** Ops controller for operational api */
-\Route::group(['prefix' => 'api/v1', 'middleware' => 'log.dfe-ops-api',],
-    function () {
-        \Route::controller('ops', 'OpsController');
-        \Route::controller('limits', 'Ops\\LimitController');
+if (true === config('dfe.enable-console-api', false)) {
+    \Route::group(
+        [
+            'prefix'     => 'api/v1',
+            'middleware' => 'log.dfe-ops-api',
+        ],
+        function (){
+            \Route::controller('ops', 'OpsController');
 
-        \Route::resource('users', 'Ops\\UserController');
-        \Route::resource('service-users', 'Ops\\ServiceUserController');
-        \Route::resource('servers', 'Ops\\ServerController');
-        \Route::resource('clusters', 'Ops\\ClusterController');
-        \Route::resource('instances', 'Ops\\InstanceController');
-        \Route::resource('mounts', 'Ops\\MountController');
-        \Route::resource('app-keys', 'Ops\\AppKeyController');
-        \Route::resource('instances', 'Ops\\InstanceController');
-        \Route::resource('limits', 'Ops\\PolicyController');
-    });
+            \Route::resource('users', 'Ops\\UserController');
+            \Route::resource('service-users', 'Ops\\ServiceUserController');
+            \Route::resource('servers', 'Ops\\ServerController');
+            \Route::resource('clusters', 'Ops\\ClusterController');
+            \Route::resource('instances', 'Ops\\InstanceController');
+            \Route::resource('mounts', 'Ops\\MountController');
+            \Route::resource('app-keys', 'Ops\\AppKeyController');
+            \Route::resource('instances', 'Ops\\InstanceController');
+            \Route::resource('limits', 'Ops\\LimitController');
+        });
+}
 
 /** Miscellaneous controllers for dashboard functionality */
 \Route::controllers([
@@ -64,7 +75,7 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
     'form-submit',
     [
         'before' => 'csrf',
-        function () {
+        function (){
             //  validation;
         },
     ]

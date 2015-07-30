@@ -176,7 +176,15 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
         $_dbService = Provision::getDatabaseProvisioner($_instance->guest_location_nbr);
         $_dbConfig = $_dbService->provision($request);
 
-        //  2. Update the instance with new provision info
+        //  2. Generate an app key for the instance
+        AppKey::create([
+            'key_class_text' => AppKeyClasses::INSTANCE,
+            'owner_id'       => $_instance->id,
+            'owner_type_nbr' => OwnerTypes::INSTANCE,
+            'server_secret'  => config('dfe.security.console-api-key'),
+        ]);
+
+        //  3. Update the instance with new provision info
         try {
             $_instance->fill([
                 'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
@@ -195,16 +203,6 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
                 'terminate_date'     => null,
                 'provision_ind'      => true,
                 'deprovision_ind'    => false,
-            ]);
-
-            /**
-             * Generate an app key for the instance
-             */
-            AppKey::create([
-                'key_class_text' => AppKeyClasses::INSTANCE,
-                'owner_id'       => $_instance->id,
-                'owner_type_nbr' => OwnerTypes::INSTANCE,
-                'server_secret'  => config('dfe.security.console-api-key'),
             ]);
 
             //  Create the guest row...
