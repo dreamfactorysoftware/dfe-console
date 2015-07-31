@@ -10,6 +10,7 @@ use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
@@ -222,8 +223,16 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function import(ImportJob $job)
     {
-        $_instance = $this->_findInstance($job->getInstanceId());
-        $_services = $this->getPortableServices($_instance->guest_location_nbr);
+        $_instanceId = $job->getInstanceId();
+
+        if (null !== ($_instance = Instance::byNameOrId($_instanceId))) {
+            throw new \LogicException('The instance "' . $_instanceId . '" already exists.');
+        }
+
+        $_result = $this->provision(new ProvisionJob($_instanceId, $job->getOptions()));
+
+        $_guest = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
+
         $_imports = [];
 
         foreach ($_services as $_type => $_service) {

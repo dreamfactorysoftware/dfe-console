@@ -22,6 +22,7 @@ use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -223,6 +224,8 @@ class OpsController extends BaseController implements IsVersioned
             $_payload = $request->input();
             $_job = new ProvisionJob($request->input('instance-id'), $_payload);
 
+            $this->debug('provision "' . $request->input('instance-id') . '" request received with payload: ' . Json::encode($_payload));
+
             \Queue::push($_job);
 
             try {
@@ -231,7 +234,7 @@ class OpsController extends BaseController implements IsVersioned
                 throw new \Exception('Instance not found after provisioning.');
             }
         } catch (\Exception $_ex) {
-            $this->error('Queuing error: ' . $_ex->getMessage());
+            $this->error('Provision error: ' . $_ex->getMessage());
 
             return $this->failure($_ex);
         }
@@ -355,12 +358,7 @@ class OpsController extends BaseController implements IsVersioned
             $_payload = $request->input();
             unset($_payload['password']);
 
-            $this->error('failed request for partner id "' .
-                $_pid .
-                '": ' .
-                $_ex->getCode() .
-                ' - ' .
-                $_ex->getMessage(),
+            $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
