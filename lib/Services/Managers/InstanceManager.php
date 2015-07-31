@@ -129,6 +129,8 @@ class InstanceManager extends BaseManager implements Factory
                 throw new \InvalidArgumentException('The "owner-id" and/or "owner-type" specified is/are invalid.');
             }
 
+            $this->debug('owner validated: ' . print_r($_owner, true));
+
             if (false === ($_sanitized = Instance::isNameAvailable($instanceName, $_owner->admin_ind))) {
                 throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
             }
