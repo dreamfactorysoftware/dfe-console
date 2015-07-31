@@ -16,16 +16,16 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="well well-sm">
                         <div class="btn-group" role="group">
-                            <button type="button" disabled="disabled" class="btn btn-default btn-sm" id="_prev"><i class="fa fa-fw fa-backward"></i></button>
+                            <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span id="currentPage">Page 1</span>&nbsp;<span class="caret"></span></button>
                                 <ul class="dropdown-menu" role="menu" id="tablePages"></ul>
                             </div>
-                            <button type="button" disabled="disabled" class="btn btn-default btn-sm" id="_next"><i class="fa fa-fw fa-forward"></i></button>
+                            <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
                         </div>
 
                         <div class="btn-group">
-                            <button type="button" id="selectedServersRemove" disabled="disabled" class="btn btn-default btn-sm" title="Delete selected servers" value="delete"><i class="fa fa-fw fa-trash"></i></button>
+                            <button type="button" id="selectedServersRemove" class="btn btn-default btn-sm" title="Delete selected servers" value="delete"><i class="fa fa-fw fa-trash"></i></button>
                         </div>
 
                         <div class="btn-group">
