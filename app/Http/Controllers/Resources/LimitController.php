@@ -1,9 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
+use DreamFactory\Library\Utility\Curl;
 
 class LimitController extends ResourceController
 {
@@ -45,8 +48,8 @@ class LimitController extends ResourceController
             'Minute' => DateTimeIntervals::SECONDS_PER_MINUTE,
             'Hour'   => DateTimeIntervals::SECONDS_PER_HOUR,
             'Day'    => DateTimeIntervals::SECONDS_PER_DAY,
-            'Week'   => DateTimeIntervals::SECONDS_PER_DAY * 7,
-            'Month'  => DateTimeIntervals::SECONDS_PER_DAY * 30,
+            '7 Days'   => DateTimeIntervals::SECONDS_PER_DAY * 7,
+            '30 Days'  => DateTimeIntervals::SECONDS_PER_DAY * 30,
         ];
     }
 
@@ -84,7 +87,7 @@ class LimitController extends ResourceController
      */
     public function getInstanceServices($instanceId)
     {
-        return $this->_findInstance($instanceId)->call('/rest/system/services');
+        return $this->callInstanceApi($this->_findInstance($instanceId), '/api/v2/system/service');
     }
 
     /**
@@ -94,6 +97,21 @@ class LimitController extends ResourceController
      */
     public function getInstanceUsers($instanceId)
     {
-        return $this->_findInstance($instanceId)->call('/rest/system/users');
+        return $this->callInstanceApi($this->_findInstance($instanceId),'/api/v2/system/user');
+    }
+
+    public function generateConsoleApiKey($metadata)
+    {
+        return hash('sha256', $metadata['cluster-id'] . $metadata['instance-id']);
+    }
+
+    public function callInstanceApi(Instance $instance, $uri)
+    {
+        $_url = config('DFE_DEFAULT_DOMAIN_PROTOCOL','https') . '://' .
+            $instance->instance_data_text['env']['instance-id'] . '.' .
+            $instance->instance_data_text['env']['default-domain'] .
+            $uri;
+
+        return Curl::get($_url,[], ['CURLOPT_HEADER' => EnterpriseDefaults::CONSOLE_X_HEADER . ': ' . $this->generateConsoleApiKey($instance->instance_data_text['env'])]);
     }
 }
