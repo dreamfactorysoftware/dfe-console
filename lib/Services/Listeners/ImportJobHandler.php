@@ -1,6 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 
 /**
@@ -9,36 +11,47 @@ use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 class ImportJobHandler extends BaseListener
 {
     //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /** @inheritdoc */
+    const LOG_PREFIX = 'dfe.import';
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
-     * Handle a request
+     * Handle a provisioning request
      *
-     * @param  ImportJob $job
+     * @param \DreamFactory\Enterprise\Services\Jobs\ExportJob $job
      *
      * @return mixed
+     *
      */
     public function handle(ImportJob $job)
     {
-        $this->setLumberjackPrefix('dfe.import');
-
         $_start = microtime(true);
+        $_instanceId = $job->getInstanceId();
 
-        $this->debug('>>> import "' . $job->getInstanceId() . '" request received');
+        $this->debug('>>> import "' . $_instanceId . '" request received');
 
         try {
-            $job->setResult($_result = \Provision::import($job));
-            $this->debug('import "' . $job->getInstanceId() . '" request SUCCESS');
+            //  Instance cannot exist
+            if (null !== ($_instance = Instance::byNameOrId($_instanceId)->first())) {
+                throw new \LogicException('Instance "' . $_instanceId . '" already exists.');
+            }
+
+            $job->setResult($_result = Provision::import($job));
+            $this->debug('<<< import "' . $_instanceId . '" request SUCCESS');
         } catch (\Exception $_ex) {
-            $this->error('import "' . $job->getInstanceId() . '" request FAILURE: ' . $_ex->getMessage());
+            $this->error('<<< import "' . $_instanceId . '" request FAILURE: ' . $_ex->getMessage());
             $_result = false;
         }
 
         $_elapsed = microtime(true) - $_start;
-        $this->debug('<<< import complete in ' . number_format($_elapsed, 4) . 's');
+        $this->debug('import complete in ' . number_format($_elapsed, 4) . 's');
 
         return $_result;
     }
-
 }
