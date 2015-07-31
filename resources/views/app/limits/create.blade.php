@@ -18,7 +18,7 @@
                         <select class="form-control" id="cluster_id" name="cluster_id">
                             <option value="0">All Clusters</option>
                             @foreach ($clusters as $_cluster)
-                                <option value="{{ $_cluster['cluster_id_text'] }}" {{ Input::old('cluster_id') == $_cluster['cluster_id_text'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
+                                <option value="{{ $_cluster['cluster_id'] }}" {{ Input::old('cluster_id') == $_cluster['cluster_id'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -33,7 +33,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="service_id">Service</label>
@@ -55,10 +55,10 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="col-md-12">
                     <hr/>
-                    
+
                     <div class="form-group">
                         <label for="period_nbr">Time Period</label>
                         <select class="form-control"
@@ -69,7 +69,7 @@
                             @endforeach
                         </select>
                     </div>
-                        
+
                     <div class="form-group">
                         <label for="limit_nbr">Limit for Period</label>
                         <input type="number" class="form-control" id="limit_nbr" name="limit_nbr">

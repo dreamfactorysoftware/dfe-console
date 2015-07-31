@@ -112,6 +112,6 @@ class LimitController extends ResourceController
             $instance->instance_data_text['env']['default-domain'] .
             $uri;
 
-        return json_encode(Curl::get($_url,[], [CURLOPT_HTTPHEADER => [EnterpriseDefaults::CONSOLE_X_HEADER . ': ' . $this->generateConsoleApiKey($instance->instance_data_text['env'])]]));
+        return json_encode(Curl::get($_url,[], [CURLOPT_HTTPHEADER => [EnterpriseDefaults::CONSOLE_X_HEADER . ': ' . $this->generateConsoleApiKey($instance->instance_data_text['env'])]])->resource);
     }
 }
