@@ -113,10 +113,6 @@ class InstanceManager extends BaseManager implements Factory
      */
     public function make($instanceName, $options = [])
     {
-        if (false === ($_sanitized = Instance::isNameAvailable($instanceName))) {
-            throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
-        }
-
         try {
             //  Basic checks...
             if (null === ($_ownerId = array_get($options, 'owner-id'))) {
@@ -131,6 +127,10 @@ class InstanceManager extends BaseManager implements Factory
                 $_owner = OwnerTypes::getOwner($_ownerId, $_ownerType);
             } catch (ModelNotFoundException $_ex) {
                 throw new \InvalidArgumentException('The "owner-id" and/or "owner-type" specified is/are invalid.');
+            }
+
+            if (false === ($_sanitized = Instance::isNameAvailable($instanceName, $_owner->admin_ind))) {
+                throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
             }
 
             //  Validate the cluster and pull component ids
@@ -155,35 +155,29 @@ class InstanceManager extends BaseManager implements Factory
             $_guestAttributes = [
                 'instance_id'           => null,
                 'vendor_id'             => $_guestLocation,
-                'vendor_image_id'       => array_get(
-                    $options,
+                'vendor_image_id'       => array_get($options,
                     'vendor-image-id',
-                    config('provisioning.default-vendor-image-id')
-                ),
-                'vendor_credentials_id' => array_get(
-                    $options,
+                    config('provisioning.default-vendor-image-id')),
+                'vendor_credentials_id' => array_get($options,
                     'vendor-credentials-id',
-                    config('provisioning.default-vendor-credentials-id')
-                ),
+                    config('provisioning.default-vendor-credentials-id')),
             ];
 
             //  Write it out
-            return \DB::transaction(
-                function () use ($_ownerId, $_attributes, $_guestAttributes) {
-                    $_instance = Instance::create($_attributes);
-                    $this->debug('created instance row id#' . $_instance->id);
+            return \DB::transaction(function () use ($_ownerId, $_attributes, $_guestAttributes) {
+                $_instance = Instance::create($_attributes);
+                $this->debug('created instance row id#' . $_instance->id);
 
-                    $_guestAttributes['instance_id'] = $_instance->id;
-                    $_guest = InstanceGuest::create($_guestAttributes);
-                    $this->debug('created guest row id#' . $_guest->id);
+                $_guestAttributes['instance_id'] = $_instance->id;
+                $_guest = InstanceGuest::create($_guestAttributes);
+                $this->debug('created guest row id#' . $_guest->id);
 
-                    if (!$_instance || !$_guest) {
-                        throw new \RuntimeException('Instance creation failed');
-                    }
-
-                    return $_instance;
+                if (!$_instance || !$_guest) {
+                    throw new \RuntimeException('Instance creation failed');
                 }
-            );
+
+                return $_instance;
+            });
         } catch (\Exception $_ex) {
             throw new ProvisioningException('Error creating new instance: ' . $_ex->getMessage());
         }
