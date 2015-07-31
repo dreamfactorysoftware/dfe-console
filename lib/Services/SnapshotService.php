@@ -217,11 +217,12 @@ HTML
     /**
      * Given an instance and a snapshot ID, replace the data with that of the snapshot.
      *
+     * @param int|string $instanceId
      * @param string $snapshotId
      *
      * @return bool
      */
-    public function restore($snapshotId)
+    public function restore($instanceId, $snapshotId)
     {
         //  Mount the snapshot
         $_tag = 'restore.' . $snapshotId;

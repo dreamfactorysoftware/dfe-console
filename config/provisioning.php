@@ -42,7 +42,7 @@ return [
     'default-dns-zone'            => env('DFE_DEFAULT_DNS_ZONE'),
     'default-dns-domain'          => env('DFE_DEFAULT_DNS_DOMAIN'),
     'default-domain'              => env('DFE_DEFAULT_DOMAIN'),
-    'default-domain-protocol'     => env('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https'),
+    'default-domain-protocol'     => env('DFE_DEFAULT_DOMAIN_PROTOCOL', ConsoleDefaults::DEFAULT_DOMAIN_PROTOCOL),
     //@todo update image to 14.* LTS x64
     //  Ubuntu server 12.04.1 i386
     'default-vendor-image-id'     => 4647,
