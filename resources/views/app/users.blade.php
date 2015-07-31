@@ -1,22 +1,8 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Users', 'prefix' => $prefix))
-
+@include('layouts.partials.topmenu')
 @extends('layouts.main')
-
 @section('content')
+    @include('layouts.partials.sidebar-menu',['resource'=>'users'])
 
-
-    <div class="col-md-2">
-        <div >
-            <ul class="nav nav-pills nav-stacked visible-md visible-lg">
-                <li class="active">
-                    <a href="/{{$prefix}}/users">Manage</a>
-                </li>
-                <li>
-                    <a  href="/{{$prefix}}/users/create">Create</a>
-                </li>
-            </ul>
-        </div>
-    </div>
 
     <div class="col-md-10">
         <div>
@@ -82,7 +68,7 @@
                             <th></th>
                             <th style="max-width: 100px"></th>
                             <th style="min-width: 175px">Name</th>
-                            <th style="min-width: 125px">Nickname</th>
+                            <th style="min-width: 125px">Display Name</th>
                             <th style="min-width: 175px">Email</th>
                             <th style="min-width: 150px">Role</th>
                             <th style="min-width: 100px">Status</th>
