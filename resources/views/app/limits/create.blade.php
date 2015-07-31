@@ -18,7 +18,7 @@
                         <select class="form-control" id="cluster_id" name="cluster_id">
                             <option value="0">All Clusters</option>
                             @foreach ($clusters as $_cluster)
-                                <option value="{{ $_cluster['cluster_id'] }}" {{ Input::old('cluster_id') == $_cluster['cluster_id'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
+                                <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $_cluster['id'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
                             @endforeach
                         </select>
                     </div>
