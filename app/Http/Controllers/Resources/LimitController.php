@@ -130,7 +130,7 @@ class LimitController extends ResourceController
             ];
 
             Limit::create($limit);
-            die('<pre>' . print_r($_input, true));
+
             return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit added')->with('flash_type', 'alert-success');
 
         } catch (QueryException $e) {
