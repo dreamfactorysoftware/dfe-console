@@ -89,16 +89,16 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ($_input['cluster_id'] === 0 && $_input['instance_id'] === 0) {
+            if (array_get($_input, 'cluster_id', 0) === 0 && array_get($_input, 'instance_id', 0) === 0) {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif ($_input['cluster_id'] !== 0 && $_input['instance_id'] === 0) {
+            } elseif (array_get($_input, 'cluster_id', 0) !== 0 && array_get($_input, 'instance_id', 0) === 0) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
-                if ($_input['service_name'] === 0 && $_input['user_id'] === 0) {
+                if (array_get($_input, 'service_name', 0) === 0 && array_get($_input, 'user_id', 0) === 0) {
                     $_limit_key_text = 'instance.default.' . $_time_period;
-                } elseif ($_input['service_name'] !== 0) {
+                } elseif (array_get($_input, 'service_name', 0) !== 0) {
                     $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
-                } elseif ($_input['user_id'] !== 0) {
+                } elseif (array_get($_input, 'user_id', 0) !== 0) {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
                 }
             }
