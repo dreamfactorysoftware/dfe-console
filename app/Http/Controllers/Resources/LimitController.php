@@ -113,7 +113,7 @@ class LimitController extends ResourceController
             } else {
                 if ($_input['service_name'] == 0 && $_input['user_id'] == 0) {
                     $_limit_key_text = 'instance.default.' . $_time_period;
-                } elseif ($_input['service_name'] != 0) {
+                } elseif (is_numeric($_input['service_name']) === false) {
                     $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
                 } elseif ($_input['user_id'] != 0) {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
