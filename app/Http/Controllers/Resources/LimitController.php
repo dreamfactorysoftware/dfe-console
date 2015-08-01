@@ -87,7 +87,7 @@ class LimitController extends ResourceController
         try {
             // Build the limit record
 
-            $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
+            $_time_period = str_replace(' ', '-', strtolower(array_get($_input, 'period_name', 'Minute')));
 
             if (array_get($_input, 'cluster_id', 0) === 0 && array_get($_input, 'instance_id', 0) === 0) {
                 $_limit_key_text = 'default.' . $_time_period;
@@ -104,11 +104,11 @@ class LimitController extends ResourceController
             }
 
             $limit = [
-                'cluster_id' => $_input['cluster_id'],
-                'instance_id' => $_input['instance_id'],
+                'cluster_id' => array_get($_input, 'cluster_id', 0),
+                'instance_id' => array_get($_input, 'instance_id', 0),
                 'limit_key_text' => $_limit_key_text,
-                'period_nbr' => $this->periods[$_input['period_name']],
-                'limit_nbr' => $_input['limit_nbr'],
+                'period_nbr' => $this->periods[array_get($_input, 'period_name', 'Minute')],
+                'limit_nbr' => array_get($_input, 'limit_nbr', 0),
                 'is_active' => true
             ];
 
