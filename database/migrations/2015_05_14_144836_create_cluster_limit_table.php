@@ -26,11 +26,6 @@ class CreateClusterLimitTable extends Migration
                     $table->dateTime('create_date');
                     $table->boolean('is_active')->default(1);
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
-
-                    //  Indices
-                    $table->foreign('cluster_id', 'fk_limit_cluster_id')->references('id')->on('cluster_t');
-                    $table->foreign('instance_id', 'fk_limit_instance_id')->references('id')->on('instance_t');
-                    $table->unique(['cluster_id', 'instance_id', 'limit_key_text'], 'ux_limit_cluster_instance_key');
                 }
             );
         }

@@ -81,35 +81,51 @@ class LimitController extends ResourceController
             ]);
     }
 
+    /**
+     * @todo add manual constraint checks, as 0 is a valid option for cluster_id and instance_id in this use
+     *
+     * @return $this
+     */
     public function store()
     {
-        $_input = \Input::all();
+        $_input = [];
 
         try {
             // Build the limit record
 
-            $_time_period = str_replace(' ', '-', strtolower(array_get($_input, 'period_name', 'Minute')));
+            foreach([
+                        'cluster_id' => 0,
+                        'instance_id' => 0,
+                        'service_name' => 0,
+                        'user_id' => 0,
+                        'period_name' => "Minute",
+                        'limit_nbr' => 0
+                    ] as $_input_key => $_input_default) {
+                $_input[$_input_key] = \Input::get($_input_key, $_input_default);
+            }
 
-            if (array_get($_input, 'cluster_id', 0) === 0 && array_get($_input, 'instance_id', 0) === 0) {
+            $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
+
+            if ( $_input['cluster_id'] === 0 && $_input['instance_id'] === 0) {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif (array_get($_input, 'cluster_id', 0) !== 0 && array_get($_input, 'instance_id', 0) === 0) {
+            } elseif ($_input['cluster_id'] !== 0 && $_input['instance_id'] === 0) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
-                if (array_get($_input, 'service_name', 0) === 0 && array_get($_input, 'user_id', 0) === 0) {
+                if ($_input['service_name'] === 0 && $_input['user_id'] === 0) {
                     $_limit_key_text = 'instance.default.' . $_time_period;
-                } elseif (array_get($_input, 'service_name', 0) !== 0) {
+                } elseif ($_input['service_name'] !== 0) {
                     $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
-                } elseif (array_get($_input, 'user_id', 0) !== 0) {
+                } elseif ($_input['user_id'] !== 0) {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
                 }
             }
 
             $limit = [
-                'cluster_id' => array_get($_input, 'cluster_id', 0),
-                'instance_id' => array_get($_input, 'instance_id', 0),
+                'cluster_id' => $_input['cluster_id'],
+                'instance_id' => $_input['instance_id'],
                 'limit_key_text' => $_limit_key_text,
-                'period_nbr' => $this->periods[array_get($_input, 'period_name', 'Minute')],
-                'limit_nbr' => array_get($_input, 'limit_nbr', 0),
+                'period_nbr' => $this->periods[$_input['period_name']],
+                'limit_nbr' => $_input['limit_nbr'],
                 'is_active' => true
             ];
 
