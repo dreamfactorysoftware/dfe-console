@@ -81,6 +81,13 @@ class LimitController extends ResourceController
             ]);
     }
 
+    public function edit($limit_id)
+    {
+        $limit = Limit::find($limit_id);
+
+        print "<pre>" . print_r($limit, true);
+    }
+
     /**
      * @todo add manual constraint checks, as 0 is a valid option for cluster_id and instance_id in this use
      *
