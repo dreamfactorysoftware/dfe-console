@@ -127,6 +127,6 @@ class LimitController extends ResourceController
             }
         }
 
-        return json_encode($_results);
+        return $_results;
     }
 }
