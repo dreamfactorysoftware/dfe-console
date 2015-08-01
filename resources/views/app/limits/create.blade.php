@@ -9,7 +9,6 @@
         <form class="policy-form" method="POST" action="/{{$prefix}}/limits">
             <input name="_method" type="hidden" value="POST">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
-            <input name="limit_period" id="limit_period" type="hidden" value="min">
 
             <div class="row">
                 <div class="col-md-6">
@@ -29,7 +28,7 @@
                                 id="instance_id"
                                 name="instance_id"
                                 disabled="disabled">
-                            <option value>All Instances</option>
+                            <option value="0">All Instances</option>
                         </select>
                     </div>
                 </div>
@@ -41,7 +40,7 @@
                                 id="service_id"
                                 name="service_id"
                                 disabled="disabled">
-                            <option value>All Services</option>
+                            <option value="0">All Services</option>
                         </select>
                     </div>
 
@@ -51,7 +50,7 @@
                                 id="user_id"
                                 name="user_id"
                                 disabled="disabled">
-                            <option value>All Users</option>
+                            <option value="0">All Users</option>
                         </select>
                     </div>
                 </div>
@@ -111,8 +110,6 @@
                 $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                     var _item;
 
-                    $_select.empty();
-
                     if (!$.isArray(data)) {
                         $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
                     } else {
@@ -145,8 +142,6 @@
                 $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/services').done(function (data) {
                     var _item;
 
-                    $_select.empty();
-
                     if (!$.isArray(data)) {
                         $_select.append('<option value="" selected="selected">No Services</option>').attr('disabled', 'disabled');
                     } else {
@@ -165,8 +160,6 @@
 
                 $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
                     var _item, $_select = $('#user_id');
-
-                    $_select.empty();
 
                     if (!$.isArray(data)) {
                         $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
