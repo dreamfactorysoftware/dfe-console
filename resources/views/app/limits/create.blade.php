@@ -40,7 +40,7 @@
                                 id="service_name"
                                 name="service_name"
                                 disabled="disabled">
-                            <option value="0">All Services</option>
+                            <option value="all">All Services</option>
                         </select>
                     </div>
 
@@ -134,7 +134,7 @@
                 var _instanceId = $('option:selected', this).val().toString();
 
                 if (!_instanceId || 0 == _instanceId) {
-                    $_select.empty().append('<option value="0" selected="selected">All Services</option>').attr('disabled', 'disabled');
+                    $_select.empty().append('<option value="all" selected="selected">All Services</option>').attr('disabled', 'disabled');
                     return false;
                 }
 

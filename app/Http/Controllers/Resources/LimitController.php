@@ -103,7 +103,7 @@ class LimitController extends ResourceController
                     ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
             }
-die('<pre>' . print_r($_input, true));
+
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
             if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
@@ -111,9 +111,9 @@ die('<pre>' . print_r($_input, true));
             } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
-                if ($_input['service_name'] == 0 && $_input['user_id'] == 0) {
+                if ($_input['service_name'] == 'all' && $_input['user_id'] == 0) {
                     $_limit_key_text = 'instance.default.' . $_time_period;
-                } elseif (is_numeric($_input['service_name']) === false) {
+                } elseif ($_input['service_name'] != 'all') {
                     $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
                 } elseif ($_input['user_id'] != 0) {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
@@ -130,7 +130,7 @@ die('<pre>' . print_r($_input, true));
             ];
 
             Limit::create($limit);
-
+            die('<pre>' . print_r($_input, true));
             return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit added')->with('flash_type', 'alert-success');
 
         } catch (QueryException $e) {
