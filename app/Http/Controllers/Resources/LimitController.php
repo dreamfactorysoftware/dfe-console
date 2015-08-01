@@ -103,7 +103,7 @@ class LimitController extends ResourceController
                     ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
             }
-
+die('<pre>' . print_r($_input, true));
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
             if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
