@@ -85,7 +85,11 @@ class LimitController extends ResourceController
     {
         $limit = Limit::find($limit_id);
 
-        print "<pre>" . print_r($limit, true);
+        $services = $this->getInstanceServices($limit->instance_id);
+
+        $users = $this->getInstanceUsers($limit->instance_id);
+
+        print "<pre>" . print_r($services, true) . print_r($users, true);
     }
 
     /**
