@@ -80,6 +80,51 @@ class LimitController extends ResourceController
             ]);
     }
 
+    public function store()
+    {
+        $_input = \Input::all();
+
+        try {
+            // Build the limit record
+
+            $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
+
+            if ($_input['cluster_id'] === 0 && $_input['instance_id'] === 0) {
+                $_limit_key_text = 'default.' . $_time_period;
+            } elseif ($_input['cluster_id'] !== 0 && $_input['instance_id'] === 0) {
+                $_limit_key_text = 'cluster.default.' . $_time_period;
+            } else {
+                if ($_input['service_name'] === 0 && $_input['user_id'] === 0) {
+                    $_limit_key_text = 'instance.default.' . $_time_period;
+                } elseif ($_input['service_name'] !== 0) {
+                    $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
+                } elseif ($_input['user_id'] !== 0) {
+                    $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
+                }
+            }
+
+            $limit = [
+                'cluster_id' => $_input['cluster_id'],
+                'instance_id' => $_input['instance_id'],
+                'limit_key_text' => $_limit_key_text,
+                'period_nbr' => $this->periods[$_input['period_name']],
+                'limit_nbr' => $_input['limit_nbr'],
+                'is_active' => true
+            ];
+
+            Limit::create($limit);
+
+            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit added')->with('flash_type', 'alert-success');
+
+        } catch (QueryException $e) {
+
+            Session::flash('flash_message', 'Unable to add limit!');
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/' . $this->getUiPrefix() . '/limits/create')->withInput();
+        }
+    }
+
     /**
      * @param string|int $instanceId
      *
@@ -121,7 +166,7 @@ class LimitController extends ResourceController
                 if (empty($_row->label) === true) {
                     $_results[] = ['id' => $_row->id, 'name' => $_row->name];
                 } else {
-                    $_results[] = ['id' => $_row->id, 'name' => $_row->label];
+                    $_results[] = ['id' => $_row->name, 'name' => $_row->label];
                 }
 
             }

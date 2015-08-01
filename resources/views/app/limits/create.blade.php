@@ -35,10 +35,10 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="service_id">Service</label>
+                        <label for="service_name">Service</label>
                         <select class="form-control"
-                                id="service_id"
-                                name="service_id"
+                                id="service_name"
+                                name="service_name"
                                 disabled="disabled">
                             <option value="0">All Services</option>
                         </select>
@@ -59,12 +59,12 @@
                     <hr/>
 
                     <div class="form-group">
-                        <label for="period_nbr">Time Period</label>
+                        <label for="period_name">Time Period</label>
                         <select class="form-control"
-                                id="period_nbr"
-                                name="period_nbr">
+                                id="period_name"
+                                name="period_name">
                             @foreach ($limitPeriods as $_periodName => $_period)
-                                <option value="{{ $_period }}" {{ Input::old('period_nbr') == $_period ? 'selected="selected"' : null }}>{{ $_periodName }}</option>
+                                <option value="{{ $_periodName }}" {{ Input::old('period_name') == $_periodName ? 'selected="selected"' : null }}>{{ $_periodName }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -111,6 +111,7 @@
                     var _item;
 
                     if (!$.isArray(data)) {
+                        $_select.empty();
                         $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
                     } else {
                         $.each(data, function (index, item) {
@@ -129,7 +130,7 @@
 
             //  Instance selection
             $_form.on('change', '#instance_id', function (e) {
-                var $_select = $('#service_id');
+                var $_select = $('#service_name');
                 var _instanceId = $('option:selected', this).val().toString();
 
                 if (!_instanceId || 0 == _instanceId) {
@@ -143,6 +144,7 @@
                     var _item;
 
                     if (!$.isArray(data)) {
+                        $_select.empty();
                         $_select.append('<option value="" selected="selected">No Services</option>').attr('disabled', 'disabled');
                     } else {
                         $.each(data, function (index, item) {
@@ -162,6 +164,7 @@
                     var _item, $_select = $('#user_id');
 
                     if (!$.isArray(data)) {
+                        $_select.empty();
                         $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
                     } else {
                         $.each(data, function (index, item) {
