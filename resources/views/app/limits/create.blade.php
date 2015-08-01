@@ -180,6 +180,10 @@
                     $_spinner.removeClass('fa-spin').addClass('hidden');
                 });
             });
+
+            $_form.on('click', '.btn-primary', function (e) {
+                $_form.submit();
+            });
         });
     </script>
 @stop
