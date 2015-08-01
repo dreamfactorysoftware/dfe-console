@@ -85,14 +85,45 @@ class LimitController extends ResourceController
     {
         $limit = Limit::find($limit_id);
 
-        $services = $users = [];
+        $services = $users = $values = [];
 
         if ($limit->instance_id != 0) {
             $services = $this->getInstanceServices($limit->instance_id);
             $users = $this->getInstanceUsers($limit->instance_id);
         }
 
-        print "<pre>" . print_r($limit, true) . print_r($services, true) . print_r($users, true);
+        $values['id'] = $limit_id;
+        $values['cluster_id'] = $limit->cluster_id;
+        $values['instance_id'] = $limit->instance_id;
+        $values['limit_nbr'] = $limit->limit_nbr;
+
+        foreach (explode('.', $limit->limit_key_text) as $_value) {
+            $_limit_key = explode(':', $_value);
+
+            switch($_limit_key[0]) {
+                case 'default':
+                case 'cluster':
+                case 'instance':
+                    break;
+                case 'user':
+                    $values['user_id'] = $_limit_key[1];
+                    break;
+                case 'service':
+                    $values['service_name'] = $_limit_key[1];
+                    break;
+                case 'role':
+                    $values['role_id'] = $_limit_key[1];
+                    break;
+                case 'api_key':
+                    $values['api_key'] = $_limit_key[1];
+                    break;
+                default:
+                    // It's time period
+                    $values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
+            }
+        }
+
+        print "<pre>" . print_r($values, true) ;
     }
 
     /**
