@@ -8,6 +8,10 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 use DreamFactory\Library\Utility\Curl;
+use Illuminate\Database\QueryException;
+use Illuminate\Routing\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Session;
 
 class LimitController extends ResourceController
 {
@@ -74,6 +78,10 @@ class LimitController extends ResourceController
      */
     public function index()
     {
+        $limits = Limit::all();
+
+        die('<pre>' . print_r($limits, true));
+
         return \View::make('app.limits',
             [
                 'prefix' => $this->_prefix,
@@ -85,17 +93,35 @@ class LimitController extends ResourceController
     {
         $limit = Limit::find($limit_id);
 
-        $services = $users = $values = [];
+        $services = $users = $_response = [];
+
+        $values = [
+            'id' => $limit_id,
+            'cluster_id' => $limit->cluster_id,
+            'instance_id' => $limit->instance_id,
+            'limit_nbr' => $limit->limit_nbr,
+            'user_id' => 0,
+            'service_name' => '',
+            'role_id' => 0,
+            'api_key' => '',
+            'period_name' => '',
+            'label_text' => $limit->label_text
+        ];
 
         if ($limit->instance_id != 0) {
             $services = $this->getInstanceServices($limit->instance_id);
             $users = $this->getInstanceUsers($limit->instance_id);
-        }
 
-        $values['id'] = $limit_id;
-        $values['cluster_id'] = $limit->cluster_id;
-        $values['instance_id'] = $limit->instance_id;
-        $values['limit_nbr'] = $limit->limit_nbr;
+            // @todo Refactor this so it's not in two places!
+
+            $_cluster = $this->_findCluster($values['cluster_id']);
+            $_rows = Instance::byClusterId($_cluster->id)->get(['id', 'instance_name_text']);
+
+            /** @type Instance $_instance */
+            foreach ($_rows as $_instance) {
+                $_response[] = ['id' => $_instance->id, 'name' => $_instance->instance_name_text];
+            }
+        }
 
         foreach (explode('.', $limit->limit_key_text) as $_value) {
             $_limit_key = explode(':', $_value);
@@ -123,7 +149,43 @@ class LimitController extends ResourceController
             }
         }
 
-        print "<pre>" . print_r($values, true) ;
+        return \View::make('app.limits.edit',
+            [
+                'limitPeriods' => $this->periods,
+                'prefix' => $this->_prefix,
+                'clusters' => Cluster::all(),
+                'instances' => $_response,
+                'services' => $services,
+                'users' => $users,
+                'limit' => $values
+            ]);
+    }
+
+    public function update($limit_id)
+    {
+        try {
+            // Build the limit record
+
+            $formLimit = $this->_buildLimitFromInput();
+
+            $limit = Limit::find($limit_id);
+
+            foreach($formLimit as $_key => $_value) {
+                $limit->$_key = $_value;
+            }
+
+            $limit->is_active = \Input::get('is_active', 0);
+            $limit->save();
+
+            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit updated')->with('flash_type', 'alert-success');
+
+        } catch (QueryException $e) {
+
+            Session::flash('flash_message', 'Unable to edit limit!');
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/' . $this->getUiPrefix() . '/limits/' . $limit['id'] . '/edit')->withInput();
+        }
     }
 
     /**
@@ -133,25 +195,45 @@ class LimitController extends ResourceController
      */
     public function store()
     {
-        $_input = [];
-
         try {
             // Build the limit record
 
-            foreach([
-                        'cluster_id' => 0,
-                        'instance_id' => 0,
-                        'service_name' => 0,
-                        'user_id' => 0,
-                        'period_name' => "Minute",
-                        'limit_nbr' => 0
-                    ] as $_input_key => $_input_default) {
+            $limit = $this->_buildLimitFromInput();
+            $limit['is_active'] = true;
+
+            Limit::create($limit);
+
+            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit added')->with('flash_type', 'alert-success');
+
+        } catch (QueryException $e) {
+
+            Session::flash('flash_message', 'Unable to add limit!');
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/' . $this->getUiPrefix() . '/limits/create')->withInput();
+        }
+    }
+
+    private function _buildLimitFromInput()
+    {
+        try {
+            $_input = [];
+
+            foreach ([
+                         'cluster_id' => 0,
+                         'instance_id' => 0,
+                         'service_name' => 0,
+                         'user_id' => 0,
+                         'period_name' => "Minute",
+                         'limit_nbr' => 0,
+                         'label_text' => ''
+                     ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
             }
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
+            if ($_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
                 $_limit_key_text = 'default.' . $_time_period;
             } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
@@ -171,20 +253,14 @@ class LimitController extends ResourceController
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
-                'is_active' => true
+                'label_text' => $_input['label_text']
             ];
 
-            Limit::create($limit);
-
-            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit added')->with('flash_type', 'alert-success');
-
-        } catch (QueryException $e) {
-
-            Session::flash('flash_message', 'Unable to add limit!');
-            Session::flash('flash_type', 'alert-danger');
-
-            return redirect('/' . $this->getUiPrefix() . '/limits/create')->withInput();
+            return $limit;
+        } catch (\Exception $e) {
+            throw new \Exception('Unable to build limit record');
         }
+
     }
 
     /**
