@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 use DreamFactory\Library\Utility\Curl;
+use Symfony\Component\HttpFoundation\Request;
 
 class LimitController extends ResourceController
 {
@@ -85,17 +86,24 @@ class LimitController extends ResourceController
     {
         $limit = Limit::find($limit_id);
 
-        $services = $users = $values = [];
+        $services = $users = [];
+
+        $values = [
+            'id' => $limit_id,
+            'cluster_id' => $limit->cluster_id,
+            'instance_id' => $limit->instance_id,
+            'limit_nbr' => $limit->limit_nbr,
+            'user_id' => 0,
+            'service_name' => '',
+            'role_id' => 0,
+            'api_key' => '',
+            'period_name' => ''
+        ];
 
         if ($limit->instance_id != 0) {
             $services = $this->getInstanceServices($limit->instance_id);
             $users = $this->getInstanceUsers($limit->instance_id);
         }
-
-        $values['id'] = $limit_id;
-        $values['cluster_id'] = $limit->cluster_id;
-        $values['instance_id'] = $limit->instance_id;
-        $values['limit_nbr'] = $limit->limit_nbr;
 
         foreach (explode('.', $limit->limit_key_text) as $_value) {
             $_limit_key = explode(':', $_value);
@@ -123,7 +131,19 @@ class LimitController extends ResourceController
             }
         }
 
-        print "<pre>" . print_r($values, true) ;
+        $req = Request::create('/'. $this->_prefix . '/cluster/' . $values['cluster_id'] . '/instances');
+
+
+        return \View::make('app.limits.edit',
+            [
+                'limitPeriods' => $this->periods,
+                'prefix' => $this->_prefix,
+                'clusters' => Cluster::all(),
+                'instances' => json_decode(Route::dispatch($req)->getContent()),
+                'services' => $services,
+                'users' => $users,
+                'limit' => $values
+            ]);
     }
 
     /**
