@@ -90,17 +90,21 @@ class LimitController extends ResourceController
                 'role_id' => 0,
                 'api_key' => '',
                 'period_name' => '',
-                'label_text' => $_limit->label_text
+                'label_text' => $_limit->label_text,
+                'cluster_id_text' => '',
+                'instance_id_text' => ''
             ];
 
             if ($_limit['cluster_id'] != 0) {
                 $_cluster = $this->_findCluster($_limit['cluster_id']);
+                $_values['cluster_id_text'] = $_cluster->cluster_id_text;
             }
 
             if ($_limit['instance_id'] != 0) {
                 $_instance = $this->_findInstance($_limit['instance_id']);
                 $_services = $this->getInstanceServices($_limit['instance_id']);
                 $_users = $this->getInstanceUsers($_limit['instance_id']);
+                $_values['instance_id_text'] = $_instance->instance_id_text;
             }
 
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
@@ -146,8 +150,8 @@ class LimitController extends ResourceController
 
             $_limits[] = [
                 'id' => $_limit['id'],
-                'cluster_id_text' => $_cluster->cluster_id_text,
-                'instance_id_text' => $_instance->instance_id_text,
+                'cluster_id_text' => $_values['cluster_id_text'],
+                'instance_id_text' => $_values['instance_id_text'],
                 'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
                 'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
                 'period_name' => $_values['period_name'],
