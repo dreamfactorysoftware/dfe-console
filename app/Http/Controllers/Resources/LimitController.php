@@ -161,12 +161,15 @@ class LimitController extends ResourceController
         try {
             // Build the limit record
 
-            $limit = $this->_buildLimitFromInput();
-            $limit['id'] = $limit_id;
-//die('<pre>' . print_r($limit, true));
-            $updateLimit = new Limit();
+            $formLimit = $this->_buildLimitFromInput();
 
-            $updateLimit->update($limit);
+            $limit = Limit::find($limit_id);
+
+            foreach($formLimit as $_key => $_value) {
+                $limit->$_key = $_value;
+            }
+
+            $limit->save();
 
             return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit updated')->with('flash_type', 'alert-success');
 
@@ -175,7 +178,7 @@ class LimitController extends ResourceController
             Session::flash('flash_message', 'Unable to edit limit!');
             Session::flash('flash_type', 'alert-danger');
 
-            return redirect('/' . $this->getUiPrefix() . '/limits/create')->withInput();
+            return redirect('/' . $this->getUiPrefix() . '/limits/' . $limit['id'] . '/edit')->withInput();
         }
     }
 
