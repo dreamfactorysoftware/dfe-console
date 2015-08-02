@@ -100,7 +100,8 @@ class LimitController extends ResourceController
             'service_name' => '',
             'role_id' => 0,
             'api_key' => '',
-            'period_name' => ''
+            'period_name' => '',
+            'label_text' => $limit->label_text
         ];
 
         if ($limit->instance_id != 0) {
