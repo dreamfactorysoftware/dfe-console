@@ -169,6 +169,7 @@ class LimitController extends ResourceController
                 $limit->$_key = $_value;
             }
 
+            $limit->is_active = \Input::get('is_active', 0);
             $limit->save();
 
             return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit updated')->with('flash_type', 'alert-success');
@@ -193,6 +194,7 @@ class LimitController extends ResourceController
             // Build the limit record
 
             $limit = $this->_buildLimitFromInput();
+            $limit['is_active'] = true;
 
             Limit::create($limit);
 
@@ -218,7 +220,8 @@ class LimitController extends ResourceController
                          'service_name' => 0,
                          'user_id' => 0,
                          'period_name' => "Minute",
-                         'limit_nbr' => 0
+                         'limit_nbr' => 0,
+                         'label_text' => ''
                      ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
             }
@@ -245,7 +248,7 @@ class LimitController extends ResourceController
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
-                'is_active' => true
+                'label_text' => $_input['label_text']
             ];
 
             return $limit;

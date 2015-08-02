@@ -79,6 +79,12 @@
                         <label for="limit_nbr">Limit for Period</label>
                         <input type="number" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ empty(Input::old('limit_nbr')) === false ? Input::old('limit_nbr') : $limit['limit_nbr'] }}">
                     </div>
+
+                    <div class="form-group">
+                        <label for="label_text">Limit Name</label>
+                        <input type="text" class="form-control" id="label_text" name="label_text"
+                               value="{{ empty(Input::old('label_text')) === false ? Input::old('label_text') : $limit['label_text'] }}">
+                    </div>
                 </div>
             </div>
 
