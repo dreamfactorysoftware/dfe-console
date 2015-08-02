@@ -65,10 +65,6 @@ class LimitController extends ResourceController
      */
     public function create(array $viewData = [])
     {
-        $limits = Limit::all();
-
-        die('<pre>' . print_r($limits));
-
         return \View::make('app.limits.create',
             [
                 'limitPeriods' => $this->periods,
@@ -82,6 +78,10 @@ class LimitController extends ResourceController
      */
     public function index()
     {
+        $limits = Limit::all();
+
+        die('<pre>' . print_r($limits));
+
         return \View::make('app.limits',
             [
                 'prefix' => $this->_prefix,
