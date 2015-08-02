@@ -102,11 +102,22 @@ class LimitController extends ResourceController
 
             if ($_limit['instance_id'] != 0) {
                 $_instance = $this->_findInstance($_limit['instance_id']);
-                $_services = $this->getInstanceServices($_limit['instance_id']);
-                $_users = $this->getInstanceUsers($_limit['instance_id']);
+                $_tmp = $this->getInstanceServices($_limit['instance_id']);
+                $_services = [];
+
+                foreach ($_tmp as $_id => $_name) {
+                    $_users[$_id] = $_name;
+                }
+
+                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+                $_users = [];
+
+                foreach($_tmp as $_id => $_name) {
+                    $_users[$_id] = $_name;
+                }
+
                 $_values['instance_id_text'] = $_instance->instance_id_text;
 
-                die('<pre>' . print_r($_users, true) . print_r($_services, true));
             }
 
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
