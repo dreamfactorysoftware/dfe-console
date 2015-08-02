@@ -160,7 +160,7 @@ class LimitController extends ResourceController
                         $_values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
                 }
             }
-
+die('<pre>' . print_r($_users, true));
             $_limits[] = [
                 'id' => $_limit['id'],
                 'cluster_id_text' => $_values['cluster_id_text'],
