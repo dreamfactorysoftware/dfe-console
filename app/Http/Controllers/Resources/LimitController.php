@@ -170,7 +170,8 @@ class LimitController extends ResourceController
                 'period_name' => $_values['period_name'],
                 'limit_nbr' => $_limit->limit_nbr,
                 'label_text' => $_limit->label_text,
-                'is_active' => $_limit->is_active
+                'is_active' => $_limit->is_active,
+                'notes' => $_values['notes']
             ];
 
         }
