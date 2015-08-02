@@ -11,6 +11,7 @@ use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\QueryException;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Session;
 
 class LimitController extends ResourceController
 {
