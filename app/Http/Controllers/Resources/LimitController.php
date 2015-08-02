@@ -111,9 +111,11 @@ class LimitController extends ResourceController
 
                 $_tmp = $this->getInstanceUsers($_limit['instance_id']);
                 $_users = [];
-
+print "<pre>";
                 foreach($_tmp as $_v) {
+                    print_r($_v);
                     $_users[$_v['id']] = $_v['name'];
+                    print_r($_users);
                 }
                 die('<pre>' . print_r($_users, true));
                 $_values['instance_id_text'] = $_instance->instance_id_text;
