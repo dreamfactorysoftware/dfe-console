@@ -87,7 +87,7 @@ class LimitController extends ResourceController
     {
         $limit = Limit::find($limit_id);
 
-        $services = $users = [];
+        $services = $users = $_response = [];
 
         $values = [
             'id' => $limit_id,
@@ -104,6 +104,16 @@ class LimitController extends ResourceController
         if ($limit->instance_id != 0) {
             $services = $this->getInstanceServices($limit->instance_id);
             $users = $this->getInstanceUsers($limit->instance_id);
+
+            // @todo Refactor this so it's not in two places!
+
+            $_cluster = $this->_findCluster($values['cluster_id']);
+            $_rows = Instance::byClusterId($_cluster->id)->get(['id', 'instance_name_text']);
+
+            /** @type Instance $_instance */
+            foreach ($_rows as $_instance) {
+                $_response[] = ['id' => $_instance->id, 'name' => $_instance->instance_name_text];
+            }
         }
 
         foreach (explode('.', $limit->limit_key_text) as $_value) {
@@ -131,19 +141,6 @@ class LimitController extends ResourceController
                     $values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
             }
         }
-
-        // @todo Refactor this so it's not in two places!
-
-        $_cluster = $this->_findCluster($values['cluster_id']);
-        $_rows = Instance::byClusterId($_cluster->id)->get(['id', 'instance_name_text']);
-
-        $_response = [];
-
-        /** @type Instance $_instance */
-        foreach ($_rows as $_instance) {
-            $_response[] = ['id' => $_instance->id, 'name' => $_instance->instance_name_text];
-        }
-
 
         return \View::make('app.limits.edit',
             [
