@@ -80,7 +80,7 @@ class LimitController extends ResourceController
     {
         $limits = Limit::all();
 
-        die('<pre>' . print_r($limits));
+        die('<pre>' . print_r($limits, true));
 
         return \View::make('app.limits',
             [
