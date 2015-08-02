@@ -105,6 +105,8 @@ class LimitController extends ResourceController
                 $_services = $this->getInstanceServices($_limit['instance_id']);
                 $_users = $this->getInstanceUsers($_limit['instance_id']);
                 $_values['instance_id_text'] = $_instance->instance_id_text;
+
+                die('<pre>' . print_r($_users, true));
             }
 
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
