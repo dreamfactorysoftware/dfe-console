@@ -30,7 +30,7 @@
                                 disabled="disabled">
                             <option value="0">All Instances</option>
                             @foreach($instances as $_instance)
-                                <option value="{{ $_instance['id'] }}" {{ Input::old('instance_id') == $_instance['id'] || $limit['instance_id'] == $_instance['id'] ? 'selected="selected"' : null }}>{{ $_instance['instance_id_text'] }}</option>
+                                <option value="{{ $_instance['id'] }}" {{ Input::old('instance_id') == $_instance['id'] || $limit['instance_id'] == $_instance['id'] ? 'selected="selected"' : null }}>{{ $_instance['name'] }}</option>
                             @endforeach
                         </select>
                     </div>
