@@ -134,7 +134,7 @@ class LimitController extends ResourceController
 
         // @todo Refactor this so it's not in two places!
 
-        $_cluster = $this->_findCluster($_value['cluster_id']);
+        $_cluster = $this->_findCluster($_values['cluster_id']);
         $_rows = Instance::byClusterId($_cluster->id)->get(['id', 'instance_name_text']);
 
         $_response = [];
