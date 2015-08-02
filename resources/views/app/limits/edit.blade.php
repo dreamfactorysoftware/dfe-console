@@ -26,8 +26,7 @@
                         <label for="instance_name_text">Instance</label>
                         <select class="form-control"
                                 id="instance_id"
-                                name="instance_id"
-                                disabled="disabled">
+                                name="instance_id"{{ count($instances) > 0 ?: ' disabled="disabled"' }}>
                             <option value="0">All Instances</option>
                             @foreach($instances as $_instance)
                                 <option value="{{ $_instance['id'] }}" {{ Input::old('instance_id') == $_instance['id'] || $limit['instance_id'] == $_instance['id'] ? 'selected="selected"' : null }}>{{ $_instance['name'] }}</option>
@@ -41,8 +40,7 @@
                         <label for="service_name">Service</label>
                         <select class="form-control"
                                 id="service_name"
-                                name="service_name"
-                                disabled="disabled">
+                                name="service_name"{{ count($services) > 0 ?: ' disabled="disabled"' }}>
                             <option value="all">All Services</option>
                             @foreach($services as $_service)
                                 <option value="{{ $_service['id'] }}" {{ Input::old('service_name') == $_service['id'] || $limit['service_name'] == $_service['id'] ? 'selected="selected"' : null }}>{{ $_service['name'] }}</option>
@@ -54,8 +52,7 @@
                         <label for="user_id">User</label>
                         <select class="form-control"
                                 id="user_id"
-                                name="user_id"
-                                disabled="disabled">
+                                name="user_id"{{ count($users) > 0 ?: ' disabled="disabled"' }}>
                             <option value="0">All Users</option>
                             @foreach($users as $_user)
                                 <option value="{{ $_user['id'] }}" {{ Input::old('user_id') == $_user['id'] || $limit['user_id'] == $_user['id'] ? 'selected="selected"' : null }}>{{ $_user['name'] }}</option>
