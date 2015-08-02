@@ -115,7 +115,7 @@ class LimitController extends ResourceController
                 foreach($_tmp as $_id => $_name) {
                     $_users[$_id] = $_name;
                 }
-
+                die('<pre>' . print_r($_users, true));
                 $_values['instance_id_text'] = $_instance->instance_id_text;
 
             }
@@ -160,7 +160,7 @@ class LimitController extends ResourceController
                         $_values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
                 }
             }
-die('<pre>' . print_r($_users, true));
+
             $_limits[] = [
                 'id' => $_limit['id'],
                 'cluster_id_text' => $_values['cluster_id_text'],
