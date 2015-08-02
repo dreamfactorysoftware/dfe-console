@@ -163,7 +163,9 @@ class LimitController extends ResourceController
             $limit = $this->_buildLimitFromInput();
             $limit['id'] = $limit_id;
 
-            Limit::save($limit);
+            $updateLimit = new Limit();
+
+            $updateLimit->save($limit);
 
             return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit updated')->with('flash_type', 'alert-success');
 
