@@ -44,6 +44,9 @@
                                 name="service_name"
                                 disabled="disabled">
                             <option value="all">All Services</option>
+                            @foreach($services as $_service)
+                                <option value="{{ $_service['id'] }}" {{ Input::old('service_name') == $_service['id'] || $limit['service_name'] == $_service['id'] ? 'selected="selected"' : null }}>{{ $_service['name'] }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -54,6 +57,9 @@
                                 name="user_id"
                                 disabled="disabled">
                             <option value="0">All Users</option>
+                            @foreach($users as $_user)
+                                <option value="{{ $_user['id'] }}" {{ Input::old('user_id') == $_user['id'] || $limit['user_id'] == $_user['id'] ? 'selected="selected"' : null }}>{{ $_user['name'] }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -67,14 +73,14 @@
                                 id="period_name"
                                 name="period_name">
                             @foreach ($limitPeriods as $_periodName => $_period)
-                                <option value="{{ $_periodName }}" {{ Input::old('period_name') == $_periodName ? 'selected="selected"' : null }}>{{ $_periodName }}</option>
+                                <option value="{{ $_periodName }}" {{ Input::old('period_name') == $_periodName || $limit['period_name'] == $_periodName ? 'selected="selected"' : null }}>{{ $_periodName }}</option>
                             @endforeach
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="limit_nbr">Limit for Period</label>
-                        <input type="number" class="form-control" id="limit_nbr" name="limit_nbr">
+                        <input type="number" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ empty(Input::old('limit_nbr')) === false ? Input::old('limit_nbr') : $limit['limit_nbr'] }}">
                     </div>
                 </div>
             </div>

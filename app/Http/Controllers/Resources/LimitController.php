@@ -132,7 +132,17 @@ class LimitController extends ResourceController
             }
         }
 
-        $req = Request::create('/'. $this->_prefix . '/cluster/' . $values['cluster_id'] . '/instances');
+        // @todo Refactor this so it's not in two places!
+
+        $_cluster = $this->_findCluster($_value['cluster_id']);
+        $_rows = Instance::byClusterId($_cluster->id)->get(['id', 'instance_name_text']);
+
+        $_response = [];
+
+        /** @type Instance $_instance */
+        foreach ($_rows as $_instance) {
+            $_response[] = ['id' => $_instance->id, 'name' => $_instance->instance_name_text];
+        }
 
 
         return \View::make('app.limits.edit',
@@ -140,7 +150,7 @@ class LimitController extends ResourceController
                 'limitPeriods' => $this->periods,
                 'prefix' => $this->_prefix,
                 'clusters' => Cluster::all(),
-                'instances' => json_decode(Route::dispatch($req)->getContent()),
+                'instances' => $_response,
                 'services' => $services,
                 'users' => $users,
                 'limit' => $values
