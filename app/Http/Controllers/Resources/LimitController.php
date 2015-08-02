@@ -78,14 +78,90 @@ class LimitController extends ResourceController
      */
     public function index()
     {
-        $limits = Limit::all();
+        $_results = Limit::all();
 
-        die('<pre>' . print_r($limits, true));
+        $_limits = [];
+
+        foreach($_results as $_limit) {
+            $_values = [
+                'limit_nbr' => $_limit->limit_nbr,
+                'user_id' => 0,
+                'service_name' => '',
+                'role_id' => 0,
+                'api_key' => '',
+                'period_name' => '',
+                'label_text' => $_limit->label_text
+            ];
+
+            if ($_limit['cluster_id'] != 0) {
+                $_cluster = $this->_findCluster($_limit['cluster_id']);
+            }
+
+            if ($_limit['instance_id'] != 0) {
+                $_instance = $this->_findInstance($_limit['instance_id']);
+                $_services = $this->getInstanceServices($_limit['instance_id']);
+                $_users = $this->getInstanceUsers($_limit['instance_id']);
+            }
+
+            $defaultPos = strpos($_limit['limit_key_text'], 'default.');
+            $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
+            $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instnace.default.');
+
+            if ($defaultPos !== false && $defaultPos == 0) {
+                $_values['notes'] = 'Default for all clusters and instances';
+            } elseif ($clusterDefaultPos !== false && $clusterDefaultPos == 0) {
+                $_values['notes'] = 'Default for cluster';
+            } elseif ($instanceDefaultPos !== false && $instanceDefaultPos == 0) {
+                $_values['notes'] = 'Default for instance';
+            } else {
+                $_values['notes'] = '';
+            }
+
+
+            foreach (explode('.', $_limit['limit_key_text']) as $_value) {
+                $_limit_key = explode(':', $_value);
+
+                switch ($_limit_key[0]) {
+                    case 'default':
+                    case 'cluster':
+                    case 'instance':
+                        break;
+                    case 'user':
+                        $_values['user_id'] = $_limit_key[1];
+                        break;
+                    case 'service':
+                        $_values['service_name'] = $_limit_key[1];
+                        break;
+                    case 'role':
+                        $_values['role_id'] = $_limit_key[1];
+                        break;
+                    case 'api_key':
+                        $_values['api_key'] = $_limit_key[1];
+                        break;
+                    default:
+                        // It's time period
+                        $_values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
+                }
+            }
+
+            $_limits[] = [
+                'id' => $_limit['id'],
+                'cluster_id_text' => $_cluster->cluster_id_text,
+                'instance_id_text' => $_instance->instance_id_text,
+                'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
+                'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
+                'period_name' => $_values['period_name'],
+                'limit_nbr' => $_limit->limit_nbr,
+                'label_text' => $_limit->label_text,
+                'is_active' => $_limit->is_active
+            ];
+
+        }
 
         return \View::make('app.limits',
             [
                 'prefix' => $this->_prefix,
-                'limits' => [],
+                'limits' => $_limits,
             ]);
     }
 
@@ -222,7 +298,7 @@ class LimitController extends ResourceController
             foreach ([
                          'cluster_id' => 0,
                          'instance_id' => 0,
-                         'service_name' => 0,
+                         'service_name' => 'all',
                          'user_id' => 0,
                          'period_name' => "Minute",
                          'limit_nbr' => 0,
