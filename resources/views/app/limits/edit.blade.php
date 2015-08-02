@@ -87,7 +87,7 @@
                     <hr>
                     <div class="form-group">
                         <div class="">
-                            <button type="button" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-primary">Save</button>
                             <button type="button" class="btn btn-default">Close</button>
                         </div>
                     </div>
