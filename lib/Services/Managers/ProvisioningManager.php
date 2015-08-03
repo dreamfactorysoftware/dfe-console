@@ -226,16 +226,17 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         //  Validate instance
         $_instanceId = $job->getInstanceId();
 
-        if (null === ($_instance = $this->_findInstance($_instanceId))) {
-            throw new InstanceNotFoundException('The instance "' . $_instanceId . '" was not found.');
+        if (null !== ($_instance = $this->_findInstance($_instanceId))) {
+            throw new InstanceNotFoundException('The instance "' . $_instanceId . '" exists and cannot be overwritten.');
         }
 
-        //  1.  Make a backup.
-        $_export = \Artisan::call('dfe:export', ['instance-id' => $_instance->id,]);
+        $_options = $job->getOptions();
 
-        $_result = $this->provision(new ProvisionJob($_instanceId, $job->getOptions()));
+        if (0 != \Artisan::call('dfe:provision', array_merge($_options, ['instance-id' => $_instanceId,]))) {
+            throw new \RuntimeException('The instance could be be provisioned.');
+        }
 
-        $_guest = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
+        $_services = $this->getPortableServices(array_get($_options, 'guest-location'));
 
         $_imports = [];
 
