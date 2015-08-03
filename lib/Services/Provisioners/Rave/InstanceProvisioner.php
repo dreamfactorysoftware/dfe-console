@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Enums\OperationalStates;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\HasOfferings;
 use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;
@@ -70,18 +71,15 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             $this->deprovisionStorage($request);
 
             if (!$this->deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
-                $this->error('* unable to remove instance "' .
-                    $_instance->instance_id_text .
-                    '" after failed provision.');
+                $this->error('* unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.');
             }
         }
 
-        return [
-            'success'  => $_success,
-            'instance' => $_success ? $_instance->toArray() : false,
-            'log'      => $_output,
-            'result'   => $_result,
-        ];
+        return ProvisionServiceResponse::make($_success,
+            $request,
+            $_result,
+            ['instance' => $_success ? $_instance->toArray() : false,],
+            $_output);
     }
 
     /** @inheritdoc */
@@ -101,12 +99,11 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             $_instance->updateState(ProvisionStates::DEPROVISIONING_ERROR);
         }
 
-        return [
-            'success'  => $_success,
-            'instance' => $_success ? $_instance->toArray() : false,
-            'log'      => $_output,
-            'result'   => $_result,
-        ];
+        return ProvisionServiceResponse::make($_success,
+            $request,
+            $_result,
+            ['instance' => $_success ? $_instance->toArray() : false,],
+            $_output);
     }
 
     /**
@@ -285,13 +282,11 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
      */
     protected function getFullyQualifiedDomainName($name)
     {
-        return implode(
-            '.',
+        return implode('.',
             [
                 trim($name, '. '),
                 trim(config('provisioning.default-dns-zone'), '. '),
                 trim(config('provisioning.default-dns-domain'), '. '),
-            ]
-        );
+            ]);
     }
 }

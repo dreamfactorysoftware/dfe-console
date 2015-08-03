@@ -42,16 +42,17 @@ class ImportJobHandler extends BaseListener
                 throw new \LogicException('Instance "' . $_instanceId . '" already exists.');
             }
 
-            $job->setResult($_result = Provision::import($job));
+            if (false === ($_response = Provision::import($job))) {
+                throw new \RuntimeException('import failure');
+            }
+
+            $this->info('import complete in ' . number_format(microtime(true) - $_start, 4) . 's');
             $this->debug('<<< import "' . $_instanceId . '" request SUCCESS');
         } catch (\Exception $_ex) {
             $this->error('<<< import "' . $_instanceId . '" request FAILURE: ' . $_ex->getMessage());
-            $_result = false;
+            $_response = false;
         }
 
-        $_elapsed = microtime(true) - $_start;
-        $this->debug('import complete in ' . number_format($_elapsed, 4) . 's');
-
-        return $_result;
+        return $_response;
     }
 }
