@@ -301,7 +301,7 @@ HTML
     protected function getSnapshotFromUrl($url, $path)
     {
         if (false !== ($_source = fopen($url, 'rb')) && false !== ($_target = fopen($path, 'wb'))) {
-            while (!feof($$_source)) {
+            while (!feof($_source)) {
                 fwrite($_target, fread($_source, 1024 * 8), 8192);
             }
 
@@ -379,7 +379,7 @@ HTML
 
         foreach ($files as $_type => $_export) {
             $_added[$_type . '-export'] = $_export;
-            static::moveWorkFile($archive, $$this->workPath . $_export);
+            static::moveWorkFile($archive, $this->workPath . $_export);
         }
 
         return $_added;
