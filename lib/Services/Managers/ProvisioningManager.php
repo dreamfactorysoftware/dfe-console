@@ -10,11 +10,11 @@ use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Database\Exceptions\InstanceNotFoundException;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortableProvisionerAware
 {
@@ -226,16 +226,26 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         //  Validate instance
         $_instanceId = $job->getInstanceId();
 
-        if (null !== ($_instance = $this->_findInstance($_instanceId))) {
-            throw new InstanceNotFoundException('The instance "' . $_instanceId . '" exists and cannot be overwritten.');
+        try {
+            if ($this->_findInstance($_instanceId)) {
+                throw new \RuntimeException('Instance "' . $_instanceId . '" exists and cannot be imported.');
+            }
+        } catch (ModelNotFoundException $_ex) {
+            //  This is what we want.
         }
 
         $_options = $job->getOptions();
 
-        if (0 != \Artisan::call('dfe:provision', array_merge($_options, ['instance-id' => $_instanceId,]))) {
+        if (0 != \Artisan::call('dfe:provision',
+                array_merge([
+                    'instance-id' => $_instanceId,
+                    'owner-id'    => array_get($_options, 'owner-id'),
+                ]))
+        ) {
             throw new \RuntimeException('The instance could be be provisioned.');
         }
 
+        $_instance = $this->_findInstance($_instanceId);
         $_services = $this->getPortableServices(array_get($_options, 'guest-location'));
 
         $_imports = [];

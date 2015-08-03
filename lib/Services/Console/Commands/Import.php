@@ -34,7 +34,7 @@ class Import extends Command
     {
         $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
             $this->argument('snapshot'),
-            $this->getOptions());
+            array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
 
         \Queue::push($_job = new ImportJob($_request));
 
@@ -50,8 +50,15 @@ class Import extends Command
     {
         return array_merge(parent::getArguments(),
             [
+                ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
                 ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
                 ['snapshot', InputArgument::REQUIRED, 'The path of the snapshot file'],
+                [
+                    'guest-location',
+                    InputArgument::OPTIONAL,
+                    'The location of the new instance',
+                    config('provisioning.default-guest-location'),
+                ],
             ]);
     }
 
@@ -76,6 +83,12 @@ class Import extends Command
                     'i',
                     InputOption::VALUE_NONE,
                     'If specified, the "snapshot" value is a snapshot-id not a path',
+                ],
+                [
+                    'owner-type',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'The owner-id of the new instance',
                 ],
             ]);
     }
