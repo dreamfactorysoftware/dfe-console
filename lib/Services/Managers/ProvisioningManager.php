@@ -10,7 +10,7 @@ use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Exceptions\InstanceNotFoundException;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
@@ -223,11 +223,15 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function import(ImportJob $job)
     {
+        //  Validate instance
         $_instanceId = $job->getInstanceId();
 
-        if (null !== ($_instance = Instance::byNameOrId($_instanceId))) {
-            throw new \LogicException('The instance "' . $_instanceId . '" already exists.');
+        if (null === ($_instance = $this->_findInstance($_instanceId))) {
+            throw new InstanceNotFoundException('The instance "' . $_instanceId . '" was not found.');
         }
+
+        //  1.  Make a backup.
+        $_export = \Artisan::call('dfe:export', ['instance-id' => $_instance->id,]);
 
         $_result = $this->provision(new ProvisionJob($_instanceId, $job->getOptions()));
 

@@ -36,7 +36,9 @@ class Import extends Command
             $this->argument('snapshot'),
             $this->getOptions());
 
-        return \Queue::push(new ImportJob($_request));
+        \Queue::push($_job = new ImportJob($_request));
+
+        return $_job->getResult();
     }
 
     /**
@@ -73,7 +75,7 @@ class Import extends Command
                     'snapshot-id',
                     'i',
                     InputOption::VALUE_NONE,
-                    'If specified, the "snapshot" value is a snapshot-id not a path'
+                    'If specified, the "snapshot" value is a snapshot-id not a path',
                 ],
             ]);
     }
