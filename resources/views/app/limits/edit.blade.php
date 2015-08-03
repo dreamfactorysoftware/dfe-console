@@ -6,85 +6,72 @@
     <div class="col-xs-11 col-sm-10 col-md-10">
         @include('layouts.partials.context-header',['resource'=>'limits','title' => 'Edit Limit'])
 
-        <form class="policy-form" method="POST" action="/{{$prefix}}/limits/{{$limit['id']}}">
-            <input name="_method" type="hidden" value="PUT">
+        <form class="policy-form" method="POST" action="/{{$prefix}}/limits">
+            <input name="_method" type="hidden" value="POST">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
+            <input name="is_active" type="hidden" value="1">
 
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
+                        <label for="label_text">Name</label>
+                        <input type="text" class="form-control" id="label_text" name="label_text" value="{{ $limit['label_text'] }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="type_select">Type</label>{{$limit['type']}}
+                        <select class="form-control" id="type_select" name="type_select">
+                            <option value="">Select type</option>
+                            <option value="cluster">Cluster</option>
+                            <option value="instance">Instance</option>
+                            <option value="user">User</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="select_cluster" style="display: none;">
                         <label for="cluster_id">Cluster</label>
                         <select class="form-control" id="cluster_id" name="cluster_id">
-                            <option value="0">All Clusters</option>
+                            <option value="">Select Cluster</option>
                             @foreach ($clusters as $_cluster)
-                                <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $_cluster['id'] || $limit['cluster_id'] == $_cluster['id'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
+                                <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $limit['id'] ? 'selected="selected"' : null }} @if ($_cluster['id'] == $limit['id']) selected @endif>{{ $_cluster['cluster_id_text'] }}</option>
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label for="instance_name_text">Instance</label>
-                        <select class="form-control"
-                                id="instance_id"
-                                name="instance_id"{{ count($instances) > 0 ?: ' disabled="disabled"' }}>
-                            <option value="0">All Instances</option>
-                            @foreach($instances as $_instance)
-                                <option value="{{ $_instance['id'] }}" {{ Input::old('instance_id') == $_instance['id'] || $limit['instance_id'] == $_instance['id'] ? 'selected="selected"' : null }}>{{ $_instance['name'] }}</option>
-                            @endforeach
+                    <div class="form-group" id="select_instance" style="display: none;">
+                        <label for="instance_id">Instance</label>
+                        <select class="form-control" id="instance_id" name="instance_id">
+                            <option value="0">Select Instance</option>
                         </select>
                     </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="service_name">Service</label>
-                        <select class="form-control"
-                                id="service_name"
-                                name="service_name"{{ count($services) > 0 ?: ' disabled="disabled"' }}>
-                            <option value="all">All Services</option>
-                            @foreach($services as $_service)
-                                <option value="{{ $_service['id'] }}" {{ Input::old('service_name') == $_service['id'] || $limit['service_name'] == $_service['id'] ? 'selected="selected"' : null }}>{{ $_service['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
+                    <div class="form-group" id="select_user" style="display: none;">
                         <label for="user_id">User</label>
-                        <select class="form-control"
-                                id="user_id"
-                                name="user_id"{{ count($users) > 0 ?: ' disabled="disabled"' }}>
-                            <option value="0">All Users</option>
-                            @foreach($users as $_user)
-                                <option value="{{ $_user['id'] }}" {{ Input::old('user_id') == $_user['id'] || $limit['user_id'] == $_user['id'] ? 'selected="selected"' : null }}>{{ $_user['name'] }}</option>
-                            @endforeach
+                        <select class="form-control" id="user_id" name="user_id">
+                            <option value="">Select User</option>
+                            <option value="">All User</option>
                         </select>
+                    </div>
+                    <div id="limit_settings" style="display: none;">
+                        <div class="form-group" id="select_period">
+                            <label for="period_name">Period</label>
+                            <select class="form-control" id="period_name" name="period_name">
+                                <option value="">Select Period</option>
+                                <option value="Minute">Minute</option>
+                                <option value="Hour">Hour</option>
+                                <option value="Day">Day</option>
+                                <option value="7 Days">7 Days</option>
+                                <option value="30 Days">30 Days</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="limit_nbr">Limit</label>
+                            <input type="number" class="form-control" id="limit_nbr" name="limit_nbr">
+                        </div>
+                        <div>
+                            <label for="is_active">Active</label>&nbsp;&nbsp;
+                            <input type="checkbox" id="is_active" name="is_active">
+                        </div>
                     </div>
                 </div>
+                <div class="col-md-6">
 
-                <div class="col-md-12">
-                    <hr/>
-
-                    <div class="form-group">
-                        <label for="period_name">Time Period</label>
-                        <select class="form-control"
-                                id="period_name"
-                                name="period_name">
-                            @foreach ($limitPeriods as $_periodName => $_period)
-                                <option value="{{ $_periodName }}" {{ Input::old('period_name') == $_periodName || $limit['period_name'] == $_periodName ? 'selected="selected"' : null }}>{{ $_periodName }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="limit_nbr">Limit for Period</label>
-                        <input type="number" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ empty(Input::old('limit_nbr')) === false ? Input::old('limit_nbr') : $limit['limit_nbr'] }}">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="label_text">Limit Name</label>
-                        <input type="text" class="form-control" id="label_text" name="label_text"
-                               value="{{ empty(Input::old('label_text')) === false ? Input::old('label_text') : $limit['label_text'] }}">
-                    </div>
                 </div>
             </div>
 
@@ -93,7 +80,7 @@
                     <hr>
                     <div class="form-group">
                         <div class="">
-                            <button type="button" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-primary" disabled>Create</button>
                             <button type="button" class="btn btn-default">Close</button>
                         </div>
                     </div>
@@ -103,6 +90,62 @@
     </div>
 
     <script>
+
+        $('#type_select').on('change', function(){
+
+            var selected = $('#type_select').val();
+            console.log(selected);
+
+            if (selected === '') {
+                $('#select_cluster').hide();
+                $('#select_instance').hide();
+                $('#select_user').hide();
+                $('#limit_settings').hide();
+            }
+
+            if (selected === 'cluster') {
+                $('#select_cluster').show();
+                $('#select_instance').hide();
+                $('#select_user').hide();
+                $('#limit_settings').show();
+            }
+
+            if (selected === 'instance') {
+                $('#select_cluster').show();
+                $('#select_instance').show();
+                $('#select_user').hide();
+                $('#limit_settings').show();
+            }
+
+            if (selected === 'user') {
+                $('#select_cluster').show();
+                $('#select_instance').show();
+                $('#select_user').show();
+                $('#limit_settings').show();
+            }
+        });
+
+        $( document ).ready(function() {
+
+            /*
+             var txt = "{{ $config['scheme'] or ''}}";
+
+             if(txt !== ''){
+             $('#app_scheme_text option')
+             .filter(function() { return $.trim( $(this).text() ) == txt.toUpperCase(); })
+             .attr('selected',true);
+
+             $('#web_scheme_text option')
+             .filter(function() { return $.trim( $(this).text() ) == txt.toUpperCase(); })
+             .attr('selected',true);
+             }
+
+*/
+
+
+
+        });
+
         jQuery(function ($) {
             var $_form = $('.policy-form');
             var $_spinner = $('.label-spinner');
@@ -144,13 +187,17 @@
             $_form.on('change', '#instance_id', function (e) {
                 var $_select = $('#service_name');
                 var _instanceId = $('option:selected', this).val().toString();
+                var _type = $('#type_select option:selected').val().toString();
+
+
+
+                $_spinner.addClass('fa-spin').removeClass('hidden');
+/*
 
                 if (!_instanceId || 0 == _instanceId) {
                     $_select.empty().append('<option value="all" selected="selected">All Services</option>').attr('disabled', 'disabled');
                     return false;
                 }
-
-                $_spinner.addClass('fa-spin').removeClass('hidden');
 
                 $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/services').done(function (data) {
                     var _item;
@@ -171,6 +218,11 @@
                 }).always(function () {
                     $_spinner.removeClass('fa-spin').addClass('hidden');
                 });
+*/
+                if (true) {
+
+                }
+
 
                 $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
                     var _item, $_select = $('#user_id');
