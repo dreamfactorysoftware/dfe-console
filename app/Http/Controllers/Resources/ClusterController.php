@@ -12,6 +12,7 @@ use Illuminate\Database\QueryException;
 use Session;
 use Validator;
 
+
 class ClusterController extends ResourceController
 {
     //******************************************************************************
@@ -59,10 +60,69 @@ class ClusterController extends ResourceController
         return $_response;
     }
 
+
+    /**
+     * Returns an array of servers NOT assigned to a cluster
+     *
+     * @param
+     *
+     * @return array
+     */
+    public function getAvailableServers()
+    {
+        $servers = Server::get(['id', 'server_type_id', 'server_id_text']);
+        $cs = ClusterServer::get(['server_id']);
+
+        $servers_all = [];
+        $servers_in_use = [];
+
+        $servers_db = [];
+        $servers_web = [];
+        $servers_app = [];
+
+        foreach ($cs as $server)
+        {
+            $servers_in_use[] = intval($server->server_id);
+        }
+
+        foreach ($servers as $server)
+        {
+            if (!in_array($server->id, $servers_in_use))
+            {
+                if ($server->server_type_id == 1)
+                {
+                    $servers_db[] = array('id' => $server->id, 'name' => $server->server_id_text);
+                }
+
+                if ($server->server_type_id == 2)
+                {
+                    $servers_web[] = array('id' => $server->id, 'name' => $server->server_id_text);
+                }
+
+                if ($server->server_type_id == 3)
+                {
+                    $servers_app[] = array('id' => $server->id, 'name' => $server->server_id_text);
+                }
+
+                $servers_all[] = intval($server->id);
+            }
+        }
+
+        return array('web' => $servers_web, 'db' => $servers_db, 'app' => $servers_app);
+    }
+
+
     /** @inheritdoc */
     public function create(array $viewData = [])
     {
-        return $this->renderView('app.clusters.create');
+        $servers = $this->getAvailableServers();
+
+        return $this->renderView('app.clusters.create',
+            [
+                'db' => $servers['db'],
+                'web' => $servers['web'],
+                'app' => $servers['app']
+            ]);
     }
 
     /**
@@ -72,99 +132,23 @@ class ClusterController extends ResourceController
      */
     public function edit($id)
     {
+        $servers = $this->getAvailableServers();
         $_cluster = $this->_findCluster($id);
-        $_clusterServers = $this->_clusterServers($_cluster->id);
-        $_contexts = config('dfe.ui.button-contexts');
+        $_clusterServers = $this->_clusterServers($id);
 
-        $_ids = [];
-
-        $_rows = ClusterServer::join('server_t', 'id', '=', 'server_id')->get([
-            'server_t.id',
-            'server_t.server_id_text',
-            'server_t.server_type_id',
-            'server_t.config_text',
-            'cluster_server_asgn_t.cluster_id',
-        ]);
-
-        /** @type Server $_server */
-        foreach ($_rows as $_server) {
-            if (ServerTypes::DB == $_server->server_type_id) {
-                if (!property_exists($_server, 'config_text')) {
-                    if (!array_key_exists('multi-assign', json_decode($_server->config_text, true))) {
-                        $_ids[] = intval($_server->id);
-                    } else {
-                        if ($id == $_server->cluster_id) {
-                            $_ids[] = intval($_server->id);
-                        }
-                    }
-                } else {
-                    $_ids[] = intval($_server->id);
-                }
-            } else {
-                $_ids[] = intval($_server->id);
-            }
-        }
-
-        $_data = $_dropdown = $_dropdown_all = [];
+        $_datas = [
+            'web' => null,
+            'db' => null,
+            'app' => null
+        ];
 
         foreach ($_clusterServers as $_type => $_servers) {
-            $_serverType = strtoupper(ServerTypes::nameOf($_type, false));
+            $_serverType = strtolower(ServerTypes::nameOf($_type, false));
 
             foreach ($_servers as $_server) {
-                $_serverId = $_server->id;
-                $_label = <<<HTML
-<div><span class="label label-{$_contexts[$_type]}">{$_serverType}</span></div>
-HTML;
-
-                $_button = <<<HTML
-<button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_" onclick="removeServer('{$_serverId}');" value="delete" style="width: 25px"></button>
-HTML;
-
-                $_data[] = [
-                    $_server->id,
-                    $_button,
-                    $_server->server_id_text,
-                    $_label,
-                ];
-            }
-        }
-
-        $_servers_all = Server::all();
-
-        if (!empty($_servers_all)) {
-            $_index1 = 0;
-            $_index2 = 0;
-
-            foreach ($_servers_all as $_server) {
-                $_serverId = $_server->id;
-                $_serverType = strtoupper(ServerTypes::nameOf($_type = $_server->server_type_id, false));
-
-                $_label = <<<HTML
-<div><span class="label label-{$_contexts[$_type]}">{$_serverType}</span></div>
-HTML;
-
-                $_button = <<<HTML
-<button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" id="cluster_button_" onclick="removeServer('{$_serverId}');" value="delete" style="width: 25px"></button>
-HTML;
-
-                if (!in_array(intval($_server->id), $_ids)) {
-                    $_dropdown[] = [
-                        $_index1++,
-                        intval($_server->id),
-                        $_server->server_id_text,
-                        strtoupper($_serverType),
-                        $_label,
-                        $_button,
-                    ];
-                }
-
-                $_dropdown_all[] = [
-                    $_index2++,
-                    intval($_server->id),
-                    $_server->server_id_text,
-                    strtoupper($_serverType),
-                    $_label,
-                    $_button,
+                $_datas[$_serverType] = [
+                    'id' => $_server->id,
+                    'name' => $_server->server_id_text
                 ];
             }
         }
@@ -173,9 +157,10 @@ HTML;
             [
                 'cluster_id'          => $id,
                 'cluster'             => $_cluster,
-                'servers'             => json_encode($_data),
-                'server_dropdown_all' => json_encode($_dropdown_all),
-                'server_dropdown'     => $_dropdown,
+                'db' => $servers['db'],
+                'web' => $servers['web'],
+                'app' => $servers['app'],
+                'datas' => $_datas
             ]);
     }
 
@@ -190,6 +175,9 @@ HTML;
                     'required',
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
+                'web_server_id' => 'required|string',
+                'db_server_id' => 'required|string',
+                'app_server_id' => 'required|string'
             ]);
 
         if ($_validator->fails()) {
@@ -205,7 +193,16 @@ HTML;
                         $flash_message = 'Name is blank or contain invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'subdomain_text':
-                        $flash_message = 'Host is blank or format is invalid (use subdomain.domain.tld)';
+                        $flash_message = 'Fixed DNS Subdomain is blank or format is invalid (use subdomain.domain.tld)';
+                        break;
+                    case 'web_server_id':
+                        $flash_message = 'Select Web Server';
+                        break;
+                    case 'db_server_id':
+                        $flash_message = 'Select Database Server';
+                        break;
+                    case 'app_server_id':
+                        $flash_message = 'Select App Server';
                         break;
                 }
 
@@ -225,6 +222,24 @@ HTML;
         unset($cluster_data['_server_list']);
 
         try {
+
+            ClusterServer::where('cluster_id', '=', $id)->delete();
+
+            $add = ['server_id' => intval($cluster_data['web_server_id']), 'cluster_id' => intval($id)];
+            ClusterServer::create($add);
+
+            $add = ['server_id' => intval($cluster_data['db_server_id']), 'cluster_id' => intval($id)];
+            ClusterServer::create($add);
+
+            $add = ['server_id' => intval($cluster_data['app_server_id']), 'cluster_id' => intval($id)];
+            ClusterServer::create($add);
+
+            unset($cluster_data['web_server_id']);
+            unset($cluster_data['db_server_id']);
+            unset($cluster_data['app_server_id']);
+
+
+            /*
             $cluster_assigned_servers_array = [];
 
             if (!empty($servers)) {
@@ -251,16 +266,21 @@ HTML;
                 $add = ['server_id' => intval($value), 'cluster_id' => intval($id)];
                 ClusterServer::create($add);
             }
+            */
 
             if (!Cluster::find($id)->update($cluster_data)) {
                 throw new EnterpriseDatabaseException('Unable to update cluster "' . $id . '"');
             }
 
-            $result_text = 'The server "' . $cluster_data['cluster_id_text'] . '" was updated successfully!';
-            $result_status = 'alert-success';
+            \Session::flash('flash_message', 'The server "' . $cluster_data['cluster_id_text'] . '" was updated successfully!');
+            \Session::flash('flash_type', 'alert-success');
 
-            return \Redirect::to($this->makeRedirectUrl('clusters',
-                ['flash_message' => $result_text, 'flash_type' => $result_status]));
+            return \Redirect::to($this->makeRedirectUrl('clusters'));
+
+            //return \Redirect::to($this->makeRedirectUrl('clusters',
+            //['flash_message' => $result_text, 'flash_type' => $result_status]));
+
+
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             \Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
@@ -281,6 +301,9 @@ HTML;
                     "required",
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
+                'web_server_id' => 'required|string',
+                'db_server_id' => 'required|string',
+                'app_server_id' => 'required|string'
             ]);
 
         if ($_validator->fails()) {
@@ -298,6 +321,15 @@ HTML;
                     case 'subdomain_text':
                         $flash_message = 'DNS Subdomain is blank or format is invalid (use subdomain.domain.tld)';
                         break;
+                    case 'web_server_id':
+                        $flash_message = 'Select Web Server';
+                        break;
+                    case 'db_server_id':
+                        $flash_message = 'Select Database Server';
+                        break;
+                    case 'app_server_id':
+                        $flash_message = 'Select App Server';
+                        break;
                 }
 
                 break;
@@ -310,8 +342,19 @@ HTML;
         }
 
         try {
-            $create_cluster = new Cluster;
-            $create_cluster->create($_input);
+            $cluster = new Cluster;
+            $cluster->cluster_id_text = $_input['cluster_id_text'];
+            $cluster->subdomain_text = $_input['subdomain_text'];
+            $cluster->save();
+
+            $add = ['server_id' => intval($_input['web_server_id']), 'cluster_id' => intval($cluster->id)];
+            ClusterServer::create($add);
+
+            $add = ['server_id' => intval($_input['db_server_id']), 'cluster_id' => intval($cluster->id)];
+            ClusterServer::create($add);
+
+            $add = ['server_id' => intval($_input['app_server_id']), 'cluster_id' => intval($cluster->id)];
+            ClusterServer::create($add);
 
             $result_text = 'The cluster "' . $_input['cluster_id_text'] . '" was created successfully!';
             $result_status = 'alert-success';
