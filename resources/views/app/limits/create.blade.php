@@ -28,68 +28,6 @@
                             <option value="user">User</option>
                         </select>
                     </div>
-
-                    <!--div id="type_select_cluster" style="display: none;">
-                        <div class="form-group">
-                            <label for="type_select">Cluster</label>
-                            <select class="form-control" id="type_select" name="type_select">
-                                <option value="">Select cluster</option>
-                                @foreach ($clusters as $_cluster)
-                                    <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $_cluster['id'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div id="type_select_instance" style="display: none;">
-                        <div class="form-group">
-                            <label for="cluster_id">Cluster</label>
-                            <select class="form-control" id="cluster_id" name="cluster_id">
-                                <option value="">Select cluster</option>
-                                @foreach ($clusters as $_cluster)
-                                    <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $_cluster['id'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="instance_id">Instance</label>
-                            <select class="form-control" id="instance_id" name="instance_id">
-                                <option value="">Select instance</option>
-
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div id="type_select_user" style="display: none;">
-                        <div class="form-group">
-                            <label for="cluster_id">Cluster</label>
-                            <select class="form-control" id="cluster_id" name="cluster_id">
-                                <option value="">Select cluster</option>
-                                @foreach ($clusters as $_cluster)
-                                    <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $_cluster['id'] ? 'selected="selected"' : null }}>{{ $_cluster['cluster_id_text'] }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="user_instance_id">Instance</label>
-                            <select class="form-control" id="user_instance_id" name="user_instance_id">
-                                <option value="">Select instance</option>
-
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="user_id">User</label>
-                            <select class="form-control" id="user_id" name="user_id">
-                                <option value="">Select user</option>
-
-                            </select>
-                        </div>
-
-                    </div-->
-
-
                     <div class="form-group" id="select_cluster" style="display: none;">
                         <label for="cluster_id">Cluster</label>
                         <select class="form-control" id="cluster_id" name="cluster_id">
