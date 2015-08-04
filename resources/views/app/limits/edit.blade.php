@@ -87,69 +87,88 @@
 
     <script>
 
+        $(document.body).on('change', 'select', function (event) {
+            console.log(event);
+            console.log(event.currentTarget.id);
 
+            var select = event.currentTarget.id;
+            var _type = $('#type_select').val();
 
+            if (select === 'type_select') {
 
-        $('#type_select').on('change', function(){
+                generateForm(_type);
 
-            var selected = $('#type_select').val();
-            console.log(selected);
+                if ('{{$limit['type']}}' === 'cluster') {
+                    var cluster_id = $('#cluster_id').val();
+                    loadInstances(cluster_id, null);
+                }
 
-            if (selected === '') {
-                $('#select_cluster').hide();
-                $('#select_instance').hide();
-                $('#select_user').hide();
+                if ('{{$limit['type']}}' === 'instance') {
+                    if (_type !== 'user') {
+                        var instance_id = $('#instance_id').val();
+                        loadUsers(instance_id, null);
+                    }
+                }
             }
 
-            if (selected === 'cluster') {
-                $('#select_cluster').show();
-                $('#select_instance').hide();
-                $('#select_user').hide();
+            if (select === 'cluster_id') {
+                if (_type !== 'cluster') {
+                    var cluster_id = $('#cluster_id').val();
+                    loadInstances(cluster_id, null);
+                }
             }
 
-            if (selected === 'instance') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').hide();
+            if (select === 'instance_id') {
+                if (_type !== 'instance') {
+                    var instance_id = $('#instance_id').val();
+                    console.log('here ' + _type);
+                    loadUsers(instance_id, null);
+                }
             }
 
-            if (selected === 'user') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').show();
-            }
+
         });
 
 
-        if ('{{$limit['type']}}' === 'cluster') {
-            $('#select_cluster').show();
-            $('#select_instance').hide();
-            $('#select_user').hide();
-        }
-
-        if ('{{$limit['type']}}' === 'instance') {
-            $('#select_cluster').show();
-            $('#select_instance').show();
-            $('#select_user').hide();
-            loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
-            //$('#instance_id').val('{{$limit['instance_id']}}');
-        }
-
-        if ('{{$limit['type']}}' === 'user') {
-            $('#select_cluster').show();
-            $('#select_instance').show();
-            $('#select_user').show();
-            loadUsers('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}', '{{$limit['instance_id']}}');
-        }
-
-
         $( document ).ready(function() {
+
+            generateForm('{{$limit['type']}}');
+
+            if ('{{$limit['type']}}' === 'instance') {
+                loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
+            }
+
+            if ('{{$limit['type']}}' === 'user') {
+                loadUsers('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}', '{{$limit['instance_id']}}');
+            }
 
             $('#type_select').val('{{$limit['type']}}');
             $('#instance_id').val('{{$limit['instance_id']}}');
             $('#period_name').val('{{$limit['period_name']}}');
 
         });
+
+        function generateForm(type) {
+
+            if (type === 'cluster') {
+                $('#select_cluster').show();
+                $('#select_instance').hide();
+                $('#select_user').hide();
+                console.log('now cluster');
+            }
+
+            if (type === 'instance') {
+                $('#select_cluster').show();
+                $('#select_instance').show();
+                $('#select_user').hide();
+            }
+
+            if (type === 'user') {
+                $('#select_cluster').show();
+                $('#select_instance').show();
+                $('#select_user').show();
+            }
+        }
 
 
         function loadInstances(clusterId, instanceId) {
@@ -167,10 +186,15 @@
             $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                 var _item;
 
+                $_select.empty();
+
                 if (!$.isArray(data)) {
-                    $_select.empty();
                     $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
                 } else {
+                    if (!instanceId) {
+                        $_select.append('<option value="">Select Instance</option>')
+                    }
+
                     $.each(data, function (index, item) {
                         var selected = '';
                         if (instanceId === item.id){
@@ -191,39 +215,38 @@
         }
 
 
-        function loadUsers(clusterId, instanceId) {
+        function loadUsers(instanceId, userId) {
             var $_spinner = $('.label-spinner');
-            var $_select = $('#instance_id');
-            var _clusterId = clusterId;//$('option:selected', this).val().toString();
+            var $_select = $('#user_id');
+            var _instanceId = instanceId;
 
-            if (!_clusterId || 0 == _clusterId) {
-                $_select.empty().append('<option value="0" selected="selected">All Instances</option>').attr('disabled', 'disabled');
+            if (!_instanceId || 0 == _instanceId) {
+                $_select.empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
                 return false;
             }
 
             $_spinner.addClass('fa-spin').removeClass('hidden');
 
-            $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
-                var _item;
+            $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
+                var _item, $_select = $('#user_id');
+
+                $_select.empty();
 
                 if (!$.isArray(data)) {
-                    $_select.empty();
-                    $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
+                    $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
                 } else {
+                    if (!userId) {
+                        $_select.append('<option value="">Select User</option>')
+                    }
                     $.each(data, function (index, item) {
-                        var selected = '';
-                        if (instanceId === item.id){
-                            selected = 'selected';
-                        }
-                        $_select.append('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
-                        console.log('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
+                        $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
                     });
 
                     $_select.removeAttr('disabled').focus();
                 }
             }).fail(function (xhr, status) {
                 $_select.append('<option value="" selected="selected">Please Reload Page</option>').attr('disabled', 'disabled');
-                alert('The current list of instances unavailable.\n\n' + '(' + status + ')');
+                alert('The current list of users is not available.\n\n' + '(' + status + ')');
             }).always(function () {
                 $_spinner.removeClass('fa-spin').addClass('hidden');
             });
