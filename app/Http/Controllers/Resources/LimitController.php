@@ -252,7 +252,7 @@ class LimitController extends ResourceController
                 'id' => $_limit['id'],
                 'cluster_id_text' => $_values['cluster_id_text'],
                 'instance_id_text' => $_values['instance_id_text'],
-                'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
+                //'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
                 //'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
                 'period_name' => $_values['period_name'],
                 'limit_nbr' => $_limit->limit_nbr,
