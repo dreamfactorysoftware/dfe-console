@@ -97,7 +97,7 @@ class ServerController extends ResourceController
 
     public function edit($id)
     {
-        $cluster_names = '';
+        $cluster_names = 'The server is not assigned to a cluster';
         $cluster_servers = $this->_serverClusters($id);
 
         if (count($cluster_servers) > 0)
