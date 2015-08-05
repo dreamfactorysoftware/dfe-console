@@ -325,6 +325,8 @@ class LimitController extends ResourceController
 
         echo json_encode($_limits).'<br>';
 
+        echo 'test = '.json_encode($this->getInstanceUsers('7'));
+
         return;
 
         return \View::make('app.limits',
