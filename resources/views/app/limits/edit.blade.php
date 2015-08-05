@@ -12,9 +12,14 @@
 
             <div class="row">
                 <div class="col-md-6">
+                    @if(Session::has('flash_message'))
+                        <p class="alert {{ Session::get('flash_type') }}">{{ Session::get('flash_message') }}</p>
+                    @endif
                     <div class="form-group">
                         <label for="label_text">Name</label>
-                        <input type="text" class="form-control" id="label_text" name="label_text" value="{{ $limit['label_text'] }}">
+                        <input type="text" class="form-control" id="label_text" name="label_text"
+                        @if (Input::old('label_text')) value="{{ Input::old('label_text') }}" @else value="{{$limit['label_text'] or '' }}" @endif
+                        >
                     </div>
                     <div class="form-group">
                         <label for="type_select">Type</label>
@@ -28,7 +33,7 @@
                         <label for="cluster_id">Cluster</label>
                         <select class="form-control" id="cluster_id" name="cluster_id">
                             @foreach ($clusters as $_cluster)
-                                <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $limit['cluster_id'] ? 'selected="selected"' : null }} @if ($_cluster['id'] == $limit['cluster_id']) selected @endif>{{ $_cluster['cluster_id_text'] }}</option>
+                                <option value="{{ $_cluster['id'] }}" {{ Input::    old('cluster_id') == $limit['cluster_id'] ? 'selected="selected"' : null }} @if ($_cluster['id'] == $limit['cluster_id']) selected @endif>{{ $_cluster['cluster_id_text'] }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -88,8 +93,6 @@
     <script>
 
         $(document.body).on('change', 'select', function (event) {
-            console.log(event);
-            console.log(event.currentTarget.id);
 
             var select = event.currentTarget.id;
             var _type = $('#type_select').val();
@@ -121,7 +124,6 @@
             if (select === 'instance_id') {
                 if (_type !== 'instance') {
                     var instance_id = $('#instance_id').val();
-                    console.log('here ' + _type);
                     loadUsers(instance_id, null);
                 }
             }
@@ -154,7 +156,6 @@
                 $('#select_cluster').show();
                 $('#select_instance').hide();
                 $('#select_user').hide();
-                console.log('now cluster');
             }
 
             if (type === 'instance') {
@@ -201,7 +202,6 @@
                             selected = 'selected';
                         }
                         $_select.append('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
-                        console.log('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
                     });
 
                     $_select.removeAttr('disabled').focus();

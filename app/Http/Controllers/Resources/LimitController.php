@@ -9,9 +9,12 @@ use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Session;
+use Validator;
+
 
 class LimitController extends ResourceController
 {
@@ -80,6 +83,61 @@ class LimitController extends ResourceController
      */
     public function update($id)
     {
+
+        $validator = Validator::make(Input::all(),
+            [
+                'type_select'      => 'required|string',
+                'label_text'       => 'required|string',
+                'cluster_id'       => 'required|string',
+                'instance_id'      => 'sometimes|required',
+                'user_id'          => 'sometimes|required',
+                'period_name'      => 'required|string|min:1',
+                'limit_nbr'        => 'required|string|min:1'
+
+            ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach ($messages as $key => $value) {
+                switch ($key) {
+
+                    case 'type_select':
+                        $flash_message = 'Select Type';
+                        break;
+                    case 'label_text':
+                        $flash_message = 'Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'cluster_id':
+                        $flash_message = 'Select Cluster';
+                        break;
+                    case 'instance_id':
+                        $flash_message = 'Select Instance';
+                        break;
+                    case 'user_id':
+                        $flash_message = 'Select User';
+                        break;
+                    case 'period_name':
+                        $flash_message =
+                            'Select Period';
+                        break;
+                    case 'limit_nbr':
+                        $flash_message =
+                            'Limit must be a number';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/v1/limits/' . $id . '/edit')->withInput();
+        }
 
         $_input = [];
 
@@ -280,8 +338,6 @@ class LimitController extends ResourceController
     {
         $_limit = Limit::find($id);
 
-        //echo $_results;
-
         $_values = [
             'limit_nbr' => $_limit->limit_nbr,
             'user_id' => 0,
@@ -376,6 +432,8 @@ class LimitController extends ResourceController
             'cluster_id_text' => $_values['cluster_id_text'],
             'instance_id' => $_limit['instance_id'],
             'instance_id_text' => $_values['instance_id_text'],
+            'user_id' => $_limit['user_id'],
+            'user_id_text' => $_values['user_id_text'],
             //'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
             //'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
             'period_name' => $_values['period_name'],
@@ -402,6 +460,63 @@ class LimitController extends ResourceController
      */
     public function store()
     {
+
+        $validator = Validator::make(Input::all(),
+            [
+                'label_text'       => 'required|string',
+                'type_select'      => 'required|string',
+                'cluster_id'       => 'required|string',
+                'instance_id'      => 'sometimes|required|string',
+                //'user_id'          => 'sometimes|required',
+                'period_name'      => 'required|string|min:1',
+                'limit_nbr'        => 'required|numeric|min:1'
+
+            ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach ($messages as $key => $value) {
+                switch ($key) {
+
+                    case 'type_select':
+                        $flash_message = 'Select Type';
+                        break;
+                    case 'label_text':
+                        $flash_message = 'Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'cluster_id':
+                        $flash_message = 'Select Cluster';
+                        break;
+                    case 'instance_id':
+                        $flash_message = 'Select Instance';
+                        break;
+                    case 'user_id':
+                        $flash_message = 'Select User';
+                        break;
+                    case 'period_name':
+                        $flash_message =
+                            'Select Period';
+                        break;
+                    case 'limit_nbr':
+                        $flash_message =
+                            'Limit must be a number';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+
+
+            return redirect('/v1/limits/create')->withInput();
+        }
+
         $_input = [];
 
         try {
@@ -439,10 +554,11 @@ class LimitController extends ResourceController
             $limit = [
                 'cluster_id' => $_input['cluster_id'],
                 'instance_id' => $_input['instance_id'],
+                'user_id' => $_input['user_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
-                'is_active' => (isset($_input['is_active'])) ? 1 : 0,
+                'is_active' => ($_input['is_active']) ? 1 : 0,
                 'label_text' => $_input['label_text']
             ];
 
@@ -522,7 +638,6 @@ class LimitController extends ResourceController
         }
 
     }
-
 
 
     /**
