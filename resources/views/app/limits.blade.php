@@ -77,7 +77,7 @@
                                 <td>{{ $value['label_text'] }}</td>
                                 <td>{{ $value['cluster_id_text'] }}</td>
                                 <td>{{ $value['instance_id_text'] }}</td>
-                                <td> </td>
+                                <td>{{ $value['user_name'] }}</td>
                                 <td>{{ $value['limit_nbr'] }} / {{ $value['period_name'] }}</td>
                                 <td class="" style="text-align: center; vertical-align: middle;">@if ($value['is_active'] == 1) <span class="label label-success">Active</span> @else <span class="label label-warning">Not Active</span> @endif</td>
 
