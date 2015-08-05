@@ -165,11 +165,11 @@ class LimitController extends ResourceController
             } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
-                if ($_input['service_name'] == 'all' && $_input['user_id'] == 0) {
+                if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
                     $_limit_key_text = 'instance.default.' . $_time_period;
                 } elseif ($_input['service_name'] != 'all') {
                     $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
-                } elseif ($_input['user_id'] != 0) {
+                } elseif ($_input['user_id'] != '') {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
                 }
             }
@@ -253,21 +253,21 @@ class LimitController extends ResourceController
                                 foreach ($_tmp as $_v) {
                                     $_services[$_v['id']] = $_v['name'];
                                 }
+*/
+                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+                $_users = [];
 
-                                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
-                                $_users = [];
+                foreach($_tmp as $_v) {
+                    $_users[$_v['id']] = $_v['name'];
+                }
 
-                                foreach($_tmp as $_v) {
-                                    $_users[$_v['id']] = $_v['name'];
-                                }
-                */
                 $_values['instance_id_text'] = $_instance->instance_id_text;
 
             }
 
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
             $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
-            $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instnace.default.');
+            $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
 
             if ($defaultPos !== false && $defaultPos == 0) {
                 $_values['notes'] = 'Default for all clusters and instances';
@@ -311,7 +311,7 @@ class LimitController extends ResourceController
                 'cluster_id_text' => $_values['cluster_id_text'],
                 'instance_id_text' => $_values['instance_id_text'],
                 //'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
-                //'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
+                'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
                 'period_name' => $_values['period_name'],
                 'limit_nbr' => $_limit->limit_nbr,
                 'label_text' => $_limit->label_text,
@@ -432,7 +432,7 @@ class LimitController extends ResourceController
             'cluster_id_text' => $_values['cluster_id_text'],
             'instance_id' => $_limit['instance_id'],
             'instance_id_text' => $_values['instance_id_text'],
-            'user_id' => $_limit['user_id'],
+            //'user_id' => $_limit['user_id'],
             //'user_id_text' => $_values['user_id_text'],
             //'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
             //'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
@@ -467,7 +467,7 @@ class LimitController extends ResourceController
                 'type_select'      => 'required|string',
                 'cluster_id'       => 'required|string',
                 'instance_id'      => 'sometimes|required|string',
-                //'user_id'          => 'sometimes|required',
+                'user_id'          => 'sometimes|required|string|min:1',
                 'period_name'      => 'required|string|min:1',
                 'limit_nbr'        => 'required|numeric|min:1'
 
@@ -542,11 +542,11 @@ class LimitController extends ResourceController
             } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
-                if ($_input['service_name'] == 'all' && $_input['user_id'] == 0) {
+                if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
                     $_limit_key_text = 'instance.default.' . $_time_period;
                 } elseif ($_input['service_name'] != 'all') {
                     $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
-                } elseif ($_input['user_id'] != 0) {
+                } elseif ($_input['user_id'] != '') {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
                 }
             }
@@ -554,7 +554,7 @@ class LimitController extends ResourceController
             $limit = [
                 'cluster_id' => $_input['cluster_id'],
                 'instance_id' => $_input['instance_id'],
-                'user_id' => $_input['user_id'],
+                //'user_id' => $_input['user_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
@@ -586,8 +586,6 @@ class LimitController extends ResourceController
      */
     public function destroy($ids)
     {
-        echo $ids;
-
         try {
             $limit_names = [];
 

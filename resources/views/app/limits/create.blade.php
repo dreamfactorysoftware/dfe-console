@@ -47,7 +47,7 @@
                         <label for="user_id">User</label>
                         <select class="form-control" id="user_id" name="user_id">
                             <option value="">Select User</option>
-                            <option value="">All User</option>
+                            <option value="0">All User</option>
                         </select>
                     </div>
                     <div id="limit_settings">
