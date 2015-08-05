@@ -319,7 +319,12 @@ class LimitController extends ResourceController
                 'notes' => $_values['notes']
             ];
 
+            echo $_values['user_id'].'<br>'.$_values['user_id'].'<br>';
         }
+
+        echo json_encode($_limits).'<br>';
+
+        return;
 
         return \View::make('app.limits',
             [
