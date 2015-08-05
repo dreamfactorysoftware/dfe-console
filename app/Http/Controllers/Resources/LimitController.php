@@ -259,6 +259,7 @@ class LimitController extends ResourceController
 
                 foreach($_tmp as $_v) {
                     $_users[$_v['id']] = $_v['name'];
+                    echo 'name = '.$_v['name'].'<br>';
                 }
 
                 $_values['instance_id_text'] = $_instance->instance_id_text;
@@ -319,7 +320,7 @@ class LimitController extends ResourceController
                 'notes' => $_values['notes']
             ];
 
-            echo $_values['user_id'].'<br>'.$_values['user_id'].'<br>';
+            echo $_values['user_id'].'<br>';//.$_values['user_id'].'<br>';
         }
 
         echo json_encode($_limits).'<br>';
