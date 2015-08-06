@@ -249,7 +249,11 @@
                         $_select.append('<option value="">Select User</option>')
                     }
                     $.each(data, function (index, item) {
-                        $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
+                        var selected = '';
+                        if (userId === item.id){
+                            selected = 'selected';
+                        }
+                        $_select.append('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
                     });
 
                     $_select.removeAttr('disabled').focus();
