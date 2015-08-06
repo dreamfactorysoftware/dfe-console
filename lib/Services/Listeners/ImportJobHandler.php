@@ -1,7 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 
@@ -37,11 +36,6 @@ class ImportJobHandler extends BaseListener
         $this->debug('>>> import "' . $_instanceId . '" request received');
 
         try {
-            //  Instance cannot exist
-            if (null !== ($_instance = Instance::byNameOrId($_instanceId)->first())) {
-                throw new \LogicException('Instance "' . $_instanceId . '" already exists.');
-            }
-
             if (false === ($_response = Provision::import($job))) {
                 throw new \RuntimeException('import failure');
             }
