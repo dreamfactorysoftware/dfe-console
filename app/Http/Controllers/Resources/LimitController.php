@@ -397,17 +397,23 @@ class LimitController extends ResourceController
             $_values['notes'] = '';
         }
 
+        $_this_limit_type = null;
 
         foreach (explode('.', $_limit['limit_key_text']) as $_value) {
             $_limit_key = explode(':', $_value);
 
             switch ($_limit_key[0]) {
                 case 'default':
+                    break;
                 case 'cluster':
+                    $_this_limit_type = 'cluster';
+                    break;
                 case 'instance':
+                    $_this_limit_type = 'instance';
                     break;
                 case 'user':
                     $_values['user_id'] = $_limit_key[1];
+                    $_this_limit_type = 'user';
                     break;
                 case 'service':
                     $_values['service_name'] = $_limit_key[1];
@@ -426,7 +432,7 @@ class LimitController extends ResourceController
 
         $_limits = [
             'id' => $_limit['id'],
-            'type' => $_type,
+            'type' => $_this_limit_type,
             'cluster_id' => $_limit['cluster_id'],
             'cluster_id_text' => $_values['cluster_id_text'],
             'instance_id' => $_limit['instance_id'],
