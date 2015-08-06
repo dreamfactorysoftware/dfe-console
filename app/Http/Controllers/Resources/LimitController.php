@@ -253,17 +253,15 @@ class LimitController extends ResourceController
                                 foreach ($_tmp as $_v) {
                                     $_services[$_v['id']] = $_v['name'];
                                 }
-*/
+                */
                 $_tmp = $this->getInstanceUsers($_limit['instance_id']);
                 $_users = [];
 
                 foreach($_tmp as $_v) {
                     $_users[$_v['id']] = $_v['name'];
-                    echo 'name = '.$_v['name'].'<br>';
                 }
 
                 $_values['instance_id_text'] = $_instance->instance_id_text;
-
             }
 
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
@@ -319,15 +317,7 @@ class LimitController extends ResourceController
                 'is_active' => $_limit->is_active,
                 'notes' => $_values['notes']
             ];
-
-            //echo $_values['user_id'].'<br>';//.$_values['user_id'].'<br>';
         }
-
-        //echo json_encode($_limits).'<br>';
-
-        //echo 'test = '.json_encode($this->getInstanceUsers('7'));
-
-        //return;
 
         return \View::make('app.limits',
             [
