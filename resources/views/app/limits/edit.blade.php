@@ -250,10 +250,10 @@
                     }
                     $.each(data, function (index, item) {
                         var selected = '';
-                        if (userId === item.id){
+                        if (userId == item.id){
                             selected = 'selected';
                         }
-                        $_select.append('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
+                        $_select.append('<option value="' + item.id + '" ' + selected + '>[' + item.id + ',' + userId + '] ' + item.name + '</option>');
                     });
 
                     $_select.removeAttr('disabled').focus();
