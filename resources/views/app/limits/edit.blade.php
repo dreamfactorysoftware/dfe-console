@@ -136,17 +136,26 @@
 
             generateForm('{{$limit['type']}}');
 
+            if ('{{$limit['type']}}' === 'cluster') {
+                $('#type_select').val('{{$limit['type']}}');
+            }
+
             if ('{{$limit['type']}}' === 'instance') {
+                $('#type_select').val('{{$limit['type']}}');
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
+                $('#instance_id').val('{{$limit['instance_id']}}');
             }
 
             if ('{{$limit['type']}}' === 'user') {
+                $('#type_select').val('{{$limit['type']}}');
+
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
-                loadUsers('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}', '{{$limit['instance_id']}}');
+                $('#instance_id').val('{{$limit['instance_id']}}');
+                loadUsers('{{$limit['instance_id']}}', '{{$limit['user_id']}}');
             }
 
-            $('#type_select').val('{{$limit['type']}}');
-            $('#instance_id').val('{{$limit['instance_id']}}');
+            //$('#type_select').val('{{$limit['type']}}');
+            //$('#instance_id').val('{{$limit['instance_id']}}');
             $('#period_name').val('{{$limit['period_name']}}');
 
         });
