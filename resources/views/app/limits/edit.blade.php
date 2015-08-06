@@ -141,6 +141,7 @@
             }
 
             if ('{{$limit['type']}}' === 'user') {
+                loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
                 loadUsers('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}', '{{$limit['instance_id']}}');
             }
 
