@@ -9,9 +9,12 @@ use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Session;
+use Validator;
+
 
 class LimitController extends ResourceController
 {
@@ -74,6 +77,143 @@ class LimitController extends ResourceController
     }
 
     /**
+     * @param integer $id
+     *
+     * @return \Illuminate\View\View
+     */
+    public function update($id)
+    {
+
+        $validator = Validator::make(Input::all(),
+            [
+                'type_select'      => 'required|string',
+                'label_text'       => 'required|string',
+                'cluster_id'       => 'required|string',
+                'instance_id'      => 'sometimes|min:1',
+                'user_id'          => 'sometimes|min:1',
+                'period_name'      => 'required|string|min:1',
+                'limit_nbr'        => 'required|string|min:1'
+
+            ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach ($messages as $key => $value) {
+                switch ($key) {
+
+                    case 'type_select':
+                        $flash_message = 'Select Type';
+                        break;
+                    case 'label_text':
+                        $flash_message = 'Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'cluster_id':
+                        $flash_message = 'Select Cluster';
+                        break;
+                    case 'instance_id':
+                        $flash_message = 'Select Instance';
+                        break;
+                    case 'user_id':
+                        $flash_message = 'Select User';
+                        break;
+                    case 'period_name':
+                        $flash_message =
+                            'Select Period';
+                        break;
+                    case 'limit_nbr':
+                        $flash_message =
+                            'Limit must be a number';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/v1/limits/' . $id . '/edit')->withInput();
+        }
+
+        $_input = [];
+
+        try {
+            // Build the limit record
+
+            foreach([
+                        'cluster_id' => 0,
+                        'instance_id' => 0,
+                        'service_name' => 0,
+                        'user_id' => 0,
+                        'period_name' => "Minute",
+                        'limit_nbr' => 0,
+                        'is_active' => 0,
+                        'label_text' => 0,
+                        'type_select' => 0
+                    ] as $_input_key => $_input_default) {
+                $_input[$_input_key] = \Input::get($_input_key, $_input_default);
+            }
+
+            $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
+
+            if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
+                $_limit_key_text = 'default.' . $_time_period;
+            } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
+                $_limit_key_text = 'cluster.default.' . $_time_period;
+            } else {
+                if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
+                    $_limit_key_text = 'instance.default.' . $_time_period;
+                } elseif ($_input['service_name'] != 'all') {
+                    $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
+                } elseif ($_input['user_id'] != '') {
+                    $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
+                }
+            }
+
+
+            if ($_input['type_select'] == 'cluster') {
+                $_input['instance_id'] = 0;
+                $_input['user_id'] = 0;
+            }
+
+            if ($_input['type_select'] == 'instance') {
+                $_input['user_id'] = 0;
+            }
+
+            $limit = [
+                'cluster_id' => $_input['cluster_id'],
+                'instance_id' => $_input['instance_id'],
+                //'user_id' => $_input['user_id'],
+                'limit_key_text' => $_limit_key_text,
+                'period_nbr' => $this->periods[$_input['period_name']],
+                'limit_nbr' => $_input['limit_nbr'],
+                'is_active' => ($_input['is_active']) ? 1 : 0,
+                'label_text' => $_input['label_text']
+            ];
+
+            if (!Limit::find($id)->update($limit)) {
+                throw new EnterpriseDatabaseException('Unable to update limit "' . $id . '"');
+            }
+
+            \Session::flash('flash_message', 'The limit "' . $_input['label_text'] . '" was updated successfully!');
+            \Session::flash('flash_type', 'alert-success');
+
+            return \Redirect::to($this->makeRedirectUrl('limits'));
+
+        } catch (QueryException $e) {
+
+            Session::flash('flash_message', 'Unable to add limit!');
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
+        }
+    }
+
+    /**
      * @return \Illuminate\View\View
      */
     public function index()
@@ -101,33 +241,9 @@ class LimitController extends ResourceController
                 $_values['cluster_id_text'] = $_cluster->cluster_id_text;
             }
 
-            //temp
-            $_services = [];
-            $_users = [];
-/*
-            if ($_limit['instance_id'] != 0) {
-                $_instance = $this->_findInstance($_limit['instance_id']);
-                $_tmp = $this->getInstanceServices($_limit['instance_id']);
-                $_services = [];
-
-                foreach ($_tmp as $_v) {
-                    $_services[$_v['id']] = $_v['name'];
-                }
-
-                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
-                $_users = [];
-
-                foreach($_tmp as $_v) {
-                    $_users[$_v['id']] = $_v['name'];
-                }
-
-                $_values['instance_id_text'] = $_instance->instance_id_text;
-
-            }
-*/
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
             $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
-            $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instnace.default.');
+            $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
 
             if ($defaultPos !== false && $defaultPos == 0) {
                 $_values['notes'] = 'Default for all clusters and instances';
@@ -139,17 +255,23 @@ class LimitController extends ResourceController
                 $_values['notes'] = '';
             }
 
+            $_this_limit_type = null;
 
             foreach (explode('.', $_limit['limit_key_text']) as $_value) {
                 $_limit_key = explode(':', $_value);
 
                 switch ($_limit_key[0]) {
                     case 'default':
+                        break;
                     case 'cluster':
+                        $_this_limit_type = 'cluster';
+                        break;
                     case 'instance':
+                        $_this_limit_type = 'instance';
                         break;
                     case 'user':
                         $_values['user_id'] = $_limit_key[1];
+                        $_this_limit_type = 'user';
                         break;
                     case 'service':
                         $_values['service_name'] = $_limit_key[1];
@@ -166,11 +288,39 @@ class LimitController extends ResourceController
                 }
             }
 
+            //temp
+            $_services = [];
+            $_users = [];
+
+            if ($_limit['instance_id'] != 0) {
+                $_instance = $this->_findInstance($_limit['instance_id']);
+                //$_tmp = $this->getInstanceServices($_limit['instance_id']);
+                $_services = [];
+                /*
+                foreach ($_tmp as $_v) {
+                    $_services[$_v['id']] = $_v['name'];
+                }
+                */
+
+                $_users = [];
+
+                if ($_this_limit_type == 'user') {
+                    $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+
+                    foreach($_tmp as $_v) {
+                        $_users[$_v['id']] = $_v['name'];
+                    }
+                }
+
+                $_values['instance_id_text'] = $_instance->instance_id_text;
+
+            }
+
             $_limits[] = [
                 'id' => $_limit['id'],
                 'cluster_id_text' => $_values['cluster_id_text'],
                 'instance_id_text' => $_values['instance_id_text'],
-                'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
+                //'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
                 'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
                 'period_name' => $_values['period_name'],
                 'limit_nbr' => $_limit->limit_nbr,
@@ -178,7 +328,6 @@ class LimitController extends ResourceController
                 'is_active' => $_limit->is_active,
                 'notes' => $_values['notes']
             ];
-
         }
 
         return \View::make('app.limits',
@@ -197,8 +346,6 @@ class LimitController extends ResourceController
     public function edit($id)
     {
         $_limit = Limit::find($id);
-
-        //echo $_results;
 
         $_values = [
             'limit_nbr' => $_limit->limit_nbr,
@@ -220,52 +367,65 @@ class LimitController extends ResourceController
         //temp
         $_services = [];
         $_users = [];
-        /*
-                    if ($_limit['instance_id'] != 0) {
-                        $_instance = $this->_findInstance($_limit['instance_id']);
-                        $_tmp = $this->getInstanceServices($_limit['instance_id']);
-                        $_services = [];
 
-                        foreach ($_tmp as $_v) {
-                            $_services[$_v['id']] = $_v['name'];
-                        }
+        if ($_limit['instance_id'] != 0) {
+            $_instance = $this->_findInstance($_limit['instance_id']);
+            /*
+            $_tmp = $this->getInstanceServices($_limit['instance_id']);
+            $_services = [];
 
-                        $_tmp = $this->getInstanceUsers($_limit['instance_id']);
-                        $_users = [];
+            foreach ($_tmp as $_v) {
+                $_services[$_v['id']] = $_v['name'];
+            }
+            */
 
-                        foreach($_tmp as $_v) {
-                            $_users[$_v['id']] = $_v['name'];
-                        }
+            $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+            $_users = [];
 
-                        $_values['instance_id_text'] = $_instance->instance_id_text;
+            foreach($_tmp as $_v) {
+                $_users[$_v['id']] = $_v['name'];
+            }
 
-                    }
-        */
+            $_values['instance_id_text'] = $_instance->instance_id_text;
+
+        }
+
         $defaultPos = strpos($_limit['limit_key_text'], 'default.');
         $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
         $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
 
+        $_type = null;
+
         if ($defaultPos !== false && $defaultPos == 0) {
             $_values['notes'] = 'Default for all clusters and instances';
+            $_type = '';
         } elseif ($clusterDefaultPos !== false && $clusterDefaultPos == 0) {
             $_values['notes'] = 'Default for cluster';
+            $_type = 'cluster';
         } elseif ($instanceDefaultPos !== false && $instanceDefaultPos == 0) {
             $_values['notes'] = 'Default for instance';
+            $_type = 'instance';
         } else {
             $_values['notes'] = '';
         }
 
+        $_this_limit_type = null;
 
         foreach (explode('.', $_limit['limit_key_text']) as $_value) {
             $_limit_key = explode(':', $_value);
 
             switch ($_limit_key[0]) {
                 case 'default':
+                    break;
                 case 'cluster':
+                    $_this_limit_type = 'cluster';
+                    break;
                 case 'instance':
+                    $_this_limit_type = 'instance';
                     break;
                 case 'user':
                     $_values['user_id'] = $_limit_key[1];
+                    $_this_limit_type = 'user';
                     break;
                 case 'service':
                     $_values['service_name'] = $_limit_key[1];
@@ -284,9 +444,14 @@ class LimitController extends ResourceController
 
         $_limits = [
             'id' => $_limit['id'],
+            'type' => $_this_limit_type,
+            'cluster_id' => $_limit['cluster_id'],
             'cluster_id_text' => $_values['cluster_id_text'],
+            'instance_id' => $_limit['instance_id'],
             'instance_id_text' => $_values['instance_id_text'],
-            'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
+            'user_id' => $_values['user_id'],
+            //'user_id_text' => $_values['user_id_text'],
+            //'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
             'user_name' => $_values['user_id'] == 0 ?'':$_users[$_values['user_id']],
             'period_name' => $_values['period_name'],
             'limit_nbr' => $_limit->limit_nbr,
@@ -294,34 +459,6 @@ class LimitController extends ResourceController
             'is_active' => $_limit->is_active,
             'notes' => $_values['notes']
         ];
-        
-        /*
-        $cluster_names = '';
-        $cluster_servers = $this->_serverClusters($id);
-
-        if (count($cluster_servers) > 0)
-        {
-            $cluster = $this->_findCluster($cluster_servers[0]->cluster_id);
-            $cluster_names = $cluster->cluster_id_text;
-        }
-
-        $server_types = ServerType::all();
-        $server_data = $this->_findServer($id);
-
-        if (is_array($server_data->config_text)) {
-            $config = $server_data->config_text;
-        } else {
-            $config = json_decode($server_data->config_text, true);
-        }
-
-
-        return View::make('app.servers.edit')->with('server_id', $id)->with('prefix', $this->_prefix)->with('server',
-            $server_data)->with('server_types', $server_types)->with('clusters', $cluster_names)->with('config',
-            $config);
-        */
-
-        //return \View::make('app.limits.edit')->with('prefix', $this->_prefix)->with('limit', $_results);
-
 
         return \View::make('app.limits.edit',
             [
@@ -330,10 +467,7 @@ class LimitController extends ResourceController
                 'clusters'     => Cluster::all(),
                 'limit'        => $_limits
             ]);
-
     }
-
-
 
 
     /**
@@ -343,6 +477,63 @@ class LimitController extends ResourceController
      */
     public function store()
     {
+
+        $validator = Validator::make(Input::all(),
+            [
+                'label_text'       => 'required|string',
+                'type_select'      => 'required|string',
+                'cluster_id'       => 'required|string',
+                'instance_id'      => 'sometimes|string',
+                'user_id'          => 'sometimes|string|min:1',
+                'period_name'      => 'required|string|min:1',
+                'limit_nbr'        => 'required|numeric|min:1'
+
+            ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach ($messages as $key => $value) {
+                switch ($key) {
+
+                    case 'type_select':
+                        $flash_message = 'Select Type';
+                        break;
+                    case 'label_text':
+                        $flash_message = 'Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'cluster_id':
+                        $flash_message = 'Select Cluster';
+                        break;
+                    case 'instance_id':
+                        $flash_message = 'Select Instance';
+                        break;
+                    case 'user_id':
+                        $flash_message = 'Select User';
+                        break;
+                    case 'period_name':
+                        $flash_message =
+                            'Select Period';
+                        break;
+                    case 'limit_nbr':
+                        $flash_message =
+                            'Limit must be a number';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+
+
+            return redirect('/v1/limits/create')->withInput();
+        }
+
         $_input = [];
 
         try {
@@ -368,11 +559,11 @@ class LimitController extends ResourceController
             } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
-                if ($_input['service_name'] == 'all' && $_input['user_id'] == 0) {
+                if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
                     $_limit_key_text = 'instance.default.' . $_time_period;
                 } elseif ($_input['service_name'] != 'all') {
                     $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
-                } elseif ($_input['user_id'] != 0) {
+                } elseif ($_input['user_id'] != '') {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
                 }
             }
@@ -380,19 +571,17 @@ class LimitController extends ResourceController
             $limit = [
                 'cluster_id' => $_input['cluster_id'],
                 'instance_id' => $_input['instance_id'],
+                //'user_id' => $_input['user_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
-                'is_active' => (isset($_input['is_active'])) ? 1 : 0,
+                'is_active' => ($_input['is_active']) ? 1 : 0,
                 'label_text' => $_input['label_text']
             ];
 
             Limit::create($limit);
 
-            Session::flash('flash_message', 'The limit');
-            Session::flash('flash_type', 'alert-danger');
-
-            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'Limit added')->with('flash_type', 'alert-success');
+            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'The limit "'.$_input['label_text'].'" was created successfully!')->with('flash_type', 'alert-success');
 
         } catch (QueryException $e) {
 
@@ -411,8 +600,6 @@ class LimitController extends ResourceController
      */
     public function destroy($ids)
     {
-        echo $ids;
-
         try {
             $limit_names = [];
 
@@ -463,7 +650,6 @@ class LimitController extends ResourceController
         }
 
     }
-
 
 
     /**

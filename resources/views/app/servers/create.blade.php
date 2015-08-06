@@ -26,6 +26,10 @@
                                     <input id="server_id_text" name="server_id_text" class="form-control" placeholder="Enter server name." type="name" value="{{ Input::old('server_id_text') }}">
                                 </div>
                                 <div class="form-group">
+                                    <label>Host</label>
+                                    <input id="host_text" name="host_text" class="form-control" placeholder="Enter host." type="text" value="{{ Input::old('host_text') }}">
+                                </div>
+                                <div class="form-group">
                                     <label>Type</label>
                                     <select class="form-control" id="server_type_select" name="server_type_select">
                                         <option value="">Select type</option>
@@ -33,10 +37,6 @@
                                             <option id="{{$server_type['id']}}" @if (Input::old('server_type_select') == $server_type['type_name_text']) selected="selected" @endif>{{$server_type['type_name_text']}}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Host</label>
-                                    <input id="host_text" name="host_text" class="form-control" placeholder="Enter host." type="text" value="{{ Input::old('host_text') }}">
                                 </div>
                                 <div id="server_type_db" style="display: none;">
                                     <div class="form-group">

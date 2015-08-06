@@ -25,14 +25,6 @@
                                 <input id="server_name_text" name="server_id_text" @if (Input::old('server_id_text')) value="{{ Input::old('server_id_text') }}" @else value="{{ $server->server_id_text }}" @endif class="form-control" placeholder="Enter server name.">
                             </div>
                             <div class="form-group">
-                                <label>Type</label>
-                                    @foreach ($server_types as $server_type)
-                                        @if ($server_type['id'] == $server->server_type_id)
-                                            <input id="server_type_select" name="server_type_select" value="{{$server_type['type_name_text']}}" class="form-control" placeholder="" readonly>
-                                        @endif
-                                    @endforeach
-                            </div>
-                            <div class="form-group">
                                 <label>Cluster</label>
                                 <input class="form-control" value="{{ $clusters }}" type="text" readonly>
                             </div>
@@ -40,7 +32,14 @@
                                 <label>Host</label>
                                 <input id="server_host_text" name="host_text" @if (Input::old('host_text')) value="{{ Input::old('host_text') }}" @else value="{{$server->host_text}}" @endif class="form-control" placeholder="Enter host." type="text">
                             </div>
-
+                            <div class="form-group">
+                                <label>Type</label>
+                                    @foreach ($server_types as $server_type)
+                                        @if ($server_type['id'] == $server->server_type_id)
+                                            <input id="server_type_select" name="server_type_select" value="{{$server_type['type_name_text']}}" class="form-control" placeholder="" readonly>
+                                        @endif
+                                    @endforeach
+                            </div>
                             <div id="server_type_db" style="display: none;">
                                 <div class="form-group">
                                     <label>Port</label>
