@@ -54,13 +54,13 @@ class ProvisionJobHandler
                 throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_result = $_provisioner->provision(new ProvisionServiceRequest($_instance));
-
-            if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
-                \Log::info('provisioning - success, completed in ' . number_format($_result['elapsed'], 4) . 's');
+            if (false === ($_response = $_provisioner->provision(new ProvisionServiceRequest($_instance)))) {
+                throw new ProvisioningException('provisioning error');
             }
 
-            return true;
+            \Log::info('provisioning - success, completed in ' . number_format($_response->getElapsed(), 4) . 's');
+
+            return $_response;
         } catch (\Exception $_ex) {
             \Log::error('provisioning - failure, exception during provisioning: ' . $_ex->getMessage());
 
@@ -72,5 +72,4 @@ class ProvisionJobHandler
 
         return false;
     }
-
 }

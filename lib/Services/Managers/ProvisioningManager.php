@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Managers;
+<?php namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
 use DreamFactory\Enterprise\Common\Contracts\PortableProvisionerAware;
@@ -15,6 +14,7 @@ use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortableProvisionerAware
 {
@@ -227,8 +227,10 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         $_instanceId = $job->getInstanceId();
 
         try {
+            //  Instance cannot exist
             if ($this->_findInstance($_instanceId)) {
-                throw new \RuntimeException('Instance "' . $_instanceId . '" exists and cannot be imported.');
+                throw new \LogicException('Instance "' . $_instanceId . '" already exists.',
+                    Response::HTTP_PRECONDITION_REQUIRED);
             }
         } catch (ModelNotFoundException $_ex) {
             //  This is what we want.
@@ -242,7 +244,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
                     'owner-id'    => array_get($_options, 'owner-id'),
                 ]))
         ) {
-            throw new \RuntimeException('The instance could be be provisioned.');
+            throw new \RuntimeException('The instance could be be provisioned.', Response::HTTP_PRECONDITION_FAILED);
         }
 
         $_instance = $this->_findInstance($_instanceId);
@@ -250,8 +252,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
 
         $_imports = [];
 
+        //  Allow each service to import individually, collecting the output
         foreach ($_services as $_type => $_service) {
-            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance, $job->getTarget()));
+            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance, $job->get()));
         }
 
         return $_imports;

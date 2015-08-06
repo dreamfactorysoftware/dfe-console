@@ -43,19 +43,22 @@ class RegisterJob extends BaseJob
     /**
      * Create a new command instance.
      *
-     * @param int $ownerId   The id of the entity
-     * @param int $ownerType The type of owner (implied from entity type if null)
+     * @param int         $ownerId   The id of the entity
+     * @param int         $ownerType The type of owner (implied from entity type if null)
+     * @param string|null $tag       Optional string to describe your job
      */
-    public function __construct($ownerId, $ownerType)
+    public function __construct($ownerId, $ownerType, $tag = null)
     {
+        parent::__construct($tag);
+
         //  Make sure we have a good types
         $this->ownerInfo = OwnerTypes::getOwner($ownerId, $ownerType);
 
         $this->ownerId = $ownerId;
-        $this->ownerType =
-            (is_numeric($ownerType) && OwnerTypes::contains($ownerType))
-                ? $ownerType
-                : OwnerTypes::defines($ownerType, true);
+        $this->ownerType = (is_numeric($ownerType) && OwnerTypes::contains($ownerType))
+            ? $ownerType
+            : OwnerTypes::defines($ownerType,
+                true);
     }
 
     /**
