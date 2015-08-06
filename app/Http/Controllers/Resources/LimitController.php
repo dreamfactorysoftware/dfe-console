@@ -581,10 +581,7 @@ class LimitController extends ResourceController
 
             Limit::create($limit);
 
-            Session::flash('flash_message', 'The limit '.$_input['label_text'].' was created successfully!');
-            Session::flash('flash_type', 'alert-danger');
-
-            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'The limit '.$_input['label_text'].' was created successfully!')->with('flash_type', 'alert-success');
+            return \Redirect::to('/' . $this->getUiPrefix() . '/limits')->with('flash_message', 'The limit "'.$_input['label_text'].'" was created successfully!')->with('flash_type', 'alert-success');
 
         } catch (QueryException $e) {
 
