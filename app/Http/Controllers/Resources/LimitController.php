@@ -187,7 +187,7 @@ class LimitController extends ResourceController
             $limit = [
                 'cluster_id' => $_input['cluster_id'],
                 'instance_id' => $_input['instance_id'],
-                'user_id' => $_input['user_id'],
+                //'user_id' => $_input['user_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
@@ -241,29 +241,6 @@ class LimitController extends ResourceController
                 $_values['cluster_id_text'] = $_cluster->cluster_id_text;
             }
 
-            //temp
-            $_services = [];
-            $_users = [];
-
-            if ($_limit['instance_id'] != 0) {
-                $_instance = $this->_findInstance($_limit['instance_id']);
-                //$_tmp = $this->getInstanceServices($_limit['instance_id']);
-                $_services = [];
-                /*
-                                foreach ($_tmp as $_v) {
-                                    $_services[$_v['id']] = $_v['name'];
-                                }
-                */
-                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
-                $_users = [];
-
-                foreach($_tmp as $_v) {
-                    $_users[$_v['id']] = $_v['name'];
-                }
-
-                $_values['instance_id_text'] = $_instance->instance_id_text;
-            }
-
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
             $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
             $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
@@ -278,17 +255,23 @@ class LimitController extends ResourceController
                 $_values['notes'] = '';
             }
 
+            $_this_limit_type = null;
 
             foreach (explode('.', $_limit['limit_key_text']) as $_value) {
                 $_limit_key = explode(':', $_value);
 
                 switch ($_limit_key[0]) {
                     case 'default':
+                        break;
                     case 'cluster':
+                        $_this_limit_type = 'cluster';
+                        break;
                     case 'instance':
+                        $_this_limit_type = 'instance';
                         break;
                     case 'user':
                         $_values['user_id'] = $_limit_key[1];
+                        $_this_limit_type = 'user';
                         break;
                     case 'service':
                         $_values['service_name'] = $_limit_key[1];
@@ -303,6 +286,34 @@ class LimitController extends ResourceController
                         // It's time period
                         $_values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
                 }
+            }
+
+            //temp
+            $_services = [];
+            $_users = [];
+
+            if ($_limit['instance_id'] != 0) {
+                $_instance = $this->_findInstance($_limit['instance_id']);
+                //$_tmp = $this->getInstanceServices($_limit['instance_id']);
+                $_services = [];
+                /*
+                foreach ($_tmp as $_v) {
+                    $_services[$_v['id']] = $_v['name'];
+                }
+                */
+
+                $_users = [];
+
+                if ($_this_limit_type == 'user') {
+                    $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+
+                    foreach($_tmp as $_v) {
+                        $_users[$_v['id']] = $_v['name'];
+                    }
+                }
+
+                $_values['instance_id_text'] = $_instance->instance_id_text;
+
             }
 
             $_limits[] = [
@@ -367,6 +378,7 @@ class LimitController extends ResourceController
                 $_services[$_v['id']] = $_v['name'];
             }
             */
+
             $_tmp = $this->getInstanceUsers($_limit['instance_id']);
             $_users = [];
 
@@ -471,8 +483,8 @@ class LimitController extends ResourceController
                 'label_text'       => 'required|string',
                 'type_select'      => 'required|string',
                 'cluster_id'       => 'required|string',
-                'instance_id'      => 'sometimes|required|string',
-                'user_id'          => 'sometimes|required|string|min:1',
+                'instance_id'      => 'sometimes|string',
+                'user_id'          => 'sometimes|string|min:1',
                 'period_name'      => 'required|string|min:1',
                 'limit_nbr'        => 'required|numeric|min:1'
 
