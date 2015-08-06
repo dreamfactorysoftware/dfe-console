@@ -559,7 +559,7 @@ class LimitController extends ResourceController
             $limit = [
                 'cluster_id' => $_input['cluster_id'],
                 'instance_id' => $_input['instance_id'],
-                //'user_id' => $_input['user_id'],
+                'user_id' => $_input['user_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
