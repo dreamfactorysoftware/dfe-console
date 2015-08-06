@@ -89,8 +89,8 @@ class LimitController extends ResourceController
                 'type_select'      => 'required|string',
                 'label_text'       => 'required|string',
                 'cluster_id'       => 'required|string',
-                'instance_id'      => 'sometimes|required',
-                'user_id'          => 'sometimes|required',
+                'instance_id'      => 'sometimes|min:1',
+                'user_id'          => 'sometimes|min:1',
                 'period_name'      => 'required|string|min:1',
                 'limit_nbr'        => 'required|string|min:1'
 
@@ -356,27 +356,28 @@ class LimitController extends ResourceController
         //temp
         $_services = [];
         $_users = [];
-        /*
-                    if ($_limit['instance_id'] != 0) {
-                        $_instance = $this->_findInstance($_limit['instance_id']);
-                        $_tmp = $this->getInstanceServices($_limit['instance_id']);
-                        $_services = [];
 
-                        foreach ($_tmp as $_v) {
-                            $_services[$_v['id']] = $_v['name'];
-                        }
+        if ($_limit['instance_id'] != 0) {
+            $_instance = $this->_findInstance($_limit['instance_id']);
+            /*
+            $_tmp = $this->getInstanceServices($_limit['instance_id']);
+            $_services = [];
 
-                        $_tmp = $this->getInstanceUsers($_limit['instance_id']);
-                        $_users = [];
+            foreach ($_tmp as $_v) {
+                $_services[$_v['id']] = $_v['name'];
+            }
+            */
+            $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+            $_users = [];
 
-                        foreach($_tmp as $_v) {
-                            $_users[$_v['id']] = $_v['name'];
-                        }
+            foreach($_tmp as $_v) {
+                $_users[$_v['id']] = $_v['name'];
+            }
 
-                        $_values['instance_id_text'] = $_instance->instance_id_text;
+            $_values['instance_id_text'] = $_instance->instance_id_text;
 
-                    }
-        */
+        }
+
         $defaultPos = strpos($_limit['limit_key_text'], 'default.');
         $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
         $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
