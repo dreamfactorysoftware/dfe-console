@@ -82,7 +82,7 @@
                     <div class="form-group">
                         <div class="">
                             <button type="submit" class="btn btn-primary">Update</button>
-                            <button type="button" class="btn btn-default">Close</button>
+                            <button type="button" class="btn btn-default" onclick="closeCreate();">Close</button>
                         </div>
                     </div>
                 </div>
@@ -265,6 +265,11 @@
                 $_spinner.removeClass('fa-spin').addClass('hidden');
             });
         }
+
+        function closeCreate(){
+            window.location = '/{{$prefix}}/limits';
+        }
+
 
     </script>
 @stop

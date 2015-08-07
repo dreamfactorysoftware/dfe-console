@@ -83,7 +83,7 @@
                     <div class="form-group">
                         <div class="">
                             <button type="submit" class="btn btn-primary">Create</button>
-                            <button type="button" class="btn btn-default">Close</button>
+                            <button type="button" class="btn btn-default" onclick="closeCreate();">Close</button>
                         </div>
                     </div>
                 </div>
@@ -264,5 +264,9 @@
             });
 */
         });
+
+        function closeCreate(){
+            window.location = '/{{$prefix}}/limits';
+        }
     </script>
 @stop
