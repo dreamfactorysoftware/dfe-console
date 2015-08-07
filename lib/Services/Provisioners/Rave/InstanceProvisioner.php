@@ -88,6 +88,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
         $_output = [];
         $_success = $_result = false;
         $_instance = $request->getInstance();
+        $_original = $_instance->toArray();
 
         //	Update the current instance state
         $_instance->updateState(ProvisionStates::DEPROVISIONING);
@@ -102,7 +103,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
         return ProvisionServiceResponse::make($_success,
             $request,
             $_result,
-            ['instance' => $_success ? $_instance->toArray() : false,],
+            ['instance' => $_success ? $_original : false,],
             $_output);
     }
 

@@ -58,7 +58,7 @@ class ProvisionJobHandler
                 throw new ProvisioningException('provisioning error');
             }
 
-            \Log::info('provisioning - success, completed in ' . number_format($_response->getElapsed(), 4) . 's');
+            \Log::info('provisioning - success, completed in ' . number_format($_response->getElapsedTime(), 4) . 's');
 
             return $_response;
         } catch (\Exception $_ex) {

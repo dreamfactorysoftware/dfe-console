@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Traits\HasTimer;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
 use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
@@ -43,7 +44,7 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation, LockingService, Notifier;
+    use InstanceValidation, LockingService, Notifier, HasTimer;
 
     //******************************************************************************
     //* Members
@@ -70,14 +71,14 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
     /**
      * @param ProvisionServiceRequest|mixed $request
      *
-     * @return mixed
+     * @return ProvisionServiceResponse
      */
     abstract protected function doProvision($request);
 
     /**
      * @param ProvisionServiceRequest|mixed $request
      *
-     * @return mixed
+     * @return ProvisionServiceResponse
      */
     abstract protected function doDeprovision($request);
 
@@ -117,20 +118,14 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
     /** @inheritdoc */
     public function provision($request)
     {
-        $_response = new ProvisionServiceResponse();
-        $_response->setRequest($request)->startTimer();
-        $_elapsed = $_response->setResult($_result = $this->doProvision($request))->stopTimer();
-
-        $this->audit(['elapsed' => $_elapsed, 'result' => $_result]);
-        $request->setResult($_response);
+        $this->startTimer();
+        $_response = $this->doProvision($request);
+        $_response->setElapsedTime($_elapsed = $this->stopTimer());
+        $this->audit(['elapsed' => $_elapsed, 'result' => $_response->getResult()]);
 
         //  Save results...
         $_instance = $request->getInstance();
-        $_data = $_instance->instance_data_text ?: [];
-
-        !isset($_data['_operations']) && ($_data['_operations'] = []);
-        $_data['_operations'][date('c')] = $_result;
-        $_instance->update(['instance_data_text' => $_data]);
+        $_instance->addOperation('provision', $_response->getResult());
 
         //  Send notification
         $_guest = $_instance->guest;
@@ -141,14 +136,15 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
 
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
-            'headTitle'     => $_result ? 'Launch Complete' : 'Launch Failure',
-            'contentHeader' => $_result ? 'Your instance has been launched' : 'Your instance was not launched',
-            'emailBody'     => $_result
+            'headTitle'     => $_response->isSuccess() ? 'Launch Complete' : 'Launch Failure',
+            'contentHeader' => $_response->isSuccess() ? 'Your instance has been launched'
+                : 'Your instance was not launched',
+            'emailBody'     => $_response->isSuccess()
                 ? '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' . 'has been created. You can reach it by going to <a href="//' . $_host . '">' . $_host . '</a> from any browser.</p>'
                 : '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' . 'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
         ];
 
-        $_subject = $_result['success'] ? 'Instance launch successful' : 'Instance launch failure';
+        $_subject = $_response->isSuccess() ? 'Instance launch successful' : 'Instance launch failure';
 
         $this->notifyInstanceOwner($_instance, $_subject, $_data);
 
@@ -156,36 +152,34 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
     }
 
     /** @inheritdoc */
-
     public function deprovision($request)
     {
-        $_timestamp = microtime(true);
-        $_result = $this->doDeprovision($request);
-        $_elapsed = microtime(true) - $_timestamp;
+        $this->startTimer();
+
+        //  Save results...
         $_instance = $request->getInstance();
+        $_instance->addOperation('deprovision');
 
-        if (is_array($_result)) {
-            $_result['elapsed'] = $_elapsed;
-        }
-
-        $this->audit(['elapsed' => $_elapsed, 'result' => $_result]);
-        $request->setResult($_result);
+        $_response = $this->doDeprovision($request);
+        $_response->setElapsedTime($_elapsed = $this->stopTimer());
+        $this->audit(['elapsed' => $_elapsed, 'result' => $_result = $_response->getResult()]);
 
         //  Send notification
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
-            'headTitle'     => $_result ? 'Retirement Complete' : 'Retirement Failure',
-            'contentHeader' => $_result ? 'Your instance has been retired' : 'Your instance is not quite retired',
-            'emailBody'     => $_result
+            'headTitle'     => $_response->isSuccess() ? 'Retirement Complete' : 'Retirement Failure',
+            'contentHeader' => $_response->isSuccess() ? 'Your instance has been retired'
+                : 'Your instance is not quite retired',
+            'emailBody'     => $_response->isSuccess()
                 ? '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> has been retired.  A snapshot may be available in the dashboard, under <strong>Snapshots</strong>.</p>'
                 : '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> retirement was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
         ];
 
-        $_subject = $_result['success'] ? 'Instance retirement successful' : 'Instance retirement failure';
+        $_subject = $_response->isSuccess() ? 'Instance retirement successful' : 'Instance retirement failure';
 
         $this->notifyInstanceOwner($_instance, $_subject, $_data);
 
-        return $_result;
+        return $_response;
     }
 
     /**

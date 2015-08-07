@@ -16,7 +16,7 @@ class ProvisionTest extends \TestCase
      */
     public function testProvision()
     {
-        $_instanceId = 'dfe-test-case';
+        $_instanceId = 'wicker';
 
         $_payload = [
             'instance-id'        => $_instanceId,

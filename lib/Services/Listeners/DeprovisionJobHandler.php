@@ -50,7 +50,7 @@ class DeprovisionJobHandler extends BaseListener
                 throw new ProvisioningException('deprovision failure');
             }
 
-            $this->info('deprovision request complete in ' . number_format($_response->getElapsed(), 4) . 's');
+            $this->info('deprovision request complete in ' . number_format($_response->getElapsedTime(), 4) . 's');
             $this->debug('<<< deprovision "' . $command->getInstanceId() . '" request SUCCESS');
 
             $command->setResult($_response);
