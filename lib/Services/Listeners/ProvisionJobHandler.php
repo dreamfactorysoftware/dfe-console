@@ -47,7 +47,7 @@ class ProvisionJobHandler
         }
 
         try {
-            $_guest = array_get($_options, 'guest-location-nbr', config('provisioning.default-guest-location'));
+            $_guest = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
             $_provisioner = Provision::getProvisioner($_guest);
 
             if (empty($_provisioner)) {

@@ -22,7 +22,7 @@ class ProvisionTest extends \TestCase
             'instance-id'        => $_instanceId,
             'owner-id'           => 22,
             'owner-type'         => OwnerTypes::USER,
-            'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
+            'guest-location' => GuestLocations::DFE_CLUSTER,
         ];
 
         /** @var Instance $_instance */

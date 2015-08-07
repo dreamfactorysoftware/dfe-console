@@ -18,9 +18,9 @@ class ProvisionTest extends \TestCase
         $_instanceId = 'dfe-test-case';
 
         $_payload = [
-            'instance-id'        => $_instanceId,
-            'owner-id'           => 1,
-            'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
+            'instance-id'    => $_instanceId,
+            'owner-id'       => 1,
+            'guest-location' => GuestLocations::DFE_CLUSTER,
         ];
 
         /** @var Instance $_instance */
