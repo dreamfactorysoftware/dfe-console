@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
