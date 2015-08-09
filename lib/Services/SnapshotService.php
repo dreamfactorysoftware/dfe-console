@@ -15,6 +15,7 @@ use DreamFactory\Enterprise\Database\Models\RouteHash;
 use DreamFactory\Enterprise\Database\Models\Snapshot;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
+use DreamFactory\Enterprise\Storage\Facades\Mounter;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use DreamFactory\Library\Utility\Inflector;
 use League\Flysystem\Filesystem;
@@ -288,6 +289,26 @@ HTML
         @unlink($_workFile);
 
         return $workPath ?: new Filesystem(new ZipArchiveAdapter($_workFile));
+    }
+
+    /**
+     * Returns the absolute path to the root of the trash filesystem
+     *
+     * @return string
+     */
+    public function getRootTrashPath()
+    {
+        return config('snapshot.trash-path', EnterpriseDefaults::DEFAULT_TRASH_PATH);
+    }
+
+    /**
+     * Returns the absolute path to the root of the trash filesystem
+     *
+     * @return Filesystem
+     */
+    public function getRootTrashMount()
+    {
+        return Mounter::mount('snapshot-trash');
     }
 
     /**
