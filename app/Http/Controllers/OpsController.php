@@ -19,8 +19,6 @@ use DreamFactory\Enterprise\Partner\AlertPartner;
 use DreamFactory\Enterprise\Partner\Facades\Partner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
-use DreamFactory\Enterprise\Services\Jobs\ExportJob;
-use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -273,14 +271,35 @@ class OpsController extends BaseController implements IsVersioned
     {
         try {
             $_instanceId = $request->input('instance-id');
-            $_instance = $this->_findInstance($_instanceId);
+            $_snapshotId = $request->input('snapshot-id');
 
-            $_job = new ImportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
-            \Queue::push($_job);
+            try {
+                $_instance = $this->_findInstance($_instanceId);
+                $_snapshot = $this->_findSnapshot($_snapshotId);
+            } catch (ModelNotFoundException $_ex) {
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance and/or snapshot not found.');
+            }
 
-            return $this->success($_job->getResult());
+            //  Requester must be instance user
+            if (\Auth::user()->id != $_instance->user->id) {
+                return $this->failure(Response::HTTP_FORBIDDEN);
+            }
+
+            //  Instance user must equal snapshot user
+            if ($_instance->user->id || $_snapshot->user->id) {
+                return $this->failure(Response::HTTP_UNAUTHORIZED);
+            }
+
+            $_result = \Artisan::call('dfe:import',
+                ['instance-id' => $_instanceId, 'snapshot' => $_snapshotId, 'snapshot-id' => true]);
+
+            if (0 != $_result) {
+                return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
+            }
+
+            return $this->success($_result);
         } catch (\Exception $_ex) {
-            $this->error('Queuing error: ' . $_ex->getMessage());
+            $this->error($_ex->getMessage());
 
             return $this->failure($_ex);
         }
@@ -296,15 +315,20 @@ class OpsController extends BaseController implements IsVersioned
     public function postExport(Request $request)
     {
         try {
-            $_instanceId = $request->input('instance-id');
-            $_instance = $this->_findInstance($_instanceId);
+            $_result = \Artisan::call('dfe:export',
+                [
+                    'instance-id' => $request->input('instance-id'),
+                    'owner-id'    => \Auth::user()->id,
+                    'owner-type'  => OwnerTypes::USER,
+                ]);
 
-            $_job = new ExportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
-            \Queue::push($_job);
+            if (0 != $_result) {
+                return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
+            }
 
-            return $this->success($_job->getResult());
+            return $this->success($_result);
         } catch (\Exception $_ex) {
-            $this->error('Queuing error: ' . $_ex->getMessage());
+            $this->error($_ex->getMessage());
 
             return $this->failure($_ex);
         }

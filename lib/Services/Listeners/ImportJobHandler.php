@@ -23,7 +23,7 @@ class ImportJobHandler extends BaseListener
     /**
      * Handle a provisioning request
      *
-     * @param \DreamFactory\Enterprise\Services\Jobs\ExportJob $job
+     * @param \DreamFactory\Enterprise\Services\Jobs\ImportJob $job
      *
      * @return mixed
      *

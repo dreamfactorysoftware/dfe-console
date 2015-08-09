@@ -260,7 +260,10 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
 
         //  Allow each service to import individually, collecting the output
         foreach ($_services as $_type => $_service) {
-            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance, $job->get()));
+            //@todo I think the following may be replaced with "$_exports[$_type] = $_service->import($job);"
+            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance,
+                $job->getTarget() ?: array_get($job->getOptions(), 'target'),
+                $job->getOptions()));
         }
 
         return $_imports;
@@ -287,12 +290,13 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         $_exports = [];
 
         foreach ($_services as $_type => $_service) {
+            //@todo I think the following may be replaced with "$_exports[$_type] = $_service->export($job);"
             $_exports[$_type] = $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
         }
 
         return Snapshot::createFromExports($_instance,
             $_exports,
-            array_get($job->getOptions(), 'target'),
+            $job->getTarget() ?: array_get($job->getOptions(), 'target'),
             array_get($job->getOptions(), 'keep-days'));
     }
 
