@@ -74,18 +74,20 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
 
             //  Now ancillary sub-directories
             foreach (config('provisioning.public-paths', []) as $_path) {
-                !$_filesystem->has($_check = $_instanceRootPath . DIRECTORY_SEPARATOR . $_path) &&
-                $_filesystem->createDir($_check);
+                !$_filesystem->has($_check =
+                    $_instanceRootPath . DIRECTORY_SEPARATOR . trim($_path,
+                        DIRECTORY_SEPARATOR . ' ')) && $_filesystem->createDir($_check);
             }
 
             foreach (config('provisioning.private-paths', []) as $_path) {
-                !$_filesystem->has($_check = $_privatePath . DIRECTORY_SEPARATOR . $_path) &&
-                $_filesystem->createDir($_check);
+                !$_filesystem->has($_check =
+                    $_privatePath . DIRECTORY_SEPARATOR . trim($_path,
+                        DIRECTORY_SEPARATOR . ' ')) && $_filesystem->createDir($_check);
             }
 
             foreach (config('provisioning.owner-private-paths', []) as $_path) {
-                !$_filesystem->has($_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path) &&
-                $_filesystem->createDir($_check);
+                !$_filesystem->has(
+                    $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path) && $_filesystem->createDir($_check);
             }
         } catch (\Exception $_ex) {
             $this->error('! error creating directory structure: ' . $_ex->getMessage());
@@ -161,11 +163,12 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
         $_target = $_tag . '.storage.zip';
 
         //  Create our zip container
-        $_file = static::archiveTree($_mount, $_workPath . DIRECTORY_SEPARATOR . $_target);
+        if (false !== ($_file = static::archiveTree($_mount, $_workPath . DIRECTORY_SEPARATOR . $_target))) {
+            //  Copy it over to the snapshot area
+            $this->writeStream($_instance->getSnapshotMount(), $_workPath . DIRECTORY_SEPARATOR . $_target, $_target);
+        }
 
-        //  Copy it over to the snapshot area
-        $this->writeStream($_instance->getSnapshotMount(), $_workPath . DIRECTORY_SEPARATOR . $_target, $_target);
-        $this->deleteWorkPath($_tag);
+        !$request->get('keep-work', false) && $this->deleteWorkPath($_tag);
 
         //  The name of the file in the snapshot mount
         return $_file;

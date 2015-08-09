@@ -14,7 +14,7 @@ class ImportJobHandler extends BaseListener
     //******************************************************************************
 
     /** @inheritdoc */
-    const LOG_PREFIX = 'dfe.import';
+    const LOG_PREFIX = 'dfe:import';
 
     //******************************************************************************
     //* Methods
@@ -30,22 +30,22 @@ class ImportJobHandler extends BaseListener
      */
     public function handle(ImportJob $job)
     {
-        $_start = microtime(true);
-        $_instanceId = $job->getInstanceId();
+        $this->registerHandler($job);
 
-        $this->debug('>>> import "' . $_instanceId . '" request received');
+        $this->info('import "' . ($_instanceId = $job->getInstanceId()) . '"');
+
+        $this->startTimer();
 
         try {
             if (false === ($_response = Provision::import($job))) {
-                throw new \RuntimeException('import failure');
+                throw new \RuntimeException('Unknown import failure');
             }
-
-            $this->info('import complete in ' . number_format(microtime(true) - $_start, 4) . 's');
-            $this->debug('<<< import "' . $_instanceId . '" request SUCCESS');
-        } catch (\Exception $_ex) {
-            $this->error('<<< import "' . $_instanceId . '" request FAILURE: ' . $_ex->getMessage());
-            $_response = false;
+        } catch (\RuntimeException $_ex) {
+            $this->error('[ERROR] ' . $_ex->getMessage());
+            !isset($_response) && $_response = false;
         }
+
+        $this->info('instance import complete in ' . number_format($this->getElapsedTime(), 4) . 's');
 
         return $_response;
     }

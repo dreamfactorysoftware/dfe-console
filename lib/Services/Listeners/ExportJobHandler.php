@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Facades\Snapshot;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 
 /**
@@ -26,27 +25,28 @@ class ExportJobHandler extends BaseListener
      *
      * @param \DreamFactory\Enterprise\Services\Jobs\ExportJob $job
      *
-     * @return mixed
+     * @return array Array version of the snapshot manifest
      *
      */
     public function handle(ExportJob $job)
     {
-        $_start = microtime(true);
-        $_instanceId = $job->getInstanceId();
+        $this->registerHandler($job);
 
-        $this->debug('>>> export "' . $_instanceId . '" request received');
+        $this->info('export "' . ($_instanceId = $job->getInstanceId()) . '"');
+
+        $this->startTimer();
 
         try {
-            $job->setResult($_result = Snapshot::createFromExports($job->getInstance(), Provision::export($job)));
-            $this->debug('<<< export "' . $_instanceId . '" request SUCCESS');
-        } catch (\Exception $_ex) {
-            $this->error('<<< export "' . $_instanceId . '" request FAILURE: ' . $_ex->getMessage());
-            $_result = false;
+            if (false === ($_response = Provision::export($job))) {
+                throw new \RuntimeException('Unknown import failure');
+            }
+        } catch (\RuntimeException $_ex) {
+            $this->error('[ERROR] ' . $_ex->getMessage());
+            !isset($_response) && $_response = false;
         }
 
-        $_elapsed = microtime(true) - $_start;
-        $this->debug('export complete in ' . number_format($_elapsed, 4) . 's');
+        $this->info('request complete in ' . number_format($this->getElapsedTime(), 4) . 's');
 
-        return $_result;
+        return $_response;
     }
 }

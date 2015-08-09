@@ -9,6 +9,7 @@ use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Facades\Snapshot;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
@@ -217,37 +218,42 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
+     * Restore portable snapshot data to an instance. If instance does not exist, it is created.
+     *
      * @param ImportJob $job
      *
-     * @return array
+     * @return array an array keyed by provisioner with the results up each ones import
      */
     public function import(ImportJob $job)
     {
         //  Validate instance
         $_instanceId = $job->getInstanceId();
 
-        try {
-            //  Instance cannot exist
-            if ($this->_findInstance($_instanceId)) {
-                throw new \LogicException('Instance "' . $_instanceId . '" already exists.',
-                    Response::HTTP_PRECONDITION_REQUIRED);
-            }
-        } catch (ModelNotFoundException $_ex) {
-            //  This is what we want.
-        }
-
+        //  No instance, let's make one...
         $_options = $job->getOptions();
 
-        if (0 != \Artisan::call('dfe:provision',
-                array_merge([
-                    'instance-id' => $_instanceId,
-                    'owner-id'    => array_get($_options, 'owner-id'),
-                ]))
-        ) {
-            throw new \RuntimeException('The instance could be be provisioned.', Response::HTTP_PRECONDITION_FAILED);
+        try {
+            //  Find instance if it exists...
+            $_instance = $this->_findInstance($_instanceId);
+        } catch (ModelNotFoundException $_ex) {
+            try {
+                $_result = \Artisan::call('dfe:provision',
+                    array_merge($_options,
+                        [
+                            'instance-id' => $_instanceId,
+                        ]));
+
+                if (0 == $_result) {
+                    $_instance = $this->_findInstance($_instanceId);
+                } else {
+                    throw new ModelNotFoundException();
+                }
+            } catch (ModelNotFoundException $_ex) {
+                throw new \RuntimeException('The instance could be be provisioned.',
+                    Response::HTTP_PRECONDITION_FAILED);
+            }
         }
 
-        $_instance = $this->_findInstance($_instanceId);
         $_services = $this->getPortableServices(array_get($_options, 'guest-location'));
 
         $_imports = [];
@@ -267,16 +273,27 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function export(ExportJob $job)
     {
-        $_instance = $this->_findInstance($job->getInstanceId());
+        try {
+            $_instance = $this->_findInstance($job->getInstanceId());
+        } catch (ModelNotFoundException $_ex) {
+            throw new \RuntimeException('Instance "' . $job->getInstanceId() . '" not found.',
+                Response::HTTP_NOT_FOUND);
+        }
+
+        //  Get the portable services of this instance provisioner
         $_services = $this->getPortableServices($_instance->guest_location_nbr);
-        $_exports = [];
 
         //  Allow each service to export individually, collecting the output
+        $_exports = [];
+
         foreach ($_services as $_type => $_service) {
             $_exports[$_type] = $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
         }
 
-        return $_exports;
+        return Snapshot::createFromExports($_instance,
+            $_exports,
+            array_get($job->getOptions(), 'target'),
+            array_get($job->getOptions(), 'keep-days'));
     }
 
     /**
