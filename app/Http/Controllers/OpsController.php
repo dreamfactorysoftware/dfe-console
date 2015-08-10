@@ -280,11 +280,6 @@ class OpsController extends BaseController implements IsVersioned
                 return $this->failure(Response::HTTP_NOT_FOUND, 'Instance and/or snapshot not found.');
             }
 
-            //  Requester must be instance user
-            if (\Auth::user()->id != $_instance->user->id) {
-                return $this->failure(Response::HTTP_FORBIDDEN);
-            }
-
             //  Instance user must equal snapshot user
             if ($_instance->user->id || $_snapshot->user->id) {
                 return $this->failure(Response::HTTP_UNAUTHORIZED);
@@ -315,12 +310,7 @@ class OpsController extends BaseController implements IsVersioned
     public function postExport(Request $request)
     {
         try {
-            $_result = \Artisan::call('dfe:export',
-                [
-                    'instance-id' => $request->input('instance-id'),
-                    'owner-id'    => \Auth::user()->id,
-                    'owner-type'  => OwnerTypes::USER,
-                ]);
+            $_result = \Artisan::call('dfe:export', $request->input());
 
             if (0 != $_result) {
                 return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);

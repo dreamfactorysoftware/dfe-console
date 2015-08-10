@@ -48,6 +48,10 @@ class AuthenticateOpsClient extends BaseMiddleware
         $_token = $request->input('access-token');
         $_clientId = $request->input('client-id');
 
+        //  Remove these arguments
+        $request->offsetUnset('client-id');
+        $request->offsetUnset('access-token');
+
         //  Just plain ol' bad...
         if (empty($_token) || empty($_clientId)) {
             $this->error('bad request: no token or client-id present');
@@ -78,7 +82,7 @@ class AuthenticateOpsClient extends BaseMiddleware
             return ErrorPacket::create(Response::HTTP_UNAUTHORIZED);
         }
 
-        $request->setUserResolver(function () use ($_owner){
+        $request->setUserResolver(function () use ($_owner) {
             return $_owner;
         });
 
