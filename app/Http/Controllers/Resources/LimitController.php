@@ -11,6 +11,8 @@ use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Route;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\HttpFoundation\Request;
 use Session;
 use Validator;
@@ -53,11 +55,11 @@ class LimitController extends ResourceController
         parent::__construct();
 
         $this->periods = [
-            'Minute' => DateTimeIntervals::SECONDS_PER_MINUTE,
-            'Hour'   => DateTimeIntervals::SECONDS_PER_HOUR,
-            'Day'    => DateTimeIntervals::SECONDS_PER_DAY,
-            '7 Days'   => DateTimeIntervals::SECONDS_PER_DAY * 7,
-            '30 Days'  => DateTimeIntervals::SECONDS_PER_DAY * 30,
+            'Minute' => 1,
+            'Hour'   => 60,
+            'Day'    => 60 * 24,
+            '7 Days'   => 60 * 24 * 7,
+            '30 Days'  => 60 * 24 * 30,
         ];
     }
 
@@ -236,9 +238,14 @@ class LimitController extends ResourceController
                 'instance_id_text' => ''
             ];
 
-            if ($_limit['cluster_id'] != 0) {
-                $_cluster = $this->_findCluster($_limit['cluster_id']);
-                $_values['cluster_id_text'] = $_cluster->cluster_id_text;
+            if (!empty($_limit['cluster_id'])) {
+                try {
+                    $_cluster = $this->_findCluster($_limit['cluster_id']);
+                    $_values['cluster_id_text'] = $_cluster->cluster_id_text;
+                } catch (Exception $e) {
+                    // Invalid cluster id, skip
+                    continue;
+                }
             }
 
             $defaultPos = strpos($_limit['limit_key_text'], 'default.');
@@ -292,27 +299,34 @@ class LimitController extends ResourceController
             $_services = [];
             $_users = [];
 
-            if ($_limit['instance_id'] != 0) {
-                $_instance = $this->_findInstance($_limit['instance_id']);
-                //$_tmp = $this->getInstanceServices($_limit['instance_id']);
-                $_services = [];
-                /*
-                foreach ($_tmp as $_v) {
-                    $_services[$_v['id']] = $_v['name'];
-                }
-                */
+            if (!empty($_limit['instance_id'])) {
 
-                $_users = [];
-
-                if ($_this_limit_type == 'user') {
-                    $_tmp = $this->getInstanceUsers($_limit['instance_id']);
-
-                    foreach($_tmp as $_v) {
-                        $_users[$_v['id']] = $_v['name'];
+                try {
+                    $_instance = $this->_findInstance($_limit['instance_id']);
+                    //$_tmp = $this->getInstanceServices($_limit['instance_id']);
+                    $_services = [];
+                    /*
+                    foreach ($_tmp as $_v) {
+                        $_services[$_v['id']] = $_v['name'];
                     }
-                }
+                    */
 
-                $_values['instance_id_text'] = $_instance->instance_id_text;
+                    $_users = [];
+
+                    if ($_this_limit_type == 'user') {
+                        $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+
+                        foreach($_tmp as $_v) {
+                            $_users[$_v['id']] = $_v['name'];
+                        }
+                    }
+
+                    $_values['instance_id_text'] = $_instance->instance_id_text;
+
+                } catch (Exception $e) {
+                    // Invalid instance, skip it
+                    continue;
+                }
 
             }
 
