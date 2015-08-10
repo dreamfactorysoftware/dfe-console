@@ -7,6 +7,7 @@
         @include('layouts.partials.context-header',['resource'=>'limits','title' => 'New Limit'])
 
         <form class="policy-form" method="POST" action="/{{$prefix}}/limits">
+            <input name="_method" type="hidden" value="POST">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
             <div class="row">
@@ -15,8 +16,8 @@
                         <p class="alert {{ Session::get('flash_type') }}">{{ Session::get('flash_message') }}</p>
                     @endif
                     <div class="form-group">
-                        <label for="limit_key_text">Name</label>
-                        <input type="text" class="form-control" id="limit_key_text" name="limit_key_text" value="{{ Input::old('limit_key_text') }}">
+                        <label for="label_text">Name</label>
+                        <input type="text" class="form-control" id="label_text" name="label_text" value="{{ Input::old('label_text') }}">
                     </div>
                     <div class="form-group">
                         <label for="type_select">Type</label>
@@ -46,19 +47,19 @@
                         <label for="user_id">User</label>
                         <select class="form-control" id="user_id" name="user_id">
                             <option value="">Select User</option>
-                            <option value="">All Users</option>
+                            <option value="0">All User</option>
                         </select>
                     </div>
                     <div id="limit_settings">
                         <div class="form-group" id="select_period">
-                            <label for="period_nbr">Period</label>
-                            <select class="form-control" id="period_nbr" name="period_nbr">
+                            <label for="period_name">Period</label>
+                            <select class="form-control" id="period_name" name="period_name">
                                 <option value="">Select Period</option>
-                                <option value="Minute" {{ Input::old('period_nbr') == 'Minute' ? 'selected' : '' }}>Minute</option>
-                                <option value="Hour" {{ Input::old('period_nbr') == 'Hour' ? 'selected' : '' }}>Hour</option>
-                                <option value="Day" {{ Input::old('period_nbr') == 'Day' ? 'selected' : '' }}>Day</option>
-                                <option value="7 Days" {{ Input::old('period_nbr') == '7 Days' ? 'selected' : '' }}>7 Days</option>
-                                <option value="30 Days" {{ Input::old('period_nbr') == '30 Days' ? 'selected' : '' }}>30 Days</option>
+                                <option value="Minute" {{ Input::old('period_name') == 'Minute' ? 'selected' : '' }}>Minute</option>
+                                <option value="Hour" {{ Input::old('period_name') == 'Hour' ? 'selected' : '' }}>Hour</option>
+                                <option value="Day" {{ Input::old('period_name') == 'Day' ? 'selected' : '' }}>Day</option>
+                                <option value="7 Days" {{ Input::old('period_name') == '7 Days' ? 'selected' : '' }}>7 Days</option>
+                                <option value="30 Days" {{ Input::old('period_name') == '30 Days' ? 'selected' : '' }}>30 Days</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -66,8 +67,8 @@
                             <input type="text" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ Input::old('limit_nbr') }}">
                         </div>
                         <div>
-                            <label for="active_ind">Active</label>&nbsp;&nbsp;
-                            <input type="checkbox" id="active_ind" name="active_ind" {{ Input::old('active_ind', false) ? 'checked' : null }}>
+                            <label for="is_active">Active</label>&nbsp;&nbsp;
+                            <input type="checkbox" id="is_active" name="is_active">
                         </div>
                     </div>
                 </div>
@@ -82,6 +83,7 @@
                     <div class="form-group">
                         <div class="">
                             <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-default">Close</button>
                         </div>
                     </div>
                 </div>
@@ -90,8 +92,20 @@
     </div>
 
     <script>
+
+        $( document ).ready(function() {
+
+            var _type = '{{ Input::old('type_select') }}';
+
+            generateForm(_type);
+
+
+
+        });
+
+
         function generateForm(type) {
-            //@todo this is NOT an example of good programming
+
             if (type === '') {
                 $('#select_cluster').hide();
                 $('#select_instance').hide();
@@ -117,13 +131,40 @@
             }
         }
 
+
+        $('#type_select').on('change', function(){
+
+            var selected = $('#type_select').val();
+
+            if (selected === '') {
+                $('#select_cluster').hide();
+                $('#select_instance').hide();
+                $('#select_user').hide();
+            }
+
+            if (selected === 'cluster') {
+                $('#select_cluster').show();
+                $('#select_instance').hide();
+                $('#select_user').hide();
+            }
+
+            if (selected === 'instance') {
+                $('#select_cluster').show();
+                $('#select_instance').show();
+                $('#select_user').hide();
+            }
+
+            if (selected === 'user') {
+                $('#select_cluster').show();
+                $('#select_instance').show();
+                $('#select_user').show();
+            }
+
+        });
+
         jQuery(function ($) {
             var $_form = $('.policy-form');
             var $_spinner = $('.label-spinner');
-
-            $('#type_select').on('change', function(){
-                generateForm($(this).val());
-            });
 
             //  Cluster selection
             $_form.on('change', '#cluster_id', function (e) {
@@ -138,6 +179,8 @@
                 $_spinner.addClass('fa-spin').removeClass('hidden');
 
                 $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
+                    var _item;
+
                     if (!$.isArray(data)) {
                         $_select.empty();
                         $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
@@ -160,10 +203,11 @@
             $_form.on('change', '#instance_id', function (e) {
                 var $_select = $('#service_name');
                 var _instanceId = $('option:selected', this).val().toString();
-                var _type = $('#type_select').find('option:selected').val().toString();
+                var _type = $('#type_select option:selected').val().toString();
 
                 $_spinner.addClass('fa-spin').removeClass('hidden');
 /*
+
                 if (!_instanceId || 0 == _instanceId) {
                     $_select.empty().append('<option value="all" selected="selected">All Services</option>').attr('disabled', 'disabled');
                     return false;
@@ -194,7 +238,7 @@
                     $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
                         //if()
 
-                        var $_select = $('#user_id');
+                        var _item, $_select = $('#user_id');
 
                         if (!$.isArray(data)) {
                             $_select.empty();
@@ -219,8 +263,6 @@
                 $_form.submit();
             });
 */
-
-            generateForm('{{ Input::old('type_select') }}');
         });
     </script>
 @stop

@@ -17,7 +17,8 @@ class CreateClusterLimitTable extends Migration
             \Schema::create('limit_t',
                 function (Blueprint $table) {
                     $table->bigIncrements('id');
-                    $table->string('limit_key_text', 64);
+                    $table->string('label_text', 64);
+                    $table->string('limit_key_text', 200)->index();
                     $table->integer('cluster_id')->index();
                     $table->integer('instance_id')->index();
                     $table->integer('period_nbr')->nullable();;
