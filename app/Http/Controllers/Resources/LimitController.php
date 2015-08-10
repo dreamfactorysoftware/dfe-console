@@ -211,7 +211,7 @@ class LimitController extends ResourceController
 
             Session::flash('flash_message', 'Unable to add limit!');
             Session::flash('flash_type', 'alert-danger');
-
+            logger('Error editing limit: ' . $e->getMessage());
             return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
         }
     }
@@ -602,7 +602,7 @@ class LimitController extends ResourceController
 
             Session::flash('flash_message', 'Unable to add limit!');
             Session::flash('flash_type', 'alert-danger');
-
+            logger('Error adding limit: ' . $e->getMessage());
             return redirect('/' . $this->getUiPrefix() . '/limits/create')->withInput();
         }
     }
@@ -660,7 +660,7 @@ class LimitController extends ResourceController
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
-            logger('Error adding limit: ' . $e->getMessage());
+            logger('Error deleting limit: ' . $e->getMessage());
             return redirect('/v1/limits')->withInput();
         }
 
