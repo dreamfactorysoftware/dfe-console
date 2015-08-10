@@ -95,7 +95,7 @@ class LimitController extends ResourceController
                 'instance_id'      => 'sometimes|min:1',
                 'user_id'          => 'sometimes|min:1',
                 'period_name'      => 'required|string|min:1',
-                'limit_nbr'        => 'required|string|min:1'
+                'limit_nbr'        => 'required|numeric|min:1'
 
             ]);
 
@@ -129,7 +129,7 @@ class LimitController extends ResourceController
                         break;
                     case 'limit_nbr':
                         $flash_message =
-                            'Limit must be a number';
+                            'Limit must be a number and larger than 0';
                         break;
                 }
 
@@ -535,7 +535,7 @@ class LimitController extends ResourceController
                         break;
                     case 'limit_nbr':
                         $flash_message =
-                            'Limit must be a number';
+                            'Limit must be a number and larger than 0';
                         break;
                 }
 
