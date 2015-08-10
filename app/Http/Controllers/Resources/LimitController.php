@@ -163,9 +163,9 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
+            if ( $_input['cluster_id'] === null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
+            } elseif ($_input['cluster_id'] !== null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
                 if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
@@ -179,12 +179,12 @@ class LimitController extends ResourceController
 
 
             if ($_input['type_select'] == 'cluster') {
-                $_input['instance_id'] = 0;
-                $_input['user_id'] = 0;
+                $_input['instance_id'] = null;
+                $_input['user_id'] = null;
             }
 
             if ($_input['type_select'] == 'instance') {
-                $_input['user_id'] = 0;
+                $_input['user_id'] = null;
             }
 
             $limit = [
@@ -374,7 +374,7 @@ class LimitController extends ResourceController
             'instance_id_text' => ''
         ];
 
-        if ($_limit['cluster_id'] != 0) {
+        if ($_limit['cluster_id'] !== null) {
             $_cluster = $this->_findCluster($_limit['cluster_id']);
             $_values['cluster_id_text'] = $_cluster->cluster_id_text;
         }
@@ -383,7 +383,7 @@ class LimitController extends ResourceController
         $_services = [];
         $_users = [];
 
-        if ($_limit['instance_id'] != 0) {
+        if ($_limit['instance_id'] !== null) {
             $_instance = $this->_findInstance($_limit['instance_id']);
             /*
             $_tmp = $this->getInstanceServices($_limit['instance_id']);
@@ -569,9 +569,9 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
+            if ( $_input['cluster_id'] === null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
+            } elseif ($_input['cluster_id'] !== null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
                 if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
