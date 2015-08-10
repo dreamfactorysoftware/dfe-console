@@ -88,10 +88,16 @@
                                         <input name="_method" type="hidden" value="DELETE">
                                         <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
 
-                                        @if( Auth::user()->id != $value->id )
+                                        @if( Auth::user()->id != $value->id)
                                             <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}" id="user_checkbox_{{ $value->id }}" name="{{ $value->first_name_text }} {{ $value->last_name_text }}">&nbsp;&nbsp;
                                             <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')" value="delete" style="width: 25px" ></button>
+                                        @else
+                                            @if($value->admin == 0)
+                                                <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}" id="user_checkbox_{{ $value->id }}" name="{{ $value->first_name_text }} {{ $value->last_name_text }}">&nbsp;&nbsp;
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')" value="delete" style="width: 25px" ></button>
+                                            @endif
                                         @endif
+
                                     </form>
                                 </td>
                                 <td>{{ $value->first_name_text }} {{ $value->last_name_text }}</td>
