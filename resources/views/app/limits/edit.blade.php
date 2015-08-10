@@ -54,11 +54,9 @@
                         <div class="form-group" id="select_period">
                             <label for="period_name">Period</label>
                             <select class="form-control" id="period_name" name="period_name">
-                                <option value="Minute">Minute</option>
-                                <option value="Hour">Hour</option>
-                                <option value="Day">Day</option>
-                                <option value="7 Days">7 Days</option>
-                                <option value="30 Days">30 Days</option>
+                                @foreach ($limitPeriods as $_periodName => $_period)
+                                    <option value="{{ $_periodName }}" {{ Input::old('period_name') == $_periodName || $limit['period_name'] == $_periodName ? 'selected="selected"' : null }}>{{ $_periodName }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="form-group">
