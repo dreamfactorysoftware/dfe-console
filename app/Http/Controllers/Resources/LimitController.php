@@ -660,7 +660,7 @@ class LimitController extends ResourceController
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
-
+            logger('Error adding limit: ' . $e->getMessage());
             return redirect('/v1/limits')->withInput();
         }
 
