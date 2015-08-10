@@ -336,7 +336,7 @@ CREATE TABLE `limit_t` (
   `instance_id` int(11) DEFAULT NULL,
   `limit_nbr` int(11) DEFAULT NULL,
   `period_nbr` int(11) DEFAULT NULL,
-  `active_ind` tinyint(1) NOT NULL DEFAULT '0',
+  `active_ind` tinyint(1) NOT NULL DEFAULT '1',
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
