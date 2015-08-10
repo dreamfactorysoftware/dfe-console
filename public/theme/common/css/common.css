@@ -1,3 +1,9 @@
+#home-link-container {
+    border: none !important;
+    width:  100%;
+    height: 100%;
+}
+
 .dfe-topnav-logo-height {
     max-height: 48px;
 }

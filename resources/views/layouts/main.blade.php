@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ "DreamFactory Enterprise&trade;" }} | @yield('page-title','Welcome!')</title>
-    <!--link href="/static/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet"-->
+    {{--<link href="/theme/standard/css/bootstrap.min.css" rel="stylesheet">--}}
+    <link href="/static/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/font-awesome-4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/bootstrap-datepicker-1.4.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
-    <link href="/theme/standard/css/bootstrap.min.css" rel="stylesheet">
     <link href="/theme/common/css/common.css" rel="stylesheet">
     <link rel="apple-touch-icon" href="/public/img/apple-touch-icon.png">
 
