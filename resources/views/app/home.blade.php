@@ -1,10 +1,10 @@
+@extends('layouts.main')
+@include('layouts.partials.topmenu',['pageName' => 'Home', 'prefix' => $prefix])
 <?php
-!isset($links) && $links =[];
+!isset($links) && $links = [];
 $_uri = URL::getRequest()->getRequestUri();
 $_active = ' active';
 ?>
-@extends('layouts.main')
-@include('layouts.partials.topmenu',['pageName' => 'Home', 'prefix' => $prefix])
 @section('content')
     <div class="col-xs-1 col-sm-2 col-md-2 df-sidebar-nav">
         <ul class="nav nav-pills nav-stacked visible-md visible-lg visible-sm">
