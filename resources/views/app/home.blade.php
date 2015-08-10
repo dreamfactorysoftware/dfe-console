@@ -1,12 +1,12 @@
 @extends('layouts.main')
-@include('layouts.partials.topmenu',['pageName' => 'Home', 'prefix' => $prefix])
 <?php
 !isset($links) && $links = [];
 $_uri = URL::getRequest()->getRequestUri();
 $_active = ' active';
 ?>
+@include('layouts.partials.topmenu',['pageName' => 'Home', 'prefix' => $prefix])
 @section('content')
-    <div class="col-xs-1 col-sm-2 col-md-2 df-sidebar-nav">
+    <div class="col-xs-1 col-sm-2 col-md-2">
         <ul class="nav nav-pills nav-stacked visible-md visible-lg visible-sm">
             @foreach( $links as $_link)
                 <li role="presentation" class="home-link @if($_uri == $_link['href']){!! $_active !!}@endif"><a href="{{ $_link['href'] }}">{{ $_link['name'] }}</a></li>
@@ -15,9 +15,7 @@ $_active = ' active';
     </div>
 
     <div class="col-xs-11 col-sm-10 col-md-10">
-        <div style="height:100%">
-            <iframe id="home-link-container" seamless="seamless"></iframe>
-        </div>
+        <iframe id="home-link-container" seamless="seamless"></iframe>
     </div>
 
     <script>
