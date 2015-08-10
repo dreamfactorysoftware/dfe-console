@@ -14,21 +14,19 @@ class CreateClusterLimitTable extends Migration
     public function up()
     {
         if (!\Schema::hasTable('limit_t')) {
-            \Schema::create(
-                'limit_t',
+            \Schema::create('limit_t',
                 function (Blueprint $table) {
                     $table->bigIncrements('id');
+                    $table->string('limit_key_text', 64);
                     $table->integer('cluster_id')->index();
                     $table->integer('instance_id')->index();
-                    $table->string('limit_key_text');
-                    $table->integer('limit_nbr')->nullable();
                     $table->integer('period_nbr')->nullable();;
+                    $table->integer('limit_nbr')->nullable();
+                    $table->boolean('active_ind')->default(1);
                     $table->dateTime('create_date');
                     $table->string('label_text')->nullable();
-                    $table->boolean('is_active')->default(1);
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
-                }
-            );
+                });
         }
     }
 
