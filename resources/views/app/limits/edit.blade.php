@@ -160,6 +160,7 @@
 
         });
 
+        //@todo REALLY??
         function generateForm(type) {
 
             if (type === 'cluster') {
