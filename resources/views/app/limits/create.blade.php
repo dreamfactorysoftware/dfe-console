@@ -7,7 +7,6 @@
         @include('layouts.partials.context-header',['resource'=>'limits','title' => 'New Limit'])
 
         <form class="policy-form" method="POST" action="/{{$prefix}}/limits">
-            <input name="_method" type="hidden" value="POST">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
 
             <div class="row">
@@ -47,7 +46,7 @@
                         <label for="user_id">User</label>
                         <select class="form-control" id="user_id" name="user_id">
                             <option value="">Select User</option>
-                            <option value="0">All User</option>
+                            <option value="">All Users</option>
                         </select>
                     </div>
                     <div id="limit_settings">
@@ -67,8 +66,8 @@
                             <input type="text" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ Input::old('limit_nbr') }}">
                         </div>
                         <div>
-                            <label for="is_active">Active</label>&nbsp;&nbsp;
-                            <input type="checkbox" id="is_active" name="is_active">
+                            <label for="active_ind">Active</label>&nbsp;&nbsp;
+                            <input type="checkbox" id="active_ind" name="active_ind" {{ Input::old('active_ind', false) ? 'checked' : null }}>
                         </div>
                     </div>
                 </div>

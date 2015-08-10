@@ -95,7 +95,7 @@ class LimitController extends ResourceController
                 'instance_id'      => 'sometimes|min:1',
                 'user_id'          => 'sometimes|min:1',
                 'period_name'      => 'required|string|min:1',
-                'limit_nbr'        => 'required|string|min:1'
+                'limit_nbr'        => 'required|numeric|min:1'
 
             ]);
 
@@ -129,7 +129,7 @@ class LimitController extends ResourceController
                         break;
                     case 'limit_nbr':
                         $flash_message =
-                            'Limit must be a number';
+                            'Limit must be a number and larger than 0';
                         break;
                 }
 
@@ -148,8 +148,8 @@ class LimitController extends ResourceController
             // Build the limit record
 
             foreach([
-                        'cluster_id' => 0,
-                        'instance_id' => 0,
+                        'cluster_id' => null,
+                        'instance_id' => null,
                         'service_name' => 0,
                         'user_id' => 0,
                         'period_name' => "Minute",
@@ -163,9 +163,9 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
+            if ( $_input['cluster_id'] === null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
+            } elseif ($_input['cluster_id'] !== null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
                 if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
@@ -179,18 +179,17 @@ class LimitController extends ResourceController
 
 
             if ($_input['type_select'] == 'cluster') {
-                $_input['instance_id'] = 0;
-                $_input['user_id'] = 0;
+                $_input['instance_id'] = null;
+                $_input['user_id'] = null;
             }
 
             if ($_input['type_select'] == 'instance') {
-                $_input['user_id'] = 0;
+                $_input['user_id'] = null;
             }
 
             $limit = [
-                'cluster_id' => $_input['cluster_id'],
-                'instance_id' => $_input['instance_id'],
-                //'user_id' => $_input['user_id'],
+                'cluster_id' => $_input['cluster_id'] == 0 ? null : $_input['cluster_id'],
+                'instance_id' => $_input['instance_id'] == 0 ? null : $_input['instance_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
@@ -209,9 +208,9 @@ class LimitController extends ResourceController
 
         } catch (QueryException $e) {
 
-            Session::flash('flash_message', 'Unable to add limit!');
+            Session::flash('flash_message', 'Unable to update limit!');
             Session::flash('flash_type', 'alert-danger');
-
+            logger('Error editing limit: ' . $e->getMessage());
             return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
         }
     }
@@ -340,7 +339,7 @@ class LimitController extends ResourceController
                 'period_name' => $_values['period_name'],
                 'limit_nbr' => $_limit->limit_nbr,
                 'label_text' => $_limit->label_text,
-                'is_active' => $_limit->is_active,
+                'active_ind' => $_limit->active_ind,
                 'notes' => $_values['notes']
             ];
         }
@@ -374,7 +373,7 @@ class LimitController extends ResourceController
             'instance_id_text' => ''
         ];
 
-        if ($_limit['cluster_id'] != 0) {
+        if ($_limit['cluster_id'] !== null) {
             $_cluster = $this->_findCluster($_limit['cluster_id']);
             $_values['cluster_id_text'] = $_cluster->cluster_id_text;
         }
@@ -383,7 +382,7 @@ class LimitController extends ResourceController
         $_services = [];
         $_users = [];
 
-        if ($_limit['instance_id'] != 0) {
+        if ($_limit['instance_id'] !== null) {
             $_instance = $this->_findInstance($_limit['instance_id']);
             /*
             $_tmp = $this->getInstanceServices($_limit['instance_id']);
@@ -471,7 +470,7 @@ class LimitController extends ResourceController
             'period_name' => $_values['period_name'],
             'limit_nbr' => $_limit->limit_nbr,
             'label_text' => $_limit->label_text,
-            'is_active' => $_limit->is_active,
+            'active_ind' => $_limit->active_ind,
             'notes' => $_values['notes']
         ];
 
@@ -535,7 +534,7 @@ class LimitController extends ResourceController
                         break;
                     case 'limit_nbr':
                         $flash_message =
-                            'Limit must be a number';
+                            'Limit must be a number and larger than 0';
                         break;
                 }
 
@@ -555,13 +554,13 @@ class LimitController extends ResourceController
             // Build the limit record
 
             foreach([
-                        'cluster_id' => 0,
-                        'instance_id' => 0,
+                        'cluster_id' => null,
+                        'instance_id' => null,
                         'service_name' => 0,
                         'user_id' => 0,
                         'period_name' => "Minute",
                         'limit_nbr' => 0,
-                        'is_active' => 0,
+                        'active_ind' => 0,
                         'label_text' => 0
                     ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
@@ -569,9 +568,9 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ( $_input['cluster_id'] == 0 && $_input['instance_id'] == 0) {
+            if ( $_input['cluster_id'] === null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif ($_input['cluster_id'] != 0 && $_input['instance_id'] == 0) {
+            } elseif ($_input['cluster_id'] !== null && $_input['instance_id'] === null) {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
                 if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
@@ -584,13 +583,12 @@ class LimitController extends ResourceController
             }
 
             $limit = [
-                'cluster_id' => $_input['cluster_id'],
-                'instance_id' => $_input['instance_id'],
-                //'user_id' => $_input['user_id'],
+                'cluster_id' => $_input['cluster_id'] == 0? null : $_input['cluster_id'],
+                'instance_id' => $_input['instance_id'] == 0? null : $_input['instance_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
-                'is_active' => ($_input['is_active']) ? 1 : 0,
+                'active_ind' => ($_input['active_ind']) ? 1 : 0,
                 'label_text' => $_input['label_text']
             ];
 
@@ -602,7 +600,7 @@ class LimitController extends ResourceController
 
             Session::flash('flash_message', 'Unable to add limit!');
             Session::flash('flash_type', 'alert-danger');
-
+            logger('Error adding limit: ' . $e->getMessage());
             return redirect('/' . $this->getUiPrefix() . '/limits/create')->withInput();
         }
     }
@@ -660,7 +658,7 @@ class LimitController extends ResourceController
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
-
+            logger('Error deleting limit: ' . $e->getMessage());
             return redirect('/v1/limits')->withInput();
         }
 
@@ -704,7 +702,7 @@ class LimitController extends ResourceController
         $_results=[];
 
         foreach ($_rows as $_row) {
-            if ($_row->is_active === true) {
+            if ($_row->active_ind === true) {
                 if (empty($_row->label) === true) {
                     $_results[] = ['id' => $_row->id, 'name' => $_row->name];
                 } else {

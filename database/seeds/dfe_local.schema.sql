@@ -331,12 +331,12 @@ DROP TABLE IF EXISTS `limit_t`;
 
 CREATE TABLE `limit_t` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `label_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `limit_key_text` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `cluster_id` int(11) DEFAULT NULL,
   `instance_id` int(11) DEFAULT NULL,
+  `limit_key_text` VARCHAR(200) COLLATE utf8_unicode_ci NOT NULL,
   `limit_nbr` int(11) DEFAULT NULL,
   `period_nbr` int(11) DEFAULT NULL,
+  `label_text` VARCHAR(64) COLLATE utf8_unicode_ci NOT NULL,
   `active_ind` tinyint(1) NOT NULL DEFAULT '1',
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -347,7 +347,7 @@ CREATE TABLE `limit_t` (
   KEY `limit_t_instance_id_index` (`instance_id`),
   CONSTRAINT `fk_limit_cluster_id` FOREIGN KEY (`cluster_id`) REFERENCES `cluster_t` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_limit_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `migration_t` */
 
@@ -645,7 +645,7 @@ DELIMITER $$
 	INSERT INTO `cluster_server_asgn_arch_t`
 		SELECT *
 		FROM `cluster_server_asgn_t`
-		WHERE 
+		WHERE
 		`cluster_id` = old.cluster_id AND `server_id` = old.server_id;
     END */$$
 
@@ -686,11 +686,11 @@ DELIMITER $$
 
 /*!50003 CREATE */ /*!50003 TRIGGER `isa_beforeDelete` BEFORE DELETE ON `instance_server_asgn_t` FOR EACH ROW BEGIN
 		INSERT INTO `instance_server_asgn_arch_t`
-		
-			SELECT * 
+
+			SELECT *
 			FROM `instance_server_asgn_t`
-			WHERE 
-				`server_id` = old.server_id AND 
+			WHERE
+				`server_id` = old.server_id AND
 				`instance_id` = old.instance_id;
     END */$$
 
@@ -705,12 +705,12 @@ DELIMITER $$
 
 /*!50003 CREATE */ /*!50003 TRIGGER `instance_afterInsert` AFTER INSERT ON `instance_t` FOR EACH ROW BEGIN
 	DELETE FROM `deactivation_t` where user_id = new.user_id and instance_id = new.id;
-    
-	INSERT INTO `deactivation_t` 
+
+	INSERT INTO `deactivation_t`
 		(user_id, instance_id, activate_by_date, create_date )
 	VALUES
 		(new.user_id, new.id, CURRENT_TIMESTAMP + INTERVAL 7 DAY, current_timestamp );
-		
+
     END */$$
 
 
