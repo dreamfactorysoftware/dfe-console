@@ -148,8 +148,8 @@ class LimitController extends ResourceController
             // Build the limit record
 
             foreach([
-                        'cluster_id' => 0,
-                        'instance_id' => 0,
+                        'cluster_id' => null,
+                        'instance_id' => null,
                         'service_name' => 0,
                         'user_id' => 0,
                         'period_name' => "Minute",
@@ -555,8 +555,8 @@ class LimitController extends ResourceController
             // Build the limit record
 
             foreach([
-                        'cluster_id' => 0,
-                        'instance_id' => 0,
+                        'cluster_id' => null,
+                        'instance_id' => null,
                         'service_name' => 0,
                         'user_id' => 0,
                         'period_name' => "Minute",
