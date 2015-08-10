@@ -5,7 +5,7 @@
     <div class="col-xs-1 col-sm-2 col-md-2 df-sidebar-nav"></div>
 
     <div class="col-xs-11 col-sm-10 col-md-10">
-        @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Instance Manager'])
+        @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Manage Instances'])
 
 
         <!-- Tool Bar -->
