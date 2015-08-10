@@ -188,9 +188,8 @@ class LimitController extends ResourceController
             }
 
             $limit = [
-                'cluster_id' => $_input['cluster_id'],
-                'instance_id' => $_input['instance_id'],
-                //'user_id' => $_input['user_id'],
+                'cluster_id' => $_input['cluster_id'] == 0 ? null : $_input['cluster_id'],
+                'instance_id' => $_input['instance_id'] == 0 ? null : $_input['instance_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
@@ -209,7 +208,7 @@ class LimitController extends ResourceController
 
         } catch (QueryException $e) {
 
-            Session::flash('flash_message', 'Unable to add limit!');
+            Session::flash('flash_message', 'Unable to update limit!');
             Session::flash('flash_type', 'alert-danger');
             logger('Error editing limit: ' . $e->getMessage());
             return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
@@ -584,9 +583,8 @@ class LimitController extends ResourceController
             }
 
             $limit = [
-                'cluster_id' => $_input['cluster_id'],
-                'instance_id' => $_input['instance_id'],
-                //'user_id' => $_input['user_id'],
+                'cluster_id' => $_input['cluster_id'] == 0? null : $_input['cluster_id'],
+                'instance_id' => $_input['instance_id'] == 0? null : $_input['instance_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
