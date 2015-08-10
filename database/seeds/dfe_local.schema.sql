@@ -515,7 +515,6 @@ CREATE TABLE `snapshot_t` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `snapshot_t_user_id_snapshot_id_text_unique` (`user_id`,`snapshot_id_text`),
   KEY `snapshot_t_instance_id_foreign` (`instance_id`),
-  CONSTRAINT `snapshot_t_instance_id_foreign` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON DELETE CASCADE,
   CONSTRAINT `snapshot_t_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

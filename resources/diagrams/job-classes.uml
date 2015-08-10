@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>PHP</ID>
+  <OriginalElement>\DreamFactory\Enterprise\Common\Jobs\BaseEnterpriseJob</OriginalElement>
+  <nodes>
+    <node x="98.0" y="104.5">\DreamFactory\Enterprise\Services\Jobs\DeprovisionJob</node>
+    <node x="303.5" y="464.5">\DreamFactory\Enterprise\Common\Contracts\EnterpriseJob</node>
+    <node x="947.0" y="293.0">\DreamFactory\Enterprise\Common\Jobs\BaseJob</node>
+    <node x="754.0" y="104.5">\DreamFactory\Enterprise\Services\Jobs\ExportJob</node>
+    <node x="1142.0" y="304.5">\Illuminate\Contracts\Queue\ShouldQueue</node>
+    <node x="306.5" y="-15.5">\DreamFactory\Enterprise\Services\Jobs\ProvisionJob</node>
+    <node x="917.5" y="430.0">\DreamFactory\Enterprise\Services\Jobs\RegisterJob</node>
+    <node x="-16.5" y="258.5">\DreamFactory\Enterprise\Services\Jobs\ManifestJob</node>
+    <node x="282.0" y="81.5">\DreamFactory\Enterprise\Common\Jobs\BaseInstanceJob</node>
+    <node x="536.0" y="81.5">\DreamFactory\Enterprise\Common\Jobs\PortabilityJob</node>
+    <node x="267.0" y="258.5">\DreamFactory\Enterprise\Common\Jobs\BaseEnterpriseJob</node>
+    <node x="553.0" y="224.5">\DreamFactory\Enterprise\Services\Jobs\ImportJob</node>
+    <node x="921.5" y="184.5">\Symfony\Component\Console\Input\InputAwareInterface</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="\DreamFactory\Enterprise\Services\Jobs\ExportJob" target="\DreamFactory\Enterprise\Common\Jobs\PortabilityJob">
+      <point x="-46.0" y="0.0" />
+      <point x="64.0" y="0.0" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Services\Jobs\ImportJob" target="\DreamFactory\Enterprise\Common\Jobs\PortabilityJob">
+      <point x="0.0" y="-15.5" />
+      <point x="0.0" y="38.5" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Common\Jobs\BaseEnterpriseJob" target="\DreamFactory\Enterprise\Common\Jobs\BaseJob">
+      <point x="93.0" y="0.0" />
+      <point x="-53.0" y="0.0" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Services\Jobs\RegisterJob" target="\DreamFactory\Enterprise\Common\Jobs\BaseJob">
+      <point x="0.0" y="-50.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Common\Jobs\BaseInstanceJob" target="\DreamFactory\Enterprise\Common\Jobs\BaseEnterpriseJob">
+      <point x="0.0" y="38.5" />
+      <point x="0.0" y="-61.5" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Common\Jobs\BaseJob" target="\Symfony\Component\Console\Input\InputAwareInterface">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="15.5" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Services\Jobs\ManifestJob" target="\DreamFactory\Enterprise\Common\Jobs\BaseEnterpriseJob">
+      <point x="96.5" y="0.0" />
+      <point x="-93.0" y="0.0" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Common\Jobs\PortabilityJob" target="\DreamFactory\Enterprise\Common\Jobs\BaseInstanceJob">
+      <point x="-64.0" y="0.0" />
+      <point x="78.0" y="0.0" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Common\Jobs\BaseJob" target="\Illuminate\Contracts\Queue\ShouldQueue">
+      <point x="53.0" y="0.0" />
+      <point x="-58.0" y="0.0" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Services\Jobs\DeprovisionJob" target="\DreamFactory\Enterprise\Common\Jobs\BaseInstanceJob">
+      <point x="62.0" y="0.0" />
+      <point x="-78.0" y="0.0" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Common\Jobs\BaseEnterpriseJob" target="\DreamFactory\Enterprise\Common\Contracts\EnterpriseJob">
+      <point x="0.0" y="61.5" />
+      <point x="0.0" y="-15.5" />
+    </edge>
+    <edge source="\DreamFactory\Enterprise\Services\Jobs\ProvisionJob" target="\DreamFactory\Enterprise\Common\Jobs\BaseInstanceJob">
+      <point x="0.0" y="15.5" />
+      <point x="0.0" y="-38.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="620.5" y="257.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

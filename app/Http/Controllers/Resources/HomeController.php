@@ -3,7 +3,6 @@
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 
-
 class HomeController extends ResourceController
 {
     //******************************************************************************
@@ -21,8 +20,8 @@ class HomeController extends ResourceController
                 'prefix'   => ConsoleDefaults::UI_PREFIX,
                 'resource' => null,
                 'title'    => null,
-            ]
-        );
+                'links'    => config('links.console', []),
+            ]);
     }
 
 }

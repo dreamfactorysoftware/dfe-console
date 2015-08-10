@@ -35,7 +35,9 @@ class Export extends Command
         $_request = PortableServiceRequest::makeExport($this->argument('instance-id'),
             $this->option('destination'));
 
-        \Queue::push($_job = new ExportJob($_request));
+        $_job = new ExportJob($_request);
+
+        \Queue::push($_job);
 
         return $_job->getResult();
     }
