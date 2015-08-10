@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 use DreamFactory\Library\Utility\Curl;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Routing\Route;
@@ -242,7 +243,7 @@ class LimitController extends ResourceController
                 try {
                     $_cluster = $this->_findCluster($_limit['cluster_id']);
                     $_values['cluster_id_text'] = $_cluster->cluster_id_text;
-                } catch (Exception $e) {
+                } catch (ModelNotFoundException $e) {
                     // Invalid cluster id, skip
                     continue;
                 }
@@ -323,7 +324,7 @@ class LimitController extends ResourceController
 
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
-                } catch (Exception $e) {
+                } catch (ModelNotFoundException $e) {
                     // Invalid instance, skip it
                     continue;
                 }
