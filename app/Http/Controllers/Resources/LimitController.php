@@ -702,7 +702,7 @@ class LimitController extends ResourceController
         $_results=[];
 
         foreach ($_rows as $_row) {
-            if ($_row->active_ind === true) {
+            if ($_row->is_active === true) {
                 if (empty($_row->label) === true) {
                     $_results[] = ['id' => $_row->id, 'name' => $_row->name];
                 } else {
