@@ -672,7 +672,11 @@ class LimitController extends ResourceController
      */
     public function getInstanceServices($instanceId)
     {
-        return $this->callInstanceApi($this->_findInstance($instanceId), '/api/v2/system/service');
+        if (!empty($instanceId)) {
+            return $this->callInstanceApi($this->_findInstance($instanceId), '/api/v2/system/service');
+        }
+
+        return false;
     }
 
     /**
@@ -682,7 +686,11 @@ class LimitController extends ResourceController
      */
     public function getInstanceUsers($instanceId)
     {
-        return $this->callInstanceApi($this->_findInstance($instanceId),'/api/v2/system/user');
+        if (!empty($instanceId)) {
+            return $this->callInstanceApi($this->_findInstance($instanceId),'/api/v2/system/user');
+        }
+
+        return false;
     }
 
     public function generateConsoleApiKey($metadata)
