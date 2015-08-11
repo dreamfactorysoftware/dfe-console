@@ -17,7 +17,7 @@
                     </div>
                     <div class="btn-group btn-group">
 
-                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
+                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="height: 30px; width: 40px"></button>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
@@ -27,7 +27,7 @@
                             </ul>
                         </div>
 
-                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
+                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="height: 30px; width: 40px"></button>
                     </div>
                     <div class="btn-group">
                         <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="Search Instances...">
