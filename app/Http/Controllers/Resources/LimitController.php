@@ -672,7 +672,11 @@ class LimitController extends ResourceController
      */
     public function getInstanceServices($instanceId)
     {
-        return $this->callInstanceApi($this->_findInstance($instanceId), '/api/v2/system/service');
+        if (!empty($instanceId)) {
+            return $this->callInstanceApi($this->_findInstance($instanceId), '/api/v2/system/service');
+        }
+
+        return false;
     }
 
     /**
@@ -682,7 +686,11 @@ class LimitController extends ResourceController
      */
     public function getInstanceUsers($instanceId)
     {
-        return $this->callInstanceApi($this->_findInstance($instanceId),'/api/v2/system/user');
+        if (!empty($instanceId)) {
+            return $this->callInstanceApi($this->_findInstance($instanceId),'/api/v2/system/user');
+        }
+
+        return false;
     }
 
     public function generateConsoleApiKey($metadata)
@@ -702,7 +710,7 @@ class LimitController extends ResourceController
         $_results=[];
 
         foreach ($_rows as $_row) {
-            if ($_row->active_ind === true) {
+            if ($_row->is_active === true) {
                 if (empty($_row->label) === true) {
                     $_results[] = ['id' => $_row->id, 'name' => $_row->name];
                 } else {
