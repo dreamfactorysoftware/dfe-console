@@ -201,20 +201,6 @@ CREATE TABLE `instance_guest_t` (
   CONSTRAINT `fk_instance_guest_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-/*Table structure for table `instance_janitor_t` */
-
-DROP TABLE IF EXISTS `instance_janitor_t`;
-
-CREATE TABLE `instance_janitor_t` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `storage_id_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  `private_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `registration_ind` tinyint(1) NOT NULL DEFAULT '0',
-  `user_id` int(11) NOT NULL,
-  `user_storage_id_text` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
 /*Table structure for table `instance_server_asgn_arch_t` */
 
 DROP TABLE IF EXISTS `instance_server_asgn_arch_t`;
@@ -335,7 +321,7 @@ CREATE TABLE `instance_arch_t` (
   `terminate_date` datetime DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
   `lmod_date` timestamp
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `job_fail_t` */
 
