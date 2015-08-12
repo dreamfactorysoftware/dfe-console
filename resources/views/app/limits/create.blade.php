@@ -234,8 +234,12 @@
 */
                 if (_type === 'user') {
 
+                    if (!_instanceId || 0 == _instanceId) {
+                        $_select.empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
+                        return false;
+                    }
+
                     $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
-                        //if()
 
                         var _item, $_select = $('#user_id');
 

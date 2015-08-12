@@ -64,8 +64,8 @@
                             <input type="number" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ $limit['limit_nbr'] }}">
                         </div>
                         <div>
-                            <label for="is_active">Active</label>&nbsp;&nbsp;
-                            <input type="checkbox" id="is_active" name="is_active" @if ($limit['is_active'] == '1') checked @endif>
+                            <label for="active_ind">Active</label>&nbsp;&nbsp;
+                            <input type="checkbox" id="active_ind" name="active_ind" @if ($limit['active_ind'] == '1') checked @endif>
                         </div>
                     </div>
                 </div>
