@@ -33,7 +33,7 @@ CREATE TABLE `app_key_t` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_key_t_client_id_unique` (`client_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `auth_reset_t` */
 
@@ -105,7 +105,7 @@ CREATE TABLE `cluster_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_cluster_cluster_id_text` (`cluster_id_text`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `deactivation_arch_t` */
 
@@ -199,7 +199,7 @@ CREATE TABLE `instance_guest_t` (
   KEY `ix_instance_guest_instance_id` (`id`),
   KEY `fk_instance_guest_instance_id` (`instance_id`),
   CONSTRAINT `fk_instance_guest_instance_id` FOREIGN KEY (`instance_id`) REFERENCES `instance_t` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `instance_server_asgn_arch_t` */
 
@@ -281,7 +281,7 @@ CREATE TABLE `instance_t` (
   CONSTRAINT `fk_instance_db_server_id` FOREIGN KEY (`db_server_id`) REFERENCES `server_t` (`id`),
   CONSTRAINT `fk_instance_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`),
   CONSTRAINT `fk_instance_web_server` FOREIGN KEY (`web_server_id`) REFERENCES `server_t` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `instance_arch_t` */
 
@@ -402,7 +402,7 @@ CREATE TABLE `mount_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `mount_t_mount_id_text_unique` (`mount_id_text`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `owner_hash_t` */
 
@@ -448,7 +448,7 @@ CREATE TABLE `route_hash_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ix_route_hash_hash` (`hash_text`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `server_arch_t` */
 
@@ -483,7 +483,7 @@ CREATE TABLE `server_t` (
   KEY `idx_server_server_type_id` (`server_type_id`),
   KEY `ux_server_id_name` (`server_type_id`,`server_id_text`),
   CONSTRAINT `fk_server_server_type_id` FOREIGN KEY (`server_type_id`) REFERENCES `server_type_t` (`id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `server_type_t` */
 
@@ -497,7 +497,7 @@ CREATE TABLE `server_type_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_server_type_name_text` (`type_name_text`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `server_type_t` */
 
@@ -525,7 +525,7 @@ CREATE TABLE `service_user_t` (
   PRIMARY KEY (`id`),
   KEY `fk_service_user_owner_id` (`owner_id`),
   CONSTRAINT `fk_service_user_owner_id` FOREIGN KEY (`owner_id`) REFERENCES `service_user_t` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `snapshot_t` */
 
@@ -600,7 +600,7 @@ CREATE TABLE `user_t` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `ixu_user_email_addr_text` (`email_addr_text`),
   KEY `fk_user_owner_id` (`owner_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `vendor_credentials_t` */
 
@@ -640,7 +640,7 @@ CREATE TABLE `vendor_image_t` (
   PRIMARY KEY (`id`),
   KEY `ixu_vendor_image_id_name` (`vendor_id`,`image_id_text`),
   CONSTRAINT `fk_vendor_image_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendor_t` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `vendor_image_t` */
 
@@ -656,7 +656,7 @@ CREATE TABLE `vendor_t` (
   `create_date` datetime NOT NULL,
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `vendor_t` */
 
