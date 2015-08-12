@@ -59,7 +59,7 @@ CREATE TABLE `cluster_arch_t` (
   `subdomain_text` varchar(128) DEFAULT NULL,
   `max_instances_nbr` int(11) DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
-  `lmod_date` timestamp DEFAULT CURRENT_TIMESTAMP
+  `lmod_date` timestamp
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `cluster_server_asgn_arch_t` */
@@ -140,7 +140,8 @@ CREATE TABLE `deactivation_t` (
   `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_user_instance` (`user_id`,`instance_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 
 /*Table structure for table `instance_guest_arch_t` */
 
@@ -292,10 +293,49 @@ CREATE TABLE `instance_t` (
   CONSTRAINT `fk_instance_app_server_id` FOREIGN KEY (`app_server_id`) REFERENCES `server_t` (`id`),
   CONSTRAINT `fk_instance_cluster_id` FOREIGN KEY (`cluster_id`) REFERENCES `cluster_t` (`id`),
   CONSTRAINT `fk_instance_db_server_id` FOREIGN KEY (`db_server_id`) REFERENCES `server_t` (`id`),
-  CONSTRAINT `fk_instance_environment` FOREIGN KEY (`environment_id`) REFERENCES `environment_t` (`id`),
   CONSTRAINT `fk_instance_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`),
   CONSTRAINT `fk_instance_web_server` FOREIGN KEY (`web_server_id`) REFERENCES `server_t` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+/*Table structure for table `instance_arch_t` */
+
+DROP TABLE IF EXISTS `instance_arch_t`;
+
+CREATE TABLE `instance_arch_t` (
+  `id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `guest_location_nbr` int(11) DEFAULT NULL,
+  `environment_id` int(11) DEFAULT NULL,
+  `instance_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `instance_name_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `instance_data_text` mediumtext COLLATE utf8_unicode_ci,
+  `cluster_id` int(11) DEFAULT NULL,
+  `app_server_id` int(11) DEFAULT NULL,
+  `db_server_id` int(11) DEFAULT NULL,
+  `web_server_id` int(11) DEFAULT NULL,
+  `storage_id_text` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
+  `db_host_text` varchar(1024) COLLATE utf8_unicode_ci DEFAULT 'localhost',
+  `db_port_nbr` int(11) DEFAULT NULL,
+  `db_name_text` varchar(64) CHARACTER SET utf8 DEFAULT 'dreamfactory',
+  `db_user_text` varchar(64) CHARACTER SET utf8 DEFAULT 'dsp_user',
+  `db_password_text` varchar(64) CHARACTER SET utf8 DEFAULT 'dsp_user',
+  `request_id_text` varchar(128) CHARACTER SET utf8 DEFAULT NULL,
+  `request_date` datetime DEFAULT NULL,
+  `activate_ind` tinyint(1) DEFAULT '0',
+  `trial_instance_ind` tinyint(1) DEFAULT '1',
+  `provision_ind` tinyint(1) DEFAULT '0',
+  `deprovision_ind` tinyint(1) DEFAULT '0',
+  `state_nbr` int(11) DEFAULT '0',
+  `ready_state_nbr` int(11) DEFAULT '0',
+  `platform_state_nbr` int(11) DEFAULT '0',
+  `storage_version_nbr` int(11) DEFAULT '0',
+  `last_state_date` datetime DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `terminate_date` datetime DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
 
 /*Table structure for table `job_fail_t` */
 
