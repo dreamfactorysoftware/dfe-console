@@ -52,13 +52,14 @@ CREATE TABLE `auth_reset_t` (
 DROP TABLE IF EXISTS `cluster_arch_t`;
 
 CREATE TABLE `cluster_arch_t` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `cluster_id_text` varchar(128) NOT NULL,
-  `subdomain_text` varchar(128) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `lmod_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  `id` int(11) DEFAULT NULL,
+  `owner_id` int(11) DEFAULT NULL,
+  `owner_type_nbr` int(11) DEFAULT NULL,
+  `cluster_id_text` varchar(128) DEFAULT NULL,
+  `subdomain_text` varchar(128) DEFAULT NULL,
+  `max_instances_nbr` int(11) DEFAULT NULL,
+  `create_date` datetime DEFAULT NULL,
+  `lmod_date` timestamp DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Table structure for table `cluster_server_asgn_arch_t` */
