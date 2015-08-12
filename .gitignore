@@ -1,7 +1,7 @@
 vendor/
 node_modules/
-/.env
-/.env.local
+.env
+.env.local
 /.dfe.cluster.json
 /.idea/workspace.xml
 /.idea/tasks.xml
