@@ -20,7 +20,15 @@ var table = $('#instanceTable').DataTable({
             "targets": [0],
             "visible": false
         }
-    ]
+    ],
+    "bStateSave": true,
+    "fnStateSave": function (oSettings, oData) {
+        localStorage.setItem('Instances_' + window.location.pathname, JSON.stringify(oData));
+    },
+    "fnStateLoad": function (oSettings) {
+        var data = localStorage.getItem('Instances_' + window.location.pathname);
+        return JSON.parse(data);
+    }
 });
 
 /*
@@ -213,3 +221,9 @@ function setTableInfo(){
         $('#tableInfo').html('Showing Instances ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsDisplay);
     }
 }
+
+$('#refresh').click(function(){
+    table.state.clear();
+    localStorage.removeItem('Instances_' + window.location.pathname);
+    window.location.reload();
+});
