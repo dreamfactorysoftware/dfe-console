@@ -50,7 +50,6 @@
                                     <th>Name</th>
                                     <th>Cluster</th>
                                     <th>Owner Email</th>
-                                    <th>Limit</th>
                                     <th>Last Modified</th>
                                 </tr>
                             </thead>
@@ -67,8 +66,7 @@
                                     <!--td style="text-align: left; vertical-align: middle;">{{ $_instance->create_date }}</td-->
 
                                     <td>{{ $_instance->user->email_addr_text }}</td>
-                                    <td> </td>
-                                    <td>{{ $_instance->lmod_date }}</td>
+                                    <td style="width: 185px">{{ $_instance->lmod_date }}</td>
                                 </tr>
 
                             @endforeach
