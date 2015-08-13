@@ -154,7 +154,7 @@ class LimitController extends ResourceController
                         'user_id' => 0,
                         'period_name' => "Minute",
                         'limit_nbr' => 0,
-                        'is_active' => 0,
+                        'active_ind' => 0,
                         'label_text' => 0,
                         'type_select' => 0
                     ] as $_input_key => $_input_default) {
@@ -193,7 +193,7 @@ class LimitController extends ResourceController
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
-                'is_active' => ($_input['is_active']) ? 1 : 0,
+                'active_ind' => ($_input['active_ind']) ? 1 : 0,
                 'label_text' => $_input['label_text']
             ];
 
@@ -710,7 +710,7 @@ class LimitController extends ResourceController
         $_results=[];
 
         foreach ($_rows as $_row) {
-            if ($_row->is_active === true) {
+            if ($_row->active_ind === true) {
                 if (empty($_row->label) === true) {
                     $_results[] = ['id' => $_row->id, 'name' => $_row->name];
                 } else {
