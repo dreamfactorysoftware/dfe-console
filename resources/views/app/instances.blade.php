@@ -50,7 +50,7 @@
                                     <th>Name</th>
                                     <th>Cluster</th>
                                     <th>Owner Email</th>
-                                    <th>Policy</th>
+                                    <th>Limit</th>
                                     <th>Last Modified</th>
                                 </tr>
                             </thead>
