@@ -17,10 +17,6 @@ var table = $('#instanceTable').DataTable({
     "dom": '<"toolbar">',
     "aoColumnDefs": [
         {
-            "bSortable": false,
-            "aTargets": [5]
-        },
-        {
             "targets": [0],
             "visible": false
         }
