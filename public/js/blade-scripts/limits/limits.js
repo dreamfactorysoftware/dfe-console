@@ -139,13 +139,13 @@ $( document ).ready(function() {
         $('#_prev').prop('disabled', true);
 
 
-        $('#serverSearch').on( 'keyup click', function () {
+        $('#limitsSearch').on( 'keyup click', function () {
             filterGlobal();
         } );
 
         updatePageDropdown();
         selectPage(info.page);
-        $('#serverSearch').val(table.search());
+        $('#limitsSearch').val(table.search());
 
     }
 
@@ -208,7 +208,7 @@ function updatePageDropdown(){
 
 function filterGlobal () {
     $('#limitTable').DataTable().search(
-        $('#serverSearch').val()
+        $('#limitsSearch').val()
     ).draw();
 
     updatePageDropdown();
