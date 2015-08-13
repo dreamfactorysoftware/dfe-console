@@ -25,12 +25,11 @@
                         <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="height: 30px; width: 40px"></button>
                     </div>
                     <div class="btn-group">
-                        <input id="limitsSearch" class="form-control input-sm" value="" type="text" placeholder="Search Limits...">
-                    </div>
-                    <div class="btn-group">
                         <button type="button" id="selectedLimitsRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected servers" value="delete" style="width: 40px"></button>
                     </div>
-
+                    <div class="btn-group">
+                        <input id="limitsSearch" class="form-control input-sm" value="" type="text" placeholder="Search Limits...">
+                    </div>
                     <div class="btn-group pull-right">
                         <button type="button" id="refresh" class="btn btn-default btn-sm"><i class="fa fa-fw fa-refresh"></i></button>
                     </div>
