@@ -759,7 +759,7 @@ CREATE TABLE `snapshot_t` (
     `lmod_date`        TIMESTAMP               NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `ux_snapshot_user_id_snapshot_id` (`user_id`, `snapshot_id_text`),
-    KEY `ix_snapshot_user_id` (`instance_id`),
+    KEY `ix_snapshot_user_id` (`user_id`),
     KEY `ix_snapshot_instance_id` (`instance_id`),
     CONSTRAINT `fk_snapshot_user_id` FOREIGN KEY (`user_id`) REFERENCES `user_t` (`id`)
         ON DELETE CASCADE)
