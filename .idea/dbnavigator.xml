@@ -22,7 +22,11 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a">
+        <schema name="dfe_local" object-types="table" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="1da9b971-3bd3-4f11-8a4c-d75c3479417a">
@@ -30,6 +34,7 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
+    <mapping file-url="file://$PROJECT_DIR$/database/seeds/dfe_local.schema.sql" connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a" current-schema="dfe_local" />
     <mapping file-url="file:///tmp/dfe_local.sql" connection-id="virtual-mysql-connection" current-schema="ROOT" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
@@ -87,7 +92,7 @@
           <charset value="UTF-8" />
           <ddl-file-binding value="true" />
           <database-logging value="true" />
-          <environment-type value="default" />
+          <environment-type value="development" />
           <idle-time-to-disconnect value="30" />
           <password-expiry-time value="10" />
           <max-connection-pool-size value="7" />
@@ -263,7 +268,7 @@
     </dataset-editor-settings>
     <code-editor-settings>
       <general>
-        <show-object-navigation-gutter value="true" />
+        <show-object-navigation-gutter value="false" />
         <show-spec-declaration-navigation-gutter value="true" />
       </general>
       <confirmations>
