@@ -138,8 +138,10 @@ class UserController extends ResourceController
                 'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was created successfully!';
             $result_status = 'alert-success';
 
-            return \Redirect::to($this->makeRedirectUrl('users',
-                ['flash_message' => $result_text, 'flash_type' => $result_status]));
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
 
         } catch (QueryException $e) {
             $res_text = strtolower($e->getMessage());
@@ -275,8 +277,11 @@ class UserController extends ResourceController
                 'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was updated successfully!';
             $result_status = 'alert-success';
 
-            return \Redirect::to($this->makeRedirectUrl('users',
-                ['flash_message' => $result_text, 'flash_type' => $result_status]));
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
+
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
