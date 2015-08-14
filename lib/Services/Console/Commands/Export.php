@@ -1,12 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Export extends Command
+class Export extends ConsoleCommand
 {
     //******************************************************************************
     //* Members
@@ -32,6 +32,8 @@ class Export extends Command
      */
     public function fire()
     {
+        parent::fire();
+
         $_request = PortableServiceRequest::makeExport($this->argument('instance-id'),
             $this->option('destination'));
 

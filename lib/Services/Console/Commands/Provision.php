@@ -1,12 +1,15 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Provision extends Command
+class Provision extends ConsoleCommand
 {
     //******************************************************************************
     //* Members
@@ -32,13 +35,37 @@ class Provision extends Command
      */
     public function fire()
     {
-        return \Queue::push(new ProvisionJob($this->argument('instance-id'), [
-            'guest-location' => $this->argument('guest-location'),
-            'owner-id'       => $this->argument('owner-id'),
+        parent::fire();
+
+        $_instanceId = $this->argument('instance-id');
+
+        //	Check the name here for quicker response...
+        if (false === ($_instanceName = Instance::isNameAvailable($_instanceId)) || is_numeric($_instanceName[0])) {
+            $this->error('The name of your instance cannot be "' . $_instanceId . '".  It is either currently in-use, or otherwise invalid.');
+            exit(1);
+        }
+
+        $_ownerType = OwnerTypes::USER;
+        $_ownerId = $this->argument('owner-id');
+        $_guestLocation = GuestLocations::resolve($this->argument('guest-location'));
+
+        try {
+            $_owner = OwnerTypes::getOwner($_ownerId, $_ownerType);
+        } catch (\Exception $_ex) {
+            try {
+                $_owner = User::byEmail($_ownerId);
+            } catch (\Exception $_ex) {
+                throw new \InvalidArgumentException('The owner-id "' . $_ownerId . '" could not be found.');
+            }
+        }
+
+        \Log::info('[cli] provision "' . $_instanceId . '"');
+
+        return \Queue::push(new ProvisionJob($_instanceId, [
+            'guest-location' => $_guestLocation,
+            'owner-id'       => $_owner->id,
+            'owner-type'     => $_ownerType,
             'cluster-id'     => $this->option('cluster-id'),
-            'restart'        => $this->option('restart'),
-            'trial'          => $this->option('trial'),
-            'tag'            => $this->option('tag'),
         ]));
     }
 
@@ -77,24 +104,6 @@ class Provision extends Command
                     InputOption::VALUE_OPTIONAL,
                     'The cluster where this instance is to be placed.',
                     config('provisioning.default-cluster-id'),
-                ],
-                [
-                    'restart',
-                    'r',
-                    InputOption::VALUE_NONE,
-                    'If specified, the existing stopped instance will be restarted.',
-                ],
-                [
-                    'tag',
-                    'a',
-                    InputOption::VALUE_OPTIONAL,
-                    'The key to use for retrieving this instance from the manager. Defaults to the instance name.',
-                ],
-                [
-                    'trial',
-                    't',
-                    InputOption::VALUE_NONE,
-                    'Deprecated and ignored.',
                 ],
             ]);
     }

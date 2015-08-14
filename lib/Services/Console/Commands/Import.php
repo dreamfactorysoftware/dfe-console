@@ -1,12 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Import extends Command
+class Import extends ConsoleCommand
 {
     //******************************************************************************
     //* Members
@@ -32,6 +32,8 @@ class Import extends Command
      */
     public function fire()
     {
+        parent::fire();
+
         $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
             $this->argument('snapshot'),
             array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));

@@ -1,11 +1,11 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Deprovision extends Command
+class Deprovision extends ConsoleCommand
 {
     //******************************************************************************
     //* Constants
@@ -38,6 +38,8 @@ class Deprovision extends Command
      */
     public function fire()
     {
+        parent::fire();
+
         return \Queue::push(new DeprovisionJob($this->argument('instance-id'),
             ['cluster-id' => $this->option('cluster-id'),]));
     }
