@@ -1,11 +1,13 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Library\Utility\Json;
 
 /**
  * Processes queued provision requests
@@ -32,6 +34,13 @@ class ProvisionJobHandler
     public function handle(ProvisionJob $command)
     {
         $_options = $command->getOptions();
+        $_guestLocation = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
+
+        if (is_string($_guestLocation) && !is_numeric($_guestLocation)) {
+            $_options['guest-location'] = $_guestLocation = GuestLocations::resolve($_guestLocation);
+        }
+
+        \Log::info('Provisioning requested [guest=' . $_guestLocation . ']: ' . Json::encode($_options));
 
         try {
             //  Create the instance record

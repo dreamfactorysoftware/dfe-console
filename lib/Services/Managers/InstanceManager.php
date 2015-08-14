@@ -135,8 +135,10 @@ class InstanceManager extends BaseManager implements Factory
                 throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
             }
 
-            //  Validate the cluster and pull component ids
+            //  Get the proper location
             $_guestLocation = array_get($options, 'guest-location', config('provisioning.default-guest-location'));
+
+            //  Validate the cluster and pull component ids
             $_clusterId = array_get($options, 'cluster-id', config('provisioning.default-cluster-id'));
             $_clusterConfig = $this->_getServersForCluster($_clusterId);
             $_ownerId = $_owner->id;
@@ -151,7 +153,6 @@ class InstanceManager extends BaseManager implements Factory
                 'app_server_id'      => (int)$_clusterConfig['app-server-id'],
                 'web_server_id'      => (int)$_clusterConfig['web-server-id'],
                 'state_nbr'          => ProvisionStates::CREATED,
-                'trial_instance_ind' => !!array_get($options, 'trial', false),
             ];
 
             $_guestAttributes = [
