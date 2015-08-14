@@ -88,14 +88,12 @@ class OpsController extends BaseController implements IsVersioned
             $_archived = true;
         }
 
-        $_baseStoragePath = $_instance->getRootStoragePath();
-
         $_base = [
             'id'                 => $_instance->id,
             'archived'           => $_archived,
             'deleted'            => false,
             'metadata'           => Instance::makeMetadata($_instance),
-            'root-storage-path'  => $_baseStoragePath,
+            'root-storage-path'  => \InstanceStorage::getUserStoragePath($_instance),
             'storage-path'       => $_instance->getStoragePath(),
             'owner-private-path' => $_instance->getOwnerPrivatePath(),
             'private-path'       => $_instance->getPrivatePath(),
