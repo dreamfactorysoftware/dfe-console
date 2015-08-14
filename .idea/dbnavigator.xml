@@ -22,11 +22,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes>
-      <connection connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a">
-        <schema name="dfe_local" object-types="table" />
-      </connection>
-    </loaded-nodes>
+    <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="1da9b971-3bd3-4f11-8a4c-d75c3479417a">
@@ -258,6 +254,9 @@
           <content-type name="PL/SQL" enabled="true" />
           <content-type name="JavaScript" enabled="true" />
           <content-type name="PHP" enabled="true" />
+          <content-type name="JSP" enabled="true" />
+          <content-type name="JSPx" enabled="true" />
+          <content-type name="ASP" enabled="true" />
           <content-type name="YAML" enabled="true" />
           <content-type name="Bash" enabled="true" />
         </content-types>
@@ -437,11 +436,10 @@
         <fetch-block-size value="100" />
         <execution-timeout value="20" />
         <debug-execution-timeout value="600" />
-        <prompt-execution value="false" />
+        <focus-result value="false" />
       </statement-execution>
       <script-execution>
         <command-line-interfaces />
-        <execution-timeout value="300" />
       </script-execution>
       <method-execution>
         <execution-timeout value="30" />
@@ -471,10 +469,6 @@
         <compile-dependencies value="ASK" />
         <always-show-controls value="false" />
       </compiler>
-      <debugger>
-        <debugger-type value="JDBC" />
-        <use-generic-runners value="true" />
-      </debugger>
     </operation-settings>
     <ddl-file-settings>
       <extensions>
