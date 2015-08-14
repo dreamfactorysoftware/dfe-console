@@ -47,7 +47,7 @@ class Provision extends ConsoleCommand
 
         $_ownerType = OwnerTypes::USER;
         $_ownerId = $this->argument('owner-id');
-        $_guestLocation = GuestLocations::resolve($this->argument('guest-location'));
+        $_guestLocation = $this->argument('guest-location');
 
         try {
             $_owner = OwnerTypes::getOwner($_ownerId, $_ownerType);
@@ -59,7 +59,11 @@ class Provision extends ConsoleCommand
             }
         }
 
-        \Log::info('[cli] provision "' . $_instanceId . '"');
+        if (empty($_owner)) {
+            throw new \InvalidArgumentException('The owner-id "' . $_ownerId . '" is not valid.');
+        }
+
+        $this->writeln('Provisioning instance <comment>"' . $_instanceId . '"</comment>.');
 
         return \Queue::push(new ProvisionJob($_instanceId, [
             'guest-location' => $_guestLocation,
