@@ -37,7 +37,9 @@ class ProvisionJobHandler
         $_guestLocation = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
 
         if (is_string($_guestLocation) && !is_numeric($_guestLocation)) {
-            $_options['guest-location'] = $_guestLocation = GuestLocations::resolve($_guestLocation);
+            $_options['guest-location'] = GuestLocations::resolve($_guestLocation, true);
+            \Log::debug('* guest location "' . $_options['guest-location'] . '" resolved from "' . $_guestLocation . '".');
+            $_guestLocation = $_options['guest-location'];
         }
 
         \Log::info('Provisioning requested [guest=' . $_guestLocation . ']: ' . Json::encode($_options));
