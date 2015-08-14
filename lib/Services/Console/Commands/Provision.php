@@ -56,7 +56,7 @@ class Provision extends Command
                 [
                     'guest-location',
                     InputArgument::OPTIONAL,
-                    'The location of the new instance. Values: 1 = DFE, 2 = AWS, or 3 = Azure.',
+                    'The location of the new instance. Values: ' . GuestLocations::prettyList('"', true),
                     config('provisioning.default-guest-location'),
                 ],
             ]);
