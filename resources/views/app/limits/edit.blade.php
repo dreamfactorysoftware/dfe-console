@@ -29,7 +29,7 @@
                             <option value="user">User</option>
                         </select>
                     </div>
-                    <div class="form-group" id="select_cluster" style="display: none;">
+                    <div class="form-group" id="select_cluster">
                         <label for="cluster_id">Cluster</label>
                         <select class="form-control" id="cluster_id" name="cluster_id">
                             @foreach ($clusters as $_cluster)
@@ -99,16 +99,16 @@
 
                 generateForm(_type);
 
-                if ('{{$limit['type']}}' === 'cluster') {
+                if ( _type === 'instance') {
                     var cluster_id = $('#cluster_id').val();
                     loadInstances(cluster_id, null);
                 }
 
-                if ('{{$limit['type']}}' === 'instance') {
-                    if (_type !== 'user') {
-                        var instance_id = $('#instance_id').val();
-                        loadUsers(instance_id, null);
-                    }
+                if ( _type === 'user') {
+                    var cluster_id = $('#cluster_id').val();
+                    loadInstances(cluster_id, null);
+                    var instance_id = $('#instance_id').val();
+                    loadUsers(instance_id, null);
                 }
             }
 
@@ -125,13 +125,10 @@
                     loadUsers(instance_id, null);
                 }
             }
-
-
         });
 
 
         $( document ).ready(function() {
-
             generateForm('{{$limit['type']}}');
 
             if ('{{$limit['type']}}' === 'cluster') {
@@ -146,38 +143,28 @@
 
             if ('{{$limit['type']}}' === 'user') {
                 $('#type_select').val('{{$limit['type']}}');
-
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
                 $('#instance_id').val('{{$limit['instance_id']}}');
                 loadUsers('{{$limit['instance_id']}}', '{{$limit['user_id']}}');
             }
 
-            //$('#type_select').val('{{$limit['type']}}');
-            //$('#instance_id').val('{{$limit['instance_id']}}');
             $('#period_name').val('{{$limit['period_name']}}');
-
         });
 
-        //@todo REALLY??
         function generateForm(type) {
+            var set_show = true;
 
-            if (type === 'cluster') {
-                $('#select_cluster').show();
-                $('#select_instance').hide();
-                $('#select_user').hide();
-            }
-
-            if (type === 'instance') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').hide();
-            }
-
-            if (type === 'user') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').show();
-            }
+            $('#type_select > option').each(function() {
+                if (set_show === true) {
+                    $('#select_' + this.value).show();
+                    if (type === this.value) {
+                        set_show = false;
+                    }
+                }
+                else {
+                    $('#select_' + this.value).hide();
+                }
+            });
         }
 
 
@@ -194,8 +181,6 @@
             $_spinner.addClass('fa-spin').removeClass('hidden');
 
             $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
-                var _item;
-
                 $_select.empty();
 
                 if (!$.isArray(data)) {
@@ -230,14 +215,14 @@
             var _instanceId = instanceId;
 
             if (!_instanceId || 0 == _instanceId) {
-                $_select.empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
+                $_select.empty().append('<option value="" selected="selected">Select User</option>');
                 return false;
             }
 
             $_spinner.addClass('fa-spin').removeClass('hidden');
 
             $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
-                var _item, $_select = $('#user_id');
+                var $_select = $('#user_id');
 
                 $_select.empty();
 
@@ -245,7 +230,7 @@
                     $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
                 } else {
                     if (!userId) {
-                        $_select.append('<option value="">Select User</option>')
+                        $_select.append('<option value="">Select User</option>');
                     }
                     $.each(data, function (index, item) {
                         var selected = '';
