@@ -1,20 +1,32 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Models\Instance;
+
 class ImportTest extends \TestCase
 {
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    public function testExport()
+    /**
+     * Tests provision request
+     */
+    public function testImport()
     {
-        $_instanceId = 'wicker-2';
-        $_ownerId = 22;
-        $_snapshot = '20150803014008.wicker';
+        $_instanceId = 'wicker';
+        $_snapshotId = '';
 
-        $_result = \Artisan::call('dfe:import',
-            ['owner-id' => $_ownerId, 'instance-id' => $_instanceId, 'snapshot' => $_snapshot, 'snapshot-id',]);
+        $_instance = Instance::byNameOrId($_instanceId)->firstOrFail();
 
-        $this->assertNotFalse($_result);
+        $_payload = [
+            'owner-id'       => $_instance->user_id,
+            'instance-id'    => $_instanceId,
+            'snapshot'       => $_snapshotId,
+            'snapshot-id'    => true,
+            'guest-location' => GuestLocations::DFE_CLUSTER,
+        ];
+
+        $_result = \Artisan::call('dfe:import', $_payload);
     }
 }

@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Config\ClusterManifest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Common\Utility\Disk;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
@@ -89,7 +90,7 @@ class Setup extends ConsoleCommand
         $_paths = config('commands.setup.required-directories', []);
 
         foreach ($_paths as $_path) {
-            if (!FileSystem::ensurePath($_path)) {
+            if (!Disk::ensurePath($_path)) {
                 $this->writeln('Unable to create directory: ' . $_path, 'error');
             }
         }
