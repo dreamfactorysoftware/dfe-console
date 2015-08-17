@@ -392,33 +392,33 @@ class LimitController extends ResourceController
                 $_services[$_v['id']] = $_v['name'];
             }
             */
-
+            /*
             $_tmp = $this->getInstanceUsers($_limit['instance_id']);
             $_users = [];
 
             foreach($_tmp as $_v) {
                 $_users[$_v['id']] = $_v['name'];
             }
-
+            */
             $_values['instance_id_text'] = $_instance->instance_id_text;
 
+        }
+
+        if ($_limit['user_id'] !== null) {
+            $_user = $this->_findUser($_limit['user_id']);
+            $_values['user_id_text'] = $_user->user_id_text;
         }
 
         $defaultPos = strpos($_limit['limit_key_text'], 'default.');
         $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
         $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
 
-        $_type = null;
-
         if ($defaultPos !== false && $defaultPos == 0) {
             $_values['notes'] = 'Default for all clusters and instances';
-            $_type = '';
         } elseif ($clusterDefaultPos !== false && $clusterDefaultPos == 0) {
             $_values['notes'] = 'Default for cluster';
-            $_type = 'cluster';
         } elseif ($instanceDefaultPos !== false && $instanceDefaultPos == 0) {
             $_values['notes'] = 'Default for instance';
-            $_type = 'instance';
         } else {
             $_values['notes'] = '';
         }
