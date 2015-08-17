@@ -40,7 +40,7 @@
                     <div class="form-group" id="select_instance" style="display: none;">
                         <label for="instance_id">Instance</label>
                         <select class="form-control" id="instance_id" name="instance_id">
-                            <option value="0">Select Instance</option>
+                            <option value="">Select Instance</option>
                         </select>
                     </div>
                     <div class="form-group" id="select_user" style="display: none;">
