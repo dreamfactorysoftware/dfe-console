@@ -163,9 +163,9 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ( $_input['cluster_id'] === null && $_input['instance_id'] === null) {
+            if ( $_input['cluster_id'] === '' && $_input['instance_id'] === '') {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif ($_input['cluster_id'] !== null && $_input['instance_id'] === null) {
+            } elseif ($_input['cluster_id'] !== '' && $_input['instance_id'] === '') {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
                 if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
@@ -568,9 +568,9 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            if ( $_input['cluster_id'] === null && $_input['instance_id'] === null) {
+            if ( $_input['cluster_id'] === '' && $_input['instance_id'] === '') {
                 $_limit_key_text = 'default.' . $_time_period;
-            } elseif ($_input['cluster_id'] !== null && $_input['instance_id'] === null) {
+            } elseif ($_input['cluster_id'] !== '' && $_input['instance_id'] === '') {
                 $_limit_key_text = 'cluster.default.' . $_time_period;
             } else {
                 if ($_input['service_name'] == 'all' && $_input['user_id'] == '') {

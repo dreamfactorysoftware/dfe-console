@@ -61,7 +61,7 @@
                         </div>
                         <div class="form-group">
                             <label for="limit_nbr">Limit</label>
-                            <input type="number" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ $limit['limit_nbr'] }}">
+                            <input type="text" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ $limit['limit_nbr'] }}">
                         </div>
                         <div>
                             <label for="active_ind">Active</label>&nbsp;&nbsp;
