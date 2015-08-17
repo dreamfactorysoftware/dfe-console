@@ -30,8 +30,8 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
-    <mapping file-url="file://$PROJECT_DIR$/database/seeds/dfe_local.schema.sql" connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a" current-schema="dfe_local" />
     <mapping file-url="file:///tmp/dfe_local.sql" connection-id="virtual-mysql-connection" current-schema="ROOT" />
+    <mapping file-url="file://$PROJECT_DIR$/database/seeds/dfe_local.schema.sql" connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a" current-schema="dfe_local" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
@@ -254,9 +254,6 @@
           <content-type name="PL/SQL" enabled="true" />
           <content-type name="JavaScript" enabled="true" />
           <content-type name="PHP" enabled="true" />
-          <content-type name="JSP" enabled="true" />
-          <content-type name="JSPx" enabled="true" />
-          <content-type name="ASP" enabled="true" />
           <content-type name="YAML" enabled="true" />
           <content-type name="Bash" enabled="true" />
         </content-types>
@@ -436,10 +433,11 @@
         <fetch-block-size value="100" />
         <execution-timeout value="20" />
         <debug-execution-timeout value="600" />
-        <focus-result value="false" />
+        <prompt-execution value="false" />
       </statement-execution>
       <script-execution>
         <command-line-interfaces />
+        <execution-timeout value="300" />
       </script-execution>
       <method-execution>
         <execution-timeout value="30" />
@@ -469,6 +467,10 @@
         <compile-dependencies value="ASK" />
         <always-show-controls value="false" />
       </compiler>
+      <debugger>
+        <debugger-type value="JDBC" />
+        <use-generic-runners value="true" />
+      </debugger>
     </operation-settings>
     <ddl-file-settings>
       <extensions>
