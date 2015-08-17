@@ -97,17 +97,8 @@
 
                                                 <input name="_method" type="hidden" value="DELETE">
                                                 <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
-
-                                                @if (array_key_exists('cluster_id', $value))
-                                                    <div class="tooltip-wrapper"  data-title="Cluster In Use - Delete Disabled">
-                                                        <input type="checkbox" disabled>&nbsp;&nbsp;
-                                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled style="width: 25px" ></button>
-                                                    </div>
-                                                @else
-                                                    <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}" name="{{ $value->cluster_id_text }}">&nbsp;&nbsp;
-                                                    <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
-                                                @endif
-
+                                                <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}" name="{{ $value->cluster_id_text }}">&nbsp;&nbsp;
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
                                             </form>
                                         </div>
                                     </td>
