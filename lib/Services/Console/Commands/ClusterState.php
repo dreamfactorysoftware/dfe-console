@@ -1,9 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
-use Illuminate\Console\Command;
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ClusterState extends Command
+class ClusterState extends ConsoleCommand
 {
     //******************************************************************************
     //* Members
@@ -20,23 +20,13 @@ class ClusterState extends Command
     //******************************************************************************
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
-    public function fire()
-    {
-    }
-
-    /**
      * Get the console command arguments.
      *
      * @return array
      */
     protected function getArguments()
     {
-        return array_merge(
-            parent::getArguments(),
+        return array_merge(parent::getArguments(),
             [
                 ['cluster-id', InputArgument::REQUIRED, 'The cluster id'],
             ]);

@@ -7,6 +7,7 @@ use Illuminate\Database\QueryException;
 use Session;
 use Validator;
 
+
 class UserController extends ResourceController
 {
     //******************************************************************************
@@ -58,6 +59,7 @@ class UserController extends ResourceController
     {
         $is_system_admin = '';
         $user = null;
+        $create_user = null;
         $user_data = \Input::all();
 
         $validator = Validator::make($user_data,
@@ -112,32 +114,35 @@ class UserController extends ResourceController
         }
 
         if ($is_system_admin != '') {
-            $user = new ServiceUser;
+            $create_user = new ServiceUser;
         } else {
-            $user = new User;
+            $create_user = new User;
         }
 
         if (array_key_exists('active', $user_data)) {
-            $user->active_ind = 1;
+            $user_data['active_ind'] = 1;
         } else {
-            $user->active_ind = 0;
+            $user_data['active_ind'] = 0;
         }
 
-        $user->password_text = bcrypt($user_data['new_password']);
-        $user->email_addr_text = $user_data['email_addr_text'];
-        $user->first_name_text = $user_data['first_name_text'];
-        $user->last_name_text = $user_data['last_name_text'];
-        $user->nickname_text = $user_data['nickname_text'];
+        $user_data['password_text'] = bcrypt($user_data['new_password']);
+
+        unset($user_data['active']);
+        unset($user_data['new_password']);
+        unset($user_data['system_admin']);
 
         try {
-            $user->save();
+            $create_user->create($user_data);
 
             $result_text =
                 'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was created successfully!';
             $result_status = 'alert-success';
 
-            return \Redirect::to($this->makeRedirectUrl('users',
-                ['flash_message' => $result_text, 'flash_type' => $result_status]));
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
+
         } catch (QueryException $e) {
             $res_text = strtolower($e->getMessage());
 
@@ -151,6 +156,7 @@ class UserController extends ResourceController
 
             return redirect('/v1/users/create')->withInput();
         }
+
     }
 
     public function update($id)
@@ -271,8 +277,11 @@ class UserController extends ResourceController
                 'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was updated successfully!';
             $result_status = 'alert-success';
 
-            return \Redirect::to($this->makeRedirectUrl('users',
-                ['flash_message' => $result_text, 'flash_type' => $result_status]));
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
+
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');

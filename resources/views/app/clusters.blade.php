@@ -1,4 +1,4 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Clusters', 'prefix' => $prefix))
+@include('layouts.partials.topmenu', ['pageName' => 'Clusters'])
 
 @extends('layouts.main')
 
@@ -37,7 +37,7 @@
                         </div>
                         <div class="btn-group btn-group">
 
-                            <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
+                            <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="height: 30px; width: 40px"></button>
 
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
@@ -47,7 +47,7 @@
                                 </ul>
                             </div>
 
-                            <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
+                            <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="height: 30px; width: 40px"></button>
                         </div>
                         <div class="btn-group">
                             <button type="button" id="selectedClustersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected clusters" value="delete" style="width: 40px"></button>
@@ -97,17 +97,8 @@
 
                                                 <input name="_method" type="hidden" value="DELETE">
                                                 <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
-
-                                                @if (array_key_exists('cluster_id', $value))
-                                                    <div class="tooltip-wrapper"  data-title="Cluster In Use - Delete Disabled">
-                                                        <input type="checkbox" disabled>&nbsp;&nbsp;
-                                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" disabled style="width: 25px" ></button>
-                                                    </div>
-                                                @else
-                                                    <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}" name="{{ $value->cluster_id_text }}">&nbsp;&nbsp;
-                                                    <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
-                                                @endif
-
+                                                <input type="checkbox" value="{{ $value->id }}" id="cluster_checkbox_{{ $value->id }}" name="{{ $value->cluster_id_text }}">&nbsp;&nbsp;
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeCluster({{ $value->id }}, '{{ $value->cluster_id_text }}')" value="delete" style="width: 25px" ></button>
                                             </form>
                                         </div>
                                     </td>

@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 
@@ -42,17 +43,19 @@ class DeprovisionJobHandler extends BaseListener
                 throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_result = $_provisioner->deprovision(new ProvisionServiceRequest($_instance, null, true), $_options);
+            $_response =
+                $_provisioner->deprovision(new ProvisionServiceRequest($_instance, null, true, false, $_options));
 
-            if (is_array($_result) && isset($_result['elapsed'])) {
-                $this->debug('deprovision request complete in ' . number_format($_result['elapsed'], 4) . 's');
+            if (!$_response) {
+                throw new ProvisioningException('deprovision failure');
             }
 
+            $this->info('deprovision request complete in ' . number_format($_response->getElapsedTime(), 4) . 's');
             $this->debug('<<< deprovision "' . $command->getInstanceId() . '" request SUCCESS');
 
-            $command->setResult($_result);
+            $command->setResult($_response);
 
-            return $_result;
+            return $_response;
         } catch (\Exception $_ex) {
             $this->error('deprovision "' . $command->getInstanceId() . '" request exception: ' . $_ex->getMessage());
         }
@@ -61,5 +64,4 @@ class DeprovisionJobHandler extends BaseListener
 
         return false;
     }
-
 }

@@ -51,4 +51,8 @@ class ConsoleDefaults
      * @type string
      */
     const UI_PREFIX = 'v1';
+    /**
+     * @type string
+     */
+    const DEFAULT_DOMAIN_PROTOCOL = EnterpriseDefaults::DEFAULT_DOMAIN_PROTOCOL;
 }

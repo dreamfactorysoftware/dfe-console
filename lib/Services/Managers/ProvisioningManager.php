@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Managers;
+<?php namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
 use DreamFactory\Enterprise\Common\Contracts\PortableProvisionerAware;
@@ -10,10 +9,13 @@ use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Facades\Snapshot;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortableProvisionerAware
 {
@@ -216,18 +218,52 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     }
 
     /**
+     * Restore portable snapshot data to an instance. If instance does not exist, it is created.
+     *
      * @param ImportJob $job
      *
-     * @return array
+     * @return array an array keyed by provisioner with the results up each ones import
      */
     public function import(ImportJob $job)
     {
-        $_instance = $this->_findInstance($job->getInstanceId());
-        $_services = $this->getPortableServices($_instance->guest_location_nbr);
+        //  Validate instance
+        $_instanceId = $job->getInstanceId();
+
+        //  No instance, let's make one...
+        $_options = $job->getOptions();
+
+        try {
+            //  Find instance if it exists...
+            $_instance = $this->_findInstance($_instanceId);
+        } catch (ModelNotFoundException $_ex) {
+            try {
+                $_result = \Artisan::call('dfe:provision',
+                    array_merge($_options,
+                        [
+                            'instance-id' => $_instanceId,
+                        ]));
+
+                if (0 == $_result) {
+                    $_instance = $this->_findInstance($_instanceId);
+                } else {
+                    throw new ModelNotFoundException();
+                }
+            } catch (ModelNotFoundException $_ex) {
+                throw new \RuntimeException('The instance could be be provisioned.',
+                    Response::HTTP_PRECONDITION_FAILED);
+            }
+        }
+
+        $_services = $this->getPortableServices(array_get($_options, 'guest-location'));
+
         $_imports = [];
 
+        //  Allow each service to import individually, collecting the output
         foreach ($_services as $_type => $_service) {
-            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance, $job->getTarget()));
+            //@todo I think the following may be replaced with "$_exports[$_type] = $_service->import($job);"
+            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance,
+                $job->getTarget() ?: array_get($job->getOptions(), 'target'),
+                $job->getOptions()));
         }
 
         return $_imports;
@@ -240,16 +276,28 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function export(ExportJob $job)
     {
-        $_instance = $this->_findInstance($job->getInstanceId());
+        try {
+            $_instance = $this->_findInstance($job->getInstanceId());
+        } catch (ModelNotFoundException $_ex) {
+            throw new \RuntimeException('Instance "' . $job->getInstanceId() . '" not found.',
+                Response::HTTP_NOT_FOUND);
+        }
+
+        //  Get the portable services of this instance provisioner
         $_services = $this->getPortableServices($_instance->guest_location_nbr);
-        $_exports = [];
 
         //  Allow each service to export individually, collecting the output
+        $_exports = [];
+
         foreach ($_services as $_type => $_service) {
+            //@todo I think the following may be replaced with "$_exports[$_type] = $_service->export($job);"
             $_exports[$_type] = $_service->export(PortableServiceRequest::makeExport($_instance, $job->getTarget()));
         }
 
-        return $_exports;
+        return Snapshot::createFromExports($_instance,
+            $_exports,
+            $job->getTarget() ?: array_get($job->getOptions(), 'target'),
+            array_get($job->getOptions(), 'keep-days'));
     }
 
     /**

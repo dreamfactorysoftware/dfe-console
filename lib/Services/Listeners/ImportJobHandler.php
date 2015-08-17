@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
+use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 
 /**
@@ -9,36 +10,43 @@ use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 class ImportJobHandler extends BaseListener
 {
     //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /** @inheritdoc */
+    const LOG_PREFIX = 'dfe:import';
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
-     * Handle a request
+     * Handle a provisioning request
      *
-     * @param  ImportJob $job
+     * @param \DreamFactory\Enterprise\Services\Jobs\ImportJob $job
      *
      * @return mixed
+     *
      */
     public function handle(ImportJob $job)
     {
-        $this->setLumberjackPrefix('dfe.import');
+        $this->registerHandler($job);
 
-        $_start = microtime(true);
+        $this->info('import "' . ($_instanceId = $job->getInstanceId()) . '"');
 
-        $this->debug('>>> import "' . $job->getInstanceId() . '" request received');
+        $this->startTimer();
 
         try {
-            $job->setResult($_result = \Provision::import($job));
-            $this->debug('import "' . $job->getInstanceId() . '" request SUCCESS');
-        } catch (\Exception $_ex) {
-            $this->error('import "' . $job->getInstanceId() . '" request FAILURE: ' . $_ex->getMessage());
-            $_result = false;
+            if (false === ($_response = Provision::import($job))) {
+                throw new \RuntimeException('Unknown import failure');
+            }
+        } catch (\RuntimeException $_ex) {
+            $this->error('[ERROR] ' . $_ex->getMessage());
+            !isset($_response) && $_response = false;
         }
 
-        $_elapsed = microtime(true) - $_start;
-        $this->debug('<<< import complete in ' . number_format($_elapsed, 4) . 's');
+        $this->info('instance import complete in ' . number_format($this->getElapsedTime(), 4) . 's');
 
-        return $_result;
+        return $_response;
     }
-
 }

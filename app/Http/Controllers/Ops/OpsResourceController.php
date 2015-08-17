@@ -18,5 +18,4 @@ class OpsResourceController extends ResourceController
 
         $this->middleware(AuthenticateOpsClient::ALIAS);
     }
-
 }

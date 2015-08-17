@@ -43,6 +43,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/build" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/vendor" />
     </content>
@@ -53,12 +54,10 @@
         <CLASSES>
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
-          <root url="phar://$MODULE_DIR$/composer.phar" />
         </CLASSES>
         <SOURCES>
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
-          <root url="phar://$MODULE_DIR$/composer.phar" />
         </SOURCES>
       </library>
     </orderEntry>

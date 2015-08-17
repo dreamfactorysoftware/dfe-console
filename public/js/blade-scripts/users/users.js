@@ -32,17 +32,6 @@ function initUserEditSet(status){
 }
 
 
-function systemAdminClick(){
-
-    var status = $("#system_admin").is(':checked');
-
-    if(Boolean(status))
-        $("#advancedUserOptions").hide();
-    else
-        $("#advancedUserOptions").show();
-}
-
-
 function removeUser(id, name, type) {
 
     if(confirm('Remove User "' + name + '" ? ')){

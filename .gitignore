@@ -1,7 +1,7 @@
 vendor/
 node_modules/
-/.env
-/.env.local
+.env
+.env.local
 /.dfe.cluster.json
 /.idea/workspace.xml
 /.idea/tasks.xml
@@ -10,5 +10,6 @@ node_modules/
 /_ide_*.php
 /original
 composer.lock
+composer.phar
 /database/dfe/*
 !/database/dfe/dfe_local.schema.sql

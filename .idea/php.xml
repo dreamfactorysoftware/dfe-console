@@ -33,6 +33,7 @@
         <option value="Illuminate\Database\Eloquent\Model-&gt;__get" />
         <option value="Illuminate\Support\Facades\Queue::getFacadeAccessor" />
         <option value="config" />
+        <option value="DreamFactory\Enterprise\Common\Utility\Disk::segment" />
       </list>
     </option>
   </component>

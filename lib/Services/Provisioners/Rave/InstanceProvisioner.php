@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Enums\OperationalStates;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\HasOfferings;
 use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;
@@ -70,18 +71,15 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             $this->deprovisionStorage($request);
 
             if (!$this->deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
-                $this->error('* unable to remove instance "' .
-                    $_instance->instance_id_text .
-                    '" after failed provision.');
+                $this->error('* unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.');
             }
         }
 
-        return [
-            'success'  => $_success,
-            'instance' => $_success ? $_instance->toArray() : false,
-            'log'      => $_output,
-            'result'   => $_result,
-        ];
+        return ProvisionServiceResponse::make($_success,
+            $request,
+            $_result,
+            ['instance' => $_success ? $_instance->toArray() : false,],
+            $_output);
     }
 
     /** @inheritdoc */
@@ -90,6 +88,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
         $_output = [];
         $_success = $_result = false;
         $_instance = $request->getInstance();
+        $_original = $_instance->toArray();
 
         //	Update the current instance state
         $_instance->updateState(ProvisionStates::DEPROVISIONING);
@@ -101,12 +100,11 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             $_instance->updateState(ProvisionStates::DEPROVISIONING_ERROR);
         }
 
-        return [
-            'success'  => $_success,
-            'instance' => $_success ? $_instance->toArray() : false,
-            'log'      => $_output,
-            'result'   => $_result,
-        ];
+        return ProvisionServiceResponse::make($_success,
+            $request,
+            $_result,
+            ['instance' => $_success ? $_original : false,],
+            $_output);
     }
 
     /**
@@ -176,7 +174,15 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
         $_dbService = Provision::getDatabaseProvisioner($_instance->guest_location_nbr);
         $_dbConfig = $_dbService->provision($request);
 
-        //  2. Update the instance with new provision info
+        //  2. Generate an app key for the instance
+        AppKey::create([
+            'key_class_text' => AppKeyClasses::INSTANCE,
+            'owner_id'       => $_instance->id,
+            'owner_type_nbr' => OwnerTypes::INSTANCE,
+            'server_secret'  => config('dfe.security.console-api-key'),
+        ]);
+
+        //  3. Update the instance with new provision info
         try {
             $_instance->fill([
                 'guest_location_nbr' => GuestLocations::DFE_CLUSTER,
@@ -195,16 +201,6 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
                 'terminate_date'     => null,
                 'provision_ind'      => true,
                 'deprovision_ind'    => false,
-            ]);
-
-            /**
-             * Generate an app key for the instance
-             */
-            AppKey::create([
-                'key_class_text' => AppKeyClasses::INSTANCE,
-                'owner_id'       => $_instance->id,
-                'owner_type_nbr' => OwnerTypes::INSTANCE,
-                'server_secret'  => config('dfe.security.console-api-key'),
             ]);
 
             //  Create the guest row...
@@ -287,13 +283,11 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
      */
     protected function getFullyQualifiedDomainName($name)
     {
-        return implode(
-            '.',
+        return implode('.',
             [
                 trim($name, '. '),
                 trim(config('provisioning.default-dns-zone'), '. '),
                 trim(config('provisioning.default-dns-domain'), '. '),
-            ]
-        );
+            ]);
     }
 }

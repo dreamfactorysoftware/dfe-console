@@ -1,27 +1,12 @@
-@include('layouts.partials.topmenu',['pageName' => 'Instances', 'prefix' => $prefix])
-
 @extends('layouts.main')
-
+@include('layouts.partials.topmenu',['pageName' => 'Instances', 'prefix' => $prefix])
 @section('content')
 
-    <div class="col-md-2">
-        <div>
-            <ul class="nav nav-pills nav-stacked visible-md visible-lg">
-                <li class="active">
-                    <a href="/{{$prefix}}/instances">Manage</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <div class="col-xs-1 col-sm-2 col-md-2 df-sidebar-nav"></div>
 
-    <div class="col-md-10">
-        <div>
-            <div>
-                <div class="nav nav-pills dfe-section-header">
-                    <h4>Manage Instances</h4>
-                </div>
-            </div>
-        </div>
+    <div class="col-xs-11 col-sm-10 col-md-10">
+        @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Manage Instances'])
+
 
         <!-- Tool Bar -->
         <div class="row">
@@ -32,7 +17,7 @@
                     </div>
                     <div class="btn-group btn-group">
 
-                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
+                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="height: 30px; width: 40px"></button>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
@@ -42,15 +27,17 @@
                             </ul>
                         </div>
 
-                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
+                        <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="height: 30px; width: 40px"></button>
                     </div>
-                    <div style="clear: both"></div>
+                    <div class="btn-group">
+                        <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="Search Instances...">
+                    </div>
+                    <div class="btn-group pull-right">
+                        <button type="button" id="refresh" class="btn btn-default btn-sm fa fa-fw fa-refresh" title="Reset sorting" value="" style="width: 40px"></button>
+                    </div>
                 </div>
             </div>
         </div>
-
-
-
 
         <div>
             <div class="row">
@@ -63,9 +50,7 @@
                                     <th>Name</th>
                                     <th>Cluster</th>
                                     <th>Owner Email</th>
-                                    <th>Policy</th>
                                     <th>Last Modified</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,12 +66,7 @@
                                     <!--td style="text-align: left; vertical-align: middle;">{{ $_instance->create_date }}</td-->
 
                                     <td>{{ $_instance->user->email_addr_text }}</td>
-                                    <td> </td>
-                                    <td>{{ $_instance->lmod_date }}</td>
-                                    <td>
-                                        <input class="btn btn-default btn-xs" type="button" value="Backup">&nbsp;&nbsp;
-                                        <input class="btn btn-default btn-xs" type="button" value="Restore">
-                                    </td>
+                                    <td style="width: 185px">{{ $_instance->lmod_date }}</td>
                                 </tr>
 
                             @endforeach

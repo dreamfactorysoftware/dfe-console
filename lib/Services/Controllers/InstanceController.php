@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Controllers;
+<?php namespace DreamFactory\Enterprise\Services\Controllers;
 
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
 use DreamFactory\Enterprise\Database\Models\Cluster;
@@ -30,7 +29,7 @@ class InstanceController extends FactoryController
             $_response[$_cluster->cluster_id_text] = $_cluster->toArray();
             $_response[$_cluster->cluster_id_text]['servers'] = [];
 
-            $_servers = $_cluster->servers();
+            $_servers = $_cluster->assignedServers();
 
             if ($_servers->count()) {
                 /** @type Server $_server */
@@ -58,6 +57,6 @@ class InstanceController extends FactoryController
             throw new \RuntimeException('The user for instance "' . $instanceId . '" was not found.');
         }
 
-        return $_instance->getMetadata();
+        return $_instance->getMetadata()->toArray();
     }
 }

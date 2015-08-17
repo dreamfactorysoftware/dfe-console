@@ -3,7 +3,6 @@
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 
 class ProvisionTest extends \TestCase
 {
@@ -16,13 +15,12 @@ class ProvisionTest extends \TestCase
      */
     public function testProvision()
     {
-        $_instanceId = 'dfe-test-case';
+        $_instanceId = 'wicker2';
 
         $_payload = [
-            'instance-id'        => $_instanceId,
-            'owner-id'           => 22,
-            'owner-type'         => OwnerTypes::USER,
-            'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
+            'instance-id'    => $_instanceId,
+            'owner-id'       => 22,
+            'guest-location' => GuestLocations::DFE_CLUSTER,
         ];
 
         /** @var Instance $_instance */
@@ -30,8 +28,9 @@ class ProvisionTest extends \TestCase
             $_instance->delete();
         }
 
-        $_job = new ProvisionJob($_instanceId, $_payload);
+        $_result = \Artisan::call('dfe:provision', $_payload);
 
-        $_result = \Queue::push($_job);
+//        $_job = new ProvisionJob($_instanceId, $_payload);
+//        $_result = \Queue::push($_job);
     }
 }

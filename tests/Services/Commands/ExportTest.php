@@ -1,7 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
-use DreamFactory\Enterprise\Services\Jobs\ExportJob;
-
 class ExportTest extends \TestCase
 {
     //******************************************************************************
@@ -10,10 +8,10 @@ class ExportTest extends \TestCase
 
     public function testExport()
     {
-        $_instanceId = 'bender';
+        $_instanceId = 'wicker';
 
-        $_job = new ExportJob($_instanceId);
+        $_result = \Artisan::call('dfe:export', ['instance-id' => $_instanceId]);
 
-        $_result = \Queue::push($_job);
+        $this->assertNotFalse($_result);
     }
 }

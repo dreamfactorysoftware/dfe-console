@@ -17,9 +17,9 @@ class DeprovisionTest extends \TestCase
         $_instanceId = 'leela';
 
         $_payload = [
-            'instance-id'        => $_instanceId,
-            'owner-id'           => 22,
-            'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
+            'instance-id'    => $_instanceId,
+            'owner-id'       => 22,
+            'guest-location' => GuestLocations::DFE_CLUSTER,
         ];
 
         $_job = new DeprovisionJob($_instanceId, $_payload);

@@ -113,10 +113,6 @@ class InstanceManager extends BaseManager implements Factory
      */
     public function make($instanceName, $options = [])
     {
-        if (false === ($_sanitized = Instance::isNameAvailable($instanceName))) {
-            throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
-        }
-
         try {
             //  Basic checks...
             if (null === ($_ownerId = array_get($options, 'owner-id'))) {
@@ -133,8 +129,16 @@ class InstanceManager extends BaseManager implements Factory
                 throw new \InvalidArgumentException('The "owner-id" and/or "owner-type" specified is/are invalid.');
             }
 
-            //  Validate the cluster and pull component ids
+            $this->debug('owner validated: ' . $_owner->id . ($_owner->admin_ind ? ' (admin)' : ' (non-admin)'));
+
+            if (false === ($_sanitized = Instance::isNameAvailable($instanceName, $_owner->admin_ind))) {
+                throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
+            }
+
+            //  Get the proper location
             $_guestLocation = array_get($options, 'guest-location', config('provisioning.default-guest-location'));
+
+            //  Validate the cluster and pull component ids
             $_clusterId = array_get($options, 'cluster-id', config('provisioning.default-cluster-id'));
             $_clusterConfig = $this->_getServersForCluster($_clusterId);
             $_ownerId = $_owner->id;
@@ -149,41 +153,34 @@ class InstanceManager extends BaseManager implements Factory
                 'app_server_id'      => (int)$_clusterConfig['app-server-id'],
                 'web_server_id'      => (int)$_clusterConfig['web-server-id'],
                 'state_nbr'          => ProvisionStates::CREATED,
-                'trial_instance_ind' => !!array_get($options, 'trial', false),
             ];
 
             $_guestAttributes = [
                 'instance_id'           => null,
                 'vendor_id'             => $_guestLocation,
-                'vendor_image_id'       => array_get(
-                    $options,
+                'vendor_image_id'       => array_get($options,
                     'vendor-image-id',
-                    config('provisioning.default-vendor-image-id')
-                ),
-                'vendor_credentials_id' => array_get(
-                    $options,
+                    config('provisioning.default-vendor-image-id')),
+                'vendor_credentials_id' => array_get($options,
                     'vendor-credentials-id',
-                    config('provisioning.default-vendor-credentials-id')
-                ),
+                    config('provisioning.default-vendor-credentials-id')),
             ];
 
             //  Write it out
-            return \DB::transaction(
-                function () use ($_ownerId, $_attributes, $_guestAttributes) {
-                    $_instance = Instance::create($_attributes);
-                    $this->debug('created instance row id#' . $_instance->id);
+            return \DB::transaction(function () use ($_ownerId, $_attributes, $_guestAttributes) {
+                $_instance = Instance::create($_attributes);
+                $this->debug('created instance row id#' . $_instance->id);
 
-                    $_guestAttributes['instance_id'] = $_instance->id;
-                    $_guest = InstanceGuest::create($_guestAttributes);
-                    $this->debug('created guest row id#' . $_guest->id);
+                $_guestAttributes['instance_id'] = $_instance->id;
+                $_guest = InstanceGuest::create($_guestAttributes);
+                $this->debug('created guest row id#' . $_guest->id);
 
-                    if (!$_instance || !$_guest) {
-                        throw new \RuntimeException('Instance creation failed');
-                    }
-
-                    return $_instance;
+                if (!$_instance || !$_guest) {
+                    throw new \RuntimeException('Instance creation failed');
                 }
-            );
+
+                return $_instance;
+            });
         } catch (\Exception $_ex) {
             throw new ProvisioningException('Error creating new instance: ' . $_ex->getMessage());
         }

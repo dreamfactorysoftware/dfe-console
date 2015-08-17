@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
@@ -98,17 +97,14 @@ class ServerController extends ResourceController
 
     public function edit($id)
     {
+        $cluster_names = 'The server is not assigned to a cluster';
         $cluster_servers = $this->_serverClusters($id);
 
-        $cluster_names = '';
-
-        foreach ($cluster_servers as $value) {
-            $cluster = $this->_findCluster($value->cluster_id);
-            $cluster_names .= ' ' . $cluster->cluster_id_text . ',';
+        if (count($cluster_servers) > 0)
+        {
+            $cluster = $this->_findCluster($cluster_servers[0]->cluster_id);
+            $cluster_names = $cluster->cluster_id_text;
         }
-
-        $cluster_names = rtrim($cluster_names, ',');
-        $cluster_names = ($cluster_names ? $cluster_names : '(none)');
 
         $server_types = ServerType::all();
         $server_data = $this->_findServer($id);
@@ -126,8 +122,9 @@ class ServerController extends ResourceController
 
     public function update($id)
     {
-
         $input = Input::all();
+
+
 
         $validator = Validator::make($input,
             [
@@ -141,8 +138,7 @@ class ServerController extends ResourceController
                 'config.' . $input['server_type_select'] . '.scheme'                => 'sometimes|required|string|min:1',
                 'config.' . $input['server_type_select'] . '.username'              => 'sometimes|required|string',
                 'config.' . $input['server_type_select'] . '.driver'                => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.access_token'          => 'sometimes|required|string|min:1',
+                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string'
             ]);
 
         if ($validator->fails()) {
@@ -167,7 +163,7 @@ class ServerController extends ResourceController
                         $flash_message = 'Port must be an integer and larger than 0';
                         break;
                     case 'config.' . $input['server_type_select'] . '.scheme':
-                        $flash_message = 'Scheme is not selected';
+                        $flash_message = 'Protocol is not selected';
                         break;
                     case 'config.' . $input['server_type_select'] . '.username':
                         $flash_message =
@@ -180,9 +176,6 @@ class ServerController extends ResourceController
                         $flash_message =
                             'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
-                    case 'config.' . $input['server_type_select'] . '.access_token':
-                        $flash_message = 'Access Token is blank or contains invalid characters';
-                        break;
                 }
 
                 break;
@@ -191,7 +184,7 @@ class ServerController extends ResourceController
             Session::flash('flash_message', $flash_message);
             Session::flash('flash_type', 'alert-danger');
 
-            return redirect('/v1/servers/create')->withInput();
+            return redirect('/v1/servers/' . $id . '/edit')->withInput();
         }
 
         try {
@@ -230,7 +223,6 @@ class ServerController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         } catch (QueryException $e) {
-            //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
 
@@ -255,8 +247,7 @@ class ServerController extends ResourceController
                 'config.' . $input['server_type_select'] . '.scheme'                => 'sometimes|required|string|min:1',
                 'config.' . $input['server_type_select'] . '.username'              => 'sometimes|required|string',
                 'config.' . $input['server_type_select'] . '.driver'                => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.access_token'          => 'sometimes|required|string|min:1',
+                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string'
             ]);
 
         if ($validator->fails()) {
@@ -293,9 +284,6 @@ class ServerController extends ResourceController
                     case 'config.' . $input['server_type_select'] . '.default-database-name':
                         $flash_message =
                             'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
-                        break;
-                    case 'config.' . $input['server_type_select'] . '.access_token':
-                        $flash_message = 'Access Token is blank or contains invalid characters';
                         break;
                 }
 
@@ -344,7 +332,6 @@ class ServerController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         } catch (QueryException $e) {
-            //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
 
@@ -399,7 +386,6 @@ class ServerController extends ResourceController
                 ->with('flash_message', $result_text)
                 ->with('flash_type', $result_status);
         } catch (QueryException $e) {
-            //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
 

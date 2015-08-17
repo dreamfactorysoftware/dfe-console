@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Cluster;
@@ -8,11 +9,10 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Jobs\ManifestJob;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Manifest extends Command
+class Manifest extends ConsoleCommand
 {
     //******************************************************************************
     //* Traits
@@ -38,20 +38,17 @@ class Manifest extends Command
     /** @inheritdoc */
     public function fire()
     {
+        parent::fire();
+
         if ($this->option('create') && $this->option('show')) {
-            throw new \InvalidArgumentException(
-                'The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.'
-            );
+            throw new \InvalidArgumentException('The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.');
         }
 
-        $this->_job = new ManifestJob(
-            $this->argument('cluster-id'),
-            $this->argument('web-server-id'),
-            ServerTypes::WEB
-        );
+        $this->_job =
+            new ManifestJob($this->argument('cluster-id'), $this->argument('web-server-id'), ServerTypes::WEB);
 
-        $this->_job
-            ->setInput($this->input)->setOutput($this->output)
+        $this->_job->setInput($this->input)
+            ->setOutput($this->output)
             ->setOwner($this->option('owner-id'), $this->option('owner-type'))
             ->setShowManifest($this->option('show'))
             ->setCreateManifest($this->option('create'))
@@ -68,8 +65,7 @@ class Manifest extends Command
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(
-            parent::getArguments(),
+        return array_merge(parent::getArguments(),
             [
                 ['cluster-id', InputArgument::REQUIRED, 'The id/name of the cluster',],
                 ['web-server-id', InputArgument::REQUIRED, 'The id/name of the web server from "cluster-id"',],
@@ -78,15 +74,13 @@ class Manifest extends Command
                     InputArgument::OPTIONAL,
                     'The /path/to/manifest/file to write. Otherwise it is written to the current working directory.',
                 ],
-            ]
-        );
+            ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(
-            parent::getOptions(),
+        return array_merge(parent::getOptions(),
             [
                 ['create', 'c', InputOption::VALUE_NONE, 'Create a new manifest file. This is the default.'],
                 ['no-keys', 'k', InputOption::VALUE_NONE, 'If specified, no application keys will be generated.'],
@@ -104,8 +98,7 @@ class Manifest extends Command
                     'The owner type for the manifest key if not "dashboard"',
                     'dashboard',
                 ],
-            ]
-        );
+            ]);
     }
 
     /**

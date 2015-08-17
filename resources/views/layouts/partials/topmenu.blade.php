@@ -1,39 +1,30 @@
 <?php
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use Illuminate\Support\Str;
 
-$menu = array();
+//  Set prefix if missing
+$prefix = isset($prefix) ? $prefix : ConsoleDefaults::UI_PREFIX;
 
-array_push($menu, array('id' => 0,  'link' => 'home',     'name' => 'Home'));
-array_push($menu, array('id' => 1,  'link' => 'users',          'name' => 'Users'));
-array_push($menu, array('id' => 2,  'link' => 'servers',        'name' => 'Servers'));
-array_push($menu, array('id' => 3,  'link' => 'clusters',       'name' => 'Clusters'));
-array_push($menu, array('id' => 4,  'link' => 'instances',      'name' => 'Instances'));
-array_push($menu, array('id' => 5,  'link' => 'policies',       'name' => 'Policies'));
-array_push($menu, array('id' => 5,  'link' => 'reports',        'name' => 'Reports'));
+//  And page name (derived from route)
+if (!isset($pageName) || empty($pageName)) {
+    $_parts = explode('.', Route::getCurrentRoute()->getName());
+    $pageName = isset($_parts, $_parts[sizeof($_parts) - 2]) ? Str::title($_parts[sizeof($_parts) - 2]) : null;
+}
 
+$_linkPrefix = '/' . ConsoleDefaults::UI_PREFIX . '/';
+$_resources = ['Home', 'Servers', 'Clusters', 'Users', 'Instances', 'Limits', 'Reports'];
 ?>
-
 <div class="dfe-topmenu">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-md-12 col-sm-12 col-xs-12">
                 <div style="vertical-align: top">
-                    <h1 class="text-primary pull-left dfe-topmenu-pagename">
-                        {{$pageName}}
-                    </h1>
+                    <h1 class="text-primary pull-left dfe-topmenu-pagename">{{ $pageName }}</h1>
                     <ul class="nav nav-pills pull-right visible-md visible-lg">
-                        @foreach ($menu as $menu_item)
-
-                            @if ($menu_item['name'] == $pageName)
-                                <li class="active">
-                            @else
-                                <li class="">
-                            @endif
-                                    @if ($menu_item['name'] == 'Dashboard')
-                                        <a href="/">{{ $menu_item['name'] }}</a>
-                                    @else
-                                        <a href="/{{$prefix}}/{{ $menu_item['link'] }}">{{ $menu_item['name'] }}</a>
-                                    @endif
-                                </li>
+                        @foreach ($_resources as $_resource)
+                            <li class="{{ $_resource == $pageName ? 'active' : null }}">
+                                <a href="{{ $_linkPrefix . strtolower($_resource) }}">{{ $_resource }}</a>
+                            </li>
                         @endforeach
                     </ul>
                 </div>

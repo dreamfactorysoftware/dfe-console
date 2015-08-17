@@ -29,6 +29,10 @@
       <console name="localhost" type="STANDARD" />
     </connection>
   </component>
+  <component name="DBNavigator.Project.FileConnectionMappingManager">
+    <mapping file-url="file://$PROJECT_DIR$/database/seeds/dfe_local.schema.sql" connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a" current-schema="dfe_local" />
+    <mapping file-url="file:///tmp/dfe_local.sql" connection-id="virtual-mysql-connection" current-schema="ROOT" />
+  </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
     <execution-history>
@@ -55,7 +59,7 @@
           <description value="localhost" />
           <database-type value="MYSQL" />
           <config-type value="BASIC" />
-          <database-version value="5.5" />
+          <database-version value="5.6" />
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />
@@ -84,7 +88,7 @@
           <charset value="UTF-8" />
           <ddl-file-binding value="true" />
           <database-logging value="true" />
-          <environment-type value="default" />
+          <environment-type value="development" />
           <idle-time-to-disconnect value="30" />
           <password-expiry-time value="10" />
           <max-connection-pool-size value="7" />
@@ -125,7 +129,7 @@
     </connections>
     <browser-settings>
       <general>
-        <display-mode value="TABBED" />
+        <display-mode value="SIMPLE" />
         <navigation-history-size value="100" />
         <show-object-details value="false" />
       </general>
@@ -250,6 +254,9 @@
           <content-type name="PL/SQL" enabled="true" />
           <content-type name="JavaScript" enabled="true" />
           <content-type name="PHP" enabled="true" />
+          <content-type name="JSP" enabled="true" />
+          <content-type name="JSPx" enabled="true" />
+          <content-type name="ASP" enabled="true" />
           <content-type name="YAML" enabled="true" />
           <content-type name="Bash" enabled="true" />
         </content-types>

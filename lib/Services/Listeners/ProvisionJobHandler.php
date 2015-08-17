@@ -1,11 +1,13 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Library\Utility\Json;
 
 /**
  * Processes queued provision requests
@@ -32,6 +34,15 @@ class ProvisionJobHandler
     public function handle(ProvisionJob $command)
     {
         $_options = $command->getOptions();
+        $_guestLocation = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
+
+        if (is_string($_guestLocation) && !is_numeric($_guestLocation)) {
+            $_options['guest-location'] = GuestLocations::resolve($_guestLocation, true);
+            \Log::debug('* guest location "' . $_options['guest-location'] . '" resolved from "' . $_guestLocation . '".');
+            $_guestLocation = $_options['guest-location'];
+        }
+
+        \Log::info('Provisioning requested [guest=' . $_guestLocation . ']: ' . Json::encode($_options));
 
         try {
             //  Create the instance record
@@ -47,20 +58,20 @@ class ProvisionJobHandler
         }
 
         try {
-            $_guest = array_get($_options, 'guest-location-nbr', config('provisioning.default-guest-location'));
+            $_guest = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
             $_provisioner = Provision::getProvisioner($_guest);
 
             if (empty($_provisioner)) {
                 throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_result = $_provisioner->provision(new ProvisionServiceRequest($_instance));
-
-            if (is_array($_result) && $_result['success'] && isset($_result['elapsed'])) {
-                \Log::info('provisioning - success, completed in ' . number_format($_result['elapsed'], 4) . 's');
+            if (false === ($_response = $_provisioner->provision(new ProvisionServiceRequest($_instance)))) {
+                throw new ProvisioningException('provisioning error');
             }
 
-            return true;
+            \Log::info('provisioning - success, completed in ' . number_format($_response->getElapsedTime(), 4) . 's');
+
+            return $_response;
         } catch (\Exception $_ex) {
             \Log::error('provisioning - failure, exception during provisioning: ' . $_ex->getMessage());
 
@@ -72,5 +83,4 @@ class ProvisionJobHandler
 
         return false;
     }
-
 }

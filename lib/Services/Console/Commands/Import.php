@@ -1,11 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
-use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
-class Import extends Command
+class Import extends ConsoleCommand
 {
     //******************************************************************************
     //* Members
@@ -18,7 +19,7 @@ class Import extends Command
     /**
      * @type string Command description
      */
-    protected $description = 'Imports a previously exported snapshot';
+    protected $description = 'Import a portable instance export';
 
     //******************************************************************************
     //* Methods
@@ -31,12 +32,15 @@ class Import extends Command
      */
     public function fire()
     {
-        $_request = new PortableServiceRequest($this->argument('instance-id'), $this->argument('snapshot-id'));
+        parent::fire();
 
-        return \Queue::push(new ImportJob($_request,
-            $this->argument('instance-id'),
-            null,
-            $this->argument('snapshot')));
+        $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
+            $this->argument('snapshot'),
+            array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
+
+        \Queue::push($_job = new ImportJob($_request));
+
+        return $_job->getResult();
     }
 
     /**
@@ -48,8 +52,46 @@ class Import extends Command
     {
         return array_merge(parent::getArguments(),
             [
+                ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
                 ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
                 ['snapshot', InputArgument::REQUIRED, 'The path of the snapshot file'],
+                [
+                    'guest-location',
+                    InputArgument::OPTIONAL,
+                    'The location of the new instance',
+                    config('provisioning.default-guest-location'),
+                ],
+            ]);
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return array_merge(parent::getArguments(),
+            [
+                [
+                    'cluster-id',
+                    'c',
+                    InputOption::VALUE_OPTIONAL,
+                    'The cluster where this instance is to be placed.',
+                    config('provisioning.default-cluster-id'),
+                ],
+                [
+                    'snapshot-id',
+                    'i',
+                    InputOption::VALUE_NONE,
+                    'If specified, the "snapshot" value is a snapshot-id not a path',
+                ],
+                [
+                    'owner-type',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'The owner-id of the new instance',
+                ],
             ]);
     }
 }

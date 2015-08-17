@@ -12,5 +12,4 @@ class ClusterController extends OpsResourceController
     protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Cluster';
     /** @type string */
     protected $_resource = 'cluster';
-
 }

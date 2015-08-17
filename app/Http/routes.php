@@ -8,23 +8,34 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group(['middleware' => 'auth'],
     function () {
-        \Route::get('/', 'Resources\\HomeController@index');
-        \Route::get('home', 'Resources\\HomeController@index');
+        \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\\HomeController@index']);
+        \Route::get('/home', ['as' => 'home', 'uses' => 'Resources\\HomeController@index']);
+        \Route::get('/', ['as' => 'home', 'uses' => 'Resources\\HomeController@index']);
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/{clusterId}/instances',
+            'Resources\\ClusterController@getInstances');
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/services',
+            'Resources\\LimitController@getInstanceServices');
+        \Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/users',
+            'Resources\\LimitController@getInstanceUsers');
     });
 
 //******************************************************************************
 //* Resource Controllers
 //******************************************************************************
 
-\Route::group(['prefix' => ConsoleDefaults::UI_PREFIX, 'middleware' => 'auth'],
+\Route::group([
+    'prefix'     => ConsoleDefaults::UI_PREFIX,
+    'namespace'  => 'Resources',
+    'middleware' => 'auth',
+],
     function () {
-        \Route::resource('home', 'Resources\\HomeController');
-        \Route::resource('users', 'Resources\\UserController');
-        \Route::resource('servers', 'Resources\\ServerController');
-        \Route::resource('clusters', 'Resources\\ClusterController');
-        \Route::resource('instances', 'Resources\\InstanceController');
-        \Route::resource('policies', 'Resources\\PolicyController');
-        \Route::resource('reports', 'Resources\\ReportController');
+        \Route::resource('home', 'HomeController');
+        \Route::resource('users', 'UserController');
+        \Route::resource('servers', 'ServerController');
+        \Route::resource('clusters', 'ClusterController');
+        \Route::resource('instances', 'InstanceController');
+        \Route::resource('limits', 'LimitController');
+        \Route::resource('reports', 'ReportController');
     });
 
 //******************************************************************************
@@ -32,20 +43,25 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 //******************************************************************************
 
 /** Ops controller for operational api */
-\Route::group(['prefix' => 'api/v1', 'middleware' => 'log.dfe-ops-api',],
-    function () {
-        \Route::controller('ops', 'OpsController');
+if (true === config('dfe.enable-console-api', false)) {
+    \Route::group([
+        'prefix'     => 'api/v1',
+        'middleware' => 'log.dfe-ops-api',
+    ],
+        function () {
+            \Route::controller('ops', 'OpsController');
 
-        \Route::resource('users', 'Ops\\UserController');
-        \Route::resource('service-users', 'Ops\\ServiceUserController');
-        \Route::resource('servers', 'Ops\\ServerController');
-        \Route::resource('clusters', 'Ops\\ClusterController');
-        \Route::resource('instances', 'Ops\\InstanceController');
-        \Route::resource('mounts', 'Ops\\MountController');
-        \Route::resource('app-keys', 'Ops\\AppKeyController');
-        \Route::resource('instances', 'Ops\\InstanceController');
-        \Route::resource('policies', 'Ops\\PolicyController');
-    });
+            \Route::resource('users', 'Ops\\UserController');
+            \Route::resource('service-users', 'Ops\\ServiceUserController');
+            \Route::resource('servers', 'Ops\\ServerController');
+            \Route::resource('clusters', 'Ops\\ClusterController');
+            \Route::resource('instances', 'Ops\\InstanceController');
+            \Route::resource('mounts', 'Ops\\MountController');
+            \Route::resource('app-keys', 'Ops\\AppKeyController');
+            \Route::resource('instances', 'Ops\\InstanceController');
+            \Route::resource('limits', 'Ops\\LimitController');
+        });
+}
 
 /** Miscellaneous controllers for dashboard functionality */
 \Route::controllers([
@@ -59,12 +75,10 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 //* Testing
 //******************************************************************************
 
-\Route::post(
-    'form-submit',
+\Route::post('form-submit',
     [
         'before' => 'csrf',
         function () {
             //  validation;
         },
-    ]
-);
+    ]);

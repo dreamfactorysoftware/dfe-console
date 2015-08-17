@@ -19,10 +19,8 @@ use DreamFactory\Enterprise\Partner\AlertPartner;
 use DreamFactory\Enterprise\Partner\Facades\Partner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
-use DreamFactory\Enterprise\Services\Jobs\ExportJob;
-use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
-use DreamFactory\Library\Utility\IfSet;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -79,8 +77,7 @@ class OpsController extends BaseController implements IsVersioned
             $_instance = $this->_findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
-                return $this->failure(Response::HTTP_NOT_FOUND,
-                    'Instance not found, invalid owner (' . $_owner->id . ').');
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
         } catch (\Exception $_ex) {
             //  Check the deleted instances
@@ -91,14 +88,12 @@ class OpsController extends BaseController implements IsVersioned
             $_archived = true;
         }
 
-        $_baseStoragePath = $_instance->getRootStoragePath();
-
         $_base = [
             'id'                 => $_instance->id,
             'archived'           => $_archived,
             'deleted'            => false,
             'metadata'           => Instance::makeMetadata($_instance),
-            'root-storage-path'  => $_baseStoragePath,
+            'root-storage-path'  => \InstanceStorage::getUserStoragePath($_instance),
             'storage-path'       => $_instance->getStoragePath(),
             'owner-private-path' => $_instance->getOwnerPrivatePath(),
             'private-path'       => $_instance->getPrivatePath(),
@@ -225,28 +220,17 @@ class OpsController extends BaseController implements IsVersioned
             $_payload = $request->input();
             $_job = new ProvisionJob($request->input('instance-id'), $_payload);
 
+            $this->debug('provision "' . $request->input('instance-id') . '" request received with payload: ' . Json::encode($_payload));
+
             \Queue::push($_job);
 
             try {
-                $_instance = $this->_findInstance($_job->getInstanceId());
-                $_data = $_instance->instance_data_text;
-                $_result = IfSet::get($_data, '.provisioning');
-                unset($_data['.provisioning']);
-
-                if (!$_instance->update(['instance_data_text' => $_data])) {
-                    throw new \RuntimeException('Unable to update instance row.');
-                }
-
-                if (!isset($_result['instance'])) {
-                    throw new \RuntimeException('The provisioning information is incomplete. Bailing.');
-                }
-
-                return $this->success($_result['instance']);
+                return $this->success($this->_findInstance($_job->getInstanceId()));
             } catch (ModelNotFoundException $_ex) {
                 throw new \Exception('Instance not found after provisioning.');
             }
         } catch (\Exception $_ex) {
-            $this->error('Queuing error: ' . $_ex->getMessage());
+            $this->error('Provision error: ' . $_ex->getMessage());
 
             return $this->failure($_ex);
         }
@@ -285,14 +269,30 @@ class OpsController extends BaseController implements IsVersioned
     {
         try {
             $_instanceId = $request->input('instance-id');
-            $_instance = $this->_findInstance($_instanceId);
+            $_snapshotId = $request->input('snapshot-id');
 
-            $_job = new ImportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
-            \Queue::push($_job);
+            try {
+                $_instance = $this->_findInstance($_instanceId);
+                $_snapshot = $this->_findSnapshot($_snapshotId);
+            } catch (ModelNotFoundException $_ex) {
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance and/or snapshot not found.');
+            }
 
-            return $this->success($_job->getResult());
+            //  Instance user must equal snapshot user
+            if ($_instance->user->id || $_snapshot->user->id) {
+                return $this->failure(Response::HTTP_UNAUTHORIZED);
+            }
+
+            $_result = \Artisan::call('dfe:import',
+                ['instance-id' => $_instanceId, 'snapshot' => $_snapshotId, 'snapshot-id' => true]);
+
+            if (0 != $_result) {
+                return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
+            }
+
+            return $this->success($_result);
         } catch (\Exception $_ex) {
-            $this->error('Queuing error: ' . $_ex->getMessage());
+            $this->error($_ex->getMessage());
 
             return $this->failure($_ex);
         }
@@ -308,15 +308,15 @@ class OpsController extends BaseController implements IsVersioned
     public function postExport(Request $request)
     {
         try {
-            $_instanceId = $request->input('instance-id');
-            $_instance = $this->_findInstance($_instanceId);
+            $_result = \Artisan::call('dfe:export', $request->input());
 
-            $_job = new ExportJob($_instanceId, $request->input('target', $_instance->getSnapshotPath()));
-            \Queue::push($_job);
+            if (0 != $_result) {
+                return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
+            }
 
-            return $this->success($_job->getResult());
+            return $this->success($_result);
         } catch (\Exception $_ex) {
-            $this->error('Queuing error: ' . $_ex->getMessage());
+            $this->error($_ex->getMessage());
 
             return $this->failure($_ex);
         }
@@ -370,12 +370,7 @@ class OpsController extends BaseController implements IsVersioned
             $_payload = $request->input();
             unset($_payload['password']);
 
-            $this->error('failed request for partner id "' .
-                $_pid .
-                '": ' .
-                $_ex->getCode() .
-                ' - ' .
-                $_ex->getMessage(),
+            $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
@@ -440,7 +435,7 @@ class OpsController extends BaseController implements IsVersioned
 
         //  Create a user account
         try {
-            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
+            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password) {
                 $user = User::create([
                     'first_name_text'   => $_first,
                     'last_name_text'    => $_last,

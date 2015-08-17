@@ -1,22 +1,8 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Users', 'prefix' => $prefix))
-
+@include('layouts.partials.topmenu')
 @extends('layouts.main')
-
 @section('content')
+    @include('layouts.partials.sidebar-menu',['resource'=>'users'])
 
-
-    <div class="col-md-2">
-        <div >
-            <ul class="nav nav-pills nav-stacked visible-md visible-lg">
-                <li class="active">
-                    <a href="/{{$prefix}}/users">Manage</a>
-                </li>
-                <li>
-                    <a  href="/{{$prefix}}/users/create">Create</a>
-                </li>
-            </ul>
-        </div>
-    </div>
 
     <div class="col-md-10">
         <div>
@@ -40,7 +26,7 @@
                     </div>
                     <div class="btn-group btn-group">
 
-                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="width: 40px"></button>
+                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-backward" id="_prev" style="height: 30px; width: 40px"></button>
 
                         <div class="btn-group">
                             <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
@@ -50,7 +36,7 @@
                             </ul>
                         </div>
 
-                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="width: 40px"></button>
+                        <button type="button" disabled="true" class="btn btn-default btn-sm fa fa-fw fa-forward" id="_next" style="height: 30px; width: 40px"></button>
                     </div>
                     <div class="btn-group">
                         <button type="button" id="selectedUsersRemove" class="btn btn-default btn-sm fa fa-fw fa-trash" title="Delete selected clusters" value="delete" style="width: 40px"></button>
@@ -82,7 +68,7 @@
                             <th></th>
                             <th style="max-width: 100px"></th>
                             <th style="min-width: 175px">Name</th>
-                            <th style="min-width: 125px">Nickname</th>
+                            <th style="min-width: 125px">Display Name</th>
                             <th style="min-width: 175px">Email</th>
                             <th style="min-width: 150px">Role</th>
                             <th style="min-width: 100px">Status</th>
@@ -102,10 +88,16 @@
                                         <input name="_method" type="hidden" value="DELETE">
                                         <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
 
-                                        @if( Auth::user()->id != $value->id )
+                                        @if( Auth::user()->id != $value->id)
                                             <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}" id="user_checkbox_{{ $value->id }}" name="{{ $value->first_name_text }} {{ $value->last_name_text }}">&nbsp;&nbsp;
                                             <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')" value="delete" style="width: 25px" ></button>
+                                        @else
+                                            @if($value->admin == 0)
+                                                <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}" id="user_checkbox_{{ $value->id }}" name="{{ $value->first_name_text }} {{ $value->last_name_text }}">&nbsp;&nbsp;
+                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')" value="delete" style="width: 25px" ></button>
+                                            @endif
                                         @endif
+
                                     </form>
                                 </td>
                                 <td>{{ $value->first_name_text }} {{ $value->last_name_text }}</td>
