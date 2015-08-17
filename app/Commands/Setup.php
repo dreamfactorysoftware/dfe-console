@@ -3,11 +3,10 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Config\ClusterManifest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Common\Utility\Disk;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
-use DreamFactory\Library\Utility\FileSystem;
+use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\JsonFile;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -173,7 +172,7 @@ INI;
     {
         $_path = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
-        if (!FileSystem::ensurePath($_path)) {
+        if (!Disk::ensurePath($_path)) {
             $this->writeln('Unable to write to backup path <comment>' . $_path . '</comment>. Aborting.', 'error');
 
             return false;
@@ -190,7 +189,7 @@ INI;
     {
         $_backupPath = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
-        if (!FileSystem::ensurePath($_backupPath)) {
+        if (!Disk::ensurePath($_backupPath)) {
             $this->writeln('Unable to write to backup path <comment>' . $_backupPath . '</comment>. Aborting.',
                 'error');
 
