@@ -9,7 +9,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
 
     <div class="col-md-2 df-sidebar-nav">
-        <div class="">
+        <!--div class="">
             <ul class="nav nav-pills nav-stacked visible-md visible-lg">
                 <li class="active">
                     <a class="" href="/{{$prefix}}/reports">API Calls</a>
@@ -18,7 +18,7 @@
                     <a class="" href="/{{$prefix}}/reports/bandwidth">Bandwith</a>
                 </li>
             </ul>
-        </div>
+        </div-->
     </div>
 
     <div style="" class="col-md-10">
@@ -168,7 +168,7 @@
                             </div>
                             <div role="tabpanel" class="tab-pane" id="instances">
                                 <button id="instance_type_endpoints" type="button" class="btn btn-default btn-sm btn-info">Endpoints</button>&nbsp;&nbsp;
-                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;
+                                <!--button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;-->
                                 <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
                                 <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
 
@@ -305,6 +305,7 @@
             var search_param = '';
             var search_field = '';
             var no_select = '';
+            var search_additional = ''
 
             if (type === 'cluster')
             {
@@ -342,6 +343,7 @@
                             search_type = 'API-Calls-Applications';
                             search_param = 'dfe.instance_id';
                             search_field = 'app_name';
+                            search_additional = '%20NOT%20app_name:admin';
                             break;
                         case 'instance_type_roles':
                             search_type = 'Api-Calls-by-User-Roles';
@@ -366,7 +368,7 @@
 
             if(search_val !== '*')
             {
-                search_string = "%20AND%20" + search_param + ":" + search_val;
+                search_string = "%20AND%20" + search_param + ":" + search_val + search_additional;
             }
             else
             {
