@@ -64,7 +64,7 @@ class Provision extends ConsoleCommand
         return \Queue::push(new ProvisionJob($_instanceId, [
             'guest-location' => $_guestLocation,
             'owner-id'       => $_owner->id,
-            'owner-type'     => $_owner->owner_type_nbr,
+            'owner-type'     => $_ownerType ?: OwnerTypes::USER,
             'cluster-id'     => $this->option('cluster-id'),
         ]));
     }
