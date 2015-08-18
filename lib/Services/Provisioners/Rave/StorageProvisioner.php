@@ -1,7 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners\Rave;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
+use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
 use DreamFactory\Enterprise\Services\Provisioners\BaseStorageProvisioner;
+use DreamFactory\Library\Utility\Disk;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 
@@ -58,14 +60,12 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
         //******************************************************************************
 
         //  The instance's base storage path
-        $_instanceRootPath = $_instance->instance_id_text;
-        $_privatePathName = \InstanceStorage::getPrivatePathName();
+        $_instanceRootPath = Disk::segment([$_instance->instance_id_text]);
 
-        //  The instance's private path
-        $_privatePath = $_instance->instance_id_text . DIRECTORY_SEPARATOR . $_privatePathName;
-
-        //  The user's private path. Same as instance's when non-hosted
-        $_ownerPrivatePath = $_privatePathName;
+        //  The user's and instance's private path
+        $_privateName = InstanceStorage::getPrivatePathName();
+        $_ownerPrivatePath = Disk::segment([$_privateName]);
+        $_privatePath = Disk::segment([$_instanceRootPath, $_privateName]);
 
         //  Make sure everything exists
         try {

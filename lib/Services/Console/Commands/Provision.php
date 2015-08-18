@@ -1,16 +1,22 @@
 <?php namespace DreamFactory\Enterprise\Services\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class Provision extends ConsoleCommand
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
+
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -41,7 +47,9 @@ class Provision extends ConsoleCommand
 
         //	Check the name here for quicker response...
         if (false === ($_instanceName = Instance::isNameAvailable($_instanceId)) || is_numeric($_instanceName[0])) {
-            $this->error('The name of your instance cannot be "' . $_instanceId . '".  It is either currently in-use, or otherwise invalid.');
+            $this->error('The name of your instance cannot be "' .
+                $_instanceId .
+                '".  It is either currently in-use, or otherwise invalid.');
             exit(1);
         }
 
@@ -49,26 +57,14 @@ class Provision extends ConsoleCommand
         $_ownerId = $this->argument('owner-id');
         $_guestLocation = $this->argument('guest-location');
 
-        try {
-            $_owner = OwnerTypes::getOwner($_ownerId, $_ownerType);
-        } catch (\Exception $_ex) {
-            try {
-                $_owner = User::byEmail($_ownerId);
-            } catch (\Exception $_ex) {
-                throw new \InvalidArgumentException('The owner-id "' . $_ownerId . '" could not be found.');
-            }
-        }
-
-        if (empty($_owner)) {
-            throw new \InvalidArgumentException('The owner-id "' . $_ownerId . '" is not valid.');
-        }
+        $_owner = $this->_locateOwner($_ownerId, $_ownerType);
 
         $this->writeln('Provisioning instance <comment>"' . $_instanceId . '"</comment>.');
 
         return \Queue::push(new ProvisionJob($_instanceId, [
             'guest-location' => $_guestLocation,
             'owner-id'       => $_owner->id,
-            'owner-type'     => $_ownerType,
+            'owner-type'     => $_owner->owner_type_nbr,
             'cluster-id'     => $this->option('cluster-id'),
         ]));
     }
