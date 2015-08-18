@@ -64,39 +64,41 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
 
         //  The user's and instance's private path
         $_privateName = InstanceStorage::getPrivatePathName();
-        $_ownerPrivatePath = Disk::path($_privateName);
-        $_privatePath = Disk::path([$_instanceRootPath, $_privateName]);
+        $_ownerPrivatePath = $_privateName;
+        $_privatePath = Disk::segment([$_instanceRootPath, $_privateName]);
 
         //  Make sure everything exists
         try {
+            logger('* private path: ' . $_privatePath);
             !$_filesystem->has($_privatePath) && $_filesystem->createDir($_privatePath);
+
+            logger('* owner private path: ' . $_ownerPrivatePath);
             !$_filesystem->has($_ownerPrivatePath) && $_filesystem->createDir($_ownerPrivatePath);
 
             //  Now ancillary sub-directories
             foreach (config('provisioning.public-paths', []) as $_path) {
-                !$_filesystem->has($_check =
-                    $_instanceRootPath . DIRECTORY_SEPARATOR . trim($_path,
-                        DIRECTORY_SEPARATOR . ' ')) && $_filesystem->createDir($_check);
+                $_path = Disk::segment([$_instanceRootPath, $_path]);
+                logger('* public path: ' . $_path);
+                !$_filesystem->has($_path) && $_filesystem->createDir($_path);
             }
 
             foreach (config('provisioning.private-paths', []) as $_path) {
-                !$_filesystem->has($_check =
-                    $_privatePath . DIRECTORY_SEPARATOR . trim($_path,
-                        DIRECTORY_SEPARATOR . ' ')) && $_filesystem->createDir($_check);
+                $_path = Disk::segment([$_privatePath, $_path]);
+                logger('* private path: ' . $_path);
+                !$_filesystem->has($_path) && $_filesystem->createDir($_path);
             }
 
             foreach (config('provisioning.owner-private-paths', []) as $_path) {
-                !$_filesystem->has(
-                    $_check = $_ownerPrivatePath . DIRECTORY_SEPARATOR . $_path) && $_filesystem->createDir($_check);
+                $_path = Disk::segment([$_ownerPrivatePath, $_path]);
+                logger('* owner private path: ' . $_path);
+                !$_filesystem->has($_path) && $_filesystem->createDir($_path);
             }
         } catch (\Exception $_ex) {
             $this->error('! error creating directory structure: ' . $_ex->getMessage());
             throw $_ex;
         }
 
-        $this->debug('instance "' . $_instance->instance_id_text . '"storage created');
-        $this->debug('        private: ' . $_privatePath);
-        $this->debug('  owner private: ' . $_ownerPrivatePath);
+        $this->debug('Storage provisioned for instance "' . $_instance->instance_id_text . '"');
 
         $this->privatePath = $_privatePath;
         $this->ownerPrivatePath = $_ownerPrivatePath;
