@@ -95,6 +95,7 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
             }
         } catch (\Exception $_ex) {
             $this->error('! error creating directory structure: ' . $_ex->getMessage());
+            logger('File system: ' . print_r($_filesystem, true));
             throw $_ex;
         }
 
