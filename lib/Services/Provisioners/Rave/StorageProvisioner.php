@@ -60,12 +60,12 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
         //******************************************************************************
 
         //  The instance's base storage path
-        $_instanceRootPath = Disk::segment([$_instance->instance_id_text]);
+        $_instanceRootPath = trim($_instance->instance_id_text);
 
         //  The user's and instance's private path
         $_privateName = InstanceStorage::getPrivatePathName();
-        $_ownerPrivatePath = Disk::segment([$_privateName]);
-        $_privatePath = Disk::segment([$_instanceRootPath, $_privateName]);
+        $_ownerPrivatePath = Disk::path($_privateName);
+        $_privatePath = Disk::path([$_instanceRootPath, $_privateName]);
 
         //  Make sure everything exists
         try {
