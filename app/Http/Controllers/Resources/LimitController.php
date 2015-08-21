@@ -392,14 +392,14 @@ class LimitController extends ResourceController
                 $_services[$_v['id']] = $_v['name'];
             }
             */
-            /*
+            
             $_tmp = $this->getInstanceUsers($_limit['instance_id']);
             $_users = [];
 
             foreach($_tmp as $_v) {
                 $_users[$_v['id']] = $_v['name'];
             }
-            */
+
             $_values['instance_id_text'] = $_instance->instance_id_text;
 
         }
