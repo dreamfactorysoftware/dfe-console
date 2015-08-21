@@ -360,7 +360,7 @@ class LimitController extends ResourceController
     public function edit($id)
     {
         $_limit = Limit::find($id);
-
+echo $_limit;
         $_values = [
             'limit_nbr' => $_limit->limit_nbr,
             'user_id' => 0,
