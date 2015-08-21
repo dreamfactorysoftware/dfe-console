@@ -441,7 +441,7 @@ class LimitController extends ResourceController
             }
             */
 
-            if ($_limit['user_id'] !== null) {
+            if ($_values['user_id'] !== null) {
                 $_tmp = $this->getInstanceUsers($_limit['instance_id']);
                 $_users = [];
 
@@ -454,7 +454,7 @@ class LimitController extends ResourceController
 
         }
 
-        if ($_limit['user_id'] !== null) {
+        if ($_values['user_id'] !== null) {
             $_user = $this->_findUser($_limit['user_id']);
             $_values['user_id_text'] = $_user->user_id_text;
         }
