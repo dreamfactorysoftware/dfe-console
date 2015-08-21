@@ -39,7 +39,7 @@
                     <div class="form-group" id="select_instance" style="display: none;">
                         <label for="instance_id">Instance</label>
                         <select class="form-control" id="instance_id" name="instance_id">
-                            <option value="0">Select Instance</option>
+                            <option value="">Select Instance</option>
                         </select>
                     </div>
                     <div class="form-group" id="select_user" style="display: none;">
@@ -104,61 +104,25 @@
 
 
         function generateForm(type) {
+            var set_show = true;
 
-            if (type === '') {
-                $('#select_cluster').hide();
-                $('#select_instance').hide();
-                $('#select_user').hide();
-            }
-
-            if (type === 'cluster') {
-                $('#select_cluster').show();
-                $('#select_instance').hide();
-                $('#select_user').hide();
-            }
-
-            if (type === 'instance') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').hide();
-            }
-
-            if (type === 'user') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').show();
-            }
+            $('#type_select > option').each(function() {
+                if (set_show === true) {
+                    $('#select_' + this.value).show();
+                    if (type === this.value) {
+                        set_show = false;
+                    }
+                }
+                else {
+                    $('#select_' + this.value).hide();
+                }
+            });
         }
 
 
         $('#type_select').on('change', function(){
-
             var selected = $('#type_select').val();
-
-            if (selected === '') {
-                $('#select_cluster').hide();
-                $('#select_instance').hide();
-                $('#select_user').hide();
-            }
-
-            if (selected === 'cluster') {
-                $('#select_cluster').show();
-                $('#select_instance').hide();
-                $('#select_user').hide();
-            }
-
-            if (selected === 'instance') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').hide();
-            }
-
-            if (selected === 'user') {
-                $('#select_cluster').show();
-                $('#select_instance').show();
-                $('#select_user').show();
-            }
-
+            generateForm(selected);
         });
 
         jQuery(function ($) {
