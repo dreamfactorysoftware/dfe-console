@@ -363,7 +363,7 @@ class LimitController extends ResourceController
 
         $_values = [
             'limit_nbr' => $_limit->limit_nbr,
-            'user_id' => 0,
+            'user_id' => '',
             'service_name' => '',
             'role_id' => 0,
             'api_key' => '',
@@ -440,7 +440,7 @@ class LimitController extends ResourceController
                 $_services[$_v['id']] = $_v['name'];
             }
             */
-echo $_values['user_id'];
+
             if ($_values['user_id'] !== '') {
                 $_tmp = $this->getInstanceUsers($_limit['instance_id']);
                 $_users = [];
