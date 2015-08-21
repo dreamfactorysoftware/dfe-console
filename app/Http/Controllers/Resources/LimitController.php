@@ -422,7 +422,7 @@ class LimitController extends ResourceController
 
 
 
-        if ($_limit['cluster_id'] !== null) {
+        if ($_limit['cluster_id'] !== '') {
             $_cluster = $this->_findCluster($_limit['cluster_id']);
             $_values['cluster_id_text'] = $_cluster->cluster_id_text;
         }
@@ -430,7 +430,7 @@ class LimitController extends ResourceController
         $_services = [];
         $_users = [];
 
-        if ($_limit['instance_id'] !== null) {
+        if ($_limit['instance_id'] !== '') {
             $_instance = $this->_findInstance($_limit['instance_id']);
             /*
             $_tmp = $this->getInstanceServices($_limit['instance_id']);
@@ -441,7 +441,7 @@ class LimitController extends ResourceController
             }
             */
 
-            if ($_values['user_id'] !== null) {
+            if ($_values['user_id'] !== '') {
                 $_tmp = $this->getInstanceUsers($_limit['instance_id']);
                 $_users = [];
 
