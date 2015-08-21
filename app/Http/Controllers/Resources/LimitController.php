@@ -361,56 +361,6 @@ class LimitController extends ResourceController
     {
         $_limit = Limit::find($id);
 
-        $_values = [
-            'limit_nbr' => $_limit->limit_nbr,
-            'user_id' => 0,
-            'service_name' => '',
-            'role_id' => 0,
-            'api_key' => '',
-            'period_name' => '',
-            'label_text' => $_limit->label_text,
-            'cluster_id_text' => '',
-            'instance_id_text' => ''
-        ];
-
-        if ($_limit['cluster_id'] !== null) {
-            $_cluster = $this->_findCluster($_limit['cluster_id']);
-            $_values['cluster_id_text'] = $_cluster->cluster_id_text;
-        }
-
-        //temp
-        $_services = [];
-        $_users = [];
-
-        if ($_limit['instance_id'] !== null) {
-            $_instance = $this->_findInstance($_limit['instance_id']);
-            /*
-            $_tmp = $this->getInstanceServices($_limit['instance_id']);
-            $_services = [];
-
-            foreach ($_tmp as $_v) {
-                $_services[$_v['id']] = $_v['name'];
-            }
-            */
-
-            if ($_limit['user_id'] !== null) {
-                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
-                $_users = [];
-
-                foreach ($_tmp as $_v) {
-                    $_users[$_v['id']] = $_v['name'];
-                }
-            }
-            
-            $_values['instance_id_text'] = $_instance->instance_id_text;
-
-        }
-
-        if ($_limit['user_id'] !== null) {
-            $_user = $this->_findUser($_limit['user_id']);
-            $_values['user_id_text'] = $_user->user_id_text;
-        }
-
         $defaultPos = strpos($_limit['limit_key_text'], 'default.');
         $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
         $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
@@ -456,6 +406,55 @@ class LimitController extends ResourceController
                     // It's time period
                     $_values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
             }
+        }
+
+        $_values = [
+            'limit_nbr' => $_limit->limit_nbr,
+            'user_id' => 0,
+            'service_name' => '',
+            'role_id' => 0,
+            'api_key' => '',
+            'period_name' => '',
+            'label_text' => $_limit->label_text,
+            'cluster_id_text' => '',
+            'instance_id_text' => ''
+        ];
+
+        if ($_limit['cluster_id'] !== null) {
+            $_cluster = $this->_findCluster($_limit['cluster_id']);
+            $_values['cluster_id_text'] = $_cluster->cluster_id_text;
+        }
+
+        $_services = [];
+        $_users = [];
+
+        if ($_limit['instance_id'] !== null) {
+            $_instance = $this->_findInstance($_limit['instance_id']);
+            /*
+            $_tmp = $this->getInstanceServices($_limit['instance_id']);
+            $_services = [];
+
+            foreach ($_tmp as $_v) {
+                $_services[$_v['id']] = $_v['name'];
+            }
+            */
+
+            if ($_limit['user_id'] !== null) {
+                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+                $_users = [];
+
+                foreach ($_tmp as $_v) {
+                    $_users[$_v['id']] = $_v['name'];
+                }
+            }
+
+            $_values['instance_id_text'] = $_instance->instance_id_text;
+
+        }
+
+        if ($_limit['user_id'] !== null) {
+            $_user = $this->_findUser($_limit['user_id']);
+            $_values['user_id_text'] = $_user->user_id_text;
         }
 
         $_limits = [
