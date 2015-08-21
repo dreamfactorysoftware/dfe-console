@@ -140,8 +140,18 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
             'contentHeader' => $_response->isSuccess() ? 'Your instance has been launched'
                 : 'Your instance was not launched',
             'emailBody'     => $_response->isSuccess()
-                ? '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' . 'has been created. You can reach it by going to <a href="//' . $_host . '">' . $_host . '</a> from any browser.</p>'
-                : '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' . 'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
+                ? '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> ' .
+                'has been created. You can reach it by going to <a href="//' .
+                $_host .
+                '">' .
+                $_host .
+                '</a> from any browser.</p>'
+                : '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> ' .
+                'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
         ];
 
         $_subject = $_response->isSuccess() ? 'Instance launch successful' : 'Instance launch failure';
@@ -171,8 +181,12 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
             'contentHeader' => $_response->isSuccess() ? 'Your instance has been retired'
                 : 'Your instance is not quite retired',
             'emailBody'     => $_response->isSuccess()
-                ? '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> has been retired.  A snapshot may be available in the dashboard, under <strong>Snapshots</strong>.</p>'
-                : '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> retirement was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
+                ? '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> has been retired.  A snapshot may be available in the dashboard, under <strong>Snapshots</strong>.</p>'
+                : '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> retirement was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
         ];
 
         $_subject = $_response->isSuccess() ? 'Instance retirement successful' : 'Instance retirement failure';

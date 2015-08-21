@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Managers;
+<?php namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\Factory;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
@@ -9,11 +8,8 @@ use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceGuest;
-use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
-use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -140,7 +136,7 @@ class InstanceManager extends BaseManager implements Factory
 
             //  Validate the cluster and pull component ids
             $_clusterId = array_get($options, 'cluster-id', config('provisioning.default-cluster-id'));
-            $_clusterConfig = $this->_getServersForCluster($_clusterId);
+            $_clusterConfig = $this->getServersForCluster($_clusterId);
             $_ownerId = $_owner->id;
 
             $_attributes = [
@@ -167,7 +163,7 @@ class InstanceManager extends BaseManager implements Factory
             ];
 
             //  Write it out
-            return \DB::transaction(function () use ($_ownerId, $_attributes, $_guestAttributes) {
+            return \DB::transaction(function () use ($_ownerId, $_attributes, $_guestAttributes){
                 $_instance = Instance::create($_attributes);
                 $this->debug('created instance row id#' . $_instance->id);
 
@@ -192,14 +188,13 @@ class InstanceManager extends BaseManager implements Factory
      * @return array
      * @throws ProvisioningException
      */
-    protected function _getServersForCluster($clusterId)
+    protected function getServersForCluster($clusterId)
     {
         try {
             $_cluster = static::_lookupCluster($clusterId);
-            $_servers = static::_lookupClusterServers($_cluster->id);
-            //$this->debug('Servers: ' . print_r($_servers, true));
+            $_servers = static::_lookupClusterServers($_cluster);
 
-            $_serverIds = $this->_extractServerIds($_servers);
+            $_serverIds = $this->extractServerIds($_servers);
 
             return [
                 'cluster-id'    => $_cluster->id,
@@ -218,7 +213,7 @@ class InstanceManager extends BaseManager implements Factory
      *
      * @return mixed
      */
-    protected function _extractServerIds(array $servers, $name = 'id')
+    protected function extractServerIds(array $servers, $name = 'id')
     {
         $_list = ServerTypes::getDefinedConstants(true);
         $_types = array_flip($_list);
@@ -244,43 +239,5 @@ class InstanceManager extends BaseManager implements Factory
         }
 
         return $_types;
-    }
-
-    /**
-     * @param array|\Illuminate\Support\Collection|Collection $servers
-     * @param int                                             $type
-     *
-     * @return Server|null
-     */
-    protected function _locateServerByType($servers, $type)
-    {
-        if (!isset($servers[$type]) || empty($servers[$type])) {
-            return null;
-        }
-
-        $_ck = 'instance-manager.cache.lru.' . $type;
-        $_lastId = \Cache::get($_ck . '.last-used-id');
-        $_exclude = $_lastId && 1 > count($servers[$type]) ? [$_lastId] : [];
-
-        /** @type Server $_server */
-        foreach ($servers[$type] as $_server) {
-            if (!in_array($_server->id, $_exclude)) {
-                \Cache::put($_ck . '.last-used-id', $_server->id, 60);
-
-                return $_server;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param Instance $instance
-     *
-     * @return Filesystem
-     */
-    public function getFilesystem($instance)
-    {
-        return $instance->getStorageMount();
     }
 }

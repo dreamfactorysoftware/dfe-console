@@ -320,7 +320,7 @@ MYSQL
             $this->debug('dropping database "' . $databaseToDrop . '"');
 
             return $db->transaction(
-                function () use ($db, $databaseToDrop) {
+                function () use ($db, $databaseToDrop){
                     $_result = $db->statement('SET FOREIGN_KEY_CHECKS = 0');
                     $_result && $_result = $db->statement('DROP DATABASE `' . $databaseToDrop . '`');
                     $_result && $db->statement('SET FOREIGN_KEY_CHECKS = 1');
@@ -355,7 +355,7 @@ MYSQL
     protected function grantPrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
-            function () use ($db, $creds, $fromServer) {
+            function () use ($db, $creds, $fromServer){
                 //  Create users
                 $_users = $this->getDatabaseUsers($creds, $fromServer);
 
@@ -393,7 +393,7 @@ MYSQL
     protected function revokePrivileges($db, $creds, $fromServer)
     {
         return $db->transaction(
-            function () use ($db, $creds, $fromServer) {
+            function () use ($db, $creds, $fromServer){
                 //  Create users
                 $_users = $this->getDatabaseUsers($creds, $fromServer);
 

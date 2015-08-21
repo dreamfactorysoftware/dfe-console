@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Providers;
+<?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 use DreamFactory\Enterprise\Services\Managers\InstanceManager;
@@ -25,13 +24,6 @@ class InstanceServiceProvider extends BaseServiceProvider
 
     /** @inheritdoc */
     const IOC_NAME = 'dfe.instance';
-
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /** @inheritdoc */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\Managers\\InstanceManager';
 
     //********************************************************************************
     //* Public Methods

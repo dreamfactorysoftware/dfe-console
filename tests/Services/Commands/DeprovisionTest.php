@@ -14,7 +14,7 @@ class DeprovisionTest extends \TestCase
      */
     public function testDeprovision()
     {
-        $_instanceId = 'leela';
+        $_instanceId = 'wicker';
 
         $_payload = [
             'instance-id'    => $_instanceId,

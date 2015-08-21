@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Utility;
+<?php namespace DreamFactory\Enterprise\Services\Utility;
 
 /**
  * Generates files of random sizes to fill up a subdirectory

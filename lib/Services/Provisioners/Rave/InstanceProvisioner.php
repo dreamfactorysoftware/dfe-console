@@ -71,7 +71,9 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             $this->deprovisionStorage($request);
 
             if (!$this->deprovisionInstance($request, ['keep-database' => ($_ex instanceof SchemaExistsException)])) {
-                $this->error('* unable to remove instance "' . $_instance->instance_id_text . '" after failed provision.');
+                $this->error('* unable to remove instance "' .
+                    $_instance->instance_id_text .
+                    '" after failed provision.');
             }
         }
 
@@ -206,7 +208,7 @@ class InstanceProvisioner extends BaseProvisioner implements OfferingsAware
             //  Create the guest row...
             $_host = $this->getFullyQualifiedDomainName($_name);
 
-            \DB::transaction(function () use ($_instance, $_host) {
+            \DB::transaction(function () use ($_instance, $_host){
                 /**
                  * Add guest data if there is a guest record
                  */

@@ -4,6 +4,7 @@ use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
+use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
@@ -93,7 +94,7 @@ class OpsController extends BaseController implements IsVersioned
             'archived'           => $_archived,
             'deleted'            => false,
             'metadata'           => Instance::makeMetadata($_instance),
-            'root-storage-path'  => \InstanceStorage::getUserStoragePath($_instance),
+            'root-storage-path'  => InstanceStorage::getStorageRootPath(),
             'storage-path'       => $_instance->getStoragePath(),
             'owner-private-path' => $_instance->getOwnerPrivatePath(),
             'private-path'       => $_instance->getPrivatePath(),
@@ -220,7 +221,10 @@ class OpsController extends BaseController implements IsVersioned
             $_payload = $request->input();
             $_job = new ProvisionJob($request->input('instance-id'), $_payload);
 
-            $this->debug('provision "' . $request->input('instance-id') . '" request received with payload: ' . Json::encode($_payload));
+            $this->debug('provision "' .
+                $request->input('instance-id') .
+                '" request received with payload: ' .
+                Json::encode($_payload));
 
             \Queue::push($_job);
 
@@ -370,7 +374,12 @@ class OpsController extends BaseController implements IsVersioned
             $_payload = $request->input();
             unset($_payload['password']);
 
-            $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
+            $this->error('failed request for partner id "' .
+                $_pid .
+                '": ' .
+                $_ex->getCode() .
+                ' - ' .
+                $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
@@ -435,7 +444,7 @@ class OpsController extends BaseController implements IsVersioned
 
         //  Create a user account
         try {
-            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password) {
+            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
                 $user = User::create([
                     'first_name_text'   => $_first,
                     'last_name_text'    => $_last,

@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Providers;
+<?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 use DreamFactory\Enterprise\Services\Managers\ProvisioningManager;
@@ -17,15 +16,6 @@ class ProvisioningServiceProvider extends BaseServiceProvider
      * @type string The name of the service in the IoC
      */
     const IOC_NAME = 'provisioning';
-
-    //******************************************************************************
-    //* Methods
-    //******************************************************************************
-
-    /**
-     * @type string The actual provisioning service
-     */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\Managers\\ProvisioningManager';
 
     //********************************************************************************
     //* Public Methods

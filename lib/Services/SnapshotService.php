@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
+use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
@@ -12,7 +13,6 @@ use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\RouteHash;
 use DreamFactory\Enterprise\Database\Models\Snapshot;
-use DreamFactory\Enterprise\Storage\Facades\Mounter;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use DreamFactory\Library\Utility\Inflector;
@@ -70,19 +70,22 @@ class SnapshotService extends BaseService
         //  Create the snapshot archive and stuff it full of goodies
         /** @var SnapshotManifest $_manifest */
         list($_fsSnapshot, $_manifest, $_routeHash, $_routeLink) =
-            $this->createExportArchive($_snapshotId, $_snapshotName, [
-                'timestamp'           => $_stamp,
-                'guest-location'      => $instance->guest_location_nbr,
-                'instance-id'         => $instance->instance_id_text,
-                'cluster-id'          => (int)$instance->cluster_id,
-                'db-server-id'        => (int)$instance->db_server_id,
-                'web-server-id'       => (int)$instance->web_server_id,
-                'app-server-id'       => (int)$instance->app_server_id,
-                'owner-id'            => (int)$instance->user->id,
-                'owner-email-address' => $instance->user->email_addr_text,
-                'owner-storage-key'   => $instance->user->storage_id_text,
-                'storage-key'         => $instance->storage_id_text,
-            ], $keepDays);
+            $this->createExportArchive($_snapshotId,
+                $_snapshotName,
+                [
+                    'timestamp'           => $_stamp,
+                    'guest-location'      => $instance->guest_location_nbr,
+                    'instance-id'         => $instance->instance_id_text,
+                    'cluster-id'          => (int)$instance->cluster_id,
+                    'db-server-id'        => (int)$instance->db_server_id,
+                    'web-server-id'       => (int)$instance->web_server_id,
+                    'app-server-id'       => (int)$instance->app_server_id,
+                    'owner-id'            => (int)$instance->user->id,
+                    'owner-email-address' => $instance->user->email_addr_text,
+                    'owner-storage-key'   => $instance->user->storage_id_text,
+                    'storage-key'         => $instance->storage_id_text,
+                ],
+                $keepDays);
 
         try {
             $this->addFilesToArchive($exports, $_fsSnapshot);
@@ -125,19 +128,21 @@ class SnapshotService extends BaseService
                 }
 
                 //  Let the user know...
-                $this->notifyInstanceOwner($instance, 'Export successful', [
-                    'firstName'     => $instance->user->first_name_text,
-                    'headTitle'     => 'Export Complete',
-                    'contentHeader' => 'Your export has completed',
-                    'emailBody'     => <<<HTML
+                $this->notifyInstanceOwner($instance,
+                    'Export successful',
+                    [
+                        'firstName'     => $instance->user->first_name_text,
+                        'headTitle'     => 'Export Complete',
+                        'contentHeader' => 'Your export has completed',
+                        'emailBody'     => <<<HTML
 <p>Your export is complete. It may be downloaded it for up to {$keepDays} days, from the following link:<br/>
 <br/>
 <strong><a href="{$_routeLink}" target="_blank">{$_routeLink}</a></strong>
 </p>
 HTML
 
-                    ,
-                ]);
+                        ,
+                    ]);
 
                 $_success = true;
             } catch (\Exception $_ex) {
@@ -147,16 +152,18 @@ HTML
         } catch (\Exception $_ex) {
             $this->error('exception during sub-provisioner export call: ' . $_ex->getMessage());
 
-            $this->notifyInstanceOwner($instance, 'Export failure', [
-                'firstName'     => $instance->user->first_name_text,
-                'headTitle'     => 'Export Failure',
-                'contentHeader' => 'Your export was not created',
-                'emailBody'     => <<<HTML
+            $this->notifyInstanceOwner($instance,
+                'Export failure',
+                [
+                    'firstName'     => $instance->user->first_name_text,
+                    'headTitle'     => 'Export Failure',
+                    'contentHeader' => 'Your export was not created',
+                    'emailBody'     => <<<HTML
 <p>The export requested did not complete properly. Please make sure your instance is up and running, then try again. If the issue persists, please contact support.</p>
 HTML
 
-                ,
-            ]);
+                    ,
+                ]);
 
             $_success = false;
         }
@@ -274,7 +281,7 @@ HTML
      */
     public function getRootTrashPath()
     {
-        return config('snapshot.trash-path', EnterpriseDefaults::DEFAULT_TRASH_PATH);
+        return InstanceStorage::getTrashPath();
     }
 
     /**
@@ -284,7 +291,7 @@ HTML
      */
     public function getRootTrashMount()
     {
-        return Mounter::mount('snapshot-trash');
+        return InstanceStorage::getTrashMount();
     }
 
     /**
@@ -354,12 +361,13 @@ HTML
         $_fsSnapshot = new Filesystem(new ZipArchiveAdapter($this->workPath . $exportName));
 
         //  Create our manifest
-        $_manifest = new SnapshotManifest(array_merge($manifest, [
-            'id'   => $exportId,
-            'name' => $exportName,
-            'hash' => $_hash,
-            'link' => $_link,
-        ]), config('snapshot.metadata-file-name'), $_fsSnapshot);
+        $_manifest = new SnapshotManifest(array_merge($manifest,
+            [
+                'id'   => $exportId,
+                'name' => $exportName,
+                'hash' => $_hash,
+                'link' => $_link,
+            ]), config('snapshot.metadata-file-name'), $_fsSnapshot);
 
         return [$_fsSnapshot, $_manifest, $_hash, $_link];
     }
