@@ -4,7 +4,7 @@
     @include('layouts.partials.sidebar-menu',['resource'=>'limits'])
 
     <div class="col-xs-11 col-sm-10 col-md-10">
-        @include('layouts.partials.context-header',['resource'=>'limits','title' => 'New Limit'])
+        @include('layouts.partials.context-header',['resource'=>'limits','title' => 'Create Limit'])
 
         <form class="policy-form" method="POST" action="/{{$prefix}}/limits">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
@@ -224,6 +224,8 @@
                         $_spinner.removeClass('fa-spin').addClass('hidden');
                     });
                 }
+
+                $_spinner.removeClass('fa-spin').addClass('hidden');
             });
 /*
             $_form.on('click', '.btn-primary', function (e) {
