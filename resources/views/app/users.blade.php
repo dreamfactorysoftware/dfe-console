@@ -105,7 +105,7 @@
                                 <td>{{ $value->email_addr_text }}</td>
 
                                 @if($value->admin == 0)
-                                    <td><span class="label label-info" id="user_type">DSP Owner</span></td>
+                                    <td><span class="label label-info" id="user_type">Instance Owner</span></td>
                                 @else
                                     <td><span class="label label-primary" id="user_type">System Administrator</span></td>
                                 @endif
