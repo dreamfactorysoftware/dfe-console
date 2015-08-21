@@ -361,6 +361,18 @@ class LimitController extends ResourceController
     {
         $_limit = Limit::find($id);
 
+        $_values = [
+            'limit_nbr' => $_limit->limit_nbr,
+            'user_id' => 0,
+            'service_name' => '',
+            'role_id' => 0,
+            'api_key' => '',
+            'period_name' => '',
+            'label_text' => $_limit->label_text,
+            'cluster_id_text' => '',
+            'instance_id_text' => ''
+        ];
+
         $defaultPos = strpos($_limit['limit_key_text'], 'default.');
         $clusterDefaultPos = strpos($_limit['limit_key_text'], 'cluster.default.');
         $instanceDefaultPos = strpos($_limit['limit_key_text'], 'instance.default.');
@@ -408,17 +420,7 @@ class LimitController extends ResourceController
             }
         }
 
-        $_values = [
-            'limit_nbr' => $_limit->limit_nbr,
-            'user_id' => 0,
-            'service_name' => '',
-            'role_id' => 0,
-            'api_key' => '',
-            'period_name' => '',
-            'label_text' => $_limit->label_text,
-            'cluster_id_text' => '',
-            'instance_id_text' => ''
-        ];
+
 
         if ($_limit['cluster_id'] !== null) {
             $_cluster = $this->_findCluster($_limit['cluster_id']);
