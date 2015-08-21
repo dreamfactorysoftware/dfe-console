@@ -14,6 +14,9 @@
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/original" />
       <excludeFolder url="file://$MODULE_DIR$/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/vendor" />

@@ -8,25 +8,29 @@ use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 
 return [
     //******************************************************************************
+    //* Licensing
+    //******************************************************************************
+    //  The installation key given to you by DreamFactory sales
+    'install-key'             => env('DFE_INSTALL_KEY'),
+    //******************************************************************************
     //* General
     //******************************************************************************
     //  The id of THIS cluster
-    'cluster-id'         => env('DFE_CLUSTER_ID'),
+    'cluster-id'              => env('DFE_CLUSTER_ID'),
     //  A string to be pre-pended to instance names for non-admin users
-    'instance-prefix'    => env('DFE_DEFAULT_INSTANCE_PREFIX'),
+    'instance-prefix'         => env('DFE_DEFAULT_INSTANCE_PREFIX'),
     //  The hash algorithm for hashing api keys. Defaults to 'sha256'
-    'signature-method'   => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
+    'signature-method'        => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
     //  The list of allowed partners
-    'allowed-partners' => ['vz', 'hs', 'df',],
-    'default-domain' => env('DFE_DEFAULT_DOMAIN', '.dreamfactory.com'),
-    'default-domain-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL','https'),
-
+    'allowed-partners'        => ['vz', 'hs', 'df',],
+    'default-domain'          => env('DFE_DEFAULT_DOMAIN', '.dreamfactory.com'),
+    'default-domain-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https'),
     //  Set this to FALSE to disallow contact with this console via the Ops API
-    'enable-console-api' => true,
+    'enable-console-api'      => true,
     //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************
-    'common'             => [
+    'common'                  => [
         'display-name'      => 'DreamFactory Enterprise&trade; Console',
         'display-version'   => 'v1.0-beta',
         'display-copyright' => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
@@ -40,7 +44,7 @@ return [
     //******************************************************************************
     //* UI Settings
     //******************************************************************************
-    'ui'                 => [
+    'ui'                      => [
         'prefix'          => 'v1',
         'button-contexts' => [
             ServerTypes::DB  => 'primary',
@@ -51,7 +55,7 @@ return [
     //******************************************************************************
     //* Console API Keys
     //******************************************************************************
-    'security'           => [
+    'security'                => [
         'console-api-url'           => env('DFE_CONSOLE_API_URL'),
         /** This key needs to match the key configured in the dashboard */
         'console-api-key'           => env('DFE_CONSOLE_API_KEY'),

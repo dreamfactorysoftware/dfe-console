@@ -63,6 +63,7 @@
     "dreamfactory/dfe-ops-client":           "dev-develop as dev-master",
     "dreamfactory/dfe-storage":              "dev-develop as dev-master",
     "dreamfactory/dfe-database":             "dev-develop as dev-master",
+    "dreamfactory/df-managed":               "dev-develop as dev-master",
     "barryvdh/laravel-cors":                 "0.6.x"
   },
   "require-dev":       {
