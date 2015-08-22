@@ -160,7 +160,7 @@ class LimitController extends ResourceController
                     ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
             }
-
+echo json_encode($_input);
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
             if ( $_input['cluster_id'] === '' && $_input['instance_id'] === '') {
@@ -190,7 +190,6 @@ class LimitController extends ResourceController
             $limit = [
                 'cluster_id' => $_input['cluster_id'] == 0 ? null : $_input['cluster_id'],
                 'instance_id' => $_input['instance_id'] == 0 ? null : $_input['instance_id'],
-                'user_id' => $_input['user_id'] == 0 ? null : $_input['user_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
@@ -198,14 +197,15 @@ class LimitController extends ResourceController
                 'label_text' => $_input['label_text']
             ];
 
+            /*
             if (!Limit::find($id)->update($limit)) {
                 throw new EnterpriseDatabaseException('Unable to update limit "' . $id . '"');
             }
-
+*/
             \Session::flash('flash_message', 'The limit "' . $_input['label_text'] . '" was updated successfully!');
             \Session::flash('flash_type', 'alert-success');
 
-            return \Redirect::to($this->makeRedirectUrl('limits'));
+  //          return \Redirect::to($this->makeRedirectUrl('limits'));
 
         } catch (QueryException $e) {
 
