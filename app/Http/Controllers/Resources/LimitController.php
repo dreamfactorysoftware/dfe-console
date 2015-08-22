@@ -209,7 +209,7 @@ class LimitController extends ResourceController
 
         } catch (QueryException $e) {
 
-            Session::flash('flash_message', 'Unable to update limit! '.$e->getMessage());
+            Session::flash('flash_message', '1Unable to update limit! '.$e->getMessage());
             Session::flash('flash_type', 'alert-danger');
             logger('Error editing limit: ' . $e->getMessage());
             return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
