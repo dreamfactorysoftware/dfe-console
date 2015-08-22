@@ -148,10 +148,10 @@ class LimitController extends ResourceController
             // Build the limit record
 
             foreach([
-                        'cluster_id' => null,
-                        'instance_id' => null,
+                        'cluster_id' => '',
+                        'instance_id' => '',
                         'service_name' => 0,
-                        'user_id' => 0,
+                        'user_id' => '',
                         'period_name' => "Minute",
                         'limit_nbr' => 0,
                         'active_ind' => 0,
@@ -190,6 +190,7 @@ class LimitController extends ResourceController
             $limit = [
                 'cluster_id' => $_input['cluster_id'] == 0 ? null : $_input['cluster_id'],
                 'instance_id' => $_input['instance_id'] == 0 ? null : $_input['instance_id'],
+                'user_id' => $_input['user_id'] == 0 ? null : $_input['user_id'],
                 'limit_key_text' => $_limit_key_text,
                 'period_nbr' => $this->periods[$_input['period_name']],
                 'limit_nbr' => $_input['limit_nbr'],
