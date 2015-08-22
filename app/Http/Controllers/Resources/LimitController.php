@@ -145,6 +145,16 @@ class LimitController extends ResourceController
         $_input = [];
 
         try {
+
+            if ($_input['type_select'] == 'cluster') {
+                $_input['instance_id'] = '';
+                $_input['user_id'] = '';
+            }
+
+            if ($_input['type_select'] == 'instance') {
+                $_input['user_id'] = '';
+            }
+
             // Build the limit record
 
             foreach([
@@ -175,16 +185,6 @@ echo json_encode($_input);
                 } elseif ($_input['user_id'] != '') {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
                 }
-            }
-
-
-            if ($_input['type_select'] == 'cluster') {
-                $_input['instance_id'] = null;
-                $_input['user_id'] = null;
-            }
-
-            if ($_input['type_select'] == 'instance') {
-                $_input['user_id'] = null;
             }
 
             $limit = [
