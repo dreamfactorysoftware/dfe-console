@@ -146,15 +146,6 @@ class LimitController extends ResourceController
 
         try {
 
-            if ($_input['type_select'] == 'cluster') {
-                $_input['instance_id'] = '';
-                $_input['user_id'] = '';
-            }
-
-            if ($_input['type_select'] == 'instance') {
-                $_input['user_id'] = '';
-            }
-
             // Build the limit record
 
             foreach([
@@ -169,6 +160,15 @@ class LimitController extends ResourceController
                         'type_select' => 0
                     ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
+            }
+
+            if ($_input['type_select'] == 'cluster') {
+                $_input['instance_id'] = '';
+                $_input['user_id'] = '';
+            }
+
+            if ($_input['type_select'] == 'instance') {
+                $_input['user_id'] = '';
             }
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
