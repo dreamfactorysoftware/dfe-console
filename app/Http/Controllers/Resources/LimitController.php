@@ -430,7 +430,7 @@ class LimitController extends ResourceController
         $_services = [];
         $_users = [];
 
-        if ($_limit['instance_id'] !== '') {
+        if ($_limit['instance_id'] !== null) {
             $_instance = $this->_findInstance($_limit['instance_id']);
             /*
             $_tmp = $this->getInstanceServices($_limit['instance_id']);
