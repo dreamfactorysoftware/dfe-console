@@ -9,7 +9,7 @@ return [
     'default' => 'rave',
     //  The provisioners, or "hosts" of our instances, or "guests".
     'hosts'   => [
-        /** RAVE === DSP2 */
+        /** RAVE === DF2 */
         'rave' => [
             /********************************************************************************
              * The namespace for our provisioning classes. This is optional and you may specify
@@ -17,7 +17,7 @@ return [
              * however. If an "namespace" key exists, it will be pre-pended to all provisioner
              * classes.
              ********************************************************************************/
-            'namespace' => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave',
+            'namespace'    => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave',
             /********************************************************************************
              * Each provisioner has a set of "sub-provisioners". The important one is the
              * "instance" provisioner. Also required are two standard sub-provisioners.
@@ -36,7 +36,7 @@ return [
              * Developers may add additional sub-provisioners to the list in their own
              * provisioner host class.
              ********************************************************************************/
-            'provides'  => [
+            'provides'     => [
                 PortableTypes::INSTANCE => 'InstanceProvisioner',
                 PortableTypes::STORAGE  => 'StorageProvisioner',
                 PortableTypes::DATABASE => 'DatabaseProvisioner',
@@ -46,7 +46,9 @@ return [
              * the available guest(s). Selecting a version for instance (as below). It can be
              * used for anything and provides an automatic UI in the Dashboard for user selection.
              ********************************************************************************/
-            'offerings' => [],
+            'offerings'    => [],
+            /** The resource discovery uri */
+            'resource-uri' => '/api/v2/system/',
         ],
     ],
 ];

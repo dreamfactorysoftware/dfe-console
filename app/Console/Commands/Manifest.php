@@ -1,11 +1,9 @@
-<?php namespace DreamFactory\Enterprise\Services\Console\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Jobs\ManifestJob;
@@ -29,7 +27,7 @@ class Manifest extends ConsoleCommand
     /**  @var string The console command description */
     protected $description = 'Generates a cluster manifest file (.dfe.cluster.json) for DFE installations.';
     /** @type ManifestJob */
-    protected $_job = null;
+    protected $job;
 
     //******************************************************************************
     //* Methods
@@ -44,10 +42,10 @@ class Manifest extends ConsoleCommand
             throw new \InvalidArgumentException('The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.');
         }
 
-        $this->_job =
+        $this->job =
             new ManifestJob($this->argument('cluster-id'), $this->argument('web-server-id'), ServerTypes::WEB);
 
-        $this->_job->setInput($this->input)
+        $this->job->setInput($this->input)
             ->setOutput($this->output)
             ->setOwner($this->option('owner-id'), $this->option('owner-type'))
             ->setShowManifest($this->option('show'))
@@ -55,11 +53,11 @@ class Manifest extends ConsoleCommand
             ->setNoKeys($this->option('no-keys'));
 
         $_output = $this->argument('output-file');
-        $this->_job->setOutputFile(!empty($_output) ? $_output : null);
+        $this->job->setOutputFile(!empty($_output) ? $_output : null);
 
-        \Queue::push($this->_job);
+        $_result = $this->dispatch($this->job);
 
-        return $this->_job->getResult();
+        return $this->job->getResult();
     }
 
     /** @inheritdoc */
@@ -104,21 +102,21 @@ class Manifest extends ConsoleCommand
     /**
      * @param int|string $clusterId
      *
-     * @return string Return the id/name of the cluster involved in this job
+     * @return \DreamFactory\Enterprise\Database\Models\Cluster
      */
     public function getCluster($clusterId = null)
     {
-        return $this->_findCluster($clusterId ?: $this->_job->getClusterId());
+        return $this->_findCluster($clusterId ?: $this->job->getClusterId());
     }
 
     /**
      * @param int|string $serverId
      *
-     * @return string Return the id/name of the server involved in this job
+     * @return \DreamFactory\Enterprise\Database\Models\Server
      */
     public function getServer($serverId = null)
     {
-        return $this->_findCluster($serverId ?: $this->_job->getServerId());
+        return $this->_findCluster($serverId ?: $this->job->getServerId());
     }
 
     /**
@@ -126,7 +124,7 @@ class Manifest extends ConsoleCommand
      */
     public function getOutputFile()
     {
-        return $this->_job->getOutputFile();
+        return $this->job->getOutputFile();
     }
 
     /**
@@ -134,7 +132,8 @@ class Manifest extends ConsoleCommand
      */
     public function getOwner()
     {
-        return $this->_locateOwner($this->_job->getOwner()->id, $this->_job->getOwnerType());
-    }
+        $_owner = $this->job->getOwner();
 
+        return $this->_locateOwner($_owner->id, $_owner->owner_type_nbr);
+    }
 }

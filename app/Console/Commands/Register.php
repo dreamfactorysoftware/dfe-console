@@ -1,4 +1,4 @@
-<?php namespace DreamFactory\Enterprise\Services\Console\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;

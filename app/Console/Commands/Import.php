@@ -1,22 +1,13 @@
-<?php namespace DreamFactory\Enterprise\Services\Console\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Enums\GuestLocations;
-use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
+use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Provision extends ConsoleCommand
+class Import extends ConsoleCommand
 {
-    //******************************************************************************
-    //* Traits
-    //******************************************************************************
-
-    use EntityLookup;
-
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -24,11 +15,11 @@ class Provision extends ConsoleCommand
     /**
      * @type string Command name
      */
-    protected $name = 'dfe:provision';
+    protected $name = 'dfe:import';
     /**
      * @type string Command description
      */
-    protected $description = 'Provision a new instance';
+    protected $description = 'Import a portable instance export';
 
     //******************************************************************************
     //* Methods
@@ -43,30 +34,13 @@ class Provision extends ConsoleCommand
     {
         parent::fire();
 
-        $_instanceId = $this->argument('instance-id');
+        $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
+            $this->argument('snapshot'),
+            array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
 
-        //	Check the name here for quicker response...
-        if (false === ($_instanceName = Instance::isNameAvailable($_instanceId)) || is_numeric($_instanceName[0])) {
-            $this->error('The name of your instance cannot be "' .
-                $_instanceId .
-                '".  It is either currently in-use, or otherwise invalid.');
-            exit(1);
-        }
+        \Queue::push($_job = new ImportJob($_request));
 
-        $_ownerType = OwnerTypes::USER;
-        $_ownerId = $this->argument('owner-id');
-        $_guestLocation = $this->argument('guest-location');
-
-        $_owner = $this->_locateOwner($_ownerId, $_ownerType);
-
-        $this->writeln('Provisioning instance <comment>"' . $_instanceId . '"</comment>.');
-
-        return \Queue::push(new ProvisionJob($_instanceId, [
-            'guest-location' => $_guestLocation,
-            'owner-id'       => $_owner->id,
-            'owner-type'     => $_ownerType ?: OwnerTypes::USER,
-            'cluster-id'     => $this->option('cluster-id'),
-        ]));
+        return $_job->getResult();
     }
 
     /**
@@ -80,10 +54,11 @@ class Provision extends ConsoleCommand
             [
                 ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
                 ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
+                ['snapshot', InputArgument::REQUIRED, 'The path of the snapshot file'],
                 [
                     'guest-location',
                     InputArgument::OPTIONAL,
-                    'The location of the new instance. Values: ' . GuestLocations::prettyList('"', true),
+                    'The location of the new instance',
                     config('provisioning.default-guest-location'),
                 ],
             ]);
@@ -104,6 +79,18 @@ class Provision extends ConsoleCommand
                     InputOption::VALUE_OPTIONAL,
                     'The cluster where this instance is to be placed.',
                     config('provisioning.default-cluster-id'),
+                ],
+                [
+                    'snapshot-id',
+                    'i',
+                    InputOption::VALUE_NONE,
+                    'If specified, the "snapshot" value is a snapshot-id not a path',
+                ],
+                [
+                    'owner-type',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'The owner-id of the new instance',
                 ],
             ]);
     }

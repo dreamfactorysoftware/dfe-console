@@ -1,4 +1,4 @@
-<?php namespace DreamFactory\Enterprise\Services\Console\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
@@ -64,7 +64,7 @@ class Deprovision extends ConsoleCommand
      */
     protected function getOptions()
     {
-        return array_merge(parent::getArguments(),
+        return array_merge(parent::getOptions(),
             [
                 [
                     'cluster-id',

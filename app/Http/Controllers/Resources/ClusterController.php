@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
-use DreamFactory\Enterprise\Database\Exceptions\EnterpriseDatabaseException;
+use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
 use DreamFactory\Enterprise\Database\Models\Instance;
@@ -11,7 +11,6 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use Illuminate\Database\QueryException;
 use Session;
 use Validator;
-
 
 class ClusterController extends ResourceController
 {
@@ -60,7 +59,6 @@ class ClusterController extends ResourceController
         return $_response;
     }
 
-
     /**
      * Returns an array of servers NOT assigned to a cluster
      *
@@ -80,37 +78,30 @@ class ClusterController extends ResourceController
         $servers_web = [];
         $servers_app = [];
 
-        foreach ($cs as $server)
-        {
+        foreach ($cs as $server) {
             $servers_in_use[] = intval($server->server_id);
         }
 
-        foreach ($servers as $server)
-        {
-            if (!in_array($server->id, $servers_in_use))
-            {
-                if ($server->server_type_id == 1)
-                {
-                    $servers_db[] = array('id' => $server->id, 'name' => $server->server_id_text);
+        foreach ($servers as $server) {
+            if (!in_array($server->id, $servers_in_use)) {
+                if ($server->server_type_id == 1) {
+                    $servers_db[] = ['id' => $server->id, 'name' => $server->server_id_text];
                 }
 
-                if ($server->server_type_id == 2)
-                {
-                    $servers_web[] = array('id' => $server->id, 'name' => $server->server_id_text);
+                if ($server->server_type_id == 2) {
+                    $servers_web[] = ['id' => $server->id, 'name' => $server->server_id_text];
                 }
 
-                if ($server->server_type_id == 3)
-                {
-                    $servers_app[] = array('id' => $server->id, 'name' => $server->server_id_text);
+                if ($server->server_type_id == 3) {
+                    $servers_app[] = ['id' => $server->id, 'name' => $server->server_id_text];
                 }
 
                 $servers_all[] = intval($server->id);
             }
         }
 
-        return array('web' => $servers_web, 'db' => $servers_db, 'app' => $servers_app);
+        return ['web' => $servers_web, 'db' => $servers_db, 'app' => $servers_app];
     }
-
 
     /** @inheritdoc */
     public function create(array $viewData = [])
@@ -119,9 +110,9 @@ class ClusterController extends ResourceController
 
         return $this->renderView('app.clusters.create',
             [
-                'db' => $servers['db'],
+                'db'  => $servers['db'],
                 'web' => $servers['web'],
-                'app' => $servers['app']
+                'app' => $servers['app'],
             ]);
     }
 
@@ -138,8 +129,8 @@ class ClusterController extends ResourceController
 
         $_datas = [
             'web' => null,
-            'db' => null,
-            'app' => null
+            'db'  => null,
+            'app' => null,
         ];
 
         foreach ($_clusterServers as $_type => $_servers) {
@@ -147,20 +138,20 @@ class ClusterController extends ResourceController
 
             foreach ($_servers as $_server) {
                 $_datas[$_serverType] = [
-                    'id' => $_server->id,
-                    'name' => $_server->server_id_text
+                    'id'   => $_server->id,
+                    'name' => $_server->server_id_text,
                 ];
             }
         }
 
         return $this->renderView('app.clusters.edit',
             [
-                'cluster_id'          => $id,
-                'cluster'             => $_cluster,
-                'db' => $servers['db'],
-                'web' => $servers['web'],
-                'app' => $servers['app'],
-                'datas' => $_datas
+                'cluster_id' => $id,
+                'cluster'    => $_cluster,
+                'db'         => $servers['db'],
+                'web'        => $servers['web'],
+                'app'        => $servers['app'],
+                'datas'      => $_datas,
             ]);
     }
 
@@ -175,9 +166,9 @@ class ClusterController extends ResourceController
                     'required',
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-                'web_server_id' => 'required|string',
-                'db_server_id' => 'required|string',
-                'app_server_id' => 'required|string'
+                'web_server_id'   => 'required|string',
+                'db_server_id'    => 'required|string',
+                'app_server_id'   => 'required|string',
             ]);
 
         if ($_validator->fails()) {
@@ -238,7 +229,6 @@ class ClusterController extends ResourceController
             unset($cluster_data['db_server_id']);
             unset($cluster_data['app_server_id']);
 
-
             /*
             $cluster_assigned_servers_array = [];
 
@@ -269,17 +259,17 @@ class ClusterController extends ResourceController
             */
 
             if (!Cluster::find($id)->update($cluster_data)) {
-                throw new EnterpriseDatabaseException('Unable to update cluster "' . $id . '"');
+                throw new DatabaseException('Unable to update cluster "' . $id . '"');
             }
 
-            \Session::flash('flash_message', 'The server "' . $cluster_data['cluster_id_text'] . '" was updated successfully!');
+            \Session::flash('flash_message',
+                'The server "' . $cluster_data['cluster_id_text'] . '" was updated successfully!');
             \Session::flash('flash_type', 'alert-success');
 
             return \Redirect::to($this->makeRedirectUrl('clusters'));
 
             //return \Redirect::to($this->makeRedirectUrl('clusters',
             //['flash_message' => $result_text, 'flash_type' => $result_status]));
-
 
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
@@ -301,9 +291,9 @@ class ClusterController extends ResourceController
                     "required",
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-                'web_server_id' => 'required|string',
-                'db_server_id' => 'required|string',
-                'app_server_id' => 'required|string'
+                'web_server_id'   => 'required|string',
+                'db_server_id'    => 'required|string',
+                'app_server_id'   => 'required|string',
             ]);
 
         if ($_validator->fails()) {

@@ -1,19 +1,13 @@
-<?php namespace DreamFactory\Enterprise\Console\Commands;
+<?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Deprovision extends ConsoleCommand
+class Export extends ConsoleCommand
 {
-    //******************************************************************************
-    //* Constants
-    //******************************************************************************
-
-    /** @type string */
-    const COMMAND_QUEUE = 'deprovision';
-
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -21,11 +15,11 @@ class Deprovision extends ConsoleCommand
     /**
      * @type string Command name
      */
-    protected $name = 'dfe:deprovision';
+    protected $name = 'dfe:export';
     /**
      * @type string Command description
      */
-    protected $description = 'Deprovisions, or shuts down, a running instance';
+    protected $description = 'Create a portable instance export';
 
     //******************************************************************************
     //* Methods
@@ -40,8 +34,13 @@ class Deprovision extends ConsoleCommand
     {
         parent::fire();
 
-        return \Queue::push(new DeprovisionJob($this->argument('instance-id'),
-            ['cluster-id' => $this->option('cluster-id'),]));
+        $_request = PortableServiceRequest::makeExport($this->argument('instance-id'),
+            $this->option('destination'));
+
+        $_job = new ExportJob($_request);
+        $_result = $this->dispatch($_job);
+
+        return $_result ?: $_job->getResult();
     }
 
     /**
@@ -53,7 +52,7 @@ class Deprovision extends ConsoleCommand
     {
         return array_merge(parent::getArguments(),
             [
-                ['instance-id', InputArgument::REQUIRED, 'The instance to deprovision'],
+                ['instance-id', InputArgument::REQUIRED, 'The instance to export'],
             ]);
     }
 
@@ -67,11 +66,10 @@ class Deprovision extends ConsoleCommand
         return array_merge(parent::getOptions(),
             [
                 [
-                    'cluster-id',
-                    'c',
+                    'destination',
+                    'd',
                     InputOption::VALUE_OPTIONAL,
-                    'The cluster containing the instance',
-                    config('provisioning.default-cluster-id'),
+                    'The path to place the export file.',
                 ],
             ]);
     }
