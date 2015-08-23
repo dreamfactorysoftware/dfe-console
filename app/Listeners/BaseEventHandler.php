@@ -1,4 +1,4 @@
-<?php namespace DreamFactory\Enterprise\Console\Handlers\Events;
+<?php namespace DreamFactory\Enterprise\Console\Listeners;
 
 use Illuminate\Http\Request;
 
