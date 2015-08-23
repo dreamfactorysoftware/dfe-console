@@ -62,6 +62,8 @@ return [
         'DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider',
         /** DreamFactory Partner Services Provider */
         'DreamFactory\Enterprise\Partner\Providers\PartnerServiceProvider',
+        /** DreamFactory Instance API Services Provider */
+        'DreamFactory\Enterprise\Instance\Ops\Providers\InstanceApiClientServiceProvider',
         /** 3rd-party Service Providers */
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'Barryvdh\Cors\CorsServiceProvider',

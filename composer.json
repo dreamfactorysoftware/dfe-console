@@ -25,6 +25,10 @@
     },
     {
       "type": "vcs",
+      "url":  "git@github.com:dreamfactorysoftware/dfe-api-client.git"
+    },
+    {
+      "type": "vcs",
       "url":  "git@github.com:dreamfactorysoftware/dfe-ops-client.git"
     },
     {
@@ -61,6 +65,7 @@
     "dreamfactory/dfe-common":               "dev-develop as dev-master",
     "dreamfactory/dfe-partner":              "dev-develop as dev-master",
     "dreamfactory/dfe-ops-client":           "dev-develop as dev-master",
+    "dreamfactory/dfe-api-client":           "dev-develop as dev-master",
     "dreamfactory/dfe-storage":              "dev-develop as dev-master",
     "dreamfactory/dfe-database":             "dev-develop as dev-master",
     "dreamfactory/df-managed":               "dev-develop as dev-master",
