@@ -1,7 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
@@ -9,6 +8,8 @@ use DreamFactory\Enterprise\Database\Models\Mount;
 use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
+use DreamFactory\Enterprise\Instance\Ops\Providers\InstanceApiClientServiceProvider;
+use DreamFactory\Enterprise\Instance\Ops\Services\InstanceApiClientService;
 
 /**
  * General usage services
@@ -49,12 +50,12 @@ class UsageService extends BaseService
     protected function gatherConsoleStatistics()
     {
         $_stats = [
-            'users'     => ServiceUser::count(),
-            'mounts'    => Mount::count(),
-            'servers'   => Server::count(),
-            'clusters'  => Cluster::count(),
-            'limits'    => Limit::count(),
-            'instances' => Instance::count(),
+            'user'     => ServiceUser::count(),
+            'mount'    => Mount::count(),
+            'server'   => Server::count(),
+            'cluster'  => Cluster::count(),
+            'limit'    => Limit::count(),
+            'instance' => Instance::count(),
         ];
 
         return $_stats;
@@ -66,7 +67,7 @@ class UsageService extends BaseService
     protected function gatherDashboardStatistics()
     {
         $_stats = [
-            'users' => User::count(),
+            'user' => User::count(),
         ];
 
         return $_stats;
@@ -82,21 +83,19 @@ class UsageService extends BaseService
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
-            $_resourceUri =
-                config('provisioners.hosts.' .
-                    GuestLocations::resolve($_instance->guest_location_nbr) .
-                    '.resource-uri');
+            /** @type InstanceApiClientService $_api */
+            $_api = app(InstanceApiClientServiceProvider::IOC_NAME)->connect($_instance);
 
-            if (!empty($_resourceUri)) {
-                $_resources = $_instance->call($_resourceUri);
+            $_resources = $_api->resources();
 
+            if (!empty($_resources)) {
                 foreach ($_resources as $_resource) {
                     try {
-                        if (false !== ($_result = $_instance->getResource($_resource))) {
-                            $_stats[$_resource] = count($_result->response);
+                        if (false !== ($_result = $_api->resource($_resource->name))) {
+                            $_stats[$_resource->name] = count($_result);
                         }
                     } catch (\Exception $_ex) {
-                        $_stats[$_resource] = 'unavailable';
+                        $_stats[$_resource->name] = 'unavailable';
                     }
                 }
             }

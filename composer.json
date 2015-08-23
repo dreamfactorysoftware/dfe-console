@@ -4,6 +4,8 @@
   "homepage":          "https://www.dreamfactory.com/",
   "keywords":          [
     "dreamfactory",
+    "df",
+    "dfe",
     "fabric",
     "utility",
     "cli"
@@ -51,7 +53,7 @@
   "type":              "project",
   "require":           {
     "laravel/framework":                     "5.1.*",
-    "guzzlehttp/guzzle":                     "~4.0",
+    "guzzlehttp/guzzle":                     "~6.0",
     "predis/predis":                         "~1.1@dev",
     "wpb/string-blade-compiler":             "2.*@dev",
     "ruflin/elastica":                       "*",
@@ -85,9 +87,6 @@
     }
   },
   "autoload-dev":      {
-    "psr-4":    {
-      "DreamFactory\\Enterprise\\Common\\": "/opt/dreamfactory/dfe/dfe-common/"
-    },
     "classmap": [
       "tests/TestCase.php"
     ]
