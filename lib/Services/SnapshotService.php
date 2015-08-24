@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
-use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
@@ -272,26 +271,6 @@ HTML
         @unlink($_workFile);
 
         return $workPath ?: new Filesystem(new ZipArchiveAdapter($_workFile));
-    }
-
-    /**
-     * Returns the absolute path to the root of the trash filesystem
-     *
-     * @return string
-     */
-    public function getRootTrashPath()
-    {
-        return InstanceStorage::getTrashPath();
-    }
-
-    /**
-     * Returns the absolute path to the root of the trash filesystem
-     *
-     * @return Filesystem
-     */
-    public function getRootTrashMount()
-    {
-        return InstanceStorage::getTrashMount();
     }
 
     /**

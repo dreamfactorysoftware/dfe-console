@@ -14,7 +14,7 @@ class BaseEventHandler
     /**
      * @type Request
      */
-    protected $_request;
+    protected $request;
 
     //******************************************************************************
     //* Methods
@@ -25,6 +25,6 @@ class BaseEventHandler
      */
     public function __construct(Request $request)
     {
-        $this->_request = $request;
+        $this->request = $request;
     }
 }

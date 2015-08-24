@@ -11,8 +11,6 @@ use League\Flysystem\Filesystem;
  * @method static array createFromExports(Instance $instance, array $exports, Filesystem $destination = null, $keepDays = 30)
  * @method static array restore(string $instanceId, string $snapshot, Filesystem $fsDestination = null)
  * @method static mixed downloadFromHash(string $hash)
- * @method static string getRootTrashPath(string $append = null)
- * @method static Filesystem getRootTrashMount(string $append = null)
  */
 class Snapshot extends Facade
 {
