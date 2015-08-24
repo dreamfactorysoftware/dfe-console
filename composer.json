@@ -62,7 +62,7 @@
     "league/flysystem-ziparchive":           "~1.0",
     "league/flysystem-eventable-filesystem": "~1.0",
     "dreamfactory/dfe-audit":                "~1.0",
-    "dreamfactory/php-utils":                "*",
+    "dreamfactory/php-utils":                "1.1.*",
     "dreamfactory/console-tools":            "dev-develop as dev-master",
     "dreamfactory/dfe-common":               "dev-develop as dev-master",
     "dreamfactory/dfe-partner":              "dev-develop as dev-master",
