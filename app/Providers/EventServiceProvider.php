@@ -11,7 +11,7 @@ class EventServiceProvider extends ServiceProvider
     /** @inheritdoc */
     protected $listen = [
         'auth.login' => [
-            'DreamFactory\Enterprise\Console\Listeners\Events\AuthLoginEventHandler',
+            '\DreamFactory\Enterprise\Console\Listeners\Events\AuthLoginEventHandler',
         ],
     ];
 }
