@@ -2,9 +2,10 @@ vendor/
 node_modules/
 .env
 .env.local
-/.dfe.cluster.json
-/.idea/workspace.xml
-/.idea/tasks.xml
+.dfe.cluster.json
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/composerJson.xml
 /build
 /tests/storage/
 /_ide_*.php
