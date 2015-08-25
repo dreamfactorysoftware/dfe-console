@@ -34,8 +34,7 @@ class Export extends ConsoleCommand
     {
         parent::fire();
 
-        $_request = PortableServiceRequest::makeExport($this->argument('instance-id'),
-            $this->option('destination'));
+        $_request = PortableServiceRequest::makeExport($this->argument('instance-id'), $this->option('destination'));
 
         $_job = new ExportJob($_request);
         $_result = $this->dispatch($_job);
@@ -50,8 +49,7 @@ class Export extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 ['instance-id', InputArgument::REQUIRED, 'The instance to export'],
             ]);
     }
@@ -63,8 +61,7 @@ class Export extends ConsoleCommand
      */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(),
-            [
+        return array_merge(parent::getOptions(), [
                 [
                     'destination',
                     'd',

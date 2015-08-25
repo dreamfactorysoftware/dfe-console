@@ -26,8 +26,7 @@ class ClusterState extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 ['cluster-id', InputArgument::REQUIRED, 'The cluster id'],
             ]);
     }

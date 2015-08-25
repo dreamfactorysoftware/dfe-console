@@ -35,38 +35,38 @@ class Server extends ConsoleCommand
     protected function getArguments()
     {
         return array_merge(parent::getArguments(), [
-                [
-                    'operation',
-                    InputArgument::REQUIRED,
-                    'The operation to perform: create, update, or delete',
-                ],
-                [
-                    'server-id',
-                    InputArgument::REQUIRED,
-                    'The id of the server upon which to perform operation',
-                ],
-            ]);
+            [
+                'operation',
+                InputArgument::REQUIRED,
+                'The operation to perform: create, update, or delete',
+            ],
+            [
+                'server-id',
+                InputArgument::REQUIRED,
+                'The id of the server upon which to perform operation',
+            ],
+        ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
         return array_merge(parent::getOptions(), [
-                [
-                    'server-type',
-                    't',
-                    InputOption::VALUE_REQUIRED,
-                    'The type of server: ' . implode(', ', ServerTypes::getDefinedConstants(true)),
-                ],
-                ['mount-id', 'm', InputOption::VALUE_REQUIRED, 'The id of the storage mount for this server'],
-                ['host-name', 'a', InputOption::VALUE_REQUIRED, 'The host name of this server',],
-                [
-                    'config',
-                    'c',
-                    InputOption::VALUE_REQUIRED,
-                    'JSON-encoded array of configuration data for this server',
-                ],
-            ]);
+            [
+                'server-type',
+                't',
+                InputOption::VALUE_REQUIRED,
+                'The type of server: ' . implode(', ', ServerTypes::getDefinedConstants(true)),
+            ],
+            ['mount-id', 'm', InputOption::VALUE_REQUIRED, 'The id of the storage mount for this server'],
+            ['host-name', 'a', InputOption::VALUE_REQUIRED, 'The host name of this server',],
+            [
+                'config',
+                'c',
+                InputOption::VALUE_REQUIRED,
+                'JSON-encoded array of configuration data for this server',
+            ],
+        ]);
     }
 
     /**

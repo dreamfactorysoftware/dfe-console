@@ -49,8 +49,7 @@ class Token extends ConsoleCommand implements SelfHandling
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 ['instance-id', InputArgument::REQUIRED, 'The instance id'],
             ]);
     }

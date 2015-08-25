@@ -45,6 +45,7 @@ return [
         'DreamFactory\Enterprise\Console\Providers\ConfigServiceProvider',
         'DreamFactory\Enterprise\Console\Providers\EventServiceProvider',
         'DreamFactory\Enterprise\Console\Providers\RouteServiceProvider',
+        'DreamFactory\Enterprise\Services\Providers\UsageServiceProvider',
         /** DreamFactory Common service providers */
         'DreamFactory\Enterprise\Common\Providers\LibraryAssetsProvider',
         'DreamFactory\Enterprise\Common\Providers\Auth\ConsoleAuthProvider',
@@ -56,7 +57,6 @@ return [
         /** DreamFactory Services service providers */
         'DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider',
         'DreamFactory\Enterprise\Storage\Providers\MountServiceProvider',
-        'DreamFactory\Enterprise\Services\Providers\UsageServiceProvider',
         'DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider',
         'DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider',
         'DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider',

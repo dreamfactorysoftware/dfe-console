@@ -34,9 +34,9 @@ class Import extends ConsoleCommand
     {
         parent::fire();
 
-        $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
-            $this->argument('snapshot'),
-            array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
+        $_request =
+            PortableServiceRequest::makeImport($this->argument('instance-id'), $this->argument('snapshot'),
+                array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
 
         \Queue::push($_job = new ImportJob($_request));
 
@@ -50,8 +50,7 @@ class Import extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
                 ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
                 ['snapshot', InputArgument::REQUIRED, 'The path of the snapshot file'],
@@ -71,8 +70,7 @@ class Import extends ConsoleCommand
      */
     protected function getOptions()
     {
-        return array_merge(parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 [
                     'cluster-id',
                     'c',

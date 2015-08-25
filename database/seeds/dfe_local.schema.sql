@@ -16,14 +16,8 @@ SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0;
 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0;
 
-/********************************************************************************
-*
-* Create the database and use it
-*
-********************************************************************************/
-
-CREATE DATABASE IF NOT EXISTS `dfe_local`
-    DEFAULT CHARACTER SET utf8;
+/** Create the database and use it **/
+CREATE DATABASE IF NOT EXISTS `dfe_local` DEFAULT CHARACTER SET utf8;
 
 USE `dfe_local`;
 
@@ -165,7 +159,7 @@ CREATE TABLE `role_t` (
     `active_ind`       TINYINT(1)              NOT NULL,
     `home_view_text`   VARCHAR(256)
                        COLLATE utf8_unicode_ci NOT NULL,
-    `create_date`      TIMESTAMP               NOT NULL,
+    `create_date`      DATETIME                NOT NULL,
     `lmod_date`        TIMESTAMP               NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     UNIQUE KEY `ux_role_role_name` (`role_name_text`))

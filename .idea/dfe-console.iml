@@ -67,15 +67,5 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="bootstrap" level="application" />
-    <orderEntry type="library" name="highcharts" level="application" />
-    <orderEntry type="library" name="jquery" level="application" />
-    <orderEntry type="library" name="jquery.dataTables" level="application" />
-    <orderEntry type="library" name="material" level="application" />
-    <orderEntry type="library" name="ripples" level="application" />
-    <orderEntry type="library" name="dataTables.bootstrap" level="application" />
-    <orderEntry type="library" name="dataTables.bootstrap" level="application" />
-    <orderEntry type="library" name="jquery.validate" level="application" />
-    <orderEntry type="library" name="jquery.validate" level="application" />
   </component>
 </module>

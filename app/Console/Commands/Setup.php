@@ -178,7 +178,8 @@ INI;
             return false;
         }
 
-        return false !== file_put_contents($_path . DIRECTORY_SEPARATOR . ltrim($filename, DIRECTORY_SEPARATOR),
+        return false !==
+        file_put_contents($_path . DIRECTORY_SEPARATOR . ltrim($filename, DIRECTORY_SEPARATOR),
             $jsonEncode ? JsonFile::encode($contents) : $contents);
     }
 

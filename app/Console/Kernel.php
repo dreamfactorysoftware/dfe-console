@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Server',
         'DreamFactory\Enterprise\Console\Console\Commands\Cluster',
         'DreamFactory\Enterprise\Console\Console\Commands\Token',
+        'DreamFactory\Enterprise\Console\Console\Commands\Metrics',
         //  Services
         'DreamFactory\Enterprise\Console\Console\Commands\Manifest',
         'DreamFactory\Enterprise\Console\Console\Commands\Provision',

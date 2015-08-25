@@ -19,11 +19,8 @@ class UsageServiceProvider extends BaseServiceProvider
     /** @inheritdoc */
     public function register()
     {
-        $this->singleton(
-            static::IOC_NAME,
-            function ($app){
-                return new UsageService($app);
-            }
-        );
+        $this->singleton(static::IOC_NAME, function ($app){
+            return new UsageService($app);
+        });
     }
 }

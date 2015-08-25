@@ -11,14 +11,12 @@
     <link href="/static/bootstrap-datepicker-1.4.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
     <link href="/theme/common/css/common.css" rel="stylesheet">
     <link rel="apple-touch-icon" href="/public/img/apple-touch-icon.png">
-
     <script type="text/javascript" src="/static/jquery-2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="/static/datatables-1.10.7/js/jquery.dataTables.min.js"></script>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 <body class="@yield('body-class')">

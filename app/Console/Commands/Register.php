@@ -36,10 +36,7 @@ class Register extends ConsoleCommand
     {
         parent::fire();
 
-        $_command = new RegisterJob(
-            $this->argument('owner-id'),
-            strtolower($this->argument('owner-type'))
-        );
+        $_command = new RegisterJob($this->argument('owner-id'), strtolower($this->argument('owner-type')));
 
         \Queue::push($_command);
 
@@ -53,9 +50,7 @@ class Register extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(
-            parent::getArguments(),
-            [
+        return array_merge(parent::getArguments(), [
                 [
                     'owner-id',
                     InputArgument::REQUIRED,
@@ -66,7 +61,6 @@ class Register extends ConsoleCommand
                     InputArgument::REQUIRED,
                     'One of the following owner types: ' . OwnerTypes::prettyList(),
                 ],
-            ]
-        );
+            ]);
     }
 }

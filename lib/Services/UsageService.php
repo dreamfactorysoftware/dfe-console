@@ -50,6 +50,7 @@ class UsageService extends BaseService
     protected function gatherConsoleStatistics()
     {
         $_stats = [
+            'uri'      => config('app.url', \Request::getSchemeAndHttpHost()),
             'user'     => ServiceUser::count(),
             'mount'    => Mount::count(),
             'server'   => Server::count(),
@@ -83,21 +84,28 @@ class UsageService extends BaseService
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
+            $_stats[$_instance->instance_id_text] = ['uri' => $_instance->getProvisionedEndpoint(),];
+
             /** @type InstanceApiClientService $_api */
             $_api = app(InstanceApiClientServiceProvider::IOC_NAME)->connect($_instance);
-
             $_resources = $_api->resources();
 
             if (!empty($_resources)) {
+                $_list = [];
+
                 foreach ($_resources as $_resource) {
-                    try {
-                        if (false !== ($_result = $_api->resource($_resource->name))) {
-                            $_stats[$_resource->name] = count($_result);
+                    if (property_exists($_resource, 'name')) {
+                        try {
+                            if (false !== ($_result = $_api->resource($_resource->name))) {
+                                $_list[$_resource->name] = count($_result);
+                            }
+                        } catch (\Exception $_ex) {
+                            $_list[$_resource->name] = 'unavailable';
                         }
-                    } catch (\Exception $_ex) {
-                        $_stats[$_resource->name] = 'unavailable';
                     }
                 }
+
+                $_stats[$_instance->instance_id_text]['resources'] = $_list;
             }
         }
 
