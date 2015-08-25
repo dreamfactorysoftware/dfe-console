@@ -5,6 +5,7 @@
 
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 return [
     //******************************************************************************
@@ -27,6 +28,8 @@ return [
     'default-domain-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https'),
     //  Set this to FALSE to disallow contact with this console via the Ops API
     'enable-console-api'      => true,
+    //  The default number of days to keep metrics data
+    'metrics-keep-days'       => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
     //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************

@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Enterprise\Services\UsageService;
+use DreamFactory\Library\Utility\Json;
 use Symfony\Component\Console\Input\InputOption;
 
 class Metrics extends ConsoleCommand
@@ -71,7 +72,7 @@ class Metrics extends ConsoleCommand
         $_stats = $_service->gatherStatistics();
 
         if (!empty($_stats)) {
-            $this->writeln(json_encode($_stats));
+            $this->writeln(Json::encode($_stats, JSON_UNESCAPED_SLASHES));
         }
     }
 }

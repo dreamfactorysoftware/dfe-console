@@ -8,8 +8,7 @@ use DreamFactory\Enterprise\Database\Models\Mount;
 use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
-use DreamFactory\Enterprise\Instance\Ops\Providers\InstanceApiClientServiceProvider;
-use DreamFactory\Enterprise\Instance\Ops\Services\InstanceApiClientService;
+use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 
 /**
  * General usage services
@@ -86,8 +85,7 @@ class UsageService extends BaseService
         foreach (Instance::all() as $_instance) {
             $_stats[$_instance->instance_id_text] = ['uri' => $_instance->getProvisionedEndpoint(),];
 
-            /** @type InstanceApiClientService $_api */
-            $_api = app(InstanceApiClientServiceProvider::IOC_NAME)->connect($_instance);
+            $_api = InstanceApiClient::connect($_instance);
             $_resources = $_api->resources();
 
             if (!empty($_resources)) {

@@ -55,4 +55,8 @@ class ConsoleDefaults
      * @type string
      */
     const DEFAULT_DOMAIN_PROTOCOL = EnterpriseDefaults::DEFAULT_DOMAIN_PROTOCOL;
+    /**
+     * @type int The default number of days to keep system metrics
+     */
+    const DEFAULT_METRICS_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_METRICS_DAYS_TO_KEEP;
 }
