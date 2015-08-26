@@ -47,7 +47,6 @@
                         <label for="user_id">User</label>
                         <select class="form-control" id="user_id" name="user_id">
                             <option value="">Select User</option>
-                            <option value="">All User</option>
                         </select>
                     </div>
                     <div id="limit_settings">
@@ -215,7 +214,7 @@
             var _instanceId = instanceId;
 
             if (!_instanceId || 0 == _instanceId) {
-                $_select.empty().append('<option value="" selected="selected">Select User</option>');
+                $_select.empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
                 return false;
             }
 
