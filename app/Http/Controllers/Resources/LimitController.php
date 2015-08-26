@@ -354,7 +354,7 @@ class LimitController extends ResourceController
 
         $_values = [
             'limit_nbr'        => $_limit->limit_nbr,
-            'user_id'          => 0,
+            'user_id'          => null,
             'service_name'     => '',
             'role_id'          => 0,
             'api_key'          => '',
