@@ -360,8 +360,10 @@ class UserController extends ResourceController
 
             $result_status = 'alert-success';
 
-            return \Redirect::to($this->makeRedirectUrl('users',
-                ['flash_message' => $result_text, 'flash_type' => $result_status]));
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message',
