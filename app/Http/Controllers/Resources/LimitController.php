@@ -200,10 +200,15 @@ class LimitController extends ResourceController
 
             return \Redirect::to($this->makeRedirectUrl('limits'));
         } catch (QueryException $e) {
+            $err_msg = $e->getMessage();
 
-            Session::flash('flash_message', 'Unable to update limit!');
+            if (strpos($err_msg, 'SQLSTATE') !== FALSE)
+                Session::flash('flash_message', 'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
+            else
+                Session::flash('flash_message', 'Unable to update limit!');
+
             Session::flash('flash_type', 'alert-danger');
-            logger('Error editing limit: ' . $e->getMessage());
+            logger('Error editing limit: ' . $err_msg);
 
             return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
         }
