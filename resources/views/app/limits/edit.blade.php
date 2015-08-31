@@ -193,7 +193,7 @@
                     $.each(data, function (index, item) {
                         var selected = '';
                         console.log(instanceId + ' === ' + item.id);
-                        if (instanceId === item.id){
+                        if (instanceId == item.id){
                             console.log('selected: ' + instanceId + ' === ' + item.id);
                             selected = 'selected';
                         }
