@@ -168,7 +168,6 @@
 
 
         function loadInstances(clusterId, instanceId) {
-            console.log(clusterId + ', ' + instanceId);
             var $_spinner = $('.label-spinner');
             var $_select = $('#instance_id');
             var _clusterId = clusterId;//$('option:selected', this).val().toString();
@@ -192,9 +191,7 @@
 
                     $.each(data, function (index, item) {
                         var selected = '';
-                        console.log(instanceId + ' === ' + item.id);
                         if (instanceId == item.id){
-                            console.log('selected: ' + instanceId + ' === ' + item.id);
                             selected = 'selected';
                         }
                         $_select.append('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
