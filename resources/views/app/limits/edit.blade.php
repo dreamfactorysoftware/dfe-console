@@ -168,6 +168,7 @@
 
 
         function loadInstances(clusterId, instanceId) {
+            console.log(clusterId + ', ' + instanceId);
             var $_spinner = $('.label-spinner');
             var $_select = $('#instance_id');
             var _clusterId = clusterId;//$('option:selected', this).val().toString();
