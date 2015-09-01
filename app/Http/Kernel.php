@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http;
+<?php namespace DreamFactory\Enterprise\Console\Http;
 
 use DreamFactory\Enterprise\Common\Http\Middleware\ApiLogger;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;

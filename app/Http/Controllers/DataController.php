@@ -78,8 +78,7 @@ abstract class DataController extends FactoryController
                     if ($_column['searchable']) {
                         $_name =
                             !empty($_column['name'])
-                                ? $_column['name']
-                                : (!empty($_column['data']) ? $_column['data']
+                                ? $_column['name'] : (!empty($_column['data']) ? $_column['data']
                                 : null);
 
                         if (!empty($_name)) {
@@ -210,9 +209,7 @@ abstract class DataController extends FactoryController
         /** @type Model[] $data */
         foreach ($data as $_item) {
             $_values =
-                (is_object($_item) && method_exists($_item, 'getAttributes'))
-                    ? $_item->getAttributes()
-                    : (array)$_item;
+                (is_object($_item) && method_exists($_item, 'getAttributes')) ? $_item->getAttributes() : (array)$_item;
 
             if (null !== ($_id = array_get($_values, 'id'))) {
                 $_values['DT_RowId'] = $_id;

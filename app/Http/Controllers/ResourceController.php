@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 use DreamFactory\Enterprise\Common\Facades\Packet;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
@@ -84,8 +83,7 @@ abstract class ResourceController extends DataController
                 [
                     'model'      => $_model,
                     'pageHeader' => 'Edit ' . ucwords($this->resource),
-                ]
-            );
+                ]);
         } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }

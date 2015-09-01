@@ -271,24 +271,35 @@ class OpsController extends BaseController implements IsVersioned
      */
     public function postImport(Request $request)
     {
+        logger('import input=[' . json_encode($request->input()));
+
         try {
             $_instanceId = $request->input('instance-id');
             $_snapshotId = $request->input('snapshot-id');
 
             try {
-                $_instance = $this->_findInstance($_instanceId);
                 $_snapshot = $this->_findSnapshot($_snapshotId);
             } catch (ModelNotFoundException $_ex) {
-                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance and/or snapshot not found.');
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Snapshot "' . $_snapshotId . '" not found.');
             }
 
-            //  Instance user must equal snapshot user
-            if ($_instance->user->id || $_snapshot->user->id) {
-                return $this->failure(Response::HTTP_UNAUTHORIZED);
+            try {
+                if ($this->_findInstance($_instanceId)) {
+                    return $this->failure(Response::HTTP_CONFLICT, 'Instance already exists.');
+                }
+            } catch (ModelNotFoundException $_ex) {
+                //  We want this...
             }
 
-            $_result = \Artisan::call('dfe:import',
-                ['instance-id' => $_instanceId, 'snapshot' => $_snapshotId, 'snapshot-id' => true]);
+            $_payload = [
+                'instance-id' => $_instanceId,
+                'snapshot'    => $_snapshot->snapshot_id_text,
+                'owner-id'    => $_snapshot->user_id,
+                'owner-type'  => OwnerTypes::USER,
+                'snapshot-id' => null,
+            ];
+
+            $_result = \Artisan::call('dfe:import', $_payload);
 
             if (0 != $_result) {
                 return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);

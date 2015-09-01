@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Middleware;
+<?php namespace DreamFactory\Enterprise\Console\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
