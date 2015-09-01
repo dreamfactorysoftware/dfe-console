@@ -291,15 +291,14 @@ class OpsController extends BaseController implements IsVersioned
                 //  We want this...
             }
 
-            $_payload = [
-                'instance-id' => $_instanceId,
-                'snapshot'    => $_snapshot->snapshot_id_text,
-                'owner-id'    => $_snapshot->user_id,
-                'owner-type'  => OwnerTypes::USER,
-                'snapshot-id' => null,
-            ];
-
-            $_result = \Artisan::call('dfe:import', $_payload);
+            $_result = \Artisan::call('dfe:import',
+                [
+                    '--instance-id' => $_instanceId,
+                    '--snapshot'    => $_snapshot->snapshot_id_text,
+                    '--owner-id'    => $_snapshot->user_id,
+                    '--owner-type'  => OwnerTypes::USER,
+                    '--snapshot-id' => true,
+                ]);
 
             if (0 != $_result) {
                 return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);

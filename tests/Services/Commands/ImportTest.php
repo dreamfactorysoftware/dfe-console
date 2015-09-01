@@ -1,7 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ImportTest extends \TestCase
 {
@@ -14,18 +16,24 @@ class ImportTest extends \TestCase
      */
     public function testImport()
     {
-        $_instanceId = 'wicker';
-        $_snapshotId = '';
+        $_instanceId = 'jablan';
+        $_snapshotId = '20150824141112.jablan';
 
-        $_instance = Instance::byNameOrId($_instanceId)->firstOrFail();
+        try {
+            $_instance = Instance::byNameOrId($_instanceId)->firstOrFail();
+            throw new \RuntimeException('The instance "' . $_instanceId . '" already exists.');
+        } catch (ModelNotFoundException $_ex) {
+            //  Good
+        }
 
-        $_payload = [
-            'owner-id'       => $_instance->user_id,
-            'instance-id'    => $_instanceId,
-            'snapshot'       => $_snapshotId,
-            'snapshot-id'    => true,
-            'guest-location' => GuestLocations::DFE_CLUSTER,
-        ];
+        $_payload =
+            [
+                '--instance-id' => $_instanceId,
+                '--snapshot'    => $_snapshotId,
+                '--owner-id'    => 1,
+                '--owner-type'  => OwnerTypes::USER,
+                '--snapshot-id' => true,
+            ];
 
         $_result = \Artisan::call('dfe:import', $_payload);
     }
