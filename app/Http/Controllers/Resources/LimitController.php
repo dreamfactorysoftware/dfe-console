@@ -158,6 +158,15 @@ class LimitController extends ResourceController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
+            if ($_input['type_select'] == 'cluster') {
+                $_input['instance_id'] = '';
+                $_input['user_id'] = '';
+            }
+
+            if ($_input['type_select'] == 'instance') {
+                $_input['user_id'] = '';
+            }
+
             if ($_input['cluster_id'] === '' && $_input['instance_id'] === '') {
                 $_limit_key_text = 'default.' . $_time_period;
             } elseif ($_input['cluster_id'] !== '' && $_input['instance_id'] === '') {
@@ -170,15 +179,6 @@ class LimitController extends ResourceController
                 } elseif ($_input['user_id'] != '') {
                     $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
                 }
-            }
-
-            if ($_input['type_select'] == 'cluster') {
-                $_input['instance_id'] = null;
-                $_input['user_id'] = null;
-            }
-
-            if ($_input['type_select'] == 'instance') {
-                $_input['user_id'] = null;
             }
 
             $limit = [
