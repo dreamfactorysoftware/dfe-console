@@ -1,5 +1,7 @@
 @extends('layouts.main')
+
 @include('layouts.partials.topmenu')
+
 @section('content')
     @include('layouts.partials.sidebar-menu',['resource'=>'limits'])
 
@@ -10,8 +12,9 @@
     <div class="row">
         <form method="POST" action="/{{$prefix}}/limits/multi" id="multi_delete">
             <input name="_method" type="hidden" value="DELETE">
-            <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+            <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input name="_selected" id="_selected" type="hidden" value="">
+            
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="well well-sm">
                     <div class="btn-group">
@@ -77,8 +80,8 @@
 
                                 <td>{{ $value['label_text'] }}</td>
                                 <td>{{ $value['cluster_id_text'] }}</td>
-                                <td>{{ $value['instance_id_text'] }}</td>
-                                <td>{{ $value['user_name'] }}</td>
+                                <td>@if(empty($value['instance_id_text']))<em>All</em>@else{{ $value['instance_id_text'] }}@endif</td>
+                                <td>@if(empty($value['user_name']))<em>All</em>@else{{ $value['user_name'] }}@endif</td>
                                 <td>{{ $value['limit_nbr'] }} / {{ $value['period_name'] }}</td>
                                 <td class="" style="text-align: center; vertical-align: middle;">@if ($value['active_ind'] == 1) <span class="label label-success">Active</span> @else <span class="label label-warning">Not Active</span> @endif</td>
 
