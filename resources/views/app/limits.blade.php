@@ -53,14 +53,14 @@
                 <table id="limitTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-policy">
                     <thead>
                     <tr>
-                        <th></th>
-                        <th class="" style="text-align: center; vertical-align: middle;"></th>
+                        <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                         <th>Name</th>
                         <th>Cluster</th>
                         <th>Instance</th>
                         <th>User</th>
-                        <th>Limit</th>
-                        <th class="" style="text-align: center; vertical-align: middle;">Status</th>
+                        <th>Definition</th>
+                        <th style="text-align: center;">Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -77,13 +77,12 @@
                                         <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeLimit('{{ $value['id'] }}', '{{ $value['label_text'] }}')" value="delete" style="width: 25px" ></button>
                                     </form>
                                 </td>
-
                                 <td>{{ $value['label_text'] }}</td>
                                 <td>{{ $value['cluster_id_text'] }}</td>
                                 <td>@if(empty($value['instance_id_text']))<em>All</em>@else{{ $value['instance_id_text'] }}@endif</td>
                                 <td>@if(empty($value['user_name']))<em>All</em>@else{{ $value['user_name'] }}@endif</td>
-                                <td>{{ $value['limit_nbr'] }} / {{ $value['period_name'] }}</td>
-                                <td class="" style="text-align: center; vertical-align: middle;">@if ($value['active_ind'] == 1) <span class="label label-success">Active</span> @else <span class="label label-warning">Not Active</span> @endif</td>
+                                <td style="text-align: right;">{{ number_format($value['limit_nbr'],0) }} per {{ strtolower($value['period_name']) }}</td>
+                                <td style="text-align: center;">@if ($value['active_ind'] == 1) <span class="label label-success">Active</span> @else <span class="label label-warning">Not Active</span> @endif</td>
 
                             </tr>
                         @endforeach
