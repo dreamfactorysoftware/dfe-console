@@ -1,16 +1,14 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
-use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
-use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Session;
 use Validator;
@@ -119,12 +117,10 @@ class LimitController extends ResourceController
                         $flash_message = 'Select User';
                         break;
                     case 'period_name':
-                        $flash_message =
-                            'Select Period';
+                        $flash_message = 'Select Period';
                         break;
                     case 'limit_nbr':
-                        $flash_message =
-                            'Limit must be a number and larger than 0';
+                        $flash_message = 'Limit must be a number and larger than 0';
                         break;
                 }
 
@@ -157,6 +153,8 @@ class LimitController extends ResourceController
             }
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
+
+            $_limit_key_text = 'default.' . $_time_period;
 
             if ($_input['type_select'] == 'cluster') {
                 $_input['instance_id'] = '';
@@ -202,10 +200,12 @@ class LimitController extends ResourceController
         } catch (QueryException $e) {
             $err_msg = $e->getMessage();
 
-            if (strpos($err_msg, 'SQLSTATE') !== FALSE)
-                Session::flash('flash_message', 'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
-            else
+            if (strpos($err_msg, 'SQLSTATE') !== false) {
+                Session::flash('flash_message',
+                    'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
+            } else {
                 Session::flash('flash_message', 'Unable to update limit!');
+            }
 
             Session::flash('flash_type', 'alert-danger');
             logger('Error editing limit: ' . $err_msg);
@@ -313,10 +313,12 @@ class LimitController extends ResourceController
                     $_users = [];
 
                     if ($_this_limit_type == 'user') {
-                        $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+                        $_users = [];
 
-                        foreach ($_tmp as $_v) {
-                            $_users[$_v['id']] = $_v['name'];
+                        if (false !== ($_rows = $this->getInstanceUsers($_limit['instance_id']))) {
+                            foreach ($_rows as $_index => $_user) {
+                                $_users[$_user['id']] = $_user['name'];
+                            }
                         }
                     }
 
@@ -416,7 +418,7 @@ class LimitController extends ResourceController
             }
         }
 
-        if ($_limit['cluster_id'] !== null) {
+        if (!empty($_limit['cluster_id'])) {
             $_cluster = $this->_findCluster($_limit['cluster_id']);
             $_values['cluster_id_text'] = $_cluster->cluster_id_text;
         }
@@ -424,7 +426,7 @@ class LimitController extends ResourceController
         $_services = [];
         $_users = [];
 
-        if ($_limit['instance_id'] !== null) {
+        if (!empty($_limit['instance_id'])) {
             $_instance = $this->_findInstance($_limit['instance_id']);
             /*
             $_tmp = $this->getInstanceServices($_limit['instance_id']);
@@ -435,12 +437,13 @@ class LimitController extends ResourceController
             }
             */
 
-            if ($_values['user_id'] !== null) {
-                $_tmp = $this->getInstanceUsers($_limit['instance_id']);
+            if (!empty($_values['user_id'])) {
                 $_users = [];
 
-                foreach ($_tmp as $_v) {
-                    $_users[$_v['id']] = $_v['name'];
+                if (false !== ($_rows = $this->getInstanceUsers($_limit['instance_id']))) {
+                    foreach ($_rows as $_index => $_user) {
+                        $_users[$_user['id']] = $_user['name'];
+                    }
                 }
             }
 
@@ -524,12 +527,10 @@ class LimitController extends ResourceController
                         $flash_message = 'Select User';
                         break;
                     case 'period_name':
-                        $flash_message =
-                            'Select Period';
+                        $flash_message = 'Select Period';
                         break;
                     case 'limit_nbr':
-                        $flash_message =
-                            'Limit must be a number and larger than 0';
+                        $flash_message = 'Limit must be a number and larger than 0';
                         break;
                 }
 
@@ -666,7 +667,8 @@ class LimitController extends ResourceController
     public function getInstanceServices($instanceId)
     {
         if (!empty($instanceId)) {
-            return $this->callInstanceApi($this->_findInstance($instanceId), '/api/v2/system/service');
+            return $this->formatResponse($this->_findInstance($instanceId)
+                ->call('/api/v2/system/service', [], [], Request::METHOD_GET, false));
         }
 
         return false;
@@ -680,43 +682,35 @@ class LimitController extends ResourceController
     public function getInstanceUsers($instanceId)
     {
         if (!empty($instanceId)) {
-            return $this->callInstanceApi($this->_findInstance($instanceId), '/api/v2/system/user');
+            return $this->formatResponse($this->_findInstance($instanceId)
+                ->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
         }
 
         return false;
     }
 
-    public function generateConsoleApiKey($metadata)
+    /**
+     * Formats the instance api response
+     *
+     * @param array $response
+     *
+     * @return array
+     */
+    protected function formatResponse($response)
     {
-        return hash('sha256', $metadata['cluster-id'] . $metadata['instance-id']);
-    }
-
-    public function callInstanceApi(Instance $instance, $uri)
-    {
-        $_url = config('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https') . '://' .
-            $instance->instance_data_text['env']['instance-id'] . '.' .
-            $instance->instance_data_text['env']['default-domain'] .
-            $uri;
-
-        $_rows =
-            Curl::get($_url,
-                [],
-                [
-                    CURLOPT_HTTPHEADER => [
-                        EnterpriseDefaults::CONSOLE_X_HEADER .
-                        ': ' .
-                        $this->generateConsoleApiKey($instance->instance_data_text['env']),
-                    ],
-                ])->resource;
+        if (null === ($_rows = (array)data_get($response, 'resource'))) {
+            logger('invalid response format: ' . print_r($response, true));
+            throw new \RuntimeException('Invalid console response.');
+        }
 
         $_results = [];
 
-        foreach ($_rows as $_row) {
-            if ($_row->is_active === true) {
-                if (empty($_row->label) === true) {
-                    $_results[] = ['id' => $_row->id, 'name' => $_row->name];
+        foreach ($_rows as $_index => $_row) {
+            if ($_row['is_active']) {
+                if (empty($_row['label'])) {
+                    $_results[] = ['id' => $_row['id'], 'name' => $_row['name']];
                 } else {
-                    $_results[] = ['id' => $_row->name, 'name' => $_row->label];
+                    $_results[] = ['id' => $_row['name'], 'name' => $_row['label']];
                 }
             }
         }
