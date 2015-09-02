@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Exceptions\SchemaExistsException;
 use DreamFactory\Enterprise\Services\Provisioners\BaseDatabaseProvisioner;
+use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -113,19 +114,47 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
     /** @inheritdoc */
     public function import($request)
     {
+        /** @type \ZipArchive $_archive */
+        $_archive = null;
+        $_from = null;
         $_instance = $request->getInstance();
 
-        if (!file_exists($_from = $request->getTarget())) {
-            throw new \InvalidArgumentException('$from file "' . $_from . '" missing or unreadable.');
+        //  Grab the target (zip archive) and pull out the target of the import
+        $_zip = $request->getTarget();
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_archive = $_zip->getAdapter()->getArchive();
+
+        foreach ($_zip->listContents() as $_file) {
+            if ('dir' != $_file['type'] && false !== strpos($_file['path'], '.database.sql')) {
+                $_path = Disk::segment([sys_get_temp_dir(), 'dfe', 'import', sha1($_file['path'])], true);
+
+                if (!$_archive->extractTo($_path, $_file['path'])) {
+                    throw new \RuntimeException('Unable to unzip archive file "' . $_file['path'] . '" from snapshot.');
+                }
+
+                $_from = Disk::path([$_path, $_file['path']], false);
+
+                if (!$_from || !file_exists($_from)) {
+                    throw new \InvalidArgumentException('$from file "' . $_file['path'] . '" missing or unreadable.');
+                }
+
+                break;
+            }
         }
 
         /** @type Connection $_db */
         list($_db, ,) = $this->getRootDatabaseConnection($_instance);
 
         $this->dropDatabase($_db, $_instance->db_name_text);
-        $this->createDatabase($_db, $_instance->db_name_text);
+        $this->createDatabase($_db, ['database' => $_instance->db_name_text]);
 
-        return $_db->statement('source ' . $_from);
+        $_results = $_db->statement('source ' . $_from);
+
+        //  Clean up temp space...
+        unlink($_from);
+
+        return $_results;
     }
 
     /** @inheritdoc */
@@ -207,13 +236,10 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
 
         //  Build the config
         $_config =
-            array_merge(
-                is_scalar($_server->config_text)
-                    ? Json::decode($_server->config_text, true)
-                    : (array)$_server->config_text,
+            array_merge(is_scalar($_server->config_text) ? Json::decode($_server->config_text, true)
+                : (array)$_server->config_text,
                 $_skeleton,
-                ['db-server-id' => $_dbServer,]
-            );
+                ['db-server-id' => $_dbServer,]);
 
         //  Sanity Checks
         if (empty($_config)) {
@@ -291,8 +317,7 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
         try {
             $_dbName = $creds['database'];
 
-            return $db->statement(
-                <<<MYSQL
+            return $db->statement(<<<MYSQL
 CREATE DATABASE IF NOT EXISTS `{$_dbName}`
 MYSQL
             );
@@ -319,16 +344,14 @@ MYSQL
 
             $this->debug('dropping database "' . $databaseToDrop . '"');
 
-            return $db->transaction(
-                function () use ($db, $databaseToDrop){
-                    $_result = $db->statement('SET FOREIGN_KEY_CHECKS = 0');
-                    $_result && $_result = $db->statement('DROP DATABASE `' . $databaseToDrop . '`');
-                    $_result && $db->statement('SET FOREIGN_KEY_CHECKS = 1');
-                    $this->debug('database "' . $databaseToDrop . '" dropped.');
+            return $db->transaction(function () use ($db, $databaseToDrop){
+                $_result = $db->statement('SET FOREIGN_KEY_CHECKS = 0');
+                $_result && $_result = $db->statement('DROP DATABASE `' . $databaseToDrop . '`');
+                $_result && $db->statement('SET FOREIGN_KEY_CHECKS = 1');
+                $this->debug('database "' . $databaseToDrop . '" dropped.');
 
-                    return $_result;
-                }
-            );
+                return $_result;
+            });
         } catch (\Exception $_ex) {
             $_message = $_ex->getMessage();
 
@@ -354,33 +377,29 @@ MYSQL
      */
     protected function grantPrivileges($db, $creds, $fromServer)
     {
-        return $db->transaction(
-            function () use ($db, $creds, $fromServer){
-                //  Create users
-                $_users = $this->getDatabaseUsers($creds, $fromServer);
+        return $db->transaction(function () use ($db, $creds, $fromServer){
+            //  Create users
+            $_users = $this->getDatabaseUsers($creds, $fromServer);
 
-                try {
-                    foreach ($_users as $_user) {
-                        $db->statement(
-                            'GRANT ALL PRIVILEGES ON ' .
-                            $creds['database'] .
-                            '.* TO ' .
-                            $_user .
-                            ' IDENTIFIED BY \'' .
-                            $creds['password'] .
-                            '\''
-                        );
-                    }
-
-                    //	Grants for instance database
-                    return true;
-                } catch (\Exception $_ex) {
-                    $this->error('* issue grants - failure: ' . $_ex->getMessage());
-
-                    return false;
+            try {
+                foreach ($_users as $_user) {
+                    $db->statement('GRANT ALL PRIVILEGES ON ' .
+                        $creds['database'] .
+                        '.* TO ' .
+                        $_user .
+                        ' IDENTIFIED BY \'' .
+                        $creds['password'] .
+                        '\'');
                 }
+
+                //	Grants for instance database
+                return true;
+            } catch (\Exception $_ex) {
+                $this->error('* issue grants - failure: ' . $_ex->getMessage());
+
+                return false;
             }
-        );
+        });
     }
 
     /**
@@ -392,38 +411,36 @@ MYSQL
      */
     protected function revokePrivileges($db, $creds, $fromServer)
     {
-        return $db->transaction(
-            function () use ($db, $creds, $fromServer){
-                //  Create users
-                $_users = $this->getDatabaseUsers($creds, $fromServer);
+        return $db->transaction(function () use ($db, $creds, $fromServer){
+            //  Create users
+            $_users = $this->getDatabaseUsers($creds, $fromServer);
 
-                try {
-                    foreach ($_users as $_user) {
-                        //	Grants for instance database
-                        if (!($_result =
-                            $db->statement('REVOKE ALL PRIVILEGES ON ' . $creds['database'] . '.* FROM ' . $_user))
-                        ) {
-                            $this->error('* error revoking privileges from "' . $_user . '"');
-                            continue;
-                        }
-
-                        $this->debug('grants revoked - complete');
-
-                        if (!($_result = $db->statement('DROP USER ' . $_user))) {
-                            $this->error('* error dropping user "' . $_user . '"');
-                        }
-
-                        $_result && $this->debug('users dropped > ', $_users);
+            try {
+                foreach ($_users as $_user) {
+                    //	Grants for instance database
+                    if (!($_result =
+                        $db->statement('REVOKE ALL PRIVILEGES ON ' . $creds['database'] . '.* FROM ' . $_user))
+                    ) {
+                        $this->error('* error revoking privileges from "' . $_user . '"');
+                        continue;
                     }
 
-                    return true;
-                } catch (\Exception $_ex) {
-                    $this->error('revoke grants - failure: ' . $_ex->getMessage());
+                    $this->debug('grants revoked - complete');
 
-                    return false;
+                    if (!($_result = $db->statement('DROP USER ' . $_user))) {
+                        $this->error('* error dropping user "' . $_user . '"');
+                    }
+
+                    $_result && $this->debug('users dropped > ', $_users);
                 }
+
+                return true;
+            } catch (\Exception $_ex) {
+                $this->error('revoke grants - failure: ' . $_ex->getMessage());
+
+                return false;
             }
-        );
+        });
     }
 
     /**

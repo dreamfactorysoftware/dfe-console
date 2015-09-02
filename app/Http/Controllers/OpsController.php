@@ -293,9 +293,9 @@ class OpsController extends BaseController implements IsVersioned
 
             $_result = \Artisan::call('dfe:import',
                 [
-                    '--instance-id' => $_instanceId,
-                    '--snapshot'    => $_snapshot->snapshot_id_text,
-                    '--owner-id'    => $_snapshot->user_id,
+                    'instance-id'   => $_instanceId,
+                    'snapshot'      => $_snapshot->snapshot_id_text,
+                    'owner-id'      => $_snapshot->user_id,
                     '--owner-type'  => OwnerTypes::USER,
                     '--snapshot-id' => true,
                 ]);

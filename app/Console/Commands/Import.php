@@ -3,10 +3,11 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
+use Illuminate\Contracts\Bus\SelfHandling;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Import extends ConsoleCommand
+class Import extends ConsoleCommand implements SelfHandling
 {
     //******************************************************************************
     //* Members
@@ -34,13 +35,14 @@ class Import extends ConsoleCommand
     {
         parent::fire();
 
-        $_request =
-            PortableServiceRequest::makeImport($this->argument('instance-id'), $this->argument('snapshot'),
-                array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
+        $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
+            $this->argument('snapshot'),
+            array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
 
-        \Queue::push($_job = new ImportJob($_request));
+        $_job = new ImportJob($_request);
+        $_result = $this->dispatch($_job);
 
-        return $_job->getResult();
+        return [$_result, $_job];
     }
 
     /**
@@ -50,7 +52,8 @@ class Import extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
                 ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
                 ['snapshot', InputArgument::REQUIRED, 'The path of the snapshot file'],
@@ -70,7 +73,8 @@ class Import extends ConsoleCommand
      */
     protected function getOptions()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 [
                     'cluster-id',
                     'c',

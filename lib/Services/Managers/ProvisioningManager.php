@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceResponse;
 use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
@@ -15,6 +16,7 @@ use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use League\Flysystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortableProvisionerAware
@@ -229,8 +231,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         //  Validate instance
         $_instanceId = $job->getInstanceId();
 
-        //  No instance, let's make one...
-        $_options = $job->getOptions();
+        //  Validate import file
+        $_snapshotId = $job->getTarget();
+        $_target = $this->validateImportTarget($_snapshotId);
 
         try {
             //  Find instance if it exists...
@@ -238,10 +241,10 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         } catch (ModelNotFoundException $_ex) {
             try {
                 $_result = \Artisan::call('dfe:provision',
-                    array_merge($_options,
-                        [
-                            'instance-id' => $_instanceId,
-                        ]));
+                    [
+                        'owner-id'    => $job->getOwner()->id,
+                        'instance-id' => $_instanceId,
+                    ]);
 
                 if (0 == $_result) {
                     $_instance = $this->_findInstance($_instanceId);
@@ -249,22 +252,36 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
                     throw new ModelNotFoundException();
                 }
             } catch (ModelNotFoundException $_ex) {
-                throw new \RuntimeException('The instance could be be provisioned.',
+                throw new \RuntimeException('The instance could not be provisioned.',
                     Response::HTTP_PRECONDITION_FAILED);
             }
         }
 
-        $_services = $this->getPortableServices(array_get($_options, 'guest-location'));
+        //  Get the services and options
+        $_services = $this->getPortableServices(array_get($_options = $job->getOptions(false), 'guest-location'));
+
+        //  Are we done yet?
+        if (empty($_services)) {
+            $job->setResult(new PortableServiceResponse('Your instance "' .
+                $_instanceId .
+                '" has been created. However, no portable services are available for instance\'s "guest-location".',
+                Response::HTTP_PARTIAL_CONTENT));
+
+            return true;
+        }
 
         $_imports = [];
 
         //  Allow each service to import individually, collecting the output
+        $_request = PortableServiceRequest::makeImport($_instance,
+            $_target,
+            array_merge(['snapshot-id' => $_snapshotId], $job->getOptions(false)));
+
         foreach ($_services as $_type => $_service) {
-            //@todo I think the following may be replaced with "$_exports[$_type] = $_service->import($job);"
-            $_imports[$_type] = $_service->import(PortableServiceRequest::makeImport($_instance,
-                $job->getTarget() ?: array_get($job->getOptions(), 'target'),
-                $job->getOptions()));
+            $_imports[$_type] = $_service->import($_request);
         }
+
+        $job->setResult(new PortableServiceResponse($_imports));
 
         return $_imports;
     }
@@ -316,5 +333,17 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         }
 
         return $tag . $connector . $subkey;
+    }
+
+    /**
+     * Given a snapshot id, return a filesystem containing it
+     *
+     * @param string $snapshotId
+     *
+     * @return Filesystem
+     */
+    protected function validateImportTarget($snapshotId)
+    {
+        return $this->_findSnapshot($snapshotId)->getMount();
     }
 }

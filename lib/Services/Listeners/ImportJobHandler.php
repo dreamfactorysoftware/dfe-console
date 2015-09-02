@@ -40,6 +40,12 @@ class ImportJobHandler extends BaseListener
             if (false === ($_response = Provision::import($job))) {
                 throw new \RuntimeException('Unknown import failure');
             }
+
+            if (true === $_response) {
+                $this->notice('Partial import of "' .
+                    $_instanceId .
+                    '". No portable services are available for "guest-location".');
+            }
         } catch (\RuntimeException $_ex) {
             $this->error('[ERROR] ' . $_ex->getMessage());
             !isset($_response) && $_response = false;

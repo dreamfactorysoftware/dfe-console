@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
 use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
+use DreamFactory\Enterprise\Common\Traits\Guzzler;
 use DreamFactory\Enterprise\Services\Provisioners\BaseStorageProvisioner;
 use DreamFactory\Library\Utility\Disk;
 use League\Flysystem\Filesystem;
@@ -43,6 +44,12 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
      * @type string My ID!
      */
     const PROVISIONER_ID = 'rave';
+
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use Guzzler;
 
     //******************************************************************************
     //* Methods
@@ -133,9 +140,37 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
     /** @inheritdoc */
     public function import($request)
     {
+        $_from = null;
         $_instance = $request->getInstance();
         $_mount = $_instance->getStorageMount();
-        $_target = $request->getTarget();
+
+        //  Grab the target (zip archive) and pull out the target of the import
+        $_zip = $request->getTarget();
+        /** @var \ZipArchive $_archive */
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_archive = $_zip->getAdapter()->getArchive();
+
+        $_path = null;
+
+        foreach ($_zip->listContents() as $_file) {
+            if ('dir' != $_file['type'] && false !== strpos($_file['path'], '.storage.zip')) {
+                $_from = Disk::segment([sys_get_temp_dir(), 'dfe', 'import', sha1($_file['path'])], true);
+
+                if (!$_archive->extractTo($_from, $_file['path'])) {
+                    throw new \RuntimeException('Unable to unzip archive file "' . $_file['path'] . '" from snapshot.');
+                }
+
+                $_path = Disk::path([$_from, $_file['path']], false);
+
+                if (!$_path || !file_exists($_path)) {
+                    throw new \InvalidArgumentException('$from file "' . $_file['path'] . '" missing or unreadable.');
+                }
+
+                $_from = new Filesystem(new ZipArchiveAdapter($_path));
+
+                break;
+            }
+        }
 
         if (!($_mount instanceof Filesystem)) {
             $_mount = new Filesystem(new ZipArchiveAdapter($_mount));
@@ -143,15 +178,27 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
 
         //  If "clean" == true, storage is wiped clean before restore
         if (true === $request->get('clean', false)) {
-            $_target->deleteDir('./');
+            $_mount->deleteDir('./');
         }
 
         //  Extract the files
         $_restored = [];
 
-        foreach ($_mount->listContents() as $_file) {
-            $_restored[$_file['file']] = $_target->put($_file['file'], $_mount->read($_file['file']));
+        /** @type Filesystem $_archive */
+        foreach ($_from->listContents() as $_file) {
+            $_filename = $_file['path'];
+
+            if ('dir' == array_get($_file, 'type')) {
+                $_mount->createDir($_filename);
+            } else {
+                $_mount->writeStream($_filename, $_archive->readStream($_filename));
+            }
+
+            $_restored[] = $_file;
         }
+
+        unset($_from);
+        $_path && is_dir(dirname($_path)) && Disk::deleteTree(dirname($_path));
 
         return $_restored;
     }
@@ -176,5 +223,4 @@ class StorageProvisioner extends BaseStorageProvisioner implements PortableData
         //  The name of the file in the snapshot mount
         return $_file;
     }
-
 }
