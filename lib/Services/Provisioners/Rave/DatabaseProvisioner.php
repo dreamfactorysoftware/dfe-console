@@ -144,12 +144,12 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
         }
 
         /** @type Connection $_db */
-        list($_db, ,) = $this->getRootDatabaseConnection($_instance);
+        list($_db, $_rootConfig, $_rootServer) = $this->getRootDatabaseConnection($_instance);
 
         $this->dropDatabase($_db, $_instance->db_name_text);
         $this->createDatabase($_db, ['database' => $_instance->db_name_text]);
 
-        $_results = $_db->statement('source ' . $_from);
+        $_results = $this->loadSqlDump($_instance, $_from, $_rootConfig);
 
         //  Clean up temp space...
         unlink($_from);
@@ -237,9 +237,7 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
         //  Build the config
         $_config =
             array_merge(is_scalar($_server->config_text) ? Json::decode($_server->config_text, true)
-                : (array)$_server->config_text,
-                $_skeleton,
-                ['db-server-id' => $_dbServer,]);
+                : (array)$_server->config_text, $_skeleton, ['db-server-id' => $_dbServer,]);
 
         //  Sanity Checks
         if (empty($_config)) {
@@ -469,5 +467,41 @@ MYSQL
             '\'' . $creds['username'] . '\'@\'' . $fromServer . '\'',
             '\'' . $creds['username'] . '\'@\'localhost\'',
         ];
+    }
+
+    /**
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
+     * @param string                                            $filename
+     * @param array                                             $dbConfig
+     *
+     * @return string
+     */
+    protected function loadSqlDump(Instance $instance, $filename, $dbConfig)
+    {
+        $_command = str_replace(PHP_EOL, null, `which mysql`);
+
+        $_template = $_command . ' {:options} < ' . $filename;
+        $_port = $instance->db_port_nbr;
+
+        $_options = [
+            '--host=' . escapeshellarg(array_get($dbConfig, 'host')),
+            '--user=' . escapeshellarg(array_get($dbConfig, 'username')),
+            '--password=' . escapeshellarg(array_get($dbConfig, 'password')),
+        ];
+
+        if (!empty($_port)) {
+            $_options[] = '--port=' . $_port;
+        }
+
+        $_command = str_replace('{:options}', implode(' ', $_options), $_template);
+        exec($_command, $_output, $_return);
+
+        if (0 != $_return) {
+            $this->error('Error while importing database of instance id "' . $instance->instance_id_text . '".');
+
+            return false;
+        }
+
+        return $_output;
     }
 }

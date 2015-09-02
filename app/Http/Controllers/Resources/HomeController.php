@@ -15,8 +15,7 @@ class HomeController extends ResourceController
     public function index()
     {
         //  Fill up the expected defaults...
-        return $this->renderView('app.home',
-            [
+        return $this->renderView('app.home', [
                 'prefix'   => ConsoleDefaults::UI_PREFIX,
                 'resource' => null,
                 'title'    => null,
