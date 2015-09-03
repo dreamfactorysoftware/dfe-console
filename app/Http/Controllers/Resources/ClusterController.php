@@ -56,6 +56,11 @@ class ClusterController extends ResourceController
 
         $this->debug('found ' . count($_response) . ' instance(s)');
 
+        usort($_response,
+            function ($a, $b){
+                return strcasecmp($a['name'], $b['name']);
+            });
+
         return $_response;
     }
 

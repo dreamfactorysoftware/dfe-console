@@ -237,7 +237,9 @@ class DatabaseProvisioner extends BaseDatabaseProvisioner implements PortableDat
         //  Build the config
         $_config =
             array_merge(is_scalar($_server->config_text) ? Json::decode($_server->config_text, true)
-                : (array)$_server->config_text, $_skeleton, ['db-server-id' => $_dbServer,]);
+                : (array)$_server->config_text,
+                $_skeleton,
+                ['db-server-id' => $_dbServer,]);
 
         //  Sanity Checks
         if (empty($_config)) {
@@ -478,7 +480,9 @@ MYSQL
      */
     protected function loadSqlDump(Instance $instance, $filename, $dbConfig)
     {
-        $_command = str_replace(PHP_EOL, null, `which mysql`);
+        if (empty($_command = str_replace(PHP_EOL, null, `which mysql`))) {
+            return false;
+        }
 
         $_template = $_command . ' {:options} < ' . $filename;
         $_port = $instance->db_port_nbr;
@@ -494,6 +498,9 @@ MYSQL
         }
 
         $_command = str_replace('{:options}', implode(' ', $_options), $_template);
+
+        logger('Import command: ' . $_command);
+
         exec($_command, $_output, $_return);
 
         if (0 != $_return) {

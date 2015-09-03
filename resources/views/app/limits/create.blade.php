@@ -105,7 +105,7 @@
         function generateForm(type) {
             var set_show = true;
 
-            $('#type_select > option').each(function() {
+            $('#type_select').find('> option').each(function() {
                 if (set_show === true) {
                     $('#select_' + this.value).show();
                     if (type === this.value) {
@@ -141,9 +141,7 @@
                 $_spinner.addClass('fa-spin').removeClass('hidden');
 
                 $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
-                    var _item;
-
-                    if (!$.isArray(data)) {
+                    if (!$.isArray(data) || !data.length) {
                         $_select.empty();
                         $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
                     } else {
@@ -163,53 +161,25 @@
 
             //  Instance selection
             $_form.on('change', '#instance_id', function (e) {
-                var $_select = $('#service_name');
-                var _instanceId = $('option:selected', this).val().toString();
-                var _type = $('#type_select option:selected').val().toString();
+                if ('user' == $('#type_select').find(':selected').val()) {
+                    var _instanceId = $(':selected', this).val();
 
-                $_spinner.addClass('fa-spin').removeClass('hidden');
-/*
-
-                if (!_instanceId || 0 == _instanceId) {
-                    $_select.empty().append('<option value="all" selected="selected">All Services</option>').attr('disabled', 'disabled');
-                    return false;
-                }
-
-                $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/services').done(function (data) {
-                    var _item;
-
-                    if (!$.isArray(data)) {
-                        $_select.empty();
-                        $_select.append('<option value="" selected="selected">No Services</option>').attr('disabled', 'disabled');
-                    } else {
-                        $.each(data, function (index, item) {
-                            $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
-                        });
-
-                        $_select.removeAttr('disabled').focus();
-                    }
-                }).fail(function (xhr, status) {
-                    $_select.append('<option value="" selected="selected">Please Reload Page</option>').attr('disabled', 'disabled');
-                    alert('The current list of services is not available.\n\n' + '(' + status + ')');
-                }).always(function () {
-                    $_spinner.removeClass('fa-spin').addClass('hidden');
-                });
-*/
-                if (_type === 'user') {
+                    $_spinner.addClass('fa-spin').removeClass('hidden');
 
                     if (!_instanceId || 0 == _instanceId) {
-                        $_select.empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
+                        $('select#user_id').empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
                         return false;
                     }
 
                     $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
+                       var $_select = $('#user_id');
+                       $_select.empty();
 
-                        var _item, $_select = $('#user_id');
-
-                        if (!$.isArray(data)) {
-                            $_select.empty();
+                        if (!$.isArray(data)||!data.length) {
                             $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
                         } else {
+                            $_select.append('<option>Select User</option>');
+
                             $.each(data, function (index, item) {
                                 $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
                             });
@@ -222,15 +192,10 @@
                     }).always(function () {
                         $_spinner.removeClass('fa-spin').addClass('hidden');
                     });
-                }
 
-                $_spinner.removeClass('fa-spin').addClass('hidden');
+                    $_spinner.removeClass('fa-spin').addClass('hidden');
+                }
             });
-/*
-            $_form.on('click', '.btn-primary', function (e) {
-                $_form.submit();
-            });
-*/
         });
     </script>
 @stop
