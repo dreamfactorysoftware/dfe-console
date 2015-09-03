@@ -167,7 +167,7 @@
                     $_spinner.addClass('fa-spin').removeClass('hidden');
 
                     if (!_instanceId || 0 == _instanceId) {
-                        $('select#user_id').empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
+                        $('select#user_id').empty().append('<option value="0" selected="selected">All Users</option>');
                         return false;
                     }
 
@@ -176,9 +176,10 @@
                        $_select.empty();
 
                         if (!$.isArray(data)||!data.length) {
-                            $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
+                            $_select.append('<option value="0" selected="selected">All Users</option>');
                         } else {
                             $_select.append('<option>Select User</option>');
+                            $_select.append('<option value="0">All Users</option>');
 
                             $.each(data, function (index, item) {
                                 $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
@@ -187,6 +188,7 @@
                             $_select.removeAttr('disabled').focus();
                         }
                     }).fail(function (xhr, status) {
+                        var $_select = $('#user_id');
                         $_select.append('<option value="" selected="selected">Please Reload Page</option>').attr('disabled', 'disabled');
                         alert('The current list of users is not available.\n\n' + '(' + status + ')');
                     }).always(function () {
