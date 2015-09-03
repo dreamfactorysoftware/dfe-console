@@ -231,6 +231,9 @@
                     if (!userId) {
                         $_select.append('<option value="">Select User</option>');
                     }
+
+                    $_select.append('<option value="0">All Users</option>');
+
                     $.each(data, function (index, item) {
                         var selected = '';
                         if (userId == item.id){
