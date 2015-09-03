@@ -214,7 +214,7 @@
             var _instanceId = instanceId;
 
             if (!_instanceId || 0 == _instanceId) {
-                $_select.empty().append('<option value="0" selected="selected">All Users</option>').attr('disabled', 'disabled');
+                $_select.empty().append('<option value="0" selected="selected">All Users</option>');
                 return false;
             }
 
@@ -226,7 +226,7 @@
                 $_select.empty();
 
                 if (!$.isArray(data)) {
-                    $_select.append('<option value="" selected="selected">No Users</option>').attr('disabled', 'disabled');
+                    $_select.append('<option value="" selected="selected">All Users</option>');
                 } else {
                     if (!userId) {
                         $_select.append('<option value="">Select User</option>');
