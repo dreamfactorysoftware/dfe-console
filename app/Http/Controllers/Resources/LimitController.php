@@ -306,7 +306,7 @@ class LimitController extends ResourceController
                     $_instance = $this->_findInstance($_limit['instance_id']);
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
-                    //logger('LimitController (instance): '.$_instance.' / '.$_values['instance_id_text']);
+                    logger('LimitController (instance): '.$_instance.' / '.$_values['instance_id_text']);
 
                     if ('user' == $_this_limit_type) {
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
