@@ -268,35 +268,34 @@ class LimitController extends ResourceController
             $_this_limit_type = null;
 
             foreach (explode('.', $_limit['limit_key_text']) as $_value) {
-                if (false !== strpos($_value, ':')) {
-                    $_limit_key = explode(':', $_value);
+                $_limit_key = explode(':', $_value);
 
-                    switch ($_limit_key[0]) {
-                        case 'default':
-                            break;
-                        case 'cluster':
-                            $_this_limit_type = 'cluster';
-                            break;
-                        case 'instance':
-                            $_this_limit_type = 'instance';
-                            break;
-                        case 'user':
-                            $_values['user_id'] = $_limit_key[1];
-                            $_this_limit_type = 'user';
-                            break;
-                        case 'service':
-                            $_values['service_name'] = $_limit_key[1];
-                            break;
-                        case 'role':
-                            $_values['role_id'] = $_limit_key[1];
-                            break;
-                        case 'api_key':
-                            $_values['api_key'] = $_limit_key[1];
-                            break;
-                        default:
-                            // It's time period
-                            $_values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
-                    }
+                switch ($_limit_key[0]) {
+                    case 'default':
+                        break;
+                    case 'cluster':
+                        $_this_limit_type = 'cluster';
+                        break;
+                    case 'instance':
+                        $_this_limit_type = 'instance';
+                        break;
+                    case 'user':
+                        $_values['user_id'] = $_limit_key[1];
+                        $_this_limit_type = 'user';
+                        break;
+                    case 'service':
+                        $_values['service_name'] = $_limit_key[1];
+                        break;
+                    case 'role':
+                        $_values['role_id'] = $_limit_key[1];
+                        break;
+                    case 'api_key':
+                        $_values['api_key'] = $_limit_key[1];
+                        break;
+
+                    default:
+                        // It's time period
+                        $_values['period_name'] = ucwords(str_replace('-', ' ', $_limit_key[0]));
                 }
             }
 

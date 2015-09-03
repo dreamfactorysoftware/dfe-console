@@ -81,7 +81,7 @@
                                 <td>{{ $value['cluster_id_text'] }}</td>
                                 <td>@if(empty($value['instance_id_text']))<em>All</em>@else{{ $value['instance_id_text'] }}@endif</td>
                                 <td>@if(empty($value['user_name']))<em>All</em>@else{{ $value['user_name'] }}@endif</td>
-                                <td style="text-align: right;">{{ number_format($value['limit_nbr'],0) }} per {{ strtolower($value['period_name']) }}</td>
+                                <td style="text-align: right;">{{ number_format($value['limit_nbr'],0) }} / {{ strtolower($value['period_name']) }}</td>
                                 <td style="text-align: center;">@if ($value['active_ind'] == 1) <span class="label label-success">Active</span> @else <span class="label label-warning">Not Active</span> @endif</td>
 
                             </tr>
