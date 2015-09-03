@@ -134,17 +134,20 @@
                 var _clusterId = $('option:selected', this).val().toString();
 
                 if (!_clusterId || 0 == _clusterId) {
-                    $_select.empty().append('<option value="0" selected="selected">All Instances</option>').attr('disabled', 'disabled');
+                    $_select.empty();
+                    $_select.append('<option>Select Instance</option>');
+                    $_select.append('<option value="0">All Instances</option>');
                     return false;
                 }
 
                 $_spinner.addClass('fa-spin').removeClass('hidden');
 
                 $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
-                    if (!$.isArray(data) || !data.length) {
-                        $_select.empty();
-                        $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
-                    } else {
+                    $_select.empty();
+                    $_select.append('<option>Select Instance</option>');
+                    $_select.append('<option value="0">All Instances</option>');
+
+                    if ($.isArray(data) || data.length) {
                         $.each(data, function (index, item) {
                             $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
                         });
@@ -167,20 +170,19 @@
                     $_spinner.addClass('fa-spin').removeClass('hidden');
 
                     if (!_instanceId || 0 == _instanceId) {
-                        $('select#user_id').empty().append('<option value="0" selected="selected">All Users</option>');
+                        $('#user_id').empty();
+                        $('#user_id').append('<option>Select User</option>');
+                        $('#user_id').append('<option value="0">All Users</option>');
                         return false;
                     }
 
                     $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
-                       var $_select = $('#user_id');
-                       $_select.empty();
+                        var $_select = $('#user_id');
+                        $_select.empty();
+                        $_select.append('<option>Select User</option>');
+                        $_select.append('<option value="0">All Users</option>');
 
-                        if (!$.isArray(data)||!data.length) {
-                            $_select.append('<option value="0" selected="selected">All Users</option>');
-                        } else {
-                            $_select.append('<option>Select User</option>');
-                            $_select.append('<option value="0">All Users</option>');
-
+                        if ($.isArray(data) || data.length) {
                             $.each(data, function (index, item) {
                                 $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
                             });

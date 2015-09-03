@@ -170,10 +170,12 @@
         function loadInstances(clusterId, instanceId) {
             var $_spinner = $('.label-spinner');
             var $_select = $('#instance_id');
-            var _clusterId = clusterId;//$('option:selected', this).val().toString();
+            var _clusterId = clusterId;
 
             if (!_clusterId || 0 == _clusterId) {
-                $_select.empty().append('<option value="0" selected="selected">All Instances</option>').attr('disabled', 'disabled');
+                $_select.empty();
+                $_select.append('<option value="">Select Instance</option>');
+                $_select.append('<option value="0">All Instances</option>');
                 return false;
             }
 
@@ -181,14 +183,10 @@
 
             $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                 $_select.empty();
+                $_select.append('<option value="">Select Instance</option>');
+                $_select.append('<option value="0">All Instances</option>');
 
-                if (!$.isArray(data)) {
-                    $_select.append('<option value="" selected="selected">No Instances</option>').attr('disabled', 'disabled');
-                } else {
-                    if (!instanceId) {
-                        $_select.append('<option value="">Select Instance</option>')
-                    }
-
+                if ($.isArray(data)) {
                     $.each(data, function (index, item) {
                         var selected = '';
                         if (instanceId == item.id){
@@ -214,7 +212,9 @@
             var _instanceId = instanceId;
 
             if (!_instanceId || 0 == _instanceId) {
-                $_select.empty().append('<option value="0" selected="selected">All Users</option>');
+                $_select.empty();
+                $_select.append('<option value="">Select User</option>');
+                $_select.append('<option value="0">All Users</option>');
                 return false;
             }
 
@@ -224,16 +224,10 @@
                 var $_select = $('#user_id');
 
                 $_select.empty();
+                $_select.append('<option value="">Select User</option>');
+                $_select.append('<option value="0">All Users</option>');
 
-                if (!$.isArray(data)) {
-                    $_select.append('<option value="" selected="selected">All Users</option>');
-                } else {
-                    if (!userId) {
-                        $_select.append('<option value="">Select User</option>');
-                    }
-
-                    $_select.append('<option value="0">All Users</option>');
-
+                if ($.isArray(data)) {
                     $.each(data, function (index, item) {
                         var selected = '';
                         if (userId == item.id){
