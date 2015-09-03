@@ -434,6 +434,9 @@ class LimitController extends ResourceController
 
             if (!empty($_values['user_id'])) {
                 if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
+
+                    logger('LimitController (getuser): '.json_encode($_rows));
+                    
                     foreach ($_rows as $_user) {
                         logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
                         if ($_user['id'] != $_values['user_id']) {
