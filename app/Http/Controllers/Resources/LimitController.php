@@ -280,7 +280,7 @@ logger('foreach - '.$_limit_key[0]);
                         $_this_limit_type = 'instance';
                         break;
                     case 'user':
-                        $_values['user_id'] = $_limit_key[1];
+                        $_values['user_id'] .= $_limit_key[1];
                         $_this_limit_type = 'user';
                         break;
                     case 'service':
