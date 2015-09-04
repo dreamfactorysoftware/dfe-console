@@ -269,7 +269,7 @@ class LimitController extends ResourceController
 
             foreach (explode('.', $_limit['limit_key_text']) as $_value) {
                 $_limit_key = explode(':', $_value);
-logger('foreach - '.$_limit_key[0]);
+
                 switch ($_limit_key[0]) {
                     case 'default':
                         break;
@@ -299,35 +299,23 @@ logger('foreach - '.$_limit_key[0]);
                 }
             }
 
-            logger('LimitController (user_id): '.$_values['user_id'].' / '.$_limit['instance_id']);
-
             $_userName = null;
 
             if (!empty($_limit['instance_id'])) {
-                //logger('here');
+
                 try {
                     $_instance = $this->_findInstance($_limit['instance_id']);
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
-                    //logger('LimitController (instance): '.$_instance.' / '.$_values['instance_id_text']);
-                    logger($_this_limit_type);
                     if ('user' == $_this_limit_type) {
-                        logger('got user');
-                        logger($_instance);
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
-                            logger('got rows');
-                            //logger('LimitController (getuser): '.json_encode($_rows));
-logger($_rows);
                             foreach ($_rows as $_user) {
-                                logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
-                                if ($_user['id'] == $_values['user_id']) {
-                                    $_userName = $_user['name'];
-                                    break;
-                                    //continue;
+                                if ($_user['id'] != $_values['user_id']) {
+                                    continue;
                                 }
 
-                                //$_userName = $_user['name'];
-                                //break;
+                                $_userName = $_user['name'];
+                                break;
                             }
                         }
                     }
@@ -437,15 +425,9 @@ logger($_rows);
             $_instance = $this->_findInstance($_limit->instance_id);
             $_values['instance_id_text'] = $_instance->instance_id_text;
 
-            //logger('LimitController (instance): '.$_instance.' / '.$_values['instance_id_text']);
-
             if (!empty($_values['user_id'])) {
                 if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
-
-                    logger('LimitController (getuser): '.json_encode($_rows));
-                    
                     foreach ($_rows as $_user) {
-                        logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
                         if ($_user['id'] != $_values['user_id']) {
                             continue;
                         }
