@@ -280,7 +280,7 @@ class LimitController extends ResourceController
                         $_this_limit_type = 'instance';
                         break;
                     case 'user':
-                        $_values['user_id'] .= $_limit_key[1];
+                        $_values['user_id'] = $_limit_key[1];
                         $_this_limit_type = 'user';
                         break;
                     case 'service':
@@ -310,6 +310,7 @@ class LimitController extends ResourceController
                     if ('user' == $_this_limit_type) {
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
                             foreach ($_rows as $_user) {
+                                logger('_user: '.$_user);
                                 if ($_user['id'] != $_values['user_id']) {
                                     continue;
                                 }
