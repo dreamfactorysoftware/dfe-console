@@ -299,7 +299,7 @@ class LimitController extends ResourceController
                 }
             }
 
-            logger('LimitController (user_id)'.$_values['user_id']);
+            logger('LimitController (user_id): '.$_values['user_id'].' / '.$_limit['instance_id']);
 
             $_userName = null;
 
