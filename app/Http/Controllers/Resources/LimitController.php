@@ -269,7 +269,7 @@ class LimitController extends ResourceController
 
             foreach (explode('.', $_limit['limit_key_text']) as $_value) {
                 $_limit_key = explode(':', $_value);
-
+logger('foreach - '.$_limit_key[0]);
                 switch ($_limit_key[0]) {
                     case 'default':
                         break;
