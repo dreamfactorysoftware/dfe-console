@@ -318,7 +318,7 @@ logger('foreach - '.$_limit_key[0]);
                             //logger('LimitController (getuser): '.json_encode($_rows));
 
                             foreach ($_rows as $_user) {
-                                //logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
+                                logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
                                 if ($_user['id'] != $_values['user_id']) {
                                     continue;
                                 }
