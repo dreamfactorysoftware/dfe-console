@@ -676,7 +676,8 @@ class LimitController extends ResourceController
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
-
+logger('instance = '.$_instance);
+            logger('response = '.json_encode($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false)));
             return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
         }
 
