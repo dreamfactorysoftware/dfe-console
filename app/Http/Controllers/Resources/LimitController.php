@@ -308,6 +308,7 @@ class LimitController extends ResourceController
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
                     if ('user' == $_this_limit_type) {
+                        logger('_rows: '.json_encode($_instance));
                         logger('_rows: '.json_encode($this->getInstanceUsers($_instance)));
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
 
