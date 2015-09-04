@@ -308,12 +308,8 @@ class LimitController extends ResourceController
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
                     if ('user' == $_this_limit_type) {
-                        logger('_rows: '.json_encode($_instance));
-                        logger('_rows: '.json_encode($this->getInstanceUsers($_instance)));
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
-
                             foreach ($_rows as $_user) {
-                                logger('_user: '.json_encode($_user));
                                 if ($_user['id'] != $_values['user_id']) {
                                     continue;
                                 }
@@ -676,8 +672,6 @@ class LimitController extends ResourceController
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
-            logger('instance = '.$_instance);
-            logger('response = '.json_encode($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false)));
             return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
         }
 
@@ -693,7 +687,6 @@ class LimitController extends ResourceController
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
-
             return $this->formatResponse($_instance->call('/api/v2/system/admin', [], [], Request::METHOD_GET, false));
         }
 
