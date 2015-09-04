@@ -313,6 +313,7 @@ logger('foreach - '.$_limit_key[0]);
                     logger($_this_limit_type);
                     if ('user' == $_this_limit_type) {
                         logger('got user');
+                        logger($_instance);
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
                             logger('got rows');
                             //logger('LimitController (getuser): '.json_encode($_rows));
