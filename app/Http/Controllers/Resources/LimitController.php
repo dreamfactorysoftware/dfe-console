@@ -321,11 +321,13 @@ logger($_rows);
                             foreach ($_rows as $_user) {
                                 logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
                                 if ($_user['id'] == $_values['user_id']) {
-                                    continue;
+                                    $_userName = $_user['name'];
+                                    break;
+                                    //continue;
                                 }
 
-                                $_userName = $_user['name'];
-                                break;
+                                //$_userName = $_user['name'];
+                                //break;
                             }
                         }
                     }
