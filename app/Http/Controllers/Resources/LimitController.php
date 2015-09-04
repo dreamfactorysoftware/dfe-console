@@ -316,7 +316,7 @@ logger('foreach - '.$_limit_key[0]);
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
                             logger('got rows');
                             //logger('LimitController (getuser): '.json_encode($_rows));
-
+logger($_rows);
                             foreach ($_rows as $_user) {
                                 logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
                                 if ($_user['id'] != $_values['user_id']) {
