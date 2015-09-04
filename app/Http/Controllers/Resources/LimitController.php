@@ -320,7 +320,7 @@ logger('foreach - '.$_limit_key[0]);
 logger($_rows);
                             foreach ($_rows as $_user) {
                                 logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
-                                if ($_user['id'] != $_values['user_id']) {
+                                if ($_user['id'] == $_values['user_id']) {
                                     continue;
                                 }
 
