@@ -304,7 +304,7 @@ class LimitController extends ResourceController
             $_userName = null;
 
             if (!empty($_limit['instance_id'])) {
-                logger('here');
+                //logger('here');
                 try {
                     $_instance = $this->_findInstance($_limit['instance_id']);
                     $_values['instance_id_text'] = $_instance->instance_id_text;
@@ -318,7 +318,7 @@ class LimitController extends ResourceController
                             //logger('LimitController (getuser): '.json_encode($_rows));
 
                             foreach ($_rows as $_user) {
-                                logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
+                                //logger('LimitController: '.$_user['id'].' / '.$_values['user_id'].' / '.$_user['name']);
                                 if ($_user['id'] != $_values['user_id']) {
                                     continue;
                                 }
