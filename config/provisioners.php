@@ -6,18 +6,18 @@ use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 
 return [
     //  The default provisioner
-    'default' => 'rave',
+    'default' => 'dreamfactory',
     //  The provisioners, or "hosts" of our instances, or "guests".
     'hosts'   => [
-        /** RAVE === DF2 */
-        'rave' => [
+        /** DreamFactory v2.x */
+        'dreamfactory' => [
             /********************************************************************************
              * The namespace for our provisioning classes. This is optional and you may specify
              * fully qualified class names in the "provides" section. You cannot mix and match
              * however. If an "namespace" key exists, it will be pre-pended to all provisioner
              * classes.
              ********************************************************************************/
-            'namespace'    => 'DreamFactory\\Enterprise\\Services\\Provisioners\\Rave',
+            /** 'namespace'    => 'App\Provisioners\Acme, */
             /********************************************************************************
              * Each provisioner has a set of "sub-provisioners". The important one is the
              * "instance" provisioner. Also required are two standard sub-provisioners.
@@ -30,16 +30,16 @@ return [
              *
              * Any of these "resource" sub-provisioners may implement the "PortableData"
              * interface, making them available for import/export services from the console and
-             * dashboard. The "rave" provisioner does this and offers import/export services
+             * dashboard. The "dreamfactory" provisioner does this and offers import/export services
              * through the provisioning sub-system.
              *
              * Developers may add additional sub-provisioners to the list in their own
              * provisioner host class.
              ********************************************************************************/
             'provides'     => [
-                PortableTypes::INSTANCE => 'InstanceProvisioner',
-                PortableTypes::STORAGE  => 'StorageProvisioner',
-                PortableTypes::DATABASE => 'DatabaseProvisioner',
+                PortableTypes::INSTANCE => DreamFactory\Enterprise\Provisioners\DreamFactory\InstanceProvisioner::class,
+                PortableTypes::STORAGE  => DreamFactory\Enterprise\Provisioners\DreamFactory\StorageProvisioner::class,
+                PortableTypes::DATABASE => DreamFactory\Enterprise\Provisioners\DreamFactory\DatabaseProvisioner::class,
             ],
             /********************************************************************************
              * Provisioners may provide "offerings" or options that dictate certain features of
@@ -47,7 +47,7 @@ return [
              * used for anything and provides an automatic UI in the Dashboard for user selection.
              ********************************************************************************/
             'offerings'    => [],
-            /** The resource discovery uri */
+            /** The instance-provided resource discovery uri */
             'resource-uri' => '/api/v2/system/',
         ],
     ],

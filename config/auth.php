@@ -5,7 +5,7 @@
 
 return [
     'driver'            => 'console',
-    'model'             => 'DreamFactory\\Enterprise\\Database\\Models\\ServiceUser',
+    'model'             => DreamFactory\Enterprise\Database\Models\ServiceUser::class,
     'table'             => 'service_user_t',
     'password'          => [
         'email'  => 'dfe-common::emails.password',

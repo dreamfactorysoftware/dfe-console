@@ -28,7 +28,7 @@ class Update extends ConsoleCommand implements SelfHandling
     {
         parent::fire();
 
-        $_composer = !$this->option('no-composer');
+        $_noComposer = $this->option('no-composer');
     }
 
     /**

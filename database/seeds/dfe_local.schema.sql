@@ -737,7 +737,8 @@ CREATE TABLE `job_result_t` (
                    COLLATE utf8_unicode_ci NOT NULL,
   `create_date`    DATETIME                NOT NULL,
   `lmod_date`      TIMESTAMP               NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ix_job_result_result_id` (`result_id_text`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8
