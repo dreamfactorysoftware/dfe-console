@@ -302,6 +302,7 @@ class LimitController extends ResourceController
             $_userName = null;
 
             if (!empty($_limit['instance_id'])) {
+
                 try {
                     $_instance = $this->_findInstance($_limit['instance_id']);
                     $_values['instance_id_text'] = $_instance->instance_id_text;
@@ -671,7 +672,6 @@ class LimitController extends ResourceController
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
-
             return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
         }
 
@@ -687,7 +687,6 @@ class LimitController extends ResourceController
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
-
             return $this->formatResponse($_instance->call('/api/v2/system/admin', [], [], Request::METHOD_GET, false));
         }
 
