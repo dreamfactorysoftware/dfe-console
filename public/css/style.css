@@ -15,6 +15,10 @@ body {
     height:      100%;
 }
 
+table > td span.label {
+    vertical-align: middle;
+}
+
 /*
  * set height to 100% for full use of window
  */
