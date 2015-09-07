@@ -30,6 +30,8 @@ return [
     'enable-console-api'      => true,
     //  The default number of days to keep metrics data
     'metrics-keep-days'       => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
+    //  The url to download the current version of DFE console
+    'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/develop.zip',
     //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************
