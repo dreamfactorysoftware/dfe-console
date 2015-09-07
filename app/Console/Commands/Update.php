@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
-use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

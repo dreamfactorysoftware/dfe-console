@@ -74,3 +74,9 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
     'auth'      => 'Auth\\AuthController',
     'password'  => 'Auth\\PasswordController',
 ]);
+
+/** An endpoint to return the current version of dfe-console */
+\Route::get('/version',
+    function (){
+        return `git rev-parse --verify HEAD`;
+    });
