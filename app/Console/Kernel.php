@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //  Core
+        'DreamFactory\Enterprise\Console\Console\Commands\Update',
         'DreamFactory\Enterprise\Console\Console\Commands\Setup',
         'DreamFactory\Enterprise\Console\Console\Commands\Register',
         'DreamFactory\Enterprise\Console\Console\Commands\Mount',
