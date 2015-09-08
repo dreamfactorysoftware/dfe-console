@@ -19,11 +19,7 @@ class Update extends ConsoleCommand implements SelfHandling
     //* Methods
     //******************************************************************************
 
-    /**
-     * Handle the command
-     *
-     * @return mixed
-     */
+    /** @inheritdoc */
     public function fire()
     {
         parent::fire();
@@ -36,7 +32,7 @@ class Update extends ConsoleCommand implements SelfHandling
 
         $_currentBranch = $this->shell($_git . ' rev-parse --abbrev-ref HEAD');
 
-        if (0 != $this->shell($_git . ' remote update')) {
+        if (0 != $this->shell($_git . ' remote update >/dev/null 2>&1')) {
             $this->error('Error retrieving update from remote origin.');
 
             return 1;
@@ -54,17 +50,16 @@ class Update extends ConsoleCommand implements SelfHandling
         $this->info('Upgrading to revision <comment>' . $_remote . '</comment>');
         if (0 != $this->shell($_git . ' pull -q --ff-only origin ' . $_currentBranch, true)) {
             $this->error('Error while pulling current revision. Reverting.');
+            if (0 != $this->shell($_git . ' revert --hard ' . $_current)) {
+                $this->error('Error while reverting to prior version.');
+            }
 
             return 1;
         }
 
         if (!$this->option('no-composer')) {
             $this->info('Updating composer dependencies');
-
-            $_result = $this->shell('composer --quiet --no-interaction --no-ansi update');
-            echo $_result;
-            //$this->error('Error while running composer update. Manual intervention most likely will be necessary.');
-            //return 1;
+            $this->shell('composer --quiet --no-interaction --no-ansi update');
         };
 
         return 0;
@@ -83,6 +78,7 @@ EOT
         );
     }
 
+    /** @inheritdoc */
     protected function getOptions()
     {
         return array_merge(parent::getOptions(), [['no-composer', null, InputOption::VALUE_NONE,]]);
@@ -103,5 +99,4 @@ EOT
 
         return $returnExitCode ? $_returnVar : (0 == $_returnVar ? $_result : null);
     }
-
 }
