@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use Illuminate\Contracts\Bus\SelfHandling;
+use Symfony\Component\Console\Input\InputOption;
 
 class Update extends ConsoleCommand implements SelfHandling
 {
@@ -74,6 +75,11 @@ versions of DFE Console and if found, installs the latest.
 
 EOT
         );
+    }
+
+    protected function getOptions()
+    {
+        return array_merge(parent::getOptions(), [['no-composer', null, InputOption::VALUE_NONE,]]);
     }
 
     /**
