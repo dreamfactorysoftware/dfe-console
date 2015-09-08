@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class CreateFailedJobsTable extends Migration
 {
@@ -18,16 +17,14 @@ class CreateFailedJobsTable extends Migration
     public function up()
     {
         if (!\Schema::hasTable('job_fail_t')) {
-            \Schema::create(
-                'job_fail_t',
-                function (Blueprint $table){
-                    $table->increments('id');
+            \Schema::create('job_fail_t',
+                function (Blueprint $table) {
+                    $table->unsignedBigInteger('id');
                     $table->text('connection');
                     $table->text('queue');
                     $table->text('payload');
                     $table->timestamp('failed_at');
-                }
-            );
+                });
         }
     }
 
@@ -38,7 +35,9 @@ class CreateFailedJobsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('job_fail_t');
+        if (\Schema::hasTable('job_fail_t')) {
+            \Schema::drop('job_fail_t');
+        }
     }
 
 }

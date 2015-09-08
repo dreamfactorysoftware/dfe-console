@@ -14,6 +14,12 @@
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/original" />
       <excludeFolder url="file://$MODULE_DIR$/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed/vendor" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/vendor" />
@@ -43,6 +49,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/build" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/vendor" />
     </content>
@@ -52,24 +59,15 @@
       <library name="PHARS">
         <CLASSES>
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
+          <root url="phar://$MODULE_DIR$/vendor/dreamfactory/dfe-database/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
         </CLASSES>
         <SOURCES>
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
+          <root url="phar://$MODULE_DIR$/vendor/dreamfactory/dfe-database/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
           <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="bootstrap" level="application" />
-    <orderEntry type="library" name="highcharts" level="application" />
-    <orderEntry type="library" name="jquery" level="application" />
-    <orderEntry type="library" name="jquery.dataTables" level="application" />
-    <orderEntry type="library" name="material" level="application" />
-    <orderEntry type="library" name="ripples" level="application" />
-    <orderEntry type="library" name="dataTables.bootstrap" level="application" />
-    <orderEntry type="library" name="dataTables.bootstrap" level="application" />
-    <orderEntry type="library" name="jquery.validate" level="application" />
-    <orderEntry type="library" name="jquery.validate" level="application" />
-    <orderEntry type="library" name="underscore-DefinitelyTyped" level="application" />
   </component>
 </module>

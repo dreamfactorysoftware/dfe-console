@@ -1,10 +1,8 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Common\Enums\ElkIntervals;
+use DreamFactory\Enterprise\Common\Facades\Elk;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
-use DreamFactory\Enterprise\Console\Enums\ElkIntervals;
-use DreamFactory\Enterprise\Console\Providers\ElkServiceProvider;
-use DreamFactory\Enterprise\Console\Services\ElkService;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
@@ -106,7 +104,7 @@ class DashboardController extends FactoryController
                     break;
             }
 
-            if (false !== ($_results = $this->_elk()->callOverTime($_facility, $_interval, $_size, $_from, $_which))) {
+            if (false !== ($_results = Elk::callOverTime($_facility, $_interval, $_size, $_from, $_which))) {
                 \Cache::put('stats.dashboard', $_results, static::STATS_CACHE_TTL);
             }
         }
@@ -141,10 +139,7 @@ class DashboardController extends FactoryController
         $_stats = \Cache::get('stats.global-stats');
 
         if (empty($_stats)) {
-            /** @type ElkService $_source */
-            $_source = $this->_elk();
-
-            if (false === ($_stats = $_source->globalStats())) {
+            if (false === ($_stats = Elk::globalStats())) {
                 $_stats = [];
             }
 
@@ -162,7 +157,7 @@ class DashboardController extends FactoryController
         $_stats = \Cache::get('stats.all-stats');
 
         if (empty($_stats)) {
-            \Cache::put('stats.all-stats', $_stats = $this->_elk()->allStats(), static::STATS_CACHE_TTL);
+            \Cache::put('stats.all-stats', $_stats = Elk::allStats(), static::STATS_CACHE_TTL);
         }
 
         return SuccessPacket::make($_stats);
@@ -183,15 +178,5 @@ class DashboardController extends FactoryController
         }
 
         return round(isset($_kbs, $_kbs[0]) ? $_kbs[0] / 1024 : 0, 1);
-    }
-
-    /**
-     * @return ElkService
-     */
-    protected function _elk()
-    {
-        static $_service;
-
-        return $_service ?: $_service = \App::make(ElkServiceProvider::IOC_NAME);
     }
 }

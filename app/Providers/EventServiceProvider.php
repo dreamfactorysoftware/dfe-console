@@ -8,12 +8,10 @@ class EventServiceProvider extends ServiceProvider
     //* Members
     //******************************************************************************
 
-    /**
-     * @var array The event handler mappings for the application.
-     */
+    /** @inheritdoc */
     protected $listen = [
         'auth.login' => [
-            'DreamFactory\Enterprise\Console\Handlers\Events\AuthLoginEventHandler',
+            'DreamFactory\Enterprise\Console\Listeners\Events\AuthLoginEventHandler',
         ],
     ];
 }

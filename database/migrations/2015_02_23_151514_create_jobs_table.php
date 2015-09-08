@@ -17,19 +17,17 @@ class CreateJobsTable extends Migration
     public function up()
     {
         if (!\Schema::hasTable('job_t')) {
-            \Schema::create(
-                'job_t',
-                function (Blueprint $table){
-                    $table->bigIncrements('id');
-                    $table->string('queue');
+            \Schema::create('job_t',
+                function (Blueprint $table) {
+                    $table->unsignedBigInteger('id', true);
+                    $table->string('queue', 256);
                     $table->text('payload');
                     $table->tinyInteger('attempts')->unsigned();
                     $table->tinyInteger('reserved')->unsigned();
                     $table->unsignedInteger('reserved_at')->nullable();
                     $table->unsignedInteger('available_at');
                     $table->unsignedInteger('created_at');
-                }
-            );
+                });
         }
     }
 

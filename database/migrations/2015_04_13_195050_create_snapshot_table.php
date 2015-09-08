@@ -19,7 +19,7 @@ class CreateSnapshotTable extends Migration
         if (!\Schema::hasTable('snapshot_t')) {
             \Schema::create(
                 'snapshot_t',
-                function (Blueprint $table){
+                function (Blueprint $table) {
                     $table->bigIncrements('id');
                     $table->integer('user_id')->index();
                     $table->integer('instance_id')->index();

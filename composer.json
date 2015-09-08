@@ -4,9 +4,12 @@
   "homepage":          "https://www.dreamfactory.com/",
   "keywords":          [
     "dreamfactory",
-    "fabric",
-    "utility",
-    "cli"
+    "df",
+    "dfe",
+    "enterprise",
+    "deployment",
+    "virtual",
+    "hypervisor"
   ],
   "license":           [
     "proprietary"
@@ -14,7 +17,18 @@
   "authors":           [
     {
       "name":  "Jerry Ablan",
-      "email": "jerryablan@dreamfactory.com"
+      "email": "jerryablan@dreamfactory.com",
+      "role":  "Back-end architecture and design"
+    },
+    {
+      "name":  "David Weiner",
+      "email": "davidweiner@dreamfactory.com",
+      "role":  "Back-end design and integration"
+    },
+    {
+      "name":  "Carsten Jacobsen",
+      "email": "carstenjacobsen@dreamfactory.com",
+      "role":  "Front-end, user interface"
     }
   ],
   "minimum-stability": "dev",
@@ -22,6 +36,10 @@
     {
       "type": "vcs",
       "url":  "git@github.com:dreamfactorysoftware/dfe-database.git"
+    },
+    {
+      "type": "vcs",
+      "url":  "git@github.com:dreamfactorysoftware/dfe-api-client.git"
     },
     {
       "type": "vcs",
@@ -42,27 +60,34 @@
     {
       "type": "vcs",
       "url":  "git@github.com:dreamfactorysoftware/dfe-audit.git"
+    },
+    {
+      "type": "vcs",
+      "url":  "git@github.com:dreamfactorysoftware/dfe-dreamfactory-provisioner.git"
     }
   ],
   "type":              "project",
   "require":           {
-    "laravel/framework":           "5.1.*",
-    "guzzlehttp/guzzle":           "~4.0",
-    "predis/predis":               "~1.1@dev",
-    "wpb/string-blade-compiler":   "2.*@dev",
-    "ruflin/elastica":             "*",
-    "graham-campbell/flysystem":   "~2.1",
-    "league/flysystem-sftp":       "~1.0",
-    "league/flysystem-ziparchive": "~1.0",
-    "dreamfactory/dfe-audit":      "~1.0",
-    "dreamfactory/php-utils":      "*",
-    "dreamfactory/console-tools":  "dev-develop as dev-master",
-    "dreamfactory/dfe-common":     "dev-develop as dev-master",
-    "dreamfactory/dfe-partner":    "dev-develop as dev-master",
-    "dreamfactory/dfe-ops-client": "dev-develop as dev-master",
-    "dreamfactory/dfe-storage":    "dev-develop as dev-master",
-    "dreamfactory/dfe-database":   "dev-develop as dev-master",
-    "barryvdh/laravel-cors": "0.6.x"
+    "laravel/framework":                         "5.1.*",
+    "guzzlehttp/guzzle":                         "~4.0",
+    "predis/predis":                             "~1.1@dev",
+    "wpb/string-blade-compiler":                 "2.*@dev",
+    "ruflin/elastica":                           "*",
+    "graham-campbell/flysystem":                 "~3.0",
+    "league/flysystem-sftp":                     "~1.0",
+    "league/flysystem-ziparchive":               "~1.0",
+    "league/flysystem-eventable-filesystem":     "~1.0",
+    "dreamfactory/dfe-audit":                    "~1.0",
+    "dreamfactory/php-utils":                    "1.1.*",
+    "dreamfactory/console-tools":                "dev-develop as dev-master",
+    "dreamfactory/dfe-common":                   "dev-develop as dev-master",
+    "dreamfactory/dfe-partner":                  "dev-develop as dev-master",
+    "dreamfactory/dfe-ops-client":               "dev-develop as dev-master",
+    "dreamfactory/dfe-api-client":               "dev-develop as dev-master",
+    "dreamfactory/dfe-storage":                  "dev-develop as dev-master",
+    "dreamfactory/dfe-database":                 "dev-develop as dev-master",
+    "dreamfactory/dfe-dreamfactory-provisioner": "dev-develop as dev-master",
+    "barryvdh/laravel-cors":                     "0.6.x"
   },
   "require-dev":       {
     "barryvdh/laravel-ide-helper": "~2.0",
@@ -78,9 +103,6 @@
     }
   },
   "autoload-dev":      {
-    "psr-4":    {
-      "DreamFactory\\Enterprise\\Common\\": "/opt/dreamfactory/dfe/dfe-common/"
-    },
     "classmap": [
       "tests/TestCase.php"
     ]
@@ -94,7 +116,6 @@
     ],
     "post-update-cmd":  [
       "php artisan clear-compiled",
-      "php artisan ide-helper:generate",
       "php artisan optimize",
       "php artisan vendor:publish --tag=public --force"
     ]
@@ -104,7 +125,7 @@
   },
   "extra":             {
     "branch-alias": {
-      "dev-develop": "1.x-dev"
+      "dev-develop": "1.0.x-dev"
     }
   }
 }

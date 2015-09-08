@@ -22,7 +22,22 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a">
+        <schema name="dfe_local" object-types="table" />
+      </connection>
+    </loaded-nodes>
+  </component>
+  <component name="DBNavigator.Project.DatabaseConsoleManager">
+    <connection id="1da9b971-3bd3-4f11-8a4c-d75c3479417a">
+      <console name="localhost" type="STANDARD" />
+    </connection>
+  </component>
+  <component name="DBNavigator.Project.FileConnectionMappingManager">
+    <mapping file-url="file://$PROJECT_DIR$/database/seeds/dfe_local.schema.sql" connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a" current-schema="dfe_local" />
+    <mapping file-url="file:///tmp/dfe_local.sql" connection-id="virtual-mysql-connection" current-schema="ROOT" />
+    <mapping file-url="file:///tmp/dfe_local.sql" connection-id="virtual-mysql-connection" current-schema="ROOT" />
+    <mapping file-url="file://$PROJECT_DIR$/database/seeds/dfe_local.schema.sql" connection-id="1da9b971-3bd3-4f11-8a4c-d75c3479417a" current-schema="dfe_local" />
   </component>
   <component name="DBNavigator.Project.MethodExecutionManager">
     <method-browser />
@@ -34,6 +49,10 @@
   </component>
   <component name="DBNavigator.Project.ObjectDependencyManager">
     <last-used-dependency-type value="INCOMING" />
+  </component>
+  <component name="DBNavigator.Project.ObjectQuickFilterManager">
+    <last-used-operator value="EQUAL" />
+    <filters />
   </component>
   <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
     <recently-used-interfaces />
@@ -63,16 +82,19 @@
         </properties>
         <ssh-settings>
           <active value="false" />
-          <host value="" />
-          <port value="22" />
-          <user value="" />
-          <password value="" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <proxy-password value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
         </ssh-settings>
         <details>
           <charset value="UTF-8" />
           <ddl-file-binding value="true" />
           <database-logging value="true" />
-          <environment-type value="default" />
+          <environment-type value="development" />
           <idle-time-to-disconnect value="30" />
           <password-expiry-time value="10" />
           <max-connection-pool-size value="7" />
@@ -109,12 +131,11 @@
           </object-type-filter>
           <object-name-filters />
         </object-filters>
-        <consoles />
       </connection>
     </connections>
     <browser-settings>
       <general>
-        <display-mode value="TABBED" />
+        <display-mode value="SIMPLE" />
         <navigation-history-size value="100" />
         <show-object-details value="false" />
       </general>
@@ -221,6 +242,7 @@
         <convert-empty-strings-to-null value="true" />
         <select-content-on-cell-edit value="true" />
         <large-value-preview-active value="true" />
+        <load-view-data-active value="false" />
       </general>
       <filters>
         <prompt-filter-dialog value="true" />
@@ -419,16 +441,18 @@
       <statement-execution>
         <fetch-block-size value="100" />
         <execution-timeout value="20" />
-        <focus-result value="false" />
+        <debug-execution-timeout value="600" />
+        <prompt-execution value="false" />
       </statement-execution>
       <script-execution>
         <command-line-interfaces />
+        <execution-timeout value="300" />
       </script-execution>
-      <statement-execution>
-        <execution-timeout value="20" />
+      <method-execution>
+        <execution-timeout value="30" />
         <debug-execution-timeout value="600" />
         <parameter-history-size value="10" />
-      </statement-execution>
+      </method-execution>
     </execution-engine-settings>
     <operation-settings>
       <transactions>
@@ -452,6 +476,10 @@
         <compile-dependencies value="ASK" />
         <always-show-controls value="false" />
       </compiler>
+      <debugger>
+        <debugger-type value="JDBC" />
+        <use-generic-runners value="true" />
+      </debugger>
     </operation-settings>
     <ddl-file-settings>
       <extensions>

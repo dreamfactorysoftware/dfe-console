@@ -1,18 +1,20 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Common\Contracts\VirtualProvisioner;
 use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
+use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Traits\HasTimer;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
-use DreamFactory\Enterprise\Common\Traits\TemplateEmailQueueing;
+use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
-use DreamFactory\Enterprise\Services\Auditing\Audit;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
-use DreamFactory\Library\Utility\JsonFile;
-use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Mail\Message;
+use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
 
 /**
  * A base class for all provisioners
@@ -23,7 +25,7 @@ use Illuminate\Mail\Message;
  *
  * @todo Move all english text to templates
  */
-abstract class BaseProvisioner extends BaseService implements ResourceProvisioner
+abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
 {
     //******************************************************************************
     //* Constants
@@ -32,13 +34,17 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     /**
      * @type string This is the "facility" passed along to the auditing system for reporting
      */
-    const DEFAULT_FACILITY = 'dfe-provision';
+    const DEFAULT_FACILITY = ProvisioningServiceProvider::IOC_NAME;
+    /**
+     * @type string Your provisioner id
+     */
+    const PROVISIONER_ID = false;
 
     //******************************************************************************
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation, LockingService, TemplateEmailQueueing;
+    use InstanceValidation, LockingService, Notifier, HasTimer;
 
     //******************************************************************************
     //* Members
@@ -47,7 +53,7 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
     /**
      * @type array The default cluster environment file template.
      */
-    protected static $_envTemplate = [
+    protected static $envTemplate = [
         'cluster-id'       => null,
         'default-domain'   => null,
         'signature-method' => ConsoleDefaults::SIGNATURE_METHOD,
@@ -55,130 +61,139 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
         'api-url'          => null,
         'api-key'          => null,
         'client-id'        => null,
-        'client-secret'    => null
+        'client-secret'    => null,
     ];
-    /**
-     * @type string A prefix for notification subjects
-     */
-    protected $_subjectPrefix;
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /**
-     * @param ProvisioningRequest|mixed $request
+     * @param ProvisionServiceRequest|mixed $request
      *
-     * @return mixed
+     * @return ProvisionServiceResponse
      */
-    abstract protected function _doProvision($request);
+    abstract protected function doProvision($request);
 
     /**
-     * @param ProvisioningRequest|mixed $request
+     * @param ProvisionServiceRequest|mixed $request
      *
-     * @return mixed
+     * @return ProvisionServiceResponse
      */
-    abstract protected function _doDeprovision($request);
+    abstract protected function doDeprovision($request);
 
     /** @inheritdoc */
     public function boot()
     {
         parent::boot();
 
-        if (empty($this->_subjectPrefix)) {
-            $this->_subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
+        $this->setLumberjackPrefix(ProvisioningServiceProvider::IOC_NAME . '.' . $this->getProvisionerId());
+
+        if (empty($this->subjectPrefix)) {
+            $this->subjectPrefix = config('dfe.email-subject-prefix', ConsoleDefaults::EMAIL_SUBJECT_PREFIX);
         }
     }
 
-    /** @inheritdoc */
-    public function provision($request, $options = [])
+    /**
+     * Get the current status of an instance
+     *
+     * @param Instance $instance
+     *
+     * @return array
+     */
+    public function status($instance)
     {
-        $_timestamp = microtime(true);
-        $_result = $this->_doProvision($request);
-        $_elapsed = microtime(true) - $_timestamp;
-
-        if (is_array($_result)) {
-            $_result['elapsed'] = $_elapsed;
+        /** @var Instance $_instance */
+        if (null === ($_instance = Instance::find($instance->id))) {
+            return ['success' => false, 'error' => ['code' => 404, 'message' => 'Instance not found.']];
         }
 
-        $this->_logProvision(['elapsed' => $_elapsed, 'result' => $_result]);
-        $request->setResult($_result);
+        return [
+            'success'     => true,
+            'status'      => $_instance->state_nbr,
+            'status_text' => ProvisionStates::prettyNameOf($_instance->state_nbr),
+        ];
+    }
+
+    /** @inheritdoc */
+    public function provision($request)
+    {
+        $this->startTimer();
+        $_response = $this->doProvision($request);
+        $_response->setElapsedTime($_elapsed = $this->stopTimer());
+        $this->audit(['elapsed' => $_elapsed, 'result' => $_response->getResult()]);
 
         //  Save results...
         $_instance = $request->getInstance();
-        $_data = $_instance->instance_data_text;
-        $_data['.provisioning'] = $_result;
-        $_instance->update(['instance_data_text' => $_data]);
+        $_instance->addOperation('provision', $_response->getResult());
 
         //  Send notification
         $_guest = $_instance->guest;
-        $_host =
-            $_guest
-                ? $_guest->public_host_text
-                : $_instance->instance_id_text . '.' .
-                config('dfe.provisioning.default-dns-zone') .
-                '.' .
-                config('dfe.provisioning.default-dns-domain');
+        $_host = ($_guest && $_guest->public_host_text)
+            ? $_guest->public_host_text
+            : $_instance->instance_id_text . '.' . trim(config('provisioning.default-dns-zone'),
+                '.') . '.' . trim(config('provisioning.default-dns-domain'), '.');
 
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
-            'headTitle'     => $_result ? 'Launch Complete' : 'Launch Failure',
-            'contentHeader' => $_result ? 'Your instance has been launched' : 'Your instance was not launched',
-            'emailBody'     =>
-                $_result
-                    ?
-                    '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' .
-                    'has been created. You can reach it by going to <a href="//' . $_host . '">' .
-                    $_host . '</a> from any browser.</p>'
-                    :
-                    '<p>Your instance <strong>' .
-                    $_instance->instance_name_text .
-                    '</strong> ' .
-                    'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
+            'headTitle'     => $_response->isSuccess() ? 'Launch Complete' : 'Launch Failure',
+            'contentHeader' => $_response->isSuccess() ? 'Your instance has been launched'
+                : 'Your instance was not launched',
+            'emailBody'     => $_response->isSuccess()
+                ? '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> ' .
+                'has been created. You can reach it by going to <a href="//' .
+                $_host .
+                '">' .
+                $_host .
+                '</a> from any browser.</p>'
+                : '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> ' .
+                'was not created. Our engineers will examine the issue and notify you when it has been resolved. Hang tight, we\'ve got it.</p>',
         ];
 
-        $_subject = $_result['success'] ? 'Instance launch successful' : 'Instance launch failure';
+        $_subject = $_response->isSuccess() ? 'Instance launch successful' : 'Instance launch failure';
 
-        $this->_notify($_instance, $_subject, $_data);
+        $this->notifyInstanceOwner($_instance, $_subject, $_data);
 
-        return $_result;
+        return $_response;
     }
 
     /** @inheritdoc */
-    public function deprovision($request, $options = [])
+    public function deprovision($request)
     {
-        $_timestamp = microtime(true);
-        $_result = $this->_doDeprovision($request);
-        $_elapsed = microtime(true) - $_timestamp;
+        $this->startTimer();
+
+        //  Save results...
         $_instance = $request->getInstance();
+        $_instance->addOperation('deprovision');
 
-        if (is_array($_result)) {
-            $_result['elapsed'] = $_elapsed;
-        }
-
-        $this->_logProvision(['elapsed' => $_elapsed, 'result' => $_result]);
-        $request->setResult($_result);
+        $_response = $this->doDeprovision($request);
+        $_response->setElapsedTime($_elapsed = $this->stopTimer());
+        $this->audit(['elapsed' => $_elapsed, 'result' => $_result = $_response->getResult()]);
 
         //  Send notification
         $_data = [
             'firstName'     => $_instance->user->first_name_text,
-            'headTitle'     => $_result ? 'Shutdown Complete' : 'Shutdown Failure',
-            'contentHeader' => $_result ? 'Your instance has retired' : 'Your instance was not retired',
-            'emailBody'     => $_result
-                ?
-                '<p>Your instance <strong>' . $_instance->instance_name_text . '</strong> ' .
-                'has been retired.  A snapshot may be available in the dashboard under <strong>Snapshots</strong>.</p>'
-                :
-                '<p>Your instance <strong>' .
+            'headTitle'     => $_response->isSuccess() ? 'Retirement Complete' : 'Retirement Failure',
+            'contentHeader' => $_response->isSuccess() ? 'Your instance has been retired'
+                : 'Your instance is not quite retired',
+            'emailBody'     => $_response->isSuccess()
+                ? '<p>Your instance <strong>' .
                 $_instance->instance_name_text .
-                '</strong> shutdown was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
+                '</strong> has been retired.  A snapshot may be available in the dashboard, under <strong>Snapshots</strong>.</p>'
+                : '<p>Your instance <strong>' .
+                $_instance->instance_name_text .
+                '</strong> retirement was not successful. Our engineers will examine the issue and, if necessary, notify you if/when the issue has been resolved. Mostly likely you will not have to do a thing. But we will check it out just to be safe.</p>',
         ];
 
-        $_subject = $_result['success'] ? 'Instance shutdown successful' : 'Instance shutdown failure';
+        $_subject = $_response->isSuccess() ? 'Instance retirement successful' : 'Instance retirement failure';
 
-        $this->_notify($_instance, $_subject, $_data);
+        $this->notifyInstanceOwner($_instance, $_subject, $_data);
 
-        return $_result;
+        return $_response;
     }
 
     /**
@@ -188,66 +203,21 @@ abstract class BaseProvisioner extends BaseService implements ResourceProvisione
      *
      * @return bool
      */
-    protected function _logProvision($data = [], $level = AuditLevels::INFO, $deprovisioning = false)
+    protected function audit($data = [], $level = AuditLevels::INFO, $deprovisioning = false)
     {
         //  Put instance ID into the correct place
         isset($data['instance']) && $data['dfe'] = ['instance_id' => $data['instance']->instance_id_text];
 
-        return Audit::log($data, $level, app('request'), (($deprovisioning ? 'de' : null) . 'provision'));
+        return \Audit::log($data, $level, app('request'), ($deprovisioning ? 'de' : null) . 'provision');
     }
 
-    /**
-     * @param Instance $instance
-     * @param string   $subject
-     * @param array    $data
-     *
-     * @return int The number of recipients mailed
-     */
-    protected function _notify($instance, $subject, array $data)
+    /** @inheritdoc */
+    public function getProvisionerId()
     {
-        if (!empty($this->_subjectPrefix)) {
-            $subject = $this->_subjectPrefix . ' ' . trim(str_replace($this->_subjectPrefix, null, $subject));
+        if (!static::PROVISIONER_ID) {
+            throw new NotImplementedException('No provisioner id has been set.');
         }
 
-        $_result =
-            \Mail::send(
-                'emails.generic',
-                $data,
-                function ($message) use ($instance, $subject){
-                    /** @var Message $message */
-                    $message
-                        ->to($instance->user->email_addr_text,
-                            $instance->user->first_name_text . ' ' . $instance->user->last_name_text)
-                        ->subject($subject);
-                }
-            );
-
-        $this->debug('  * provisioner: notification sent to ' . $instance->user->email_addr_text);
-
-        return $_result;
+        return static::PROVISIONER_ID;
     }
-
-    /**
-     * @param string|Filesystem $filename      The absolute (relative if $filesystem supplied) location to write the
-     *                                         environment file
-     * @param array             $env           The data to add to the default template
-     * @param Filesystem        $filesystem    An optional file system to write the file. If null, the file is written
-     *                                         locally
-     * @param bool              $mergeDefaults If false, only the data in $env is written out
-     *
-     * @return bool
-     */
-    protected function _writeEnvironmentFile($filename, array $env, $filesystem = null, $mergeDefaults = true)
-    {
-        $_data = $mergeDefaults ? array_merge(static::$_envTemplate, $env) : $env;
-
-        if (null !== $filesystem) {
-            return $filesystem->put($filename, JsonFile::encode($_data));
-        }
-
-        JsonFile::encodeFile($filename, $_data);
-
-        return true;
-    }
-
 }

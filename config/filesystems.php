@@ -1,4 +1,9 @@
 <?php
+//******************************************************************************
+//* File systems used by DFE Console
+//******************************************************************************
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+
 return [
     //  Default Filesystem Disk
     'default' => 'local',
@@ -13,21 +18,21 @@ return [
         //  cluster-east-2 hosted storage
         'cluster-east-2'   => [
             'driver' => 'local',
-            'root'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'root'   => env('DFE_HOSTED_BASE_PATH', ConsoleDefaults::STORAGE_ROOT),
         ],
         //  mount-east-1 hosted storage
         'mount-east-1'     => [
             'driver' => 'local',
-            'root'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'root'   => env('DFE_HOSTED_BASE_PATH', ConsoleDefaults::STORAGE_ROOT),
         ],
         //  dfe-mount-east-1 hosted storage
         'dfe-mount-east-1' => [
             'driver' => 'local',
-            'root'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'root'   => env('DFE_HOSTED_BASE_PATH', ConsoleDefaults::STORAGE_ROOT),
         ],
         'mount-local-1'    => [
             'driver' => 'local',
-            'root'   => env('DFE_HOSTED_BASE_PATH', '/data/storage'),
+            'root'   => env('DFE_HOSTED_BASE_PATH', ConsoleDefaults::STORAGE_ROOT),
         ],
     ],
 ];

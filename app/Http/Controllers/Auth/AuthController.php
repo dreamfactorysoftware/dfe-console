@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Http\Controllers\Auth\CommonAuthController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Database\Models\User;
 
 class AuthController extends CommonAuthController
 {
@@ -18,12 +19,15 @@ class AuthController extends CommonAuthController
      */
     public function validator(array $data)
     {
-        return \Validator::make($data, [
-            'first_name_text' => 'required|max:64',
-            'last_name_text'  => 'required|max:64',
-            'email_addr_text' => 'required|email|max:320|unique:service_user_t',
-            'password_text'   => 'required|confirmed|min:6',
-        ]);
+        \Log::debug('validator called with ' . print_r($data, true));
+
+        return \Validator::make($data,
+            [
+                'first_name_text' => 'required|max:64',
+                'last_name_text'  => 'required|max:64',
+                'email_addr_text' => 'required|email|max:320|unique:service_user_t',
+                'password_text'   => 'required|confirmed|min:6',
+            ]);
     }
 
     /**

@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
 /**
  * Provides settings items
@@ -10,39 +9,39 @@ class SettingsController extends FactoryController
     //* Methods
     //********************************************************************************
 
-    public function __construct()
-    {
-        $this->_active = [];
-    }
-
     public function getUsers()
     {
-        return \View::make('app.users');
+        return $this->renderView('app.users');
+    }
+
+    public function getMounts()
+    {
+        return $this->renderView('app.mounts');
     }
 
     public function getServers()
     {
-        return \View::make('app.servers');
+        return $this->renderView('app.servers');
     }
 
     public function getClusters()
     {
-        return \View::make('app.clusters');
+        return $this->renderView('app.clusters');
     }
 
     public function getInstances()
     {
-        return \View::make('app.instances');
+        return $this->renderView('app.instances');
     }
 
     public function getRoles()
     {
-        return \View::make('app.roles');
+        return $this->renderView('app.roles');
     }
 
     public function getQuotas()
     {
-        return \View::make('app.quotas');
+        return $this->renderView('app.quotas');
     }
 
 }

@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
-use DreamFactory\Enterprise\Services\Commands\ProvisionJob;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Instance;
 
@@ -15,22 +14,19 @@ class ProvisionTest extends \TestCase
      */
     public function testProvision()
     {
-        $_instanceId = 'dfe-test-case';
+        $_instanceId = 'wicker';
 
-        $_payload = [
-            'instance-id'        => $_instanceId,
-            'owner-id'           => 1,
-            'guest-location-nbr' => GuestLocations::DFE_CLUSTER,
-        ];
-
-        if ( null !== ( $_instance = Instance::byNameOrId( $_instanceId )->first() ) )
-        {
+        /** @var Instance $_instance */
+        if (null !== ($_instance = Instance::byNameOrId($_instanceId)->first())) {
             $_instance->delete();
         }
 
-        $_job = new ProvisionJob( $_instanceId, $_payload );
+        $_payload = [
+            'instance-id'    => $_instanceId,
+            'owner-id'       => 'jerryablan@gmail.com',/*'jerryablan@dreamfactory.com'*/
+            'guest-location' => GuestLocations::DFE_CLUSTER,
+        ];
 
-        $_result = \Queue::push( $_job );
-
+        \Artisan::call('dfe:provision', $_payload);
     }
 }

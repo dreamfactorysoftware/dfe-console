@@ -4,7 +4,7 @@
 //******************************************************************************
 return [
     'default' => env('CACHE_DRIVER', 'redis'),
-    'prefix'  => 'dfe',
+    'prefix'  => 'dfe-console',
     'stores'  => [
         'array'     => [
             'driver' => 'array',
@@ -16,7 +16,7 @@ return [
         ],
         'file'      => [
             'driver' => 'file',
-            'path'   => storage_path() . '/framework/cache',
+            'path'   => base_path() . '/bootstrap/cache',
         ],
         'memcached' => [
             'driver'  => 'memcached',

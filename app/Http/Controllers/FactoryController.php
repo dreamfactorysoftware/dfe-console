@@ -1,22 +1,10 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use DreamFactory\Enterprise\Database\Models\Cluster;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\Server;
-use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
-class FactoryController extends Controller
+abstract class FactoryController extends BaseController
 {
-    //******************************************************************************
-    //* Constants
-    //******************************************************************************
-
-    /**
-     * @type int
-     */
-    const DEFAULT_PER_PAGE = 25;
-
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -24,78 +12,183 @@ class FactoryController extends Controller
     /**
      * @type bool True if this is a datatables request
      */
-    protected $_dtRequest = false;
+    protected $dataTables = false;
     /**
      * @type int
      */
-    protected $_skip = null;
+    protected $skip;
+    /**
+     * @type string
+     */
+    protected $search;
     /**
      * @type int
      */
-    protected $_limit = null;
+    protected $limit;
     /**
      * @type array
      */
-    protected $_order = null;
+    protected $order;
+    /**
+     * @type string
+     */
+    protected $uiPrefix = ConsoleDefaults::UI_PREFIX;
+    /**
+     * @type string Any data to merge into view data when rendering
+     */
+    protected $extraViewData = ['prefix' => ConsoleDefaults::UI_PREFIX];
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    /**
-     * ctor
-     */
+    /** @inheritdoc */
     public function __construct()
     {
         $this->middleware('auth');
+        $this->setLumberjackPrefix('dfe-console');
+        $this->uiPrefix = config('dfe.ui.prefix', ConsoleDefaults::UI_PREFIX);
     }
 
     /**
-     * @param bool $asArray
+     * @param string $view      The view name
+     * @param array  $data      The view data
+     * @param array  $mergeData Any additional data to merge with the view data which is merged
+     *                          with this class's $extraViewData
      *
-     * @return array|string The hashed email address
+     * @return \Illuminate\View\View
      */
-    public static function getUserHash($asArray = false)
+    protected function renderView($view, array $data = [], array $mergeData = [])
     {
-        $_hash = md5(strtolower(\Auth::user() ? \Auth::user()->email : 'nobody@dreamfactory.com'));
+        return \View::make($view, $data, array_merge($this->extraViewData, $mergeData));
+    }
 
-        return $asArray ? ['_userHash' => $_hash] : $_hash;
+    /**
+     * @return boolean
+     */
+    public function isDataTables()
+    {
+        return $this->dataTables;
+    }
+
+    /**
+     * @param boolean $dataTables
+     *
+     * @return $this
+     */
+    public function setDataTables($dataTables)
+    {
+        $this->dataTables = $dataTables;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSkip()
+    {
+        return $this->skip;
+    }
+
+    /**
+     * @param int $skip
+     *
+     * @return $this
+     */
+    public function setSkip($skip)
+    {
+        $this->skip = $skip;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSearch()
+    {
+        return $this->search;
+    }
+
+    /**
+     * @param string $search
+     *
+     * @return $this
+     */
+    public function setSearch($search)
+    {
+        $this->search = $search;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * @param int $limit
+     *
+     * @return $this
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+
+        return $this;
     }
 
     /**
      * @return array
      */
-    public static function getUserInfo()
+    public function getOrder()
     {
-        $_name = \Auth::user() ? \Auth::user()->email : 'nobody@dreamfactory.com';
-        $_hash = md5(strtolower($_name));
-
-        return [
-            'name' => $_name,
-            'hash' => $_hash,
-        ];
+        return $this->order;
     }
 
     /**
-     * Get and cache array of database stats
+     * @param array $order
      *
-     * @return array
+     * @return $this
      */
-    public static function getActiveCounts()
+    public function setOrder($order)
     {
-        $_counts = \Cache::get('console.active_counts');
+        $this->order = $order;
 
-        if (empty($_counts)) {
-            $_counts = [
-                'clusters'  => Cluster::count(),
-                'users'     => ServiceUser::count(),
-                'instances' => Instance::count(),
-                'servers'   => Server::count(),
-            ];
-
-            \Cache::put('console.active_counts', $_counts, 1);
-        }
-
-        return $_counts;
+        return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getExtraViewData()
+    {
+        return $this->extraViewData;
+    }
+
+    /**
+     * @param string $extraViewData
+     *
+     * @return $this
+     */
+    public function setExtraViewData($extraViewData)
+    {
+        $this->extraViewData = $extraViewData;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUiPrefix()
+    {
+        return $this->uiPrefix;
+    }
+
 }

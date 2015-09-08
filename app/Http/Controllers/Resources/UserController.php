@@ -1,9 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Database\QueryException;
+use Session;
+use Validator;
+
 
 class UserController extends ResourceController
 {
@@ -12,37 +15,21 @@ class UserController extends ResourceController
     //******************************************************************************
 
     /** @type string */
-    protected $_tableName = 'user_t';
+    protected $tableName = 'user_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\User';
+    protected $model = 'DreamFactory\\Enterprise\\Database\\Models\\User';
     /** @type string */
-    protected $_resource = 'user';
-    /**
-     * @type string
-     */
-    protected $_prefix = 'v1';
+    protected $resource = 'user';
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->_active = [];
-    }
-
-    /**
-     * @param array $viewData
-     *
-     * @return \Illuminate\View\View
-     */
     public function create(array $viewData = [])
     {
-        $this->_resourceView = 'app.users.create';
+        $this->resourceView = 'app.users.create';
 
-        return parent::create(array_merge(['prefix' => $this->_prefix], $viewData));
+        return parent::create($viewData);
     }
 
     public function edit($id)
@@ -59,11 +46,10 @@ class UserController extends ResourceController
             }
 
             $user_data = $users->find($id);
+            $user_data['password_text'] = '********';
 
-            $user_data['password_text'] = '1234567890';
-
-            return \View::make('app.users.edit')->with('user_id', $id)->with('prefix', $this->_prefix)->with('user',
-                    $user_data)->with('is_admin', $is_admin);
+            return $this->renderView('app.users.edit',
+                ['user_id' => $id, 'user' => $user_data, 'is_admin' => $is_admin]);
         } else {
             return 'FAIL';
         }
@@ -73,44 +59,167 @@ class UserController extends ResourceController
     {
         $is_system_admin = '';
         $user = null;
-        $user_data = Input::all();
+        $create_user = null;
+        $user_data = \Input::all();
+
+        $validator = Validator::make($user_data,
+            [
+                'email_addr_text' => 'required|email',
+                'first_name_text' => 'required|string',
+                'last_name_text'  => 'required|string',
+                'nickname_text'   => 'required|string',
+                'new_password'    => 'required|string',
+            ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach ($messages as $key => $value) {
+                switch ($key) {
+
+                    case 'email_addr_text':
+                        $flash_message = 'Email is blank or format is invalid (use abc@domain.tld)';
+                        break;
+                    case 'first_name_text':
+                        $flash_message =
+                            'First Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'last_name_text':
+                        $flash_message =
+                            'Last Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'nickname_text':
+                        $flash_message =
+                            'Nickname is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'new_password':
+                        $flash_message = 'Password is blank or contains invalid characters';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/v1/users/create')->withInput();
+        }
 
         if (array_key_exists('system_admin', $user_data)) {
             $is_system_admin = 1;
         }
 
         if ($is_system_admin != '') {
-            $user = new ServiceUser;
+            $create_user = new ServiceUser;
         } else {
-            $user = new User;
+            $create_user = new User;
         }
 
         if (array_key_exists('active', $user_data)) {
-            $user->active_ind = 1;
+            $user_data['active_ind'] = 1;
         } else {
-            $user->active_ind = 0;
+            $user_data['active_ind'] = 0;
         }
 
-        $user->password_text = bcrypt($user_data['new_password']);
-        $user->email_addr_text = $user_data['email_addr_text'];
-        $user->first_name_text = $user_data['first_name_text'];
-        $user->last_name_text = $user_data['last_name_text'];
-        $user->nickname_text = $user_data['nickname_text'];
+        $user_data['password_text'] = bcrypt($user_data['new_password']);
 
-        $user->save();
+        unset($user_data['active']);
+        unset($user_data['new_password']);
+        unset($user_data['system_admin']);
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/users';
+        try {
+            $create_user->create($user_data);
 
-        return Redirect::to($_redirect);
+            $result_text =
+                'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was created successfully!';
+            $result_status = 'alert-success';
+
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
+
+        } catch (QueryException $e) {
+            $res_text = strtolower($e->getMessage());
+
+            if (strpos($res_text, 'duplicate entry') !== false) {
+                Session::flash('flash_message', 'Email is already in use.');
+                Session::flash('flash_type', 'alert-danger');
+            } else {
+                Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+                Session::flash('flash_type', 'alert-danger');
+            }
+
+            return redirect('/v1/users/create')->withInput();
+        }
+
     }
 
     public function update($id)
     {
         $is_system_admin = '';
         $users = null;
-        $user_data = Input::all();
+        $user_data = \Input::all();
+
+        if (array_key_exists('user_type', $user_data)) {
+            $is_system_admin = $user_data['user_type'];
+        }
+
+        $validator = Validator::make($user_data,
+            [
+                'email_addr_text' => 'required|email',
+                'first_name_text' => 'required|string',
+                'last_name_text'  => 'required|string',
+                'nickname_text'   => 'required|string',
+                'new_password'    => 'required|string',
+            ]);
+
+        if ($validator->fails()) {
+
+            $messages = $validator->messages()->getMessages();
+
+            $flash_message = '';
+
+            foreach ($messages as $key => $value) {
+                switch ($key) {
+
+                    case 'email_addr_text':
+                        $flash_message = 'Email is blank or format is invalid (use abc@domain.tld)';
+                        break;
+                    case 'first_name_text':
+                        $flash_message = 'First Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'last_name_text':
+                        $flash_message = 'Last Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'nickname_text':
+                        $flash_message = 'Nickname contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        break;
+                    case 'new_password':
+                        $flash_message = 'Password is blank or contains invalid characters';
+                        break;
+                }
+
+                break;
+            }
+
+            Session::flash('flash_message', $flash_message);
+            Session::flash('flash_type', 'alert-danger');
+
+            $_redirect = '/v1/users/' . $id . '/edit?user_type=';
+
+            if ($is_system_admin) {
+                $_redirect .= 'admin';
+            } else {
+                $_redirect .= 'user';
+            }
+
+            return redirect($_redirect)->withInput();
+        }
 
         if (array_key_exists('user_type', $user_data)) {
             $is_system_admin = $user_data['user_type'];
@@ -123,25 +232,7 @@ class UserController extends ResourceController
                 $user_data['active_ind'] = 0;
             }
         }
-        /*
-                if ( array_key_exists( 'instance_manage_ind', $user_data ) )
-                {
-                    $user_data['instance_manage_ind'] = 1;
-                }
-                else
-                {
-                    $user_data['instance_manage_ind'] = 0;
-                }
 
-                if ( array_key_exists( 'instance_policy_ind', $user_data ) )
-                {
-                    $user_data['instance_policy_ind'] = 1;
-                }
-                else
-                {
-                    $user_data['instance_policy_ind'] = 0;
-                }
-        */
         if ($is_system_admin != '') {
             $user = ServiceUser::where('email_addr_text', '=', $user_data['email_addr_text'])->first();
 
@@ -178,46 +269,109 @@ class UserController extends ResourceController
         unset($user_data['instance_manage_ind']);
         unset($user_data['instance_policy_ind']);
 
-        $user = $users->find($id);
-        $user->update($user_data);
+        try {
+            $user = $users->find($id);
+            $user->update($user_data);
 
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/users';
+            $result_text =
+                'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was updated successfully!';
+            $result_status = 'alert-success';
 
-        return \Redirect::to($_redirect);
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
+
+        } catch (QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
+            Session::flash('flash_type', 'alert-danger');
+
+            $_redirect = '/v1/users/' . $id . '/edit?user_type=';
+
+            if ($is_system_admin) {
+                $_redirect .= 'admin';
+            } else {
+                $_redirect .= 'user';
+            }
+
+            return redirect($_redirect)->withInput();
+        }
     }
 
     public function destroy($ids)
     {
         $user_data = \Input::all();
-        $a_users = new ServiceUser;
-        $o_users = new User;
+        $id_array = [];
 
-        if ($ids != 'multi') {
-            if ($user_data['user_type'] != "") {
-                $a_users->find($ids)->delete();
-            } else {
-                $o_users->find($ids)->delete();
-            }
-        } else {
-            $id_array = explode(',', $user_data['_selectedIds']);
-            $type_array = explode(',', $user_data['_selectedTypes']);
+        $user_names = [];
 
-            foreach ($id_array as $i => $id) {
-                if ($type_array[$i] != "") {
-                    $a_users->find($id_array[$i])->delete();
+        try {
+
+            if ($ids != 'multi') {
+                if ($user_data['user_type'] != "") {
+                    $user = ServiceUser::where('id', '=', $ids);
+                    $user_name = $user->get(['first_name_text', 'last_name_text']);
+                    array_push($user_names,
+                        '"' . $user_name[0]->first_name_text . ' ' . $user_name[0]->last_name_text . '"');
+                    $user->delete();
                 } else {
-                    $o_users->find($id_array[$i])->delete();
+                    $user = User::where('id', '=', $ids);
+                    $user_name = $user->get(['first_name_text', 'last_name_text']);
+                    array_push($user_names,
+                        '"' . $user_name[0]->first_name_text . ' ' . $user_name[0]->last_name_text . '"');
+                    $user->delete();
+                }
+            } else {
+                $id_array = explode(',', $user_data['_selectedIds']);
+                $type_array = explode(',', $user_data['_selectedTypes']);
+
+                foreach ($id_array as $i => $id) {
+                    if ($type_array[$i] != "") {
+                        $user = ServiceUser::where('id', '=', $id);
+                        $user_name = $user->get(['first_name_text', 'last_name_text']);
+                        array_push($user_names,
+                            '"' . $user_name[0]->first_name_text . ' ' . $user_name[0]->last_name_text . '"');
+                        $user->delete();
+                    } else {
+                        $user = User::where('id', '=', $id);
+                        $user_name = $user->get(['first_name_text', 'last_name_text']);
+                        array_push($user_names,
+                            '"' . $user_name[0]->first_name_text . ' ' . $user_name[0]->last_name_text . '"');
+                        $user->delete();
+                    }
                 }
             }
+
+            if (count($id_array) > 1) {
+                $names = '';
+                foreach ($user_names as $i => $name) {
+                    $names .= $name;
+
+                    if (count($user_names) > $i + 1) {
+                        $names .= ', ';
+                    }
+                }
+
+                $result_text = 'The users ' . $names . ' were deleted successfully!';
+            } else {
+                $result_text = 'The user ' . $user_names[0] . ' was deleted successfully!';
+            }
+
+            $result_status = 'alert-success';
+
+            Session::flash('flash_message', $result_text);
+            Session::flash('flash_type', $result_status);
+
+            return \Redirect::to($this->makeRedirectUrl('users'));
+        } catch (QueryException $e) {
+            //$res_text = $e->getMessage();
+            Session::flash('flash_message',
+                'Error! One or more users can\'t be deleted because a resource is assigned to the user(s). ');
+            Session::flash('flash_type', 'alert-danger');
+
+            return redirect('/v1/users')->withInput();
         }
-
-        $_redirect = '/';
-        $_redirect .= $this->_prefix;
-        $_redirect .= '/users';
-
-        return \Redirect::to($_redirect);
     }
 
     public function index()
@@ -235,25 +389,27 @@ class UserController extends ResourceController
             'active_ind',
         ];
 
-        $o_users = $users_owners->take(500)->get($_columns);
-        $a_users = $users_admins->take(500)->get($_columns);
+        $o_users = $users_owners->get($_columns);
+        $a_users = $users_admins->get($_columns);
 
         $o_users_array = json_decode($o_users);
         $a_users_array = json_decode($a_users);
 
-        array_walk($o_users_array, function (&$o_user_array) {
-            $o_user_array->admin = true;
-        });
+        array_walk($o_users_array,
+            function (&$o_user_array) {
+                $o_user_array->admin = true;
+            });
 
-        array_walk($a_users_array, function (&$a_user_array) {
-            $a_user_array->admin = false;
-        });
+        array_walk($a_users_array,
+            function (&$a_user_array) {
+                $a_user_array->admin = false;
+            });
 
         $result = array_merge($o_users_array, $a_users_array);
         $result = array_map("unserialize", array_unique(array_map("serialize", $result)));
         sort($result);
 
-        return \View::make('app.users')->with('prefix', $this->_prefix)->with('users', $result);//$users_owners->all());
+        return $this->renderView('app.users', ['users' => $result]);
     }
 
 }

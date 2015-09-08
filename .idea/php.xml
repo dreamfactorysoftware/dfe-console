@@ -11,11 +11,14 @@
         <path_mappings>
           <mapping local-root="$PROJECT_DIR$" remote-root="/opt/dreamfactory/dfe/dfe-console" />
           <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-common" remote-root="/opt/dreamfactory/dfe/dfe-common" />
-          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/fabric-db" remote-root="/opt/dreamfactory/lib/fabric-db" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-ops-client" remote-root="/opt/dreamfactory/dfe/dfe-ops-client" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-partner" remote-root="/opt/dreamfactory/dfe/dfe-partner" />
+          <mapping local-root="$PROJECT_DIR$/vendor/dreamfactory/dfe-storage" remote-root="/opt/dreamfactory/dfe/dfe-storage" />
         </path_mappings>
       </server>
     </servers>
   </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="5.5.0" />
   <component name="PhpStepFilterConfiguration" skip_magic_methods="true">
     <option name="skippedFunctions">
       <list>
@@ -29,6 +32,7 @@
         <option value="Illuminate\Database\Eloquent\Model-&gt;__get" />
         <option value="Illuminate\Support\Facades\Queue::getFacadeAccessor" />
         <option value="config" />
+        <option value="DreamFactory\Enterprise\Common\Utility\Disk::segment" />
       </list>
     </option>
   </component>

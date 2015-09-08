@@ -1,22 +1,24 @@
 <?php
+//******************************************************************************
+//* Default CORS configuration
+//******************************************************************************
 return [
     'defaults' => [
         'supportsCredentials' => false,
-        'allowedOrigins' => [],
-        'allowedHeaders' => [],
-        'allowedMethods' => [],
-        'exposedHeaders' => [],
-        'maxAge' => 0,
-        'hosts' => [],
+        'allowedOrigins'      => [],
+        'allowedHeaders'      => [],
+        'allowedMethods'      => [],
+        'exposedHeaders'      => [],
+        'maxAge'              => 0,
+        'hosts'               => [],
     ],
-
-    'paths' => [
+    'paths'    => [
         '*' => [
             'allowedOrigins' => ['*'],
             'allowedHeaders' => ['Content-Type'],
             'allowedMethods' => ['POST', 'PUT', 'GET', 'DELETE'],
-            'maxAge' => 3600,
-            'hosts' => [],
+            'maxAge'         => 3600,
+            'hosts'          => [],
         ],
     ],
 ];

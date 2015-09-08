@@ -1,4 +1,5 @@
 <?php
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -23,7 +24,7 @@ class CreateUsersTable extends Migration
                     $table->string('email_addr_text', 320)->unique();
                     $table->string('password_text', 200);
                     $table->integer('owner_id')->nullable();
-                    $table->integer('owner_type_nbr')->nullable();
+                    $table->integer('owner_type_nbr')->default(OwnerTypes::USER);
                     $table->dateTime('last_login_date')->nullable();
                     $table->string('last_login_ip_text', 64)->nullable();
                     $table->string('remember_token', 128)->nullable();
@@ -50,7 +51,7 @@ class CreateUsersTable extends Migration
                     $table->string('external_id_text', 128);
                     $table->string('external_password_text', 200);
                     $table->integer('owner_id')->nullable();
-                    $table->integer('owner_type_nbr')->nullable();
+                    $table->integer('owner_type_nbr')->default(OwnerTypes::SERVICE_USER);
                     $table->string('company_name_text', 128)->nullable();
                     $table->string('title_text', 128)->nullable();
                     $table->string('city_text', 64)->nullable();

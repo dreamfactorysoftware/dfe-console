@@ -19,7 +19,7 @@ class CreateAppKeysTable extends Migration
         if (!\Schema::hasTable('app_key_t')) {
             \Schema::create(
                 'app_key_t',
-                function (Blueprint $table){
+                function (Blueprint $table) {
                     $table->increments('id');
                     $table->integer('owner_id');
                     $table->integer('owner_type_nbr');

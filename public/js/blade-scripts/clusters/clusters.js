@@ -1,102 +1,3 @@
-/*
-function confirmRemoveCluster(id) {
-    return;
-    var state = $("#cluster_button_" + id).attr('value');
-
-    if (state === 'delete') {
-        $("#cluster_button_" + id).html('Confirm!');
-        $("#cluster_button_" + id).attr('value', 'confirm');
-        $("#cluster_button_" + id).attr('class', 'btn btn-danger btn-xs');
-        $("#cluster_button_" + id).attr('style', 'width: 75px');
-        $("#cluster_button_cancel_" + id).show();
-        $("#cluster_checkbox_" + id).hide();
-        $("#actionColumn").attr('width', '200px');
-    }
-
-    if (state === 'confirm') {
-        $.ajax({
-            url: "/{{$prefix}}/clusters/" + id,
-            type: "DELETE",
-            success: function (data, textStatus, jqXHR) {
-                window.location = 'clusters'
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log('error');
-            }
-        });
-    }
-};
-
-
-function cancelRemoveCluster(id) {
-
-    $( "#cluster_button_" + id).html('');
-    $( "#cluster_button_" + id).attr('value', 'delete');
-    $( "#cluster_button_" + id).attr('class', 'btn btn-default btn-sm fa fa-fw fa-trash');
-    $("#cluster_button_" + id).attr('style', 'width: 25px');
-    $( "#cluster_button_cancel_" + id).hide();//attr('display', 'none');
-    $("#cluster_checkbox_" + id).show();
-    $("#actionColumn").removeAttr('width');
-
-};
-
-function cancelRemoveSelectedClusters() {
-    $( "#selectedclustersRemove").html('');
-    $( "#selectedclustersRemove").attr('value', 'delete');
-    $( "#selectedclustersRemove").attr('class', 'btn btn-default btn-sm fa fa-fw fa-trash');
-    $("#selectedclustersRemove").attr('style', 'width: 40px');
-    $( "#selectedclusterRemoveCancel").hide();//attr('display', 'none');
-}
-
-
-function confirmRemoveSelectedClusters () {
-    return;
-    var deleteArray = [];
-
-    $('input[type=checkbox]').each(function () {
-
-        if(this.checked)
-            deleteArray.push(this.value);
-    });
-
-    if(deleteArray.length) {
-
-        var state = $("#selectedclustersRemove").attr('value');
-
-        if (state === 'delete') {
-            $("#selectedclustersRemove").html('Confirm!');
-            $("#selectedclustersRemove").attr('value', 'confirm');
-            $("#selectedclustersRemove").attr('class', 'btn btn-danger btn-sm');
-            $("#selectedclustersRemove").attr('style', 'width: 75px');
-            $("#selectedclusterRemoveCancel").show();
-        }
-
-        if (state === 'confirm') {
-
-            $( "#selectedclustersRemove").html('');
-            $( "#selectedclustersRemove").attr('value', 'delete');
-            $( "#selectedclustersRemove").attr('class', 'btn btn-default btn-sm fa fa-fw fa-trash');
-            $("#selectedclustersRemove").attr('style', 'width: 40px');
-            $( "#selectedclusterRemoveCancel").hide();
-
-            $.ajax({
-                url : "/{{$prefix}}/clusters/" + deleteArray,
-                type: "DELETE",
-                success: function(data, textStatus, jqXHR)
-                {
-                    window.location = 'clusters'
-                },
-                error: function (jqXHR, textStatus, errorThrown)
-                {
-                    console.log('error');
-                }
-            });
-        }
-
-    }
-};
-*/
-
 
 
 var table = $('#clusterTable').DataTable({
@@ -110,21 +11,50 @@ var table = $('#clusterTable').DataTable({
             "targets": [0],
             "visible": false
         }
-    ]
+    ],
+    "bStateSave": true,
+    "fnStateSave": function (oSettings, oData) {
+        localStorage.setItem('Clusters_' + window.location.pathname, JSON.stringify(oData));
+    },
+    "fnStateLoad": function (oSettings) {
+        var data = localStorage.getItem('Clusters_' + window.location.pathname);
+        return JSON.parse(data);
+    }
 });
+
+
+
+$('#clusterTable tbody').on( 'click', 'tr', function () {
+
+    tableRowIndex = null;
+
+    var $tr = $(this);
+
+    while(tableColIndex === null){
+        //wait
+    }
+
+    var cluster_id = $tr.find('input[type="hidden"][id="cluster_id"]').val();
+
+    tableRowIndex = cluster_id;
+
+
+    if(tableColIndex !== null){
+
+
+        if(tableColIndex > 1)
+            window.location = 'clusters/' + cluster_id + '/edit';
+    }
+} );
 
 $('#clusterTable tbody').on( 'click', 'td', function () {
 
-    var rowId = table.cell( this ).index().row - (10 * table.page.info().page);
+    tableColIndex = null;
+
     var cellId = table.cell( this ).index().column;
 
-    var cluster_id = $("#clusterTable tr:eq('" + (rowId + 1) + "')").find('input[type="hidden"]').val();
-
-    if(cellId > 1)
-        window.location = 'clusters/' + cluster_id + '/edit';
-
-
-} );
+    tableColIndex = cellId;
+});
 
 
 var info = table.page.info();
@@ -132,7 +62,7 @@ var info = table.page.info();
 $("div.toolbar").html('');
 
 if($('#tableInfo').html() === '')
-    $('#tableInfo').html('Showing clusters ' + (info.start + 1) + ' to ' + info.end + ' of ' + info.recordsTotal);
+    setTableInfo();
 
 
 $('#_next').on( 'click', function () {
@@ -148,7 +78,8 @@ $('#_next').on( 'click', function () {
     }
 
     $('#currentPage').html('Page ' + (table.page.info().page + 1));
-    $('#tableInfo').html('Showing clusters ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsTotal);
+
+    setTableInfo();
 } );
 
 $('#_prev').on( 'click', function () {
@@ -165,7 +96,8 @@ $('#_prev').on( 'click', function () {
         $('#_next').prop('disabled', false);
 
     $('#currentPage').html('Page ' + (table.page.info().page + 1));
-    $('#tableInfo').html('Showing clusters ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsTotal);
+
+    setTableInfo();
 });
 
 function selectPage(page) {
@@ -185,8 +117,62 @@ function selectPage(page) {
     if((page + 1) === table.page.info().pages)
         $('#_next').prop('disabled', true);
 
-    $('#tableInfo').html('Showing clusters ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsTotal);
+    setTableInfo();
 }
+
+
+$('#refresh').click(function(){
+    table.state.clear();
+    localStorage.removeItem('Clusters_' + window.location.pathname);
+    window.location.reload();
+});
+
+
+function setTableInfo(){
+    $('#tableInfo').html('Showing Clusters ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsDisplay);
+}
+
+
+function updatePageDropdown(){
+
+    $('#tablePages').empty();
+
+    for(var i = 0; i < table.page.info().pages; i++){
+        $('#currentPage').text('Page 1');
+        $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
+    }
+
+    if(table.page.info().page === 0)
+        $('#_prev').prop('disabled', true);
+
+    if((table.page.info().page + 1) < table.page.info().pages)
+        $('#_next').prop('disabled', false);
+
+    if(table.page.info().page > 0)
+        $('#_prev').prop('disabled', false);
+
+    if((table.page.info().page + 1) === table.page.info().pages)
+        $('#_next').prop('disabled', true);
+}
+
+function filterGlobal () {
+    $('#clusterTable').DataTable().search(
+        $('#clusterSearch').val()
+    ).draw();
+
+    updatePageDropdown();
+    setTableInfo();
+}
+
+
+
+
+
+
+
+
+
+
 
 function removeCluster(id, name) {
     if(confirm('Remove Cluster "' + name + '" ?')){
@@ -200,12 +186,18 @@ function removeCluster(id, name) {
 $('#selectedClustersRemove').click(function(){
 
     var deleteArray = [];
+    var deleteNames = '';
 
     $('input[type=checkbox]').each(function () {
 
         if(this.checked)
+        {
+            deleteNames += '"' + this.name + '", ';
             deleteArray.push(this.value);
+        }
     });
+
+    deleteNames = deleteNames.substring(0, deleteNames.length - 2);
 
     if(!deleteArray.length){
         alert('No Cluster(s) Selected!');
@@ -214,7 +206,7 @@ $('#selectedClustersRemove').click(function(){
 
     $('#_selected').val(deleteArray);
 
-    if(confirm('Remove Selected Clusters?')){
+    if(confirm('Remove Selected Clusters ' + deleteNames + ' ?')){
         $('#multi_delete').submit();
         return true;
     }
@@ -223,18 +215,33 @@ $('#selectedClustersRemove').click(function(){
 });
 
 
-
-
 $( document ).ready(function() {
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
 
-    for(var i = 0; i < info.pages; i++){
-        $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
+    if(info) {
+        for (var i = 0; i < info.pages; i++) {
+            $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
+        }
+
+        if (info.pages > 1)
+            $('#_next').prop('disabled', false);
+
+        $('#_prev').prop('disabled', true);
+
+
+        $('#clusterSearch').on('keyup click', function () {
+            filterGlobal();
+        });
+
+        updatePageDropdown();
+        selectPage(info.page);
+        $('#clusterSearch').val(table.search());
     }
-
-    if(info.pages > 1)
-        $('#_next').prop('disabled', false);
-
-    $('#_prev').prop('disabled', true);
 
     $('.tooltip-wrapper').tooltip({position: "bottom"});
 });

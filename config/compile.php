@@ -1,4 +1,7 @@
 <?php
+//******************************************************************************
+//* Pre-compiled class setup
+//******************************************************************************
 return [
     //  Additional Compiled Classes
     'files'     => [
@@ -11,6 +14,6 @@ return [
     //  Compiled File Providers
     'providers' => [
         /** DreamFactory Services service providers */
-        'DreamFactory\\Enterprise\\Services\\Auditing\\AuditServiceProvider',
+        DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
     ],
 ];

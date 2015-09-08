@@ -1,7 +1,7 @@
 <?php
-/**
- * SMTP mail settings
- */
+//******************************************************************************
+//* Mail settings for DFE console
+//******************************************************************************
 return [
     'driver'     => env('SMTP_DRIVER', 'mailgun'),
     'host'       => env('SMTP_HOST', 'smtp.mailgun.org'),

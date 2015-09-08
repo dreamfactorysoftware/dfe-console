@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Providers;
+<?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 use DreamFactory\Enterprise\Services\SnapshotService;
@@ -27,13 +26,6 @@ class SnapshotServiceProvider extends BaseServiceProvider
      * @type string The name of the service in the IoC
      */
     const IOC_NAME = 'dfe.snapshot';
-
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /** @inheritdoc */
-    protected $_serviceClass = 'DreamFactory\\Enterprise\\Services\\SnapshotService';
 
     //********************************************************************************
     //* Public Methods
