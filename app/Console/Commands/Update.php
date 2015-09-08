@@ -35,6 +35,13 @@ class Update extends ConsoleCommand implements SelfHandling
         }
 
         $_currentBranch = $this->shell($_git . ' rev-parse --abbrev-ref HEAD');
+
+        if (0 != $this->shell($_git . ' remote update')) {
+            $this->error('Error retrieving update from remote origin.');
+
+            return 1;
+        }
+
         $_current = $this->shell($_git . ' rev-parse HEAD');
         $_remote = $this->shell($_git . ' rev-parse origin/' . $_currentBranch);
 
@@ -44,7 +51,7 @@ class Update extends ConsoleCommand implements SelfHandling
             return 0;
         }
 
-        $this->info('Upgrading to revision ' . $_remote);
+        $this->info('Upgrading to revision <comment>' . $_remote . '</comment>');
         if (0 != $this->shell($_git . ' pull -q --ff-only origin ' . $_currentBranch, true)) {
             $this->error('Error while pulling current revision. Reverting.');
 
@@ -54,12 +61,11 @@ class Update extends ConsoleCommand implements SelfHandling
         if (!$this->option('no-composer')) {
             $this->info('Updating composer dependencies');
 
-            if (0 == $this->shell('composer -qn update', true)) {
-                $this->error('Error while running composer update. Manual intervention most likely will be necessary.');
-
-                return 1;
-            };
-        }
+            $_result = $this->shell('composer --quiet --no-interaction --no-ansi update');
+            echo $_result;
+            //$this->error('Error while running composer update. Manual intervention most likely will be necessary.');
+            //return 1;
+        };
 
         return 0;
     }
