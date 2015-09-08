@@ -37,7 +37,7 @@ return [
     //******************************************************************************
     'common'                  => [
         'display-name'      => 'DreamFactory Enterprise&trade; Console',
-        'display-version'   => 'v1.0-beta',
+        'display-version'   => 'v1.0.0',
         'display-copyright' => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name

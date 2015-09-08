@@ -2,10 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Update extends ConsoleCommand implements SelfHandling
 {
@@ -22,145 +19,60 @@ class Update extends ConsoleCommand implements SelfHandling
     //* Methods
     //******************************************************************************
 
-    /**
-     * Handle the command
-     *
-     * @return mixed
-     */
+    /** @inheritdoc */
     public function fire()
     {
         parent::fire();
 
-        $_noComposer = $this->option('no-composer');
-    }
-
-    /** @inheritdoc */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $baseUrl = (extension_loaded('openssl') ? 'https' : 'http') . '://' . self::HOMEPAGE;
-        $config = Composer\Factory::createConfig();
-        $remoteFilesystem = new RemoteFilesystem($this->getIO(), $config);
-        $cacheDir = $config->get('cache-dir');
-        $rollbackDir = $config->get('home');
-        $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
-
-        // check if current dir is writable and if not try the cache dir from settings
-        $tmpDir = is_writable(dirname($localFilename)) ? dirname($localFilename) : $cacheDir;
-
-        // check for permissions in local filesystem before start connection process
-        if (!is_writable($tmpDir)) {
-            throw new FilesystemException('Composer update failed: the "' .
-                $tmpDir .
-                '" directory used to download the temp file could not be written');
-        }
-        if (!is_writable($localFilename)) {
-            throw new FilesystemException('Composer update failed: the "' .
-                $localFilename .
-                '" file could not be written');
-        }
-
-        if ($input->getOption('rollback')) {
-            return $this->rollback($output, $rollbackDir, $localFilename);
-        }
-
-        $latestVersion = trim($remoteFilesystem->getContents(self::HOMEPAGE, $baseUrl . '/version', false));
-        $updateVersion = $input->getArgument('version') ?: $latestVersion;
-
-        if (preg_match('{^[0-9a-f]{40}$}', $updateVersion) && $updateVersion !== $latestVersion) {
-            $this->getIO()
-                ->writeError('<error>You can not update to a specific SHA-1 as those phars are not available for download</error>');
+        if (empty($_git = $this->shell('which git'))) {
+            $this->error('"git" does not appear to be installed on this system. It is required for this command');
 
             return 1;
         }
 
-        if (\ComposerAutoloaderInitf3508d1ad5be1efead3214b64711cab1::VERSION === $updateVersion) {
-            $this->getIO()->writeError('<info>You are already using composer version ' . $updateVersion . '.</info>');
+        $_currentBranch = $this->shell($_git . ' rev-parse --abbrev-ref HEAD');
+
+        if (0 != $this->shell($_git . ' remote update >/dev/null 2>&1')) {
+            $this->error('Error retrieving update from remote origin.');
+
+            return 1;
+        }
+
+        $_current = $this->shell($_git . ' rev-parse HEAD');
+        $_remote = $this->shell($_git . ' rev-parse origin/' . $_currentBranch);
+
+        if ($_current == $_remote) {
+            $this->info('Your installation is up-to-date (revision: <comment>' . $_current . '</comment>)');
 
             return 0;
         }
 
-        $tempFilename = $tmpDir . '/' . basename($localFilename, '.phar') . '-temp.phar';
-        $backupFile = sprintf('%s/%s-%s%s',
-            $rollbackDir,
-            strtr(Composer::RELEASE_DATE, ' :', '_-'),
-            preg_replace('{^([0-9a-f]{7})[0-9a-f]{33}$}', '$1', Composer::VERSION),
-            self::OLD_INSTALL_EXT);
-
-        $this->getIO()->writeError(sprintf("Updating to version <info>%s</info>.", $updateVersion));
-        $remoteFilename =
-            $baseUrl .
-            (preg_match('{^[0-9a-f]{40}$}', $updateVersion) ? '/composer.phar'
-                : "/download/{$updateVersion}/composer.phar");
-        $remoteFilesystem->copy(self::HOMEPAGE, $remoteFilename, $tempFilename, !$input->getOption('no-progress'));
-        if (!file_exists($tempFilename)) {
-            $this->getIO()
-                ->writeError('<error>The download of the new composer version failed for an unexpected reason</error>');
-
-            return 1;
-        }
-
-        // remove saved installations of composer
-        if ($input->getOption('clean-backups')) {
-            $finder = $this->getOldInstallationFinder($rollbackDir);
-
-            $fs = new Filesystem;
-            foreach ($finder as $file) {
-                $file = (string)$file;
-                $this->getIO()->writeError('<info>Removing: ' . $file . '</info>');
-                $fs->remove($file);
+        $this->info('Upgrading to revision <comment>' . $_remote . '</comment>');
+        if (0 != $this->shell($_git . ' pull -q --ff-only origin ' . $_currentBranch, true)) {
+            $this->error('Error while pulling current revision. Reverting.');
+            if (0 != $this->shell($_git . ' revert --hard ' . $_current)) {
+                $this->error('Error while reverting to prior version.');
             }
-        }
-
-        if ($err = $this->setLocalPhar($localFilename, $tempFilename, $backupFile)) {
-            $this->getIO()->writeError('<error>The file is corrupted (' . $err->getMessage() . ').</error>');
-            $this->getIO()->writeError('<error>Please re-run the self-update command to try again.</error>');
 
             return 1;
         }
 
-        if (file_exists($backupFile)) {
-            $this->getIO()->writeError('Use <info>composer self-update --rollback</info> to return to version ' .
-                Composer::VERSION);
-        } else {
-            $this->getIO()->writeError('<warning>A backup of the current version could not be written to ' .
-                $backupFile .
-                ', no rollback possible</warning>');
+        if (!$this->option('no-composer')) {
+            $this->info('Updating composer dependencies...');
+            $this->shell('composer --quiet --no-interaction --no-ansi update');
+        };
+
+        if (!$this->option('no-clear')) {
+            $this->info('Clearing caches...');
+            $this->shell('php artisan -q config:clear');
+            $this->shell('php artisan -q cache:clear');
+            $this->shell('php artisan -q route:clear');
+            $this->shell('php artisan -q clear-compiled');
+            $this->shell('php artisan -q optimize');
+            $this->shell('php artisan -q vendor:publish--tag =public --force');
         }
-    }
 
-    /** @inheritdoc */
-    protected function getArguments()
-    {
-        return array_merge(parent::getArguments(), ['version', InputArgument::OPTIONAL, 'The version to update to']);
-    }
-
-    /** @inheritdoc */
-    protected function getOptions()
-    {
-        return array_merge(parent::getOptions(),
-            [
-                ['rollback', 'r', InputOption::VALUE_NONE, 'Revert to an older version of DFE Console'],
-                [
-                    'no-composer',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'If specified, "composer update" will not be executed.',
-                ],
-                [
-                    'clean-backups',
-                    null,
-                    new InputOption('clean',
-                        null,
-                        InputOption::VALUE_NONE,
-                        'Clean up old backups made during priore updates. Afterwards, the current version will be the only backup available'),
-                ],
-                [
-                    'no-progress',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'If specified, no progress will be displayed during an update',
-                ],
-            ]);
+        return 0;
     }
 
     /** @inheritdoc */
@@ -176,89 +88,39 @@ EOT
         );
     }
 
-    protected function rollback(OutputInterface $output, $rollbackDir, $localFilename)
+    /** @inheritdoc */
+    protected function getOptions()
     {
-        $rollbackVersion = $this->getLastBackupVersion($rollbackDir);
-        if (!$rollbackVersion) {
-            throw new \UnexpectedValueException('Composer rollback failed: no installation to roll back to in "' .
-                $rollbackDir .
-                '"');
-        }
-
-        if (!is_writable($rollbackDir)) {
-            throw new FilesystemException('Composer rollback failed: the "' .
-                $rollbackDir .
-                '" dir could not be written to');
-        }
-
-        $old = $rollbackDir . '/' . $rollbackVersion . self::OLD_INSTALL_EXT;
-
-        if (!is_file($old)) {
-            throw new FilesystemException('Composer rollback failed: "' . $old . '" could not be found');
-        }
-        if (!is_readable($old)) {
-            throw new FilesystemException('Composer rollback failed: "' . $old . '" could not be read');
-        }
-
-        $oldFile = $rollbackDir . "/{$rollbackVersion}" . self::OLD_INSTALL_EXT;
-        $this->getIO()->writeError(sprintf("Rolling back to version <info>%s</info>.", $rollbackVersion));
-        if ($err = $this->setLocalPhar($localFilename, $oldFile)) {
-            $this->getIO()->writeError('<error>The backup file was corrupted (' .
-                $err->getMessage() .
-                ') and has been removed.</error>');
-
-            return 1;
-        }
-
-        return 0;
+        return array_merge(parent::getOptions(),
+            [
+                [
+                    'no-composer',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'If specified, a "composer update" will NOT be performed after an update.',
+                ],
+                [
+                    'no-clear',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'If specified, the caches will not be cleared after an update.',
+                ],
+            ]);
     }
 
-    protected function setLocalPhar($localFilename, $newFilename, $backupTarget = null)
+    /**
+     * Executes a shell command stripping newlines from result
+     *
+     * @param string $command
+     * @param bool   $returnExitCode If true, the exit code is returned instead of the output
+     *
+     * @return string
+     */
+    protected function shell($command, $returnExitCode = false)
     {
-        try {
-            @chmod($newFilename, fileperms($localFilename));
-            if (!ini_get('phar.readonly')) {
-                // test the phar validity
-                $phar = new \Phar($newFilename);
-                // free the variable to unlock the file
-                unset($phar);
-            }
+        $_returnVar = $_output = null;
+        $_result = trim(str_replace(PHP_EOL, ' ', exec($command, $_output, $_returnVar)));
 
-            // copy current file into installations dir
-            if ($backupTarget && file_exists($localFilename)) {
-                @copy($localFilename, $backupTarget);
-            }
-
-            rename($newFilename, $localFilename);
-        } catch (\Exception $e) {
-            if ($backupTarget) {
-                @unlink($newFilename);
-            }
-            if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
-                throw $e;
-            }
-
-            return $e;
-        }
-    }
-
-    protected function getLastBackupVersion($rollbackDir)
-    {
-        $finder = $this->getOldInstallationFinder($rollbackDir);
-        $finder->sortByName();
-        $files = iterator_to_array($finder);
-
-        if (count($files)) {
-            return basename(end($files), self::OLD_INSTALL_EXT);
-        }
-
-        return false;
-    }
-
-    protected function getOldInstallationFinder($rollbackDir)
-    {
-        $finder = Finder::create()->depth(0)->files()->name('*' . self::OLD_INSTALL_EXT)->in($rollbackDir);
-
-        return $finder;
+        return $returnExitCode ? $_returnVar : (0 == $_returnVar ? $_result : null);
     }
 }
