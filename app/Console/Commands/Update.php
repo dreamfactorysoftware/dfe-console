@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
+use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,7 +15,6 @@ class Update extends ConsoleCommand implements SelfHandling
 
     /** @inheritdoc */
     protected $name = 'dfe:update';
-
     /** @inheritdoc */
     protected $description = 'Update DFE Console to the latest version.';
 
@@ -73,7 +73,7 @@ class Update extends ConsoleCommand implements SelfHandling
             return 1;
         }
 
-        if (Composer::VERSION === $updateVersion) {
+        if (\ComposerAutoloaderInitf3508d1ad5be1efead3214b64711cab1::VERSION === $updateVersion) {
             $this->getIO()->writeError('<info>You are already using composer version ' . $updateVersion . '.</info>');
 
             return 0;
