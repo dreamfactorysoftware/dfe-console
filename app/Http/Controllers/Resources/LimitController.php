@@ -190,6 +190,23 @@ class LimitController extends ResourceController
                 'label_text'     => $_input['label_text'],
             ];
 
+
+            $res = Limit::where('cluster_id', $limit['cluster_id'])
+                ->where('instance_id', $limit['instance_id'])
+                ->where('limit_key_text', $limit['limit_key_text'])
+                ->where('period_nbr', $limit['period_nbr'])
+                ->where('id', '!=', $id)
+                ->first();
+
+
+            if(is_object($res)) {
+                \Session::flash('flash_message',
+                    'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
+                Session::flash('flash_type', 'alert-danger');
+
+                return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
+            }
+
             if (!Limit::find($id)->update($limit)) {
                 throw new DatabaseException('Unable to update limit "' . $id . '"');
             }
@@ -576,8 +593,15 @@ class LimitController extends ResourceController
                 ->with('flash_message', 'The limit "' . $_input['label_text'] . '" was created successfully!')
                 ->with('flash_type', 'alert-success');
         } catch (QueryException $e) {
+            $err_msg = $e->getMessage();
 
-            Session::flash('flash_message', 'Unable to add limit!');
+            if (strpos($err_msg, 'SQLSTATE') !== false) {
+                Session::flash('flash_message',
+                    'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
+            } else {
+                Session::flash('flash_message', 'Unable to update limit!');
+            }
+
             Session::flash('flash_type', 'alert-danger');
             logger('Error adding limit: ' . $e->getMessage());
 
