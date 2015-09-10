@@ -24,16 +24,16 @@
                     <div class="form-group">
                         <label for="type_select">Type</label>
                         <select class="form-control" id="type_select" name="type_select">
-                            <option value="cluster" >Cluster</option>
-                            <option value="instance" >Instance</option>
-                            <option value="user">User</option>
+                            <option value="cluster" {{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}>Cluster</option>
+                            <option value="instance" {{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}>Instance</option>
+                            <option value="user" {{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}>User</option>
                         </select>
                     </div>
                     <div class="form-group" id="select_cluster">
                         <label for="cluster_id">Cluster</label>
                         <select class="form-control" id="cluster_id" name="cluster_id">
                             @foreach ($clusters as $_cluster)
-                                <option value="{{ $_cluster['id'] }}" {{ Input::    old('cluster_id') == $limit['cluster_id'] ? 'selected="selected"' : null }} @if ($_cluster['id'] == $limit['cluster_id']) selected @endif>{{ $_cluster['cluster_id_text'] }}</option>
+                                <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $limit['cluster_id'] ? 'selected="selected"' : null }} @if ($_cluster['id'] == $limit['cluster_id']) selected @endif>{{ $_cluster['cluster_id_text'] }}</option>
                             @endforeach
                         </select>
                     </div>
