@@ -129,8 +129,8 @@
 
         $( document ).ready(function() {
             generateForm('{{$limit['type']}}');
-            
-            //$('#type_select').val('{{$limit['type']}}');
+
+            $('#type_select').val('{{$limit['type']}}');
 
             if ('{{$limit['type']}}' === 'instance') {
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
