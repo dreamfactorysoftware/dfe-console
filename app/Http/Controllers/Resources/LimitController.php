@@ -597,7 +597,7 @@ class LimitController extends ResourceController
                     'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
                 Session::flash('flash_type', 'alert-danger');
 
-                return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
+                return redirect('/' . $this->getUiPrefix() . '/limits/create')->withInput();
             }
 
             Limit::create($limit);
