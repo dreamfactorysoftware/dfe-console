@@ -22,11 +22,11 @@
                         >
                     </div>
                     <div class="form-group">
-                        <label for="type_select">Type</label> {{ Input::old('type_select') }}
+                        <label for="type_select">Type</label>
                         <select class="form-control" id="type_select" name="type_select">
-                            <option value="cluster" {{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}>{{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}Cluster</option>
-                            <option value="instance" {{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}>{{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}Instance</option>
-                            <option value="user" {{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}>{{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}User</option>
+                            <option value="cluster" {{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}>Cluster</option>
+                            <option value="instance" {{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}>Instance</option>
+                            <option value="user" {{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}>User</option>
                         </select>
                     </div>
                     <div class="form-group" id="select_cluster">
@@ -130,7 +130,7 @@
         $( document ).ready(function() {
             generateForm('{{$limit['type']}}');
 
-            $('#type_select').val('{{$limit['type']}}');
+            //$('#type_select').val('{{$limit['type']}}');
 
             if ('{{$limit['type']}}' === 'instance') {
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
