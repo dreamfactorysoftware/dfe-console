@@ -198,7 +198,6 @@ class LimitController extends ResourceController
                 ->where('id', '!=', $id)
                 ->first();
 
-
             if(is_object($res)) {
                 \Session::flash('flash_message',
                     'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
@@ -586,6 +585,20 @@ class LimitController extends ResourceController
                 'active_ind'     => ($_input['active_ind']) ? 1 : 0,
                 'label_text'     => $_input['label_text'],
             ];
+
+            $res = Limit::where('cluster_id', $limit['cluster_id'])
+                ->where('instance_id', $limit['instance_id'])
+                ->where('limit_key_text', $limit['limit_key_text'])
+                ->where('period_nbr', $limit['period_nbr'])
+                ->first();
+
+            if(is_object($res)) {
+                \Session::flash('flash_message',
+                    'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
+                Session::flash('flash_type', 'alert-danger');
+
+                return redirect('/' . $this->getUiPrefix() . '/limits/' . $id . '/edit')->withInput();
+            }
 
             Limit::create($limit);
 
