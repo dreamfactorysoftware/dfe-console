@@ -458,8 +458,10 @@ class LimitController extends ResourceController
 
         
 
-        if( Request::old('type_select'))
-            $_this_limit_type = Request::old('type_select');
+        if( is_array(Request::old('type_select'))) {
+
+        }
+            //$_this_limit_type = Request::old('type_select');
 
         $_limits = [
             'id'               => $_limit['id'],
