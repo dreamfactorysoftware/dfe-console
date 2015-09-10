@@ -129,7 +129,7 @@
 
         $( document ).ready(function() {
             generateForm('{{$limit['type']}}');
-console.log('{{$limit['type']}}');
+            
             //$('#type_select').val('{{$limit['type']}}');
 
             if ('{{$limit['type']}}' === 'instance') {
