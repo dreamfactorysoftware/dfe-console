@@ -24,9 +24,9 @@
                     <div class="form-group">
                         <label for="type_select">Type</label> {{ Input::old('type_select') }}
                         <select class="form-control" id="type_select" name="type_select">
-                            <option value="cluster" {{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}>Cluster</option>
-                            <option value="instance" {{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}>Instance</option>
-                            <option value="user" {{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}>User</option>
+                            <option value="cluster" {{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}>{{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}Cluster</option>
+                            <option value="instance" {{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}>{{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}Instance</option>
+                            <option value="user" {{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}>{{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}User</option>
                         </select>
                     </div>
                     <div class="form-group" id="select_cluster">
