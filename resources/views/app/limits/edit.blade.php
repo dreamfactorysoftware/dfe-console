@@ -130,18 +130,22 @@
         $( document ).ready(function() {
             generateForm('{{$limit['type']}}');
 
+            $('#type_select').val('{{$limit['type']}}');
+
+            /*
             if ('{{$limit['type']}}' === 'cluster') {
                 $('#type_select').val('{{$limit['type']}}');
             }
+            */
 
             if ('{{$limit['type']}}' === 'instance') {
-                $('#type_select').val('{{$limit['type']}}');
+                //$('#type_select').val('{{$limit['type']}}');
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
                 $('#instance_id').val('{{$limit['instance_id']}}');
             }
 
             if ('{{$limit['type']}}' === 'user') {
-                $('#type_select').val('{{$limit['type']}}');
+                //$('#type_select').val('{{$limit['type']}}');
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
                 $('#instance_id').val('{{$limit['instance_id']}}');
                 loadUsers('{{$limit['instance_id']}}', '{{$limit['user_id']}}');
@@ -152,7 +156,7 @@
 
         function generateForm(type) {
             var set_show = true;
-
+            console.log(type);
             $('#type_select > option').each(function() {
                 if (set_show === true) {
                     $('#select_' + this.value).show();
