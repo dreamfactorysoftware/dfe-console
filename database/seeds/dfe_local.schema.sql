@@ -35,7 +35,7 @@ USE `dfe_local`;
 DROP TABLE IF EXISTS `app_key_t`;
 
 CREATE TABLE `app_key_t` (
-  `id`             INT(10) UNSIGNED        NOT NULL AUTO_INCREMENT,
+  `id`             INT(11)                 NOT NULL AUTO_INCREMENT,
   `owner_id`       INT(11)                 NOT NULL,
   `owner_type_nbr` INT(11)                 NOT NULL,
   `client_id`      VARCHAR(128)
@@ -58,7 +58,7 @@ CREATE TABLE `app_key_t` (
 DROP TABLE IF EXISTS `app_key_arch_t`;
 
 CREATE TABLE `app_key_arch_t` (
-  `id`             INT(10),
+  `id`             INT(11),
   `key_class_text` VARCHAR(64),
   `client_id`      VARCHAR(128),
   `client_secret`  VARCHAR(128),
@@ -117,7 +117,7 @@ CREATE TABLE `environment_t` (
 DROP TABLE IF EXISTS `mount_t`;
 
 CREATE TABLE `mount_t` (
-  `id`              INT(10) UNSIGNED        NOT NULL AUTO_INCREMENT,
+  `id`              INT(11)                 NOT NULL AUTO_INCREMENT,
   `mount_type_nbr`  INT(11)                 NOT NULL DEFAULT '0',
   `mount_id_text`   VARCHAR(64)
                     COLLATE utf8_unicode_ci NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE `migration_t` (
 DROP TABLE IF EXISTS `role_t`;
 
 CREATE TABLE `role_t` (
-  `id`               INT(10) UNSIGNED        NOT NULL AUTO_INCREMENT,
+  `id`               INT(11)                 NOT NULL AUTO_INCREMENT,
   `role_name_text`   VARCHAR(64)
                      COLLATE utf8_unicode_ci NOT NULL,
   `description_text` VARCHAR(1024),
@@ -821,10 +821,10 @@ CREATE TABLE `snapshot_t` (
 DROP TABLE IF EXISTS `user_role_asgn_t`;
 
 CREATE TABLE `user_role_asgn_t` (
-  `user_id`     INT(10)          NOT NULL,
-  `role_id`     INT(10) UNSIGNED NOT NULL,
-  `create_date` DATETIME         NOT NULL,
-  `lmod_date`   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_id`     INT(11)   NOT NULL,
+  `role_id`     INT(11)   NOT NULL,
+  `create_date` DATETIME  NOT NULL,
+  `lmod_date`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`, `role_id`),
   KEY `fk_role_role_id` (`role_id`),
   CONSTRAINT `fk_role_role_id` FOREIGN KEY (`role_id`) REFERENCES `role_t` (`id`)
