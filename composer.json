@@ -90,10 +90,10 @@
     "barryvdh/laravel-cors":                     "0.6.x"
   },
   "require-dev":       {
+    "phpunit/phpunit":             "@stable",
     "barryvdh/laravel-ide-helper": "~2.0",
     "doctrine/dbal":               "~2.3",
     "phpspec/phpspec":             "~2.1",
-    "phpunit/phpunit":             "~4.0",
     "way/generators":              "~3.0"
   },
   "autoload":          {
