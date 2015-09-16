@@ -39,6 +39,10 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
      * @type string Your provisioner id
      */
     const PROVISIONER_ID = false;
+    /**
+     * @type string Our resource URI
+     */
+    const RESOURCE_URI = false;
 
     //******************************************************************************
     //* Traits
