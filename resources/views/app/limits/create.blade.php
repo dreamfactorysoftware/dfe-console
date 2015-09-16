@@ -114,6 +114,7 @@
                 }
                 else {
                     $('#select_' + this.value).hide();
+                    $('#' + this.value + '_id').val($('#' + this.value + '_id option:first').val());
                 }
             });
         }
@@ -133,9 +134,13 @@
                 var $_select = $('#instance_id');
                 var _clusterId = $('option:selected', this).val().toString();
 
+                if ($('#type_select').val() === 'cluster') {
+                    return false;
+                }
+
                 if (!_clusterId || 0 == _clusterId) {
                     $_select.empty();
-                    $_select.append('<option>Select Instance</option>');
+                    $_select.append('<option value="">Select Instance</option>');
                     $_select.append('<option value="0">All Instances</option>');
                     return false;
                 }
@@ -144,7 +149,7 @@
 
                 $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                     $_select.empty();
-                    $_select.append('<option>Select Instance</option>');
+                    $_select.append('<option value="">Select Instance</option>');
                     $_select.append('<option value="0">All Instances</option>');
 
                     if ($.isArray(data) || data.length) {
@@ -167,6 +172,10 @@
                 if ('user' == $('#type_select').find(':selected').val()) {
                     var _instanceId = $(':selected', this).val();
 
+                    if ($('#type_select').val() === 'instance') {
+                        return false;
+                    }
+
                     $_spinner.addClass('fa-spin').removeClass('hidden');
 
                     if (!_instanceId || 0 == _instanceId) {
@@ -179,7 +188,7 @@
                     $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
                         var $_select = $('#user_id');
                         $_select.empty();
-                        $_select.append('<option>Select User</option>');
+                        $_select.append('<option value="">Select User</option>');
                         $_select.append('<option value="0">All Users</option>');
 
                         if ($.isArray(data) || data.length) {
