@@ -53,6 +53,8 @@
       <w>queueable</w>
       <w>rackspacecloud</w>
       <w>setdev</w>
+      <w>shaper</w>
+      <w>shapers</w>
       <w>shortopts</w>
       <w>stooids</w>
       <w>stoopids</w>
@@ -62,6 +64,7 @@
       <w>unassign</w>
       <w>unmanaged</w>
       <w>weiner</w>
+      <w>wikitable</w>
       <w>worky</w>
       <w>zabcdefghijklmnopqrstuvwxyz</w>
     </words>

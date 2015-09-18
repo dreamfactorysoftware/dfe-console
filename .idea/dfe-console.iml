@@ -10,50 +10,17 @@
       <sourceFolder url="file://$MODULE_DIR$/database" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources/views" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources/lang" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/app/storage" />
-      <excludeFolder url="file://$MODULE_DIR$/build" />
-      <excludeFolder url="file://$MODULE_DIR$/original" />
-      <excludeFolder url="file://$MODULE_DIR$/storage" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/df-managed/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-database.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-database/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-database/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-dreamfactory-provisioner.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-dreamfactory-provisioner/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-dreamfactory-provisioner/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-ops-client.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-ops-client/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-ops-client/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-partner.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-partner/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-partner/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-storage.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-storage/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-storage/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/build" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/tests" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-common/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db.setdev-on" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/fabric-db/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/.idea" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/build" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/php-utils/vendor" />
     </content>
     <orderEntry type="inheritedJdk" />
@@ -61,12 +28,10 @@
     <orderEntry type="module-library">
       <library name="PHARS">
         <CLASSES>
-          <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
-          <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar/" />
         </CLASSES>
         <SOURCES>
-          <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
-          <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar" />
+          <root url="phar://$MODULE_DIR$/vendor/symfony/dependency-injection/Tests/Fixtures/includes/ProjectWithXsdExtensionInPhar.phar/" />
         </SOURCES>
       </library>
     </orderEntry>

@@ -47,6 +47,7 @@ return [
         DreamFactory\Enterprise\Console\Providers\RouteServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\UsageServiceProvider::class,
         /** DreamFactory Common service providers */
+        DreamFactory\Enterprise\Common\Providers\DataShaperServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\LibraryAssetsProvider::class,
         DreamFactory\Enterprise\Common\Providers\Auth\ConsoleAuthProvider::class,
         DreamFactory\Enterprise\Common\Providers\PacketServiceProvider::class,
