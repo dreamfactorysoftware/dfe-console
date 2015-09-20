@@ -85,10 +85,42 @@ MYSQL
                 $_data[$_details->Field] = (array)$_details;
             }
 
-            $_output[$_table] = DataShaper::transform($_data, $_format, ['class' => 'ddl-table']);
+            $_shaped = '== ' . $_table . ' ==' . PHP_EOL . 'Table definition as of ' . date('Y-m-d H:i:s') . PHP_EOL;
+            $_shaped .= DataShaper::transform($_data, $_format, ['class' => 'ddl-table']);
+
+            if (null !== ($_outputFile = $this->getOutputFileName($_table, $_format))) {
+                file_put_contents(storage_path() . DIRECTORY_SEPARATOR . $_outputFile, $_shaped);
+
+                $this->output->writeln('Wrote file <comment>' .
+                    $_outputFile .
+                    '</comment> to <info>' .
+                    storage_path() .
+                    '</info>');
+            } else {
+                $_output[$_table] = $_shaped;
+            }
         }
 
-        $this->output->writeln(print_r($_output, true));
+        !empty($_output) && $this->output->writeln(print_r($_output, true));
+    }
+
+    /**
+     * @param string     $table
+     * @param int|string $shape
+     *
+     * @return null|string
+     */
+    protected function getOutputFileName($table, $shape)
+    {
+        if (!$this->option('output-to-file')) {
+            return null;
+        }
+
+        return trim(str_replace(' ',
+                null,
+                ucwords(str_replace(['_t', '_asgn', '_arch', '_',], [null, 'Assign', 'Archive', ' '], $table))) .
+            '.' .
+            DataShaper::getShapeExtension($shape));
     }
 
     /** @inheritdoc */
@@ -115,6 +147,12 @@ MYSQL
                     InputOption::VALUE_OPTIONAL,
                     'The output format. Allowed values are: "raw", "json", or "mediawiki_table"',
                     'json',
+                ],
+                [
+                    'output-to-file',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'If specified, output will be written to a file',
                 ],
             ]);
     }
