@@ -689,7 +689,7 @@ CREATE TABLE `deactivation_arch_t` (
   COLLATE = utf8_unicode_ci;
 
 /********************************************************************************
-* Job Queue: job_t and job_fail_t
+* Job Queue: job_t, job_result_t, and job_fail_t
 ********************************************************************************/
 
 DROP TABLE IF EXISTS `job_t`;
@@ -731,14 +731,14 @@ DROP TABLE IF EXISTS `job_result_t`;
 
 CREATE TABLE `job_result_t` (
   `id`             BIGINT(20) UNSIGNED     NOT NULL AUTO_INCREMENT,
-  `result_id_text` VARCHAR(256)
+  `result_id_text` VARCHAR(255)
                    COLLATE utf8_unicode_ci NOT NULL,
   `result_text`    MEDIUMTEXT
                    COLLATE utf8_unicode_ci NOT NULL,
   `create_date`    DATETIME                NOT NULL,
   `lmod_date`      TIMESTAMP               NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `ix_job_result_result_id` (`result_id_text`)
+  UNIQUE KEY `ux_job_result_result_id` (`result_id_text`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8
