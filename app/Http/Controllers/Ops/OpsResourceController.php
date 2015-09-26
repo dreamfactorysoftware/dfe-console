@@ -9,6 +9,15 @@ use Illuminate\Http\Response;
 class OpsResourceController extends ResourceController
 {
     //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type array|string The request input
+     */
+    protected $input;
+
+    //******************************************************************************
     //* Methods
     //******************************************************************************
 
@@ -37,15 +46,14 @@ class OpsResourceController extends ResourceController
      */
     public function store(Request $request)
     {
-        $_resource = call_user_func([$this->model, 'create'], $request->input());
-
-        if (empty($_resource)) {
+        try {
+            return SuccessPacket::create(call_user_func([$this->model, 'create'], $this->scrubInput($request)),
+                Response::HTTP_CREATED);
+        } catch (\Exception $_ex) {
             return ErrorPacket::create(null,
                 Response::HTTP_INTERNAL_SERVER_ERROR,
-                'Resource not found after creation.');
+                'Error creating resource: ' . $_ex->getMessage());
         }
-
-        return SuccessPacket::create($_resource, Response::HTTP_CREATED);
     }
 
     /**
@@ -57,13 +65,11 @@ class OpsResourceController extends ResourceController
      */
     public function show($id)
     {
-        $_resource = call_user_func([$this->model, 'find'], $id);
-
-        if (empty($_resource)) {
+        try {
+            return SuccessPacket::create(call_user_func([$this->model, 'findOrFail'], $id));
+        } catch (\Exception $_ex) {
             return ErrorPacket::create();
         }
-
-        return SuccessPacket::create($_resource, Response::HTTP_OK);
     }
 
     /**
@@ -78,7 +84,7 @@ class OpsResourceController extends ResourceController
     {
         try {
             $_model = call_user_func([$this->model, 'findOrFail'], $id);
-            if ($_model->update($request->input())) {
+            if ($_model->update($this->scrubInput($request))) {
                 return SuccessPacket::create($_model, Response::HTTP_OK);
             }
 
@@ -104,5 +110,33 @@ class OpsResourceController extends ResourceController
         }
 
         return SuccessPacket::create($_resource->delete(), Response::HTTP_OK);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|string
+     */
+    protected function scrubInput(Request $request)
+    {
+        $_input = $request->input();
+
+        if (empty($_input)) {
+            return [];
+        }
+
+        if (!is_array($_input)) {
+            $_input = [$_input];
+        }
+
+        $_columns = \Schema::getColumnListing($this->tableName);
+
+        foreach ($_input as $_key => $_value) {
+            if (!in_array($_key, $_columns)) {
+                unset($_input[$_key]);
+            }
+        }
+
+        return $_input;
     }
 }
