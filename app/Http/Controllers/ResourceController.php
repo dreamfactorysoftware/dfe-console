@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Facades\Packet;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -44,7 +45,7 @@ abstract class ResourceController extends DataController
     }
 
     /** {@InheritDoc} */
-    public function store()
+    public function store(Request $request)
     {
     }
 
@@ -89,8 +90,13 @@ abstract class ResourceController extends DataController
         }
     }
 
-    /** {@InheritDoc} */
-    public function update($id)
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
+     * @return array|\Illuminate\View\View
+     */
+    public function update(Request $request, $id)
     {
         try {
             $_model = call_user_func([$this->model, 'findOrFail'], $id);

@@ -48,6 +48,8 @@ class AuthenticateOpsClient extends BaseMiddleware
         $_token = $request->input('access-token');
         $_clientId = $request->input('client-id');
 
+        $this->info('[t:' . $_token . ', cid:' . $_clientId . ']');
+
         //  Remove these arguments
         $request->offsetUnset('client-id');
         $request->offsetUnset('access-token');
