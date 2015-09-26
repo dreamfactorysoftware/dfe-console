@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
+use DreamFactory\Enterprise\Database\Models\EnterpriseModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -47,8 +48,10 @@ class OpsResourceController extends ResourceController
     public function store(Request $request)
     {
         try {
-            return SuccessPacket::create(call_user_func([$this->model, 'create'], $this->scrubInput($request)),
-                Response::HTTP_CREATED);
+            /** @type EnterpriseModel $_model */
+            $_model = call_user_func([$this->model . '::create'], $this->scrubInput($request));
+
+            return SuccessPacket::create($_model, Response::HTTP_CREATED);
         } catch (\Exception $_ex) {
             return ErrorPacket::create(null,
                 Response::HTTP_INTERNAL_SERVER_ERROR,
