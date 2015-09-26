@@ -49,7 +49,7 @@ class OpsResourceController extends ResourceController
     {
         try {
             /** @type EnterpriseModel $_model */
-            $_model = call_user_func([$this->model . '::create'], $this->scrubInput($request));
+            $_model = call_user_func([$this->model, 'create'], $this->scrubInput($request));
 
             return SuccessPacket::create($_model, Response::HTTP_CREATED);
         } catch (\Exception $_ex) {
@@ -87,6 +87,7 @@ class OpsResourceController extends ResourceController
     {
         try {
             $_model = call_user_func([$this->model, 'findOrFail'], $id);
+
             if ($_model->update($this->scrubInput($request))) {
                 return SuccessPacket::create($_model, Response::HTTP_OK);
             }
@@ -122,7 +123,7 @@ class OpsResourceController extends ResourceController
      */
     protected function scrubInput(Request $request)
     {
-        $_input = $request->input();
+        $_input = json_decode($request->getContent(), true);
 
         if (empty($_input)) {
             return [];
@@ -137,6 +138,12 @@ class OpsResourceController extends ResourceController
         foreach ($_input as $_key => $_value) {
             if (!in_array($_key, $_columns)) {
                 unset($_input[$_key]);
+                continue;
+            }
+
+            //  Encrypt the password
+            if ('password_text' == $_key) {
+                $_input[$_key] = bcrypt($_value);
             }
         }
 
