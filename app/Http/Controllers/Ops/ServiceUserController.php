@@ -8,14 +8,10 @@ class ServiceUserController extends OpsResourceController
     //* Members
     //******************************************************************************
 
-    /**
-     * @type string
-     */
+    /** @inheritdoc */
     protected $tableName = 'service_user_t';
-    /**
-     * @type string
-     */
+    /** @inheritdoc */
     protected $model = ServiceUser::class;
-    /** @type string */
+    /** @inheritdoc */
     protected $resource = 'service-user';
 }
