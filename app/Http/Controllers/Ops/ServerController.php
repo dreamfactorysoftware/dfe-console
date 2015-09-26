@@ -13,13 +13,13 @@ class ServerController extends OpsResourceController
     /**
      * @type string
      */
-    protected $_tableName = 'server_t';
+    protected $tableName = 'server_t';
     /**
      * @type string
      */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Server';
+    protected $model = Server::class;
     /** @type string */
-    protected $_resource = 'server';
+    protected $resource = 'server';
 
     //******************************************************************************
     //* Methods

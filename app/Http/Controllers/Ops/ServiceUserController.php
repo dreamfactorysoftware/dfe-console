@@ -1,5 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
+
 class ServiceUserController extends OpsResourceController
 {
     //******************************************************************************
@@ -9,11 +11,11 @@ class ServiceUserController extends OpsResourceController
     /**
      * @type string
      */
-    protected $_tableName = 'service_user_t';
+    protected $tableName = 'service_user_t';
     /**
      * @type string
      */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\ServiceUser';
+    protected $model = ServiceUser::class;
     /** @type string */
-    protected $_resource = 'service-user';
+    protected $resource = 'service-user';
 }

@@ -12,15 +12,18 @@ if (true === config('dfe.enable-console-api', false)) {
         function (){
             \Route::controller('ops', 'OpsController');
 
-            \Route::resource('users', 'Ops\\UserController');
-            \Route::resource('service-users', 'Ops\\ServiceUserController');
-            \Route::resource('servers', 'Ops\\ServerController');
-            \Route::resource('clusters', 'Ops\\ClusterController');
-            \Route::resource('instances', 'Ops\\InstanceController');
-            \Route::resource('mounts', 'Ops\\MountController');
-            \Route::resource('app-keys', 'Ops\\AppKeyController');
-            \Route::resource('instances', 'Ops\\InstanceController');
-            \Route::resource('limits', 'Ops\\LimitController');
+            \Route::resource('user', DreamFactory\Enterprise\Console\Http\Controllers\Ops\UserController::class);
+            \Route::resource('service-user',
+                DreamFactory\Enterprise\Console\Http\Controllers\Ops\ServiceUserController::class);
+            \Route::resource('server', DreamFactory\Enterprise\Console\Http\Controllers\Ops\ServerController::class);
+            \Route::resource('cluster', DreamFactory\Enterprise\Console\Http\Controllers\Ops\ClusterController::class);
+            \Route::resource('instance',
+                DreamFactory\Enterprise\Console\Http\Controllers\Ops\InstanceController::class);
+            \Route::resource('mount', DreamFactory\Enterprise\Console\Http\Controllers\Ops\MountController::class);
+            \Route::resource('app-key', DreamFactory\Enterprise\Console\Http\Controllers\Ops\AppKeyController::class);
+            \Route::resource('instance',
+                DreamFactory\Enterprise\Console\Http\Controllers\Ops\InstanceController::class);
+            \Route::resource('limit', DreamFactory\Enterprise\Console\Http\Controllers\Ops\LimitController::class);
         });
 }
 
@@ -50,17 +53,19 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group([
     'prefix'     => ConsoleDefaults::UI_PREFIX,
-    'namespace'  => 'Resources',
     'middleware' => 'auth',
 ],
     function (){
-        \Route::resource('home', 'HomeController');
-        \Route::resource('users', 'UserController');
-        \Route::resource('servers', 'ServerController');
-        \Route::resource('clusters', 'ClusterController');
-        \Route::resource('instances', 'InstanceController');
-        \Route::resource('limits', 'LimitController');
-        \Route::resource('reports', 'ReportController');
+        \Route::resource('home', DreamFactory\Enterprise\Console\Http\Controllers\Resources\HomeController::class);
+        \Route::resource('users', DreamFactory\Enterprise\Console\Http\Controllers\Resources\UserController::class);
+        \Route::resource('servers', DreamFactory\Enterprise\Console\Http\Controllers\Resources\ServerController::class);
+        \Route::resource('clusters',
+            DreamFactory\Enterprise\Console\Http\Controllers\Resources\ClusterController::class);
+        \Route::resource('instances',
+            DreamFactory\Enterprise\Console\Http\Controllers\Resources\InstanceController::class);
+        \Route::resource('limits',
+            DreamFactory\Enterprise\Console\Http\Controllers\Resources\LimitController::class);
+        \Route::resource('reports', DreamFactory\Enterprise\Console\Http\Controllers\Resources\ReportController::class);
     });
 
 //******************************************************************************

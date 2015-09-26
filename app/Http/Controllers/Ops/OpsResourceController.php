@@ -15,7 +15,7 @@ class OpsResourceController extends ResourceController
     public function __construct()
     {
         parent::__construct();
-
+        
         $this->middleware(AuthenticateOpsClient::ALIAS);
     }
 }

@@ -1,17 +1,17 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
-use DreamFactory\Enterprise\Database\Models\Limit;
+use DreamFactory\Enterprise\Database\Models\AppKey;
 
-class LimitController extends OpsResourceController
+class AppKeyController extends OpsResourceController
 {
     //******************************************************************************
     //* Members
     //******************************************************************************
 
     /** @type string */
-    protected $tableName = 'limit_t';
+    protected $tableName = 'app_key_t';
     /** @type string */
-    protected $model = Limit::class;
+    protected $model = AppKey::class;
     /** @type string */
-    protected $resource = 'limit';
+    protected $resource = 'app-key';
 }

@@ -13,13 +13,13 @@ class InstanceController extends OpsResourceController
     /**
      * @type string
      */
-    protected $_tableName = 'instance_t';
+    protected $tableName = 'instance_t';
     /**
      * @type string
      */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Instance';
+    protected $model = Instance::class;
     /** @type string */
-    protected $_resource = 'instance';
+    protected $resource = 'instance';
 
     //******************************************************************************
     //* Methods
