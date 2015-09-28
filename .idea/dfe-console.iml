@@ -16,7 +16,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/storage" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/vendor" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-audit/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/.idea" />

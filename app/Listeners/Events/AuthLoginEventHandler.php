@@ -20,7 +20,7 @@ class AuthLoginEventHandler extends BaseEventHandler
      */
     public function handle(ServiceUser $user, $remember)
     {
-        logger('[auth.login] ' . $user->id . ' logging in');
+        logger('[auth.login] ' . $user->email_addr_text . ' authorization');
 
         return $user->update([
             'last_login_date'    => $user->freshTimestamp(),
