@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 
-class ServiceUserController extends ResourceController
+class ServiceUserController extends ViewController
 {
     //******************************************************************************
     //* Members

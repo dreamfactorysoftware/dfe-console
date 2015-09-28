@@ -7,7 +7,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Response;
 
-class InstanceController extends ResourceController
+class InstanceController extends ViewController
 {
     //******************************************************************************
     //* Members

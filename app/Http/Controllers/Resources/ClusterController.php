@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Session;
 use Validator;
 
-class ClusterController extends ResourceController
+class ClusterController extends ViewController
 {
     //******************************************************************************
     //* Traits

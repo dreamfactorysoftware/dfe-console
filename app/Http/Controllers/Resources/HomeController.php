@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 
-class HomeController extends ResourceController
+class HomeController extends ViewController
 {
     //******************************************************************************
     //* Methods

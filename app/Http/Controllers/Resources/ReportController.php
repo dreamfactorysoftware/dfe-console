@@ -7,7 +7,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 
 
-class ReportController extends ResourceController
+class ReportController extends ViewController
 {
     //******************************************************************************
     //* Members
@@ -21,7 +21,7 @@ class ReportController extends ResourceController
     protected $_resource = 'report';
 
     protected $_prefix = 'v1';
-    
+
 
     public function show($id)
     {

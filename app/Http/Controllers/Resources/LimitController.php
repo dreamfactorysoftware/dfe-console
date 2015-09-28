@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Session;
 use Validator;
 
-class LimitController extends ResourceController
+class LimitController extends ViewController
 {
     //******************************************************************************
     //* Traits

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\View;
 use Session;
 use Validator;
 
-class ServerController extends ResourceController
+class ServerController extends ViewController
 {
     //******************************************************************************
     //* Members

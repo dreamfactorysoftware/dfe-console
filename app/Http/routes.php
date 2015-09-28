@@ -50,17 +50,16 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group([
     'prefix'     => ConsoleDefaults::UI_PREFIX,
-    'namespace'  => 'Resources',
     'middleware' => 'auth',
 ],
     function (){
-        \Route::resource('home', 'HomeController');
-        \Route::resource('users', 'UserController');
-        \Route::resource('servers', 'ServerController');
-        \Route::resource('clusters', 'ClusterController');
-        \Route::resource('instances', 'InstanceController');
-        \Route::resource('limits', 'LimitController');
-        \Route::resource('reports', 'ReportController');
+        \Route::resource('home', 'Resources\HomeController');
+        \Route::resource('users', 'Resources\UserController');
+        \Route::resource('servers', 'Resources\ServerController');
+        \Route::resource('clusters', 'Resources\ClusterController');
+        \Route::resource('instances', 'Resources\InstanceController');
+        \Route::resource('limits', 'Resources\LimitController');
+        \Route::resource('reports', 'Resources\ReportController');
     });
 
 //******************************************************************************
