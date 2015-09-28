@@ -86,7 +86,7 @@ class AuthenticateOpsClient extends BaseMiddleware
             return $_owner;
         });
 
-        $this->debug('token validated for client "' . $_clientId . '"');
+        //$this->debug('token validated for client "' . $_clientId . '"');
 
         return parent::handle($request, $next);
     }
