@@ -9,6 +9,7 @@ use DreamFactory\Enterprise\Database\Models\ClusterServer;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Server;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Session;
 use Validator;
 
@@ -285,7 +286,7 @@ class ClusterController extends ResourceController
         }
     }
 
-    public function store()
+    public function store(Request $request)
     {
         $_input = \Input::all();
 
@@ -412,7 +413,7 @@ class ClusterController extends ResourceController
 
             return \Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
         } catch (QueryException $e) {
-            //$res_text = $e->getMessage(); 
+            //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');
 

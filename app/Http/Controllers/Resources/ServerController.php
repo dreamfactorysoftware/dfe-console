@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServerType;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
@@ -230,7 +231,7 @@ class ServerController extends ResourceController
         }
     }
 
-    public function store()
+    public function store(Request $request)
     {
         $input = Input::all();
         $type = 0;

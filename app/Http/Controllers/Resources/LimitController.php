@@ -190,15 +190,15 @@ class LimitController extends ResourceController
                 'label_text'     => $_input['label_text'],
             ];
 
+            $res =
+                Limit::where('cluster_id', $limit['cluster_id'])
+                    ->where('instance_id', $limit['instance_id'])
+                    ->where('limit_key_text', $limit['limit_key_text'])
+                    ->where('period_nbr', $limit['period_nbr'])
+                    ->where('id', '!=', $id)
+                    ->first();
 
-            $res = Limit::where('cluster_id', $limit['cluster_id'])
-                ->where('instance_id', $limit['instance_id'])
-                ->where('limit_key_text', $limit['limit_key_text'])
-                ->where('period_nbr', $limit['period_nbr'])
-                ->where('id', '!=', $id)
-                ->first();
-
-            if(is_object($res)) {
+            if (is_object($res)) {
                 \Session::flash('flash_message',
                     'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
                 Session::flash('flash_type', 'alert-danger');
@@ -485,9 +485,11 @@ class LimitController extends ResourceController
     /**
      * @todo add manual constraint checks, as 0 is a valid option for cluster_id and instance_id in this use
      *
+     * @param \Illuminate\Http\Request $request
+     *
      * @return $this
      */
-    public function store()
+    public function store(Request $request)
     {
 
         $validator = Validator::make(\Input::all(),
@@ -586,13 +588,14 @@ class LimitController extends ResourceController
                 'label_text'     => $_input['label_text'],
             ];
 
-            $res = Limit::where('cluster_id', $limit['cluster_id'])
-                ->where('instance_id', $limit['instance_id'])
-                ->where('limit_key_text', $limit['limit_key_text'])
-                ->where('period_nbr', $limit['period_nbr'])
-                ->first();
+            $res =
+                Limit::where('cluster_id', $limit['cluster_id'])
+                    ->where('instance_id', $limit['instance_id'])
+                    ->where('limit_key_text', $limit['limit_key_text'])
+                    ->where('period_nbr', $limit['period_nbr'])
+                    ->first();
 
-            if(is_object($res)) {
+            if (is_object($res)) {
                 \Session::flash('flash_message',
                     'Unable to update limit! A limit with the selected combination of Cluster/Instance/User and Period already exists.');
                 Session::flash('flash_type', 'alert-danger');
@@ -709,6 +712,7 @@ class LimitController extends ResourceController
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
             return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
         }
 
@@ -724,6 +728,7 @@ class LimitController extends ResourceController
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
             return $this->formatResponse($_instance->call('/api/v2/system/admin', [], [], Request::METHOD_GET, false));
         }
 
