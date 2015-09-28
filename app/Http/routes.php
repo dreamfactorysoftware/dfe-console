@@ -7,7 +7,7 @@
 if (true === config('dfe.enable-console-api', false)) {
     \Route::group([
         'prefix'     => 'api/v1',
-        'middleware' => ['log.dfe-ops-api', 'auth.dfe-ops-client',],
+        'middleware' => ['log.dfe-ops-api',],
     ],
         function (){
             \Route::controller('ops', 'OpsController');

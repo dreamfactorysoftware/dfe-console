@@ -22,6 +22,14 @@ class OpsResourceController extends ResourceController
     //* Methods
     //******************************************************************************
 
+    /** @inheritdoc */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware('auth.dfe-ops-client');
+    }
+
     /**
      * Display a listing of the resource.
      *
