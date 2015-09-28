@@ -1,11 +1,10 @@
 <?php
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 use DreamFactory\Enterprise\Database\Models\Cluster;
-use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
-
+use DreamFactory\Enterprise\Database\Models\User;
 
 class ReportController extends ViewController
 {
@@ -21,7 +20,6 @@ class ReportController extends ViewController
     protected $_resource = 'report';
 
     protected $_prefix = 'v1';
-
 
     public function show($id)
     {
@@ -52,6 +50,5 @@ class ReportController extends ViewController
     }
 
 }
-
 
 ?>

@@ -1,7 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
+use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 use DreamFactory\Enterprise\Database\Models\ClusterServer;
 use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServerType;
@@ -87,13 +87,11 @@ class ServerController extends ViewController
 
     public function create(array $viewData = [])
     {
-        return \View::make(
-            'app.servers.create',
+        return \View::make('app.servers.create',
             [
                 'prefix'       => $this->_prefix,
                 'server_types' => ServerType::all(),
-            ]
-        );
+            ]);
     }
 
     public function edit($id)
@@ -101,8 +99,7 @@ class ServerController extends ViewController
         $cluster_names = 'The server is not assigned to a cluster';
         $cluster_servers = $this->_serverClusters($id);
 
-        if (count($cluster_servers) > 0)
-        {
+        if (count($cluster_servers) > 0) {
             $cluster = $this->_findCluster($cluster_servers[0]->cluster_id);
             $cluster_names = $cluster->cluster_id_text;
         }
@@ -125,8 +122,6 @@ class ServerController extends ViewController
     {
         $input = Input::all();
 
-
-
         $validator = Validator::make($input,
             [
                 'server_id_text'                                                    => 'required|string|min:1',
@@ -135,11 +130,15 @@ class ServerController extends ViewController
                     "required",
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-                'config.' . $input['server_type_select'] . '.port'                  => 'sometimes|required|numeric|min:1',
-                'config.' . $input['server_type_select'] . '.scheme'                => 'sometimes|required|string|min:1',
+                'config.' .
+                $input['server_type_select'] .
+                '.port'                                                             => 'sometimes|required|numeric|min:1',
+                'config.' .
+                $input['server_type_select'] .
+                '.scheme'                                                           => 'sometimes|required|string|min:1',
                 'config.' . $input['server_type_select'] . '.username'              => 'sometimes|required|string',
                 'config.' . $input['server_type_select'] . '.driver'                => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string'
+                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string',
             ]);
 
         if ($validator->fails()) {
@@ -220,9 +219,7 @@ class ServerController extends ViewController
             $_redirect .= $this->_prefix;
             $_redirect .= '/servers';
 
-            return Redirect::to($_redirect)
-                ->with('flash_message', $result_text)
-                ->with('flash_type', $result_status);
+            return Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
         } catch (QueryException $e) {
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
@@ -244,11 +241,15 @@ class ServerController extends ViewController
                     "required",
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-                'config.' . $input['server_type_select'] . '.port'                  => 'sometimes|required|numeric|min:1',
-                'config.' . $input['server_type_select'] . '.scheme'                => 'sometimes|required|string|min:1',
+                'config.' .
+                $input['server_type_select'] .
+                '.port'                                                             => 'sometimes|required|numeric|min:1',
+                'config.' .
+                $input['server_type_select'] .
+                '.scheme'                                                           => 'sometimes|required|string|min:1',
                 'config.' . $input['server_type_select'] . '.username'              => 'sometimes|required|string',
                 'config.' . $input['server_type_select'] . '.driver'                => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string'
+                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string',
             ]);
 
         if ($validator->fails()) {
@@ -329,9 +330,7 @@ class ServerController extends ViewController
             $_redirect .= $this->_prefix;
             $_redirect .= '/servers';
 
-            return Redirect::to($_redirect)
-                ->with('flash_message', $result_text)
-                ->with('flash_type', $result_status);
+            return Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
         } catch (QueryException $e) {
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
@@ -383,9 +382,7 @@ class ServerController extends ViewController
             $_redirect .= $this->_prefix;
             $_redirect .= '/servers';
 
-            return Redirect::to($_redirect)
-                ->with('flash_message', $result_text)
-                ->with('flash_type', $result_status);
+            return Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
         } catch (QueryException $e) {
             Session::flash('flash_message', 'An error occurred! Please try again.');
             Session::flash('flash_type', 'alert-danger');

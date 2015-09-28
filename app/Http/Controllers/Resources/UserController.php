@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
