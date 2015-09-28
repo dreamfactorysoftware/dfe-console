@@ -21,6 +21,8 @@ use DreamFactory\Enterprise\Partner\Facades\Partner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\UsageService;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -43,10 +45,6 @@ class OpsController extends BaseController implements IsVersioned
      */
     protected $instanceName;
     /**
-     * @type User
-     */
-    protected $user;
-    /**
      * @type string
      */
     protected $clientId;
@@ -61,6 +59,24 @@ class OpsController extends BaseController implements IsVersioned
     public function __construct()
     {
         $this->middleware(AuthenticateOpsClient::ALIAS, ['except' => 'postPartner',]);
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function getMetrics(Request $request)
+    {
+        /** @type UsageService $_service */
+        $_service = \App::make(UsageServiceProvider::IOC_NAME);
+        $_stats = $_service->gatherStatistics();
+
+        if (empty($_stats)) {
+            return $this->failure(Response::HTTP_INTERNAL_SERVER_ERROR, 'No stats returned from service.');
+        }
+
+        return $this->success($_stats);
     }
 
     /**
@@ -441,21 +457,21 @@ class OpsController extends BaseController implements IsVersioned
         }
 
         //  See if we know this cat...
-        if (null !== ($user = User::byEmail($_email)->first())) {
+        if (null !== ($_user = User::byEmail($_email)->first())) {
             //  Existing user found, don't add to database...
-            $_values = $user->toArray();
+            $_values = $_user->toArray();
             unset($_values['password_text'], $_values['external_password_text']);
 
             $this->info('existing user attempting registration through partner api',
                 ['channel' => 'ops.partner', 'user' => $_values]);
 
-            return $user;
+            return $_user;
         }
 
         //  Create a user account
         try {
-            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
-                $user = User::create([
+            $_user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
+                $_user = User::create([
                     'first_name_text'   => $_first,
                     'last_name_text'    => $_last,
                     'email_addr_text'   => $_email,
@@ -465,28 +481,30 @@ class OpsController extends BaseController implements IsVersioned
                     'company_name_text' => $request->input('company'),
                 ]);
 
-                $_appKey = AppKey::create([
-                    'key_class_text' => AppKeyClasses::USER,
-                    'owner_id'       => $user->id,
-                    'owner_type_nbr' => OwnerTypes::USER,
-                    'server_secret'  => config('dfe.security.console-api-key'),
-                ]);
+                if (null === ($_appKey = AppKey::mine($_user->id, OwnerTypes::USER))) {
+                    $_appKey = AppKey::create([
+                        'key_class_text' => AppKeyClasses::USER,
+                        'owner_id'       => $_user->id,
+                        'owner_type_nbr' => OwnerTypes::USER,
+                        'server_secret'  => config('dfe.security.console-api-key'),
+                    ]);
+                }
 
                 //  Update the user with the key info and activate
-                $user->api_token_text = $_appKey->client_id;
-                $user->active_ind = 1;
-                $user->save();
+                $_user->api_token_text = $_appKey->client_id;
+                $_user->active_ind = 1;
+                $_user->save();
 
-                return $user;
+                return $_user;
             });
 
-            $_values = $user->toArray();
+            $_values = $_user->toArray();
             unset($_values['password_text'], $_values['external_password_text']);
 
             $this->info('new user registered through partner api',
                 ['channel' => 'ops.partner', 'user' => $_values]);
 
-            return $user;
+            return $_user;
         } catch (\Exception $_ex) {
             if (false !== ($_pos = stripos($_message = $_ex->getMessage(), ' (sql: '))) {
                 $_message = substr($_message, 0, $_pos);
