@@ -118,7 +118,7 @@ class ServerController extends ViewController
             $config);
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $input = Input::all();
 

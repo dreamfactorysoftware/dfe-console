@@ -161,7 +161,7 @@ class UserController extends ViewController
         }
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $is_system_admin = '';
         $users = null;

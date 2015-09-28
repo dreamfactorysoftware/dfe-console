@@ -74,12 +74,13 @@ class LimitController extends ViewController
     }
 
     /**
-     * @param integer $id
+     * @param \Illuminate\Http\Request $request
+     * @param integer                  $id
      *
      * @return \Illuminate\View\View
      * @throws \DreamFactory\Enterprise\Database\Exceptions\DatabaseException
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make(\Input::all(),
             [

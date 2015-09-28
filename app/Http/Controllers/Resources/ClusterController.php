@@ -161,7 +161,7 @@ class ClusterController extends ViewController
             ]);
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $cluster_data = \Input::all();
 
