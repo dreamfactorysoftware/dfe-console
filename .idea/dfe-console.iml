@@ -11,6 +11,11 @@
       <sourceFolder url="file://$MODULE_DIR$/resources/views" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources/lang" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm.setdev-on" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/storage" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/tests" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/vendor" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-api-client" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dreamfactory/dfe-common/.idea" />
