@@ -55,7 +55,7 @@ class ClusterController extends ViewController
             $_response[] = ['id' => $_instance->id, 'name' => $_instance->instance_name_text];
         }
 
-        $this->debug('found ' . count($_response) . ' instance(s)');
+        //$this->debug('found ' . count($_response) . ' instance(s)');
 
         usort($_response,
             function ($a, $b){
@@ -74,52 +74,29 @@ class ClusterController extends ViewController
      */
     public function getAvailableServers()
     {
-        $servers = Server::get(['id', 'server_type_id', 'server_id_text']);
-        $cs = ClusterServer::get(['server_id']);
+        $_assigned = [];
+        $_rows = Server::get(['id', 'server_type_id', 'server_id_text']);
 
-        $servers_all = [];
-        $servers_in_use = [];
+        $_response = ['web' => [], 'app' => [], 'db' => [],];
 
-        $servers_db = [];
-        $servers_web = [];
-        $servers_app = [];
-
-        foreach ($cs as $server) {
-            $servers_in_use[] = intval($server->server_id);
+        foreach (ClusterServer::get(['server_id']) as $_row) {
+            $_assigned[] = $_row->server_id;
         }
 
-        foreach ($servers as $server) {
-            if (!in_array($server->id, $servers_in_use)) {
-                if ($server->server_type_id == 1) {
-                    $servers_db[] = ['id' => $server->id, 'name' => $server->server_id_text];
-                }
-
-                if ($server->server_type_id == 2) {
-                    $servers_web[] = ['id' => $server->id, 'name' => $server->server_id_text];
-                }
-
-                if ($server->server_type_id == 3) {
-                    $servers_app[] = ['id' => $server->id, 'name' => $server->server_id_text];
-                }
-
-                $servers_all[] = intval($server->id);
+        foreach ($_rows as $_row) {
+            if (!in_array($_row->id, $_assigned)) {
+                $_response[strtolower(ServerTypes::nameOf($_row->server_type_id, false))][] =
+                    ['id' => $_row->id, 'name' => $_row->server_id_text];
             }
         }
 
-        return ['web' => $servers_web, 'db' => $servers_db, 'app' => $servers_app];
+        return $_response;
     }
 
     /** @inheritdoc */
     public function create(array $viewData = [])
     {
-        $servers = $this->getAvailableServers();
-
-        return $this->renderView('app.clusters.create',
-            [
-                'db'  => $servers['db'],
-                'web' => $servers['web'],
-                'app' => $servers['app'],
-            ]);
+        return $this->renderView('app.clusters.create', $this->getAvailableServers());
     }
 
     /**
