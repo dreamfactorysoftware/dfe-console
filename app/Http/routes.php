@@ -6,7 +6,7 @@
 /** Ops controller for operational api */
 if (true === config('dfe.enable-console-api', false)) {
     \Route::group([
-        'prefix'     => 'api/v1',
+        'prefix' => 'api/v1',
         'middleware' => ['log.dfe-ops-api',],
     ],
         function (){
@@ -31,27 +31,19 @@ if (true === config('dfe.enable-console-api', false)) {
 //  Main page
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
-\Route::group(['middleware' => 'auth'],
-    function (){
-        \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
-        \Route::get('/home', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
-        \Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
-        \Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/{clusterId}/instances',
-            'Resources\ClusterController@getInstances');
-        \Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/services',
-            'Resources\LimitController@getInstanceServices');
-        \Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/users',
-            'Resources\LimitController@getInstanceUsers');
-    });
+\Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
+\Route::get('/home', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
+\Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
+\Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
+\Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/services',
+    'Resources\LimitController@getInstanceServices');
+\Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/users', 'Resources\LimitController@getInstanceUsers');
 
 //******************************************************************************
 //* General Resource Controllers
 //******************************************************************************
 
-\Route::group([
-    'prefix'     => ConsoleDefaults::UI_PREFIX,
-    'middleware' => 'auth',
-],
+\Route::group(['prefix' => ConsoleDefaults::UI_PREFIX,],
     function (){
         \Route::resource('home', 'Resources\HomeController');
         \Route::resource('users', 'Resources\UserController');
