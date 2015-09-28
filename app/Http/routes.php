@@ -1,4 +1,6 @@
 <?php
+use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+
 //******************************************************************************
 //* Ops Controller PRIME
 //******************************************************************************
@@ -6,7 +8,7 @@
 /** Ops controller for operational api */
 if (true === config('dfe.enable-console-api', false)) {
     \Route::group([
-        'prefix' => 'api/v1',
+        'prefix'     => 'api/v1',
         'middleware' => ['log.dfe-ops-api',],
     ],
         function (){
@@ -29,15 +31,9 @@ if (true === config('dfe.enable-console-api', false)) {
 //******************************************************************************
 
 //  Main page
-use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-
 \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/home', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
-\Route::get(ConsoleDefaults::UI_PREFIX . '/cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
-\Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/services',
-    'Resources\LimitController@getInstanceServices');
-\Route::get(ConsoleDefaults::UI_PREFIX . '/instance/{instanceId}/users', 'Resources\LimitController@getInstanceUsers');
 
 //******************************************************************************
 //* General Resource Controllers
@@ -45,6 +41,12 @@ use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 
 \Route::group(['prefix' => ConsoleDefaults::UI_PREFIX,],
     function (){
+        //  Specialty routes for UI
+        \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
+        \Route::get('instance/{instanceId}/services', 'Resources\LimitController@getInstanceServices');
+        \Route::get('instance/{instanceId}/users', 'Resources\LimitController@getInstanceUsers');
+
+        //  UI resource controllers
         \Route::resource('home', 'Resources\HomeController');
         \Route::resource('users', 'Resources\UserController');
         \Route::resource('servers', 'Resources\ServerController');
