@@ -391,7 +391,7 @@ CREATE TABLE `server_t` (
   `server_type_id` INT(11)       NOT NULL,
   `server_id_text` VARCHAR(64)   NOT NULL,
   `host_text`      VARCHAR(1024) NOT NULL,
-  `mount_id`       INT(11) UNSIGNED       DEFAULT NULL,
+  `mount_id`       INT(11)       DEFAULT NULL,
   `config_text`    MEDIUMTEXT,
   `create_date`    DATETIME      NOT NULL,
   `lmod_date`      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -538,7 +538,7 @@ CREATE TABLE `instance_arch_t` (
   COLLATE = utf8_unicode_ci;
 
 /********************************************************************************
-* instance_guest_t and instance_guest_arch_t 
+* instance_guest_t and instance_guest_arch_t
 ********************************************************************************/
 
 DROP TABLE IF EXISTS `instance_guest_t`;
