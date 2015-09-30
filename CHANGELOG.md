@@ -7,4 +7,4 @@ All notable changes to this project will be documented in this file. This projec
 - CHANGELOG file added
 - Full suite of command line tests
 
-[unreleased]: https://github.com/dreamfactorysoftware/dfe-console/compare/v1.x-dev...HEAD
+[unreleased]: https://github.com/dreamfactorysoftware/dfe-console/compare/develop...HEAD
