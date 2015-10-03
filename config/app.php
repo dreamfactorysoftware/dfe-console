@@ -54,7 +54,7 @@ return [
         DreamFactory\Enterprise\Common\Providers\RouteHashingServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\ElkServiceProvider::class,
-        DreamFactory\Enterprise\Common\Providers\InstanceStorageServiceProvider::class,
+        DreamFactory\Enterprise\Storage\Providers\InstanceStorageServiceProvider::class,
         /** DreamFactory Services service providers */
         DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
         DreamFactory\Enterprise\Storage\Providers\MountServiceProvider::class,
