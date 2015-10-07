@@ -60,8 +60,8 @@ class Setup extends ConsoleCommand
         }
 
         //  1.5 Generate an API secret and stick it in config for AppKey
-        $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret();
-        config(['dfe.security.console-api-key' => $_apiSecret]);
+        \Config::set('dfe.security.console-api-key',
+            $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret());
 
         //  2. Create initial admin user
         try {
