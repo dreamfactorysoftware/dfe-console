@@ -59,6 +59,10 @@ class Setup extends ConsoleCommand
             }
         }
 
+        //  1.5 Generate an API secret and stick it in config for AppKey
+        $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret();
+        config(['dfe.security.console-api-key' => $_apiSecret]);
+
         //  2. Create initial admin user
         try {
             //  Delete all users
@@ -95,7 +99,6 @@ class Setup extends ConsoleCommand
         }
 
         //  3. Create console and dashboard API key sets
-        $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret();
         $_consoleKey = AppKey::createKey(0, OwnerTypes::CONSOLE, ['server_secret' => $_apiSecret]);
         $_dashboardKey = AppKey::createKey(0, OwnerTypes::DASHBOARD, ['server_secret' => $_apiSecret]);
 
