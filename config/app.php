@@ -110,7 +110,7 @@ return [
         'Audit'           => DreamFactory\Enterprise\Services\Auditing\Audit::class,
         'Elk'             => DreamFactory\Enterprise\Common\Facades\Elk::class,
         'InstanceManager' => DreamFactory\Enterprise\Services\Facades\InstanceManager::class,
-        'InstanceStorage' => DreamFactory\Enterprise\Common\Facades\InstanceStorage::class,
+        'InstanceStorage' => DreamFactory\Enterprise\Storage\Facades\InstanceStorage::class,
         'Mounter'         => DreamFactory\Enterprise\Storage\Facades\Mounter::class,
         'Partner'         => DreamFactory\Enterprise\Partner\Facades\Partner::class,
         'Provision'       => DreamFactory\Enterprise\Services\Facades\Provision::class,

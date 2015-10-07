@@ -4,7 +4,6 @@ use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
-use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
@@ -23,6 +22,7 @@ use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Enterprise\Services\UsageService;
+use DreamFactory\Enterprise\Storage\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -307,14 +307,13 @@ class OpsController extends BaseController implements IsVersioned
                 //  We want this...
             }
 
-            $_result = \Artisan::call('dfe:import',
-                [
-                    'instance-id'   => $_instanceId,
-                    'snapshot'      => $_snapshot->snapshot_id_text,
-                    'owner-id'      => $_snapshot->user_id,
-                    '--owner-type'  => OwnerTypes::USER,
-                    '--snapshot-id' => true,
-                ]);
+            $_result = \Artisan::call('dfe:import', [
+                'instance-id'   => $_instanceId,
+                'snapshot'      => $_snapshot->snapshot_id_text,
+                'owner-id'      => $_snapshot->user_id,
+                '--owner-type'  => OwnerTypes::USER,
+                '--snapshot-id' => true,
+            ]);
 
             if (0 != $_result) {
                 return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
@@ -405,8 +404,7 @@ class OpsController extends BaseController implements IsVersioned
                 '": ' .
                 $_ex->getCode() .
                 ' - ' .
-                $_ex->getMessage(),
-                ['channel' => 'ops.partner', 'payload' => $_payload]);
+                $_ex->getMessage(), ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
         }
@@ -501,8 +499,7 @@ class OpsController extends BaseController implements IsVersioned
             $_values = $_user->toArray();
             unset($_values['password_text'], $_values['external_password_text']);
 
-            $this->info('new user registered through partner api',
-                ['channel' => 'ops.partner', 'user' => $_values]);
+            $this->info('new user registered through partner api', ['channel' => 'ops.partner', 'user' => $_values]);
 
             return $_user;
         } catch (\Exception $_ex) {
@@ -510,8 +507,7 @@ class OpsController extends BaseController implements IsVersioned
                 $_message = substr($_message, 0, $_pos);
             }
 
-            $this->error('database error creating user from partner post: ' . $_message,
-                ['channel' => 'ops.partner']);
+            $this->error('database error creating user from partner post: ' . $_message, ['channel' => 'ops.partner']);
 
             throw new RegistrationException($_message, $_ex->getCode(), $_ex);
         }
