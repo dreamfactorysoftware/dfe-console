@@ -144,6 +144,8 @@ class OpsResourceController extends ResourceController
 
         $_columns = \Schema::getColumnListing($this->tableName);
 
+        \Log::debug('resource ' . $request->getMethod() . ' request: ' . json_encode($_input, JSON_PRETTY_PRINT));
+
         foreach ($_input as $_key => $_value) {
             if (!in_array($_key, $_columns)) {
                 unset($_input[$_key]);
@@ -151,7 +153,7 @@ class OpsResourceController extends ResourceController
             }
 
             //  Encrypt the password
-            if ('password_text' == $_key) {
+            if ('password_text' == $_key && !empty($_value)) {
                 /** @noinspection PhpUndefinedMethodInspection */
                 $_input[$_key] = Hash::make($_value);
             }
