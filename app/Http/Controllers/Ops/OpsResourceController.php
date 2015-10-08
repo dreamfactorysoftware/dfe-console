@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
 use DreamFactory\Enterprise\Database\Models\EnterpriseModel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class OpsResourceController extends ResourceController
 {
@@ -151,7 +152,8 @@ class OpsResourceController extends ResourceController
 
             //  Encrypt the password
             if ('password_text' == $_key) {
-                $_input[$_key] = bcrypt($_value);
+                /** @noinspection PhpUndefinedMethodInspection */
+                $_input[$_key] = Hash::make($_value);
             }
         }
 

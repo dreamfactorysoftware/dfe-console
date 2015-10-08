@@ -27,6 +27,7 @@ use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
 
 class OpsController extends BaseController implements IsVersioned
 {
@@ -307,13 +308,14 @@ class OpsController extends BaseController implements IsVersioned
                 //  We want this...
             }
 
-            $_result = \Artisan::call('dfe:import', [
-                'instance-id'   => $_instanceId,
-                'snapshot'      => $_snapshot->snapshot_id_text,
-                'owner-id'      => $_snapshot->user_id,
-                '--owner-type'  => OwnerTypes::USER,
-                '--snapshot-id' => true,
-            ]);
+            $_result = \Artisan::call('dfe:import',
+                [
+                    'instance-id'   => $_instanceId,
+                    'snapshot'      => $_snapshot->snapshot_id_text,
+                    'owner-id'      => $_snapshot->user_id,
+                    '--owner-type'  => OwnerTypes::USER,
+                    '--snapshot-id' => true,
+                ]);
 
             if (0 != $_result) {
                 return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
@@ -404,7 +406,8 @@ class OpsController extends BaseController implements IsVersioned
                 '": ' .
                 $_ex->getCode() .
                 ' - ' .
-                $_ex->getMessage(), ['channel' => 'ops.partner', 'payload' => $_payload]);
+                $_ex->getMessage(),
+                ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());
         }
@@ -469,12 +472,13 @@ class OpsController extends BaseController implements IsVersioned
         //  Create a user account
         try {
             $_user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
+                /** @noinspection PhpUndefinedMethodInspection */
                 $_user = User::create([
                     'first_name_text'   => $_first,
                     'last_name_text'    => $_last,
                     'email_addr_text'   => $_email,
                     'nickname_text'     => $request->input('nickname', $_first),
-                    'password_text'     => bcrypt($_password),
+                    'password_text'     => Hash::make($_password),
                     'phone_text'        => $request->input('phone'),
                     'company_name_text' => $request->input('company'),
                 ]);

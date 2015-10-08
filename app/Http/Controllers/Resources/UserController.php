@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Session;
 use Validator;
 
@@ -125,7 +126,8 @@ class UserController extends ViewController
             $user_data['active_ind'] = 0;
         }
 
-        $user_data['password_text'] = bcrypt($user_data['new_password']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $user_data['password_text'] = Hash::make($user_data['new_password']);
 
         unset($user_data['active']);
         unset($user_data['new_password']);
@@ -258,7 +260,8 @@ class UserController extends ViewController
         }
 
         if ($user_data['new_password'] != '1234567890') {
-            $user_data['password_text'] = bcrypt($user_data['new_password']);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $user_data['password_text'] = Hash::make($user_data['new_password']);
         } else {
             unset($user_data['password_text']);
         }
