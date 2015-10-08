@@ -73,3 +73,10 @@ if (true === config('dfe.enable-console-api', false)) {
     function (){
         return `git rev-parse --verify HEAD`;
     });
+
+/** Login event listener */
+\Event::listen('auth.login',
+    function (){
+        \Auth::user()->update(['last_login_date' => date('c')]);
+    });
+
