@@ -2,8 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
-use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
-use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
@@ -11,7 +9,6 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Versioned;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
-use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
@@ -27,7 +24,6 @@ use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
 
 class OpsController extends BaseController implements IsVersioned
 {
@@ -438,83 +434,7 @@ class OpsController extends BaseController implements IsVersioned
      */
     protected function registerDashboardUser(Request $request)
     {
-        $_email = $request->input('email');
-        $_first = $request->input('firstname');
-        $_last = $request->input('lastname');
-        $_password = $request->input('password');
-
-        if (empty($_email) || empty($_password) || empty($_first) || empty($_last)) {
-            $this->error('missing required fields from partner post',
-                ['channel' => 'ops.partner', 'payload' => $request->input()]);
-
-            throw new \InvalidArgumentException('Missing required fields');
-        }
-
-        if (false === filter_var($_email, FILTER_VALIDATE_EMAIL)) {
-            $this->error('invalid email address "' . $_email . '"',
-                ['channel' => 'ops.partner', 'payload' => $request->input()]);
-
-            throw new \InvalidArgumentException('Email address invalid');
-        }
-
-        //  See if we know this cat...
-        if (null !== ($_user = User::byEmail($_email)->first())) {
-            //  Existing user found, don't add to database...
-            $_values = $_user->toArray();
-            unset($_values['password_text'], $_values['external_password_text']);
-
-            $this->info('existing user attempting registration through partner api',
-                ['channel' => 'ops.partner', 'user' => $_values]);
-
-            return $_user;
-        }
-
-        //  Create a user account
-        try {
-            $_user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
-                /** @noinspection PhpUndefinedMethodInspection */
-                $_user = User::create([
-                    'first_name_text'   => $_first,
-                    'last_name_text'    => $_last,
-                    'email_addr_text'   => $_email,
-                    'nickname_text'     => $request->input('nickname', $_first),
-                    'password_text'     => Hash::make($_password),
-                    'phone_text'        => $request->input('phone'),
-                    'company_name_text' => $request->input('company'),
-                ]);
-
-                if (null === ($_appKey = AppKey::mine($_user->id, OwnerTypes::USER))) {
-                    $_appKey = AppKey::create([
-                        'key_class_text' => AppKeyClasses::USER,
-                        'owner_id'       => $_user->id,
-                        'owner_type_nbr' => OwnerTypes::USER,
-                        'server_secret'  => config('dfe.security.console-api-key'),
-                    ]);
-                }
-
-                //  Update the user with the key info and activate
-                $_user->api_token_text = $_appKey->client_id;
-                $_user->active_ind = 1;
-                $_user->save();
-
-                return $_user;
-            });
-
-            $_values = $_user->toArray();
-            unset($_values['password_text'], $_values['external_password_text']);
-
-            $this->info('new user registered through partner api', ['channel' => 'ops.partner', 'user' => $_values]);
-
-            return $_user;
-        } catch (\Exception $_ex) {
-            if (false !== ($_pos = stripos($_message = $_ex->getMessage(), ' (sql: '))) {
-                $_message = substr($_message, 0, $_pos);
-            }
-
-            $this->error('database error creating user from partner post: ' . $_message, ['channel' => 'ops.partner']);
-
-            throw new RegistrationException($_message, $_ex->getCode(), $_ex);
-        }
+        return User::register($request);
     }
 
     /**
