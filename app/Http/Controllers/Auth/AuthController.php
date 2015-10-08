@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Http\Controllers\Auth\CommonAuthController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends CommonAuthController
 {
@@ -39,11 +40,12 @@ class AuthController extends CommonAuthController
      */
     public function create(array $data)
     {
+        /** @noinspection PhpUndefinedMethodInspection */
         return ServiceUser::create([
             'first_name_text' => $data['first_name_text'],
             'last_name_text'  => $data['last_name_text'],
             'email_addr_text' => $data['email_addr_text'],
-            'password_text'   => bcrypt($data['password_text']),
+            'password_text'   => Hash::make($data['password_text']),
         ]);
     }
 }
