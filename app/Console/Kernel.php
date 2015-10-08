@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Console\Console;
 
-use ChaoticWave\Utility\Grubworm\Console\Commands\Burrow;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -28,7 +27,5 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Deprovision',
         'DreamFactory\Enterprise\Console\Console\Commands\Import',
         'DreamFactory\Enterprise\Console\Console\Commands\Export',
-        //  Extras
-        Burrow::class,
     ];
 }

@@ -36,39 +36,35 @@
   "repositories":      [
     {
       "type": "vcs",
-      "url":  "git@github.com:chaoticwave/grubworm.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-database.git"
     },
     {
       "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-database.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-api-client.git"
     },
     {
       "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-api-client.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-ops-client.git"
     },
     {
       "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-ops-client.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-common.git"
     },
     {
       "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-common.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-storage.git"
     },
     {
       "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-storage.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-partner.git"
     },
     {
       "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-partner.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-audit.git"
     },
     {
       "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-audit.git"
-    },
-    {
-      "type": "vcs",
-      "url":  "git@github.com:dreamfactorysoftware/dfe-dreamfactory-provisioner.git"
+      "url":  "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git"
     }
   ],
   "type":              "project",
@@ -92,7 +88,6 @@
     "dreamfactory/dfe-storage":                  "dev-develop as dev-master",
     "dreamfactory/dfe-database":                 "dev-develop as dev-master",
     "dreamfactory/dfe-dreamfactory-provisioner": "dev-develop as dev-master",
-    "chaoticwave/grubworm":                      "dev-develop as dev-master",
     "barryvdh/laravel-cors":                     "0.6.x"
   },
   "require-dev":       {
