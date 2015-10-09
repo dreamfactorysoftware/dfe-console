@@ -91,11 +91,15 @@ class OpsController extends BaseController implements IsVersioned
             $_instance = $this->_findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
+                \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
+
                 return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
         } catch (\Exception $_ex) {
             //  Check the deleted instances
             if (null === ($_instance = InstanceArchive::byNameOrId($_id)->first())) {
+                \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
+
                 return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
 
@@ -160,8 +164,9 @@ class OpsController extends BaseController implements IsVersioned
         /**
          * This has multiple copies of data because it is used by several different systems
          */
+        \Log::info('/api/v1/ops/status: Instance "' . $_id . '" found', $_data = array_merge($_base, $_merge ?: []));
 
-        return $this->success(array_merge($_base, $_merge ?: []));
+        return $this->success($_data);
     }
 
     /**
