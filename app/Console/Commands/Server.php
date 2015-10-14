@@ -235,6 +235,16 @@ class Server extends ConsoleCommand
             return false;
         }
 
+        $_timestamp = new Carbon();
+
+        if ( !isset($_data['create_date']) || '0000-00-00 00:00:00' == $_data['create_date']) {
+            $_data['create_date'] = $_timestamp;
+        }
+
+        if (!isset($_data['lmod_date']) || '0000-00-00 00:00:00' == $_data['lmod_date']) {
+            $_data['lmod_date'] = $_timestamp;
+        }
+
         return $_data;
     }
 
