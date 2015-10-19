@@ -117,8 +117,12 @@
     ],
     "post-update-cmd":  [
       "php artisan clear-compiled",
+      "php artisan cache:clear",
+      "php artisan config:clear",
+      "php artisan route:clear",
       "php artisan optimize",
-      "php artisan vendor:publish --tag=public --force"
+      "php artisan vendor:publish --tag=public --force",
+      "chmod g+w storage/logs/laravel.log bootstrap/cache/* >/dev/null 2>&1"
     ]
   },
   "config":            {
