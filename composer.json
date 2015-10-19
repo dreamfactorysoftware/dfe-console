@@ -121,8 +121,7 @@
       "php artisan config:clear",
       "php artisan route:clear",
       "php artisan optimize",
-      "php artisan vendor:publish --tag=public --force",
-      "chmod g+w storage/logs/laravel.log bootstrap/cache/* >/dev/null 2>&1"
+      "php artisan vendor:publish --tag=public --force"
     ]
   },
   "config":            {
