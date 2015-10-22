@@ -18,12 +18,6 @@ class HomeController extends ViewController
      */
     public function index()
     {
-        /*
-        $_service = \App::make(UsageServiceProvider::IOC_NAME);
-        $_stats = $_service->gatherStatistics();
-
-        //echo "out = ".json_encode($_stats);
-        */
 
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
