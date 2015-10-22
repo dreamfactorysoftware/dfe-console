@@ -24,9 +24,9 @@ class HomeController extends ViewController
 
 
 
-        Log::info(json_encode($_stats));
+        //Log::info(json_encode($_stats));
 
-        Log::error(json_encode($_stats));
+        \Log::error(json_encode($_stats));
 
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
