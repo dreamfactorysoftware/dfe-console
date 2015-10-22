@@ -3,6 +3,10 @@
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 
+use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\UsageService;
+use DreamFactory\Library\Utility\Json;
+
 class HomeController extends ViewController
 {
     //******************************************************************************
@@ -14,6 +18,11 @@ class HomeController extends ViewController
      */
     public function index()
     {
+        $_service = \App::make(UsageServiceProvider::IOC_NAME);
+        $_stats = $_service->gatherStatistics();
+
+        console.log($_stats);
+
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
             [
