@@ -22,11 +22,11 @@ class HomeController extends ViewController
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
         $_stats = $_service->gatherStatistics();
 
-
+echo "out = ".json_encode($_stats);
 
         //Log::info(json_encode($_stats));
 
-        logger(json_encode($_stats));
+        //logger(json_encode($_stats));
 
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
