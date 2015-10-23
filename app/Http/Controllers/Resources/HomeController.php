@@ -79,6 +79,8 @@ class HomeController extends ViewController
             'i_ap' => $_inst['apps']
         ];
 
+        $qwe = config('links.console', []);
+
 
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
@@ -87,7 +89,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => http_build_query($_formatted_stats)
+                'stats'    => json_encode($qwe)      //http_build_query($_formatted_stats)
             ]);
     }
 
