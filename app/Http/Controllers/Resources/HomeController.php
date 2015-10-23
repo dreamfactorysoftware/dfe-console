@@ -23,7 +23,7 @@ class HomeController extends ViewController
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
         $_stats = $_service->gatherStatistics();
 
-
+        //$str = 'e_u='.$_stats['console'][]
 
 
         //  Fill up the expected defaults...
@@ -33,7 +33,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => $_stats['console']['instance']
+                'stats'    => http_build_query($_stats['console'])
             ]);
     }
 
