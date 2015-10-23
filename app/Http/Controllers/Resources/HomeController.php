@@ -24,13 +24,7 @@ class HomeController extends ViewController
         $_stats = $_service->gatherStatistics();
 
 
-        $_estats = [
-                'e_u' => $_stats['console']['user'] + $_stats['dashboard']['user'],
-                'e_s' => $_stats['console']['server'],
-                'e_c' => $_stats['console']['cluster'],
-                'e_l' => $_stats['console']['limit'],
-                'e_i' => $_stats['console']['instance']
-            ];
+
 
 
         $_inst['users'] = 0;
@@ -67,16 +61,23 @@ class HomeController extends ViewController
                         if ($k1 == 'app') {
                             $_inst['apps'] += $v1;
                         }
-
                     }
                 }
-
-
             }
-
-
-
         }
+
+        $_formatted_stats = [
+            'e_u' => $_stats['console']['user'] + $_stats['dashboard']['user'],
+            'e_s' => $_stats['console']['server'],
+            'e_c' => $_stats['console']['cluster'],
+            'e_l' => $_stats['console']['limit'],
+            'e_i' => $_stats['console']['instance'],
+            'i_u' => $_inst['users'],
+            'i_a' => $_inst['admins'],
+            'i_s' => $_inst['services'],
+            'i_es' => $_inst['ext_services'],
+            'i_ap' => $_inst['apps']
+        ];
 
 
         //  Fill up the expected defaults...
@@ -86,7 +87,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => $_inst['services'] //http_build_query($_estats)
+                'stats'    => http_build_query($_formatted_stats)
             ]);
     }
 
