@@ -18,6 +18,7 @@ class HomeController extends ViewController
      */
     public function index()
     {
+        /**/
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
         $_stats = $_service->gatherStatistics();
 
@@ -28,32 +29,30 @@ class HomeController extends ViewController
         $_inst['apps'] = 0;
 
 
-        foreach ($_stats['instance'] as $key => $value) {
+        foreach ($_stats['instance'] as $i => $instance) {
 
-            foreach ($value as $k => $v) {
+            foreach ($instance as $type => $resource) {
 
-                if($k == 'resources') {
-                    foreach ($v as $k1 => $v1) {
-                        if ($k1 == 'user') {
-                            $_inst['users'] += $v1;
+                if($type == 'resources') {
+                    foreach ($resource as $resource_type => $resource_value) {
+                        if ($resource_type == 'user') {
+                            $_inst['users'] += $resource_value;
                         }
 
-                        if ($k1 == 'admin') {
-                            $_inst['admins'] += $v1;
+                        if ($resource_type == 'admin') {
+                            $_inst['admins'] += $resource_value;
                         }
 
-                        if ($k1 == 'service') {
-                            $_inst['services'] += intval($v1);
+                        if ($resource_type == 'service') {
+                            $_inst['services'] += intval($resource_value);
                         }
 
-                        /*
-                        if ($k1 == 'admin') {
-                            $_inst['ext_services'] += $v1;
+                        if ($resource_type == 'ext_services') {
+                            $_inst['ext_services'] += $resource_value;
                         }
-                        */
 
-                        if ($k1 == 'app') {
-                            $_inst['apps'] += $v1;
+                        if ($resource_type == 'app') {
+                            $_inst['apps'] += $resource_value;
                         }
                     }
                 }
@@ -73,6 +72,7 @@ class HomeController extends ViewController
             'i_es' => $_inst['ext_services'],
             'i_ap' => $_inst['apps']
         ];
+        /**/
 
         $_links = config('links.console', []);
         $_links[0]['href'] .= '?'.http_build_query($_formatted_stats);
