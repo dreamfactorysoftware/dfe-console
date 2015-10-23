@@ -1,13 +1,12 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Reports', 'prefix' => $prefix))
-
 @extends('layouts.main')
+@include('layouts.partials.topmenu',['pageName' => 'Reports', 'prefix' => $prefix])
 
+@section('user-scripts')
+    {{--<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>--}}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
+@show
 
 @section('content')
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
-
     <div class="col-md-2 df-sidebar-nav">
         <!--div class="">
             <ul class="nav nav-pills nav-stacked visible-md visible-lg">
@@ -21,229 +20,222 @@
         </div-->
     </div>
 
-    <div style="" class="col-md-10">
-        <div>
-            <div class="">
-                <div class="nav nav-pills dfe-section-header">
-                    <h4 class="">API Calls</h4>
-                </div>
-            </div>
+    <div class="col-md-10">
+        <div class="nav nav-pills dfe-section-header">
+            <h4 class="">API Calls</h4>
         </div>
 
-
-        <div class="">
-            <div class="row">
-                <div class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-12">
 
 
-                    <div role="tabpanel">
+                <div role="tabpanel">
 
-                        <ul class="nav nav-tabs" role="tablist" id="chart_type_tabs">
-                            <li role="presentation" class="active"><a href="#clusters" aria-controls="clusters" role="tab" data-toggle="tab" id="chart_type_clusters">Clusters</a></li>
-                            <li role="presentation"><a href="#instance_owners" aria-controls="instance_owners" role="tab" data-toggle="tab" id="chart_type_instances">Instance Owners</a></li>
-                            <li role="presentation"><a href="#instances" aria-controls="instances" role="tab" data-toggle="tab" id="chart_type_instances">Instances</a></li>
-                        </ul>
+                    <ul class="nav nav-tabs" role="tablist" id="chart_type_tabs">
+                        <li role="presentation" class="active"><a href="#clusters" aria-controls="clusters" role="tab" data-toggle="tab" id="chart_type_clusters">Clusters</a></li>
+                        <li role="presentation"><a href="#instance_owners" aria-controls="instance_owners" role="tab" data-toggle="tab" id="chart_type_instances">Instance Owners</a></li>
+                        <li role="presentation"><a href="#instances" aria-controls="instances" role="tab" data-toggle="tab" id="chart_type_instances">Instances</a></li>
+                    </ul>
 
-                        <div class="tab-content" id="chart_select">
-                            <br>
-                            <input type="hidden" id="chartType">
-                            <input type="hidden" id="chartCategory">
+                    <div class="tab-content" id="chart_select">
+                        <br>
+                        <input type="hidden" id="chartType">
+                        <input type="hidden" id="chartCategory">
 
-                            <div role="tabpanel" class="tab-pane active" id="clusters">
-                                <div class="well well-sm" style="height: 50px">
+                        <div role="tabpanel" class="tab-pane active" id="clusters">
+                            <div class="well well-sm" style="height: 50px">
 
-                                    <div class="pull-left" role="group">
-                                        <div class="dropdown">
-                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_cluster" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                <span id="selected_cluster" value="*">Select Cluster</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_type_cluster" id="select_type_list_cluster">
+                                <div class="pull-left" role="group">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_cluster" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <span id="selected_cluster" value="*">Select Cluster</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="select_type_cluster" id="select_type_list_cluster">
 
-                                                @foreach($clusters as $i => $cluster)
-                                                    <li id="{{$cluster->cluster_id_text}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="pull-left" style="width: 25px">&nbsp;</div>
-
-                                    <div class="pull-left" role="group">
-                                        <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_clusters" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
-                                                <span id="current_period_cluster">Select Time Period</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_time_period_clusters">
-                                                <li><a href="javascript:selectPeriod(1, 'cluster')">Today</a></li>
-                                                <li><a href="javascript:selectPeriod(7, 'cluster')">This Week</a></li>
-                                                <li><a href="javascript:selectPeriod(30, 'cluster')">This Month</a></li>
-                                                <li><a href="javascript:selectPeriod(365, 'cluster')">This Year</a></li>
-                                                <li><a href="javascript:selectPeriod(0, 'cluster')">Custom Range</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-
-                                    <div id="datepickers_cluster" hidden="hidden">
-                                        <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
-
-                                        <div class="pull-left" role="group" id="datepickers">
-
-                                            <div>
-                                                <input type="text" id="datepicker_from_cluster" class="btn btn-default btn-sm" value="Date From">
-                                                &nbsp;
-                                                <input type="text" id="datepicker_to_cluster" class="btn btn-default btn-sm" value="Date To">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="pull-left" style="width: 25px">&nbsp;</div>
-
-                                    <div class="pull-left">
-                                        <button id="submit_cluster" type="button" class="btn btn-primary btn-sm">Submit</button>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="instance_owners">
-
-                                <div class="well well-sm" style="height: 50px">
-
-                                    <div class="pull-left" role="group">
-                                        <div class="dropdown">
-                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_instanceowner" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                <span id="selected_instanceowner" value="*">Select Instance Owner</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_type_instanceowner" id="select_type_list_instanceowner">
-
-                                                @foreach($users as $i => $user)
-                                                    <li id="{{$user->email_addr_text}}"><a href="#">{{$user->first_name_text}} {{$user->last_name_text}}</a></li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="pull-left" style="width: 25px">&nbsp;</div>
-
-                                    <div class="pull-left" role="group">
-                                        <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_instanceowners" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
-                                                <span id="current_period_instanceowner">Select Time Period</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_time_period_instanceowners">
-                                                <li><a href="javascript:selectPeriod(1, 'instanceowner')">Today</a></li>
-                                                <li><a href="javascript:selectPeriod(7, 'instanceowner')">This Week</a></li>
-                                                <li><a href="javascript:selectPeriod(30, 'instanceowner')">This Month</a></li>
-                                                <li><a href="javascript:selectPeriod(365, 'instanceowner')">This Year</a></li>
-                                                <li><a href="javascript:selectPeriod(0, 'instanceowner')">Custom Range</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div id="datepickers_instanceowner" hidden="hidden">
-                                        <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
-
-                                        <div class="pull-left" role="group" id="datepickers">
-
-                                            <div>
-                                                <input type="text" id="datepicker_from_instanceowner" class="btn btn-default btn-sm" value="Date From">
-                                                &nbsp;
-                                                <input type="text" id="datepicker_to_instanceowner" class="btn btn-default btn-sm" value="Date To">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="pull-left" style="width: 25px">&nbsp;</div>
-
-                                    <div class="pull-left">
-                                        <button id="submit_instanceowner" type="button" class="btn btn-primary btn-sm">Submit</button>
+                                            @foreach($clusters as $i => $cluster)
+                                                <li id="{{$cluster->cluster_id_text}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
+                                            @endforeach
+                                        </ul>
                                     </div>
                                 </div>
 
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="instances">
-                                <button id="instance_type_endpoints" type="button" class="btn btn-default btn-sm btn-info">Endpoints</button>&nbsp;&nbsp;
-                                <!--button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;-->
-                                <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
-                                <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
+                                <div class="pull-left" style="width: 25px">&nbsp;</div>
 
-                                <div>
-                                    <br>
+                                <div class="pull-left" role="group">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_clusters" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
+                                            <span id="current_period_cluster">Select Time Period</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="select_time_period_clusters">
+                                            <li><a href="javascript:selectPeriod(1, 'cluster')">Today</a></li>
+                                            <li><a href="javascript:selectPeriod(7, 'cluster')">This Week</a></li>
+                                            <li><a href="javascript:selectPeriod(30, 'cluster')">This Month</a></li>
+                                            <li><a href="javascript:selectPeriod(365, 'cluster')">This Year</a></li>
+                                            <li><a href="javascript:selectPeriod(0, 'cluster')">Custom Range</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
 
-                                <div class="well well-sm" style="height: 50px">
 
-                                    <div class="pull-left" role="group">
-                                        <div class="dropdown">
-                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_instance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                <span id="selected_instance" value="*">Select Instance</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_type_instance" id="select_type_list_instance">
+                                <div id="datepickers_cluster" hidden="hidden">
+                                    <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
 
-                                                @foreach($instances as $i => $instance)
-                                                    <li id="{{$instance->instance_id_text}}"><a href="#">{{$instance->instance_id_text}}</a></li>
-                                                @endforeach
-                                            </ul>
+                                    <div class="pull-left" role="group" id="datepickers">
+
+                                        <div>
+                                            <input type="text" id="datepicker_from_cluster" class="btn btn-default btn-sm" value="Date From">
+                                            &nbsp;
+                                            <input type="text" id="datepicker_to_cluster" class="btn btn-default btn-sm" value="Date To">
                                         </div>
                                     </div>
-
-                                    <div class="pull-left" style="width: 25px">&nbsp;</div>
-
-                                    <div class="pull-left" role="group">
-                                        <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_instances" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
-                                                <span id="current_period_instance">Select Time Period</span>
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_time_period_instances">
-                                                <li><a href="javascript:selectPeriod(1, 'instance')">Today</a></li>
-                                                <li><a href="javascript:selectPeriod(7, 'instance')">This Week</a></li>
-                                                <li><a href="javascript:selectPeriod(30, 'instance')">This Month</a></li>
-                                                <li><a href="javascript:selectPeriod(365, 'instance')">This Year</a></li>
-                                                <li><a href="javascript:selectPeriod(0, 'instance')">Custom Range</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div id="datepickers_instance" hidden="hidden">
-                                        <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
-
-                                        <div class="pull-left" role="group" id="datepickers">
-
-                                            <div>
-                                                <input type="text" id="datepicker_from_instance" class="btn btn-default btn-sm" value="Date From">
-                                                &nbsp;
-                                                <input type="text" id="datepicker_to_instance" class="btn btn-default btn-sm" value="Date To">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="pull-left" style="width: 25px">&nbsp;</div>
-
-                                    <div class="pull-left">
-                                        <button id="submit_instance" type="button" class="btn btn-primary btn-sm">Submit</button>
-
-                                    </div>
-
-
                                 </div>
 
+                                <div class="pull-left" style="width: 25px">&nbsp;</div>
+
+                                <div class="pull-left">
+                                    <button id="submit_cluster" type="button" class="btn btn-primary btn-sm">Submit</button>
+                                </div>
 
                             </div>
 
                         </div>
+                        <div role="tabpanel" class="tab-pane" id="instance_owners">
+
+                            <div class="well well-sm" style="height: 50px">
+
+                                <div class="pull-left" role="group">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_instanceowner" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <span id="selected_instanceowner" value="*">Select Instance Owner</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="select_type_instanceowner" id="select_type_list_instanceowner">
+
+                                            @foreach($users as $i => $user)
+                                                <li id="{{$user->email_addr_text}}"><a href="#">{{$user->first_name_text}} {{$user->last_name_text}}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="pull-left" style="width: 25px">&nbsp;</div>
+
+                                <div class="pull-left" role="group">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_instanceowners" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
+                                            <span id="current_period_instanceowner">Select Time Period</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="select_time_period_instanceowners">
+                                            <li><a href="javascript:selectPeriod(1, 'instanceowner')">Today</a></li>
+                                            <li><a href="javascript:selectPeriod(7, 'instanceowner')">This Week</a></li>
+                                            <li><a href="javascript:selectPeriod(30, 'instanceowner')">This Month</a></li>
+                                            <li><a href="javascript:selectPeriod(365, 'instanceowner')">This Year</a></li>
+                                            <li><a href="javascript:selectPeriod(0, 'instanceowner')">Custom Range</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div id="datepickers_instanceowner" hidden="hidden">
+                                    <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
+
+                                    <div class="pull-left" role="group" id="datepickers">
+
+                                        <div>
+                                            <input type="text" id="datepicker_from_instanceowner" class="btn btn-default btn-sm" value="Date From">
+                                            &nbsp;
+                                            <input type="text" id="datepicker_to_instanceowner" class="btn btn-default btn-sm" value="Date To">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pull-left" style="width: 25px">&nbsp;</div>
+
+                                <div class="pull-left">
+                                    <button id="submit_instanceowner" type="button" class="btn btn-primary btn-sm">Submit</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="instances">
+                            <button id="instance_type_endpoints" type="button" class="btn btn-default btn-sm btn-info">Endpoints</button>&nbsp;&nbsp;
+                            <!--button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;-->
+                            <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
+                            <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
+
+                            <div>
+                                <br>
+                            </div>
+
+                            <div class="well well-sm" style="height: 50px">
+
+                                <div class="pull-left" role="group">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_instance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <span id="selected_instance" value="*">Select Instance</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="select_type_instance" id="select_type_list_instance">
+
+                                            @foreach($instances as $i => $instance)
+                                                <li id="{{$instance->instance_id_text}}"><a href="#">{{$instance->instance_id_text}}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="pull-left" style="width: 25px">&nbsp;</div>
+
+                                <div class="pull-left" role="group">
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_instances" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
+                                            <span id="current_period_instance">Select Time Period</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="select_time_period_instances">
+                                            <li><a href="javascript:selectPeriod(1, 'instance')">Today</a></li>
+                                            <li><a href="javascript:selectPeriod(7, 'instance')">This Week</a></li>
+                                            <li><a href="javascript:selectPeriod(30, 'instance')">This Month</a></li>
+                                            <li><a href="javascript:selectPeriod(365, 'instance')">This Year</a></li>
+                                            <li><a href="javascript:selectPeriod(0, 'instance')">Custom Range</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div id="datepickers_instance" hidden="hidden">
+                                    <div class="pull-left" id="datepicker_spacer1" style="width: 25px">&nbsp;</div>
+
+                                    <div class="pull-left" role="group" id="datepickers">
+
+                                        <div>
+                                            <input type="text" id="datepicker_from_instance" class="btn btn-default btn-sm" value="Date From">
+                                            &nbsp;
+                                            <input type="text" id="datepicker_to_instance" class="btn btn-default btn-sm" value="Date To">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="pull-left" style="width: 25px">&nbsp;</div>
+
+                                <div class="pull-left">
+                                    <button id="submit_instance" type="button" class="btn btn-primary btn-sm">Submit</button>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
 
                     </div>
-                    <iframe id="iframe_chart" frameborder="0" width="100%" height="100%"></iframe>
-                    <!--iframe id="iframe_chart" src="http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:now%2Fy,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))" frameborder="0" width="100%" height="100%"></iframe-->
-                    <br><br>
+
                 </div>
+                <iframe id="iframe_chart" frameborder="0" width="100%" height="100%"></iframe>
+                <!--iframe id="iframe_chart" src="http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:now%2Fy,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))" frameborder="0" width="100%" height="100%"></iframe-->
+                <br><br>
             </div>
         </div>
     </div>
@@ -253,7 +245,6 @@
     <script type="text/javascript" src="../static/plugins/pikaday/pikaday.js"></script>
     <script type="text/javascript" src="../static/plugins/pikaday/pikaday.jquery.js"></script>
     <script>
-
         $(document.body).on('change','#select_time_period',function(){
 
             var selected = $('#select_time_period').val();
@@ -541,6 +532,5 @@
 
 
     </script>
-
 
 @stop

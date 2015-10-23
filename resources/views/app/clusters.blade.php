@@ -1,8 +1,13 @@
+@extends('layouts.main')
 @include('layouts.partials.topmenu', ['pageName' => 'Clusters'])
 
-@extends('layouts.main')
-
 @section('content')
+    <style>
+        .tooltip-wrapper {
+            display: inline-block;
+        }
+    </style>
+
     <div class="col-md-2">
         <div>
             <ul class="nav nav-pills nav-stacked visible-md visible-lg">
@@ -125,12 +130,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="../js/blade-scripts/clusters/clusters.js"></script>
 
-    <style>
-        .tooltip-wrapper {
-            display: inline-block;
-        }
-
-    </style>
+    <script type="text/javascript" src="/js/blade-scripts/clusters/clusters.js"></script>
 @stop
