@@ -82,7 +82,8 @@ class HomeController extends ViewController
                 'prefix'   => ConsoleDefaults::UI_PREFIX,
                 'resource' => null,
                 'title'    => null,
-                'links'    => $_links
+                'links'    => $_links,
+                'formatted' => json_encode($_formatted_stats)
             ]);
     }
 
