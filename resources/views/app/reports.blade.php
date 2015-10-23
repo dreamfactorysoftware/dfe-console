@@ -233,7 +233,7 @@
                     </div>
 
                 </div>
-                <iframe id="iframe_chart" frameborder="0" width="100%" height="100%"></iframe>
+                <iframe id="iframe_chart" seamless="seamless" frameborder="0" width="100%" height="100%"></iframe>
                 <!--iframe id="iframe_chart" src="http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/Api-By-Clusters?embed&_g=(time:(from:now%2Fy,mode:quick,to:now))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'_type:{{$type}}')),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(field:cluster.id,order:desc,orderBy:'1',size:5),schema:group,type:terms),(id:'3',params:(extended_bounds:(),field:'@timestamp',interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t),type:histogram))" frameborder="0" width="100%" height="100%"></iframe-->
                 <br><br>
             </div>
@@ -241,29 +241,20 @@
     </div>
 
 
-    <link href="../static/plugins/pikaday/pikaday.css" rel="stylesheet">
-    <script type="text/javascript" src="../static/plugins/pikaday/pikaday.js"></script>
-    <script type="text/javascript" src="../static/plugins/pikaday/pikaday.jquery.js"></script>
+    <link href="/static/plugins/pikaday/pikaday.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/plugins/pikaday/pikaday.js"></script>
+    <script type="text/javascript" src="/static/plugins/pikaday/pikaday.jquery.js"></script>
     <script>
         $(document.body).on('change','#select_time_period',function(){
-
             var selected = $('#select_time_period').val();
             console.log(selected);
-
-        });
-
-        $(document.body).on('click', 'ul[id^="select_type_list_"] li', function (event) {
-
+        }).on('click', 'ul[id^="select_type_list_"] li', function (event) {
             var dropdown_span = '#selected_' + event.currentTarget.parentElement.id.replace('select_type_list_', '');
             var dropdown_text = event.currentTarget.textContent;
 
             $(dropdown_span).html(dropdown_text);
             $(dropdown_span).attr('value', event.currentTarget.id);
-
-        });
-
-        $(document.body).on('click', 'button[id^="instance_type_"]', function (event) {
-
+        }).on('click', 'button[id^="instance_type_"]', function (event) {
             var selected_id = event.currentTarget.id;
 
             $( "#chart_select  :button[id^='instance_type_']" ).each(function( i ) {
@@ -274,10 +265,7 @@
             });
 
             $("#submit_instance").prop("disabled",false);
-        });
-
-
-        $(document.body).on('click', 'button[id^="submit_"]', function (event) {
+        }).on('click', 'button[id^="submit_"]', function (event) {
 
             var id = event.currentTarget.id;
             var type = id.replace('submit_', '');
@@ -375,7 +363,6 @@
             $('#iframe_chart').attr('src', _chart);
         });
 
-
         function convertPeriod(period, date_from, date_to){
 
             var _from = 'now-30d';
@@ -416,7 +403,6 @@
             }
 
         }
-
 
         function selectPeriod(period, type) {
 

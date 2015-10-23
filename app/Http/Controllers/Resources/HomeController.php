@@ -1,91 +1,119 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
-
+use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
-use DreamFactory\Enterprise\Services\UsageService;
-use DreamFactory\Library\Utility\Json;
+use Illuminate\Support\Facades\Cache;
 
-class HomeController extends ViewController
+class HomeController extends FactoryController
 {
+    //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type int Cache for 5 minutes
+     */
+    const LINK_CACHE_TTL = 5;
+
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type array The data points collected
+     */
+    protected $dataPoints = [
+        'users'        => 0,
+        'admins'       => 0,
+        'services'     => 0,
+        'ext_services' => 0,
+        'apps'         => 0,
+    ];
+
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
+    /** @inheritdoc */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->middleware('auth');
+    }
+
     /**
      * @return \Illuminate\View\View
      */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function index()
     {
-        $_service = \App::make(UsageServiceProvider::IOC_NAME);
-        $_stats = $_service->gatherStatistics();
+        //  Check if we've gotten links yet
+        if (null === ($_links = \Cache::get('home.links.console'))) {
+            $_links = config('links.console', []);
 
-        $_inst['users'] = 0;
-        $_inst['admins'] = 0;
-        $_inst['services'] = 0;
-        $_inst['ext_services'] = 0;
-        $_inst['apps'] = 0;
+            //  Override links to add link parameters if requested
+            foreach ($_links as $_index => $_link) {
+                if (array_get($_link, 'params', false)) {
+                    $_links[$_index]['href.og'] = $_links[$_index]['href'];
+                    $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
+                }
+            }
 
-
-        foreach ($_stats['instance'] as $i => $instance) {
-
-            foreach ($instance as $type => $resource) {
-
-                if($type == 'resources') {
-                    foreach ($resource as $resource_type => $resource_value) {
-                        if ($resource_type == 'user') {
-                            $_inst['users'] += $resource_value;
-                        }
-
-                        if ($resource_type == 'admin') {
-                            $_inst['admins'] += $resource_value;
-                        }
-
-                        if ($resource_type == 'service') {
-                            $_inst['services'] += intval($resource_value);
-                        }
-
-                        if ($resource_type == 'ext_services') {
-                            $_inst['ext_services'] += $resource_value;
-                        }
-
-                        if ($resource_type == 'app') {
-                            $_inst['apps'] += $resource_value;
-                        }
-                    }
+            \Cache::put('home.links.console', $_links, static::LINK_CACHE_TTL);
+        } else {
+            //  Restore original links
+            foreach ($_links as $_index => $_link) {
+                if (isset($_links[$_index]['old-href'])) {
+                    $_links[$_index]['href'] = $_links[$_index]['href.og'];
                 }
             }
         }
 
-        $_formatted_stats = [
-            'e_k' => 1, //$_stats['install-key'],
-            'e_u' => $_stats['console']['user'] + $_stats['dashboard']['user'],
-            'e_s' => $_stats['console']['server'],
-            'e_c' => $_stats['console']['cluster'],
-            'e_l' => $_stats['console']['limit'],
-            'e_i' => $_stats['console']['instance'],
-            'i_u' => $_inst['users'],
-            'i_a' => $_inst['admins'],
-            'i_s' => $_inst['services'],
-            'i_es' => $_inst['ext_services'],
-            'i_ap' => $_inst['apps']
-        ];
-
-
-        $_links = config('links.console', []);
-        $_links[0]['href'] .= '?'.http_build_query($_formatted_stats);
-
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
             [
-                'prefix'   => ConsoleDefaults::UI_PREFIX,
-                'resource' => null,
-                'title'    => null,
-                'links'    => $_links
+                'prefix'       => ConsoleDefaults::UI_PREFIX,
+                'resource'     => null,
+                'title'        => null,
+                'links'        => $_links,
+                'request_uri'  => \Request::getRequestUri(),
+                'active_class' => ' active',
             ]);
     }
 
+    /**
+     * Builds the parameter list to send with any home page links
+     *
+     * @return array The parameters to send with links
+     */
+    protected function getLinkParameters()
+    {
+        $_stats = \App::make(UsageServiceProvider::IOC_NAME)->gatherStatistics();
+        $_instanceStats = $this->dataPoints;
+
+        //  Aggregate the instance stats
+        foreach (array_get(array_get($_stats, 'instance', []), 'resources', []) as $_key => $_value) {
+            if (array_key_exists($_checkKey = $_key . 's', $_instanceStats)) {
+                $_instanceStats[$_checkKey] += $_value;
+            }
+        }
+
+        return [
+            'e_k'  => array_get($_stats, 'install-key'),
+            'e_u'  => $_stats['console']['user'] + $_stats['dashboard']['user'],
+            'e_s'  => $_stats['console']['server'],
+            'e_c'  => $_stats['console']['cluster'],
+            'e_l'  => $_stats['console']['limit'],
+            'e_i'  => $_stats['console']['instance'],
+            'i_u'  => $_instanceStats['users'],
+            'i_a'  => $_instanceStats['admins'],
+            'i_s'  => $_instanceStats['services'],
+            'i_es' => $_instanceStats['ext_services'],
+            'i_ap' => $_instanceStats['apps'],
+        ];
+    }
 }
 
 
