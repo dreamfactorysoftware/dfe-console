@@ -19,6 +19,13 @@ class HomeController extends ViewController
     public function index()
     {
 
+
+        $_service = \App::make(UsageServiceProvider::IOC_NAME);
+        $_stats = $_service->gatherStatistics();
+
+
+
+
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
             [
@@ -26,7 +33,10 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
+                'stats'    => $_stats['console']
             ]);
     }
 
 }
+
+
