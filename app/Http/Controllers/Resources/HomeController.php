@@ -46,8 +46,26 @@ class HomeController extends ViewController
 
                 if($k == 'resources') {
                     foreach ($v as $k1 => $v1) {
+                        if ($k1 == 'user') {
+                            $_inst['users'] += $v1;
+                        }
+
                         if ($k1 == 'admin') {
                             $_inst['admins'] += $v1;
+                        }
+
+                        if ($k1 == 'service') {
+                            $_inst['services'] += intval($v1);
+                        }
+
+                        /*
+                        if ($k1 == 'admin') {
+                            $_inst['ext_services'] += $v1;
+                        }
+                        */
+
+                        if ($k1 == 'app') {
+                            $_inst['apps'] += $v1;
                         }
 
                     }
@@ -68,7 +86,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => $_inst['admins'] //http_build_query($_estats)
+                'stats'    => $_inst['services'] //http_build_query($_estats)
             ]);
     }
 
