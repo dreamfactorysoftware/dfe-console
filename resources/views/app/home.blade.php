@@ -17,7 +17,6 @@ $_active = ' active';
 
     <div class="col-xs-11 col-sm-10 col-md-10">
         <iframe id="home-link-container" seamless="seamless"></iframe>
-        {{ $formatted }}
     </div>
 
     <script>
