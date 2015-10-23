@@ -18,7 +18,7 @@ class HomeController extends ViewController
      */
     public function index()
     {
-        /**/
+        /*
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
         $_stats = $_service->gatherStatistics();
 
@@ -72,10 +72,10 @@ class HomeController extends ViewController
             'i_es' => $_inst['ext_services'],
             'i_ap' => $_inst['apps']
         ];
-        /**/
+        */
 
         $_links = config('links.console', []);
-        $_links[0]['href'] .= '?'.http_build_query($_formatted_stats);
+        //$_links[0]['href'] .= '?'.http_build_query($_formatted_stats);
 
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
