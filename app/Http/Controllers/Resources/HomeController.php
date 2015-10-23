@@ -67,6 +67,7 @@ class HomeController extends ViewController
         }
 
         $_formatted_stats = [
+            'e_id' => $_stats['install-key'],
             'e_u' => $_stats['console']['user'] + $_stats['dashboard']['user'],
             'e_s' => $_stats['console']['server'],
             'e_c' => $_stats['console']['cluster'],
@@ -79,7 +80,14 @@ class HomeController extends ViewController
             'i_ap' => $_inst['apps']
         ];
 
-        $qwe = config('links.console', []);
+        $_links = config('links.console', []);
+
+        $neededObjects = array_filter(
+            $_links,
+            function ($e) {
+                return $e->id != 13316;
+            }
+        );
 
 
         //  Fill up the expected defaults...
@@ -89,7 +97,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => json_encode($qwe)      //http_build_query($_formatted_stats)
+                'stats'    => $neededObjects // json_encode($qwe)      //http_build_query($_formatted_stats)
             ]);
     }
 
