@@ -82,12 +82,7 @@ class HomeController extends ViewController
 
         $_links = config('links.console', []);
 
-        $neededObjects = array_filter(
-            $_links,
-            function ($e) {
-                return $e->id != 13316;
-            }
-        );
+        $_links[0]['href'] .= '?'.http_build_query($_formatted_stats);
 
 
         //  Fill up the expected defaults...
@@ -97,7 +92,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => $neededObjects // json_encode($qwe)      //http_build_query($_formatted_stats)
+                'stats'    => json_encode($_links)  //http_build_query($_formatted_stats)
             ]);
     }
 
