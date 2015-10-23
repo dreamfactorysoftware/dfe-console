@@ -59,7 +59,7 @@ class HomeController extends ViewController
         }
 
         $_formatted_stats = [
-            'e_id' => $_stats['install-key'],
+            'e_k' => $_stats['install-key'],
             'e_u' => $_stats['console']['user'] + $_stats['dashboard']['user'],
             'e_s' => $_stats['console']['server'],
             'e_c' => $_stats['console']['cluster'],
