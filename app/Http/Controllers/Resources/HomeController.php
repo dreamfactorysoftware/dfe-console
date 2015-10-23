@@ -23,7 +23,42 @@ class HomeController extends ViewController
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
         $_stats = $_service->gatherStatistics();
 
-        //$str = 'e_u='.$_stats['console'][]
+
+        $_estats = [
+                'e_u' => $_stats['console']['user'] + $_stats['dashboard']['user'],
+                'e_s' => $_stats['console']['server'],
+                'e_c' => $_stats['console']['cluster'],
+                'e_l' => $_stats['console']['limit'],
+                'e_i' => $_stats['console']['instance']
+            ];
+
+
+        $_inst['users'] = 0;
+        $_inst['admins'] = 0;
+        $_inst['services'] = 0;
+        $_inst['ext_services'] = 0;
+        $_inst['apps'] = 0;
+
+
+        foreach ($_stats['instance'] as $key => $value) {
+
+            foreach ($value as $k => $v) {
+
+                if($k == 'resources') {
+                    foreach ($v as $k1 => $v1) {
+                        if ($k1 == 'admin') {
+                            $_inst['admins'] += $v1;
+                        }
+
+                    }
+                }
+
+
+            }
+
+
+
+        }
 
 
         //  Fill up the expected defaults...
@@ -33,7 +68,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => http_build_query($_stats['console'])
+                'stats'    => $_inst['admins'] //http_build_query($_estats)
             ]);
     }
 
