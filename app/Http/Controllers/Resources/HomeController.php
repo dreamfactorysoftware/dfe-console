@@ -18,14 +18,8 @@ class HomeController extends ViewController
      */
     public function index()
     {
-
-
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
         $_stats = $_service->gatherStatistics();
-
-
-
-
 
         $_inst['users'] = 0;
         $_inst['admins'] = 0;
@@ -81,9 +75,7 @@ class HomeController extends ViewController
         ];
 
         $_links = config('links.console', []);
-
         $_links[0]['href'] .= '?'.http_build_query($_formatted_stats);
-
 
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
@@ -91,8 +83,7 @@ class HomeController extends ViewController
                 'prefix'   => ConsoleDefaults::UI_PREFIX,
                 'resource' => null,
                 'title'    => null,
-                'links'    => config('links.console', []),
-                'stats'    => json_encode($_links)  //http_build_query($_formatted_stats)
+                'links'    => config('links.console', [])
             ]);
     }
 
