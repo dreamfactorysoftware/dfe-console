@@ -33,7 +33,7 @@ class HomeController extends ViewController
                 'resource' => null,
                 'title'    => null,
                 'links'    => config('links.console', []),
-                'stats'    => $_stats['console']
+                'stats'    => $_stats['console']['instance']
             ]);
     }
 
