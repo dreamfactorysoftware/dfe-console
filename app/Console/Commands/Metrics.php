@@ -37,10 +37,16 @@ class Metrics extends ConsoleCommand
         return array_merge(parent::getOptions(),
             [
                 [
+                    'gather',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'When specified, all metrics are gathered and written to the database. Use when scheduling jobs.',
+                ],
+                [
                     'to-file',
                     'f',
                     InputOption::VALUE_REQUIRED,
-                    'Where to write the output instead of the console.',
+                    'Write metrics to a file.',
                 ],
                 [
                     'console-only',
@@ -78,12 +84,14 @@ class Metrics extends ConsoleCommand
         $_stats = $_service->gatherStatistics();
 
         if (!empty($_stats)) {
+            if ($this->option('gather')) {
+                Models\Metrics::create(['metrics_data_text' => $_stats,]);
+            }
+
             $_output = Json::encode($_stats, JSON_UNESCAPED_SLASHES);
 
             if (null !== ($_file = $this->option('to-file'))) {
                 file_put_contents($_file, $_output);
-
-                return 0;
             }
 
             $this->writeln($_output);
