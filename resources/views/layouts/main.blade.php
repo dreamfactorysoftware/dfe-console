@@ -12,7 +12,7 @@
     <link href="/theme/common/css/common.css" rel="stylesheet">
     <link rel="apple-touch-icon" href="/public/img/apple-touch-icon.png">
     <script type="text/javascript" src="/static/jquery-2.1.4/jquery.min.js"></script>
-    {{--<script type="text/javascript" src="/static/datatables-1.10.7/js/jquery.dataTables.min.js"></script>--}}
+    <script type="text/javascript" src="/static/datatables-1.10.7/js/jquery.dataTables.min.js"></script>
 
     @section('user-scripts')
     @stop
