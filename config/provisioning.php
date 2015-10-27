@@ -14,7 +14,7 @@ return [
     //  Either "static" or "dynamic"
     'storage-zone-type'           => env('DFE_STORAGE_ZONE_TYPE', 'static'),
     //  The "static" storage zone
-    'static-zone-name'            => env('DFE_STATIC_ZONE_NAME', 'ec2.us-east-1a'),
+    'static-zone-name'            => env('DFE_STATIC_ZONE_NAME', 'local'),
     //  relative to storage path (hosted or non)
     'public-path-base'            => env('DFE_PUBLIC_PATH_BASE', '/'),
     //  relative to storage path (hosted or non)
