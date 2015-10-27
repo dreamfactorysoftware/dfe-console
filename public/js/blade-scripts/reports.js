@@ -6,131 +6,111 @@
 jQuery(function ($) {
     var $_body = $(document.body);
 
-    var changeDropdown = function($element) {
-        var dropdown_span = '#selected_' + event.currentTarget.parentElement.id.replace('select_type_list_', '');
-        var dropdown_text = event.currentTarget.textContent;
-
-        $(dropdown_span).html(dropdown_text);
-        $(dropdown_span).attr('value', event.currentTarget.id);
+    var changeDropdown = function ($element) {
+        $('#selected_' + $element.parentElement.id.replace('select_type_list_', ''))
+            .html($element.textContent)
+            .attr('value', $element.id);
     };
 
-    //$_body.on('change', '#select_time_period', function () {
-    //    var selected = $('#select_time_period').val();
-    //    console.log(selected);
-    //});
+    $_body
+        .on('click', 'ul[id^="select_type_list_"] li', function (event) {
+            changeDropdown(event.currentTarget);
+        })
+        .on('click', 'button[id^="instance_type_"]', function (event) {
+            $('#chart_select').find(":button[id^='instance_type_']").each(function (i) {
+                $('#' + this.id).attr('class', 'btn btn-default btn-sm' + (this.id != event.currentTarget.id ? 'btn-info' : ''));
+            });
 
-    $_body.on('click', 'ul[id^="select_type_list_"] li', function (event) {
-        var dropdown_span = '#selected_' + event.currentTarget.parentElement.id.replace('select_type_list_', '');
-        var dropdown_text = event.currentTarget.textContent;
+            $('#submit_instance').prop('disabled', false);
+        })
+        .on('click', 'button[id^="submit_"]', function (event) {
+            var id = event.currentTarget.id;
+            var type = id.replace('submit_', '');
 
-        $(dropdown_span).html(dropdown_text);
-        $(dropdown_span).attr('value', event.currentTarget.id);
-    });
+            var selected = $('#selected_' + type).html();
+            var search_val = $('#selected_' + type).attr('value');
+            var search_string = '';
 
-    $_body.on('click', 'button[id^="instance_type_"]', function (event) {
+            var period = $('#current_period_' + type).html();
+            var date_start = $('#datepicker_from_' + type).val();
+            var date_end = $('#datepicker_to_' + type).val();
 
-        var selected_id = event.currentTarget.id;
+            var timeperiod = convertPeriod(period, date_start, date_end);
 
-        $("#chart_select  :button[id^='instance_type_']").each(function (i) {
-            if (this.id != selected_id)
-                $('#' + this.id).attr('class', 'btn btn-default btn-sm');
-            else
-                $('#' + this.id).attr('class', 'btn btn-default btn-sm btn-info');
-        });
+            var search_type = '';
+            var search_param = '';
+            var search_field = '';
+            var no_select = '';
+            var search_additional = ''
 
-        $("#submit_instance").prop("disabled", false);
-    });
+            if (type === 'cluster') {
+                search_type = 'API-Calls-Clusters';
+                search_param = 'dfe.cluster_id';
+                search_field = 'dfe.instance_id';
+                no_select = 'Select Cluster and click Submit again.';
+            }
+            else if (type === 'instanceowner') {
+                search_type = 'API-Calls-Instance-Owners';
+                search_param = 'dfe.instance_owner_id';
+                search_field = 'app_name';
+                no_select = 'Select Instance Owner and click Submit again.';
+            }
+            else if (type === 'instance') {
+                var chart_type = get_selected_instance_type();
 
+                if (chart_type !== '') {
+                    switch (chart_type) {
+                        case 'instance_type_endpoints':
+                            search_type = 'API-Calls-Endpoints';
+                            search_param = 'dfe.instance_id';
+                            search_field = 'path_info.raw';
+                            break;
+                        case 'instance_type_users':
+                            search_type = 'API-Calls-Users';
+                            search_param = 'dfe.instance_id';
+                            search_field = 'dfe.instance_owner_id';
+                            break;
+                        case 'instance_type_applications':
+                            search_type = 'API-Calls-Applications';
+                            search_param = 'dfe.instance_id';
+                            search_field = 'app_name';
+                            search_additional = '%20NOT%20app_name:admin';
+                            break;
+                        case 'instance_type_roles':
+                            search_type = 'Api-Calls-by-User-Roles';
+                            search_param = 'dfe.instance_id';
+                            search_field = 'user.cached.role.name';
+                            break;
+                        default:
+                            break;
+                    }
 
-    $_body.on('click', 'button[id^="submit_"]', function (event) {
-
-        var id = event.currentTarget.id;
-        var type = id.replace('submit_', '');
-
-        var selected = $('#selected_' + type).html();
-        var search_val = $('#selected_' + type).attr('value');
-        var search_string = '';
-
-        var period = $('#current_period_' + type).html();
-        var date_start = $('#datepicker_from_' + type).val();
-        var date_end = $('#datepicker_to_' + type).val();
-
-        var timeperiod = convertPeriod(period, date_start, date_end);
-
-        var search_type = '';
-        var search_param = '';
-        var search_field = '';
-        var no_select = '';
-        var search_additional = ''
-
-        if (type === 'cluster') {
-            search_type = 'API-Calls-Clusters';
-            search_param = 'dfe.cluster_id';
-            search_field = 'dfe.instance_id';
-            no_select = 'Select Cluster and click Submit again.';
-        }
-        else if (type === 'instanceowner') {
-            search_type = 'API-Calls-Instance-Owners';
-            search_param = 'dfe.instance_owner_id';
-            search_field = 'app_name';
-            no_select = 'Select Instance Owner and click Submit again.';
-        }
-        else if (type === 'instance') {
-            var chart_type = get_selected_instance_type();
-
-            if (chart_type !== '') {
-                switch (chart_type) {
-                    case 'instance_type_endpoints':
-                        search_type = 'API-Calls-Endpoints';
-                        search_param = 'dfe.instance_id';
-                        search_field = 'path_info.raw';
-                        break;
-                    case 'instance_type_users':
-                        search_type = 'API-Calls-Users';
-                        search_param = 'dfe.instance_id';
-                        search_field = 'dfe.instance_owner_id';
-                        break;
-                    case 'instance_type_applications':
-                        search_type = 'API-Calls-Applications';
-                        search_param = 'dfe.instance_id';
-                        search_field = 'app_name';
-                        search_additional = '%20NOT%20app_name:admin';
-                        break;
-                    case 'instance_type_roles':
-                        search_type = 'Api-Calls-by-User-Roles';
-                        search_param = 'dfe.instance_id';
-                        search_field = 'user.cached.role.name';
-                        break;
-                    default:
-                        break;
+                    no_select = 'Select Instance and click Submit again.';
                 }
+                else {
+                    alert('Select Chart Type (e.g. Endpoints)')
+                    return;
+                }
+            }
+            else
+                return;
 
-                no_select = 'Select Instance and click Submit again.';
+
+            if (search_val !== '*') {
+                search_string = "%20AND%20" + search_param + ":" + search_val + search_additional;
             }
             else {
-                alert('Select Chart Type (e.g. Endpoints)')
+                alert(no_select);
                 return;
             }
-        }
-        else
-            return;
 
+            var _chart = "//kibana.fabric.dreamfactory.com/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:" + search_field + ",order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;
 
-        if (search_val !== '*') {
-            search_string = "%20AND%20" + search_param + ":" + search_val + search_additional;
-        }
-        else {
-            alert(no_select);
-            return;
-        }
+            // Good one - keep it
+            //var _chart = "http://kibana.fabric.dreamfactory.com:5601/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:" + search_field + ",order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;
 
-        var _chart = "//kibana.fabric.dreamfactory.com/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:" + search_field + ",order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;
-
-        // Good one - keep it
-        //var _chart = "http://kibana.fabric.dreamfactory.com/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:" + search_field + ",order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;
-
-        $('#iframe_chart').attr('src', _chart);
-    });
+            $('#iframe_chart').attr('src', _chart);
+        });
 
 
     function convertPeriod(period, date_from, date_to) {
