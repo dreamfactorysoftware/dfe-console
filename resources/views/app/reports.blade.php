@@ -292,7 +292,7 @@
         }).on('click', 'button[id^="instance_type_"]', function (event) {
             var selected_id = event.currentTarget.id;
 
-            $("#chart_select  :button[id^='instance_type_']").each(function (i) {
+            $("#chart_select").find(":button[id^='instance_type_']").each(function (i) {
                 if (this.id != selected_id)
                     $('#' + this.id).attr('class', 'btn btn-default btn-sm');
                 else
@@ -304,9 +304,10 @@
 
             var id = event.currentTarget.id;
             var type = id.replace('submit_', '');
+            var $selectedType = $('#selected_' + type);
 
-            var selected = $('#selected_' + type).html();
-            var search_val = $('#selected_' + type).attr('value');
+            var selected = $selectedType.html();
+            var search_val = $selectedType.attr('value');
             var search_string = '';
 
             var period = $('#current_period_' + type).html();
@@ -319,7 +320,7 @@
             var search_param = '';
             var search_field = '';
             var no_select = '';
-            var search_additional = ''
+            var search_additional = '';
 
             if (type === 'cluster') {
                 search_type = 'API-Calls-Clusters';
@@ -389,7 +390,7 @@
                     .replace('{index_type}', '{{$report_index_type}}')
                     .replace('{search_string}', search_string)
                     .replace('{search_field}', search_field)
-                    .replace('{time_period}', timeperiod);
+                    .replace('{amp}', '&') + '&' + timeperiod;
 
             //kibana.enterprise.dreamfactory.com/#/visualize/edit/" + search_type + "?embed&_a=%28filters:!%28%29,linked:!f,query:%28query_string:%28analyze_wildcard:!t,query:%27_type:{{$report_index_type}}" + search_string + "%27%29%29,vis:%28aggs:!%28%28id:%272%27,params:%28%29,schema:metric,type:count%29,%28id:%274%27,params:%28field:" + search_field + ",order:desc,orderBy:%272%27,size:15%29,schema:group,type:terms%29,%28id:%273%27,params:%28extended_bounds:%28%29,index:%27logstash-*%27,field:%27@timestamp%27,interval:auto,min_doc_count:1%29,schema:segment,type:date_histogram%29%29,listeners:%28%29,params:%28addLegend:!t,addTooltip:!t,defaultYExtents:!f,mode:stacked,shareYAxis:!t%29,type:histogram%29%29&" + timeperiod;
             // Good one - keep it
