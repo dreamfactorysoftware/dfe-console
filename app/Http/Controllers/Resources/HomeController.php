@@ -58,15 +58,11 @@ class HomeController extends FactoryController
                 //if (array_get($_link, 'params', false)) {
                     $_links[$_index]['href.og'] = $_links[$_index]['href'];
                     $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
-                \Log::debug('Home (params) ');
-
                 //}
             }
-            \Log::debug('Home (set links) ' . print_r($_links, true));
+
             \Cache::put('home.links.console', $_links, static::LINK_CACHE_TTL);
         } else {
-            \Log::debug('Home (got links) ' . print_r($_links, true));
-
             //  Restore original links
             foreach ($_links as $_index => $_link) {
                 if (isset($_links[$_index]['old-href'])) {
