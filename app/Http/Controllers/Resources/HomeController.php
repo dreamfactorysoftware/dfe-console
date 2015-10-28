@@ -58,7 +58,7 @@ class HomeController extends FactoryController
                 //if (array_get($_link, 'params', false)) {
                     $_links[$_index]['href.og'] = $_links[$_index]['href'];
                     $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
-                \Log::debug('Home (params) ' . print_r(http_build_query($this->getLinkParameters(), true)));
+                \Log::debug('Home (params) ');
 
                 //}
             }
