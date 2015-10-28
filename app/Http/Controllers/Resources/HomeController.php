@@ -55,10 +55,10 @@ class HomeController extends FactoryController
 
             //  Override links to add link parameters if requested
             foreach ($_links as $_index => $_link) {
-                if (array_get($_link, 'attributes', false)) {
+                //if (array_get($_link, 'params', false)) {
                     $_links[$_index]['href.og'] = $_links[$_index]['href'];
                     $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
-                }
+                //}
             }
             \Log::debug('Home (set links) ' . print_r($_links, true));
             \Cache::put('home.links.console', $_links, static::LINK_CACHE_TTL);
