@@ -88,11 +88,11 @@
     "dreamfactory/dfe-storage":                  "dev-develop as dev-master",
     "dreamfactory/dfe-database":                 "1.0.*",
     "dreamfactory/dfe-dreamfactory-provisioner": "1.0.*",
+    "barryvdh/laravel-ide-helper":               "~2.0",
     "barryvdh/laravel-cors":                     "0.6.x"
   },
   "require-dev":       {
     "phpunit/phpunit":             "@stable",
-    "barryvdh/laravel-ide-helper": "~2.0",
     "doctrine/dbal":               "~2.3",
     "phpspec/phpspec":             "~2.1",
     "way/generators":              "~3.0"
