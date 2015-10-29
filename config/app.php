@@ -53,7 +53,6 @@ return [
         DreamFactory\Enterprise\Common\Providers\PacketServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\RouteHashingServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider::class,
-        DreamFactory\Enterprise\Common\Providers\ElkServiceProvider::class,
         DreamFactory\Enterprise\Storage\Providers\InstanceStorageServiceProvider::class,
         /** DreamFactory Services service providers */
         DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
@@ -108,7 +107,6 @@ return [
         'View'            => Illuminate\Support\Facades\View::class,
         /** DreamFactory Aliases */
         'Audit'           => DreamFactory\Enterprise\Services\Auditing\Audit::class,
-        'Elk'             => DreamFactory\Enterprise\Common\Facades\Elk::class,
         'InstanceManager' => DreamFactory\Enterprise\Services\Facades\InstanceManager::class,
         'InstanceStorage' => DreamFactory\Enterprise\Storage\Facades\InstanceStorage::class,
         'Mounter'         => DreamFactory\Enterprise\Storage\Facades\Mounter::class,

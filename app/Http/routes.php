@@ -62,10 +62,9 @@ if (true === config('dfe.enable-console-api', false)) {
 
 /** Miscellaneous controllers for dashboard functionality */
 \Route::controllers([
-    'dashboard' => 'DashboardController',
-    'settings'  => 'SettingsController',
-    'auth'      => 'Auth\AuthController',
-    'password'  => 'Auth\PasswordController',
+    'settings' => 'SettingsController',
+    'auth'     => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController',
 ]);
 
 /** An endpoint to return the current version of dfe-console */
