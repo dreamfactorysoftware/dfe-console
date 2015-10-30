@@ -1,14 +1,15 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
-use DreamFactory\Enterprise\Console\Http\Controllers\ResourceController;
+use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Session;
 use Validator;
 
-
-class UserController extends ResourceController
+class UserController extends ViewController
 {
     //******************************************************************************
     //* Members
@@ -55,7 +56,7 @@ class UserController extends ResourceController
         }
     }
 
-    public function store()
+    public function store(Request $request)
     {
         $is_system_admin = '';
         $user = null;
@@ -125,7 +126,8 @@ class UserController extends ResourceController
             $user_data['active_ind'] = 0;
         }
 
-        $user_data['password_text'] = bcrypt($user_data['new_password']);
+        /** @noinspection PhpUndefinedMethodInspection */
+        $user_data['password_text'] = Hash::make($user_data['new_password']);
 
         unset($user_data['active']);
         unset($user_data['new_password']);
@@ -135,14 +137,17 @@ class UserController extends ResourceController
             $create_user->create($user_data);
 
             $result_text =
-                'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was created successfully!';
+                'The user "' .
+                $user_data['first_name_text'] .
+                ' ' .
+                $user_data['last_name_text'] .
+                '" was created successfully!';
             $result_status = 'alert-success';
 
             Session::flash('flash_message', $result_text);
             Session::flash('flash_type', $result_status);
 
             return \Redirect::to($this->makeRedirectUrl('users'));
-
         } catch (QueryException $e) {
             $res_text = strtolower($e->getMessage());
 
@@ -156,10 +161,9 @@ class UserController extends ResourceController
 
             return redirect('/v1/users/create')->withInput();
         }
-
     }
 
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $is_system_admin = '';
         $users = null;
@@ -256,7 +260,8 @@ class UserController extends ResourceController
         }
 
         if ($user_data['new_password'] != '1234567890') {
-            $user_data['password_text'] = bcrypt($user_data['new_password']);
+            /** @noinspection PhpUndefinedMethodInspection */
+            $user_data['password_text'] = Hash::make($user_data['new_password']);
         } else {
             unset($user_data['password_text']);
         }
@@ -274,14 +279,17 @@ class UserController extends ResourceController
             $user->update($user_data);
 
             $result_text =
-                'The user "' . $user_data['first_name_text'] . ' ' . $user_data['last_name_text'] . '" was updated successfully!';
+                'The user "' .
+                $user_data['first_name_text'] .
+                ' ' .
+                $user_data['last_name_text'] .
+                '" was updated successfully!';
             $result_status = 'alert-success';
 
             Session::flash('flash_message', $result_text);
             Session::flash('flash_type', $result_status);
 
             return \Redirect::to($this->makeRedirectUrl('users'));
-
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
@@ -396,12 +404,12 @@ class UserController extends ResourceController
         $a_users_array = json_decode($a_users);
 
         array_walk($o_users_array,
-            function (&$o_user_array) {
+            function (&$o_user_array){
                 $o_user_array->admin = true;
             });
 
         array_walk($a_users_array,
-            function (&$a_user_array) {
+            function (&$a_user_array){
                 $a_user_array->admin = false;
             });
 
@@ -413,7 +421,3 @@ class UserController extends ResourceController
     }
 
 }
-
-
-
-

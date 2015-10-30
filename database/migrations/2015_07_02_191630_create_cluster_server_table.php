@@ -17,7 +17,7 @@ class CreateClusterServerTable extends Migration
     {
         if (!\Schema::hasTable('cluster_server_asgn_t')) {
             Schema::create('cluster_server_asgn_t',
-                function (Blueprint $table) {
+                function (Blueprint $table){
                     $table->integer('cluster_id');
                     $table->integer('server_id');
                     $table->dateTime('create_date');
@@ -31,7 +31,7 @@ class CreateClusterServerTable extends Migration
 
         if (!\Schema::hasTable('cluster_server_asgn_arch_t')) {
             Schema::create('cluster_server_asgn_arch_t',
-                function (Blueprint $table) {
+                function (Blueprint $table){
                     $table->integer('cluster_id');
                     $table->integer('server_id');
                     $table->dateTime('create_date');

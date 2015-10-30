@@ -1,5 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
+use DreamFactory\Enterprise\Database\Models\Role;
+
 class RoleController extends OpsResourceController
 {
     //******************************************************************************
@@ -7,9 +9,9 @@ class RoleController extends OpsResourceController
     //******************************************************************************
 
     /** @type string */
-    protected $_tableName = 'role_t';
+    protected $tableName = 'role_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Role';
+    protected $model = Role::class;
     /** @type string */
-    protected $_resource = 'role';
+    protected $resource = 'role';
 }

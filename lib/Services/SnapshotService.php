@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Facades\RouteHashing;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
@@ -12,6 +12,8 @@ use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\RouteHash;
 use DreamFactory\Enterprise\Database\Models\Snapshot;
+use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
 use DreamFactory\Library\Utility\Inflector;
@@ -68,23 +70,22 @@ class SnapshotService extends BaseService
 
         //  Create the snapshot archive and stuff it full of goodies
         /** @var SnapshotManifest $_manifest */
-        list($_fsSnapshot, $_manifest, $_routeHash, $_routeLink) =
-            $this->createExportArchive($_snapshotId,
-                $_snapshotName,
-                [
-                    'timestamp'           => $_stamp,
-                    'guest-location'      => $instance->guest_location_nbr,
-                    'instance-id'         => $instance->instance_id_text,
-                    'cluster-id'          => (int)$instance->cluster_id,
-                    'db-server-id'        => (int)$instance->db_server_id,
-                    'web-server-id'       => (int)$instance->web_server_id,
-                    'app-server-id'       => (int)$instance->app_server_id,
-                    'owner-id'            => (int)$instance->user->id,
-                    'owner-email-address' => $instance->user->email_addr_text,
-                    'owner-storage-key'   => $instance->user->storage_id_text,
-                    'storage-key'         => $instance->storage_id_text,
-                ],
-                $keepDays);
+        list($_fsSnapshot, $_manifest, $_routeHash, $_routeLink) = $this->createExportArchive($_snapshotId,
+            $_snapshotName,
+            [
+                'timestamp'           => $_stamp,
+                'guest-location'      => $instance->guest_location_nbr,
+                'instance-id'         => $instance->instance_id_text,
+                'cluster-id'          => (int)$instance->cluster_id,
+                'db-server-id'        => (int)$instance->db_server_id,
+                'web-server-id'       => (int)$instance->web_server_id,
+                'app-server-id'       => (int)$instance->app_server_id,
+                'owner-id'            => (int)$instance->user->id,
+                'owner-email-address' => $instance->user->email_addr_text,
+                'owner-storage-key'   => $instance->user->storage_id_text,
+                'storage-key'         => $instance->storage_id_text,
+            ],
+            $keepDays);
 
         try {
             $this->addFilesToArchive($exports, $_fsSnapshot);
@@ -179,6 +180,8 @@ HTML
      *
      * @param int|string $instanceId
      * @param string     $snapshot A snapshot id or path to a snapshot
+     *
+     * @return array
      */
     public function restore($instanceId, $snapshot)
     {
@@ -196,14 +199,13 @@ HTML
             $_filename = $_instance->getSnapshotPath() . DIRECTORY_SEPARATOR . $snapshot;
         } else {
             //  A snapshot hash given, find related snapshot
+            /** @type Snapshot $_snapshot */
             if (null === ($_snapshot = Snapshot::with('route-hash')->bySnapshotId($snapshot)->first())) {
                 throw new \InvalidArgumentException('The snapshot "' . $snapshot . '" is unrecognized or invalid."');
             }
 
-            $_filename =
-                $_instance->getSnapshotPath() .
-                DIRECTORY_SEPARATOR .
-                trim($_snapshot->routeHash->actual_path_text, DIRECTORY_SEPARATOR . ' ');
+            return Provision::import(new ImportJob(new PortableServiceRequest($_instance,
+                ['target' => $_snapshot->snapshot_id_text])));
         }
 
         //  Mount the snapshot
@@ -212,9 +214,8 @@ HTML
 
         //  Reconstitute the manifest and grab the services
         $_manifest = SnapshotManifest::createFromFile(config('snapshot.metadata-file-name'), $_fsSnapshot);
-        $_services = \Provision::getPortableServices($_manifest->get('guest-location'));
+        $_services = Provision::getPortableServices($_manifest->get('guest-location'));
 
-        $_request = new ProvisionServiceRequest($_instance);
         $_result = [];
 
         foreach ($_fsSnapshot->listContents() as $_item) {
@@ -225,14 +226,16 @@ HTML
                 }
 
                 if (array_key_exists($_type, $_services)) {
-                    /** @noinspection PhpUndefinedMethodInspection */
-                    $_result[$_type] =
-                        $_services[$_type]->import($_request, $_workPath . DIRECTORY_SEPARATOR . $_item['file']);
+                    $_job = new ImportJob(new PortableServiceRequest($_instance, [
+                        'target' => $_workPath . DIRECTORY_SEPARATOR . $_item['file'],
+                    ]));
+
+                    $_result[$_type] = $_services[$_type]->import($_job);
                 }
             }
         }
 
-        $_request->setResult($_result);
+        return $_result;
     }
 
     /**

@@ -5,6 +5,15 @@
     padding-bottom: 25px;
 }
 
+.well-menu {
+    padding: 9px;
+    height:  50px;
+}
+
+.well-menu > div.pull-left {
+    margin-right: 15px;
+}
+
 .dfe-topnav-logo-height {
     max-height: 48px;
 }

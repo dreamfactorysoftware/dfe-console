@@ -17,9 +17,8 @@ class CreateAppKeysTable extends Migration
     public function up()
     {
         if (!\Schema::hasTable('app_key_t')) {
-            \Schema::create(
-                'app_key_t',
-                function (Blueprint $table) {
+            \Schema::create('app_key_t',
+                function (Blueprint $table){
                     $table->increments('id');
                     $table->integer('owner_id');
                     $table->integer('owner_type_nbr');
@@ -29,8 +28,7 @@ class CreateAppKeysTable extends Migration
                     $table->string('key_class_text', 64)->index();
                     $table->dateTime('create_date');
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
-                }
-            );
+                });
         }
     }
 

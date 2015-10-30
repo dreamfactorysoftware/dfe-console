@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
+use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
@@ -34,39 +35,41 @@ class Server extends ConsoleCommand
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
             [
-                'operation',
-                InputArgument::REQUIRED,
-                'The operation to perform: create, update, or delete',
-            ],
-            [
-                'server-id',
-                InputArgument::REQUIRED,
-                'The id of the server upon which to perform operation',
-            ],
-        ]);
+                [
+                    'operation',
+                    InputArgument::REQUIRED,
+                    'The operation to perform: create, update, or delete',
+                ],
+                [
+                    'server-id',
+                    InputArgument::REQUIRED,
+                    'The id of the server upon which to perform operation',
+                ],
+            ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
             [
-                'server-type',
-                't',
-                InputOption::VALUE_REQUIRED,
-                'The type of server: ' . implode(', ', ServerTypes::getDefinedConstants(true)),
-            ],
-            ['mount-id', 'm', InputOption::VALUE_REQUIRED, 'The id of the storage mount for this server'],
-            ['host-name', 'a', InputOption::VALUE_REQUIRED, 'The host name of this server',],
-            [
-                'config',
-                'c',
-                InputOption::VALUE_REQUIRED,
-                'JSON-encoded array of configuration data for this server',
-            ],
-        ]);
+                [
+                    'server-type',
+                    't',
+                    InputOption::VALUE_REQUIRED,
+                    'The type of server: ' . implode(', ', ServerTypes::getDefinedConstants(true)),
+                ],
+                ['mount-id', 'm', InputOption::VALUE_REQUIRED, 'The id of the storage mount for this server'],
+                ['host-name', 'a', InputOption::VALUE_REQUIRED, 'The host name of this server',],
+                [
+                    'config',
+                    'c',
+                    InputOption::VALUE_REQUIRED,
+                    'JSON-encoded array of configuration data for this server',
+                ],
+            ]);
     }
 
     /**
@@ -233,6 +236,16 @@ class Server extends ConsoleCommand
         //  Config (optional)
         if (!$this->optionArray('config', 'config_text', $_data, $create)) {
             return false;
+        }
+
+        $_timestamp = new Carbon();
+
+        if (!isset($_data['create_date']) || '0000-00-00 00:00:00' == $_data['create_date']) {
+            $_data['create_date'] = $_timestamp;
+        }
+
+        if (!isset($_data['lmod_date']) || '0000-00-00 00:00:00' == $_data['lmod_date']) {
+            $_data['lmod_date'] = $_timestamp;
         }
 
         return $_data;

@@ -2,8 +2,8 @@
 
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
-use Illuminate\Filesystem\FilesystemAdapter;
+use DreamFactory\Enterprise\Storage\Facades\InstanceStorage;
+use League\Flysystem\Filesystem;
 
 class InstanceStorageServiceTest extends \TestCase
 {
@@ -51,31 +51,23 @@ class InstanceStorageServiceTest extends \TestCase
      */
     public function testStoragePaths()
     {
-        $_instance = $this->_findInstance( 'dfe-test-case' );
+        $_instance = $this->_findInstance('dfe-test-case');
 
         $_instanceId = $_instance->instance_id_text;
-        $_private = config( 'provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME );
-        $_snapshot = config( 'provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME );
+        $_private = config('provisioning.private-path-name', ConsoleDefaults::PRIVATE_PATH_NAME);
+        $_snapshot = config('provisioning.snapshot-path-name', ConsoleDefaults::SNAPSHOT_PATH_NAME);
 
-        $this->assertEquals(
-            static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_instanceId,
-            InstanceStorage::getStoragePath( $_instance )
-        );
+        $this->assertEquals(static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_instanceId,
+            InstanceStorage::getStoragePath($_instance));
 
-        $this->assertEquals(
-            static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_instanceId . DIRECTORY_SEPARATOR . $_private,
-            InstanceStorage::getPrivatePath( $_instance )
-        );
+        $this->assertEquals(static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_instanceId . DIRECTORY_SEPARATOR . $_private,
+            InstanceStorage::getPrivatePath($_instance));
 
-        $this->assertEquals(
-            static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_private,
-            InstanceStorage::getOwnerPrivatePath( $_instance )
-        );
+        $this->assertEquals(static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_private,
+            InstanceStorage::getOwnerPrivatePath($_instance));
 
-        $this->assertEquals(
-            static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_private . DIRECTORY_SEPARATOR . $_snapshot,
-            InstanceStorage::getSnapshotPath( $_instance )
-        );
+        $this->assertEquals(static::STORAGE_ROOT . DIRECTORY_SEPARATOR . $_private . DIRECTORY_SEPARATOR . $_snapshot,
+            InstanceStorage::getSnapshotPath($_instance));
     }
 
     /**
@@ -86,40 +78,39 @@ class InstanceStorageServiceTest extends \TestCase
      */
     public function testStorageMounts()
     {
-        $_instance = $this->_findInstance( 'dfe-test-case' );
+        $_instance = $this->_findInstance('dfe-test-case');
 
         $_testFile = '_test.file_';
         $_contents = 'test';
 
-        $this->_doFileTest( InstanceStorage::getStorageMount( $_instance ), $_testFile, $_contents, static::INSTANCE_STORAGE_PATH );
-        $this->_doFileTest( InstanceStorage::getPrivateStorageMount( $_instance ), $_testFile, $_contents, static::INSTANCE_PRIVATE_PATH );
-        $this->_doFileTest( InstanceStorage::getOwnerPrivateStorageMount( $_instance ), $_testFile, $_contents, static::OWNER_PRIVATE_PATH );
-        $this->_doFileTest( InstanceStorage::getSnapshotMount( $_instance ), $_testFile, $_contents, static::SNAPSHOT_PATH );
+        $this->_doFileTest(InstanceStorage::getStorageMount($_instance), $_testFile, $_contents,
+            static::INSTANCE_STORAGE_PATH);
+        $this->_doFileTest(InstanceStorage::getPrivateStorageMount($_instance), $_testFile, $_contents,
+            static::INSTANCE_PRIVATE_PATH);
+        $this->_doFileTest(InstanceStorage::getOwnerPrivateStorageMount($_instance), $_testFile, $_contents,
+            static::OWNER_PRIVATE_PATH);
+        $this->_doFileTest(InstanceStorage::getSnapshotMount($_instance), $_testFile, $_contents,
+            static::SNAPSHOT_PATH);
     }
 
     /**
-     * @param FilesystemAdapter $mount
-     * @param string            $file
-     * @param string            $contents
-     * @param string            $check
+     * @param Filesystem $mount
+     * @param string     $file
+     * @param string     $contents
+     * @param string     $check
      *
      * @throws \Exception
      */
-    protected function _doFileTest( $mount, $file, $contents, $check )
+    protected function _doFileTest($mount, $file, $contents, $check)
     {
-        $mount->put( $file, $contents );
+        $mount->put($file, $contents);
 
-        try
-        {
-            $this->assertTrue(
-                $contents == file_get_contents( $check . DIRECTORY_SEPARATOR . $file )
-            );
+        try {
+            $this->assertTrue($contents == file_get_contents($check . DIRECTORY_SEPARATOR . $file));
 
-            @$mount->delete( $file );
-        }
-        catch ( \Exception $_ex )
-        {
-            @$mount->delete( $file );
+            @$mount->delete($file);
+        } catch (\Exception $_ex) {
+            @$mount->delete($file);
             throw $_ex;
         }
     }

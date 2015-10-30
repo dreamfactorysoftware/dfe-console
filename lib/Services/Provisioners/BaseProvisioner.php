@@ -3,8 +3,6 @@
 use DreamFactory\Enterprise\Common\Contracts\VirtualProvisioner;
 use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\HasTimer;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
@@ -39,6 +37,10 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
      * @type string Your provisioner id
      */
     const PROVISIONER_ID = false;
+    /**
+     * @type string Our resource URI
+     */
+    const RESOURCE_URI = false;
 
     //******************************************************************************
     //* Traits
@@ -115,7 +117,11 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
         ];
     }
 
-    /** @inheritdoc */
+    /**
+     * @param ProvisionServiceRequest|mixed $request
+     *
+     * @return ProvisionServiceResponse|mixed
+     */
     public function provision($request)
     {
         $this->startTimer();
@@ -161,7 +167,11 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
         return $_response;
     }
 
-    /** @inheritdoc */
+    /**
+     * @param ProvisionServiceRequest|mixed $request
+     *
+     * @return ProvisionServiceResponse|mixed
+     */
     public function deprovision($request)
     {
         $this->startTimer();

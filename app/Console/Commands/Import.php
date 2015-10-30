@@ -1,8 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
+use DreamFactory\Enterprise\Services\Provisioners\PortableServiceRequest;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

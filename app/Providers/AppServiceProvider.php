@@ -11,7 +11,7 @@ class AppServiceProvider extends ServiceProvider
     /** @inheritdoc */
     public function register()
     {
+        //  Register our registrar
         $this->app->bind('Illuminate\Contracts\Auth\Registrar', 'DreamFactory\Enterprise\Console\Services\Registrar');
     }
-
 }

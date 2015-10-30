@@ -1,8 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
+use DreamFactory\Enterprise\Services\Provisioners\PortableServiceRequest;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -49,7 +49,8 @@ class Export extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 ['instance-id', InputArgument::REQUIRED, 'The instance to export'],
             ]);
     }
@@ -61,7 +62,8 @@ class Export extends ConsoleCommand
      */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
+            [
                 [
                     'destination',
                     'd',

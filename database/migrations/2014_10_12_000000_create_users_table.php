@@ -15,9 +15,8 @@ class CreateUsersTable extends Migration
     public function up()
     {
         if (!\Schema::hasTable('service_user_t')) {
-            Schema::create(
-                'service_user_t',
-                function (Blueprint $table) {
+            Schema::create('service_user_t',
+                function (Blueprint $table){
                     $table->increments('id');
                     $table->string('first_name_text', 64);
                     $table->string('last_name_text', 64);
@@ -31,14 +30,12 @@ class CreateUsersTable extends Migration
                     $table->tinyInteger('active_ind')->default(0);
                     $table->dateTime('create_date');
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
-                }
-            );
+                });
         }
 
         if (!\Schema::hasTable('user_t')) {
-            Schema::create(
-                'service_user_t',
-                function (Blueprint $table) {
+            Schema::create('service_user_t',
+                function (Blueprint $table){
                     $table->increments('id');
                     $table->string('email_addr_text', 320)->unique();
                     $table->string('password_text', 200);
@@ -68,8 +65,7 @@ class CreateUsersTable extends Migration
                     $table->string('last_login_ip_text', 64)->nullable();
                     $table->dateTime('create_date');
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
-                }
-            );
+                });
         }
     }
 

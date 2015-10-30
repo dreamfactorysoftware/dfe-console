@@ -2,27 +2,26 @@
 // Navs
 // --------------------------------------------------
 
-
 // Base class
 // --------------------------------------------------
 
 .nav {
   margin-bottom: 0;
-  padding-left: 0; // Override default ul/ol
-  list-style: none;
+  padding-left:  0; // Override default ul/ol
+  list-style:    none;
   &:extend(.clearfix all);
 
   > li {
     position: relative;
-    display: block;
+    display:  block;
 
     > a {
       position: relative;
-      display: block;
-      padding: @nav-link-padding;
+      display:  block;
+      padding:  @nav-link-padding;
       &:hover,
       &:focus {
-        text-decoration: none;
+        text-decoration:  none;
         background-color: @nav-link-hover-bg;
       }
     }
@@ -33,10 +32,10 @@
 
       &:hover,
       &:focus {
-        color: @nav-disabled-link-hover-color;
-        text-decoration: none;
+        color:            @nav-disabled-link-hover-color;
+        text-decoration:  none;
         background-color: transparent;
-        cursor: @cursor-disabled;
+        cursor:           @cursor-disabled;
       }
     }
   }
@@ -47,7 +46,7 @@
     &:hover,
     &:focus {
       background-color: @nav-link-hover-bg;
-      border-color: @link-color;
+      border-color:     @link-color;
     }
   }
 
@@ -68,7 +67,6 @@
   }
 }
 
-
 // Tabs
 // -------------------------
 
@@ -76,15 +74,15 @@
 .nav-tabs {
   border-bottom: 1px solid @nav-tabs-border-color;
   > li {
-    float: left;
+    float:         left;
     // Make the list-items overlay the bottom border
     margin-bottom: -1px;
 
     // Actual tabs (as links)
     > a {
-      margin-right: 2px;
-      line-height: @line-height-base;
-      border: 1px solid transparent;
+      margin-right:  2px;
+      line-height:   @line-height-base;
+      border:        1px solid transparent;
       border-radius: @border-radius-base @border-radius-base 0 0;
       &:hover {
         border-color: @nav-tabs-link-hover-border-color @nav-tabs-link-hover-border-color @nav-tabs-border-color;
@@ -96,11 +94,11 @@
       &,
       &:hover,
       &:focus {
-        color: @nav-tabs-active-link-hover-color;
-        background-color: @nav-tabs-active-link-hover-bg;
-        border: 1px solid @nav-tabs-active-link-hover-border-color;
+        color:               @nav-tabs-active-link-hover-color;
+        background-color:    @nav-tabs-active-link-hover-bg;
+        border:              1px solid @nav-tabs-active-link-hover-border-color;
         border-bottom-color: transparent;
-        cursor: default;
+        cursor:              default;
       }
     }
   }
@@ -110,7 +108,6 @@
     .nav-tabs-justified();
   }
 }
-
 
 // Pills
 // -------------------------
@@ -131,25 +128,23 @@
       &,
       &:hover,
       &:focus {
-        color: @nav-pills-active-link-hover-color;
+        color:            @nav-pills-active-link-hover-color;
         background-color: @nav-pills-active-link-hover-bg;
       }
     }
   }
 }
 
-
 // Stacked pills
 .nav-stacked {
   > li {
     float: none;
     + li {
-      margin-top: 2px;
+      margin-top:  2px;
       margin-left: 0; // no need for this gap between nav items
     }
   }
 }
-
 
 // Nav variations
 // --------------------------------------------------
@@ -163,20 +158,20 @@
   > li {
     float: none;
     > a {
-      text-align: center;
+      text-align:    center;
       margin-bottom: 5px;
     }
   }
 
   > .dropdown .dropdown-menu {
-    top: auto;
+    top:  auto;
     left: auto;
   }
 
   @media (min-width: @screen-sm-min) {
     > li {
       display: table-cell;
-      width: 1%;
+      width:   1%;
       > a {
         margin-bottom: 0;
       }
@@ -192,7 +187,7 @@
 
   > li > a {
     // Override margin from .nav-tabs
-    margin-right: 0;
+    margin-right:  0;
     border-radius: @border-radius-base;
   }
 
@@ -207,6 +202,7 @@
       border-bottom: 1px solid @nav-tabs-justified-link-border-color;
       border-radius: @border-radius-base @border-radius-base 0 0;
     }
+
     > .active > a,
     > .active > a:hover,
     > .active > a:focus {
@@ -215,22 +211,20 @@
   }
 }
 
-
 // Tabbable tabs
 // -------------------------
 
 // Hide tabbable panes to start, show them when `.active`
 .tab-content {
   > .tab-pane {
-    display: none;
+    display:    none;
     visibility: hidden;
   }
   > .active {
-    display: block;
+    display:    block;
     visibility: visible;
   }
 }
-
 
 // Dropdowns
 // -------------------------

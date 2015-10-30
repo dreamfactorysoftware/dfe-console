@@ -3,8 +3,6 @@
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\VirtualProvisioner;
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\HasPrivatePaths;

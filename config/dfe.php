@@ -6,6 +6,7 @@
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Services\Auditing\Enums\AuditMessageFormats;
 
 return [
     //******************************************************************************
@@ -33,11 +34,19 @@ return [
     //  The url to download the current version of DFE console
     'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/develop.zip',
     //******************************************************************************
+    //* Auditing details for instances
+    //******************************************************************************
+    'audit'                   => [
+        'host'           => env('DFE_AUDIT_HOST'),
+        'port'           => env('DFE_AUDIT_PORT'),
+        'message-format' => env('DFE_AUDIT_MESSAGE_FORMAT', AuditMessageFormats::GELF),
+    ],
+    //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************
     'common'                  => [
         'display-name'      => 'DreamFactory Enterprise&trade; Console',
-        'display-version'   => 'v1.0.0',
+        'display-version'   => 'v1.0.0-beta',
         'display-copyright' => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name

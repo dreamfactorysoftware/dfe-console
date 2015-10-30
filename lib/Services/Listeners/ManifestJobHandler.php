@@ -64,8 +64,7 @@ class ManifestJobHandler
 
                 if ($command->createManifest()) {
                     //  Create a new manifest...
-                    $_manifest = ClusterManifest::make(
-                        base_path(),
+                    $_manifest = ClusterManifest::make(base_path(),
                         [
                             'cluster-id'       => config('dfe.cluster-id'),
                             'default-domain'   => config('provisioning.default-domain'),
@@ -75,13 +74,11 @@ class ManifestJobHandler
                             'console-api-key'  => config('dfe.security.console-api-key'),
                             'client-id'        => !$_key ? null : $_key->client_id,
                             'client-secret'    => !$_key ? null : $_key->client_secret,
-                        ]
-                    );
+                        ]);
 
                     $command->setResult($_result = SuccessPacket::make($_manifest->toArray(), Response::HTTP_CREATED));
                 }
-            } catch
-            (\Exception $_ex) {
+            } catch (\Exception $_ex) {
                 $command->setResult($_result = ErrorPacket::create(Response::HTTP_BAD_REQUEST));
             }
         }

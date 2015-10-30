@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SetupTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
+    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Services\Commands\SetupTest" file="$PROJECT_DIR$/tests/Services/Commands/SetupTest.php" scope="Class" />
+    <method />
+  </configuration>
+</component>

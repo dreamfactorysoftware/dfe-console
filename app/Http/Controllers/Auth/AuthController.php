@@ -25,6 +25,7 @@ class AuthController extends CommonAuthController
             [
                 'first_name_text' => 'required|max:64',
                 'last_name_text'  => 'required|max:64',
+                'nickname_text'   => 'required|max:64',
                 'email_addr_text' => 'required|email|max:320|unique:service_user_t',
                 'password_text'   => 'required|confirmed|min:6',
             ]);
@@ -40,10 +41,11 @@ class AuthController extends CommonAuthController
     public function create(array $data)
     {
         return ServiceUser::create([
-            'first_name_text' => $data['first_name_text'],
-            'last_name_text'  => $data['last_name_text'],
-            'email_addr_text' => $data['email_addr_text'],
-            'password_text'   => bcrypt($data['password_text']),
+            'first_name_text' => array_get($data, 'first_name_text'),
+            'last_name_text'  => array_get($data, 'last_name_text'),
+            'email_addr_text' => array_get($data, 'email_addr_text'),
+            'nickname_text'   => array_get($data, 'nick_name_text'),
+            'password_text'   => \Hash::make(array_get($data, 'password_text')),
         ]);
     }
 }

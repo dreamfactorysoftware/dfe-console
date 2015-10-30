@@ -1,20 +1,20 @@
 <?php namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\PortableData;
-use DreamFactory\Enterprise\Common\Contracts\PortableProvisionerAware;
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
-use DreamFactory\Enterprise\Common\Provisioners\PortableServiceResponse;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Services\Contracts\PortableProvisionerAware;
+use DreamFactory\Enterprise\Services\Contracts\ResourceProvisionerAware;
 use DreamFactory\Enterprise\Services\Facades\Snapshot;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Enterprise\Services\Provisioners\PortableServiceResponse;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceRequest;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use League\Flysystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;

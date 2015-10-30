@@ -16,17 +16,24 @@
 }
 
 .collapse {
-  display: none;
+  display:    none;
   visibility: hidden;
 
-  &.in      { display: block; visibility: visible; }
-  tr&.in    { display: table-row; }
-  tbody&.in { display: table-row-group; }
+  &.in {
+    display:    block;
+    visibility: visible;
+  }
+  tr&.in {
+    display: table-row;
+  }
+  tbody&.in {
+    display: table-row-group;
+  }
 }
 
 .collapsing {
   position: relative;
-  height: 0;
+  height:   0;
   overflow: hidden;
   .transition-property(~"height, visibility");
   .transition-duration(.35s);

@@ -1,7 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Services\Jobs;
 
-use DreamFactory\Enterprise\Common\Jobs\PortabilityJob;
-
 class ImportJob extends PortabilityJob
 {
     //******************************************************************************

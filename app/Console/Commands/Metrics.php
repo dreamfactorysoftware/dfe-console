@@ -34,45 +34,71 @@ class Metrics extends ConsoleCommand
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
             [
-                'console-only',
-                null,
-                InputOption::VALUE_NONE,
-                'Only gather "console" metrics',
-            ],
-            [
-                'dashboard-only',
-                null,
-                InputOption::VALUE_NONE,
-                'Only gather "dashboard" metrics',
-            ],
-            [
-                'instance-only',
-                null,
-                InputOption::VALUE_NONE,
-                'Only gather "dashboard" metrics',
-            ],
-        ]);
+                [
+                    'gather',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'When specified, all metrics are gathered and written to the database. Use when scheduling jobs.',
+                ],
+                [
+                    'to-file',
+                    'f',
+                    InputOption::VALUE_REQUIRED,
+                    'Write metrics to a file.',
+                ],
+                [
+                    'console-only',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Only gather "console" metrics',
+                ],
+                [
+                    'dashboard-only',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Only gather "dashboard" metrics',
+                ],
+                [
+                    'instance-only',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Only gather "dashboard" metrics',
+                ],
+            ]);
     }
 
+    /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * Handle the command
      *
-     * @return mixed
+     * @return int
      */
     public function fire()
     {
         $this->setOutputPrefix(false);
-
-        parent::fire();
 
         /** @type UsageService $_service */
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
         $_stats = $_service->gatherStatistics();
 
         if (!empty($_stats)) {
-            $this->writeln(Json::encode($_stats, JSON_UNESCAPED_SLASHES));
+            if ($this->option('gather')) {
+                Models\Metrics::create(['metrics_data_text' => $_stats,]);
+            }
+
+            $_output = Json::encode($_stats, JSON_UNESCAPED_SLASHES);
+
+            if (null !== ($_file = $this->option('to-file'))) {
+                file_put_contents($_file, $_output);
+            }
+
+            $this->writeln($_output);
+        } else {
+            $this->writeln('No metrics were gathered.');
         }
+
+        return 0;
     }
 }

@@ -1,5 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
+use DreamFactory\Enterprise\Database\Models\Cluster;
+
 class ClusterController extends OpsResourceController
 {
     //******************************************************************************
@@ -7,9 +9,9 @@ class ClusterController extends OpsResourceController
     //******************************************************************************
 
     /** @type string */
-    protected $_tableName = 'cluster_t';
+    protected $tableName = 'cluster_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Cluster';
+    protected $model = Cluster::class;
     /** @type string */
-    protected $_resource = 'cluster';
+    protected $resource = 'cluster';
 }

@@ -48,7 +48,7 @@ return [
              ********************************************************************************/
             'offerings'    => [],
             /** The instance-provided resource discovery uri */
-            'resource-uri' => '/api/v2/system/',
+            'resource-uri' => DreamFactory\Enterprise\Provisioners\DreamFactory\InstanceProvisioner::RESOURCE_URI,
         ],
     ],
 ];

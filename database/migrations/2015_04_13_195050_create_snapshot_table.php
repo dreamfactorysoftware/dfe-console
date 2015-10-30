@@ -17,9 +17,8 @@ class CreateSnapshotTable extends Migration
     public function up()
     {
         if (!\Schema::hasTable('snapshot_t')) {
-            \Schema::create(
-                'snapshot_t',
-                function (Blueprint $table) {
+            \Schema::create('snapshot_t',
+                function (Blueprint $table){
                     $table->bigIncrements('id');
                     $table->integer('user_id')->index();
                     $table->integer('instance_id')->index();
@@ -39,8 +38,7 @@ class CreateSnapshotTable extends Migration
                     $table->foreign('user_id')->references('id')->on('user_t')->onDelete('cascade');
                     $table->foreign('instance_id')->references('id')->on('instance_t')->onDelete('cascade');
                     $table->foreign('route_hash_id')->references('id')->on('route_hash_t')->onDelete('cascade');
-                }
-            );
+                });
         }
     }
 

@@ -1,5 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Ops;
 
+use DreamFactory\Enterprise\Database\Models\Limit;
+
 class LimitController extends OpsResourceController
 {
     //******************************************************************************
@@ -7,9 +9,9 @@ class LimitController extends OpsResourceController
     //******************************************************************************
 
     /** @type string */
-    protected $_tableName = 'limit_t';
+    protected $tableName = 'limit_t';
     /** @type string */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Limit';
+    protected $model = Limit::class;
     /** @type string */
-    protected $_resource = 'limit';
+    protected $resource = 'limit';
 }

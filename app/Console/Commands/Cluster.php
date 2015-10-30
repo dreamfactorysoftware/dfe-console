@@ -55,7 +55,8 @@ class Cluster extends ConsoleCommand
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 [
                     'operation',
                     InputArgument::REQUIRED,
@@ -72,7 +73,8 @@ class Cluster extends ConsoleCommand
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
+            [
                 //  Create/Update/Delete
                 ['owner-id', null, InputOption::VALUE_REQUIRED, 'The "owner-id" of this cluster'],
                 [

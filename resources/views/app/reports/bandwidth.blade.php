@@ -1,4 +1,4 @@
-@include('layouts.partials.topmenu',array('pageName' => 'Reports', 'prefix' => $prefix))
+@include('layouts.partials.topmenu',['pageName' => 'Reports', 'prefix' => $prefix])
 
 @extends('layouts.main')
 
@@ -39,9 +39,14 @@
                     <div role="tabpanel">
 
                         <ul class="nav nav-tabs" role="tablist" id="chart_type_tabs">
-                            <li role="presentation" class="active"><a href="#clusters" aria-controls="clusters" role="tab" data-toggle="tab" id="chart_type_clusters">Clusters</a></li>
-                            <li role="presentation"><a href="#instance_owners" aria-controls="instance_owners" role="tab" data-toggle="tab" id="chart_type_instances">Instance Owners</a></li>
-                            <li role="presentation"><a href="#instances" aria-controls="instances" role="tab" data-toggle="tab" id="chart_type_instances">Instances</a></li>
+                            <li role="presentation" class="active"><a href="#clusters" aria-controls="clusters"
+                                                                      role="tab" data-toggle="tab"
+                                                                      id="chart_type_clusters">Clusters</a></li>
+                            <li role="presentation"><a href="#instance_owners" aria-controls="instance_owners"
+                                                       role="tab" data-toggle="tab" id="chart_type_instances">Instance
+                                    Owners</a></li>
+                            <li role="presentation"><a href="#instances" aria-controls="instances" role="tab"
+                                                       data-toggle="tab" id="chart_type_instances">Instances</a></li>
                         </ul>
 
                         <div class="tab-content" id="chart_select">
@@ -54,14 +59,18 @@
 
                                     <div class="pull-left" role="group">
                                         <div class="dropdown">
-                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_cluster" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button"
+                                                    id="select_type_cluster" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="true">
                                                 <span id="selected_cluster" value="*">Select Cluster</span>
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_type_cluster" id="select_type_list_cluster">
+                                            <ul class="dropdown-menu" aria-labelledby="select_type_cluster"
+                                                id="select_type_list_cluster">
 
                                                 @foreach($clusters as $i => $cluster)
-                                                    <li id="{{$cluster->cluster_id_text}}"><a href="#">{{$cluster->cluster_id_text}}</a></li>
+                                                    <li id="{{$cluster->cluster_id_text}}"><a
+                                                                href="#">{{$cluster->cluster_id_text}}</a></li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -71,7 +80,9 @@
 
                                     <div class="pull-left" role="group">
                                         <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_clusters" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
+                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button"
+                                                    id="select_time_period_clusters" data-toggle="dropdown"
+                                                    aria-expanded="false" style="width: 130px">
                                                 <span id="current_period_cluster">Select Time Period</span>
                                                 <span class="caret"></span>
                                             </button>
@@ -80,7 +91,8 @@
                                                 <li><a href="javascript:selectPeriod(7, 'cluster')">This Week</a></li>
                                                 <li><a href="javascript:selectPeriod(30, 'cluster')">This Month</a></li>
                                                 <li><a href="javascript:selectPeriod(365, 'cluster')">This Year</a></li>
-                                                <li><a href="javascript:selectPeriod(0, 'cluster')">Custom Range</a></li>
+                                                <li><a href="javascript:selectPeriod(0, 'cluster')">Custom Range</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -92,9 +104,11 @@
                                         <div class="pull-left" role="group" id="datepickers">
 
                                             <div>
-                                                <input type="text" id="datepicker_from_cluster" class="btn btn-default btn-sm" value="Date From">
+                                                <input type="text" id="datepicker_from_cluster"
+                                                       class="btn btn-default btn-sm" value="Date From">
                                                 &nbsp;
-                                                <input type="text" id="datepicker_to_cluster" class="btn btn-default btn-sm" value="Date To">
+                                                <input type="text" id="datepicker_to_cluster"
+                                                       class="btn btn-default btn-sm" value="Date To">
                                             </div>
                                         </div>
                                     </div>
@@ -102,7 +116,9 @@
                                     <div class="pull-left" style="width: 25px">&nbsp;</div>
 
                                     <div class="pull-left">
-                                        <button id="submit_cluster" type="button" class="btn btn-primary btn-sm">Submit</button>
+                                        <button id="submit_cluster" type="button" class="btn btn-primary btn-sm">
+                                            Submit
+                                        </button>
                                     </div>
 
                                 </div>
@@ -114,14 +130,19 @@
 
                                     <div class="pull-left" role="group">
                                         <div class="dropdown">
-                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_instanceowner" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button"
+                                                    id="select_type_instanceowner" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="true">
                                                 <span id="selected_instanceowner" value="*">Select Instance Owner</span>
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_type_instanceowner" id="select_type_list_instanceowner">
+                                            <ul class="dropdown-menu" aria-labelledby="select_type_instanceowner"
+                                                id="select_type_list_instanceowner">
 
                                                 @foreach($users as $i => $user)
-                                                    <li id="{{$user->email_addr_text}}"><a href="#">{{$user->first_name_text}} {{$user->last_name_text}}</a></li>
+                                                    <li id="{{$user->email_addr_text}}"><a
+                                                                href="#">{{$user->first_name_text}} {{$user->last_name_text}}</a>
+                                                    </li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -131,16 +152,23 @@
 
                                     <div class="pull-left" role="group">
                                         <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_instanceowners" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
+                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button"
+                                                    id="select_time_period_instanceowners" data-toggle="dropdown"
+                                                    aria-expanded="false" style="width: 130px">
                                                 <span id="current_period_instanceowner">Select Time Period</span>
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_time_period_instanceowners">
+                                            <ul class="dropdown-menu"
+                                                aria-labelledby="select_time_period_instanceowners">
                                                 <li><a href="javascript:selectPeriod(1, 'instanceowner')">Today</a></li>
-                                                <li><a href="javascript:selectPeriod(7, 'instanceowner')">This Week</a></li>
-                                                <li><a href="javascript:selectPeriod(30, 'instanceowner')">This Month</a></li>
-                                                <li><a href="javascript:selectPeriod(365, 'instanceowner')">This Year</a></li>
-                                                <li><a href="javascript:selectPeriod(0, 'instanceowner')">Custom Range</a></li>
+                                                <li><a href="javascript:selectPeriod(7, 'instanceowner')">This Week</a>
+                                                </li>
+                                                <li><a href="javascript:selectPeriod(30, 'instanceowner')">This
+                                                        Month</a></li>
+                                                <li><a href="javascript:selectPeriod(365, 'instanceowner')">This
+                                                        Year</a></li>
+                                                <li><a href="javascript:selectPeriod(0, 'instanceowner')">Custom
+                                                        Range</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -151,9 +179,11 @@
                                         <div class="pull-left" role="group" id="datepickers">
 
                                             <div>
-                                                <input type="text" id="datepicker_from_instanceowner" class="btn btn-default btn-sm" value="Date From">
+                                                <input type="text" id="datepicker_from_instanceowner"
+                                                       class="btn btn-default btn-sm" value="Date From">
                                                 &nbsp;
-                                                <input type="text" id="datepicker_to_instanceowner" class="btn btn-default btn-sm" value="Date To">
+                                                <input type="text" id="datepicker_to_instanceowner"
+                                                       class="btn btn-default btn-sm" value="Date To">
                                             </div>
                                         </div>
                                     </div>
@@ -161,16 +191,29 @@
                                     <div class="pull-left" style="width: 25px">&nbsp;</div>
 
                                     <div class="pull-left">
-                                        <button id="submit_instanceowner" type="button" class="btn btn-primary btn-sm">Submit</button>
+                                        <button id="submit_instanceowner" type="button" class="btn btn-primary btn-sm">
+                                            Submit
+                                        </button>
                                     </div>
                                 </div>
 
                             </div>
                             <div role="tabpanel" class="tab-pane" id="instances">
-                                <button id="instance_type_endpoints" type="button" class="btn btn-default btn-sm btn-info">Endpoints</button>&nbsp;&nbsp;
-                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>Roles</button>&nbsp;&nbsp;
-                                <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">Applications</button>&nbsp;&nbsp;
-                                <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users</button>&nbsp;&nbsp;
+                                <button id="instance_type_endpoints" type="button"
+                                        class="btn btn-default btn-sm btn-info">Endpoints
+                                </button>
+                                &nbsp;&nbsp;
+                                <button id="instance_type_roles" type="button" class="btn btn-default btn-sm" disabled>
+                                    Roles
+                                </button>
+                                &nbsp;&nbsp;
+                                <button id="instance_type_applications" type="button" class="btn btn-default btn-sm">
+                                    Applications
+                                </button>
+                                &nbsp;&nbsp;
+                                <button id="instance_type_users" type="button" class="btn btn-default btn-sm">Users
+                                </button>
+                                &nbsp;&nbsp;
 
                                 <div>
                                     <br>
@@ -180,14 +223,18 @@
 
                                     <div class="pull-left" role="group">
                                         <div class="dropdown">
-                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="select_type_instance" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <button class="btn btn-default btn-sm dropdown-toggle" type="button"
+                                                    id="select_type_instance" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="true">
                                                 <span id="selected_instance" value="*">Select Instance</span>
                                                 <span class="caret"></span>
                                             </button>
-                                            <ul class="dropdown-menu" aria-labelledby="select_type_instance" id="select_type_list_instance">
+                                            <ul class="dropdown-menu" aria-labelledby="select_type_instance"
+                                                id="select_type_list_instance">
 
                                                 @foreach($instances as $i => $instance)
-                                                    <li id="{{$instance->instance_id_text}}"><a href="#">{{$instance->instance_id_text}}</a></li>
+                                                    <li id="{{$instance->instance_id_text}}"><a
+                                                                href="#">{{$instance->instance_id_text}}</a></li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -197,16 +244,21 @@
 
                                     <div class="pull-left" role="group">
                                         <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button" id="select_time_period_instances" data-toggle="dropdown" aria-expanded="false" style="width: 130px">
+                                            <button class="btn btn-default dropdown-toggle btn-sm" type="button"
+                                                    id="select_time_period_instances" data-toggle="dropdown"
+                                                    aria-expanded="false" style="width: 130px">
                                                 <span id="current_period_instance">Select Time Period</span>
                                                 <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="select_time_period_instances">
                                                 <li><a href="javascript:selectPeriod(1, 'instance')">Today</a></li>
                                                 <li><a href="javascript:selectPeriod(7, 'instance')">This Week</a></li>
-                                                <li><a href="javascript:selectPeriod(30, 'instance')">This Month</a></li>
-                                                <li><a href="javascript:selectPeriod(365, 'instance')">This Year</a></li>
-                                                <li><a href="javascript:selectPeriod(0, 'instance')">Custom Range</a></li>
+                                                <li><a href="javascript:selectPeriod(30, 'instance')">This Month</a>
+                                                </li>
+                                                <li><a href="javascript:selectPeriod(365, 'instance')">This Year</a>
+                                                </li>
+                                                <li><a href="javascript:selectPeriod(0, 'instance')">Custom Range</a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -217,9 +269,11 @@
                                         <div class="pull-left" role="group" id="datepickers">
 
                                             <div>
-                                                <input type="text" id="datepicker_from_instance" class="btn btn-default btn-sm" value="Date From">
+                                                <input type="text" id="datepicker_from_instance"
+                                                       class="btn btn-default btn-sm" value="Date From">
                                                 &nbsp;
-                                                <input type="text" id="datepicker_to_instance" class="btn btn-default btn-sm" value="Date To">
+                                                <input type="text" id="datepicker_to_instance"
+                                                       class="btn btn-default btn-sm" value="Date To">
                                             </div>
                                         </div>
                                     </div>
@@ -227,7 +281,9 @@
                                     <div class="pull-left" style="width: 25px">&nbsp;</div>
 
                                     <div class="pull-left">
-                                        <button id="submit_instance" type="button" class="btn btn-primary btn-sm">Submit</button>
+                                        <button id="submit_instance" type="button" class="btn btn-primary btn-sm">
+                                            Submit
+                                        </button>
 
                                     </div>
 
@@ -254,7 +310,7 @@
     <script type="text/javascript" src="../../static/plugins/pikaday/pikaday.jquery.js"></script>
     <script>
 
-        $(document.body).on('change','#select_time_period',function(){
+        $(document.body).on('change', '#select_time_period', function () {
 
             var selected = $('#select_time_period').val();
             console.log(selected);
@@ -275,14 +331,14 @@
 
             var selected_id = event.currentTarget.id;
 
-            $( "#chart_select  :button[id^='instance_type_']" ).each(function( i ) {
-                if(this.id != selected_id)
+            $("#chart_select  :button[id^='instance_type_']").each(function (i) {
+                if (this.id != selected_id)
                     $('#' + this.id).attr('class', 'btn btn-default btn-sm');
                 else
                     $('#' + this.id).attr('class', 'btn btn-default btn-sm btn-info');
             });
 
-            $("#submit_instance").prop("disabled",false);
+            $("#submit_instance").prop("disabled", false);
         });
 
 
@@ -313,28 +369,23 @@
             search_meas = ',type:sum';
 
 
-            if (type === 'cluster')
-            {
+            if (type === 'cluster') {
                 search_type = 'Bandwidth-Clusters';
                 search_param = 'dfe.cluster_id';
-                search_field =   'dfe.instance_id';
+                search_field = 'dfe.instance_id';
                 no_select = 'Select Cluster and click Submit again.';
             }
-            else if (type === 'instanceowner')
-            {
+            else if (type === 'instanceowner') {
                 search_type = 'Bandwidth-Instance-Owners';
                 search_param = 'dfe.instance_owner_id';
                 search_field = 'app_name';
                 no_select = 'Select Instance Owner and click Submit again.';
             }
-            else if (type === 'instance')
-            {
+            else if (type === 'instance') {
                 var chart_type = get_selected_instance_type();
 
-                if (chart_type !== '')
-                {
-                    switch (chart_type)
-                    {
+                if (chart_type !== '') {
+                    switch (chart_type) {
                         case 'instance_type_endpoints':
                             search_type = 'Bandwidth-Endpoints';
                             search_param = 'dfe.instance_id';
@@ -361,8 +412,7 @@
 
                     no_select = 'Select Instance and click Submit again.';
                 }
-                else
-                {
+                else {
                     alert('Select Chart Type (e.g. Endpoints)')
                     return;
                 }
@@ -371,12 +421,10 @@
                 return;
 
 
-            if(search_val !== '*')
-            {
+            if (search_val !== '*') {
                 search_string = "%20AND%20" + search_param + ":" + search_val;
             }
-            else
-            {
+            else {
                 alert(no_select);
                 return;
             }
@@ -390,42 +438,40 @@
         });
 
 
-        function convertPeriod(period, date_from, date_to){
+        function convertPeriod(period, date_from, date_to) {
 
             var _from = 'now-30d';
             var _to = 'now';
 
-            if(period === 'Today'){
+            if (period === 'Today') {
                 _from = moment().startOf('day').format();
                 _to = moment().endOf('day').format();
             }
 
-            if(period === 'This Week'){
+            if (period === 'This Week') {
                 _from = moment().startOf('week').format();
                 _to = moment().endOf('day').format();
             }
 
-            if(period === 'This Month'){
+            if (period === 'This Month') {
                 _from = moment().startOf('month').format();
                 _to = moment().endOf('day').format();
             }
 
-            if(period === 'This Year'){
+            if (period === 'This Year') {
                 _from = moment().startOf('year').format();
                 _to = moment().endOf('day').format();
             }
 
-            if(period === 'Custom Range'){
+            if (period === 'Custom Range') {
                 _from = moment(date_from, 'MM/DD/YYYY').startOf('day').format();
                 _to = moment(date_to, 'MM/DD/YYYY').endOf('day').format();
             }
 
-            if(_from === 'now-30d')
-            {
+            if (_from === 'now-30d') {
                 return "_g=(time:(from:'" + _from + "',mode:quick,to:'" + _to + "'))";
             }
-            else
-            {
+            else {
                 return "_g=(time:(from:'" + _from + "',mode:absolute,to:'" + _to + "'))";
             }
 
@@ -469,7 +515,7 @@
 
         var settings = {
             firstDay: 1,
-            format: 'MM/DD/YYYY'
+            format:   'MM/DD/YYYY'
             //minDate: new Date('2000-01-01'),
             //maxDate: new Date('2020-12-31'),
             //yearRange: [2000,2020],
@@ -478,70 +524,66 @@
 
         var datepicker_from = $('#datepicker_from').pikaday(settings);
 
-        $('#datepicker_from').click(function(){
+        $('#datepicker_from').click(function () {
             datepicker_from.pikaday('show');//.pikaday('nextMonth');
         });
 
         var datepicker_to = $('#datepicker_to').pikaday(settings);
 
-        $('#datepicker_to').click(function(){
+        $('#datepicker_to').click(function () {
             datepicker_to.pikaday('show');//.pikaday('nextMonth');
         });
 
         var datepicker_from_cluster = $('#datepicker_from_cluster').pikaday(settings);
 
-        $('#datepicker_from_cluster').click(function(){
+        $('#datepicker_from_cluster').click(function () {
             datepicker_from_cluster.pikaday('show');//.pikaday('nextMonth');
         });
 
         var datepicker_to_cluster = $('#datepicker_to_cluster').pikaday(settings);
 
-        $('#datepicker_to_cluster').click(function(){
+        $('#datepicker_to_cluster').click(function () {
             datepicker_to_cluster.pikaday('show');//.pikaday('nextMonth');
         });
 
         var datepicker_from_instanceowner = $('#datepicker_from_instanceowner').pikaday(settings);
 
-        $('#datepicker_from_instanceowner').click(function(){
+        $('#datepicker_from_instanceowner').click(function () {
             datepicker_from_instanceowner.pikaday('show');//.pikaday('nextMonth');
         });
 
         var datepicker_to_instanceowner = $('#datepicker_to_instanceowner').pikaday(settings);
 
-        $('#datepicker_to_instanceowner').click(function() {
+        $('#datepicker_to_instanceowner').click(function () {
             datepicker_to_instanceowner.pikaday('show');//.pikaday('nextMonth');
         });
 
         var datepicker_from_instance = $('#datepicker_from_instance').pikaday(settings);
 
-        $('#datepicker_from_instance').click(function(){
+        $('#datepicker_from_instance').click(function () {
             datepicker_from_instance.pikaday('show');
         });
 
         var datepicker_to_instance = $('#datepicker_to_instance').pikaday(settings);
 
-        $('#datepicker_to_instance').click(function() {
+        $('#datepicker_to_instance').click(function () {
             datepicker_to_instance.pikaday('show');
         });
 
 
-        function get_selected_instance_type()
-        {
+        function get_selected_instance_type() {
             var result = '';
-            $( "#chart_select  :button[id^='instance_type_']" ).each(function( i ) {
+            $("#chart_select  :button[id^='instance_type_']").each(function (i) {
 
                 var asd = $('#' + this.id).attr('class');
 
-                if (asd.indexOf('btn-info') > -1)
-                {
+                if (asd.indexOf('btn-info') > -1) {
                     result = this.id;
                 }
             });
 
             return result;
         }
-
-
 
 
     </script>

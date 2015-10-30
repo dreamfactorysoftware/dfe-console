@@ -13,6 +13,7 @@
       <w>carsten</w>
       <w>checkin</w>
       <w>checkins</w>
+      <w>chgrp</w>
       <w>chouts</w>
       <w>console's</w>
       <w>csrf</w>
@@ -21,6 +22,7 @@
       <w>dfdsp</w>
       <w>eprovision</w>
       <w>favicons</w>
+      <w>fieldset</w>
       <w>firstname</w>
       <w>flysystems</w>
       <w>gmail</w>
@@ -53,6 +55,8 @@
       <w>queueable</w>
       <w>rackspacecloud</w>
       <w>setdev</w>
+      <w>shaper</w>
+      <w>shapers</w>
       <w>shortopts</w>
       <w>stooids</w>
       <w>stoopids</w>
@@ -62,6 +66,7 @@
       <w>unassign</w>
       <w>unmanaged</w>
       <w>weiner</w>
+      <w>wikitable</w>
       <w>worky</w>
       <w>zabcdefghijklmnopqrstuvwxyz</w>
     </words>

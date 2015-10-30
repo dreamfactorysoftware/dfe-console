@@ -18,7 +18,7 @@ class CreateFailedJobsTable extends Migration
     {
         if (!\Schema::hasTable('job_fail_t')) {
             \Schema::create('job_fail_t',
-                function (Blueprint $table) {
+                function (Blueprint $table){
                     $table->unsignedBigInteger('id');
                     $table->text('connection');
                     $table->text('queue');

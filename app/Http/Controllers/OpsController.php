@@ -2,9 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
-use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
-use DreamFactory\Enterprise\Common\Exceptions\RegistrationException;
-use DreamFactory\Enterprise\Common\Facades\InstanceStorage;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
@@ -12,7 +9,6 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Versioned;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
-use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
@@ -21,6 +17,9 @@ use DreamFactory\Enterprise\Partner\Facades\Partner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\UsageService;
+use DreamFactory\Enterprise\Storage\Facades\InstanceStorage;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -43,10 +42,6 @@ class OpsController extends BaseController implements IsVersioned
      */
     protected $instanceName;
     /**
-     * @type User
-     */
-    protected $user;
-    /**
      * @type string
      */
     protected $clientId;
@@ -64,6 +59,24 @@ class OpsController extends BaseController implements IsVersioned
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function getMetrics(Request $request)
+    {
+        /** @type UsageService $_service */
+        $_service = \App::make(UsageServiceProvider::IOC_NAME);
+        $_stats = $_service->gatherStatistics();
+
+        if (empty($_stats)) {
+            return $this->failure(Response::HTTP_INTERNAL_SERVER_ERROR, 'No stats returned from service.');
+        }
+
+        return $this->success($_stats);
+    }
+
+    /**
      * @param Request $request
      *
      * @return array
@@ -78,11 +91,15 @@ class OpsController extends BaseController implements IsVersioned
             $_instance = $this->_findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
+                \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
+
                 return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
         } catch (\Exception $_ex) {
             //  Check the deleted instances
             if (null === ($_instance = InstanceArchive::byNameOrId($_id)->first())) {
+                \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
+
                 return $this->failure(Response::HTTP_NOT_FOUND, 'Instance not found.');
             }
 
@@ -147,8 +164,9 @@ class OpsController extends BaseController implements IsVersioned
         /**
          * This has multiple copies of data because it is used by several different systems
          */
+        \Log::info('/api/v1/ops/status: Instance "' . $_id . '" found', $_data = array_merge($_base, $_merge ?: []));
 
-        return $this->success(array_merge($_base, $_merge ?: []));
+        return $this->success($_data);
     }
 
     /**
@@ -421,82 +439,7 @@ class OpsController extends BaseController implements IsVersioned
      */
     protected function registerDashboardUser(Request $request)
     {
-        $_email = $request->input('email');
-        $_first = $request->input('firstname');
-        $_last = $request->input('lastname');
-        $_password = $request->input('password');
-
-        if (empty($_email) || empty($_password) || empty($_first) || empty($_last)) {
-            $this->error('missing required fields from partner post',
-                ['channel' => 'ops.partner', 'payload' => $request->input()]);
-
-            throw new \InvalidArgumentException('Missing required fields');
-        }
-
-        if (false === filter_var($_email, FILTER_VALIDATE_EMAIL)) {
-            $this->error('invalid email address "' . $_email . '"',
-                ['channel' => 'ops.partner', 'payload' => $request->input()]);
-
-            throw new \InvalidArgumentException('Email address invalid');
-        }
-
-        //  See if we know this cat...
-        if (null !== ($user = User::byEmail($_email)->first())) {
-            //  Existing user found, don't add to database...
-            $_values = $user->toArray();
-            unset($_values['password_text'], $_values['external_password_text']);
-
-            $this->info('existing user attempting registration through partner api',
-                ['channel' => 'ops.partner', 'user' => $_values]);
-
-            return $user;
-        }
-
-        //  Create a user account
-        try {
-            $user = \DB::transaction(function () use ($request, $_first, $_last, $_email, $_password){
-                $user = User::create([
-                    'first_name_text'   => $_first,
-                    'last_name_text'    => $_last,
-                    'email_addr_text'   => $_email,
-                    'nickname_text'     => $request->input('nickname', $_first),
-                    'password_text'     => bcrypt($_password),
-                    'phone_text'        => $request->input('phone'),
-                    'company_name_text' => $request->input('company'),
-                ]);
-
-                $_appKey = AppKey::create([
-                    'key_class_text' => AppKeyClasses::USER,
-                    'owner_id'       => $user->id,
-                    'owner_type_nbr' => OwnerTypes::USER,
-                    'server_secret'  => config('dfe.security.console-api-key'),
-                ]);
-
-                //  Update the user with the key info and activate
-                $user->api_token_text = $_appKey->client_id;
-                $user->active_ind = 1;
-                $user->save();
-
-                return $user;
-            });
-
-            $_values = $user->toArray();
-            unset($_values['password_text'], $_values['external_password_text']);
-
-            $this->info('new user registered through partner api',
-                ['channel' => 'ops.partner', 'user' => $_values]);
-
-            return $user;
-        } catch (\Exception $_ex) {
-            if (false !== ($_pos = stripos($_message = $_ex->getMessage(), ' (sql: '))) {
-                $_message = substr($_message, 0, $_pos);
-            }
-
-            $this->error('database error creating user from partner post: ' . $_message,
-                ['channel' => 'ops.partner']);
-
-            throw new RegistrationException($_message, $_ex->getCode(), $_ex);
-        }
+        return User::register($request);
     }
 
     /**

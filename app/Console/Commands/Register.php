@@ -3,7 +3,10 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Services\Jobs\RegisterJob;
+use DreamFactory\Library\Utility\IfSet;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 
 class Register extends ConsoleCommand
@@ -40,7 +43,28 @@ class Register extends ConsoleCommand
 
         \Queue::push($_command);
 
-        return $_command->getResult();
+        $_result = $_command->getResult();
+
+        if (empty($_result) || null === ($_id = IfSet::getDeep($_result, 'success', 'id'))) {
+            $this->error('Results not found for request. Please try again.');
+
+            return 1;
+        }
+
+        try {
+            /** @type AppKey $_key */
+            $_key = AppKey::findOrFail($_id);
+        } catch (ModelNotFoundException $_ex) {
+            $this->error('The key has been misplaced. Please try again.');
+
+            return 2;
+        }
+
+        $this->writeln('<info>Key pair id "' . $_id . '" created. Please keep secure.</info>');
+        $this->writeln('    <comment>client_id</comment>: <info>' . $_key->client_id . '</info>');
+        $this->writeln('<comment>client_secret</comment>: <info>' . $_key->client_secret . '</info>');
+
+        return 0;
     }
 
     /**
@@ -50,7 +74,8 @@ class Register extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 [
                     'owner-id',
                     InputArgument::REQUIRED,

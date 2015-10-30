@@ -225,12 +225,12 @@ class InstanceManager extends BaseManager implements Factory
                 continue;
             }
 
-            if (null !== ($_id = array_get($_server, '.id'))) {
+            if (null !== ($_id = array_get($_server, '.' . $name))) {
                 $_types[$_typeId] = $_id;
                 continue;
             }
 
-            if (null !== ($_ids = array_get($_server, '.ids'))) {
+            if (null !== ($_ids = array_get($_server, '.' . $name . 's'))) {
                 if (is_array($_ids) && !empty($_ids)) {
                     $_types[$_typeId] = $_ids[0];
                     continue;

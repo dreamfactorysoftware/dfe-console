@@ -12,15 +12,11 @@ class BusServiceProvider extends ServiceProvider
     /** @inheritdoc */
     public function boot(Dispatcher $dispatcher)
     {
-        $dispatcher->mapUsing(
-            function ($command){
-                return Dispatcher::simpleMapping(
-                    $command,
-                    'DreamFactory\Enterprise\Services\Jobs',
-                    'DreamFactory\Enterprise\Services\Listeners'
-                );
-            }
-        );
+        $dispatcher->mapUsing(function ($command){
+            return Dispatcher::simpleMapping($command,
+                'DreamFactory\Enterprise\Services\Jobs',
+                'DreamFactory\Enterprise\Services\Listeners');
+        });
     }
 
     /** @inheritdoc */

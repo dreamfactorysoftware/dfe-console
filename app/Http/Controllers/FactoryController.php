@@ -45,8 +45,6 @@ abstract class FactoryController extends BaseController
     /** @inheritdoc */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->setLumberjackPrefix('dfe-console');
         $this->uiPrefix = config('dfe.ui.prefix', ConsoleDefaults::UI_PREFIX);
     }
 

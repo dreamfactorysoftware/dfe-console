@@ -3,8 +3,8 @@ use DreamFactory\Library\Utility\IfSet;
 use DreamFactory\Library\Utility\Inflector;
 
 $_html = null;
-$idPrefix = isset( $idPrefix ) ? $idPrefix : 'header-bar-';
-$pageName = isset( $pageName ) ? $pageName : 'Page';
+$idPrefix = isset($idPrefix) ? $idPrefix : 'header-bar-';
+$pageName = isset($pageName) ? $pageName : 'Page';
 $_buttons = array(
         'new'    => array(
                 'icon'    => 'plus',
@@ -29,41 +29,39 @@ $_buttons = array(
         ),
 );
 
-$_type = rtrim( Inflector::neutralize( $pageName ), 's' );
+$_type = rtrim(Inflector::neutralize($pageName), 's');
 
-foreach ( $_buttons as $_id => $_options )
-{
+foreach ($_buttons as $_id => $_options) {
     $_route = $_options['route'];
     $_options = $_buttons[$_id];
 
-    $_html .=
-            '<button rel="/api/v1/' .
+    $_html .= '<button rel="/api/v1/' .
             $_type .
-            's/' . $_route . '" data-toggle="tooltip" data-placement="left" title="' .
-            IfSet::get( $_options, 'tooltip' ) .
+            's/' .
+            $_route .
+            '" data-toggle="tooltip" data-placement="left" title="' .
+            IfSet::get($_options, 'tooltip') .
             '" data-type="' .
             $_type .
             '" class="btn ' .
-            IfSet::get( $_options, 'color', 'btn-info' ) .
+            IfSet::get($_options, 'color', 'btn-info') .
             ' btn-sm btn-page-header" id="' .
             $idPrefix .
             $_id .
             '"' .
-            ( $_options['hidden'] ? ' style="display: none;" ' : null ) .
+            ($_options['hidden'] ? ' style="display: none;" ' : null) .
             '>';
 
-    if ( null !== ( $_icon = IfSet::get( $_options, 'icon' ) ) )
-    {
+    if (null !== ($_icon = IfSet::get($_options, 'icon'))) {
         $_html .= '<i class="fa fa-fw fa-' . $_icon . '"></i>';
     }
 
     $_html .= '</button>';
 }
 
-unset( $_id, $_options );
+unset($_id, $_options);
 
-if ( $_html )
-{
+if ($_html) {
     $_html = '<div class="page-header-toolbar pull-right">' . $_html . '</div>';
 }
 ?>

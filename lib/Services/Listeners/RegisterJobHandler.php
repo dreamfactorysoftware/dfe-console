@@ -26,26 +26,24 @@ class RegisterJobHandler extends BaseListener
      */
     public function handle(RegisterJob $command)
     {
-        $this->setLumberjackPrefix('dfe:register');
-
         $_key = config('dfe.security.console-api-key');
 
         try {
             $_owner = $command->getOwnerInfo();
 
             //  Generate the key
-            $_key = AppKey::createKey($_owner->id, $_owner->owner_type_nbr, ['server_secret' => $_key]);
+            $_key = AppKey::createKey($_owner->id, $_owner->type, ['server_secret' => $_key]);
 
-            $this->debug('successfully created app key "' . $_key->client_id . '"');
+            $this->debug('[dfe:register] Successfully created app key "' . $_key->client_id . '"');
 
             $_result = SuccessPacket::make($_key->toArray(), Response::HTTP_CREATED);
         } catch (\Exception $_ex) {
-            $this->error('exception while creating key: ' . $_ex->getMessage());
+            $this->error('[dfe:register] Exception while creating key: ' . $_ex->getMessage());
 
             $_result = ErrorPacket::create(Response::HTTP_BAD_REQUEST, $_ex);
         }
 
-        $command->setResult($_result);
+        $command->publishResult($command->getJobId(), $_result);
 
         return $_result;
     }
