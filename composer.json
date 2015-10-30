@@ -73,7 +73,6 @@
     "guzzlehttp/guzzle":                         "~4.0",
     "predis/predis":                             "~1.1@dev",
     "wpb/string-blade-compiler":                 "2.*@dev",
-    "ruflin/elastica":                           "*",
     "graham-campbell/flysystem":                 "~3.0",
     "league/flysystem-sftp":                     "~1.0",
     "league/flysystem-ziparchive":               "~1.0",
@@ -92,10 +91,10 @@
     "barryvdh/laravel-cors":                     "0.6.x"
   },
   "require-dev":       {
-    "phpunit/phpunit":             "@stable",
-    "doctrine/dbal":               "~2.3",
-    "phpspec/phpspec":             "~2.1",
-    "way/generators":              "~3.0"
+    "phpunit/phpunit": "@stable",
+    "doctrine/dbal":   "~2.3",
+    "phpspec/phpspec": "~2.1",
+    "way/generators":  "~3.0"
   },
   "autoload":          {
     "psr-4": {
