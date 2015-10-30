@@ -1,9 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Services\Contracts;
 
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
-
-us  DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
+use DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceResponse;
 
 /**
  * Something that is aware of provisioners

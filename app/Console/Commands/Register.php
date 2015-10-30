@@ -63,6 +63,8 @@ class Register extends ConsoleCommand
         $this->writeln('<info>Key pair id "' . $_id . '" created. Please keep secure.</info>');
         $this->writeln('    <comment>client_id</comment>: <info>' . $_key->client_id . '</info>');
         $this->writeln('<comment>client_secret</comment>: <info>' . $_key->client_secret . '</info>');
+
+        return 0;
     }
 
     /**

@@ -1,8 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-
-us  DreamFactory\Enterprise\Services\UsageService;
+use DreamFactory\Enterprise\Services\UsageService;
 
 class UsageServiceProvider extends BaseServiceProvider
 {

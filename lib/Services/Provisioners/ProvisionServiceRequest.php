@@ -1,15 +1,15 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
+use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Provisioners\BaseRequest;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Storage\Facades\InstanceStorage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use League\Flysystem\Filesystem;
-
-us  DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 
 class ProvisionServiceRequest extends BaseRequest
 {
@@ -46,7 +46,7 @@ class ProvisionServiceRequest extends BaseRequest
      * @param bool|false                                        $force
      * @param array                                             $options
      *
-     * @return \DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest
+     * @return ProvisionServiceRequest
      */
     public static function createProvision(Instance $instance, Filesystem $storage = null, $force = false, array $options = [])
     {
@@ -61,7 +61,7 @@ class ProvisionServiceRequest extends BaseRequest
      * @param bool|false                                        $force
      * @param array                                             $options
      *
-     * @return \DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest
+     * @return ProvisionServiceRequest
      */
     public static function createDeprovision(Instance $instance, Filesystem $storage = null, $force = false, array $options = [])
     {
@@ -84,7 +84,7 @@ class ProvisionServiceRequest extends BaseRequest
                 try {
                     $_user = User::findOrFail($_instance->user_id);
                 } catch (ModelNotFoundException $_ex) {
-                    \Log::error('Attempt to create an instance for a non-existant user_id: ' . $_instance->user_id);
+                    \Log::error('Attempt to create an instance for a non-existent user_id: ' . $_instance->user_id);
 
                     throw new \RuntimeException('Invalid user assigned to instance.');
                 }

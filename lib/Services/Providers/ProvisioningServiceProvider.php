@@ -1,8 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-
-us  DreamFactory\Enterprise\Services\Managers\ProvisioningManager;
+use DreamFactory\Enterprise\Services\Managers\ProvisioningManager;
 
 /**
  * Register the hosting service

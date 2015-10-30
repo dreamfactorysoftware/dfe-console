@@ -1,9 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\VirtualProvisioner;
+use DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceRequest;
-use DreamFactory\Enterprise\Common\Provisioners\ProvisionServiceResponse;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Traits\HasTimer;
 use DreamFactory\Enterprise\Common\Traits\LockingService;
@@ -14,8 +13,6 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditLevels;
 use DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider;
-
-us  DreamFactory\Enterprise\Common\Enums\EnterprisePaths;
 
 /**
  * A base class for all provisioners
@@ -120,7 +117,11 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
         ];
     }
 
-    /** @inheritdoc */
+    /**
+     * @param ProvisionServiceRequest|mixed $request
+     *
+     * @return ProvisionServiceResponse|mixed
+     */
     public function provision($request)
     {
         $this->startTimer();
@@ -166,7 +167,11 @@ abstract class BaseProvisioner extends BaseService implements VirtualProvisioner
         return $_response;
     }
 
-    /** @inheritdoc */
+    /**
+     * @param ProvisionServiceRequest|mixed $request
+     *
+     * @return ProvisionServiceResponse|mixed
+     */
     public function deprovision($request)
     {
         $this->startTimer();

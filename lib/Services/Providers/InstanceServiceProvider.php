@@ -1,8 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-
-us  DreamFactory\Enterprise\Services\Managers\InstanceManager;
+use DreamFactory\Enterprise\Services\Managers\InstanceManager;
 
 /**
  * Registers the instance manager as a service

@@ -1,9 +1,7 @@
-<?php namespace DreamFactory\Enterprise\Services\Provisioners;
+<?php namespace DreamFactory\Enterprise\Common\Provisioners;
 
-use DreamFactory\Enterprise\Common\Provisioners\BaseRequest;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use League\Flysystem\Filesystem;
-
-us  DreamFactory\Enterprise\Database\Models\Instance;
 
 /**
  * A dumb container for portability jobs

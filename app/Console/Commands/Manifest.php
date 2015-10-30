@@ -54,7 +54,7 @@ class Manifest extends ConsoleCommand
         $_output = $this->argument('output-file');
         $this->job->setOutputFile(!empty($_output) ? $_output : null);
 
-        $_result = $this->dispatch($this->job);
+        $this->dispatch($this->job);
 
         return $this->job->getResult();
     }

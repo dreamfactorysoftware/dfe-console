@@ -33,13 +33,14 @@ class Token extends ConsoleCommand implements SelfHandling
 
         try {
             $_instance = $this->_findInstance($this->argument('instance-id'));
+            $this->writeln('token: ' . $_instance->generateToken());
+
+            return true;
         } catch (ModelNotFoundException $_ex) {
             $this->error('Instance not found.');
 
             return false;
         }
-
-        $this->writeln('token: ' . $_instance->generateToken());
     }
 
     /**

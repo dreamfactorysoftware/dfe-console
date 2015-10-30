@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\Factory;
+use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
@@ -10,8 +11,6 @@ use DreamFactory\Enterprise\Database\Models\InstanceGuest;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-us  DreamFactory\Enterprise\Common\Enums\ServerTypes;
 
 /**
  * Creates and manages instances
@@ -226,12 +225,12 @@ class InstanceManager extends BaseManager implements Factory
                 continue;
             }
 
-            if (null !== ($_id = array_get($_server, '.id'))) {
+            if (null !== ($_id = array_get($_server, '.' . $name))) {
                 $_types[$_typeId] = $_id;
                 continue;
             }
 
-            if (null !== ($_ids = array_get($_server, '.ids'))) {
+            if (null !== ($_ids = array_get($_server, '.' . $name . 's'))) {
                 if (is_array($_ids) && !empty($_ids)) {
                     $_types[$_typeId] = $_ids[0];
                     continue;

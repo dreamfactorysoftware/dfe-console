@@ -1,8 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-
-us  DreamFactory\Enterprise\Services\SnapshotService;
+use DreamFactory\Enterprise\Services\SnapshotService;
 
 /**
  * Register the snapshot service as a Laravel provider

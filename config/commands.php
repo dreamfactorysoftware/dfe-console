@@ -7,7 +7,7 @@ return [
     //* Information displayed when running commands
     //******************************************************************************
     'display-name'      => 'DreamFactory Enterprise(tm) Console',
-    'display-version'   => 'v1.0.0',
+    'display-version'   => 'v1.0.0-beta',
     'display-copyright' => 'Copyright (c) 2012-' . date('Y') . ', All Rights Reserved',
     //******************************************************************************
     //* Individual command settings

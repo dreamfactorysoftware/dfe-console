@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Facades;
+<?php namespace DreamFactory\Enterprise\Services\Facades;
 
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider;

@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Config\ClusterManifest;
+use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Lumberjack;
@@ -9,8 +10,6 @@ use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Services\Jobs\ManifestJob;
 use Illuminate\Http\Response;
 use Symfony\Component\Console\Output\OutputInterface;
-
-us  DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 
 /**
  * Processes queued environment manifest generation requests

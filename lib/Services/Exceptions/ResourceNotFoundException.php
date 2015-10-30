@@ -1,11 +1,8 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Exceptions;
+<?php namespace DreamFactory\Enterprise\Services\Exceptions;
 
 use Exception;
 
-/ *
-*
-Generic resource not found */
+/** Generic resource not found */
 class ResourceNotFoundException extends ProvisioningException
 {
     //******************************************************************************

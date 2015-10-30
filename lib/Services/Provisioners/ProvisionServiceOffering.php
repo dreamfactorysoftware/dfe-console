@@ -1,9 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\Offering;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
-
-us  Illuminate\Contracts\Support\Arrayable;
 
 /**
  * A provisioner's offering

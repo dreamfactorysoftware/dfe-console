@@ -1,8 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-
-us  DreamFactory\Enterprise\Common\Services\RouteHashingService;
+use DreamFactory\Enterprise\Services\Services\RouteHashingService;
 
 /**
  * Register the route hashing service as a Laravel provider

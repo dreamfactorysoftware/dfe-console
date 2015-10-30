@@ -1,12 +1,11 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
+use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Services\Jobs\RegisterJob;
 use Illuminate\Http\Response;
-
-us  DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 
 /**
  * Handles registration requests

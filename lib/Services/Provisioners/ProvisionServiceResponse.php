@@ -1,6 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
-c ass ProvisionServiceResponse extends BaseResponse
+use DreamFactory\Enterprise\Common\Provisioners\BaseResponse;
+
+class ProvisionServiceResponse extends BaseResponse
 {
     //******************************************************************************
     //* Members
@@ -9,8 +11,7 @@ c ass ProvisionServiceResponse extends BaseResponse
     /**
      * @type \DreamFactory\Enterprise\Database\Models\Instance
      */
-    protected
-    $instance;
+    protected $instance;
 
     //******************************************************************************
     //* Methods
@@ -19,8 +20,7 @@ c ass ProvisionServiceResponse extends BaseResponse
     /**
      * @return \DreamFactory\Enterprise\Database\Models\Instance
      */
-    public
-    function getInstance()
+    public function getInstance()
     {
         return $this->instance;
     }
@@ -30,8 +30,7 @@ c ass ProvisionServiceResponse extends BaseResponse
      *
      * @return ProvisionServiceResponse
      */
-    public
-    function setInstance($instance)
+    public function setInstance($instance)
     {
         $this->instance = $instance;
 

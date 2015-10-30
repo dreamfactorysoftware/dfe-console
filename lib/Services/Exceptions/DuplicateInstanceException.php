@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Services\Exceptions;
+<?php namespace DreamFactory\Enterprise\Services\Exceptions;
 
 /**
  * When an unexpected duplicate instance is encountered

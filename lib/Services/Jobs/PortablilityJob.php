@@ -1,7 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Jobs;
 
 use DreamFactory\Enterprise\Common\Jobs\BaseInstanceJob;
-use DreamFactory\Enterprise\Services\Provisioners\PortableServiceRequest;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 
 /**
  * A base class for all DFE portability requests
