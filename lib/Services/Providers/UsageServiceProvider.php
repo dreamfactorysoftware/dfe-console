@@ -1,7 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-use DreamFactory\Enterprise\Services\UsageService;
+
+us  DreamFactory\Enterprise\Services\UsageService;
 
 class UsageServiceProvider extends BaseServiceProvider
 {
@@ -19,8 +20,9 @@ class UsageServiceProvider extends BaseServiceProvider
     /** @inheritdoc */
     public function register()
     {
-        $this->singleton(static::IOC_NAME, function ($app){
-            return new UsageService($app);
-        });
+        $this->singleton(static::IOC_NAME,
+            function ($app){
+                return new UsageService($app);
+            });
     }
 }

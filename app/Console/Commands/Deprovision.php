@@ -51,7 +51,8 @@ class Deprovision extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 ['instance-id', InputArgument::REQUIRED, 'The instance to deprovision'],
             ]);
     }
@@ -63,7 +64,8 @@ class Deprovision extends ConsoleCommand
      */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
+            [
                 [
                     'cluster-id',
                     'c',

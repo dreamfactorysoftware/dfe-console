@@ -45,20 +45,21 @@ return [
         DreamFactory\Enterprise\Console\Providers\ConfigServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\EventServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\RouteServiceProvider::class,
-        DreamFactory\Enterprise\Services\Providers\UsageServiceProvider::class,
         /** DreamFactory Common service providers */
         DreamFactory\Enterprise\Common\Providers\DataShaperServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\LibraryAssetsProvider::class,
         DreamFactory\Enterprise\Common\Providers\Auth\ConsoleAuthProvider::class,
         DreamFactory\Enterprise\Common\Providers\PacketServiceProvider::class,
-        DreamFactory\Enterprise\Common\Providers\RouteHashingServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider::class,
+        /** DreamFactory Storage service providers */
         DreamFactory\Enterprise\Storage\Providers\InstanceStorageServiceProvider::class,
-        /** DreamFactory Services service providers */
-        DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
         DreamFactory\Enterprise\Storage\Providers\MountServiceProvider::class,
+        /** DreamFactory Services service providers */
+        DreamFactory\Enterprise\Services\Providers\UsageServiceProvider::class,
+        DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider::class,
+        DreamFactory\Enterprise\Services\Providers\RouteHashingServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider::class,
         /** DreamFactory Partner Services Provider */
         DreamFactory\Enterprise\Partner\Providers\PartnerServiceProvider::class,

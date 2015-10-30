@@ -103,16 +103,17 @@ class Setup extends ConsoleCommand
         $_dashboardKey = AppKey::createKey(0, OwnerTypes::DASHBOARD, ['server_secret' => $_apiSecret]);
 
         //  4. Generate .dfe.cluster.json file
-        ClusterManifest::make(base_path('database/dfe'), [
-            'cluster-id'       => config('dfe.cluster-id'),
-            'default-domain'   => config('provisioning.default-domain'),
-            'signature-method' => config('dfe.signature-method'),
-            'storage-root'     => config('provisioning.storage-root'),
-            'console-api-url'  => config('dfe.security.console-api-url'),
-            'console-api-key'  => $_apiSecret,
-            'client-id'        => $_dashboardKey->client_id,
-            'client-secret'    => $_dashboardKey->client_secret,
-        ]);
+        ClusterManifest::make(base_path('database/dfe'),
+            [
+                'cluster-id'       => config('dfe.cluster-id'),
+                'default-domain'   => config('provisioning.default-domain'),
+                'signature-method' => config('dfe.signature-method'),
+                'storage-root'     => config('provisioning.storage-root'),
+                'console-api-url'  => config('dfe.security.console-api-url'),
+                'console-api-key'  => $_apiSecret,
+                'client-id'        => $_dashboardKey->client_id,
+                'client-secret'    => $_dashboardKey->client_secret,
+            ]);
 
         //  5.  Make a console environment
         $_config = <<<INI
@@ -136,32 +137,34 @@ INI;
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
-            ['admin-email', InputArgument::REQUIRED, 'The admin email address.'],
-        ]);
+        return array_merge(parent::getArguments(),
+            [
+                ['admin-email', InputArgument::REQUIRED, 'The admin email address.'],
+            ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
-            ['force', null, InputOption::VALUE_NONE, 'Use to force re-initialization of system.'],
-            ['no-manifest', null, InputOption::VALUE_NONE, 'Do not create a manifest file.'],
-            ['no-keys', null, InputOption::VALUE_NONE, 'Do not create initialization keys.'],
+        return array_merge(parent::getOptions(),
             [
-                'admin-password',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'The admin account password to use.',
-                'dfe.admin',
-            ],
-            [
-                'api-secret',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'The API secret to use. If not specified, one will be generated',
-            ],
-        ]);
+                ['force', null, InputOption::VALUE_NONE, 'Use to force re-initialization of system.'],
+                ['no-manifest', null, InputOption::VALUE_NONE, 'Do not create a manifest file.'],
+                ['no-keys', null, InputOption::VALUE_NONE, 'Do not create initialization keys.'],
+                [
+                    'admin-password',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'The admin account password to use.',
+                    'dfe.admin',
+                ],
+                [
+                    'api-secret',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'The API secret to use. If not specified, one will be generated',
+                ],
+            ]);
     }
 
     /**
@@ -181,8 +184,7 @@ INI;
             return false;
         }
 
-        return false !==
-        file_put_contents($_path . DIRECTORY_SEPARATOR . ltrim($filename, DIRECTORY_SEPARATOR),
+        return false !== file_put_contents($_path . DIRECTORY_SEPARATOR . ltrim($filename, DIRECTORY_SEPARATOR),
             $jsonEncode ? JsonFile::encode($contents) : $contents);
     }
 

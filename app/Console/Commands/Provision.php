@@ -76,7 +76,8 @@ class Provision extends ConsoleCommand
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 ['owner-id', InputArgument::REQUIRED, 'The id of the owner of the new instance'],
                 ['instance-id', InputArgument::REQUIRED, 'The name of the new instance'],
                 [
@@ -95,7 +96,8 @@ class Provision extends ConsoleCommand
      */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
+            [
                 [
                     'cluster-id',
                     'c',

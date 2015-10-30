@@ -4,9 +4,9 @@
 // and disabled options for all buttons
 
 .button-variant(@color; @background; @border) {
-  color: @color;
+  color:            @color;
   background-color: @background;
-  border-color: @border;
+  border-color:     @border;
 
   &:hover,
   &:focus,
@@ -14,9 +14,9 @@
   &:active,
   &.active,
   .open > .dropdown-toggle& {
-    color: @color;
+    color:            @color;
     background-color: darken(@background, 10%);
-        border-color: darken(@border, 12%);
+    border-color:     darken(@border, 12%);
   }
   &:active,
   &.active,
@@ -33,20 +33,20 @@
     &:active,
     &.active {
       background-color: @background;
-          border-color: @border;
+      border-color:     @border;
     }
   }
 
   .badge {
-    color: @background;
+    color:            @background;
     background-color: @color;
   }
 }
 
 // Button sizes
 .button-size(@padding-vertical; @padding-horizontal; @font-size; @line-height; @border-radius) {
-  padding: @padding-vertical @padding-horizontal;
-  font-size: @font-size;
-  line-height: @line-height;
+  padding:       @padding-vertical @padding-horizontal;
+  font-size:     @font-size;
+  line-height:   @line-height;
   border-radius: @border-radius;
 }

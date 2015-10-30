@@ -1,7 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Config\ClusterManifest;
-use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Lumberjack;
@@ -10,6 +9,8 @@ use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Services\Jobs\ManifestJob;
 use Illuminate\Http\Response;
 use Symfony\Component\Console\Output\OutputInterface;
+
+us  DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 
 /**
  * Processes queued environment manifest generation requests
@@ -64,8 +65,7 @@ class ManifestJobHandler
 
                 if ($command->createManifest()) {
                     //  Create a new manifest...
-                    $_manifest = ClusterManifest::make(
-                        base_path(),
+                    $_manifest = ClusterManifest::make(base_path(),
                         [
                             'cluster-id'       => config('dfe.cluster-id'),
                             'default-domain'   => config('provisioning.default-domain'),
@@ -75,13 +75,11 @@ class ManifestJobHandler
                             'console-api-key'  => config('dfe.security.console-api-key'),
                             'client-id'        => !$_key ? null : $_key->client_id,
                             'client-secret'    => !$_key ? null : $_key->client_secret,
-                        ]
-                    );
+                        ]);
 
                     $command->setResult($_result = SuccessPacket::make($_manifest->toArray(), Response::HTTP_CREATED));
                 }
-            } catch
-            (\Exception $_ex) {
+            } catch (\Exception $_ex) {
                 $command->setResult($_result = ErrorPacket::create(Response::HTTP_BAD_REQUEST));
             }
         }

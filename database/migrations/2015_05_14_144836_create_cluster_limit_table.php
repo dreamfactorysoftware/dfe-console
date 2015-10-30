@@ -15,7 +15,7 @@ class CreateClusterLimitTable extends Migration
     {
         if (!\Schema::hasTable('limit_t')) {
             \Schema::create('limit_t',
-                function (Blueprint $table) {
+                function (Blueprint $table){
                     $table->bigIncrements('id');
                     $table->integer('cluster_id')->index();
                     $table->integer('instance_id')->index();
@@ -28,11 +28,16 @@ class CreateClusterLimitTable extends Migration
                     $table->timestamp('lmod_date')->default(\DB::raw('CURRENT_TIMESTAMP'));
 
                     //  Indices
-                    $table->foreign('cluster_id', 'fk_limit_cluster_id')->references('id')->on('cluster_t')->onDelete('cascade');
-                    $table->foreign('instance_id', 'fk_limit_instance_id')->references('id')->on('instance_t')->onDelete('cascade');
+                    $table->foreign('cluster_id', 'fk_limit_cluster_id')
+                        ->references('id')
+                        ->on('cluster_t')
+                        ->onDelete('cascade');
+                    $table->foreign('instance_id', 'fk_limit_instance_id')
+                        ->references('id')
+                        ->on('instance_t')
+                        ->onDelete('cascade');
                     $table->unique(['cluster_id', 'instance_id', 'limit_key_text'], 'ux_limit_cluster_instance_key');
-                }
-            );
+                });
         }
     }
 

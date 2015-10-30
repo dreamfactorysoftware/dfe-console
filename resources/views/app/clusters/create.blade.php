@@ -21,20 +21,20 @@
                             <div class="form-group">
                                 <label>Name</label>
                                 <input id="cluster_id_text"
-                                    name="cluster_id_text"
-                                    class="form-control"
-                                    placeholder="Enter name."
-                                    type="text"
-                                    value="{{ Input::old('cluster_id_text') }}">
+                                       name="cluster_id_text"
+                                       class="form-control"
+                                       placeholder="Enter name."
+                                       type="text"
+                                       value="{{ Input::old('cluster_id_text') }}">
                             </div>
                             <div class="form-group">
                                 <label>DNS Subdomain</label>
                                 <input id="subdomain_text"
-                                    name="subdomain_text"
-                                    class="form-control"
-                                    placeholder="Enter DNS Subdomain."
-                                    type="text"
-                                    value="{{ Input::old('subdomain_text') }}">
+                                       name="subdomain_text"
+                                       class="form-control"
+                                       placeholder="Enter DNS Subdomain."
+                                       type="text"
+                                       value="{{ Input::old('subdomain_text') }}">
                             </div>
                             <div class="form-group">
                                 <label>Select Web Server</label>
@@ -94,7 +94,7 @@
     </div>
 
     <script>
-        function cancel(){
+        function cancel() {
             window.location = '/v1/clusters';
         }
     </script>

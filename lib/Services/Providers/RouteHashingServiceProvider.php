@@ -2,29 +2,29 @@
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 
-us  DreamFactory\Enterprise\Services\Managers\InstanceManager;
+us  DreamFactory\Enterprise\Common\Services\RouteHashingService;
 
 /**
- * Registers the instance manager as a service
+ * Register the route hashing service as a Laravel provider
  *
- * To use the "InstMan" facade for this provider, add the service provider to
+ * To use the "RouteHash" facade for this provider, add the service provider to
  * your the "providers" array in your config/app.php file:
  *
  *  'providers' => array(
  *
  *      ... Other Providers Above ...
- *      'DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider',
+ *      'DreamFactory\Enterprise\Services\Providers\RouteHashingServiceProvider',
  *
  *  ),
  */
-class InstanceServiceProvider extends BaseServiceProvider
+class RouteHashingServiceProvider extends BaseServiceProvider
 {
     //******************************************************************************
     //* Constants
     //******************************************************************************
 
     /** @inheritdoc */
-    const IOC_NAME = 'dfe.instance';
+    const IOC_NAME = 'dfe.route-hashing';
 
     //********************************************************************************
     //* Public Methods
@@ -37,10 +37,10 @@ class InstanceServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        //  Register the manager
-        $this->singleton(static::IOC_NAME,
+        //  Register object into instance container
+        $this->app->singleton(static::IOC_NAME,
             function ($app){
-                return new InstanceManager($app);
+                return new RouteHashingService($app);
             });
     }
 

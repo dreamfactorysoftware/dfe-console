@@ -68,23 +68,22 @@ class SnapshotService extends BaseService
 
         //  Create the snapshot archive and stuff it full of goodies
         /** @var SnapshotManifest $_manifest */
-        list($_fsSnapshot, $_manifest, $_routeHash, $_routeLink) =
-            $this->createExportArchive($_snapshotId,
-                $_snapshotName,
-                [
-                    'timestamp'           => $_stamp,
-                    'guest-location'      => $instance->guest_location_nbr,
-                    'instance-id'         => $instance->instance_id_text,
-                    'cluster-id'          => (int)$instance->cluster_id,
-                    'db-server-id'        => (int)$instance->db_server_id,
-                    'web-server-id'       => (int)$instance->web_server_id,
-                    'app-server-id'       => (int)$instance->app_server_id,
-                    'owner-id'            => (int)$instance->user->id,
-                    'owner-email-address' => $instance->user->email_addr_text,
-                    'owner-storage-key'   => $instance->user->storage_id_text,
-                    'storage-key'         => $instance->storage_id_text,
-                ],
-                $keepDays);
+        list($_fsSnapshot, $_manifest, $_routeHash, $_routeLink) = $this->createExportArchive($_snapshotId,
+            $_snapshotName,
+            [
+                'timestamp'           => $_stamp,
+                'guest-location'      => $instance->guest_location_nbr,
+                'instance-id'         => $instance->instance_id_text,
+                'cluster-id'          => (int)$instance->cluster_id,
+                'db-server-id'        => (int)$instance->db_server_id,
+                'web-server-id'       => (int)$instance->web_server_id,
+                'app-server-id'       => (int)$instance->app_server_id,
+                'owner-id'            => (int)$instance->user->id,
+                'owner-email-address' => $instance->user->email_addr_text,
+                'owner-storage-key'   => $instance->user->storage_id_text,
+                'storage-key'         => $instance->storage_id_text,
+            ],
+            $keepDays);
 
         try {
             $this->addFilesToArchive($exports, $_fsSnapshot);

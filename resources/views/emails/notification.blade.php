@@ -5,8 +5,8 @@
     <title>DreamFactory Services Platform : System Notification</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="DreamFactory Software, Inc.">
-    <meta name="language" content="en" />
-    <link rel="shortcut icon" href="https://www.dreamfactory.com/favicon.ico" />
+    <meta name="language" content="en"/>
+    <link rel="shortcut icon" href="https://www.dreamfactory.com/favicon.ico"/>
     <link rel="important stylesheet" href="chrome://messagebody/skin/messageBody.css">
 </head>
 <body bgcolor="#ffffff"
@@ -30,9 +30,10 @@
                                 </td>
                                 <td width="204" align="right" valign="top" style="width: 204px; overflow: hidden;">
                                     <a href="https://dreamfactorysoftare.github.io/" title="{dreamfactory.developers}"
-                                       style="outline: none;"><img src="https://www.dreamfactory.com/sites/all/themes/dreamfactory/images/logo-email-212x43.png"
-                                                                   width="212" height="43" border="0"
-                                                                   alt="{dreamfactory.developers}" style="display: block;" /></a>
+                                       style="outline: none;"><img
+                                                src="https://www.dreamfactory.com/sites/all/themes/dreamfactory/images/logo-email-212x43.png"
+                                                width="212" height="43" border="0"
+                                                alt="{dreamfactory.developers}" style="display: block;"/></a>
                                 </td>
                             </table>
                         </div>
@@ -48,7 +49,8 @@
                                    style="width: 540px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
                                 <!-- spacer -->
                                 <tr>
-                                    <td colspan="2" align="left" valign="top" height="59" style="overflow: hidden; height: 40px;">
+                                    <td colspan="2" align="left" valign="top" height="59"
+                                        style="overflow: hidden; height: 40px;">
                                         &nbsp;
                                     </td>
                                 </tr>
@@ -58,7 +60,8 @@
                                         <p style="color: #333333; font-size: 15px; font-family: arial, sans-serif; margin-top: 0; margin-right: 0; margin-bottom: 21px; margin-left: 0;">
                                             Hey %%PRIVATE_FIRST_NAME_TEXT%%, </p>
 
-                                        <p style="color: #333333; font-size: 15px; font-family: arial, sans-serif; margin-top: 0; margin-right: 0; margin-bottom: 21px; margin-left: 0;">%%PRIVATE_EMAIL_TEXT%%</p>
+                                        <p style="color: #333333; font-size: 15px; font-family: arial, sans-serif; margin-top: 0; margin-right: 0; margin-bottom: 21px; margin-left: 0;">
+                                            %%PRIVATE_EMAIL_TEXT%%</p>
 
                                         <p style="color: #333333; font-size: 15px; font-family: arial, sans-serif; margin-top: 0; margin-right: 0; margin-bottom: 21px; margin-left: 0;">
                                             If you've got any questions, feel free to drop us a line at
@@ -66,7 +69,7 @@
                                         </p>
 
                                         <p style="color: #333333; font-size: 15px; font-family: arial, sans-serif; margin-top: 0; margin-right: 0; margin-bottom: 21px; margin-left: 0;">
-                                            Later,<br /> The Dream Team </p>
+                                            Later,<br/> The Dream Team </p>
                                     </td>
                                 </tr>
                             </table>

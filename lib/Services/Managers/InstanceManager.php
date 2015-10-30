@@ -1,7 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Managers;
 
 use DreamFactory\Enterprise\Common\Contracts\Factory;
-use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
 use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
@@ -11,6 +10,8 @@ use DreamFactory\Enterprise\Database\Models\InstanceGuest;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+us  DreamFactory\Enterprise\Common\Enums\ServerTypes;
 
 /**
  * Creates and manages instances

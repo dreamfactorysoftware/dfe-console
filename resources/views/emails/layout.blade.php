@@ -3,11 +3,11 @@
 <head>
     <title>{{ $headTitle }} | DreamFactory Enterprise&trade;</title>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <meta name="language" content="en" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <meta name="language" content="en"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="HandheldFriendly" content="true" />
-    <link rel="shortcut icon" href="//www.dreamfactory.com/favicon.ico" />
+    <meta name="HandheldFriendly" content="true"/>
+    <link rel="shortcut icon" href="//www.dreamfactory.com/favicon.ico"/>
     <style type="text/css">
         @import url(http://fonts.googleapis.com/css?family=Open+Sans|Roboto);
 
@@ -65,7 +65,7 @@
                                                               width="215"
                                                               height="29"
                                                               alt="DreamFactory"
-                                                              style="border:none;text-decoration:none;" /></a>
+                                                              style="border:none;text-decoration:none;"/></a>
         </td>
     </tr>
     </tbody>

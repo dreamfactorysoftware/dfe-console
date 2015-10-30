@@ -62,7 +62,8 @@ class Manifest extends ConsoleCommand
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(), [
+        return array_merge(parent::getArguments(),
+            [
                 ['cluster-id', InputArgument::REQUIRED, 'The id/name of the cluster',],
                 ['web-server-id', InputArgument::REQUIRED, 'The id/name of the web server from "cluster-id"',],
                 [
@@ -76,7 +77,8 @@ class Manifest extends ConsoleCommand
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
+            [
                 ['create', 'c', InputOption::VALUE_NONE, 'Create a new manifest file. This is the default.'],
                 ['no-keys', 'k', InputOption::VALUE_NONE, 'If specified, no application keys will be generated.'],
                 [

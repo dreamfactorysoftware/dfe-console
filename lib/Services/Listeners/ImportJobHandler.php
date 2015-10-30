@@ -1,8 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
-use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
+
+us  DreamFactory\Enterprise\Services\Facades\Provision;
 
 /**
  * Processes queued requests

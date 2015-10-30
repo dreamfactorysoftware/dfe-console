@@ -24,7 +24,7 @@
         </p>
 
         <p>
-            Have a great day!<br /> The Dream Team
+            Have a great day!<br/> The Dream Team
         </p>
     </div>
 @stop

@@ -1,7 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Provisioners;
 
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
-use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Provisioners\BaseRequest;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
@@ -9,6 +8,8 @@ use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Storage\Facades\InstanceStorage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use League\Flysystem\Filesystem;
+
+us  DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 
 class ProvisionServiceRequest extends BaseRequest
 {

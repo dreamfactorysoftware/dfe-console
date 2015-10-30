@@ -2,9 +2,10 @@
 namespace DreamFactory\Enterprise\Services\Facades;
 
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
+
+us  DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider;
 
 /**
  * @method static \DreamFactory\Enterprise\Services\Managers\InstanceManager registerInstances(array $instances)

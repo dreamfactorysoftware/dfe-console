@@ -91,7 +91,8 @@ EOT
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
+        return array_merge(parent::getOptions(),
+            [
                 [
                     'no-composer',
                     null,

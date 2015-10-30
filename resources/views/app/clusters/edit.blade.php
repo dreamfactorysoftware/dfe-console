@@ -17,6 +17,7 @@
                     <input name="_method" type="hidden" value="PUT">
                     <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
                     <input id="_server_list" name="_server_list" type="hidden" value="">
+
                     <div class="row">
 
                         <div class="col-md-6">
@@ -26,18 +27,20 @@
                             <div class="form-group">
                                 <label class="control-label" for="cluster_id_text">Name</label>
                                 <input id="cluster_id_text"
-                                    name="cluster_id_text"
-                                    class="form-control"
-                                    @if (Input::old('cluster_id_text')) value="{{ Input::old('cluster_id_text') }}" @else value="{{ $cluster->cluster_id_text or '' }}" @endif
-                                    type="text">
+                                       name="cluster_id_text"
+                                       class="form-control"
+                                       @if (Input::old('cluster_id_text')) value="{{ Input::old('cluster_id_text') }}"
+                                       @else value="{{ $cluster->cluster_id_text or '' }}" @endif
+                                       type="text">
                             </div>
                             <div class="form-group">
                                 <label class="control-label" for="subdomain_text">Fixed DNS Subdomain</label>
                                 <input id="subdomain_text"
-                                    name="subdomain_text"
-                                    class="form-control"
-                                    @if (Input::old('subdomain_text')) value="{{ Input::old('subdomain_text') }}" @else value="{{ $cluster->subdomain_text or '' }}" @endif
-                                    type="text">
+                                       name="subdomain_text"
+                                       class="form-control"
+                                       @if (Input::old('subdomain_text')) value="{{ Input::old('subdomain_text') }}"
+                                       @else value="{{ $cluster->subdomain_text or '' }}" @endif
+                                       type="text">
                             </div>
                             <div class="form-group">
                                 <label>Select Web Server</label>
@@ -60,7 +63,7 @@
                             <div class="form-group">
                                 <label>Select App Server</label>
                                 <select class="form-control" id="app_server_id" name="app_server_id">
-                                    <option value="{{$datas['app']['id']}}"  {{ Input::old('app_server_id') ? null : 'selected="selected"' }}>{{$datas['app']['name']}}</option>
+                                    <option value="{{$datas['app']['id']}}" {{ Input::old('app_server_id') ? null : 'selected="selected"' }}>{{$datas['app']['name']}}</option>
                                     @foreach ($app as $_app)
                                         <option value="{{ $_app['id'] }}" {{ Input::old('app_server_id') == $_app['id'] ? 'selected="selected"' : null }}>{{ $_app['name'] }}</option>
                                     @endforeach
@@ -95,7 +98,7 @@
 
 
     <script>
-        function cancel(){
+        function cancel() {
             window.location = '/v1/clusters';
         }
     </script>

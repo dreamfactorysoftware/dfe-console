@@ -1,7 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-use DreamFactory\Enterprise\Services\Managers\ProvisioningManager;
+
+us  DreamFactory\Enterprise\Services\Managers\ProvisioningManager;
 
 /**
  * Register the hosting service
@@ -29,12 +30,10 @@ class ProvisioningServiceProvider extends BaseServiceProvider
     public function register()
     {
         //  Register the manager
-        $this->singleton(
-            static::IOC_NAME,
+        $this->singleton(static::IOC_NAME,
             function ($app){
                 return new ProvisioningManager($app);
-            }
-        );
+            });
     }
 
 }

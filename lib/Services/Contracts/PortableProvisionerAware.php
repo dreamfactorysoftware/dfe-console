@@ -1,8 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Services\Contracts;
 
 use DreamFactory\Enterprise\Common\Contracts\PortabilityAware;
-use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
+
+us  DreamFactory\Enterprise\Services\Jobs\ExportJob;
 
 /**
  * Something that is aware of provisioners

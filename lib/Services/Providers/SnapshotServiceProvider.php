@@ -1,7 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-use DreamFactory\Enterprise\Services\SnapshotService;
+
+us  DreamFactory\Enterprise\Services\SnapshotService;
 
 /**
  * Register the snapshot service as a Laravel provider
@@ -38,12 +39,10 @@ class SnapshotServiceProvider extends BaseServiceProvider
      */
     public function register()
     {
-        $this->singleton(
-            static::IOC_NAME,
+        $this->singleton(static::IOC_NAME,
             function ($app){
                 return new SnapshotService($app);
-            }
-        );
+            });
     }
 
 }

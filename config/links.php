@@ -12,7 +12,11 @@ return [
     ],
     'console'   => [
         ['name' => 'Welcome', 'href' => '//www.dreamfactory.com/in_enterprise_v1/welcome.html', 'attributes' => [],],
-        ['name' => 'Resources', 'href' => '//www.dreamfactory.com/in_enterprise_v1/resources.html', 'attributes' => [],],
+        [
+            'name'       => 'Resources',
+            'href'       => '//www.dreamfactory.com/in_enterprise_v1/resources.html',
+            'attributes' => [],
+        ],
         ['name' => 'Support', 'href' => '//www.dreamfactory.com/in_enterprise_v1/support.html', 'attributes' => [],],
         ['name' => 'Licensing', 'href' => '//www.dreamfactory.com/in_enterprise_v1/license.php', 'attributes' => [],],
     ],

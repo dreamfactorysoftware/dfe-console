@@ -13,8 +13,7 @@ class CreateInstanceGuestArchTable extends Migration
     public function up()
     {
         if (!\Schema::hasTable('instance_guest_arch_t')) {
-            Schema::create(
-                'instance_guest_arch_t',
+            Schema::create('instance_guest_arch_t',
                 function (Blueprint $table){
                     $table->integer('id');
                     $table->integer('instance_id');
@@ -36,8 +35,7 @@ class CreateInstanceGuestArchTable extends Migration
                     $table->string('state_text', 64)->nullable();
                     $table->dateTime('create_date');
                     $table->timestamp('lmod_date');
-                }
-            );
+                });
         }
     }
 

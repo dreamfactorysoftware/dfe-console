@@ -18,7 +18,7 @@ class CreateJobsTable extends Migration
     {
         if (!\Schema::hasTable('job_t')) {
             \Schema::create('job_t',
-                function (Blueprint $table) {
+                function (Blueprint $table){
                     $table->unsignedBigInteger('id', true);
                     $table->string('queue', 256);
                     $table->text('payload');
