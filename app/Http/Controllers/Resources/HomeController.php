@@ -55,8 +55,11 @@ class HomeController extends FactoryController
             //  Override links to add link parameters if requested
             foreach ($_links as $_index => $_link) {
                 //if (array_get($_link, 'params', false)) {
-                $_links[$_index]['href.og'] = $_links[$_index]['href'];
-                $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
+                    $_links[$_index]['href.og'] = $_links[$_index]['href'];
+
+                    if ($_links[$_index]['name'] == 'Licensing') {
+                        $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
+                    }
                 //}
             }
 
