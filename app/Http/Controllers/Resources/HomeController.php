@@ -95,9 +95,6 @@ class HomeController extends FactoryController
         $_stats = \App::make(UsageServiceProvider::IOC_NAME)->gatherStatistics();
         $_instanceStats = $this->dataPoints;
 
-        \Log::debug($_stats);
-        \Log::debug($_instanceStats);
-
         //  Aggregate the instance stats
         foreach (array_get(array_get($_stats, 'instance', []), 'resources', []) as $_key => $_value) {
             if (array_key_exists($_checkKey = $_key . 's', $_instanceStats)) {
