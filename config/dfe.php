@@ -37,9 +37,13 @@ return [
     //* Auditing details for instances
     //******************************************************************************
     'audit'                   => [
+        //  For audit messages
         'host'           => env('DFE_AUDIT_HOST'),
         'port'           => env('DFE_AUDIT_PORT'),
         'message-format' => env('DFE_AUDIT_MESSAGE_FORMAT', AuditMessageFormats::GELF),
+        //  For client presentation
+        'client-host'    => env('DFE_AUDIT_CLIENT_HOST'),
+        'client-port'    => env('DFE_AUDIT_CLIENT_PORT'),
     ],
     //******************************************************************************
     //* Common settings across portions of app

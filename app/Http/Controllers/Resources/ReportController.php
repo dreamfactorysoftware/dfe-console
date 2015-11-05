@@ -35,7 +35,36 @@ class ReportController extends ViewController
     /** @inheritdoc */
     public function index()
     {
-        $_connection = config('reports.default');
+        //  Dynamically generate the proper report query, parameters, and host/port
+        $_key = 'reports.connections.' . config('reports.default');
+        $_title = config($_key . '.reports.api-usage.title');
+        $_indexType = config($_key . '.reports.api-usage.index-type', config('dfe.cluster-id'));
+
+        $_clientHost = '//' . trim(str_replace(['https:', 'http:', ':', '///', '//', '/',],
+                null,
+                config($_key . '.client-host')),
+                ' .'/** space and dot trimmed **/);
+
+        if (!empty($_clientPort = config($_key . '.client-port'))) {
+            $_clientHost .= ':' . $_clientPort;
+        }
+
+        $_query = config($_key . '.reports.api-usage.query-uri');
+
+        if (!empty($_params = config($_key . '.reports.api-usage.query-params', []))) {
+            foreach ($_params as $_key => $_value) {
+                if (null !== $_value) {
+                    //  Tighten up!
+                    $_value = trim(str_replace([PHP_EOL, "\t", "\r", "\n", ' '],
+                        null,
+                        str_replace(['{index_type}', '(', ')', '"', ' ',],
+                            [$_indexType, '%28', '%29', '\'', null],
+                            $_value)));
+                }
+
+                $_query .= '&' . $_key . '=' . $_value;
+            }
+        }
 
         return \View::make('app.reports',
             [
@@ -47,11 +76,10 @@ class ReportController extends ViewController
                     'last_name_text',
                 ]),
                 'instances'         => Instance::orderBy('instance_id_text')->get(['instance_id_text']),
-                'report_index_type' => config('reports.connections.' . $_connection . '.reports.api-usage.index-type',
-                    config('dfe.cluster-id')),
-                'report_base_uri'   => config('reports.connections.' . $_connection . '.base-uri'),
-                'report_title'      => config('reports.connections.' . $_connection . '.reports.api-usage.title'),
-                'report_query'      => config('reports.connections.' . $_connection . '.reports.api-usage.query'),
+                'report_index_type' => $_indexType,
+                'report_title'      => $_title,
+                'report_query'      => $_query,
+                'report_host'       => $_clientHost,
             ]);
     }
 }
