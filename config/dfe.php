@@ -42,7 +42,7 @@ return [
         'port'           => env('DFE_AUDIT_PORT'),
         'message-format' => env('DFE_AUDIT_MESSAGE_FORMAT', AuditMessageFormats::GELF),
         //  For client presentation
-        'client-host'    => env('DFE_AUDIT_CLIENT_HOST'),
+        'client-host'    => env('DFE_AUDIT_CLIENT_HOST', env('DFE_AUDIT_HOST')),
         'client-port'    => env('DFE_AUDIT_CLIENT_PORT'),
     ],
     //******************************************************************************
