@@ -27,8 +27,9 @@ class UsageService extends BaseService
     public function gatherStatistics()
     {
         //  Start out with our installation key
+        /** @noinspection PhpUndefinedMethodInspection */
         $_stats = [
-            'install-key' => config('dfe.install-key'),
+            'install-key' => config('dfe.install-key', ServiceUser::first()->getHashedEmail()),
         ];
 
         $_mirror = new \ReflectionClass(get_called_class());
