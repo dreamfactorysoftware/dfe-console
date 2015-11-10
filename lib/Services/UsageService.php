@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
-use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
@@ -10,6 +9,7 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * General usage services
@@ -27,26 +27,29 @@ class UsageService extends BaseService
      */
     public function gatherStatistics()
     {
-        //  Start out with our installation key
-        $_key =
-            hash(
-                EnterpriseDefaults::SIGNATURE_METHOD,
-                \Auth::guest() ? array_get( $_SERVER, 'REMOTE_ADDR', 'guest' ) : \Auth::user()->getHashedEmail()
-            );
+        if (\Auth::guest()) {
+            return [];
+        }
 
+        try {
+            /** @type ServiceUser $_user */
+            $_user = ServiceUser::findOrFail(\Auth::user()->id);
+        } catch (ModelNotFoundException $_ex) {
+            return [];
+        }
+
+        //  Start out with our installation key
         /** @noinspection PhpUndefinedMethodInspection */
         $_stats = [
-            'install-key' => config( 'dfe.install-key', $_key ),
+            'install-key' => config('dfe.install-key', $_user->getHashedEmail()),
         ];
 
-        $_mirror = new \ReflectionClass( get_called_class() );
+        $_mirror = new \ReflectionClass(get_called_class());
 
-        foreach ( $_mirror->getMethods() as $_method )
-        {
-            if ( preg_match( "/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName() ) )
-            {
-                $_which = str_slug( str_ireplace( ['gather', 'statistics'], null, $_methodName ) );
-                $_stats[$_which] = call_user_func( [get_called_class(), $_methodName] );
+        foreach ($_mirror->getMethods() as $_method) {
+            if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
+                $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
+                $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
             }
         }
 
@@ -59,7 +62,7 @@ class UsageService extends BaseService
     protected function gatherConsoleStatistics()
     {
         $_stats = [
-            'uri'      => config( 'app.url', \Request::getSchemeAndHttpHost() ),
+            'uri'      => config('app.url', \Request::getSchemeAndHttpHost()),
             'user'     => ServiceUser::count(),
             'mount'    => Mount::count(),
             'server'   => Server::count(),
@@ -92,30 +95,22 @@ class UsageService extends BaseService
         $_lastGuestLocation = null;
 
         /** @type Instance $_instance */
-        foreach ( Instance::all() as $_instance )
-        {
+        foreach (Instance::all() as $_instance) {
             $_stats[$_instance->instance_id_text] = ['uri' => $_instance->getProvisionedEndpoint(),];
 
-            $_api = InstanceApiClient::connect( $_instance );
+            $_api = InstanceApiClient::connect($_instance);
             $_resources = $_api->resources();
 
-            if ( !empty( $_resources ) )
-            {
+            if (!empty($_resources)) {
                 $_list = [];
 
-                foreach ( $_resources as $_resource )
-                {
-                    if ( property_exists( $_resource, 'name' ) )
-                    {
-                        try
-                        {
-                            if ( false !== ( $_result = $_api->resource( $_resource->name ) ) )
-                            {
-                                $_list[$_resource->name] = count( $_result );
+                foreach ($_resources as $_resource) {
+                    if (property_exists($_resource, 'name')) {
+                        try {
+                            if (false !== ($_result = $_api->resource($_resource->name))) {
+                                $_list[$_resource->name] = count($_result);
                             }
-                        }
-                        catch ( \Exception $_ex )
-                        {
+                        } catch (\Exception $_ex) {
                             $_list[$_resource->name] = 'unavailable';
                         }
                     }
