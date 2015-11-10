@@ -330,7 +330,7 @@
             }
             else if (type === 'user') {
                 search_type = 'API-Calls-Instance-Owners';
-                search_param = 'dfe.instance_owner_id';
+                search_param = 'dfe.owner_email_address';
                 search_field = 'app_name';
                 no_select = 'Select Instance Owner and click Submit again.';
             }
@@ -347,7 +347,7 @@
                         case 'instance_type_users':
                             search_type = 'API-Calls-Users';
                             search_param = 'dfe.instance_id';
-                            search_field = 'dfe.instance_owner_id';
+                            search_field = 'dfe.owner_email_address';
                             break;
                         case 'instance_type_applications':
                             search_type = 'API-Calls-Applications';
