@@ -50,7 +50,7 @@
         @endif
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <table id="limitTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-policy">
+                <table id="limitTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-policy" style="table-layout: fixed; width: 100%; display:none">
                     <thead>
                     <tr>
                         <th>&nbsp;</th>

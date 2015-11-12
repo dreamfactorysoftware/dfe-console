@@ -62,7 +62,7 @@
                 <div class="col-xs-12">
                     <div class="panel panel-default">
                         <table id="serverTable"
-                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-server">
+                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-server" style="table-layout: fixed; width: 100%; display:none">
                             <thead>
                             <tr>
                                 <th></th>

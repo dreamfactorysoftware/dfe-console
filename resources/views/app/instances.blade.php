@@ -43,7 +43,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="panel panel-default">
-                        <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance">
+                        <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance" style="table-layout: fixed; width: 100%; display:none">
                             <thead>
                                 <tr>
                                     <th></th>
