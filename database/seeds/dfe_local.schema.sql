@@ -107,6 +107,24 @@ CREATE TABLE `environment_t` (
   DEFAULT CHARSET = utf8;
 
 /********************************************************************************
+* Cluster Metrics: metrics_t
+********************************************************************************/
+
+DROP TABLE IF EXISTS `metrics_t`;
+
+CREATE TABLE `metrics_t` (
+  `id`                BIGINT(20) UNSIGNED     NOT NULL AUTO_INCREMENT,
+  `metrics_data_text` MEDIUMTEXT
+                      COLLATE utf8_unicode_ci NOT NULL,
+  `sent_ind`          TINYINT(1)              NOT NULL DEFAULT 0,
+  `create_date`       DATETIME                NOT NULL,
+  `lmod_date`         TIMESTAMP               NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`))
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_unicode_ci;
+
+/********************************************************************************
 * Server Mounts: mount_t
 ********************************************************************************/
 

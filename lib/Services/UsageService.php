@@ -27,19 +27,16 @@ class UsageService extends BaseService
      */
     public function gatherStatistics()
     {
-        if (\Auth::guest()) {
-            return [];
-        }
-
         try {
             /** @type ServiceUser $_user */
-            $_user = ServiceUser::findOrFail(\Auth::user()->id);
+            $_user = ServiceUser::firstOrFail();
         } catch (ModelNotFoundException $_ex) {
+            \Log::notice('No console users found. Nothing to report.');
+
             return [];
         }
 
         //  Start out with our installation key
-        /** @noinspection PhpUndefinedMethodInspection */
         $_stats = [
             'install-key' => config('dfe.install-key', $_user->getHashedEmail()),
         ];
