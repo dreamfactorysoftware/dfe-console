@@ -96,24 +96,30 @@ class UsageService extends BaseService
             $_stats[$_instance->instance_id_text] = ['uri' => $_instance->getProvisionedEndpoint(),];
 
             $_api = InstanceApiClient::connect($_instance);
-            $_resources = $_api->resources();
 
-            if (!empty($_resources)) {
-                $_list = [];
+            try {
+                if (!empty($_resources = $_api->resources())) {
+                    $_list = [];
 
-                foreach ($_resources as $_resource) {
-                    if (property_exists($_resource, 'name')) {
-                        try {
-                            if (false !== ($_result = $_api->resource($_resource->name))) {
-                                $_list[$_resource->name] = count($_result);
+                    foreach ($_resources as $_resource) {
+                        if (property_exists($_resource, 'name')) {
+                            try {
+                                if (false !== ($_result = $_api->resource($_resource->name))) {
+                                    $_list[$_resource->name] = count($_result);
+                                }
+                            } catch (\Exception $_ex) {
+                                $_list[$_resource->name] = 'unavailable';
                             }
-                        } catch (\Exception $_ex) {
-                            $_list[$_resource->name] = 'unavailable';
                         }
                     }
-                }
 
-                $_stats[$_instance->instance_id_text]['resources'] = $_list;
+                    $_stats[$_instance->instance_id_text]['resources'] = $_list;
+                    $_stats[$_instance->instance_id_text]['_status'] = ['operational'];
+                }
+            } catch (\Exception $_ex) {
+                //  Instance unavailable or not initialized
+                $_stats[$_instance->instance_id_text]['resources'] = [];
+                $_stats[$_instance->instance_id_text]['_status'] = ['unreachable'];
             }
         }
 

@@ -86,6 +86,8 @@ class Metrics extends ConsoleCommand
         if (!empty($_stats)) {
             if ($this->option('gather')) {
                 Models\Metrics::create(['metrics_data_text' => $_stats,]);
+
+                return 0;
             }
 
             $_output = Json::encode($_stats, JSON_UNESCAPED_SLASHES);

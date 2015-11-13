@@ -133,6 +133,9 @@ class OpsController extends BaseController implements IsVersioned
                 break;
 
             default:    //  All else is original + base
+                /**
+                 * This has multiple copies of data because it is used by several different systems
+                 */
                 $_merge = [
                     //  snake
                     'instance_name_text' => $_instance->instance_name_text,
@@ -161,12 +164,7 @@ class OpsController extends BaseController implements IsVersioned
                 break;
         }
 
-        /**
-         * This has multiple copies of data because it is used by several different systems
-         */
-        \Log::info('/api/v1/ops/status: Instance "' . $_id . '" found', $_data = array_merge($_base, $_merge ?: []));
-
-        return $this->success($_data);
+        return $this->success(array_merge($_base, $_merge ?: []));
     }
 
     /**

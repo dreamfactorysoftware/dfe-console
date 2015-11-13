@@ -2,7 +2,8 @@
 
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
-use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Database\Models\Metrics;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class HomeController extends FactoryController
 {
@@ -90,8 +91,18 @@ class HomeController extends FactoryController
      */
     protected function getLinkParameters()
     {
-        $_stats = \App::make(UsageServiceProvider::IOC_NAME)->gatherStatistics();
         $_instanceStats = $this->dataPoints;
+        $_stats = [];
+
+        try {
+            $_metrics = Metrics::where('sent_ind', 0)->orderBy('id', 'desc')->firstOrFail();
+
+            if (empty($_metrics) || empty($_stats = $_metrics->metrics_data_text) || !is_array($_stats)) {
+                return $_stats;
+            }
+        } catch (ModelNotFoundException $_ex) {
+            return $_stats;
+        }
 
         //  Aggregate the instance stats
         foreach (array_get(array_get($_stats, 'instance', []), 'resources', []) as $_key => $_value) {
