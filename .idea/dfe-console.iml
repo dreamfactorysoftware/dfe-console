@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/database" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources/views" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources/lang" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/bootstrap/cache" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm.setdev-on" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/chaoticwave/grubworm/.idea" />

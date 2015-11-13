@@ -49,17 +49,17 @@ return [
     //* Common settings across portions of app
     //******************************************************************************
     'common'                  => [
-        'display-name'      => 'DreamFactory Enterprise&trade; Console',
-        'display-version'   => 'v1.0.0-beta',
+        'display-name'       => 'DreamFactory Enterprise&trade; Console',
+        'display-version'    => 'v1.0.0-beta',
         /* 256px X 256px to avoid pixelation */
         'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
-        'display-copyright' => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
+        'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name
          * Included are cerulean, darkly, flatly, paper, and superhero.
          * You may also install other compatible themes and use them as well.
          */
-        'themes'            => ['auth' => 'darkly', 'page' => 'flatly'],
+        'themes'             => ['auth' => 'darkly', 'page' => 'flatly'],
     ],
     //******************************************************************************
     //* UI Settings
