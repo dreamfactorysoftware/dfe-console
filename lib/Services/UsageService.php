@@ -27,19 +27,17 @@ class UsageService extends BaseService
      */
     public function gatherStatistics()
     {
+        $_stats = [];
+
         try {
             /** @type ServiceUser $_user */
             $_user = ServiceUser::firstOrFail();
+            $_key = $_user->getHashedEmail();
         } catch (ModelNotFoundException $_ex) {
             \Log::notice('No console users found. Nothing to report.');
 
             return [];
         }
-
-        //  Start out with our installation key
-        $_stats = [
-            'install-key' => config('dfe.install-key', $_user->getHashedEmail()),
-        ];
 
         $_mirror = new \ReflectionClass(get_called_class());
 
@@ -49,6 +47,9 @@ class UsageService extends BaseService
                 $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
             }
         }
+
+        //  Set our installation key
+        $_stats['install-key'] = $_key;
 
         return $_stats;
     }
