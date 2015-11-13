@@ -58,11 +58,14 @@ class HomeController extends FactoryController
                 $_links[$_index]['href.og'] = $_links[$_index]['href'];
 
                 if ($_links[$_index]['name'] == 'Licensing') {
-                    $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
+                    $_links[$_index]['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
                 }
             }
 
             \Cache::put('home.links.console', $_links, static::LINK_CACHE_TTL);
+
+            //  Mark metrics as being sent
+            !empty($_params) && Metrics::where('sent_ind', 0)->update(['sent_ind' => 1]);
         } else {
             //  Restore original links
             foreach ($_links as $_index => $_link) {
