@@ -15,7 +15,7 @@ return [
             'reports'     => [
                 'api-usage' => [
                     'title'        => 'API Usage',
-                    'index-type'   => 'cluster-east-2',
+                    'index-type'   => env('DFE_CLUSTER_ID', 'dfe'),
                     'query-uri'    => '/#/visualize/edit/{search_type}?embed',
                     'query-params' => [
                         '_a' => '
