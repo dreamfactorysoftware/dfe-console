@@ -11,6 +11,6 @@ class BlueprintTest extends \TestCase
      */
     public function testBlueprint()
     {
-        $_result = \Artisan::call('dfe:blueprint', ['instance-id' => 'df2']);
+        $_result = \Artisan::call('dfe:blueprint', ['instance-id' => 'bender']);
     }
 }

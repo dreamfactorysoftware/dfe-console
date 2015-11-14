@@ -50,22 +50,25 @@ class Blueprint extends ConsoleCommand implements SelfHandling
                 'remember_me' => false,
             ];
 
+            $_blueprint = ['instance' => $_instance->toArray()];
+            $_resources = [];
+
             //  Get services
             $_result = $_client->resources();
 
-            $_result = $_client->post('/system/admin/session', $_payload);
+            foreach ($_result as $_resource) {
+                $_resources[$_resource->name] = [];
 
-            if (!is_object($_result) || !isset($_result->session_token)) {
-                $this->writeln('response : ' . print_r($_result, true));
-                throw new \Exception('Invalid response.');
+                try {
+                    $_response = $_client->get($_resource->name);
+                    $_resources[$_resource->name] =
+                        isset($_response->resource) ? $_response->resource : $_response;
+                } catch (\Exception $_ex) {
+                }
             }
 
-            $this->token = $_result->session_token;
-
-            //  Get services
-            $_result = $_client->get('/system?as_list=true');
-
-            $this->writeln('response : ' . print_r($_result, true));
+            $_blueprint['resources'] = $_resources;
+            $this->writeln(json_encode($_blueprint, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
             return true;
         } catch (ModelNotFoundException $_ex) {
@@ -84,12 +87,14 @@ class Blueprint extends ConsoleCommand implements SelfHandling
      */
     protected function getArguments()
     {
-        return array_merge(parent::getArguments(),
+        return array_merge(
+            parent::getArguments(),
             [
                 ['instance-id', InputArgument::REQUIRED, 'The id of the instance to inspect.'],
                 ['instance-uri', InputArgument::OPTIONAL, 'The URI of the instance (i.e. "http://localhost")'],
                 ['admin-email', InputArgument::OPTIONAL, 'An instance administrator email'],
                 ['admin-password', InputArgument::OPTIONAL, 'An instance administrator password'],
-            ]);
+            ]
+        );
     }
 }
