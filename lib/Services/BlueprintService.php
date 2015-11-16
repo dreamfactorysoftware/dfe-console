@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Services\GitService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
@@ -127,7 +128,10 @@ class BlueprintService extends BaseService
             $_commitMessage = $_message;
         }
 
-        if (0 != `/usr/bin/git add {$_file} && /usr/bin/git commit -m "{$_commitMessage}"`) {
+        $_git = new GitService($this->app, $this->path);
+        $_branch = $_git->getCurrentBranch();
+
+        if (0 !== $_git->commitChange($_file, $_commitMessage)) {
             \Log::error('Error committing blueprint file "' . $_file . '".');
         } else {
             \Event::fire('dfe.blueprint.post-commit',
