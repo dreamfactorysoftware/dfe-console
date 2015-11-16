@@ -61,6 +61,7 @@ return [
         DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\RouteHashingServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider::class,
+        DreamFactory\Enterprise\Services\Providers\BlueprintServiceProvider::class,
         /** DreamFactory Partner Services Provider */
         DreamFactory\Enterprise\Partner\Providers\PartnerServiceProvider::class,
         /** DreamFactory Instance API Services Provider */

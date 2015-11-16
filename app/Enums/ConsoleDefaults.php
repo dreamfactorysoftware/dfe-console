@@ -59,4 +59,8 @@ class ConsoleDefaults
      * @type int The default number of days to keep system metrics
      */
     const DEFAULT_METRICS_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_METRICS_DAYS_TO_KEEP;
+    /**
+     * @type string The default path of the blueprint repository
+     */
+    const DEFAULT_BLUEPRINT_REPO_PATH = EnterpriseDefaults::DEFAULT_BLUEPRINT_REPO_PATH;
 }

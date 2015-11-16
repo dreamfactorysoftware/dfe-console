@@ -2,10 +2,12 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
+use DreamFactory\Enterprise\Services\BlueprintService;
+use DreamFactory\Enterprise\Services\Providers\BlueprintServiceProvider;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class Blueprint extends ConsoleCommand implements SelfHandling
 {
@@ -36,38 +38,28 @@ class Blueprint extends ConsoleCommand implements SelfHandling
     //* Methods
     //******************************************************************************
 
+    /**
+     * Fire the command
+     *
+     * @return bool
+     */
     public function fire()
     {
         parent::fire();
 
         try {
-            $_instance = $this->findInstance($this->argument('instance-id'));
-            $_client = InstanceApiClient::connect($_instance);
+            /** @type BlueprintService $_service */
+            $_service = BlueprintServiceProvider::service();
+            $_blueprint = $_service->make($this->argument('instance-id'),
+                [
+                    'commit' => !$this->option('no-commit'),
+                    'user'   => [
+                        'email'       => $this->argument('admin-email'),
+                        'password'    => $this->argument('admin-password'),
+                        'remember_me' => false,
+                    ],
+                ]);
 
-            $_payload = [
-                'email'       => $this->argument('admin-email'),
-                'password'    => $this->argument('admin-password'),
-                'remember_me' => false,
-            ];
-
-            $_blueprint = ['instance' => $_instance->toArray()];
-            $_resources = [];
-
-            //  Get services
-            $_result = $_client->resources();
-
-            foreach ($_result as $_resource) {
-                $_resources[$_resource->name] = [];
-
-                try {
-                    $_response = $_client->get($_resource->name);
-                    $_resources[$_resource->name] =
-                        isset($_response->resource) ? $_response->resource : $_response;
-                } catch (\Exception $_ex) {
-                }
-            }
-
-            $_blueprint['resources'] = $_resources;
             $this->writeln(json_encode($_blueprint, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
 
             return true;
@@ -80,11 +72,7 @@ class Blueprint extends ConsoleCommand implements SelfHandling
         return false;
     }
 
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
+    /** @inheritdoc */
     protected function getArguments()
     {
         return array_merge(
@@ -97,4 +85,14 @@ class Blueprint extends ConsoleCommand implements SelfHandling
             ]
         );
     }
+
+    /** @inheritdoc */
+    protected function getOptions()
+    {
+        return array_merge(parent::getOptions(),
+            [
+                ['no-commit', null, InputOption::VALUE_NONE, 'Do not commit the result to the repo',],
+            ]);
+    }
+
 }

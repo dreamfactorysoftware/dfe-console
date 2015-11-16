@@ -46,6 +46,13 @@ return [
         'client-port'    => env('DFE_AUDIT_CLIENT_PORT'),
     ],
     //******************************************************************************
+    //* Blueprint Repository
+    //******************************************************************************
+    'blueprints'              => [
+        'path' => env('DFE_BLUEPRINT_PATH', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
+        'vcs'  => true,
+    ],
+    //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************
     'common'                  => [
