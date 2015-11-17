@@ -24,9 +24,17 @@ class BlueprintService extends BaseService
     //******************************************************************************
 
     /**
-     * @type string The repository path
+     * @type GitService
      */
-    protected $path;
+    protected $git;
+    /**
+     * @type string The repository base (absolute)
+     */
+    protected $repoBase;
+    /**
+     * @type string The repository path (relative to $repoBase)
+     */
+    protected $repoPath;
 
     //*************************************************************************
     //* Methods
@@ -38,18 +46,17 @@ class BlueprintService extends BaseService
         parent::boot();
 
         //  Make sure our repo path exists
-        $this->path =
-            Disk::path([
-                config('dfe.blueprints.path', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
-                config('dfe.cluster-id', gethostname()),
-            ],
-                true);
+        $this->repoBase =
+            Disk::path([config('dfe.blueprints.path', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH)], true);
 
-        if (!is_dir(Disk::path([$this->path, '.git',]))) {
-            if (0 != `/usr/bin/git init {$this->path}`) {
-                \Log::error('Error initializing git.');
-            }
-        }
+        //  Tack on the cluster for the organization
+        $this->repoPath = Disk::path([$this->repoBase, $_repoName = config('dfe.cluster-id', gethostname()),], true);
+
+        //  Get an instance of the git service if we don't have one yet
+        !$this->git && $this->git = new GitService($this->app, $this->repoBase, $_repoName);
+
+        //  Initialize it as a git repo if it isn't already...
+        $this->git->init();
     }
 
     /**
@@ -109,17 +116,17 @@ class BlueprintService extends BaseService
     protected function commitBlueprint($instanceId, $blueprint)
     {
         //  Create/update the file
-        $_file = Disk::path([$this->path, $instanceId . '.json',]);
+        $_file = Disk::path([$this->repoPath, $instanceId . '.json',]);
         JsonFile::encodeFile($_file, $blueprint);
 
         //  Commit it
-        $_commitMessage = 'Blueprint created on ' . date('Y-m-d H-i-s');
+        $_commitMessage = 'Blueprint created on ' . date('Y-m-d H:i:s');
 
         $_response = \Event::fire('dfe.blueprint.pre-commit',
             [
                 'instance-id'     => $instanceId,
                 'blueprint'       => $blueprint,
-                'repository-path' => $this->path,
+                'repository-path' => $this->repoPath,
                 'commit-message'  => $_commitMessage,
             ]);
 
@@ -128,14 +135,11 @@ class BlueprintService extends BaseService
             $_commitMessage = $_message;
         }
 
-        $_git = new GitService($this->app, $this->path);
-        $_branch = $_git->getCurrentBranch();
-
-        if (0 !== $_git->commitChange($_file, $_commitMessage)) {
+        if (0 !== $this->git->commitChange($_file, $_commitMessage)) {
             \Log::error('Error committing blueprint file "' . $_file . '".');
         } else {
             \Event::fire('dfe.blueprint.post-commit',
-                ['instance-id' => $instanceId, 'blueprint' => $blueprint, 'repository-path' => $this->path,]);
+                ['instance-id' => $instanceId, 'blueprint' => $blueprint, 'repository-path' => $this->repoPath,]);
         }
 
         return $blueprint;

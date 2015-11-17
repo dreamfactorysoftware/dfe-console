@@ -60,7 +60,9 @@ class Blueprint extends ConsoleCommand implements SelfHandling
                     ],
                 ]);
 
-            $this->writeln(json_encode($_blueprint, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+            if ($this->option('dump')) {
+                $this->writeln(json_encode($_blueprint, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+            }
 
             return true;
         } catch (ModelNotFoundException $_ex) {
@@ -92,6 +94,7 @@ class Blueprint extends ConsoleCommand implements SelfHandling
         return array_merge(parent::getOptions(),
             [
                 ['no-commit', null, InputOption::VALUE_NONE, 'Do not commit the result to the repo',],
+                ['dump', 'd', InputOption::VALUE_NONE, 'Dump the blueprint to stdout',],
             ]);
     }
 
