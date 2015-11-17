@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
 use DreamFactory\Enterprise\Database\Models\Metrics;
+use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class HomeController extends FactoryController
@@ -55,10 +56,13 @@ class HomeController extends FactoryController
 
             //  Override links to add link parameters if requested
             foreach ($_links as $_index => $_link) {
-                $_links[$_index]['href.og'] = $_links[$_index]['href'];
+                //  Only show links that are supposed to be shown...
+                if (array_get($_link, 'show', false)) {
+                    $_links[$_index]['href.og'] = $_links[$_index]['href'];
 
-                if ($_links[$_index]['name'] == 'Licensing') {
-                    $_links[$_index]['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
+                    if ($_links[$_index]['name'] == 'Licensing') {
+                        $_links[$_index]['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
+                    }
                 }
             }
 
@@ -94,38 +98,9 @@ class HomeController extends FactoryController
      */
     protected function getLinkParameters()
     {
-        $_instanceStats = $this->dataPoints;
-        $_stats = [];
-
-        try {
-            $_metrics = Metrics::where('sent_ind', 0)->orderBy('id', 'desc')->firstOrFail();
-
-            if (empty($_metrics) || empty($_stats = $_metrics->metrics_data_text) || !is_array($_stats)) {
-                return $_stats;
-            }
-        } catch (ModelNotFoundException $_ex) {
-            return $_stats;
-        }
-
-        //  Aggregate the instance stats
-        foreach (array_get(array_get($_stats, 'instance', []), 'resources', []) as $_key => $_value) {
-            if (array_key_exists($_checkKey = $_key . 's', $_instanceStats)) {
-                $_instanceStats[$_checkKey] += $_value;
-            }
-        }
-
+        /** @noinspection PhpUndefinedMethodInspection */
         return [
-            'e_k'  => array_get($_stats, 'install-key'),
-            'e_u'  => $_stats['console']['user'] + $_stats['dashboard']['user'],
-            'e_s'  => $_stats['console']['server'],
-            'e_c'  => $_stats['console']['cluster'],
-            'e_l'  => $_stats['console']['limit'],
-            'e_i'  => $_stats['console']['instance'],
-            'i_u'  => $_instanceStats['users'],
-            'i_a'  => $_instanceStats['admins'],
-            'i_s'  => $_instanceStats['services'],
-            'i_es' => $_instanceStats['ext_services'],
-            'i_ap' => $_instanceStats['apps'],
+            'e_k' => UsageServiceProvider::service()->generateInstallKey(),
         ];
     }
 }

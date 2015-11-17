@@ -29,13 +29,7 @@ class UsageService extends BaseService
     {
         $_stats = [];
 
-        try {
-            /** @type ServiceUser $_user */
-            $_user = ServiceUser::firstOrFail();
-            $_key = $_user->getHashedEmail();
-        } catch (ModelNotFoundException $_ex) {
-            \Log::notice('No console users found. Nothing to report.');
-
+        if (false === ($_installKey = $this->generateInstallKey())) {
             return [];
         }
 
@@ -49,9 +43,26 @@ class UsageService extends BaseService
         }
 
         //  Set our installation key
-        $_stats['install-key'] = $_key;
+        $_stats['install-key'] = $_installKey;
 
         return $_stats;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function generateInstallKey()
+    {
+        try {
+            /** @type ServiceUser $_user */
+            $_user = ServiceUser::firstOrFail();
+
+            return $_user->getHashedEmail();
+        } catch (ModelNotFoundException $_ex) {
+            \Log::notice('No console users found. Nothing to report.');
+
+            return false;
+        }
     }
 
     /**
