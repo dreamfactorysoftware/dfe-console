@@ -86,12 +86,13 @@ class HomeController extends FactoryController
         $_rawLinks = config('links.console', []);
 
         //  Override links to add link parameters if requested
-        foreach ($_rawLinks as $_index => $_link) {
+        foreach ($_rawLinks as $_link) {
             //  Don't show control links or first-user links
-            if (array_get($_link, 'show', false) || 'first_user' == $_link['name']) {
+            if (array_key_exists('show', $_link) && true !== $_link['show']) {
                 continue;
             }
 
+            //  Licensing has parameters
             if ('Licensing' == $_link['name']) {
                 $_link['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
             }
