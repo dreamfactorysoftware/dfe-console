@@ -82,18 +82,18 @@ class HomeController extends FactoryController
      */
     protected function getConsoleLinks()
     {
-        $_links = config('links.console', []);
+        $_links = [];
+        $_rawLinks = config('links.console', []);
 
         //  Override links to add link parameters if requested
-        foreach ($_links as $_index => $_link) {
-            //  Don't show control links
-            if (array_get($_link, 'show', false)) {
-                array_forget($_links, $_index);
+        foreach ($_rawLinks as $_index => $_link) {
+            //  Don't show control links or first-user links
+            if (array_get($_link, 'show', false) || 'first_user' == $_link['name']) {
                 continue;
             }
 
             //  Only show links that are supposed to be shown...
-            $_links[$_index]['href.og'] = $_link['href'];
+            $_links[$_index] = $_link;
 
             if ('Licensing' == $_link['name']) {
                 $_links[$_index]['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
