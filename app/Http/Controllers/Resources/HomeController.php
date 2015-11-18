@@ -84,6 +84,7 @@ class HomeController extends FactoryController
     {
         $_links = [];
         $_rawLinks = config('links.console', []);
+        \Log::debug('Raw links: ' . print_r($_rawLinks, true));
 
         //  Override links to add link parameters if requested
         foreach ($_rawLinks as $_index => $_link) {
@@ -92,12 +93,12 @@ class HomeController extends FactoryController
                 continue;
             }
 
-            //  Only show links that are supposed to be shown...
-            $_links[$_index] = $_link;
-
             if ('Licensing' == $_link['name']) {
-                $_links[$_index]['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
+                $_link['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
             }
+
+            //  Only show links that are supposed to be shown...
+            $_links[] = $_link;
         }
 
         return $_links;
