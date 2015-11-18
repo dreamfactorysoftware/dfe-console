@@ -47,10 +47,10 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Name</th>
-                                    <th>Cluster</th>
-                                    <th>Owner Email</th>
-                                    <th>Last Modified</th>
+                                    <th style="min-width: 175px">Name</th>
+                                    <th style="min-width: 175px">Cluster</th>
+                                    <th style="min-width: 175px">Owner Email</th>
+                                    <th style="min-width: 100px">Last Modified</th>
                                 </tr>
                             </thead>
                             <tbody>
