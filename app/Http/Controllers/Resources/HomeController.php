@@ -50,42 +50,13 @@ class HomeController extends FactoryController
     /** @noinspection PhpMissingParentCallCommonInspection */
     public function index()
     {
-        //  Check if we've gotten links yet
-        if (null === ($_links = \Cache::get('home.links.console'))) {
-            $_links = config('links.console', []);
-
-            //  Override links to add link parameters if requested
-            foreach ($_links as $_index => $_link) {
-                //  Only show links that are supposed to be shown...
-                if (array_get($_link, 'show', false)) {
-                    $_links[$_index]['href.og'] = $_links[$_index]['href'];
-
-                    if ($_links[$_index]['name'] == 'Licensing') {
-                        $_links[$_index]['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
-                    }
-                }
-            }
-
-            \Cache::put('home.links.console', $_links, static::LINK_CACHE_TTL);
-
-            //  Mark metrics as being sent
-            !empty($_params) && Metrics::where('sent_ind', 0)->update(['sent_ind' => 1]);
-        } else {
-            //  Restore original links
-            foreach ($_links as $_index => $_link) {
-                if (isset($_links[$_index]['old-href'])) {
-                    $_links[$_index]['href'] = $_links[$_index]['href.og'];
-                }
-            }
-        }
-
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
             [
                 'prefix'       => ConsoleDefaults::UI_PREFIX,
                 'resource'     => null,
                 'title'        => null,
-                'links'        => $_links,
+                'links'        => $this->getConsoleLinks(),
                 'request_uri'  => \Request::getRequestUri(),
                 'active_class' => ' active',
             ]);
@@ -103,6 +74,32 @@ class HomeController extends FactoryController
             'e_k' => UsageServiceProvider::service()->generateInstallKey(),
         ];
     }
+
+    /**
+     * Gets the home page links
+     *
+     * @return array
+     */
+    protected function getConsoleLinks()
+    {
+        $_links = config('links.console', []);
+
+        //  Override links to add link parameters if requested
+        foreach ($_links as $_index => $_link) {
+            //  Don't show control links
+            if (array_get($_link, 'show', false)) {
+                array_forget($_links, $_index);
+                continue;
+            }
+
+            //  Only show links that are supposed to be shown...
+            $_links[$_index]['href.og'] = $_link['href'];
+
+            if ('Licensing' == $_link['name']) {
+                $_links[$_index]['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
+            }
+        }
+
+        return $_links;
+    }
 }
-
-
