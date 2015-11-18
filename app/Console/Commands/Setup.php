@@ -6,8 +6,11 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\JsonFile;
+use Illuminate\Http\Response;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -83,6 +86,11 @@ class Setup extends ConsoleCommand
             }
 
             $this->writeln('user <comment>' . $this->argument('admin-email') . '</comment> created.', 'info');
+
+            //  Register
+            if (false === $this->registerInstallation($_user)) {
+                $this->writeln('Error while registering installation');
+            }
         } catch (\Exception $_ex) {
             $this->writeln('Error while creating admin user: ' . $_ex->getMessage(), 'error');
 
@@ -221,5 +229,46 @@ INI;
     private function _generateApiSecret()
     {
         return rtrim(base64_encode(hash('sha256', microtime())), '=');
+    }
+
+    /**
+     * @param \DreamFactory\Enterprise\Database\Models\ServiceUser $serviceUser
+     *
+     * @return bool
+     */
+    protected function registerInstallation($serviceUser)
+    {
+        //  Find out post url...
+        $_links = config('links.console', []);
+        $_url = null;
+
+        foreach ($_links as $_link) {
+            if ('first_user' == array_get($_link, 'name') && false === array_get($_link, 'show', false)) {
+                $_url = $_link['href'];
+                break;
+            }
+        }
+
+        if (empty($_url)) {
+            \Log::debug('[dfe:setup] No registration url found. No registration performed.');
+
+            return false;
+        }
+
+        $_payload = $serviceUser->toArray();
+        /** @noinspection PhpUndefinedMethodInspection */
+        $_payload['install-key'] = UsageServiceProvider::service()->generateInstallKey();
+
+        try {
+            if (false !== Curl::post($_url, $_payload)) {
+                return Response::HTTP_OK == Curl::getLastHttpCode();
+            }
+
+            \Log::error('[dfe:setup] Network error posting registration data to endpoint.');
+        } catch (\Exception $_ex) {
+            \Log::error('[dfe:setup] Exception posting registration data to endpoint: ' . $_ex->getMessage());
+        }
+
+        return false;
     }
 }

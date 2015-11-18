@@ -101,8 +101,6 @@ class HomeController extends FactoryController
             $_links[] = $_link;
         }
 
-        \Log::debug('links: ' . print_r($_links, true));
-
         return $_links;
     }
 }
