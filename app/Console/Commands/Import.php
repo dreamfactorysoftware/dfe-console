@@ -1,8 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
-use DreamFactory\Enterprise\Services\Provisioners\PortableServiceRequest;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -73,7 +73,7 @@ class Import extends ConsoleCommand implements SelfHandling
      */
     protected function getOptions()
     {
-        return array_merge(parent::getArguments(),
+        return array_merge(parent::getOptions(),
             [
                 [
                     'cluster-id',

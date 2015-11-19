@@ -3,7 +3,6 @@
 use DreamFactory\Enterprise\Common\Contracts\PrivatePathAware;
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
 use DreamFactory\Enterprise\Common\Provisioners\BaseRequest;
-use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Facades\Provision;
@@ -186,7 +185,7 @@ class ProvisionServiceRequest extends BaseRequest
     /**
      * @param int|string $instanceId
      *
-     * @return PortableServiceRequest
+     * @return $this
      */
     protected function setInstanceId($instanceId)
     {

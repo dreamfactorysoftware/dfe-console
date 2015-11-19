@@ -1,8 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
-use DreamFactory\Enterprise\Services\Provisioners\PortableServiceRequest;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
