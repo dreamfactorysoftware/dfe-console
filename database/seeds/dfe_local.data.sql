@@ -7,8 +7,8 @@
 * The supported environments
 ********************************************************************************/
 
-INSERT INTO `environment_t` (`id`, `user_id`, `environment_id_text`, `create_date`, `lmod_date`)
-VALUES (1, NULL, 'Development', NOW(), NOW()), (2, NULL, 'Production', NOW(), NOW());
+INSERT INTO `environment_t` (`user_id`, `environment_id_text`, `create_date`, `lmod_date`)
+VALUES (NULL, 'Development', NOW(), NOW()), (NULL, 'Production', NOW(), NOW());
 
 /********************************************************************************
 * The default local mount

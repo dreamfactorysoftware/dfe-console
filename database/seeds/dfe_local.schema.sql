@@ -103,11 +103,10 @@ CREATE TABLE `environment_t` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `ux_environment_environment_id` (`environment_id_text`))
   ENGINE = InnoDB
-  AUTO_INCREMENT = 3
   DEFAULT CHARSET = utf8;
 
 /********************************************************************************
-* Cluster Metrics: metrics_t
+* Metrics & Telemetry: metrics_t / telemetry_t
 ********************************************************************************/
 
 DROP TABLE IF EXISTS `metrics_t`;
@@ -120,6 +119,22 @@ CREATE TABLE `metrics_t` (
   `create_date`       DATETIME                NOT NULL,
   `lmod_date`         TIMESTAMP               NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_unicode_ci;
+
+CREATE TABLE `telemetry_t` (
+  `id`               BIGINT(20) UNSIGNED     NOT NULL AUTO_INCREMENT,
+  `provider_id_text` VARCHAR(255)
+                     COLLATE utf8_unicode_ci NOT NULL,
+  `gather_date`      DATETIME                NOT NULL,
+  `data_text`        MEDIUMTEXT
+                     COLLATE utf8_unicode_ci NOT NULL,
+  `create_date`      DATETIME                NOT NULL,
+  `lmod_date`        TIMESTAMP               NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `ix_telemetry_provider_id` (`provider_id_text`),
+  KEY `ix_telemetry_gather_date` (`gather_date`))
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8
   COLLATE = utf8_unicode_ci;

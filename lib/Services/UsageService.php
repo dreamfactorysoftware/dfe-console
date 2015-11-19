@@ -9,16 +9,59 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
+use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
+use DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * General usage services
  */
-class UsageService extends BaseService
+class UsageService extends BaseService implements MetricsProvider
 {
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type TelemetryService
+     */
+    protected $telemetry;
+
     //*************************************************************************
     //* Methods
     //*************************************************************************
+
+    /** @inheritdoc */
+    public function boot()
+    {
+        parent::boot();
+
+        //  Get an instance of the telemetry service and register any configured providers
+        /** @type TelemetryService $_telemetry */
+        $this->telemetry = TelemetryServiceProvider::service();
+
+        //  Register the configured providers
+        foreach (config('dfe.audit.telemetry-providers', []) as $_name => $_provider) {
+            $this->telemetry->registerProvider($_name, $_provider);
+        }
+    }
+
+    /**
+     * Retrieves the metrics
+     *
+     * @param array|null $options Any options around providing the data
+     *
+     * @return mixed|array
+     */
+    public function getMetrics($options = [])
+    {
+        //  If nobody has used the system, we can't report metrics
+        if (false === ($_installKey = $this->generateInstallKey())) {
+            return [];
+        }
+
+        return array_merge(['install-key' => $_installKey,], $this->telemetry->getTelemetry());
+    }
 
     /**
      * Returns statistics gathered from various sources as defined by the methods in this class and its subclasses
@@ -81,6 +124,9 @@ class UsageService extends BaseService
         ];
 
         return $_stats;
+
+        //  The new way
+        //return $this->telemetry->make('console')->getTelemetry();
     }
 
     /**
