@@ -7,8 +7,7 @@
 
     <div class="col-xs-1 col-sm-2 col-md-2">
         <ul class="nav nav-pills nav-stacked visible-md visible-lg visible-sm">
-            <li role="presentation" class="home-link active"><a href="/{{$prefix}}/reports">Reports</a></li>
-            <li role="presentation" class="home-link"><a href="/{{$prefix}}/reports/quickstart">Quickstart</a></li>
+            <li role="presentation" class="home-link active"><a href="/{{$prefix}}/reports">Quickstart</a></li>
         </ul>
     </div>
 
@@ -16,7 +15,7 @@
         <div>
             <div class="">
                 <div class="nav nav-pills dfe-section-header">
-                    <h4 class="">Reports</h4>
+                    <h4 class="">Quickstart</h4>
                 </div>
             </div>
         </div>
@@ -24,9 +23,7 @@
         <div class="">
             <div class="row">
                 <div class="col-xs-12">
-                    The ELK Stack (Elasticsearch, Logstash, Kibana) is pre-installed with DreamFactory Enterprise. The ELK system automatically logs API calls from each DreamFactory instance managed by DreamFactory Enterprise.
-                    <br><br>
-                    No configuration is required in DreamFactory Enterprise to log API calls. See the instructions <a href="http://wiki.dreamfactory.com/DFE/Reports" target="_blank">here</a> to configure Kibana and import a number of pre-defined API reports.
+                    <iframe id="iframe_quickstart" frameborder="0" width="100%" src="//www.dreamfactory.com/in_enterprise_v1/reporting.html"></iframe>
                     <br><br>
                     <button class="btn btn-default" onClick="window.open('/v1/reports/kibana');">Open Kibana</button>
                 </div>

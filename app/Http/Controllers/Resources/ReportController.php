@@ -35,10 +35,7 @@ class ReportController extends ViewController
     /** @inheritdoc */
     public function show($id)
     {
-        return \View::make('app.reports.quickstart',
-            [
-                'prefix'            => $this->_prefix
-            ]);
+        return;
     }
 
     /** @inheritdoc */
