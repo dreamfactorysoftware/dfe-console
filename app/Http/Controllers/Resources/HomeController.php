@@ -2,9 +2,7 @@
 
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
-use DreamFactory\Enterprise\Database\Models\Metrics;
-use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use DreamFactory\Enterprise\Services\Facades\Usage;
 
 class HomeController extends FactoryController
 {
@@ -71,7 +69,7 @@ class HomeController extends FactoryController
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return [
-            'e_k' => UsageServiceProvider::service()->generateInstallKey(),
+            'e_k' => Usage::service()->generateInstallKey(),
         ];
     }
 

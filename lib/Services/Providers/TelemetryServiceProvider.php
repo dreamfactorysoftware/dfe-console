@@ -6,7 +6,7 @@ use DreamFactory\Enterprise\Services\TelemetryService;
 /**
  * Registers the telemetry service
  */
-class TelemetryServiceProvider extends \DreamFactory\Library\Utility\Providers\BaseServiceProvider
+class TelemetryServiceProvider extends BaseServiceProvider
 {
     //******************************************************************************
     //* Constants

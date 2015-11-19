@@ -31,7 +31,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth'                       => 'DreamFactory\Enterprise\Console\Http\Middleware\Authenticate',
-        'auth.basic'                 => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
+        //'auth.basic'                 => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
         AuthenticateOpsClient::ALIAS => 'DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient',
         'csrf'                       => 'DreamFactory\Enterprise\Console\Http\Middleware\VerifyCsrfToken',
         'guest'                      => 'DreamFactory\Enterprise\Console\Http\Middleware\RedirectIfAuthenticated',

@@ -3,7 +3,7 @@
 use DreamFactory\Enterprise\Common\Http\Controllers\Auth\CommonAuthController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
-use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\Facades\Usage;
 use DreamFactory\Library\Utility\Curl;
 use Illuminate\Http\Response;
 
@@ -82,8 +82,7 @@ class AuthController extends CommonAuthController
         }
 
         $_payload = $serviceUser->toArray();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $_payload['install-key'] = UsageServiceProvider::service()->generateInstallKey();
+        $_payload['install-key'] = Usage::service()->generateInstallKey();
 
         try {
             if (false !== Curl::post($_url, $_payload)) {

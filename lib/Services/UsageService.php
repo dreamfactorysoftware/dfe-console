@@ -10,7 +10,7 @@ use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
-use DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider;
+use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -37,8 +37,7 @@ class UsageService extends BaseService implements MetricsProvider
         parent::boot();
 
         //  Get an instance of the telemetry service and register any configured providers
-        /** @type TelemetryService $_telemetry */
-        $this->telemetry = TelemetryServiceProvider::service();
+        $this->telemetry = Telemetry::service();
 
         //  Register the configured providers
         foreach (config('dfe.audit.telemetry-providers', []) as $_name => $_provider) {

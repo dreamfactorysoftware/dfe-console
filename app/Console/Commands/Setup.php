@@ -6,7 +6,7 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
-use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\Facades\Usage;
 use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\JsonFile;
@@ -256,8 +256,7 @@ INI;
         }
 
         $_payload = $serviceUser->toArray();
-        /** @noinspection PhpUndefinedMethodInspection */
-        $_payload['install-key'] = UsageServiceProvider::service()->generateInstallKey();
+        $_payload['install-key'] = Usage::service()->generateInstallKey();
 
         try {
             if (false !== Curl::post($_url, $_payload)) {
