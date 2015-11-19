@@ -1,16 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Telemetry;
 
-use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
-use DreamFactory\Enterprise\Database\Models\Cluster;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\Limit;
-use DreamFactory\Enterprise\Database\Models\Mount;
-use DreamFactory\Enterprise\Database\Models\Server;
-use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Services\Contracts\ProvidesTelemetry;
-use Illuminate\Database\Connection;
-use Illuminate\Support\Facades\Schema;
 
 abstract class BaseTelemetryProvider implements ProvidesTelemetry
 {

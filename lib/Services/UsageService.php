@@ -40,7 +40,7 @@ class UsageService extends BaseService implements MetricsProvider
         $this->telemetry = Telemetry::service();
 
         //  Register the configured providers
-        foreach (config('dfe.audit.telemetry-providers', []) as $_name => $_provider) {
+        foreach (config('telemetry.providers', []) as $_name => $_provider) {
             $this->telemetry->registerProvider($_name, $_provider);
         }
     }

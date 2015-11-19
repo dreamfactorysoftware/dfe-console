@@ -1,7 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Facades;
 
 use DreamFactory\Enterprise\Services\Contracts\ProvidesTelemetry;
-use DreamFactory\Enterprise\Services\Providers\BlueprintServiceProvider;
+use DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider;
 use DreamFactory\Library\Utility\Facades\BaseFacade;
 
 /**
@@ -21,6 +21,6 @@ class Telemetry extends BaseFacade
      */
     protected static function getFacadeAccessor()
     {
-        return BlueprintServiceProvider::IOC_NAME;
+        return TelemetryServiceProvider::IOC_NAME;
     }
 }

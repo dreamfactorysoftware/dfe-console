@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Facades;
 
-use DreamFactory\Enterprise\Services\Providers\BlueprintServiceProvider;
+use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Library\Utility\Facades\BaseFacade;
 
 /**
@@ -19,6 +19,6 @@ class Usage extends BaseFacade
      */
     protected static function getFacadeAccessor()
     {
-        return BlueprintServiceProvider::IOC_NAME;
+        return UsageServiceProvider::IOC_NAME;
     }
 }

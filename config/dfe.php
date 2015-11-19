@@ -7,9 +7,6 @@ use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Services\Auditing\Enums\AuditMessageFormats;
-use DreamFactory\Enterprise\Services\Telemetry\ConsoleTelemetry;
-use DreamFactory\Enterprise\Services\Telemetry\DashboardTelemetry;
-use DreamFactory\Enterprise\Services\Telemetry\InstanceTelemetry;
 
 return [
     //******************************************************************************
@@ -41,18 +38,12 @@ return [
     //******************************************************************************
     'audit'                   => [
         //  For audit messages
-        'host'                => env('DFE_AUDIT_HOST'),
-        'port'                => env('DFE_AUDIT_PORT'),
-        'message-format'      => env('DFE_AUDIT_MESSAGE_FORMAT', AuditMessageFormats::GELF),
+        'host'           => env('DFE_AUDIT_HOST'),
+        'port'           => env('DFE_AUDIT_PORT'),
+        'message-format' => env('DFE_AUDIT_MESSAGE_FORMAT', AuditMessageFormats::GELF),
         //  For client presentation
-        'client-host'         => env('DFE_AUDIT_CLIENT_HOST', env('DFE_AUDIT_HOST')),
-        'client-port'         => env('DFE_AUDIT_CLIENT_PORT'),
-        //  Telemetry providers
-        'telemetry-providers' => [
-            'console'   => ConsoleTelemetry::class,
-            'dashboard' => DashboardTelemetry::class,
-            'instance'  => InstanceTelemetry::class,
-        ],
+        'client-host'    => env('DFE_AUDIT_CLIENT_HOST', env('DFE_AUDIT_HOST')),
+        'client-port'    => env('DFE_AUDIT_CLIENT_PORT'),
     ],
     //******************************************************************************
     //* Blueprint Repository

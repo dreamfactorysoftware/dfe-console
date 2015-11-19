@@ -4,7 +4,7 @@ use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 use DreamFactory\Enterprise\Services\Managers\ProvisioningManager;
 
 /**
- * Register the hosting service
+ * Register the provisioning service
  */
 class ProvisioningServiceProvider extends BaseServiceProvider
 {
