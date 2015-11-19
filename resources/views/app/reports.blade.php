@@ -25,7 +25,7 @@
                 <div class="col-xs-12">
                     <iframe id="iframe_quickstart" frameborder="0" width="100%" src="//www.dreamfactory.com/in_enterprise_v1/reporting.html"></iframe>
                     <br><br>
-                    <button class="btn btn-default" onClick="window.open('/v1/reports/kibana');">Open Kibana</button>
+                    <button class="btn btn-default" onClick="window.open('/v1/reports/kibana');">Launch Kibana</button>
                 </div>
             </div>
         </div>
