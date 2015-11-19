@@ -36,12 +36,14 @@ class UsageService extends BaseService implements MetricsProvider
     {
         parent::boot();
 
-        //  Get an instance of the telemetry service and register any configured providers
-        $this->telemetry = Telemetry::service();
+        //  If we're using telemetry, get an instance of the telemetry service and register any providers
+        if (config('telemetry.enabled', false)) {
+            $this->telemetry = Telemetry::service();
 
-        //  Register the configured providers
-        foreach (config('telemetry.providers', []) as $_name => $_provider) {
-            $this->telemetry->registerProvider($_name, $_provider);
+            //  Register the configured providers
+            foreach (config('telemetry.providers', []) as $_name => $_provider) {
+                $this->telemetry->registerProvider($_name, new $_provider());
+            }
         }
     }
 
@@ -54,12 +56,16 @@ class UsageService extends BaseService implements MetricsProvider
      */
     public function getMetrics($options = [])
     {
-        //  If nobody has used the system, we can't report metrics
-        if (false === ($_installKey = $this->generateInstallKey())) {
-            return [];
+        if (config('telemetry.enabled', false)) {
+            //  If nobody has used the system, we can't report metrics
+            if (false === ($_installKey = $this->generateInstallKey())) {
+                return [];
+            }
+
+            return array_merge(['install-key' => $_installKey,], $this->telemetry->getTelemetry());
         }
 
-        return array_merge(['install-key' => $_installKey,], $this->telemetry->getTelemetry());
+        return $this->gatherStatistics();
     }
 
     /**
@@ -138,6 +144,9 @@ class UsageService extends BaseService implements MetricsProvider
         ];
 
         return $_stats;
+
+        //  The new way
+        //return $this->telemetry->make('dashboard')->getTelemetry();
     }
 
     /**
@@ -181,5 +190,8 @@ class UsageService extends BaseService implements MetricsProvider
         }
 
         return $_stats;
+
+        //  The new way
+        //return $this->telemetry->make('instance')->getTelemetry();
     }
 }

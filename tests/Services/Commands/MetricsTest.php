@@ -11,6 +11,8 @@ class MetricsTest extends \TestCase
 
     /**
      * Tests metrics
+     *
+     * @covers UsageService::gatherStatistics()
      */
     public function testMetrics()
     {

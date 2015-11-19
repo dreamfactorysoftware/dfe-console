@@ -55,6 +55,7 @@ return [
         DreamFactory\Enterprise\Storage\Providers\InstanceStorageServiceProvider::class,
         DreamFactory\Enterprise\Storage\Providers\MountServiceProvider::class,
         /** DreamFactory Services service providers */
+        DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\UsageServiceProvider::class,
         DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider::class,

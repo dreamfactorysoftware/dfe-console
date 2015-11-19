@@ -1,21 +1,11 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
 use Carbon\Carbon;
-use Doctrine\DBAL\Exception\InvalidArgumentException;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Database\Models\Cluster;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\Limit;
-use DreamFactory\Enterprise\Database\Models\Mount;
-use DreamFactory\Enterprise\Database\Models\Server;
-use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\Telemetry;
-use DreamFactory\Enterprise\Database\Models\User;
-use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\ProvidesTelemetry;
 use DreamFactory\Enterprise\Services\Contracts\TelemetryAggregator;
 use DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * A pluggable generic telemetry service
@@ -54,8 +44,12 @@ class TelemetryService extends BaseService implements TelemetryAggregator
 
             if ($provider instanceof ProvidesTelemetry || $provider instanceof \Closure) {
                 $this->instances[$name] = $provider;
-            } else if (is_string($provider) && class_exists($provider, false)) {
-                $this->instances[$name] = new $provider();
+            } elseif (is_string($provider)) {
+                try {
+                    $this->instances[$name] = new $provider();
+                } catch (\Exception $_ex) {
+                    throw new \InvalidArgumentException('The $provider is invalid.');
+                }
             }
         }
 
