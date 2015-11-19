@@ -2,7 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Enums\PortableTypes;
-use DreamFactory\Enterprise\Common\Facades\RouteHashing;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
@@ -13,6 +12,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\RouteHash;
 use DreamFactory\Enterprise\Database\Models\Snapshot;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Facades\RouteHashing;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\Exceptions\FileSystemException;
