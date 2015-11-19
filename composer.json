@@ -124,7 +124,7 @@
     ]
   },
   "config":            {
-    "preferred-install": "source"
+    "preferred-install": "dist"
   },
   "extra":             {
     "branch-alias": {
