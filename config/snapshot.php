@@ -16,9 +16,11 @@ return [
         'user'     => env('DFE_SCRIPT_USER', 'dfadmin'),
     ],
     //  The protocol to use for hash links
-    'hash-link-protocol' => 'https',
+    'hash-link-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https'),
     //  The base URL for linking to snapshots
-    'hash-link-base'     => 'https://download.enterprise.dreamfactory.com/snapshot',
+    'hash-link-base'     => 'download.' .
+        ltrim(env('DFE_DEFAULT_DOMAIN', 'enterprise.dreamfactory.com'), '.') .
+        '/snapshot',
     //  The number of days to keep snapshots before removing them from storage
     'days-to-keep'       => env('DFE_SNAPSHOT_DAYS_TO_KEEP', EnterpriseDefaults::SNAPSHOT_DAYS_TO_KEEP),
     //  If true, files are moved to 'soft-delete-path' instead of being deleted

@@ -3,11 +3,11 @@
 <head>
     <title>{{ $headTitle }} | DreamFactory Enterprise&trade;</title>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <meta name="language" content="en"/>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <meta name="language" content="en" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="HandheldFriendly" content="true"/>
-    <link rel="shortcut icon" href="//www.dreamfactory.com/favicon.ico"/>
+    <meta name="HandheldFriendly" content="true" />
+    <link rel="shortcut icon" href="//www.dreamfactory.com/favicon.ico" />
     <style type="text/css">
         @import url(http://fonts.googleapis.com/css?family=Open+Sans|Roboto);
 
@@ -61,11 +61,11 @@
         <td align="left" valign="middle" style="margin: 10px 0; padding: 10px 0 15px;">
             <a style="text-decoration:none; cursor:pointer; border:none; display:block; height:29px; width:100%;"
                target="_blank"
-               href="//dashboard.cloud.dreamfactory.com"><img src="http://dreamfactory.com/images/email-logo-215x29.png"
-                                                              width="215"
-                                                              height="29"
-                                                              alt="DreamFactory"
-                                                              style="border:none;text-decoration:none;"/></a>
+               href="//{{ $dashboard_url }}"><img src="http://dreamfactory.com/images/email-logo-215x29.png"
+                                                  width="215"
+                                                  height="29"
+                                                  alt="DreamFactory"
+                                                  style="border:none;text-decoration:none;" /></a>
         </td>
     </tr>
     </tbody>
@@ -114,16 +114,15 @@
     <tr>
         <td style="font-size: 8pt;color: #aaa; padding: 0 5px;">
             <p>
-                You received this email because you used the <a href="//www.dreamfactory.com/" alt target="_blank">DreamFactory
-                    Enterprise&trade;</a>
-                Dashboard. This system will never use your email address other than to communicate with you about your
-                system usage.
+                You received this email because you used the <a href="//www.dreamfactory.com/" target="_blank">DreamFactory
+                    Enterprise&trade;</a> Dashboard. This system will never use your email address other than to
+                communicate with you about your system usage.
             </p>
 
             <p>If you need further assistance or have questions, please email <a
                         style="color:#0077B5;text-decoration:none;"
                         target="_blank"
-                        href="mailto:support@dreamfactory.com">DreamFactory Support</a>.</p>
+                        href="mailto:{{ $support_email_address }}">DreamFactory Support</a>.</p>
         </td>
     </tr>
     </tbody>

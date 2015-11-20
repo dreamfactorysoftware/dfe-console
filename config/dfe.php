@@ -33,6 +33,10 @@ return [
     'metrics-keep-days'       => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
     //  The url to download the current version of DFE console
     'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/develop.zip',
+    //  The dashboard URL
+    'dashboard-url'           => env('DFE_DASHBOARD_URL'),
+    //  The support email
+    'support-email-address'   => env('DFE_SUPPORT_EMAIL_ADDRESS', 'support@dreamfactory.com'),
     //******************************************************************************
     //* Auditing details for instances
     //******************************************************************************

@@ -72,11 +72,11 @@ class BlueprintService extends BaseService
         $_instance = $this->findInstance($instanceId);
         $_client = InstanceApiClient::connect($_instance);
 
-        $_payload = [
-            'email'       => array_get($options, 'email'),
-            'password'    => array_get($options, 'password'),
-            'remember_me' => array_get($options, 'remember_me', false),
-        ];
+//        $_payload = [
+//            'email'       => array_get($options, 'email'),
+//            'password'    => array_get($options, 'password'),
+//            'remember_me' => array_get($options, 'remember_me', false),
+//        ];
 
         $_blueprint = ['instance' => $_instance->toArray()];
         $_resources = [];

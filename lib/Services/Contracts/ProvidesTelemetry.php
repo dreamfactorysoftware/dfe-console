@@ -1,7 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Services\Contracts;
 
-use DreamFactory\Enterprise\Common\Contracts\PortabilityAware;
-
 /**
  * Something that provides telemetry
  */

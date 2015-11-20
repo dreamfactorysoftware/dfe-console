@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Telemetry;
 
 use DreamFactory\Enterprise\Common\Exceptions\NotImplementedException;
+use DreamFactory\Enterprise\Database\Models\Telemetry;
 use DreamFactory\Enterprise\Services\Contracts\ProvidesTelemetry;
 
 abstract class BaseTelemetryProvider implements ProvidesTelemetry
@@ -32,5 +33,16 @@ abstract class BaseTelemetryProvider implements ProvidesTelemetry
         }
 
         return static::PROVIDER_ID;
+    }
+
+    /**
+     * @param array $telemetry
+     *
+     * @return static
+     * @throws \DreamFactory\Enterprise\Common\Exceptions\NotImplementedException
+     */
+    protected function store($telemetry = [])
+    {
+        return Telemetry::storeTelemetry($this->getProviderId(), $telemetry);
     }
 }

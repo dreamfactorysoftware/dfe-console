@@ -1,7 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Services\Telemetry;
 
-use DreamFactory\Enterprise\Database\Models\Telemetry;
-
 class ConsoleTelemetry extends BaseTelemetryProvider
 {
     //******************************************************************************
@@ -90,7 +88,7 @@ class ConsoleTelemetry extends BaseTelemetryProvider
 
         //  Drop a row in the table
         try {
-            Telemetry::storeTelemetry($this->getProviderId(), $_telemetry);
+            $this->store($_telemetry);
         } catch (\Exception $_ex) {
             //  No worries, just throw it in the log...
             \Log::error('[telemetry.console] unable to save telemetry data: ' . $_ex->getMessage(), $_telemetry);
