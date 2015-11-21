@@ -3,9 +3,7 @@
 use DreamFactory\Enterprise\Common\Http\Controllers\Auth\CommonAuthController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
-use DreamFactory\Enterprise\Services\Facades\Usage;
-use DreamFactory\Library\Utility\Curl;
-use Illuminate\Http\Response;
+use DreamFactory\Enterprise\Services\Facades\License;
 
 class AuthController extends CommonAuthController
 {
@@ -64,32 +62,8 @@ class AuthController extends CommonAuthController
      */
     protected function postRegistration(ServiceUser $serviceUser)
     {
-        //  Find out post url...
-        $_links = config('links.console', []);
-        $_url = null;
-
-        foreach ($_links as $_link) {
-            if ('first_user' == array_get($_link, 'name') && !array_get($_link, 'show', false)) {
-                $_url = $_link['href'];
-                break;
-            }
-        }
-
-        if (empty($_url)) {
-            \Log::debug('[auth.register] No registration url found. No registration performed.');
-
-            return false;
-        }
-
-        $_payload = $serviceUser->toArray();
-        $_payload['install-key'] = Usage::service()->generateInstallKey();
-
         try {
-            if (false !== Curl::post($_url, $_payload)) {
-                return Response::HTTP_OK == Curl::getLastHttpCode();
-            }
-
-            \Log::error('[auth.register] Network error posting registration data to endpoint.');
+            License::registerAdmin($serviceUser);
         } catch (\Exception $_ex) {
             \Log::error('[auth.register] Exception posting registration data to endpoint: ' . $_ex->getMessage());
         }

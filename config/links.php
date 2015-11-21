@@ -7,12 +7,6 @@ return [
     //  Instance home page links
     'instance'  => [
         [
-            'name'       => 'first_user',
-            'href'       => 'https://www.dreamfactory.com/in_enterprise_v1/register_instance.php',
-            'attributes' => [],
-            'show'       => false,
-        ],
-        [
             'name'       => 'Welcome',
             'href'       => '//www.dreamfactory.com/in_product_welcome.html',
             'attributes' => [],
@@ -32,12 +26,6 @@ return [
         ],
     ],
     'console'   => [
-        [
-            'name'       => 'first_user',
-            'href'       => 'https://www.dreamfactory.com/in_enterprise_v1/registration.php',
-            'attributes' => [],
-            'show'       => false,
-        ],
         [
             'name'       => 'Welcome',
             'href'       => '//www.dreamfactory.com/in_enterprise_v1/welcome.html',
@@ -64,12 +52,6 @@ return [
         ],
     ],
     'dashboard' => [
-        [
-            'name'       => 'first_user',
-            'href'       => 'https://www.dreamfactory.com/in_enterprise_v1/register_admin.php',
-            'attributes' => [],
-            'show'       => false,
-        ],
         [
             'name'       => 'Welcome',
             'href'       => '//www.dreamfactory.com/dfe-dashboard-welcome.html',
