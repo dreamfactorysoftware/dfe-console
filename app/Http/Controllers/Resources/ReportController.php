@@ -29,7 +29,7 @@ class ReportController extends ViewController
     /** @inheritdoc */
     public function getKibana()
     {
-        echo '<script>window.location.href = "'.env('DFE_KIBANA_URL').'";</script>';
+        return \Redirect::to(env('DFE_KIBANA_URL'));
     }
 
     /** @inheritdoc */
