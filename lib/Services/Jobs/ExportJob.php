@@ -1,6 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Jobs;
 
-class ExportJob extends PortabilityJob
+class ExportJob extends PortableJob
 {
     //******************************************************************************
     //* Constants

@@ -1,10 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Services\Jobs\PortabilityJob;
 use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Versioned;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
@@ -16,6 +18,7 @@ use DreamFactory\Enterprise\Partner\AlertPartner;
 use DreamFactory\Enterprise\Partner\Facades\Partner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Enterprise\Services\UsageService;
@@ -340,23 +343,21 @@ class OpsController extends BaseController implements IsVersioned
         logger('export input=[' . json_encode($request->input()));
 
         try {
-            $_instanceId = $request->input('instance-id');
+            $_request =
+                PortableServiceRequest::makeExport($request->input('instance-id'),
+                    $request->input('destination', null));
 
-            try {
-                $_instance = $this->_findInstance($_instanceId);
-            } catch (ModelNotFoundException $_ex) {
-                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance "' . $_instanceId . '" not found.');
-            }
+            $_job = new ExportJob($_request);
+            \Queue::push($_job);
 
-            $_result = \Artisan::call('dfe:export', ['instance-id' => $_instance->instance_id_text,]);
+            return $this->success($_job->getResult());
+        } catch (ModelNotFoundException $_ex) {
+            $this->error('Instance not found: ' . $_ex->getMessage());
 
-            if (0 != $_result) {
-                return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
-            }
-
-            return $this->success($_result);
+            return $this->failure(Response::HTTP_NOT_FOUND,
+                'The instance "' . $request->input('instance-id') . '" does not exist.');
         } catch (\Exception $_ex) {
-            $this->error($_ex->getMessage());
+            $this->error('Export queuing error: ' . $_ex->getMessage());
 
             return $this->failure($_ex);
         }
