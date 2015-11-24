@@ -1,4 +1,4 @@
-<?php namespace DreamFactory\Enterprise\Services\Services;
+<?php namespace DreamFactory\Enterprise\Services;
 
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Contracts\RouteHasher;
