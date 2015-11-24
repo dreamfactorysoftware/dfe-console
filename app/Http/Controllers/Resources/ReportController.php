@@ -29,7 +29,10 @@ class ReportController extends ViewController
     /** @inheritdoc */
     public function getKibana()
     {
-        return \Redirect::to(env('DFE_KIBANA_URL'));
+        $url = env('DFE_AUDIT_CLIENT_HOST');
+        $url .= ':'.(env('DFE_AUDIT_CLIENT_PORT') ? env('DFE_AUDIT_CLIENT_PORT') : '5601');
+
+        return \Redirect::to($url);
     }
 
     /** @inheritdoc */
