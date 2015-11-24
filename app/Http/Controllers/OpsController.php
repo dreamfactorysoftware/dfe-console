@@ -337,8 +337,18 @@ class OpsController extends BaseController implements IsVersioned
      */
     public function postExport(Request $request)
     {
+        logger('export input=[' . json_encode($request->input()));
+
         try {
-            $_result = \Artisan::call('dfe:export', $request->input());
+            $_instanceId = $request->input('instance-id');
+
+            try {
+                $_instance = $this->_findInstance($_instanceId);
+            } catch (ModelNotFoundException $_ex) {
+                return $this->failure(Response::HTTP_NOT_FOUND, 'Instance "' . $_instanceId . '" not found.');
+            }
+
+            $_result = \Artisan::call('dfe:export', ['instance-id' => $_instance->instance_id_text,]);
 
             if (0 != $_result) {
                 return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
