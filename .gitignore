@@ -1,7 +1,8 @@
 vendor/
 node_modules/
 .env
-.env-*
+.env-3wipes.com
+.env-chaoticwave.com
 .env.local
 .env.save
 .idea/*.iml
