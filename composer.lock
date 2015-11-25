@@ -2260,12 +2260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "43e8bb82731a14d7d581f2455cdd88ebd7ee0490"
+                "reference": "d80651738fcfd1bab76912b89d162fc0b0dc51b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/43e8bb82731a14d7d581f2455cdd88ebd7ee0490",
-                "reference": "43e8bb82731a14d7d581f2455cdd88ebd7ee0490",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d80651738fcfd1bab76912b89d162fc0b0dc51b0",
+                "reference": "d80651738fcfd1bab76912b89d162fc0b0dc51b0",
                 "shasum": ""
             },
             "require": {
@@ -2341,7 +2341,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2015-11-19 08:37:14"
+            "time": "2015-11-24 08:28:00"
         },
         {
             "name": "predis/predis",
@@ -2945,12 +2945,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "0dbc119596f4afc82d9b2eb2a7e6a4af1ee763fa"
+                "reference": "489c11d549e9951d7986f239d76f5eb589545963"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/0dbc119596f4afc82d9b2eb2a7e6a4af1ee763fa",
-                "reference": "0dbc119596f4afc82d9b2eb2a7e6a4af1ee763fa",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/489c11d549e9951d7986f239d76f5eb589545963",
+                "reference": "489c11d549e9951d7986f239d76f5eb589545963",
                 "shasum": ""
             },
             "require": {
@@ -2994,7 +2994,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2015-10-30 20:10:21"
+            "time": "2015-11-24 11:55:28"
         },
         {
             "name": "symfony/dependency-injection",
@@ -4733,12 +4733,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "8887e24c7a9fe8fea1b785df05b4558988d26cec"
+                "reference": "826f28f4cd17b31e4d42aa21729e52f88d91bc39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/8887e24c7a9fe8fea1b785df05b4558988d26cec",
-                "reference": "8887e24c7a9fe8fea1b785df05b4558988d26cec",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/826f28f4cd17b31e4d42aa21729e52f88d91bc39",
+                "reference": "826f28f4cd17b31e4d42aa21729e52f88d91bc39",
                 "shasum": ""
             },
             "require": {
@@ -4785,7 +4785,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2015-11-23 11:20:20"
+            "time": "2015-11-24 09:53:50"
         },
         {
             "name": "phpunit/php-code-coverage",

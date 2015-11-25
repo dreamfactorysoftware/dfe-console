@@ -3,7 +3,7 @@ return [
     //******************************************************************************
     //* Application Settings
     //******************************************************************************
-    'debug'           => env('APP_DEBUG'),
+    'debug'           => env('APP_DEBUG', false),
     'url'             => env('APP_URL', 'http://dfe-console.local'),
     'timezone'        => 'America/New_York',
     'locale'          => 'en',

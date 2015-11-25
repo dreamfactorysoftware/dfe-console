@@ -1,6 +1,7 @@
 vendor/
 node_modules/
 .env
+.env-*
 .env.local
 .env.save
 .idea/*.iml
