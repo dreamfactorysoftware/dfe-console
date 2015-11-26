@@ -758,6 +758,9 @@ class LimitController extends ViewController
             throw new \RuntimeException('Invalid console response.');
         }
 
+        echo '<br>row:<br>';
+        echo json_encode($_rows);
+
         $_results = [];
 
         foreach ($_rows as $_index => $_row) {
