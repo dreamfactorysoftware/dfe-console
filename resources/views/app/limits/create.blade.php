@@ -211,6 +211,7 @@
                         $_spinner.removeClass('fa-spin').addClass('hidden');
                     });
 
+                    /*
                     $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/admins').done(function (data) {
                         var $_select = $('#user_id');
                         //$_select.empty();
@@ -231,6 +232,7 @@
                     }).always(function () {
                         $_spinner.removeClass('fa-spin').addClass('hidden');
                     });
+                    */
 
                     $_spinner.removeClass('fa-spin').addClass('hidden');
                 }
