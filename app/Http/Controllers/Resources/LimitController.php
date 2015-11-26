@@ -714,7 +714,8 @@ class LimitController extends ViewController
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
 
-            return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
+            return $this->formatResponse($_instance->call(Request::METHOD_GET, '/api/v2/system/user'));
+            //return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
         }
 
         return false;
