@@ -749,17 +749,17 @@ class LimitController extends ViewController
      */
     protected function formatResponse($response)
     {
-        echo json_encode($response);
-        echo '<br><br>';
-        echo json_encode($response['resource']);
+        //echo json_encode($response);
+        //echo '<br><br>';
+        //echo json_encode($response['resource']);
 
         if (null === ($_rows = (array)data_get($response, 'resource'))) {
             logger('invalid response format: ' . print_r($response, true));
             throw new \RuntimeException('Invalid console response.');
         }
 
-        echo '<br>row:<br>';
-        echo json_encode($_rows);
+        //echo '<br>row:<br>';
+        //echo json_encode($_rows);
 
         $_results = [];
 
