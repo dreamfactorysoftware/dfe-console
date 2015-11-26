@@ -715,7 +715,7 @@ class LimitController extends ViewController
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
 
             //echo json_encode($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
-            return $this->formatResponse(json_decode($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false)));
+            return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
             //return $_instance->call(Request::METHOD_GET, '/api/v2/system/user');
             //return $this->formatResponse($_instance->call(Request::METHOD_GET, '/api/v2/system/user'));
             //return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
@@ -749,6 +749,10 @@ class LimitController extends ViewController
      */
     protected function formatResponse($response)
     {
+        echo json_encode($response);
+        echo '<br><br>';
+        echo json_encode($response['resource']);
+
         if (null === ($_rows = (array)data_get($response, 'resource'))) {
             logger('invalid response format: ' . print_r($response, true));
             throw new \RuntimeException('Invalid console response.');
