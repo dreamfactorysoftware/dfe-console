@@ -185,6 +185,7 @@
                         return false;
                     }
 
+                    var $_select = $('#user_id');
                     $_select.empty();
                     $_select.append('<option value="">Select User</option>');
                     $_select.append('<option value="0">All Users</option>');
