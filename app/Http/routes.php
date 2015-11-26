@@ -45,6 +45,7 @@ if (true === config('dfe.enable-console-api', false)) {
         \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
         \Route::get('instance/{instanceId}/services', 'Resources\LimitController@getInstanceServices');
         \Route::get('instance/{instanceId}/users', 'Resources\LimitController@getInstanceUsers');
+        \Route::get('instance/{instanceId}/admins', 'Resources\LimitController@getInstanceAdmins');
         \Route::get('reports/kibana', 'Resources\ReportController@getKibana');
 
         //  UI resource controllers
