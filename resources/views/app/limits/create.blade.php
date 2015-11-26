@@ -185,15 +185,40 @@
                         return false;
                     }
 
+                    $_select.empty();
+                    $_select.append('<option value="">Select User</option>');
+                    $_select.append('<option value="0">All Users</option>');
+
                     $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
                         var $_select = $('#user_id');
-                        $_select.empty();
-                        $_select.append('<option value="">Select User</option>');
-                        $_select.append('<option value="0">All Users</option>');
+                        //$_select.empty();
+                        //$_select.append('<option value="">Select User</option>');
+                        //$_select.append('<option value="0">All Users</option>');
 
                         if ($.isArray(data) || data.length) {
                             $.each(data, function (index, item) {
                                 $_select.append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+
+                            $_select.removeAttr('disabled').focus();
+                        }
+                    }).fail(function (xhr, status) {
+                        var $_select = $('#user_id');
+                        $_select.append('<option value="" selected="selected">Please Reload Page</option>').attr('disabled', 'disabled');
+                        alert('The current list of users is not available.\n\n' + '(' + status + ')');
+                    }).always(function () {
+                        $_spinner.removeClass('fa-spin').addClass('hidden');
+                    });
+
+                    $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/admins').done(function (data) {
+                        var $_select = $('#user_id');
+                        //$_select.empty();
+                        //$_select.append('<option value="">Select User</option>');
+                        //$_select.append('<option value="0">All Users</option>');
+
+                        if ($.isArray(data) || data.length) {
+                            $.each(data, function (index, item) {
+                                $_select.append('<option value="' + item.id + '">[admin] ' + item.name + '</option>');
                             });
 
                             $_select.removeAttr('disabled').focus();
