@@ -325,6 +325,7 @@ class LimitController extends ViewController
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
                     if ('user' == $_this_limit_type) {
+    
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
                             foreach ($_rows as $_user) {
                                 if ($_user['id'] != $_values['user_id']) {
@@ -714,11 +715,7 @@ class LimitController extends ViewController
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
 
-            //echo json_encode($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
             return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
-            //return $_instance->call(Request::METHOD_GET, '/api/v2/system/user');
-            //return $this->formatResponse($_instance->call(Request::METHOD_GET, '/api/v2/system/user'));
-            //return $this->formatResponse($_instance->call('/api/v2/system/user', [], [], Request::METHOD_GET, false));
         }
 
         return false;
