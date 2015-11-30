@@ -37,9 +37,7 @@ class ReportController extends ViewController
             $url = env('DFE_DEFAULT_DOMAIN_PROTOCOL').'://'.$url;
         }
 
-        echo $url;
-
-        return;// \Redirect::away($url);
+        return \Redirect::away($url);
     }
 
     /** @inheritdoc */
