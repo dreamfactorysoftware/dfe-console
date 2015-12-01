@@ -1545,12 +1545,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "8f7d46d9423b334ec63ad4b935c0ce8d8ae1847b"
+                "reference": "f3c88759b4687ccf061ff12ba69db3416dbd6951"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/8f7d46d9423b334ec63ad4b935c0ce8d8ae1847b",
-                "reference": "8f7d46d9423b334ec63ad4b935c0ce8d8ae1847b",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/f3c88759b4687ccf061ff12ba69db3416dbd6951",
+                "reference": "f3c88759b4687ccf061ff12ba69db3416dbd6951",
                 "shasum": ""
             },
             "require": {
@@ -1624,7 +1624,7 @@
                 "aws/aws-sdk-php": "Required to use the SQS queue driver and SES mail driver (~3.0).",
                 "doctrine/dbal": "Required to rename columns and drop SQLite columns (~2.4).",
                 "fzaninotto/faker": "Required to use the eloquent factory builder (~1.4).",
-                "guzzlehttp/guzzle": "Required to use the Mailgun and Mandrill mail drivers (~5.3|~6.0).",
+                "guzzlehttp/guzzle": "Required to use the Mailgun and Mandrill mail drivers and the ping methods on schedules (~5.3|~6.0).",
                 "iron-io/iron_mq": "Required to use the iron queue driver (~2.0).",
                 "league/flysystem-aws-s3-v3": "Required to use the Flysystem S3 driver (~1.0).",
                 "league/flysystem-rackspace": "Required to use the Flysystem Rackspace driver (~1.0).",
@@ -1666,7 +1666,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-11-30 19:44:42"
+            "time": "2015-12-01 14:57:08"
         },
         {
             "name": "league/event",
@@ -2159,16 +2159,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "19f765b66c6fbb56ee3b11bc16d52e38eebdc295"
+                "reference": "a208865a5aeffc2dbbef2a5b3409887272d93f32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/19f765b66c6fbb56ee3b11bc16d52e38eebdc295",
-                "reference": "19f765b66c6fbb56ee3b11bc16d52e38eebdc295",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/a208865a5aeffc2dbbef2a5b3409887272d93f32",
+                "reference": "a208865a5aeffc2dbbef2a5b3409887272d93f32",
                 "shasum": ""
             },
             "require": {
@@ -2203,7 +2203,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2015-11-10 00:45:41"
+            "time": "2015-12-01 02:52:15"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -2260,12 +2260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "d80651738fcfd1bab76912b89d162fc0b0dc51b0"
+                "reference": "694579617e07221ca16cb2be302ba5d26e64ce19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d80651738fcfd1bab76912b89d162fc0b0dc51b0",
-                "reference": "d80651738fcfd1bab76912b89d162fc0b0dc51b0",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/694579617e07221ca16cb2be302ba5d26e64ce19",
+                "reference": "694579617e07221ca16cb2be302ba5d26e64ce19",
                 "shasum": ""
             },
             "require": {
@@ -2341,7 +2341,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2015-11-24 08:28:00"
+            "time": "2015-12-01 09:06:19"
         },
         {
             "name": "predis/predis",
@@ -5533,12 +5533,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "177a015cb0e19ff4a49e0e2e2c5fc1c1bee07002"
+                "reference": "f58c9f4306b06d42b4faacf7ae6759ece99d3ae4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/177a015cb0e19ff4a49e0e2e2c5fc1c1bee07002",
-                "reference": "177a015cb0e19ff4a49e0e2e2c5fc1c1bee07002",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/f58c9f4306b06d42b4faacf7ae6759ece99d3ae4",
+                "reference": "f58c9f4306b06d42b4faacf7ae6759ece99d3ae4",
                 "shasum": ""
             },
             "require": {
@@ -5547,7 +5547,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -5574,7 +5574,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-11-30 12:36:17"
+            "time": "2015-11-30 21:39:17"
         },
         {
             "name": "way/generators",
