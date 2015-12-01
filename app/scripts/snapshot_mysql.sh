@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# @(#)$Id: snapshot_mysql.sh,v 1.0.1 2015-02-13 jablan $
+# @(#)$Id: snapshot_mysql.sh,v 1.0.2 2015-02-13 jablan $
 #
 # Creates a dump of a DSP's MySQL
 #
@@ -11,7 +11,7 @@ if [ `whoami` != "dfadmin" ] && [ `whoami` != 'jablan' ] ; then
 fi
 
 SCRIPT_NAME=`basename "${0}"`
-SCRIPT_VERSION="v1.0.1"
+SCRIPT_VERSION="v1.0.2"
 SHORTOPTS="hvqD:o:n:u:p:P:"
 LONGOPTS="help,version,quiet,db-name:,output:,db-host:,db-user:,db-pass:,db-port:"
 VERBOSE=1
