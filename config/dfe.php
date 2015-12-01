@@ -32,7 +32,7 @@ return [
     //  The default number of days to keep metrics data
     'metrics-keep-days'       => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
     //  The url to download the current version of DFE console
-    'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/develop.zip',
+    'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/master.zip',
     //  The dashboard URL
     'dashboard-url'           => env('DFE_DASHBOARD_URL'),
     //  The support email
@@ -61,7 +61,7 @@ return [
     //******************************************************************************
     'common'                  => [
         'display-name'       => 'DreamFactory Enterprise&trade; Console',
-        'display-version'    => 'v1.0.0-beta',
+        'display-version'    => 'v1.0.0',
         /* 256px X 256px to avoid pixelation */
         'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
