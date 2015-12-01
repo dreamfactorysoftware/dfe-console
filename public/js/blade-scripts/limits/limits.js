@@ -1,6 +1,4 @@
-$( document ).ready(function() {
 
-});
 
 var table = $('#limitTable').DataTable({
     "dom": '<"toolbar">',
@@ -146,7 +144,7 @@ $( document ).ready(function() {
         updatePageDropdown();
         selectPage(info.page);
         $('#limitsSearch').val(table.search());
-
+        $('#limitTable').show();
     }
 
     var selected = $('#server_type_select').val();
@@ -258,10 +256,6 @@ $('#selectedLimitsRemove').click(function(){
 });
 
 
-
-
-
-
 function cancelCreateLimit(){
 
     window.location = '/v1/limits';
@@ -271,4 +265,3 @@ function cancelEditLimit(){
 
     window.location = '/v1/limits';
 }
-

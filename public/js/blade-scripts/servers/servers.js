@@ -1,6 +1,4 @@
-$( document ).ready(function() {
 
-});
 
 var table = $('#serverTable').DataTable({
     "dom": '<"toolbar">',
@@ -148,6 +146,7 @@ $( document ).ready(function() {
         updatePageDropdown();
         selectPage(info.page);
         $('#serverSearch').val(table.search());
+        $('#serverTable').show();
 
     }
 
@@ -259,11 +258,6 @@ $('#selectedServersRemove').click(function(){
         return false;
 });
 
-
-
-
-
-
 function cancelCreateServer(){
 
     window.location = '/v1/servers';
@@ -273,4 +267,3 @@ function cancelEditServer(){
 
     window.location = '/v1/servers';
 }
-

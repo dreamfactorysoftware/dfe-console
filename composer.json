@@ -32,7 +32,6 @@
     }
   ],
   "minimum-stability": "dev",
-  "prefer-stable":     true,
   "repositories":      [
     {
       "type": "vcs",
@@ -67,7 +66,6 @@
       "url":  "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git"
     }
   ],
-  "type":              "project",
   "require":           {
     "laravel/framework":                         "5.1.*",
     "guzzlehttp/guzzle":                         "~4.0",
@@ -77,7 +75,8 @@
     "league/flysystem-sftp":                     "~1.0",
     "league/flysystem-ziparchive":               "~1.0",
     "league/flysystem-eventable-filesystem":     "~1.0",
-    "dreamfactory/console-tools":                "*@dev",
+    "sebastian/git":                             "1.0.*",
+    "dreamfactory/console-tools":                "1.0.*",
     "dreamfactory/dfe-audit":                    "1.0.*",
     "dreamfactory/php-utils":                    "1.1.*",
     "dreamfactory/dfe-common":                   "1.0.*",

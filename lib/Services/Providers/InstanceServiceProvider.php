@@ -4,17 +4,7 @@ use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
 use DreamFactory\Enterprise\Services\Managers\InstanceManager;
 
 /**
- * Registers the instance manager as a service
- *
- * To use the "InstMan" facade for this provider, add the service provider to
- * your the "providers" array in your config/app.php file:
- *
- *  'providers' => array(
- *
- *      ... Other Providers Above ...
- *      'DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider',
- *
- *  ),
+ * Registers the instance manager service
  */
 class InstanceServiceProvider extends BaseServiceProvider
 {

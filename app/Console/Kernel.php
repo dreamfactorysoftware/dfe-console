@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Console\Console;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Cluster',
         'DreamFactory\Enterprise\Console\Console\Commands\Token',
         'DreamFactory\Enterprise\Console\Console\Commands\Metrics',
+        'DreamFactory\Enterprise\Console\Console\Commands\Blueprint',
         //  Services
         'DreamFactory\Enterprise\Console\Console\Commands\Manifest',
         'DreamFactory\Enterprise\Console\Console\Commands\Provision',
@@ -28,4 +30,10 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Import',
         'DreamFactory\Enterprise\Console\Console\Commands\Export',
     ];
+
+    protected function schedule(Schedule $schedule)
+    {
+        parent::schedule($schedule);
+    }
+
 }

@@ -299,6 +299,8 @@ $( document ).ready(function() {
         updatePageDropdown();
         selectPage(info.page);
         $('#userSearch').val(table.search());
+        $('#userTable').show();
     }
 });
+
 

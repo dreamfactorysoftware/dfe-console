@@ -14,8 +14,7 @@ if (!function_exists('__dfe_autoload')) {
     function __dfe_autoload()
     {
         //  Register The Composer Auto Loader
-        $_basePath = dirname(__DIR__);
-        require $_basePath . '/vendor/autoload.php';
+        require __DIR__ . '/../vendor/autoload.php';
 
         //  Laravel 5.1
         if (file_exists(__DIR__ . '/cache/compiled.php')) {

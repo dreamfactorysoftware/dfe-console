@@ -43,14 +43,14 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="panel panel-default">
-                        <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance">
+                        <table id="instanceTable" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance" style="table-layout: fixed; width: 100%; display:none">
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th>Name</th>
-                                    <th>Cluster</th>
-                                    <th>Owner Email</th>
-                                    <th>Last Modified</th>
+                                    <th style="min-width: 175px">Name</th>
+                                    <th style="min-width: 175px">Cluster</th>
+                                    <th style="min-width: 175px">Owner Email</th>
+                                    <th style="min-width: 100px">Last Modified</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -3,7 +3,7 @@ return [
     //******************************************************************************
     //* Application Settings
     //******************************************************************************
-    'debug'           => env('APP_DEBUG'),
+    'debug'           => env('APP_DEBUG', false),
     'url'             => env('APP_URL', 'http://dfe-console.local'),
     'timezone'        => 'America/New_York',
     'locale'          => 'en',
@@ -55,12 +55,15 @@ return [
         DreamFactory\Enterprise\Storage\Providers\InstanceStorageServiceProvider::class,
         DreamFactory\Enterprise\Storage\Providers\MountServiceProvider::class,
         /** DreamFactory Services service providers */
+        DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\UsageServiceProvider::class,
+        DreamFactory\Enterprise\Services\Providers\LicenseServiceProvider::class,
         DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\RouteHashingServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider::class,
+        DreamFactory\Enterprise\Services\Providers\BlueprintServiceProvider::class,
         /** DreamFactory Partner Services Provider */
         DreamFactory\Enterprise\Partner\Providers\PartnerServiceProvider::class,
         /** DreamFactory Instance API Services Provider */

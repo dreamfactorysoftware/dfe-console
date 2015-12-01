@@ -1,6 +1,8 @@
 vendor/
 node_modules/
 .env
+.env-3wipes.com
+.env-chaoticwave.com
 .env.local
 .env.save
 .idea/*.iml
@@ -11,7 +13,6 @@ node_modules/
 /build
 /tests/storage/
 /_ide_*.php
-composer.lock
 composer.phar
 /database/dfe/*
 bootstrap/cache/

@@ -9,15 +9,64 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
+use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
+use DreamFactory\Enterprise\Services\Facades\Telemetry;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * General usage services
  */
-class UsageService extends BaseService
+class UsageService extends BaseService implements MetricsProvider
 {
+    //******************************************************************************
+    //* Members
+    //******************************************************************************
+
+    /**
+     * @type TelemetryService
+     */
+    protected $telemetry;
+
     //*************************************************************************
     //* Methods
     //*************************************************************************
+
+    /** @inheritdoc */
+    public function boot()
+    {
+        parent::boot();
+
+        //  If we're using telemetry, get an instance of the telemetry service and register any providers
+        if (config('telemetry.enabled', false)) {
+            $this->telemetry = Telemetry::service();
+
+            //  Register the configured providers
+            foreach (config('telemetry.providers', []) as $_name => $_provider) {
+                $this->telemetry->registerProvider($_name, new $_provider());
+            }
+        }
+    }
+
+    /**
+     * Retrieves the metrics
+     *
+     * @param array|null $options Any options around providing the data
+     *
+     * @return mixed|array
+     */
+    public function getMetrics($options = [])
+    {
+        if (config('telemetry.enabled', false)) {
+            //  If nobody has used the system, we can't report metrics
+            if (false === ($_installKey = $this->generateInstallKey())) {
+                return [];
+            }
+
+            return array_merge(['install-key' => $_installKey,], $this->telemetry->getTelemetry());
+        }
+
+        return $this->gatherStatistics();
+    }
 
     /**
      * Returns statistics gathered from various sources as defined by the methods in this class and its subclasses
@@ -26,10 +75,11 @@ class UsageService extends BaseService
      */
     public function gatherStatistics()
     {
-        //  Start out with our installation key
-        $_stats = [
-            'install-key' => config('dfe.install-key'),
-        ];
+        $_stats = [];
+
+        if (false === ($_installKey = $this->generateInstallKey())) {
+            return [];
+        }
 
         $_mirror = new \ReflectionClass(get_called_class());
 
@@ -40,7 +90,27 @@ class UsageService extends BaseService
             }
         }
 
+        //  Set our installation key
+        $_stats['install-key'] = $_installKey;
+
         return $_stats;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function generateInstallKey()
+    {
+        try {
+            /** @type ServiceUser $_user */
+            $_user = ServiceUser::firstOrFail();
+
+            return $_user->getHashedEmail();
+        } catch (ModelNotFoundException $_ex) {
+            \Log::notice('No console users found. Nothing to report.');
+
+            return false;
+        }
     }
 
     /**
@@ -59,6 +129,9 @@ class UsageService extends BaseService
         ];
 
         return $_stats;
+
+        //  The new way
+        //return $this->telemetry->make('console')->getTelemetry();
     }
 
     /**
@@ -71,6 +144,9 @@ class UsageService extends BaseService
         ];
 
         return $_stats;
+
+        //  The new way
+        //return $this->telemetry->make('dashboard')->getTelemetry();
     }
 
     /**
@@ -86,27 +162,36 @@ class UsageService extends BaseService
             $_stats[$_instance->instance_id_text] = ['uri' => $_instance->getProvisionedEndpoint(),];
 
             $_api = InstanceApiClient::connect($_instance);
-            $_resources = $_api->resources();
 
-            if (!empty($_resources)) {
-                $_list = [];
+            try {
+                if (!empty($_resources = $_api->resources())) {
+                    $_list = [];
 
-                foreach ($_resources as $_resource) {
-                    if (property_exists($_resource, 'name')) {
-                        try {
-                            if (false !== ($_result = $_api->resource($_resource->name))) {
-                                $_list[$_resource->name] = count($_result);
+                    foreach ($_resources as $_resource) {
+                        if (property_exists($_resource, 'name')) {
+                            try {
+                                if (false !== ($_result = $_api->resource($_resource->name))) {
+                                    $_list[$_resource->name] = count($_result);
+                                }
+                            } catch (\Exception $_ex) {
+                                $_list[$_resource->name] = 'unavailable';
                             }
-                        } catch (\Exception $_ex) {
-                            $_list[$_resource->name] = 'unavailable';
                         }
                     }
-                }
 
-                $_stats[$_instance->instance_id_text]['resources'] = $_list;
+                    $_stats[$_instance->instance_id_text]['resources'] = $_list;
+                    $_stats[$_instance->instance_id_text]['_status'] = ['operational'];
+                }
+            } catch (\Exception $_ex) {
+                //  Instance unavailable or not initialized
+                $_stats[$_instance->instance_id_text]['resources'] = [];
+                $_stats[$_instance->instance_id_text]['_status'] = ['unreachable'];
             }
         }
 
         return $_stats;
+
+        //  The new way
+        //return $this->telemetry->make('instance')->getTelemetry();
     }
 }

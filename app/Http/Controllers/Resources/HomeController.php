@@ -2,7 +2,7 @@
 
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
-use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\Facades\Usage;
 
 class HomeController extends FactoryController
 {
@@ -48,35 +48,13 @@ class HomeController extends FactoryController
     /** @noinspection PhpMissingParentCallCommonInspection */
     public function index()
     {
-        //  Check if we've gotten links yet
-        if (null === ($_links = \Cache::get('home.links.console'))) {
-            $_links = config('links.console', []);
-
-            //  Override links to add link parameters if requested
-            foreach ($_links as $_index => $_link) {
-                //if (array_get($_link, 'params', false)) {
-                $_links[$_index]['href.og'] = $_links[$_index]['href'];
-                $_links[$_index]['href'] .= '?' . http_build_query($this->getLinkParameters());
-                //}
-            }
-
-            \Cache::put('home.links.console', $_links, static::LINK_CACHE_TTL);
-        } else {
-            //  Restore original links
-            foreach ($_links as $_index => $_link) {
-                if (isset($_links[$_index]['old-href'])) {
-                    $_links[$_index]['href'] = $_links[$_index]['href.og'];
-                }
-            }
-        }
-
         //  Fill up the expected defaults...
         return $this->renderView('app.home',
             [
                 'prefix'       => ConsoleDefaults::UI_PREFIX,
                 'resource'     => null,
                 'title'        => null,
-                'links'        => $_links,
+                'links'        => $this->getConsoleLinks(),
                 'request_uri'  => \Request::getRequestUri(),
                 'active_class' => ' active',
             ]);
@@ -89,30 +67,38 @@ class HomeController extends FactoryController
      */
     protected function getLinkParameters()
     {
-        $_stats = \App::make(UsageServiceProvider::IOC_NAME)->gatherStatistics();
-        $_instanceStats = $this->dataPoints;
-
-        //  Aggregate the instance stats
-        foreach (array_get(array_get($_stats, 'instance', []), 'resources', []) as $_key => $_value) {
-            if (array_key_exists($_checkKey = $_key . 's', $_instanceStats)) {
-                $_instanceStats[$_checkKey] += $_value;
-            }
-        }
-
+        /** @noinspection PhpUndefinedMethodInspection */
         return [
-            'e_k'  => array_get($_stats, 'install-key'),
-            'e_u'  => $_stats['console']['user'] + $_stats['dashboard']['user'],
-            'e_s'  => $_stats['console']['server'],
-            'e_c'  => $_stats['console']['cluster'],
-            'e_l'  => $_stats['console']['limit'],
-            'e_i'  => $_stats['console']['instance'],
-            'i_u'  => $_instanceStats['users'],
-            'i_a'  => $_instanceStats['admins'],
-            'i_s'  => $_instanceStats['services'],
-            'i_es' => $_instanceStats['ext_services'],
-            'i_ap' => $_instanceStats['apps'],
+            'e_k' => Usage::service()->generateInstallKey(),
         ];
     }
+
+    /**
+     * Gets the home page links
+     *
+     * @return array
+     */
+    protected function getConsoleLinks()
+    {
+        $_links = [];
+        $_rawLinks = config('links.console', []);
+
+        //  Override links to add link parameters if requested
+        foreach ($_rawLinks as $_link) {
+            //  Don't show control links or first-user links
+            if (array_key_exists('show', $_link) && true !== $_link['show']) {
+                continue;
+            }
+
+            //  Licensing has parameters
+            if ('Licensing' == $_link['name']) {
+                $_link['href'] .= '?' . http_build_query($_params = $this->getLinkParameters());
+            }
+
+            //  Only show links that are supposed to be shown...
+            $_links[] = $_link;
+        }
+
+        return $_links;
+    }
 }
-
-

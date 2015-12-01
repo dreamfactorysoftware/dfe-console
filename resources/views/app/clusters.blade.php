@@ -78,7 +78,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <div class="panel panel-default">
-                        <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-cluster" id="clusterTable">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-cluster" id="clusterTable" style="table-layout: fixed; width: 100%; display:none">
                             <thead>
                                 <tr>
                                     <th></th>

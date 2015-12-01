@@ -111,10 +111,11 @@
                     if (type === this.value) {
                         set_show = false;
                     }
+                    $('#' + this.value + '_id').trigger('change');
                 }
                 else {
                     $('#select_' + this.value).hide();
-                    $('#' + this.value + '_id').val($('#' + this.value + '_id option:first').val());
+                    $('#' + this.value + '_id').val($('#' + this.value + '_id option:first').val()).trigger('change');
                 }
             });
         }

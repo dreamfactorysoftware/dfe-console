@@ -125,7 +125,7 @@ class InstanceManager extends BaseManager implements Factory
                 throw new \InvalidArgumentException('The "owner-id" and/or "owner-type" specified is/are invalid.');
             }
 
-            $this->debug('owner validated: ' . $_owner->id . ($_owner->admin_ind ? ' (admin)' : ' (non-admin)'));
+            //$this->debug('owner validated: ' . $_owner->id . ($_owner->admin_ind ? ' (admin)' : ' (non-admin)'));
 
             if (false === ($_sanitized = Instance::isNameAvailable($instanceName, $_owner->admin_ind))) {
                 throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
@@ -165,11 +165,11 @@ class InstanceManager extends BaseManager implements Factory
             //  Write it out
             return \DB::transaction(function () use ($_ownerId, $_attributes, $_guestAttributes){
                 $_instance = Instance::create($_attributes);
-                $this->debug('created instance row id#' . $_instance->id);
+                //$this->debug('created instance row id#' . $_instance->id);
 
                 $_guestAttributes['instance_id'] = $_instance->id;
                 $_guest = InstanceGuest::create($_guestAttributes);
-                $this->debug('created guest row id#' . $_guest->id);
+                //$this->debug('created guest row id#' . $_guest->id);
 
                 if (!$_instance || !$_guest) {
                     throw new \RuntimeException('Instance creation failed');

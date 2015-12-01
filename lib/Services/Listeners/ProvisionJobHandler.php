@@ -38,7 +38,7 @@ class ProvisionJobHandler
 
         if (is_string($_guestLocation) && !is_numeric($_guestLocation)) {
             $_options['guest-location'] = GuestLocations::resolve($_guestLocation, true);
-            \Log::debug('* guest location "' .
+            \Log::debug('[Provision] guest location "' .
                 $_options['guest-location'] .
                 '" resolved from "' .
                 $_guestLocation .
@@ -46,7 +46,7 @@ class ProvisionJobHandler
             $_guestLocation = $_options['guest-location'];
         }
 
-        \Log::info('Provisioning requested [guest=' . $_guestLocation . ']: ' . Json::encode($_options));
+        \Log::info('[Provision] Request [guest=' . $_guestLocation . ']: ' . Json::encode($_options));
 
         try {
             //  Create the instance record
@@ -56,7 +56,7 @@ class ProvisionJobHandler
                 throw new ProvisioningException('InstanceManager::make() failed');
             }
         } catch (\Exception $_ex) {
-            \Log::error('provisioning - failure, exception creating instance: ' . $_ex->getMessage());
+            \Log::error('[Provision] failure, exception creating instance: ' . $_ex->getMessage());
 
             return false;
         }
@@ -73,11 +73,11 @@ class ProvisionJobHandler
                 throw new ProvisioningException('provisioning error');
             }
 
-            \Log::info('provisioning - success, completed in ' . number_format($_response->getElapsedTime(), 4) . 's');
+            \Log::info('[Provision] completed in ' . number_format($_response->getElapsedTime(), 4) . 's');
 
             return $_response;
         } catch (\Exception $_ex) {
-            \Log::error('provisioning - failure, exception during provisioning: ' . $_ex->getMessage());
+            \Log::error('[Provision] failure: ' . $_ex->getMessage());
 
             //  Delete instance record...
             if (!$_instance->delete()) {

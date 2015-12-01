@@ -1,8 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Commands;
 
-use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\Facades\Usage;
 use DreamFactory\Enterprise\Services\UsageService;
-use DreamFactory\Library\Utility\Json;
 
 class MetricsTest extends \TestCase
 {
@@ -12,11 +11,13 @@ class MetricsTest extends \TestCase
 
     /**
      * Tests metrics
+     *
+     * @covers UsageService::gatherStatistics()
      */
     public function testMetrics()
     {
         /** @type UsageService $_service */
-        $_service = \App::make(UsageServiceProvider::IOC_NAME);
+        $_service = Usage::service();
         $_stats = $_service->gatherStatistics();
 
         $this->assertNotEmpty($_stats);

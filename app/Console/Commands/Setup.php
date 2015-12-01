@@ -6,8 +6,10 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\JsonFile;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -30,7 +32,7 @@ class Setup extends ConsoleCommand
     /**
      * @type array Any configuration read from config/dfe.setup.php
      */
-    protected $_config = [];
+    protected $config = [];
 
     //******************************************************************************
     //* Methods
@@ -45,7 +47,7 @@ class Setup extends ConsoleCommand
     {
         parent::fire();
 
-        $this->_config = config('commands.setup');
+        $this->config = config('commands.setup');
 
         //  1. Make sure it's a clean install
         if (0 != ServiceUser::count()) {
@@ -66,7 +68,8 @@ class Setup extends ConsoleCommand
         //  2. Create initial admin user
         try {
             //  Delete all users
-            \DB::table('service_user_t')->delete();
+            /** @noinspection PhpUndefinedMethodInspection */
+            DB::table('service_user_t')->delete();
 
             //  Add our new user
             $_user = ServiceUser::create([
@@ -83,6 +86,11 @@ class Setup extends ConsoleCommand
             }
 
             $this->writeln('user <comment>' . $this->argument('admin-email') . '</comment> created.', 'info');
+
+            //  Register
+            if (false === License::registerAdmin($_user)) {
+                $this->writeln('Error while registering installation');
+            }
         } catch (\Exception $_ex) {
             $this->writeln('Error while creating admin user: ' . $_ex->getMessage(), 'error');
 
@@ -116,22 +124,22 @@ class Setup extends ConsoleCommand
             ]);
 
         //  5.  Make a console environment
-        $_config = <<<INI
+        $config = <<<INI
 DFE_CONSOLE_API_KEY={$_apiSecret}
 DFE_CONSOLE_API_CLIENT_ID={$_consoleKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_consoleKey->client_secret}
 INI;
 
-        $this->_writeFile('console.env', $_config);
+        $this->_writeFile('console.env', $config);
 
         //  6.  Make a dashboard config file...
-        $_config = <<<INI
+        $config = <<<INI
 DFE_CONSOLE_API_KEY={$_apiSecret}
 DFE_CONSOLE_API_CLIENT_ID={$_dashboardKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_dashboardKey->client_secret}
 INI;
 
-        return $this->_writeFile('dashboard.env', $_config);
+        return $this->_writeFile('dashboard.env', $config);
     }
 
     /** @inheritdoc */

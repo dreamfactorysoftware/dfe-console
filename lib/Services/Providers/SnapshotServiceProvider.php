@@ -5,16 +5,6 @@ use DreamFactory\Enterprise\Services\SnapshotService;
 
 /**
  * Register the snapshot service as a Laravel provider
- *
- * To use the "Snapshot" facade for this provider, add the service provider to
- * your the "providers" array in your config/app.php file:
- *
- *  'providers' => array(
- *
- *      ... Other Providers Above ...
- *      'DreamFactory\Enterprise\Services\Providers\SnapshotServiceProvider',
- *
- *  ),
  */
 class SnapshotServiceProvider extends BaseServiceProvider
 {

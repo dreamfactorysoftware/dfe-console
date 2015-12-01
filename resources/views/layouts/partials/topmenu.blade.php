@@ -12,7 +12,11 @@ if (!isset($pageName) || empty($pageName)) {
 }
 
 $_linkPrefix = '/' . ConsoleDefaults::UI_PREFIX . '/';
-$_resources = ['Home', 'Servers', 'Clusters', 'Users', 'Instances', 'Limits', 'Reports'];
+$_resources = ['Home', 'Servers', 'Clusters', 'Users', 'Instances', 'Limits'];
+
+if (!empty(config('reports.connections.' . config('reports.default') . '.client-host'))) {
+    $_resources[] = 'Reports';
+}
 ?>
 <div class="dfe-topmenu">
     <div class="container-fluid">

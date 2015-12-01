@@ -325,6 +325,7 @@ class LimitController extends ViewController
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
                     if ('user' == $_this_limit_type) {
+    
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
                             foreach ($_rows as $_user) {
                                 if ($_user['id'] != $_values['user_id']) {
@@ -745,10 +746,17 @@ class LimitController extends ViewController
      */
     protected function formatResponse($response)
     {
+        //echo json_encode($response);
+        //echo '<br><br>';
+        //echo json_encode($response['resource']);
+
         if (null === ($_rows = (array)data_get($response, 'resource'))) {
             logger('invalid response format: ' . print_r($response, true));
             throw new \RuntimeException('Invalid console response.');
         }
+
+        //echo '<br>row:<br>';
+        //echo json_encode($_rows);
 
         $_results = [];
 

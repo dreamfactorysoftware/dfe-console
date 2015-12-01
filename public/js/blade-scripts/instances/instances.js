@@ -1,5 +1,7 @@
 $( document ).ready(function() {
 
+    $('#instanceTable').show();
+
     /*
     $("#instances tr").click(function (e) {
         var instance_id = $("#instances tr:eq('" + this.rowIndex + "')").find('input[type="hidden"]').val();

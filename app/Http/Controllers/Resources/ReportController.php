@@ -27,31 +27,31 @@ class ReportController extends ViewController
     //******************************************************************************
 
     /** @inheritdoc */
+    public function getKibana()
+    {
+        $url = (env('DFE_AUDIT_CLIENT_HOST') ? env('DFE_AUDIT_CLIENT_HOST') : env('DFE_AUDIT_HOST'));
+
+        $url .= ':'.(env('DFE_AUDIT_CLIENT_PORT') ? env('DFE_AUDIT_CLIENT_PORT') : '5601');
+
+        if (strpos($url, 'http') === false) {
+            $url = env('DFE_DEFAULT_DOMAIN_PROTOCOL').'://'.$url;
+        }
+
+        return \Redirect::away($url);
+    }
+
+    /** @inheritdoc */
     public function show($id)
     {
-        return $this->index();
+        return;
     }
 
     /** @inheritdoc */
     public function index()
     {
-        $_connection = config('reports.default');
-
         return \View::make('app.reports',
             [
-                'prefix'            => $this->_prefix,
-                'clusters'          => Cluster::orderBy('cluster_id_text')->get(['cluster_id_text']),
-                'users'             => User::orderBy('first_name_text')->orderBy('last_name_text')->get([
-                    'email_addr_text',
-                    'first_name_text',
-                    'last_name_text',
-                ]),
-                'instances'         => Instance::orderBy('instance_id_text')->get(['instance_id_text']),
-                'report_index_type' => config('reports.connections.' . $_connection . '.reports.api-usage.index-type',
-                    config('dfe.cluster-id')),
-                'report_base_uri'   => config('reports.connections.' . $_connection . '.base-uri'),
-                'report_title'      => config('reports.connections.' . $_connection . '.reports.api-usage.title'),
-                'report_query'      => config('reports.connections.' . $_connection . '.reports.api-usage.query'),
+                'prefix'            => $this->_prefix
             ]);
     }
 }

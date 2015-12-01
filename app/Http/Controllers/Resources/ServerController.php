@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\View;
 use Session;
 use Validator;
 
@@ -61,7 +60,7 @@ class ServerController extends ViewController
 
         $result = array_merge(json_decode($asgn_servers), json_decode($not_asgn_servers));
 
-        return View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $result);
+        return \View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $result);
     }
 
     /**
@@ -82,7 +81,7 @@ class ServerController extends ViewController
         /** @type Builder $_query */
         $_query = Server::join('server_type_t', 'server_t.server_type_id', '=', 'server_type_t.id')->select($_columns);
 
-        return $this->_processDataRequest('instance_t.instance_id_text', Server::count(), $_columns, $_query);
+        return $this->processDataRequest('instance_t.instance_id_text', Server::count(), $_columns, $_query);
     }
 
     public function create(array $viewData = [])
@@ -113,14 +112,14 @@ class ServerController extends ViewController
             $config = json_decode($server_data->config_text, true);
         }
 
-        return View::make('app.servers.edit')->with('server_id', $id)->with('prefix', $this->_prefix)->with('server',
+        return \View::make('app.servers.edit')->with('server_id', $id)->with('prefix', $this->_prefix)->with('server',
             $server_data)->with('server_types', $server_types)->with('clusters', $cluster_names)->with('config',
             $config);
     }
 
     public function update(Request $request, $id)
     {
-        $input = Input::all();
+        $input = \Input::all();
 
         $validator = Validator::make($input,
             [
@@ -188,7 +187,7 @@ class ServerController extends ViewController
         }
 
         try {
-            $input = Input::all();
+            $input = \Input::all();
 
             $type = $input['server_type_select'];
             $input_config = $input['config'][$type];
@@ -219,18 +218,18 @@ class ServerController extends ViewController
             $_redirect .= $this->_prefix;
             $_redirect .= '/servers';
 
-            return Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
+            return \Redirect::to($_redirect)->with('flash_message', $result_text)->with('flash_type', $result_status);
         } catch (QueryException $e) {
             Session::flash('flash_message', 'An error occurred! Check for errors and try again.');
             Session::flash('flash_type', 'alert-danger');
 
-            return redirect('/v1/servers/' . $id . '/edit')->withInput();
+            return \Redirect::to('/v1/servers/' . $id . '/edit')->withInput();
         }
     }
 
     public function store(Request $request)
     {
-        $input = Input::all();
+        $input = \Input::all();
         $type = 0;
 
         $validator = Validator::make($input,
@@ -295,11 +294,11 @@ class ServerController extends ViewController
             Session::flash('flash_message', $flash_message);
             Session::flash('flash_type', 'alert-danger');
 
-            return redirect('/v1/servers/create')->withInput();
+            return \Redirect::to('/v1/servers/create')->withInput();
         }
 
         try {
-            $input = Input::all();
+            $input = \Input::all();
 
             $type = $input['server_type_select'];
             $input_config = $input['config'][$type];

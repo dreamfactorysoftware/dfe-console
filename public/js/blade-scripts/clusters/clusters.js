@@ -241,8 +241,8 @@ $( document ).ready(function() {
         updatePageDropdown();
         selectPage(info.page);
         $('#clusterSearch').val(table.search());
+        $('#clusterTable').show();
     }
 
     $('.tooltip-wrapper').tooltip({position: "bottom"});
 });
-

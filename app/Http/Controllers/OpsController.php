@@ -1,10 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
+use DreamFactory\Enterprise\Services\Jobs\PortabilityJob;
 use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
+use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Versioned;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
@@ -16,6 +18,7 @@ use DreamFactory\Enterprise\Partner\AlertPartner;
 use DreamFactory\Enterprise\Partner\Facades\Partner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
+use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Enterprise\Services\UsageService;
@@ -133,6 +136,9 @@ class OpsController extends BaseController implements IsVersioned
                 break;
 
             default:    //  All else is original + base
+                /**
+                 * This has multiple copies of data because it is used by several different systems
+                 */
                 $_merge = [
                     //  snake
                     'instance_name_text' => $_instance->instance_name_text,
@@ -161,12 +167,7 @@ class OpsController extends BaseController implements IsVersioned
                 break;
         }
 
-        /**
-         * This has multiple copies of data because it is used by several different systems
-         */
-        \Log::info('/api/v1/ops/status: Instance "' . $_id . '" found', $_data = array_merge($_base, $_merge ?: []));
-
-        return $this->success($_data);
+        return $this->success(array_merge($_base, $_merge ?: []));
     }
 
     /**
@@ -339,16 +340,24 @@ class OpsController extends BaseController implements IsVersioned
      */
     public function postExport(Request $request)
     {
+        logger('export input=[' . json_encode($request->input()));
+
         try {
-            $_result = \Artisan::call('dfe:export', $request->input());
+            $_request =
+                PortableServiceRequest::makeExport($request->input('instance-id'),
+                    $request->input('destination', null));
 
-            if (0 != $_result) {
-                return $this->failure(Response::HTTP_SERVICE_UNAVAILABLE);
-            }
+            $_job = new ExportJob($_request);
+            \Queue::push($_job);
 
-            return $this->success($_result);
+            return $this->success($_job->getResult());
+        } catch (ModelNotFoundException $_ex) {
+            $this->error('Instance not found: ' . $_ex->getMessage());
+
+            return $this->failure(Response::HTTP_NOT_FOUND,
+                'The instance "' . $request->input('instance-id') . '" does not exist.');
         } catch (\Exception $_ex) {
-            $this->error($_ex->getMessage());
+            $this->error('Export queuing error: ' . $_ex->getMessage());
 
             return $this->failure($_ex);
         }

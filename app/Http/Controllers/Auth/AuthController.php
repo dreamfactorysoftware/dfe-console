@@ -3,6 +3,7 @@
 use DreamFactory\Enterprise\Common\Http\Controllers\Auth\CommonAuthController;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
+use DreamFactory\Enterprise\Services\Facades\License;
 
 class AuthController extends CommonAuthController
 {
@@ -40,12 +41,33 @@ class AuthController extends CommonAuthController
      */
     public function create(array $data)
     {
-        return ServiceUser::create([
+        $_serviceUser = ServiceUser::create([
             'first_name_text' => array_get($data, 'first_name_text'),
             'last_name_text'  => array_get($data, 'last_name_text'),
             'email_addr_text' => array_get($data, 'email_addr_text'),
             'nickname_text'   => array_get($data, 'nick_name_text'),
             'password_text'   => \Hash::make(array_get($data, 'password_text')),
         ]);
+
+        //  If this is the first registered user, post registration
+        if (1 == ServiceUser::count()) {
+            $this->postRegistration($_serviceUser);
+        }
+    }
+
+    /**
+     * @param \DreamFactory\Enterprise\Database\Models\ServiceUser $serviceUser
+     *
+     * @return bool
+     */
+    protected function postRegistration(ServiceUser $serviceUser)
+    {
+        try {
+            License::registerAdmin($serviceUser);
+        } catch (\Exception $_ex) {
+            \Log::error('[auth.register] Exception posting registration data to endpoint: ' . $_ex->getMessage());
+        }
+
+        return false;
     }
 }

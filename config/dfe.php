@@ -32,28 +32,45 @@ return [
     //  The default number of days to keep metrics data
     'metrics-keep-days'       => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
     //  The url to download the current version of DFE console
-    'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/develop.zip',
+    'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/master.zip',
+    //  The dashboard URL
+    'dashboard-url'           => env('DFE_DASHBOARD_URL'),
+    //  The support email
+    'support-email-address'   => env('DFE_SUPPORT_EMAIL_ADDRESS', 'support@dreamfactory.com'),
     //******************************************************************************
     //* Auditing details for instances
     //******************************************************************************
     'audit'                   => [
+        //  For audit messages
         'host'           => env('DFE_AUDIT_HOST'),
         'port'           => env('DFE_AUDIT_PORT'),
         'message-format' => env('DFE_AUDIT_MESSAGE_FORMAT', AuditMessageFormats::GELF),
+        //  For client presentation
+        'client-host'    => env('DFE_AUDIT_CLIENT_HOST', env('DFE_AUDIT_HOST')),
+        'client-port'    => env('DFE_AUDIT_CLIENT_PORT'),
+    ],
+    //******************************************************************************
+    //* Blueprint Repository
+    //******************************************************************************
+    'blueprints'              => [
+        'path' => env('DFE_BLUEPRINT_PATH', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
+        'vcs'  => true,
     ],
     //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************
     'common'                  => [
-        'display-name'      => 'DreamFactory Enterprise&trade; Console',
-        'display-version'   => 'v1.0.0-beta',
-        'display-copyright' => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
+        'display-name'       => 'DreamFactory Enterprise&trade; Console',
+        'display-version'    => 'v1.0.0',
+        /* 256px X 256px to avoid pixelation */
+        'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
+        'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name
          * Included are cerulean, darkly, flatly, paper, and superhero.
          * You may also install other compatible themes and use them as well.
          */
-        'themes'            => ['auth' => 'darkly', 'page' => 'flatly'],
+        'themes'             => ['auth' => 'darkly', 'page' => 'flatly'],
     ],
     //******************************************************************************
     //* UI Settings
