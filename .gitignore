@@ -15,4 +15,5 @@ node_modules/
 /_ide_*.php
 composer.phar
 /database/dfe/*
-bootstrap/cache/
+bootstrap/cache/*
+
