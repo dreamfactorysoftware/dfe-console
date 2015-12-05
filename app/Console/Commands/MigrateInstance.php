@@ -2,9 +2,11 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Instance\Capsule\InstanceCapsule;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class MigrateInstance extends ConsoleCommand implements SelfHandling
 {
@@ -35,14 +37,22 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
         $_instanceId = $this->argument('instance-id');
 
         try {
-            $_instance = $this->findInstance($_instanceId);
+            $_capsule = InstanceCapsule::make($_instanceId);
         } catch (ModelNotFoundException $_ex) {
             $this->error('The instance "' . $_instanceId . '" does not exist.');
 
             return 1;
         }
 
-        $_instance->encapsulate();
+        $_output = null;
+
+        if (0 !== ($_result = $_capsule->call('migrate', ['--seed' => null,], $_output))) {
+            $this->error('Error result "' . $_result . '" returned. Output:' . PHP_EOL);
+            $this->info(implode(PHP_EOL, $_output));
+        } else {
+            logger('[dfe.migrate-instance] "' . $_instanceId . '" output:' . PHP_EOL . implode(PHP_EOL, $_output));
+        }
+
 
         return 0;
     }
@@ -54,7 +64,7 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
 The <info>dfe:migrate-instance</info> command initiates a "php artisan migrate"
 for an instance under management.
 
-<info>php artisan dfe:migrate-instance "instance-id"</info>
+<info>php artisan dfe:migrate-instance [--seed] "instance-id"</info>
 
 EOT
         );
@@ -65,7 +75,17 @@ EOT
     {
         return array_merge(parent::getArguments(),
             [
-                ['instance-id', InputArgument::REQUIRED, 'The instance to migrate'],
+                ['instance-id', InputArgument::REQUIRED, 'The instance to migrate',],
             ]);
     }
+
+    /** @inheritdoc */
+    protected function getOptions()
+    {
+        return array_merge(parent::getOptions(), [
+            ['seed', null, InputOption::VALUE_NONE | InputOption::VALUE_OPTIONAL, 'If specified, "--seed" will be passed to any "migrate" commands',],
+        ]);
+    }
+
+
 }
