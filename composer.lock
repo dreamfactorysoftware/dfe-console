@@ -1039,12 +1039,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-storage.git",
-                "reference": "58d3ac5b7d90733b4ab3ffbe25944679b73d4235"
+                "reference": "c7e530eaf4aec0b3735681441eb4bd4fb60508d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-storage/zipball/58d3ac5b7d90733b4ab3ffbe25944679b73d4235",
-                "reference": "58d3ac5b7d90733b4ab3ffbe25944679b73d4235",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-storage/zipball/c7e530eaf4aec0b3735681441eb4bd4fb60508d4",
+                "reference": "c7e530eaf4aec0b3735681441eb4bd4fb60508d4",
                 "shasum": ""
             },
             "require": {
@@ -1091,7 +1091,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-storage/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-storage/issues"
             },
-            "time": "2015-10-30 19:55:19"
+            "time": "2015-12-05 00:50:27"
         },
         {
             "name": "dreamfactory/php-utils",
