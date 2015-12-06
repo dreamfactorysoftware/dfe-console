@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9f745fc60eecfc14fa82b05242c967b9",
-    "content-hash": "5d0b12085a92aa41bb16f3c7bb23d9ac",
+    "hash": "4c5e60bc41002afb3b3ace73764927df",
+    "content-hash": "c9ac717a35df9b19f41efce851b49c90",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -101,16 +101,16 @@
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "dev-master",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "af6d9a7fa1eb035bd2177a746106964e39b3e1be"
+                "reference": "83999f8467374adcb8893f566c9171c9d9691f50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/af6d9a7fa1eb035bd2177a746106964e39b3e1be",
-                "reference": "af6d9a7fa1eb035bd2177a746106964e39b3e1be",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/83999f8467374adcb8893f566c9171c9d9691f50",
+                "reference": "83999f8467374adcb8893f566c9171c9d9691f50",
                 "shasum": ""
             },
             "require": {
@@ -160,7 +160,7 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2015-10-22 12:34:24"
+            "time": "2015-08-13 11:40:00"
         },
         {
             "name": "classpreloader/classpreloader",
@@ -1149,16 +1149,16 @@
         },
         {
             "name": "graham-campbell/flysystem",
-            "version": "dev-master",
+            "version": "v3.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrahamCampbell/Laravel-Flysystem.git",
-                "reference": "e957c81c96f33110c77d63c6593bfd89ef114f59"
+                "reference": "b36a2b2a5a136347235ab003cdd21f5d1f0147e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Laravel-Flysystem/zipball/e957c81c96f33110c77d63c6593bfd89ef114f59",
-                "reference": "e957c81c96f33110c77d63c6593bfd89ef114f59",
+                "url": "https://api.github.com/repos/GrahamCampbell/Laravel-Flysystem/zipball/b36a2b2a5a136347235ab003cdd21f5d1f0147e3",
+                "reference": "b36a2b2a5a136347235ab003cdd21f5d1f0147e3",
                 "shasum": ""
             },
             "require": {
@@ -1234,7 +1234,7 @@
                 "laravel",
                 "s3"
             ],
-            "time": "2015-11-30 15:50:03"
+            "time": "2015-11-14 11:54:30"
         },
         {
             "name": "graham-campbell/manager",
@@ -1859,7 +1859,7 @@
         },
         {
             "name": "league/flysystem-eventable-filesystem",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-eventable-filesystem.git",
@@ -1906,7 +1906,7 @@
         },
         {
             "name": "league/flysystem-sftp",
-            "version": "dev-master",
+            "version": "1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-sftp.git",
@@ -1953,16 +1953,16 @@
         },
         {
             "name": "league/flysystem-ziparchive",
-            "version": "dev-master",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-ziparchive.git",
-                "reference": "352742ccee8af50b8cd231a90c64f0688d41b19f"
+                "reference": "ab2e804c6c121e30f8ccb0c996bf418c3c8ccab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-ziparchive/zipball/352742ccee8af50b8cd231a90c64f0688d41b19f",
-                "reference": "352742ccee8af50b8cd231a90c64f0688d41b19f",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-ziparchive/zipball/ab2e804c6c121e30f8ccb0c996bf418c3c8ccab8",
+                "reference": "ab2e804c6c121e30f8ccb0c996bf418c3c8ccab8",
                 "shasum": ""
             },
             "require": {
@@ -1995,7 +1995,7 @@
                 }
             ],
             "description": "Flysystem adapter for ZipArchive's",
-            "time": "2015-05-26 12:52:38"
+            "time": "2015-04-21 12:14:28"
         },
         {
             "name": "monolog/monolog",
@@ -5693,9 +5693,18 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
+        "laravel/framework": 0,
+        "guzzlehttp/guzzle": 0,
         "predis/predis": 20,
         "wpb/string-blade-compiler": 20,
+        "graham-campbell/flysystem": 0,
+        "league/flysystem-sftp": 0,
+        "league/flysystem-ziparchive": 0,
+        "league/flysystem-eventable-filesystem": 0,
+        "sebastian/git": 0,
         "dreamfactory/dfe-capsule": 20,
+        "barryvdh/laravel-ide-helper": 0,
+        "barryvdh/laravel-cors": 0,
         "phpunit/phpunit": 0
     },
     "prefer-stable": false,

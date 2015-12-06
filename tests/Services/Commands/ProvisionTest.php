@@ -14,7 +14,7 @@ class ProvisionTest extends \TestCase
      */
     public function testProvision()
     {
-        $_instanceId = 'wicker';
+        $_instanceId = 'bender';
 
         /** @var Instance $_instance */
         if (null !== ($_instance = Instance::byNameOrId($_instanceId)->first())) {
@@ -23,7 +23,7 @@ class ProvisionTest extends \TestCase
 
         $_payload = [
             'instance-id'    => $_instanceId,
-            'owner-id'       => 'jerryablan@gmail.com',/*'jerryablan@dreamfactory.com'*/
+            'owner-id'       => 'jerryablan@dreamfactory.com',/*'jerryablan@dreamfactory.com'*/
             'guest-location' => GuestLocations::DFE_CLUSTER,
         ];
 
