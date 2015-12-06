@@ -46,13 +46,13 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
 
         $_output = null;
 
-        if (0 !== ($_result = $_capsule->call('migrate', ['--seed' => null,], $_output))) {
-            $this->error('Error result "' . $_result . '" returned. Output:' . PHP_EOL);
-            $this->info(implode(PHP_EOL, $_output));
+        if (0 !== ($_result = $_capsule->call('migrate', $this->option('seed') ? ['--seed'] : [], $_output))) {
+            \Log::error('Error result "' . $_result . '" returned', ['output' => $_output]);
         } else {
-            logger('[dfe.migrate-instance] "' . $_instanceId . '" output:' . PHP_EOL . implode(PHP_EOL, $_output));
+            logger('[dfe.migrate-instance] "' . $_instanceId . '"', ['output' => $_output]);
         }
 
+        $_capsule->down();
 
         return 0;
     }
@@ -83,9 +83,7 @@ EOT
     protected function getOptions()
     {
         return array_merge(parent::getOptions(), [
-            ['seed', null, InputOption::VALUE_NONE | InputOption::VALUE_OPTIONAL, 'If specified, "--seed" will be passed to any "migrate" commands',],
+            ['seed', null, InputOption::VALUE_NONE, 'If specified, "--seed" will be passed to any "migrate" commands',],
         ]);
     }
-
-
 }
