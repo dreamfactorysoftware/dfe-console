@@ -38,42 +38,27 @@ class Capsule extends ConsoleCommand implements SelfHandling
         parent::fire();
         $this->setOutputPrefix('[' . $this->name . ']');
 
-        if (null !== ($_instanceId = $this->argument('instance-id'))) {
-            $this->info('Migrating instance "<comment>' . $_instanceId . '</comment>"');
-            $_results = [$_instanceId => $this->migrateSingleInstance($_instanceId)];
-        } else {
-            $this->error('You must specify an <instance-id> or use the "--all" option.');
+        $_instanceId = $this->argument('instance-id');
+
+        if ($this->option('destroy')) {
+            InstanceCapsule::unmake($_instanceId);
+            $this->info('* Instance "<comment>' . $_instanceId . '</comment>" capsule destroyed.');
+
+            return 0;
+        }
+
+        $this->info('Encapsulating instance "<comment>' . $_instanceId . '</comment>"');
+
+        try {
+            $_capsule = InstanceCapsule::make($_instanceId, false);
+            $this->info('* Instance "<comment>' . $_instanceId . '</comment>" encapsulated in <comment>' . $_capsule->getCapsulePath() . '</comment>.');
+
+            return 0;
+        } catch (ModelNotFoundException $_ex) {
+            $this->error('The instance "' . $_instanceId . '" does not exist.');
 
             return 1;
         }
-
-        $_file = storage_path(date('YmdHis') . '-migrate-instance.json');
-
-        if (false === JsonFile::encodeFile($_file, $_results)) {
-            $this->error('Error storing results to file.');
-        }
-
-        return 0;
-    }
-
-    /**
-     * @param string|Instance $instanceId
-     *
-     * @return bool
-     */
-    protected function encapsulateInstance($instanceId)
-    {
-        try {
-            $_capsule = InstanceCapsule::make($instanceId);
-        } catch (ModelNotFoundException $_ex) {
-            $this->error('The instance "' . $instanceId . '" does not exist.');
-
-            return false;
-        }
-
-        $this->debug('* Instance "'.$instanceId.'" encapsulated.');
-
-        return true;
     }
 
     /** @inheritdoc */
@@ -82,7 +67,7 @@ class Capsule extends ConsoleCommand implements SelfHandling
         $this->setHelp(<<<EOT
 The <info>dfe:capsule</info> command encapsulates a managed instance for direct access.
 
-<info>php artisan dfe:capsule <comment><instance-id></comment></info>
+<info>php artisan dfe:capsule <comment><instance-id></comment> [-d|--destroy]</info>
 
 EOT
         );
@@ -93,7 +78,7 @@ EOT
     {
         return array_merge(parent::getArguments(),
             [
-                ['instance-id', InputArgument::OPTIONAL, 'The instance to migrate',],
+                ['instance-id', InputArgument::OPTIONAL, 'The instance to encapsulate',],
             ]);
     }
 
@@ -101,9 +86,7 @@ EOT
     protected function getOptions()
     {
         return array_merge(parent::getOptions(), [
-            ['all', 'a', InputOption::VALUE_NONE, 'Migrate *all* cluster instances',],
-            ['cluster-id', 'c', InputOption::VALUE_REQUIRED, 'If specified with "--all", will migrate only instances managed by "cluster-id".',],
-            ['seed', 's', InputOption::VALUE_NONE, 'If specified, "--seed" will be passed to any "migrate" commands',],
+            ['destroy', 'd', InputOption::VALUE_NONE, 'Destroys a previously created capsule.',],
         ]);
     }
 }
