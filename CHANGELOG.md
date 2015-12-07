@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file. This projec
 - Add package `dreamfactory/dfe-capsule` for instance encapsulation
 
 ## Updated
+- Update in `dreamfactory/dfe-common` for password resets incorporated
 - Updated `.env-dist` with new default directories for blueprint and migration services
 
 ## [1.0.2][v1.0.2]
