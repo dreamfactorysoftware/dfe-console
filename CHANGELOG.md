@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased][unreleased]
+## [Unreleased Changes][unreleased]
 ## Added
 - **MigrateInstance** Artisan command
 - **MigrateInstanceTest** unit test for **MigrateInstance** Artisan command
@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [1.0.2][v1.0.2]
 ### Changed
-- ImportJob base class incorrect
+- **ImportJob** base class incorrect
 
 ## [1.0.1][v1.0.1]
 ### Removed
