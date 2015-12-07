@@ -11,6 +11,6 @@ class MigrateInstanceTest extends \TestCase
      */
     public function testMigrateInstance()
     {
-        $_result = \Artisan::call('dfe:migrate-instance', ['instance-id' => 'bender']);
+        $_result = \Artisan::call('dfe:migrate-instance', ['--all']);
     }
 }

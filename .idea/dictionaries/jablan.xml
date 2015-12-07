@@ -5,6 +5,7 @@
       <w>aight</w>
       <w>arif</w>
       <w>arrayable</w>
+      <w>asgn</w>
       <w>authenticatable</w>
       <w>bcrypt</w>
       <w>binlogging</w>
@@ -48,6 +49,7 @@
       <w>lastname</w>
       <w>loginbox</w>
       <w>longopts</w>
+      <w>lookups</w>
       <w>misconfigured</w>
       <w>myisam</w>
       <w>mysqld</w>
