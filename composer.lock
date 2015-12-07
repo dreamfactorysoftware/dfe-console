@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4c5e60bc41002afb3b3ace73764927df",
-    "content-hash": "c9ac717a35df9b19f41efce851b49c90",
+    "hash": "13c725b873b631d9327a5fac0ebff431",
+    "content-hash": "744421d1309a7196ec63732170d0ffb5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -665,12 +665,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-capsule.git",
-                "reference": "741693bf255316ac135eeadf2d2c4eb472ed8661"
+                "reference": "0202e2077ec02dec25b5d05c16e0f5ccb4fecbc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/741693bf255316ac135eeadf2d2c4eb472ed8661",
-                "reference": "741693bf255316ac135eeadf2d2c4eb472ed8661",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/0202e2077ec02dec25b5d05c16e0f5ccb4fecbc1",
+                "reference": "0202e2077ec02dec25b5d05c16e0f5ccb4fecbc1",
                 "shasum": ""
             },
             "require": {
@@ -718,7 +718,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-capsule/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-capsule/issues"
             },
-            "time": "2015-12-06 06:27:19"
+            "time": "2015-12-07 15:55:21"
         },
         {
             "name": "dreamfactory/dfe-common",
@@ -726,12 +726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "de6e4b4073155a19ad2a187bc2ab8f0e9adfefb2"
+                "reference": "1346b1e09defbe5de5845aae0cd7914996de3fcd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/de6e4b4073155a19ad2a187bc2ab8f0e9adfefb2",
-                "reference": "de6e4b4073155a19ad2a187bc2ab8f0e9adfefb2",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/1346b1e09defbe5de5845aae0cd7914996de3fcd",
+                "reference": "1346b1e09defbe5de5845aae0cd7914996de3fcd",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +789,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-12-06 06:27:03"
+            "time": "2015-12-07 04:46:54"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -2172,12 +2172,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "c542e5d86a9775abd1021618eb2430278bfc1e01"
+                "reference": "719ca71d4ac80e1985dcd91dd8ec5a47db58ad80"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/c542e5d86a9775abd1021618eb2430278bfc1e01",
-                "reference": "c542e5d86a9775abd1021618eb2430278bfc1e01",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/719ca71d4ac80e1985dcd91dd8ec5a47db58ad80",
+                "reference": "719ca71d4ac80e1985dcd91dd8ec5a47db58ad80",
                 "shasum": ""
             },
             "require": {
@@ -2215,7 +2215,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2015-12-04 15:28:43"
+            "time": "2015-12-07 11:12:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -5683,14 +5683,7 @@
             "time": "2014-10-01 04:00:00"
         }
     ],
-    "aliases": [
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/dfe-capsule"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
         "laravel/framework": 0,
@@ -5702,7 +5695,6 @@
         "league/flysystem-ziparchive": 0,
         "league/flysystem-eventable-filesystem": 0,
         "sebastian/git": 0,
-        "dreamfactory/dfe-capsule": 20,
         "barryvdh/laravel-ide-helper": 0,
         "barryvdh/laravel-cors": 0,
         "phpunit/phpunit": 0
