@@ -82,7 +82,7 @@
 		"sebastian/git":                             "1.0.*@stable",
 		"dreamfactory/console-tools":                "1.0.*",
 		"dreamfactory/dfe-audit":                    "1.0.*",
-		"dreamfactory/dfe-capsule":                  "dev-develop as dev-master",
+		"dreamfactory/dfe-capsule":                  "1.0.*",
 		"dreamfactory/php-utils":                    "1.1.*",
 		"dreamfactory/dfe-common":                   "1.0.*",
 		"dreamfactory/dfe-partner":                  "1.0.*",
