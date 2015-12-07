@@ -2,10 +2,14 @@
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
-- CHANGELOG updated
+## Added
+- MigrateInstance Artisan command
+- MigrateInstanceTest unit test for MigrateInstance Artisan command
+## Updated
+- Updated `.env-dist` with new default directories for blueprint and migration services
 
 ## [1.0.2][v1.0.2]
-### Changes
+### Changed
 - ImportJob base class incorrect
 
 ## [1.0.1][v1.0.1]
@@ -13,7 +17,7 @@ All notable changes to this project will be documented in this file. This projec
 - Cache files removed from the repository
 
 ## [1.0.0][v1.0.0]
-### Notes
+### Added
 - Initial Release
 - Full suite of command line tests
 
