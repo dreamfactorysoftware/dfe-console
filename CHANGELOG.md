@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. This projec
 ## Added
 - MigrateInstance Artisan command
 - MigrateInstanceTest unit test for MigrateInstance Artisan command
+- Add package `dreamfactory/dfe-capsule` for instance encapsulation
 ## Updated
 - Updated `.env-dist` with new default directories for blueprint and migration services
 
