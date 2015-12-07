@@ -20,4 +20,4 @@ All notable changes to this project will be documented in this file. This projec
 [v1.0.2]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.2...1.0.1
 [v1.0.1]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.1...1.0.0
 [v1.0.0]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.0...master
-[unreleased]: https://github.com/dreamfactorysoftware/dfe-console/compare/develop...HEAD
+[unreleased]: https://github.com/dreamfactorysoftware/dfe-console/compare/master...develop
