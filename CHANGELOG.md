@@ -7,5 +7,19 @@ All notable changes to this project will be documented in this file. This projec
 - CHANGELOG file added
 - Full suite of command line tests
 
+## [1.0.0][v1.0.0]
+### Notes
+- Initial Release
+
+## [1.0.1][v1.0.1]
+### Removed
+- Cache files removed from the repository
+
+## [1.0.2][v1.0.2]
+### Changes
+- Changed base class of ImportJob to match ExportJob (c2ea11f52e10d73f6948ed47a848268f1c8030ff)
+
 [unreleased]: https://github.com/dreamfactorysoftware/dfe-console/compare/develop...HEAD
-gith
+[v1.0.0]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.0...HEAD
+[v1.0.1]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.1...HEAD
+[v1.0.2]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.2...HEAD
