@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Token',
         'DreamFactory\Enterprise\Console\Console\Commands\Metrics',
         'DreamFactory\Enterprise\Console\Console\Commands\Blueprint',
+        'DreamFactory\Enterprise\Console\Console\Commands\MigrateInstance',
         //  Services
         'DreamFactory\Enterprise\Console\Console\Commands\Manifest',
         'DreamFactory\Enterprise\Console\Console\Commands\Provision',

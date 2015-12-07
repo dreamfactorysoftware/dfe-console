@@ -16,4 +16,5 @@ node_modules/
 composer.phar
 /database/dfe/*
 bootstrap/cache/*
-
+database/dfe/*
+/storage/*

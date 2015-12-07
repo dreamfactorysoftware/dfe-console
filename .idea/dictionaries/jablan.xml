@@ -5,6 +5,7 @@
       <w>aight</w>
       <w>arif</w>
       <w>arrayable</w>
+      <w>asgn</w>
       <w>authenticatable</w>
       <w>bcrypt</w>
       <w>binlogging</w>
@@ -17,8 +18,12 @@
       <w>chgrp</w>
       <w>chouts</w>
       <w>console's</w>
+      <w>creds</w>
       <w>csrf</w>
       <w>datadir</w>
+      <w>deprovision</w>
+      <w>deprovisioned</w>
+      <w>deprovisioning</w>
       <w>dfac</w>
       <w>dfdsp</w>
       <w>eprovision</w>
@@ -44,6 +49,7 @@
       <w>lastname</w>
       <w>loginbox</w>
       <w>longopts</w>
+      <w>lookups</w>
       <w>misconfigured</w>
       <w>myisam</w>
       <w>mysqld</w>
@@ -57,16 +63,19 @@
       <w>predis</w>
       <w>printf</w>
       <w>provisioner</w>
+      <w>provisioners</w>
       <w>queueable</w>
       <w>rackspacecloud</w>
       <w>setdev</w>
       <w>shaper</w>
       <w>shapers</w>
       <w>shortopts</w>
+      <w>snoozy</w>
       <w>stdout</w>
       <w>stooids</w>
       <w>stoopids</w>
       <w>stringified</w>
+      <w>symlinking</w>
       <w>topmenu</w>
       <w>topnav</w>
       <w>unassign</w>
