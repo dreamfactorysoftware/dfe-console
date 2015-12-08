@@ -80,7 +80,8 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
                     $_results[$_id] = $this->migrateSingleInstance($_id);
                     $this->info('* <comment>' . $_id . ':</comment> <info>success</info>');
                 } catch (\Exception $_ex) {
-                    $_results[$_id] = ['success' => false, 'output' => $_ex->getMessage(), 'exit_code' => $_ex->getCode()];
+                    $_results[$_id] =
+                        ['success' => false, 'output' => $_ex->getMessage(), 'exit_code' => $_ex->getCode()];
                     $this->info('* <comment>' . $_id . ':</comment> <error>failure</error>');
                 }
             }
@@ -140,10 +141,21 @@ EOT
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(), [
-            ['all', 'a', InputOption::VALUE_NONE, 'Migrate *all* cluster instances',],
-            ['cluster-id', 'c', InputOption::VALUE_REQUIRED, 'If specified with "--all", will migrate only instances managed by "cluster-id".',],
-            ['seed', 's', InputOption::VALUE_NONE, 'If specified, "--seed" will be passed to any "migrate" commands',],
-        ]);
+        return array_merge(parent::getOptions(),
+            [
+                ['all', 'a', InputOption::VALUE_NONE, 'Migrate *all* cluster instances',],
+                [
+                    'cluster-id',
+                    'c',
+                    InputOption::VALUE_REQUIRED,
+                    'If specified with "--all", will migrate only instances managed by "cluster-id".',
+                ],
+                [
+                    'seed',
+                    's',
+                    InputOption::VALUE_NONE,
+                    'If specified, "--seed" will be passed to any "migrate" commands',
+                ],
+            ]);
     }
 }

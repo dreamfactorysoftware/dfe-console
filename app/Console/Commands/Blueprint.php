@@ -90,7 +90,8 @@ class Blueprint extends ConsoleCommand implements SelfHandling
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(parent::getOptions(),
+        return array_merge(
+            parent::getOptions(),
             [
                 ['no-commit', null, InputOption::VALUE_NONE, 'Do not commit the result to the repo',],
                 ['dump', 'd', InputOption::VALUE_NONE, 'Dump the blueprint to stdout',],
