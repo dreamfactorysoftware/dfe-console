@@ -665,12 +665,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-capsule.git",
-                "reference": "76a043f42f39030b35398f5184184c2e7b92ec84"
+                "reference": "6159cd0ccb8cf17c09e2dbe561ae9fe5a1b5229a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/76a043f42f39030b35398f5184184c2e7b92ec84",
-                "reference": "76a043f42f39030b35398f5184184c2e7b92ec84",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/6159cd0ccb8cf17c09e2dbe561ae9fe5a1b5229a",
+                "reference": "6159cd0ccb8cf17c09e2dbe561ae9fe5a1b5229a",
                 "shasum": ""
             },
             "require": {
@@ -718,7 +718,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-capsule/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-capsule/issues"
             },
-            "time": "2015-12-08 21:42:27"
+            "time": "2015-12-08 23:14:06"
         },
         {
             "name": "dreamfactory/dfe-common",

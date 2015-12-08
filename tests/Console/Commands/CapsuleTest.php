@@ -11,6 +11,10 @@ class CapsuleTest extends \TestCase
      */
     public function testCapsule()
     {
-        $_result = \Artisan::call('dfe:capsule', ['instance-id' => 'bender']);
+        //  Up
+        $this->assertEquals(0, \Artisan::call('dfe:capsule', ['instance-id' => 'bender']));
+
+        //  Down
+        $this->assertEquals(0, \Artisan::call('dfe:capsule', ['instance-id' => 'bender', '--destroy' => true]));
     }
 }
