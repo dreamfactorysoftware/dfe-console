@@ -2106,7 +2106,7 @@ server_id_text</columns>
       </key>
       <foreign-key id="589" parent="50" name="fk_service_user_owner_id">
         <columns>owner_id</columns>
-        <ref-key>PRIMARY</ref-key>
+        <ref-key>~.app_key_t.PRIMARY</ref-key>
         <cascade-update-rule>restrict</cascade-update-rule>
         <cascade-delete-rule>restrict</cascade-delete-rule>
       </foreign-key>
