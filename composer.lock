@@ -665,12 +665,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:dreamfactorysoftware/dfe-capsule.git",
-                "reference": "0202e2077ec02dec25b5d05c16e0f5ccb4fecbc1"
+                "reference": "21701466eee58ce8ed46085d0143fcf4d0f250f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/0202e2077ec02dec25b5d05c16e0f5ccb4fecbc1",
-                "reference": "0202e2077ec02dec25b5d05c16e0f5ccb4fecbc1",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/21701466eee58ce8ed46085d0143fcf4d0f250f4",
+                "reference": "21701466eee58ce8ed46085d0143fcf4d0f250f4",
                 "shasum": ""
             },
             "require": {
@@ -718,7 +718,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-capsule/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-capsule/issues"
             },
-            "time": "2015-12-07 15:55:21"
+            "time": "2015-12-09 00:03:42"
         },
         {
             "name": "dreamfactory/dfe-common",
@@ -726,12 +726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "0d8c357c2aca0e7d4ac6afe3e55b92a81d6af720"
+                "reference": "61aa17d11c7761a210540bb920197bcfeacbe1ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/0d8c357c2aca0e7d4ac6afe3e55b92a81d6af720",
-                "reference": "0d8c357c2aca0e7d4ac6afe3e55b92a81d6af720",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/61aa17d11c7761a210540bb920197bcfeacbe1ed",
+                "reference": "61aa17d11c7761a210540bb920197bcfeacbe1ed",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +789,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2015-12-07 16:47:09"
+            "time": "2015-12-09 00:25:00"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -1606,12 +1606,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765"
+                "reference": "f3c88759b4687ccf061ff12ba69db3416dbd6951"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/132febfd9e9cbb954b532c7b601fae45a7523765",
-                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/f3c88759b4687ccf061ff12ba69db3416dbd6951",
+                "reference": "f3c88759b4687ccf061ff12ba69db3416dbd6951",
                 "shasum": ""
             },
             "require": {
@@ -1726,7 +1726,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-12-04 23:08:52"
+            "time": "2015-12-01 14:57:08"
         },
         {
             "name": "league/event",
@@ -1906,16 +1906,16 @@
         },
         {
             "name": "league/flysystem-sftp",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-sftp.git",
-                "reference": "5e3f97aa68f4195ebc26ad22687cc9325e5a4978"
+                "reference": "c32e064127625054e1356bd154d9c8a284fce8f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/5e3f97aa68f4195ebc26ad22687cc9325e5a4978",
-                "reference": "5e3f97aa68f4195ebc26ad22687cc9325e5a4978",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/c32e064127625054e1356bd154d9c8a284fce8f3",
+                "reference": "c32e064127625054e1356bd154d9c8a284fce8f3",
                 "shasum": ""
             },
             "require": {
@@ -1949,7 +1949,7 @@
                 }
             ],
             "description": "Flysystem adapter for SFTP",
-            "time": "2015-10-25 21:59:40"
+            "time": "2015-12-08 14:46:21"
         },
         {
             "name": "league/flysystem-ziparchive",
@@ -2320,12 +2320,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "694579617e07221ca16cb2be302ba5d26e64ce19"
+                "reference": "8eb581a43002dff2b36923595cf8737fd07f830e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/694579617e07221ca16cb2be302ba5d26e64ce19",
-                "reference": "694579617e07221ca16cb2be302ba5d26e64ce19",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/8eb581a43002dff2b36923595cf8737fd07f830e",
+                "reference": "8eb581a43002dff2b36923595cf8737fd07f830e",
                 "shasum": ""
             },
             "require": {
@@ -2401,7 +2401,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2015-12-01 09:06:19"
+            "time": "2015-12-07 21:18:21"
         },
         {
             "name": "predis/predis",
@@ -3337,12 +3337,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "37c17e747e291bbd8aa3db40cd39af1c2e57a301"
+                "reference": "bad346dad20bfc8b085953047fbcc7af98d29d3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/37c17e747e291bbd8aa3db40cd39af1c2e57a301",
-                "reference": "37c17e747e291bbd8aa3db40cd39af1c2e57a301",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/bad346dad20bfc8b085953047fbcc7af98d29d3a",
+                "reference": "bad346dad20bfc8b085953047fbcc7af98d29d3a",
                 "shasum": ""
             },
             "require": {
@@ -3382,6 +3382,7 @@
                 "symfony/console": "For using the console commands",
                 "symfony/finder": "For using the translation loader and cache warmer",
                 "symfony/form": "For using forms",
+                "symfony/process": "For using the server:run, server:start, server:stop, and server:status commands",
                 "symfony/serializer": "For using the serializer service",
                 "symfony/validator": "For using validation",
                 "symfony/yaml": "For using the debug:config and lint:yaml commands"
@@ -3416,7 +3417,7 @@
             ],
             "description": "Symfony FrameworkBundle",
             "homepage": "https://symfony.com",
-            "time": "2015-11-29 17:06:34"
+            "time": "2015-12-08 18:14:24"
         },
         {
             "name": "symfony/http-foundation",
@@ -3906,12 +3907,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/security-core.git",
-                "reference": "8a8f8ad2c6b29063ccbe2745eb3f6429937ad839"
+                "reference": "645785a55e61276cebf6cd5512ed3099634d3c81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/security-core/zipball/8a8f8ad2c6b29063ccbe2745eb3f6429937ad839",
-                "reference": "8a8f8ad2c6b29063ccbe2745eb3f6429937ad839",
+                "url": "https://api.github.com/repos/symfony/security-core/zipball/645785a55e61276cebf6cd5512ed3099634d3c81",
+                "reference": "645785a55e61276cebf6cd5512ed3099634d3c81",
                 "shasum": ""
             },
             "require": {
@@ -3966,7 +3967,7 @@
             ],
             "description": "Symfony Security Component - Core Library",
             "homepage": "https://symfony.com",
-            "time": "2015-12-05 17:37:59"
+            "time": "2015-12-08 11:07:53"
         },
         {
             "name": "symfony/security-csrf",
@@ -5285,19 +5286,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "2b0112e42c338afa9ad9dfeb94d66f6d84c2f828"
+                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/2b0112e42c338afa9ad9dfeb94d66f6d84c2f828",
-                "reference": "2b0112e42c338afa9ad9dfeb94d66f6d84c2f828",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/13edfd8706462032c2f52b4b862974dd46b71c9e",
+                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "~5"
+                "phpunit/phpunit": "~4.8"
             },
             "type": "library",
             "extra": {
@@ -5329,7 +5330,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-06 07:21:36"
+            "time": "2015-12-08 07:14:41"
         },
         {
             "name": "sebastian/environment",
