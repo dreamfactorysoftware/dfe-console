@@ -61,7 +61,7 @@ return [
     //******************************************************************************
     'common'                  => [
         'display-name'       => 'DreamFactory Enterprise&trade; Console',
-        'display-version'    => 'v1.0.5',
+        'display-version'    => 'v1.0.6',
         /* 256px X 256px to avoid pixelation */
         'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
