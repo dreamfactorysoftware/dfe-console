@@ -29,7 +29,7 @@ class AuthenticateOpsClient extends BaseMiddleware
     /**
      * @type string My alias in the ioc and for logging
      */
-    const wALIAS = 'auth.dfe-ops-client';
+    const ALIAS = 'auth.dfe-ops-client';
 
     //******************************************************************************
     //* Methods
