@@ -36,6 +36,7 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
     public function fire()
     {
         parent::fire();
+
         $this->setOutputPrefix('[' . $this->name . ']');
 
         if ($this->option('all')) {
@@ -107,7 +108,7 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
 
         $_output = null;
 
-        if (0 !== ($_result = $_capsule->call('migrate', $this->option('seed') ? ['--seed' => true] : [], $_output))) {
+        if (0 !== ($_result = $_capsule->call('migrate', $this->option('seed') ? ['--seed' => true] : []))) {
             \Log::error('Error result "' . $_result . '" returned', ['output' => $_output]);
 
             return ['success' => false, 'output' => $_output, 'exit_code' => $_result];
