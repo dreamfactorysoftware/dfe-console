@@ -173,7 +173,7 @@
             if (!_clusterId || 0 == _clusterId) {
                 $_select.empty();
                 $_select.append('<option value="">Select Instance</option>');
-                $_select.append('<option value="0">All Instances</option>');
+                $_select.append('<option value="0" selected>All Instances</option>');
                 return false;
             }
 
@@ -212,7 +212,7 @@
             if (!_instanceId || 0 == _instanceId) {
                 $_select.empty();
                 $_select.append('<option value="">Select User</option>');
-                $_select.append('<option value="0">All Users</option>');
+                $_select.append('<option value="0" selected>All Users</option>');
                 return false;
             }
 
