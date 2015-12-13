@@ -61,9 +61,7 @@ return [
     //******************************************************************************
     'common'                  => [
         'display-name'       => 'DreamFactory Enterprise&trade; Console',
-        'display-version'    => 'v1.0.6',
-        /* 256px X 256px to avoid pixelation */
-        'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
+        'display-version'    => env('DFE_VERSION'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name
@@ -71,6 +69,10 @@ return [
          * You may also install other compatible themes and use them as well.
          */
         'themes'             => ['auth' => 'darkly', 'page' => 'flatly'],
+        /** Auth pages 256x256px image */
+        'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
+        /**  NavBar 194x50px image. Shown on top of inner pages. */
+        'navbar-image'       => env('DFE_NAVBAR_IMAGE', '/theme/standard/img/logo.png'),
     ],
     //******************************************************************************
     //* UI Settings
