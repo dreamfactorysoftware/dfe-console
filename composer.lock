@@ -797,12 +797,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "a194026b51ba6b529872249647cd8e066f8660f2"
+                "reference": "41e776531064f810d95ca5b674d36bd5d8ff20f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/a194026b51ba6b529872249647cd8e066f8660f2",
-                "reference": "a194026b51ba6b529872249647cd8e066f8660f2",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/41e776531064f810d95ca5b674d36bd5d8ff20f3",
+                "reference": "41e776531064f810d95ca5b674d36bd5d8ff20f3",
                 "shasum": ""
             },
             "require": {
@@ -846,7 +846,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2015-12-04 16:57:51"
+            "time": "2015-12-15 21:11:33"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
@@ -1099,12 +1099,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/php-utils.git",
-                "reference": "8add2abe78ccf95cd74477149e94b80b79ab7d6e"
+                "reference": "f2cf934530561d52805240da4e30f9378a5026be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/8add2abe78ccf95cd74477149e94b80b79ab7d6e",
-                "reference": "8add2abe78ccf95cd74477149e94b80b79ab7d6e",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/f2cf934530561d52805240da4e30f9378a5026be",
+                "reference": "f2cf934530561d52805240da4e30f9378a5026be",
                 "shasum": ""
             },
             "require": {
@@ -1146,7 +1146,7 @@
                 "symfony",
                 "utility"
             ],
-            "time": "2015-12-11 04:59:28"
+            "time": "2015-12-15 21:19:33"
         },
         {
             "name": "graham-campbell/flysystem",
