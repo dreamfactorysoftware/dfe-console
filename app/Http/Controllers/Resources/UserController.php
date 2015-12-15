@@ -259,7 +259,7 @@ class UserController extends ViewController
             $users = new User;
         }
 
-        if ($user_data['new_password'] != '1234567890') {
+        if ($user_data['new_password'] != '********') {
             /** @noinspection PhpUndefinedMethodInspection */
             $user_data['password_text'] = Hash::make($user_data['new_password']);
         } else {
