@@ -1,7 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.0.7][v1.0.7]
+## [1.0.8][v1.0.8]
+## Added
+- Migration to correct index on `job_result_t`
 ## Fixed
 - Console registration failure corrected.
 
@@ -30,7 +32,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
-[v1.0.7]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.6...1.0.7
+[v1.0.7]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.6...1.0.8
 [v1.0.6]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.2...1.0.6
 [v1.0.2]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.1...1.0.2
 [v1.0.1]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.0...1.0.1
