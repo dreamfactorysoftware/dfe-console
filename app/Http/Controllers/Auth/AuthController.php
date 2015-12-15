@@ -53,6 +53,8 @@ class AuthController extends CommonAuthController
         if (1 == ServiceUser::count()) {
             $this->postRegistration($_serviceUser);
         }
+
+        return $_serviceUser;
     }
 
     /**

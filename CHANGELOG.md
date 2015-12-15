@@ -1,8 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased Changes][unreleased]
-None
+## [1.0.7][v1.0.7]
+## Fixed
+- Console registration failure corrected.
 
 ## [1.0.6][v1.0.6]
 ## Added
@@ -29,8 +30,9 @@ None
 - Initial Release
 - Full suite of command line tests
 
-[v1.0.6]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.6...1.0.2
-[v1.0.2]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.2...1.0.1
-[v1.0.1]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.1...1.0.0
-[v1.0.0]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.0...master
-[unreleased]: https://github.com/dreamfactorysoftware/dfe-console/compare/master...develop
+[v1.0.7]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.6...1.0.7
+[v1.0.6]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.2...1.0.6
+[v1.0.2]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.1...1.0.2
+[v1.0.1]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.0...1.0.1
+[v1.0.0]: https://github.com/dreamfactorysoftware/dfe-console/compare/master...1.0.0
+[unreleased]: https://github.com/dreamfactorysoftware/dfe-console/compare/develop...master
