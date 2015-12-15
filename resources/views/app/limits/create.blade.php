@@ -22,9 +22,9 @@
                         <label for="type_select">Type</label>
                         <select class="form-control" id="type_select" name="type_select">
                             <option value="">Select type</option>
-                            <option value="cluster" {{ Input::old('type_select') == 'cluster' ? 'selected' : '' }}>Cluster</option>
-                            <option value="instance" {{ Input::old('type_select') == 'instance' ? 'selected' : '' }}>Instance</option>
-                            <option value="user" {{ Input::old('type_select') == 'user' ? 'selected' : '' }}>User</option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }} {{ Input::old('type_select') == \DreamFactory\Library\Utility\Enums\Limits::CLUSTER ? 'selected' : '' }}>Cluster</option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }} {{ Input::old('type_select') == \DreamFactory\Library\Utility\Enums\Limits::INSTANCE ? 'selected' : '' }}>Instance</option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::USER }} {{ Input::old('type_select') == \DreamFactory\Library\Utility\Enums\Limits::USER ? 'selected' : '' }}>User</option>
                         </select>
                     </div>
                     <div class="form-group" id="select_cluster" style="display: none;">
