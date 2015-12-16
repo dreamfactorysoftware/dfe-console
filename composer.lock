@@ -1607,12 +1607,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "f3c88759b4687ccf061ff12ba69db3416dbd6951"
+                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/f3c88759b4687ccf061ff12ba69db3416dbd6951",
-                "reference": "f3c88759b4687ccf061ff12ba69db3416dbd6951",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/132febfd9e9cbb954b532c7b601fae45a7523765",
+                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765",
                 "shasum": ""
             },
             "require": {
@@ -1727,7 +1727,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-12-01 14:57:08"
+            "time": "2015-12-04 23:08:52"
         },
         {
             "name": "league/event",
