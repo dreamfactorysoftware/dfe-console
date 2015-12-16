@@ -135,7 +135,7 @@
                 var $_select = $('#instance_id');
                 var _clusterId = $('option:selected', this).val().toString();
 
-                if ($('#type_select').val() == '{{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }}') {
+                if ($('#type_select').val().toString() == '{{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }}') {
                     return false;
                 }
 
@@ -173,7 +173,7 @@
                 if ('user' == $('#type_select').find(':selected').val()) {
                     var _instanceId = $(':selected', this).val();
 
-                    if ($('#type_select').val() == '{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}') {
+                    if ($('#type_select').val().toString() == '{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}') {
                         return false;
                     }
 
