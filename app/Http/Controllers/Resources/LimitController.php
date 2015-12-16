@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
+use DreamFactory\Library\Utility\Enums\Limits;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -325,7 +326,7 @@ class LimitController extends ViewController
                     $_values['instance_id_text'] = $_instance->instance_id_text;
 
                     if ('user' == $_this_limit_type) {
-    
+
                         if (false !== ($_rows = $this->getInstanceUsers($_instance))) {
                             foreach ($_rows as $_user) {
                                 if ($_user['id'] != $_values['user_id']) {
@@ -567,17 +568,21 @@ class LimitController extends ViewController
 
             $_time_period = str_replace(' ', '-', strtolower($_input['period_name']));
 
-            //  Set the default key
-            $_limit_key_text = 'default.' . $_time_period;
-
-            if ($_input['cluster_id'] !== '' && $_input['instance_id'] === '') {
-                $_limit_key_text = 'cluster.default.' . $_time_period;
-            } elseif ($_input['service_name'] == 'all' && $_input['user_id'] == '') {
-                $_limit_key_text = 'instance.default.' . $_time_period;
-            } elseif ($_input['service_name'] != 'all') {
-                $_limit_key_text = 'service:' . $_input['service_name'] . '.' . $_time_period;
-            } elseif ($_input['user_id'] != '') {
-                $_limit_key_text = 'user:' . $_input['user_id'] . '.' . $_time_period;
+            switch ($_input['type_select']) {
+                case Limits::CLUSTER:
+                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' . $_input['period_name'];
+                    break;
+                case Limits::INSTANCE:
+                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
+                        ($_input['instance_id'] > 0 ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'all_instances') . '.' .
+                        $_input['period_name'];
+                    break;
+                case Limits::USER:
+                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
+                        ($_input['instance_id'] > 0 ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'all_instances') . '.' .
+                        ($_input['user_id'] > 0 ? 'user:' . $_input['user_id'] : 'all_users') .
+                        $_input['period_name'];
+                    break;
             }
 
             $limit = [
