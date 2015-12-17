@@ -554,6 +554,7 @@ class LimitController extends ViewController
             // Build the limit record
 
             foreach ([
+                'type_select'  => 'cluster',
                 'cluster_id'   => null,
                 'instance_id'  => null,
                 'service_name' => 0,
@@ -570,18 +571,18 @@ class LimitController extends ViewController
 
             switch ($_input['type_select']) {
                 case Limits::CLUSTER:
-                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' . $_input['period_name'];
+                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' . $_time_period;
                     break;
                 case Limits::INSTANCE:
                     $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
-                        ($_input['instance_id'] > 0 ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'all_instances') . '.' .
-                        $_input['period_name'];
+                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'all_instances') . '.' .
+                        $_time_period;
                     break;
                 case Limits::USER:
                     $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
-                        ($_input['instance_id'] > 0 ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'all_instances') . '.' .
-                        ($_input['user_id'] > 0 ? 'user:' . $_input['user_id'] : 'all_users') .
-                        $_input['period_name'];
+                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'all_instances') . '.' .
+                        (!empty($_input['user_id']) ? 'user:' . $_input['user_id'] : 'all_users') .
+                        $_time_period;
                     break;
             }
 
@@ -594,6 +595,7 @@ class LimitController extends ViewController
                 'active_ind'     => ($_input['active_ind']) ? 1 : 0,
                 'label_text'     => $_input['label_text'],
             ];
+die('<pre>' . print_r($limit, true) . var_dump($_input));
 
             $res =
                 Limit::where('cluster_id', $limit['cluster_id'])

@@ -104,18 +104,22 @@
 
         function generateForm(type) {
             var set_show = true;
+            var types = [];
+            types[{{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }}] = 'cluster';
+            types[{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}] = 'instance';
+            types[{{ \DreamFactory\Library\Utility\Enums\Limits::USER }}] = 'user';
 
             $('#type_select').find('> option').each(function() {
                 if (set_show === true) {
-                    $('#select_' + this.value).show();
-                    if (type === this.value) {
+                    $('#select_' + types[this.value]).show();
+                    if (type == this.value) {
                         set_show = false;
                     }
-                    $('#' + this.value + '_id').trigger('change');
+                    $('#' + types[this.value] + '_id').trigger('change');
                 }
                 else {
-                    $('#select_' + this.value).hide();
-                    $('#' + this.value + '_id').val($('#' + this.value + '_id option:first').val()).trigger('change');
+                    $('#select_' + types[this.value]).hide();
+                    $('#' + types[this.value] + '_id').val($('#' + types[this.value] + '_id option:first').val()).trigger('change');
                 }
             });
         }
@@ -142,7 +146,7 @@
                 if (!_clusterId || 0 == _clusterId) {
                     $_select.empty();
                     $_select.append('<option value="">Select Instance</option>');
-                    $_select.append('<option value="0">All Instances</option>');
+                    $_select.append('<option value="0">Each Instance</option>');
                     return false;
                 }
 
@@ -151,7 +155,7 @@
                 $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                     $_select.empty();
                     $_select.append('<option value="">Select Instance</option>');
-                    $_select.append('<option value="0">All Instances</option>');
+                    $_select.append('<option value="0">Each Instance</option>');
 
                     if ($.isArray(data) || data.length) {
                         $.each(data, function (index, item) {
@@ -182,7 +186,7 @@
                     if (!_instanceId || 0 == _instanceId) {
                         $('#user_id').empty();
                         $('#user_id').append('<option>Select User</option>');
-                        $('#user_id').append('<option value="0">All Users</option>');
+                        $('#user_id').append('<option value="0">Each User</option>');
                         return false;
                     }
 
@@ -190,7 +194,7 @@
                         var $_select = $('#user_id');
                         $_select.empty();
                         $_select.append('<option value="">Select User</option>');
-                        $_select.append('<option value="0">All Users</option>');
+                        $_select.append('<option value="0">Each User</option>');
 
                         if ($.isArray(data) || data.length) {
                             $.each(data, function (index, item) {
