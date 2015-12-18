@@ -64,9 +64,16 @@ class Cluster extends ConsoleCommand
     {
         try {
             $_cluster = $this->findCluster($clusterId);
-            $this->writeln('Servers assigned to cluster-id "' . $clusterId . '":');
+
+            $this->writeln('Assigned to cluster-id "' . $clusterId . '":');
+            $this->writeln('-------------------------------------------------');
+
             foreach ($_cluster->assignedServers() as $_server) {
-                $this->info('* ' . $_server->server->server_id_text);
+                $this->writeln('<info>' .
+                    $_server->server->server_id_text .
+                    "</info>\t<comment>" .
+                    $_server->server->serverType->type_name_text .
+                    '</comment>');
             }
         } catch (ModelNotFoundException $_ex) {
             throw new \InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
@@ -81,12 +88,13 @@ class Cluster extends ConsoleCommand
                 [
                     'operation',
                     InputArgument::REQUIRED,
-                    'The operation to perform: create, update, delete, add (server to cluster), or remove (server from cluster)',
+                    'The operation to perform: show, create, update, delete, add (server to cluster), or remove (server from cluster)',
                 ],
                 [
                     'cluster-id',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The id of the cluster upon which to perform operation',
+                    config('dfe.cluster-id'),
                 ],
             ]);
     }

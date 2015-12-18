@@ -40,11 +40,11 @@ class Mount extends ConsoleCommand
                 [
                     'operation',
                     InputArgument::REQUIRED,
-                    'The operation to perform: create, update, or delete',
+                    'The operation to perform: show, create, update, or delete',
                 ],
                 [
                     'mount-id',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The id of the mount upon which to perform operation',
                 ],
             ]);
@@ -86,10 +86,45 @@ class Mount extends ConsoleCommand
             case 'create':
             case 'update':
             case 'delete':
+                if (empty($_mountId = $this->argument('mount-id'))) {
+                    throw new \InvalidArgumentException('No "mount-id" provided.');
+                }
+
                 return $this->{'_' . $_command . 'Mount'}($this->argument('mount-id'));
+
+            case 'show':
+                return $this->showMounts();
         }
 
         throw new \InvalidArgumentException('The "' . $_command . '" operation is not valid');
+    }
+
+    /**
+     * @return int
+     */
+    protected function showMounts()
+    {
+        $_mounts = Models\Mount::orderBy('mount_id_text')->get();
+
+        if (empty($_mounts)) {
+            $this->info('** No mounts found **');
+
+            return 0;
+        }
+
+        foreach ($_mounts as $_mount) {
+            $_used = (0 != Models\Server::where('mount_id', $_mount->id)->count());
+
+            $this->writeln(($_used ? '*' : ' ') .
+                '<info>' .
+                $_mount->mount_id_text .
+                "</info>\t" .
+                '<comment>' .
+                json_encode($_mount->config_text) .
+                '</comment>');
+        }
+
+        return 0;
     }
 
     /**
