@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.10][v1.0.10]
+## Updated
+- Changed version constraint of PHPUNIT in composer.json to ensure only version 4.* is installed. Version 5.* requires PHP 5.6, which is not in the Ubuntu 14.04 repository.
+
 ## [1.0.9][v1.0.9]
 ## Added
 - Added `*-dist` copies of supplied branding assets.
@@ -37,6 +41,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.10]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.9...1.0.10
 [v1.0.9]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.8...1.0.9
 [v1.0.8]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.6...1.0.8
 [v1.0.6]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.2...1.0.6
