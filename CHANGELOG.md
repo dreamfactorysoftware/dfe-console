@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.10][v1.0.10]
+## Updated
+- Changed version constraint of PHPUNIT in composer.json to ensure only version 4.* is installed. Version 5.* requires PHP 5.6, which is not in the Ubuntu 14.04 repository.
+
 ## [1.0.9][v1.0.9]
 ## Added
 - Added `*-dist` copies of supplied branding assets.
