@@ -97,5 +97,4 @@ class Blueprint extends ConsoleCommand implements SelfHandling
                 ['dump', 'd', InputOption::VALUE_NONE, 'Dump the blueprint to stdout',],
             ]);
     }
-
 }

@@ -4,6 +4,7 @@ use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Services\GitService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\JsonFile;
@@ -78,24 +79,23 @@ class BlueprintService extends BaseService
 //            'remember_me' => array_get($options, 'remember_me', false),
 //        ];
 
-        $_blueprint = ['instance' => $_instance->toArray()];
-        $_resources = [];
+        $_blueprint = ['instance' => $_instance->toArray(), 'resources' => [], 'database' => [],];
 
         //  Get services
         $_result = $_client->resources();
 
         foreach ($_result as $_resource) {
-            $_resources[$_resource->name] = [];
+            $_blueprint['resources'][$_resource->name] = [];
 
             try {
                 $_response = $_client->get($_resource->name);
-                $_resources[$_resource->name] =
-                    isset($_response->resource) ? $_response->resource : $_response;
+                $_blueprint['resources'][$_resource->name] = isset($_response->resource) ? $_response->resource : $_response;
             } catch (\Exception $_ex) {
             }
         }
 
-        $_blueprint['resources'] = $_resources;
+        //  Get database
+        $_blueprint['database'] = $this->getStoredData($_instance);
 
         //  Do not commit this blueprint
         if (array_get($options, 'commit', true)) {
@@ -103,6 +103,42 @@ class BlueprintService extends BaseService
         }
 
         return $_blueprint;
+    }
+
+    /**
+     * @param Instance $instance
+     *
+     * @return array
+     */
+    protected function getStoredData(Instance $instance)
+    {
+        //  Get our database connection...
+        $_db = $instance->instanceConnection($instance);
+
+        //  Get a table list...
+        $_tables = $_db->getDoctrineConnection()->getSchemaManager()->listTables();
+
+        $_data = [];
+
+        foreach ($_tables as $_table) {
+            $_tableName = $_table->getName();
+
+            //  Get the columns
+            $_columns = [];
+
+            foreach ($_table->getColumns() as $_column) {
+                $_array = $_column->toArray();
+                $_array['type'] = (string)$_array['type'];
+                $_columns[] = $_array;
+            }
+
+            $_data[$_tableName] = [
+                'schema' => $_columns,
+                'data'   => $_db->select('SELECT * FROM ' . $_tableName),
+            ];
+        }
+
+        return $_data;
     }
 
     /**
@@ -117,10 +153,10 @@ class BlueprintService extends BaseService
     {
         //  Create/update the file
         $_file = Disk::path([$this->repoPath, $instanceId . '.json',]);
-        JsonFile::encodeFile($_file, $blueprint);
+        JsonFile::encodeFile($_file, $blueprint, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
         //  Commit it
-        $_commitMessage = 'Blueprint created on ' . date('Y-m-d H:i:s');
+        $_commitMessage = 'Blueprint for instance "' . $instanceId . '" created on ' . date('Y-m-d H:i:s');
 
         $_response = \Event::fire('dfe.blueprint.pre-commit',
             [
@@ -137,11 +173,14 @@ class BlueprintService extends BaseService
 
         if (0 !== $this->git->commitChange($_file, $_commitMessage)) {
             \Log::error('Error committing blueprint file "' . $_file . '".');
-        } else {
-            \Event::fire('dfe.blueprint.post-commit',
-                ['instance-id' => $instanceId, 'blueprint' => $blueprint, 'repository-path' => $this->repoPath,]);
+
+            return false;
         }
 
-        return $blueprint;
+        \Event::fire('dfe.blueprint.post-commit',
+            ['instance-id' => $instanceId, 'blueprint' => $blueprint, 'repository-path' => $this->repoPath,]);
+
+
+        return true;
     }
 }
