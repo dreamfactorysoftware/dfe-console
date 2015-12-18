@@ -14,7 +14,7 @@
             <input name="_method" type="hidden" value="DELETE">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input name="_selected" id="_selected" type="hidden" value="">
-            
+
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="well well-sm">
                     <div class="btn-group">
@@ -56,10 +56,11 @@
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>Name</th>
+                        <th>Type</th>
                         <th>Cluster</th>
                         <th>Instance</th>
                         <th>User</th>
-                        <th>Definition</th>
+                        <th>Limit</th>
                         <th style="text-align: center;">Status</th>
                     </tr>
                     </thead>
@@ -78,6 +79,7 @@
                                     </form>
                                 </td>
                                 <td>{{ $value['label_text'] }}</td>
+                                <td>{{ $value['limit_type_text'] }}</td>
                                 <td>{{ $value['cluster_id_text'] }}</td>
                                 <td>@if(empty($value['instance_id_text']))<em>All</em>@else{{ $value['instance_id_text'] }}@endif</td>
                                 <td>@if(empty($value['user_name']))<em>All</em>@else{{ $value['user_name'] }}@endif</td>

@@ -174,7 +174,7 @@
 
             //  Instance selection
             $_form.on('change', '#instance_id', function (e) {
-                if ('user' == $('#type_select').find(':selected').val()) {
+                if ({{ \DreamFactory\Library\Utility\Enums\Limits::USER }} == $('#type_select').find(':selected').val()) {
                     var _instanceId = $(':selected', this).val();
 
                     if ($('#type_select').val().toString() == '{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}') {

@@ -24,9 +24,9 @@
                     <div class="form-group">
                         <label for="type_select">Type</label>
                         <select class="form-control" id="type_select" name="type_select">
-                            <option value="cluster" {{ Input::old('type_select') == 'cluster' ? 'selected="selected"' : null }}>Cluster</option>
-                            <option value="instance" {{ Input::old('type_select') == 'instance' ? 'selected="selected"' : null }}>Instance</option>
-                            <option value="user" {{ Input::old('type_select') == 'user' ? 'selected="selected"' : null }}>User</option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::CLUSTER  ? 'selected="selected"' : null }}>Cluster</option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::INSTANCE  ? 'selected="selected"' : null }}>Instance</option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::USER }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::USER  ? 'selected="selected"' : null }}>User</option>
                         </select>
                     </div>
                     <div class="form-group" id="select_cluster">
@@ -98,12 +98,12 @@
 
                 generateForm(_type);
 
-                if ( _type === 'instance') {
+                if ( _type == {{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}) {
                     var cluster_id = $('#cluster_id').val();
                     loadInstances(cluster_id, null);
                 }
 
-                if ( _type === 'user') {
+                if ( _type == {{ \DreamFactory\Library\Utility\Enums\Limits::USER }}) {
                     var cluster_id = $('#cluster_id').val();
                     loadInstances(cluster_id, null);
                     var instance_id = $('#instance_id').val();
@@ -112,14 +112,14 @@
             }
 
             if (select === 'cluster_id') {
-                if (_type !== 'cluster') {
+                if (_type != {{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }}) {
                     var cluster_id = $('#cluster_id').val();
                     loadInstances(cluster_id, null);
                 }
             }
 
             if (select === 'instance_id') {
-                if (_type !== 'instance') {
+                if (_type != {{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}) {
                     var instance_id = $('#instance_id').val();
                     loadUsers(instance_id, null);
                 }
@@ -148,18 +148,22 @@
 
         function generateForm(type) {
             var set_show = true;
+            var types = [];
+            types[{{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }}] = 'cluster';
+            types[{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}] = 'instance';
+            types[{{ \DreamFactory\Library\Utility\Enums\Limits::USER }}] = 'user';
 
             $('#type_select > option').each(function() {
                 if (set_show === true) {
-                    $('#select_' + this.value).show();
+                    $('#select_' + types[this.value]).show();
                     if (type === this.value) {
                         set_show = false;
                     }
-                    $('#' + this.value + '_id').trigger('change');
+                    $('#' + types[this.value] + '_id').trigger('change');
                 }
                 else {
-                    $('#select_' + this.value).hide();
-                    $('#' + this.value + '_id').val($('#' + this.value + '_id option:first').val()).trigger('change');
+                    $('#select_' + types[this.value]).hide();
+                    $('#' + types[this.value] + '_id').val($('#' + types[this.value] + '_id option:first').val()).trigger('change');
                 }
             });
         }
@@ -173,7 +177,7 @@
             if (!_clusterId || 0 == _clusterId) {
                 $_select.empty();
                 $_select.append('<option value="">Select Instance</option>');
-                $_select.append('<option value="0" selected>All Instances</option>');
+                $_select.append('<option value="0" selected>Each Instance</option>');
                 return false;
             }
 
@@ -182,7 +186,7 @@
             $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                 $_select.empty();
                 $_select.append('<option value="">Select Instance</option>');
-                $_select.append('<option value="0">All Instances</option>');
+                $_select.append('<option value="0">Each Instance</option>');
 
                 if ($.isArray(data)) {
                     $.each(data, function (index, item) {
@@ -212,7 +216,7 @@
             if (!_instanceId || 0 == _instanceId) {
                 $_select.empty();
                 $_select.append('<option value="">Select User</option>');
-                $_select.append('<option value="0" selected>All Users</option>');
+                $_select.append('<option value="0" selected>Each User</option>');
                 return false;
             }
 
@@ -223,7 +227,7 @@
 
                 $_select.empty();
                 $_select.append('<option value="">Select User</option>');
-                $_select.append('<option value="0">All Users</option>');
+                $_select.append('<option value="0">Each User</option>');
 
                 if ($.isArray(data)) {
                     $.each(data, function (index, item) {
