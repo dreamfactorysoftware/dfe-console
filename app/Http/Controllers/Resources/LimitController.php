@@ -420,7 +420,7 @@ class LimitController extends ViewController
             'cluster_id_text' => $_values['cluster_id_text'],
             'instance_id' => empty($_limit['instance_id']) ? 0 : $_limit['instance_id'],
             'instance_id_text' => $_values['instance_id_text'],
-            'user_id' => $_values['user_id'],
+            'user_id' => empty($_values['user_id']) ? 0 : $_values['user_id'],
             'user_name' => $_values['user_name'],
             'period_name' => $_values['period_name'],
             'limit_nbr' => $_limit->limit_nbr,

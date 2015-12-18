@@ -132,12 +132,12 @@
 
             $('#type_select').val('{{$limit['type']}}');
 
-            if ('{{$limit['type']}}' === 'instance') {
+            if ('{{$limit['type']}}' === '{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}') {
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
                 $('#instance_id').val('{{$limit['instance_id']}}');
             }
 
-            if ('{{$limit['type']}}' === 'user') {
+            if ('{{$limit['type']}}' === '{{ \DreamFactory\Library\Utility\Enums\Limits::USER }}') {
                 loadInstances('{{$limit['cluster_id']}}', '{{$limit['instance_id']}}');
                 $('#instance_id').val('{{$limit['instance_id']}}');
                 loadUsers('{{$limit['instance_id']}}', '{{$limit['user_id']}}');
