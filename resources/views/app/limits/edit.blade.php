@@ -18,22 +18,30 @@
                     <div class="form-group">
                         <label for="label_text">Name</label>
                         <input type="text" class="form-control" id="label_text" name="label_text"
-                        @if (Input::old('label_text')) value="{{ Input::old('label_text') }}" @else value="{{$limit['label_text'] or '' }}" @endif
+                               @if (Input::old('label_text')) value="{{ Input::old('label_text') }}"
+                               @else value="{{$limit['label_text'] or '' }}" @endif
                         >
                     </div>
                     <div class="form-group">
                         <label for="type_select">Type</label>
                         <select class="form-control" id="type_select" name="type_select">
-                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::CLUSTER  ? 'selected="selected"' : null }}>Cluster</option>
-                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::INSTANCE  ? 'selected="selected"' : null }}>Instance</option>
-                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::USER }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::USER  ? 'selected="selected"' : null }}>User</option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::CLUSTER  ? 'selected="selected"' : null }}>
+                                Cluster
+                            </option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::INSTANCE  ? 'selected="selected"' : null }}>
+                                Instance
+                            </option>
+                            <option value={{ \DreamFactory\Library\Utility\Enums\Limits::USER }} {{ Input::old('type_select') ==  \DreamFactory\Library\Utility\Enums\Limits::USER  ? 'selected="selected"' : null }}>
+                                User
+                            </option>
                         </select>
                     </div>
                     <div class="form-group" id="select_cluster">
                         <label for="cluster_id">Cluster</label>
                         <select class="form-control" id="cluster_id" name="cluster_id">
                             @foreach ($clusters as $_cluster)
-                                <option value="{{ $_cluster['id'] }}" {{ Input::old('cluster_id') == $limit['cluster_id'] ? 'selected="selected"' : null }} @if ($_cluster['id'] == $limit['cluster_id']) selected @endif>{{ $_cluster['cluster_id_text'] }}</option>
+                                <option value="{{ $_cluster['id'] }}"
+                                        {{ Input::old('cluster_id') == $limit['cluster_id'] ? 'selected="selected"' : null }} @if ($_cluster['id'] == $limit['cluster_id']) selected @endif>{{ $_cluster['cluster_id_text'] }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -60,11 +68,13 @@
                         </div>
                         <div class="form-group">
                             <label for="limit_nbr">Limit</label>
-                            <input type="text" class="form-control" id="limit_nbr" name="limit_nbr" value="{{ $limit['limit_nbr'] }}">
+                            <input type="text" class="form-control" id="limit_nbr" name="limit_nbr"
+                                   value="{{ $limit['limit_nbr'] }}">
                         </div>
                         <div>
                             <label for="active_ind">Active</label>&nbsp;&nbsp;
-                            <input type="checkbox" id="active_ind" name="active_ind" @if ($limit['active_ind'] == '1') checked @endif>
+                            <input type="checkbox" id="active_ind" name="active_ind"
+                                   @if ($limit['active_ind'] == '1') checked @endif>
                         </div>
                     </div>
                 </div>
@@ -98,12 +108,12 @@
 
                 generateForm(_type);
 
-                if ( _type == {{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}) {
+                if (_type == {{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}) {
                     var cluster_id = $('#cluster_id').val();
                     loadInstances(cluster_id, null);
                 }
 
-                if ( _type == {{ \DreamFactory\Library\Utility\Enums\Limits::USER }}) {
+                if (_type == {{ \DreamFactory\Library\Utility\Enums\Limits::USER }}) {
                     var cluster_id = $('#cluster_id').val();
                     loadInstances(cluster_id, null);
                     var instance_id = $('#instance_id').val();
@@ -127,7 +137,7 @@
         });
 
 
-        $( document ).ready(function() {
+        $(document).ready(function () {
             generateForm('{{$limit['type']}}');
 
             $('#type_select').val('{{$limit['type']}}');
@@ -153,7 +163,7 @@
             types[{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}] = 'instance';
             types[{{ \DreamFactory\Library\Utility\Enums\Limits::USER }}] = 'user';
 
-            $('#type_select > option').each(function() {
+            $('#type_select > option').each(function () {
                 if (set_show === true) {
                     $('#select_' + types[this.value]).show();
                     if (type === this.value) {
@@ -173,6 +183,7 @@
             var $_spinner = $('.label-spinner');
             var $_select = $('#instance_id');
             var _clusterId = clusterId;
+            var _instanceId = instanceId;
 
             if (!_clusterId || 0 == _clusterId) {
                 $_select.empty();
@@ -186,15 +197,19 @@
             $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                 $_select.empty();
                 $_select.append('<option value="">Select Instance</option>');
-                $_select.append('<option value="0">Each Instance</option>');
+                var selected = '';
+                if (instanceId == 0) {
+                    selected = ' selected';
+                }
+                $_select.append('<option value="0"' + selected + '>Each Instance</option>');
 
                 if ($.isArray(data)) {
                     $.each(data, function (index, item) {
                         var selected = '';
-                        if (instanceId == item.id){
-                            selected = 'selected';
+                        if (instanceId == item.id) {
+                            selected = ' selected';
                         }
-                        $_select.append('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
+                        $_select.append('<option value="' + item.id + '"' + selected + '>' + item.name + '</option>');
                     });
 
                     $_select.removeAttr('disabled').focus();
@@ -227,15 +242,19 @@
 
                 $_select.empty();
                 $_select.append('<option value="">Select User</option>');
-                $_select.append('<option value="0">Each User</option>');
+                var selected = '';
+                if (userId == 0) {
+                    selected = ' selected';
+                }
+                $_select.append('<option value="0"' + selected + '>Each User</option>');
 
                 if ($.isArray(data)) {
                     $.each(data, function (index, item) {
                         var selected = '';
-                        if (userId == item.id){
-                            selected = 'selected';
+                        if (userId == item.id) {
+                            selected = ' selected';
                         }
-                        $_select.append('<option value="' + item.id + '" ' + selected + '>' + item.name + '</option>');
+                        $_select.append('<option value="' + item.id + '"' + selected + '>' + item.name + '</option>');
                     });
 
                     $_select.removeAttr('disabled').focus();
@@ -248,7 +267,7 @@
             });
         }
 
-        function closeCreate(){
+        function closeCreate() {
             window.location = '/{{$prefix}}/limits';
         }
 
