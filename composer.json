@@ -95,7 +95,7 @@
 		"barryvdh/laravel-cors":                     "0.6.x@stable"
 	},
 	"require-dev":       {
-		"phpunit/phpunit": "@stable",
+		"phpunit/phpunit": "~4.0",
 		"doctrine/dbal":   "~2.3",
 		"phpspec/phpspec": "~2.1",
 		"way/generators":  "~3.0"

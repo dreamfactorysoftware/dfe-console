@@ -40,11 +40,11 @@ class Server extends ConsoleCommand
                 [
                     'operation',
                     InputArgument::REQUIRED,
-                    'The operation to perform: create, update, or delete',
+                    'The operation to perform: show, create, update, or delete',
                 ],
                 [
                     'server-id',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The id of the server upon which to perform operation',
                 ],
             ]);
@@ -85,10 +85,50 @@ class Server extends ConsoleCommand
             case 'create':
             case 'update':
             case 'delete':
-                return $this->{'_' . $_command . 'Server'}($this->argument('server-id'));
+                if (empty($_serverId = $this->argument('server-id'))) {
+                    throw new \InvalidArgumentException('No "server-id" provided.');
+                }
+
+                return $this->{'_' . $_command . 'Server'}($_serverId);
+
+            case 'show':
+                return $this->showServers();
         }
 
         throw new \InvalidArgumentException('The "' . $_command . '" operation is not valid');
+    }
+
+    /**
+     * @return int
+     */
+    protected function showServers()
+    {
+        $_servers = Models\Server::orderBy('server_id_text')->get();
+
+        if (empty($_servers)) {
+            $this->info('** No servers found **');
+
+            return 0;
+        }
+
+        $this->writeln('Registered servers (* denotes cluster assignment)');
+        $this->writeln('-------------------------------------------------');
+
+        foreach ($_servers as $_server) {
+            $_used = (0 != Models\ClusterServer::where('server_id', $_server->id)->count());
+
+            $this->writeln(($_used ? '*' : ' ') .
+                '<info>' .
+                $_server->server_id_text .
+                "</info>\t" .
+                '<comment>' .
+                $_server->serverType->type_name_text .
+                '@' .
+                $_server->host_text .
+                '</comment>');
+        }
+
+        return 0;
     }
 
     /**

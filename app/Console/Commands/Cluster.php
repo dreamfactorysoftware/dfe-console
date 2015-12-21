@@ -38,18 +38,46 @@ class Cluster extends ConsoleCommand
     {
         parent::fire();
 
+        $_clusterId = $this->argument('cluster-id');
+
         switch ($_command = trim(strtolower($this->argument('operation')))) {
             case 'create':
             case 'update':
             case 'delete':
-                return $this->{'_' . $_command . 'Cluster'}($this->argument('cluster-id'));
+                return $this->{'_' . $_command . 'Cluster'}($_clusterId);
 
             case 'add':
             case 'remove':
-                return $this->{'_' . $_command . 'Server'}($this->argument('cluster-id'));
+                return $this->{'_' . $_command . 'Server'}($_clusterId, $this->option('server-id'));
+
+            case 'show':
+                return $this->showServers($_clusterId);
         }
 
         throw new \InvalidArgumentException('The command "' . $_command . '" is invalid');
+    }
+
+    /**
+     * @param string|int $clusterId
+     */
+    protected function showServers($clusterId)
+    {
+        try {
+            $_cluster = $this->findCluster($clusterId);
+
+            $this->writeln('Assigned to cluster-id "' . $clusterId . '":');
+            $this->writeln('-------------------------------------------------');
+
+            foreach ($_cluster->assignedServers() as $_server) {
+                $this->writeln('<info>' .
+                    $_server->server->server_id_text .
+                    "</info>\t<comment>" .
+                    $_server->server->serverType->type_name_text .
+                    '</comment>');
+            }
+        } catch (ModelNotFoundException $_ex) {
+            throw new \InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
+        }
     }
 
     /** @inheritdoc */
@@ -60,12 +88,13 @@ class Cluster extends ConsoleCommand
                 [
                     'operation',
                     InputArgument::REQUIRED,
-                    'The operation to perform: create, update, delete, add (server to cluster), or remove (server from cluster)',
+                    'The operation to perform: show, create, update, delete, add (server to cluster), or remove (server from cluster)',
                 ],
                 [
                     'cluster-id',
-                    InputArgument::REQUIRED,
+                    InputArgument::OPTIONAL,
                     'The id of the cluster upon which to perform operation',
+                    config('dfe.cluster-id'),
                 ],
             ]);
     }
@@ -178,56 +207,46 @@ class Cluster extends ConsoleCommand
      * Adds "server-id" from cluster
      *
      * @param string|int $clusterId
+     * @param string|int $serverId
      *
      * @return bool
      */
-    protected function _addServer($clusterId)
+    protected function _addServer($clusterId, $serverId)
     {
         try {
-            $_cluster = $this->_findCluster($clusterId);
-        } catch (ModelNotFoundException $_ex) {
-            $this->writeln('cluster-id "' . $clusterId . '" is not valid.', 'error');
-
-            return false;
-        }
-
-        try {
-            $_server = $this->_findServer($this->option('server-id'));
+            $_server = $this->findServer($serverId);
         } catch (ModelNotFoundException $_ex) {
             $this->writeln('"server-id" is a required option for this operation.');
 
             return false;
         }
 
-        return $_server->addToCluster($_cluster->id);
+        $this->writeln('Adding server-id "' . $_server->server_id_text . '" to cluster-id "' . $clusterId . '"');
+
+        return $_server->addToCluster($clusterId);
     }
 
     /**
      * Removes "server-id" from cluster
      *
      * @param string|int $clusterId
+     * @param string|int $serverId
      *
      * @return bool
      */
-    protected function _removeServer($clusterId)
+    protected function _removeServer($clusterId, $serverId)
     {
         try {
-            $_cluster = $this->_findCluster($clusterId);
-        } catch (ModelNotFoundException $_ex) {
-            $this->writeln('cluster-id "' . $clusterId . '" is not valid.', 'error');
-
-            return false;
-        }
-
-        try {
-            $_server = $this->_findServer($this->option('server-id'));
+            $_server = $this->findServer($serverId);
         } catch (ModelNotFoundException $_ex) {
             $this->writeln('"server-id" is a required option for this operation.');
 
             return false;
         }
 
-        return $_server->removeFromCluster($_cluster);
+        $this->writeln('Removing server-id "' . $_server->server_id_text . '" from cluster-id "' . $clusterId . '"');
+
+        return $_server->removeFromCluster($clusterId);
     }
 
     /**

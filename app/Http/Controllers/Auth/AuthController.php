@@ -27,7 +27,7 @@ class AuthController extends CommonAuthController
                 'first_name_text' => 'required|max:64',
                 'last_name_text'  => 'required|max:64',
                 'nickname_text'   => 'required|max:64',
-                'email_addr_text' => 'required|email|max:320|unique:service_user_t',
+                'email_addr_text' => 'required|email|max:320|unique:service_user_t,email_addr_text',
                 'password_text'   => 'required|confirmed|min:6',
             ]);
     }
@@ -53,6 +53,8 @@ class AuthController extends CommonAuthController
         if (1 == ServiceUser::count()) {
             $this->postRegistration($_serviceUser);
         }
+
+        return $_serviceUser;
     }
 
     /**
