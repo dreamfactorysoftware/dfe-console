@@ -6,8 +6,8 @@ return [
     //******************************************************************************
     //* Information displayed when running commands
     //******************************************************************************
-    'display-name'      => 'DreamFactory Enterprise(tm) Console',
-    'display-version'   => 'v1.0.10',
+    'display-name'      => 'DreamFactory Enterprise(tm) Console Utility',
+    'display-version'   => env('DFE_VERSION'),
     'display-copyright' => 'Copyright (c) 2012-' . date('Y') . ', All Rights Reserved',
     //******************************************************************************
     //* Individual command settings
