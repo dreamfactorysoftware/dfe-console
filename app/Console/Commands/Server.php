@@ -77,9 +77,9 @@ class Server extends ConsoleCommand
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         switch ($_command = trim(strtolower($this->argument('operation')))) {
             case 'create':

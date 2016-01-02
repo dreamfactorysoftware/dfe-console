@@ -27,9 +27,9 @@ class Token extends ConsoleCommand implements SelfHandling
     //* Methods
     //******************************************************************************
 
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         try {
             $_instance = $this->_findInstance($this->argument('instance-id'));

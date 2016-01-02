@@ -36,9 +36,9 @@ class Deprovision extends ConsoleCommand
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         return \Queue::push(new DeprovisionJob($this->argument('instance-id'),
             ['cluster-id' => $this->option('cluster-id'),]));

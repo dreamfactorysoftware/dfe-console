@@ -35,9 +35,9 @@ class Register extends ConsoleCommand
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         $_command = new RegisterJob($this->argument('owner-id'), strtolower($this->argument('owner-type')));
 

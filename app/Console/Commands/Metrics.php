@@ -75,8 +75,10 @@ class Metrics extends ConsoleCommand
      *
      * @return int
      */
-    public function fire()
+    public function handle()
     {
+        parent::handle();
+
         $this->setOutputPrefix(false);
 
         /** @type UsageService $_service */

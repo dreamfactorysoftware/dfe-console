@@ -31,9 +31,9 @@ class Import extends ConsoleCommand implements SelfHandling
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
             $this->argument('snapshot'),

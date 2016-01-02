@@ -34,9 +34,9 @@ class Manifest extends ConsoleCommand
     //******************************************************************************
 
     /** @inheritdoc */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         if ($this->option('create') && $this->option('show')) {
             throw new \InvalidArgumentException('The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.');

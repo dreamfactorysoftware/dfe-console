@@ -42,9 +42,9 @@ class Blueprint extends ConsoleCommand implements SelfHandling
      *
      * @return bool
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         try {
             $_service = Facades\Blueprint::service();

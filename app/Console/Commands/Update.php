@@ -20,9 +20,9 @@ class Update extends ConsoleCommand implements SelfHandling
     //******************************************************************************
 
     /** @inheritdoc */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         if (empty($_git = $this->shell('which git'))) {
             $this->error('"git" does not appear to be installed on this system. It is required for this command');

@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models;
 use DreamFactory\Library\Utility\DataShaper;
 use DreamFactory\Library\Utility\Json;
@@ -29,7 +30,7 @@ class Info extends ConsoleCommand
     /**
      * @type array The supported entities
      */
-    protected $entities = ['cluster', 'instance', 'metrics', 'mount', 'server',];
+    protected $entities = ['cluster', 'instance', 'metrics', 'mount', 'server', 'app-key',];
 
     //******************************************************************************
     //* Methods
@@ -45,29 +46,16 @@ class Info extends ConsoleCommand
         parent::handle();
 
         $_format = $this->validateFormat();
-        $_all = $this->option('all');
-        $_entityType = strtolower(trim($this->argument('entity-type')));
-
-        if (empty($_entityId = $this->argument('entity-id')) && 'metrics' != $_entityType && !$_all) {
-            throw new \InvalidArgumentException('The <comment>entity-id</comment> is required.');
-        }
-
-        if (!in_array($_entityType, $this->entities)) {
-            throw new \InvalidArgumentException('The entity-type "' . $_entityType . '" is invalid.');
-        }
-
-        if (!method_exists($this, 'find' . $_entityType)) {
-            throw new \RuntimeException('The entity-type "' . $_entityType . '" is supported but has no associated handler.');
-        }
+        list($_entityType, $_entityId, $_all, $_studlyType) = $this->validateEntityType();
 
         try {
             if ($_all) {
-                $_class = '\\DreamFactory\\Enterprise\\Database\\Models\\' . ucwords($_entityType);
+                $_class = '\\DreamFactory\\Enterprise\\Database\\Models\\' . $_studlyType;
                 /** @type Models\EnterpriseModel $_model */
                 $_model = new $_class();
                 $_info = $_model->all();
             } else {
-                $_info = call_user_func([$this, 'find' . $_entityType], $_entityId);
+                $_info = call_user_func([$this, 'find' . $_studlyType], $_entityId, $this->option('owner-type'));
             }
         } catch (ModelNotFoundException $_ex) {
             //  No results...
@@ -251,6 +239,7 @@ class Info extends ConsoleCommand
                     'For JSON formatted output, slashes will be escaped (default is that they are <comment>not</comment>)',
                     null,
                 ],
+                ['owner-type', 't', InputOption::VALUE_REQUIRED, 'The "owner-type" of the entity (required by "app-key")', OwnerTypes::USER,],
             ]);
     }
 
@@ -274,5 +263,32 @@ class Info extends ConsoleCommand
         }
 
         return $_format;
+    }
+
+    /**
+     * Validate entity type and ID. Returns array of entity identifying info
+     *
+     * @return array
+     */
+    protected function validateEntityType()
+    {
+        $_entityType = strtolower(trim($this->argument('entity-type')));
+        $_all = $this->option('all');
+
+        if (empty($_entityId = $this->argument('entity-id')) && 'metrics' != $_entityType && !$_all) {
+            throw new \InvalidArgumentException('The <comment>entity-id</comment> is required.');
+        }
+
+        if (!in_array($_entityType, $this->entities)) {
+            throw new \InvalidArgumentException('The entity-type "' . $_entityType . '" is invalid.');
+        }
+
+        $_studlyType = studly_case($_entityType);
+
+        if (!method_exists($this, 'find' . $_studlyType)) {
+            throw new \RuntimeException('The entity-type "' . $_entityType . '" is supported but has no associated handler.');
+        }
+
+        return [$_entityType, $_entityId, $_all, $_studlyType];
     }
 }
