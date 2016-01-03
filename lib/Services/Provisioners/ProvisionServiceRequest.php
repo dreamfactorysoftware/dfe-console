@@ -31,6 +31,7 @@ class ProvisionServiceRequest extends BaseRequest
             'storage'     => $storage,
             'deprovision' => !!$deprovision,
             'force'       => !!$force,
+            'success'     => null,
         ],
             $options);
 

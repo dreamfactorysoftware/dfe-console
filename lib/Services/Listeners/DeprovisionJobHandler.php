@@ -25,11 +25,11 @@ class DeprovisionJobHandler extends BaseListener
     public function handle(DeprovisionJob $command)
     {
         $_options = $command->getOptions();
-        $this->debug('>>> deprovision "' . $command->getInstanceId() . '" request received');
+        $this->debug('>>> deprovision "' . ($_instanceId = $command->getInstanceId()) . '" request received');
 
         try {
             //  Find the instance
-            $_instance = $this->_findInstance($command->getInstanceId());
+            $_instance = $this->findInstance($_instanceId);
         } catch (\Exception $_ex) {
             $this->error('deprovision request failure: instance not found.');
 
@@ -43,15 +43,14 @@ class DeprovisionJobHandler extends BaseListener
                 throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            $_response =
-                $_provisioner->deprovision(new ProvisionServiceRequest($_instance, null, true, false, $_options));
+            $_response = $_provisioner->deprovision(new ProvisionServiceRequest($_instance, null, true, false, $_options));
 
             if (!$_response) {
                 throw new ProvisioningException('deprovision failure');
             }
 
             $this->info('deprovision request complete in ' . number_format($_response->getElapsedTime(), 4) . 's');
-            $this->debug('<<< deprovision "' . $command->getInstanceId() . '" request SUCCESS');
+            $this->debug('[Deprovision] Instance "' . $_instance->instance_id_text . '" provisioned successfully.');
 
             $command->setResult($_response);
 
@@ -60,7 +59,7 @@ class DeprovisionJobHandler extends BaseListener
             $this->error('deprovision "' . $command->getInstanceId() . '" request exception: ' . $_ex->getMessage());
         }
 
-        $this->debug('<<< deprovision "' . $command->getInstanceId() . '" request FAILURE');
+        $this->debug('[Deprovision] Instance "' . $command->getInstanceId() . '" deprovision failed.');
 
         return false;
     }

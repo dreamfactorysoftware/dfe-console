@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="dfe-console.local (cli dfe:deprovision)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:deprovision gha">
+    <method />
+  </configuration>
+</component>
