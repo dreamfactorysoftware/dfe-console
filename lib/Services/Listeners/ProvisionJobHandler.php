@@ -41,7 +41,7 @@ class ProvisionJobHandler
             $_guestLocation = $_options['guest-location'];
         }
 
-        \Log::info('[Provision] Handler called', ['guest' => $_guestLocation, 'options' => $_options,]);
+        \Log::info('[Provision] Handler called', ['guest' => $_guestLocation, 'instance-id' => $command->getInstanceId(), 'options' => $_options]);
 
         try {
             //  Create the instance record

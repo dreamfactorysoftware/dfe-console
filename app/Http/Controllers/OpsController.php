@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers;
 
-use DreamFactory\Enterprise\Services\Jobs\PortabilityJob;
 use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
@@ -23,7 +22,6 @@ use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Enterprise\Services\UsageService;
 use DreamFactory\Enterprise\Storage\Facades\InstanceStorage;
-use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -237,13 +235,19 @@ class OpsController extends BaseController implements IsVersioned
     public function postProvision(Request $request)
     {
         try {
-            $_payload = $request->input();
-            $_job = new ProvisionJob($request->input('instance-id'), $_payload);
+            $_instanceId = $request->input('instance-id');
+            $_ownerType = OwnerTypes::USER;
+            $_ownerId = $request->input('owner-id');
+            $_guestLocation = $request->input('guest-location');
 
-            $this->debug('provision "' .
-                $request->input('instance-id') .
-                '" request received with payload: ' .
-                Json::encode($_payload));
+            $this->info('[ops-api] provision request', $request->input());
+
+            $_job = new ProvisionJob($_instanceId, [
+                'guest-location' => $_guestLocation,
+                'owner-id'       => $_ownerId,
+                'owner-type'     => $_ownerType ?: OwnerTypes::USER,
+                'cluster-id'     => $request->input('cluster-id', config('dfe.cluster-id')),
+            ]);
 
             \Queue::push($_job);
 
@@ -343,9 +347,8 @@ class OpsController extends BaseController implements IsVersioned
         logger('export input=[' . json_encode($request->input()));
 
         try {
-            $_request =
-                PortableServiceRequest::makeExport($request->input('instance-id'),
-                    $request->input('destination', null));
+            $_request = PortableServiceRequest::makeExport($request->input('instance-id'),
+                $request->input('destination', null));
 
             $_job = new ExportJob($_request);
             \Queue::push($_job);
@@ -411,12 +414,7 @@ class OpsController extends BaseController implements IsVersioned
             $_payload = $request->input();
             unset($_payload['password']);
 
-            $this->error('failed request for partner id "' .
-                $_pid .
-                '": ' .
-                $_ex->getCode() .
-                ' - ' .
-                $_ex->getMessage(),
+            $this->error('failed request for partner id "' . $_pid . '": ' . $_ex->getCode() . ' - ' . $_ex->getMessage(),
                 ['channel' => 'ops.partner', 'payload' => $_payload]);
 
             return $this->failure(Response::HTTP_BAD_REQUEST, $_ex->getMessage());

@@ -31,7 +31,7 @@ class DeprovisionJobHandler extends BaseListener
             //  Find the instance
             $_instance = $this->findInstance($_instanceId);
         } catch (\Exception $_ex) {
-            $this->error('deprovision request failure: instance not found.');
+            $this->error('[Deprovision] request failure: instance not found.');
 
             return false;
         }
@@ -49,14 +49,14 @@ class DeprovisionJobHandler extends BaseListener
                 throw new ProvisioningException('deprovision failure');
             }
 
-            $this->info('deprovision request complete in ' . number_format($_response->getElapsedTime(), 4) . 's');
-            $this->debug('[Deprovision] Instance "' . $_instance->instance_id_text . '" provisioned successfully.');
+            $this->debug('[Deprovision] request complete in ' . number_format($_response->getElapsedTime(), 4) . 's');
+            $this->info('[Deprovision] Instance "' . $_instance->instance_id_text . '" deprovisioned successfully.');
 
             $command->setResult($_response);
 
             return $_response;
         } catch (\Exception $_ex) {
-            $this->error('deprovision "' . $command->getInstanceId() . '" request exception: ' . $_ex->getMessage());
+            $this->error('[Deprovision] deprovision "' . $command->getInstanceId() . '" request exception: ' . $_ex->getMessage());
         }
 
         $this->debug('[Deprovision] Instance "' . $command->getInstanceId() . '" deprovision failed.');
