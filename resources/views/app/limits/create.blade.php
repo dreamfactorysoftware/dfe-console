@@ -141,12 +141,14 @@
         });
 
 
-        function updateInstances(cluster_id, instance_id = '') {
+        function updateInstances(cluster_id, instance_id) {
             var $_form = $('.policy-form');
             var $_spinner = $('.label-spinner');
 
             var $_select = $('#instance_id');
             var _clusterId = cluster_id;
+
+            instance_id = instance_id || '';
 
             if ($('#type_select').val().toString() == '{{ \DreamFactory\Library\Utility\Enums\Limits::CLUSTER }}') {
                 return false;
@@ -189,16 +191,16 @@
         }
 
 
-        function updateUser(instance_id, user_id = '') {
+        function updateUser(instance_id, user_id) {
             var $_form = $('.policy-form');
             var $_spinner = $('.label-spinner');
             var _instanceId = instance_id;
 
+            user_id = user_id || '';
+
             if ($('#type_select').val().toString() == '{{ \DreamFactory\Library\Utility\Enums\Limits::INSTANCE }}') {
                 return false;
             }
-
-            $_spinner.addClass('fa-spin').removeClass('hidden');
 
             if (!_instanceId || 0 == _instanceId) {
                 $('#user_id').empty();
@@ -206,6 +208,8 @@
                 $('#user_id').append('<option value="0">Each User</option>');
                 return false;
             }
+
+            $_spinner.addClass('fa-spin').removeClass('hidden');
 
             $.get('/v1/instance/' + encodeURIComponent(_instanceId) + '/users').done(function (data) {
                 var $_select = $('#user_id');
@@ -233,8 +237,6 @@
             }).always(function () {
                 $_spinner.removeClass('fa-spin').addClass('hidden');
             });
-
-            $_spinner.removeClass('fa-spin').addClass('hidden');
         }
 
         function generateForm(type) {
@@ -262,7 +264,6 @@
 
     </script>
 @stop
-
 
 
 
