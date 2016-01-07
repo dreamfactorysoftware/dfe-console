@@ -225,7 +225,7 @@ function setTableInfo(){
 }
 
 function resetCounter(id, name) {
-    if(confirm('Reset all limit counters for "' + name + '" ?')){
+    if(confirm('Reset all limit counters for instance "' + name + '" ?')){
         $('#reset_counter_' + id).submit();
         return true;
     }

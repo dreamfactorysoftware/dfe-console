@@ -616,17 +616,24 @@ class LimitController extends ViewController
                 $id_array = explode(',', $selected);
             } elseif ($ids == 'resetcounter') {
                 $limit = Limit::where('id', '=', \Input::get('limit_id'))->first();
-                $limit_key_text = $limit->limit_key_text;
-                $instance_id = $limit->instance_id;
-                $limit_name = $limit->label_text;
 
-                $this->resetLimitCounter($instance_id, $limit_key_text);
+                $this->resetLimitCounter($limit->instance_id, $limit->limit_key_text);
 
-                Session::flash('flash_message', 'The counter for the limit ' . $limit_name . ' has been reset');
+                Session::flash('flash_message', 'The counter for the limit ' . $limit->limit_name . ' has been reset');
                 Session::flash('flash_type', 'alert-success');
 
                 return \Redirect::to('/' . $this->getUiPrefix() . '/limits');
 
+            } elseif($ids == 'resetallcounters') {
+                $instance_id = \Input::get('instance_id');
+                $limit = Limit::where('id', '=', $instance_id)->first();
+
+                $this->resetAllLimitCounters($instance_id);
+
+                Session::flash('flash_message', 'All limit counters for the instance has been reset');
+                Session::flash('flash_type', 'alert-success');
+
+                return \Redirect::to('/' . $this->getUiPrefix() . '/instances');
             } else {
                 $id_array = explode(',', $ids);
             }
