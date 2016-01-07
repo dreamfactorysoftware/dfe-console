@@ -79,7 +79,7 @@
                                     </form>
                                     @if($value['enable_clear'])
                                     <form method="POST" action="/{{$prefix}}/limits/resetcounter" id="reset_counter_{{ $value['id'] }}" style="display: inline">
-                                        <input type="hidden" id="limit_id" value="{{ $value['id'] }}">
+                                        <input type="hidden" name="limit_id" id="limit_id" value="{{ $value['id'] }}">
                                         <input name="_method" type="hidden" value="DELETE">
                                         <input name="_token" type="hidden" value="{{ csrf_token() }}">
                                         <button type="button" class="btn btn-default btn-xs fa fa-fw fa-bolt" onclick="resetCounter('{{ $value['id'] }}', '{{ $value['label_text'] }}')" value="reset" style="width: 25px; display: inline; vertical-align: middle" data-toggle="tooltip" data-placement="right" title="Reset counter"></button>

@@ -612,14 +612,13 @@ class LimitController extends ViewController
             $limit_names = [];
 
             if ($ids == 'multi') {
-                $params = \Input::all();
-                $selected = $params['_selected'];
+                $selected = \Input::get('_selected');
                 $id_array = explode(',', $selected);
             } elseif ($ids == 'resetcounter') {
-                $limit = Limit::where('id', '=', \Input::get('limit_id'));
-                $limit_key_text = $limit->get(['limit_key_text']);
-                $instance_id = $limit->get(['instance_id']);
-                $limit_name = $limit->get(['label_text']);
+                $limit = Limit::where('id', '=', \Input::get('limit_id'))->first();
+                $limit_key_text = $limit->limit_key_text;
+                $instance_id = $limit->instance_id;
+                $limit_name = $limit->label_text;
 
                 $this->resetLimitCounter($instance_id, $limit_key_text);
 
@@ -633,13 +632,10 @@ class LimitController extends ViewController
             }
 
             foreach ($id_array as $id) {
-                $limit = Limit::where('id', '=', $id);
-                $limit_name = $limit->get(['label_text']);
-                $instance_id = $limit->get(['instance_id']);
-                $cluster_id = $limit->get(['cluster_id']);
-                array_push($limit_names, '"' . $limit_name[0]->label_text . '"');
+                $limit = Limit::where('id', '=', $id)->first();
+                array_push($limit_names, '"' . $limit->label_text . '"');
                 $limit->delete();
-                $this->refreshInstanceConfig($cluster_id, $instance_id);
+                $this->refreshInstanceConfig($limit->cluster_id, $limit->instance_id);
             }
 
             if (count($id_array) > 1) {
