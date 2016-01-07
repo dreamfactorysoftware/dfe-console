@@ -77,6 +77,15 @@
                                         <input type="checkbox" value="{{ $value['id'] }}" id="server_checkbox_{{ $value['id'] }}" name="{{ $value['label_text'] }}">&nbsp;&nbsp;
                                         <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeLimit('{{ $value['id'] }}', '{{ $value['label_text'] }}')" value="delete" style="width: 25px" ></button>
                                     </form>
+                                    @if($value['enable_clear'])
+                                    <form method="POST" action="/{{$prefix}}/limits/resetcounter" id="reset_counter_{{ $value['id'] }}">
+                                        <input type="hidden" id="limit_id" value="{{ $value['id'] }}">
+                                        <input name="_method" type="hidden" value="DELETE">
+                                        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-bolt" value="reset" style="width: 25px" data-toggle="tooltip" data-placement="right" title="Reset counter"></button>
+                                    </form>
+                                    @endif
+
                                 </td>
                                 <td>{{ $value['label_text'] }}</td>
                                 <td>{{ $value['limit_type_text'] }}</td>

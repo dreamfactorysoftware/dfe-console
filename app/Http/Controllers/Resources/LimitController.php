@@ -205,6 +205,8 @@ class LimitController extends ViewController
                 throw new DatabaseException('Unable to update limit "' . $id . '"');
             }
 
+            $this->refreshInstanceConfig($limit['cluster_id'], $limit['instance_id']);
+
             \Session::flash('flash_message', 'The limit "' . $_input['label_text'] . '" was updated successfully!');
             \Session::flash('flash_type', 'alert-success');
 
@@ -273,6 +275,9 @@ class LimitController extends ViewController
             // The period is always the last element
             $_values['period_name'] = ucwords(str_replace('-', ' ', array_pop($_limit_key_array)));
 
+            // Can this limit be cleared?
+            $enableClear = true;
+
            // If there are any elements left in the array, it's the instance name/each_instance or user id/each_user
 
             if (!empty($_limit_key_array)) {
@@ -281,6 +286,9 @@ class LimitController extends ViewController
                     $_values['instance_id_text'] = array_shift($_limit_key_array);
                 } else {
                     $_values['instance_id_text'] = ucwords(str_replace('_', ' ', array_shift($_limit_key_array)));
+
+                    // This is an each_instance rule, can not be cleared individually
+                    $enableClear = false;
                 }
             }
 
@@ -313,6 +321,9 @@ class LimitController extends ViewController
                         // Invalid instance, skip it
                         continue;
                     }
+                } else {
+                    // This is an each_user instance, can not be cleared individually
+                    $enableClear = false;
                 }
             }
 
@@ -327,6 +338,7 @@ class LimitController extends ViewController
                 'label_text' => $_limit->label_text,
                 'active_ind' => $_limit->active_ind,
                 'limit_type_text' => $_values['limit_type_text'],
+                'enable_clear' => $enableClear,
             ];
         }
 
@@ -567,6 +579,7 @@ class LimitController extends ViewController
             }
 
             Limit::create($limit);
+            $this->refreshInstanceConfig($limit['cluster_id'], $limit['instance_id']);
 
             return \Redirect::to('/' . $this->getUiPrefix() . '/limits')
                 ->with('flash_message', 'The limit "' . $_input['label_text'] . '" was created successfully!')
@@ -609,8 +622,11 @@ class LimitController extends ViewController
             foreach ($id_array as $id) {
                 $limit = Limit::where('id', '=', $id);
                 $limit_name = $limit->get(['label_text']);
+                $instance_id = $limit->get(['instance_id']);
+                $cluster_id = $limit->get(['cluster_id']);
                 array_push($limit_names, '"' . $limit_name[0]->label_text . '"');
                 $limit->delete();
+                $this->refreshInstanceConfig($cluster_id, $instance_id);
             }
 
             if (count($id_array) > 1) {
@@ -696,6 +712,46 @@ class LimitController extends ViewController
         }
 
         return false;
+    }
+
+    protected function refreshInstanceConfig($clusterId, $instanceId)
+    {
+        $instances = $this->getInstancesForCluster($clusterId);
+
+        if (!is_null($instanceId)) {
+            $instances = ['id' => $instanceId];
+        }
+
+        foreach($instances as $instanceId) {
+            $this->_refreshInstanceConfig($instanceId);
+        }
+
+        return true;
+    }
+    private function _refreshInstanceConfig($instanceId)
+    {
+        if (!empty($instanceId)) {
+            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
+            return $this->formatResponse($_instance->call('/instance/refresh', [], [], Request::METHOD_PUT, false));
+        }
+
+        return false;
+    }
+
+    public function getInstancesForCluster($clusterId)
+    {
+        $_cluster = $this->_findCluster($clusterId);
+        $_rows = Instance::byClusterId($_cluster->id)->get(['id']);
+
+        $_response = [];
+
+        /** @type Instance $_instance */
+        foreach ($_rows as $_instance) {
+            $_response[] = ['id' => $_instance->id];
+        }
+
+        return $_response;
     }
 
     /**
