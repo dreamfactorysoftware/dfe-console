@@ -86,10 +86,10 @@
                                                     onclick="resetCounter('{{ $_instance->instance_id }}', '{{ $_instance->instance_id_text }}')"
                                                     value="reset"
                                                     style="width: 25px; display: inline; vertical-align: middle"
-                                                    data-toggle="tooltip" data-placement="right" title="Reset counter">
-                                                Reset All Limit Counters
+                                                    data-toggle="tooltip" data-placement="right" title="Reset all limit counters for this instnace">
                                             </button>
                                         </form>
+
                                     </td>
                                 </tr>
 
