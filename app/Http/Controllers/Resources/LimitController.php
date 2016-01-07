@@ -615,6 +615,19 @@ class LimitController extends ViewController
                 $params = \Input::all();
                 $selected = $params['_selected'];
                 $id_array = explode(',', $selected);
+            } elseif ($ids == 'resetcounter') {
+                $limit = Limit::where('id', '=', \Input::get('limit_id'));
+                $limit_key_text = $limit->get(['limit_key_text']);
+                $instance_id = $limit->get(['instance_id']);
+                $limit_name = $limit->get(['label_text']);
+
+                $this->resetLimitCounter($instance_id, $limit_key_text);
+
+                Session::flash('flash_message', 'The counter for the limit ' . $limit_name . ' has been reset');
+                Session::flash('flash_type', 'alert-success');
+
+                return \Redirect::to('/' . $this->getUiPrefix() . '/limits');
+
             } else {
                 $id_array = explode(',', $ids);
             }
@@ -647,11 +660,7 @@ class LimitController extends ViewController
             Session::flash('flash_message', $result_text);
             Session::flash('flash_type', 'alert-success');
 
-            $_redirect = '/';
-            $_redirect .= $this->getUiPrefix();
-            $_redirect .= '/limits';
-
-            return \Redirect::to($_redirect);
+            return \Redirect::to('/' . $this->getUiPrefix() . '/limits');
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
@@ -734,6 +743,28 @@ class LimitController extends ViewController
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
 
             return $this->formatResponse($_instance->call('/instance/refresh', [], [], Request::METHOD_PUT, false));
+        }
+
+        return false;
+    }
+
+    private function resetLimitCounter($instanceId, $limit_key_text)
+    {
+        if (!empty($limit_key_text) && !empty($instanceId)) {
+            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
+            return $this->formatResponse($_instance->call('/instance/clearlimitscounter/' . $limit_key_text, [], [], Request::METHOD_DELETE, false));
+        }
+
+        return false;
+    }
+
+    private function resetAllLimitCounters($instanceId)
+    {
+        if (!empty($limit_key_text) && !empty($instanceId)) {
+            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
+            return $this->formatResponse($_instance->call('/instance/clearlimitschace', [], [], Request::METHOD_DELETE, false));
         }
 
         return false;
