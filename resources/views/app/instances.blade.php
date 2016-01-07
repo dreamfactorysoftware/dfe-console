@@ -77,13 +77,13 @@
                                     <td style="width: 185px">{{ $_instance->lmod_date }}</td>
                                     <td>
                                         <form method="POST" action="/{{$prefix}}/limits/resetallcounters"
-                                              id="reset_counter_{{ $value['id'] }}">
-                                            <input type="hidden" name="limit_id" id="limit_id"
-                                                   value="{{ $value['id'] }}">
+                                              id="reset_counter_{{ $_instance->instance_id }}">
+                                            <input type="hidden" name="instance_id" id="instance_id"
+                                                   value="{{ $_instance->instance_id }}">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input name="_token" type="hidden" value="{{ csrf_token() }}">
                                             <button type="button" class="btn btn-default btn-xs fa fa-fw fa-bolt"
-                                                    onclick="resetCounter('{{ $value['id'] }}', '{{ $value['label_text'] }}')"
+                                                    onclick="resetCounter('{{ $_instance->instance_id }}', '{{ $_instance->instance_id_text }}')"
                                                     value="reset"
                                                     style="width: 25px; display: inline; vertical-align: middle"
                                                     data-toggle="tooltip" data-placement="right" title="Reset counter">
