@@ -763,7 +763,7 @@ class LimitController extends ViewController
 
     private function resetAllLimitCounters($instanceId)
     {
-        if (!empty($limit_key_text) && !empty($instanceId)) {
+        if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
 
             return $this->formatResponse($_instance->call('/instance/clearlimitscache', [], [], Request::METHOD_DELETE, false));
