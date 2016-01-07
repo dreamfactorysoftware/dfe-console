@@ -45,6 +45,12 @@
         </div>
 
         <div>
+            @if(Session::has('flash_message'))
+                <div class="alert {{ Session::get('flash_type') }}">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    {{ Session::get('flash_message') }}
+                </div>
+            @endif
             <div class="row">
                 <div class="col-xs-12">
                     <div class="panel panel-default">
@@ -86,7 +92,8 @@
                                                     onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
                                                     value="reset"
                                                     style="width: 25px; display: inline; vertical-align: middle"
-                                                    data-toggle="tooltip" data-placement="right" title="Reset all limit counters for this instnace">
+                                                    data-toggle="tooltip" data-placement="right"
+                                                    title="Reset all limit counters for this instnace">
                                             </button>
                                         </form>
 

@@ -626,7 +626,6 @@ class LimitController extends ViewController
 
             } elseif($ids == 'resetallcounters') {
                 $instance_id = \Input::get('instance_id');
-                $limit = Limit::where('id', '=', $instance_id)->first();
 
                 $this->resetAllLimitCounters($instance_id);
 
