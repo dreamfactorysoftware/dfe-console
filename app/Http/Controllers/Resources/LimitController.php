@@ -767,7 +767,7 @@ class LimitController extends ViewController
         if (!empty($limit_key_text) && !empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
 
-            return $this->formatResponse($_instance->call('/instance/clearlimitschace', [], [], Request::METHOD_DELETE, false));
+            return $this->formatResponse($_instance->call('/instance/clearlimitscache', [], [], Request::METHOD_DELETE, false));
         }
 
         return false;
