@@ -26,7 +26,7 @@ class Users extends ConsoleCommand
     /**
      * @type string The console command description
      */
-    protected $description = 'Manage DFE Dashboard users.';
+    protected $description = 'Manage <comment>DFE Dashboard</comment> users.';
     /**
      * @type array The allowed operation list
      */
@@ -113,7 +113,7 @@ class Users extends ConsoleCommand
             $_nickname = $this->option('nickname');
             $_password = $this->option('password');
 
-            if (empty($_first) || empty($_last) || empty($_password) || empty($_nickname)) {
+            if (empty($_first) && empty($_last) && empty($_password) && empty($_nickname)) {
                 $this->error('At least one of "first name", "last name", "nickname", or "password" are required for an update.');
 
                 return false;

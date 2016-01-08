@@ -13,7 +13,7 @@ class Update extends ConsoleCommand implements SelfHandling
     /** @inheritdoc */
     protected $name = 'dfe:update';
     /** @inheritdoc */
-    protected $description = 'Update DFE Console to the latest version.';
+    protected $description = 'Update <comment>DFE Console</comment> to the latest version.';
 
     //******************************************************************************
     //* Methods
