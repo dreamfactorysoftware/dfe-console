@@ -1099,12 +1099,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/php-utils.git",
-                "reference": "0f7361359a5efd4d20cf64e330a84db435bc0347"
+                "reference": "3be35a1f3f940f5bde64c497cc6d4fbc60800477"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/0f7361359a5efd4d20cf64e330a84db435bc0347",
-                "reference": "0f7361359a5efd4d20cf64e330a84db435bc0347",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/3be35a1f3f940f5bde64c497cc6d4fbc60800477",
+                "reference": "3be35a1f3f940f5bde64c497cc6d4fbc60800477",
                 "shasum": ""
             },
             "require": {
@@ -1146,7 +1146,7 @@
                 "symfony",
                 "utility"
             ],
-            "time": "2016-01-04 03:50:56"
+            "time": "2016-01-08 06:47:11"
         },
         {
             "name": "graham-campbell/flysystem",
@@ -2321,12 +2321,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "001ad99d731ecce1f8a17affed96e59194bd4918"
+                "reference": "74c40a7cbe501ccacbe01a0c45250c6f943aae4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/001ad99d731ecce1f8a17affed96e59194bd4918",
-                "reference": "001ad99d731ecce1f8a17affed96e59194bd4918",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/74c40a7cbe501ccacbe01a0c45250c6f943aae4c",
+                "reference": "74c40a7cbe501ccacbe01a0c45250c6f943aae4c",
                 "shasum": ""
             },
             "require": {
@@ -2402,7 +2402,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2015-12-24 05:32:20"
+            "time": "2016-01-08 19:28:39"
         },
         {
             "name": "predis/predis",
@@ -2584,12 +2584,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "0df7c747651f8506c5a6b41b5d686a0db0e11f15"
+                "reference": "2b4eb2c1731c7c2d8f4dbc5e5b08818dd4f6c3ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/0df7c747651f8506c5a6b41b5d686a0db0e11f15",
-                "reference": "0df7c747651f8506c5a6b41b5d686a0db0e11f15",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/2b4eb2c1731c7c2d8f4dbc5e5b08818dd4f6c3ce",
+                "reference": "2b4eb2c1731c7c2d8f4dbc5e5b08818dd4f6c3ce",
                 "shasum": ""
             },
             "require": {
@@ -2597,11 +2597,11 @@
                 "psr/log": "~1.0"
             },
             "require-dev": {
-                "guzzlehttp/guzzle": "5.3.*"
+                "guzzlehttp/guzzle": "~6.0"
             },
             "suggest": {
                 "egeloen/http-adapter": "Allow using httpadapter transport",
-                "guzzlehttp/guzzle": "Allow using guzzle 5.3.x as the http transport (Requires php 5.4)",
+                "guzzlehttp/guzzle": "Allow using guzzle 6 as the http transport (Requires php 5.5)",
                 "monolog/monolog": "Logging request"
             },
             "type": "library",
@@ -2631,7 +2631,7 @@
                 "client",
                 "search"
             ],
-            "time": "2016-01-07 10:21:19"
+            "time": "2016-01-08 09:22:39"
         },
         {
             "name": "sebastian/git",
@@ -4349,12 +4349,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "74b63b05ea5a243efa877d3904bc7d441750b255"
+                "reference": "e0ef9e9833ca024d251e77e8d82a00ca92b0aa71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/74b63b05ea5a243efa877d3904bc7d441750b255",
-                "reference": "74b63b05ea5a243efa877d3904bc7d441750b255",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/e0ef9e9833ca024d251e77e8d82a00ca92b0aa71",
+                "reference": "e0ef9e9833ca024d251e77e8d82a00ca92b0aa71",
                 "shasum": ""
             },
             "require": {
@@ -4410,7 +4410,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-12-31 18:00:15"
+            "time": "2016-01-07 23:41:52"
         },
         {
             "name": "doctrine/collections",
@@ -5096,12 +5096,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c"
+                "reference": "d0896b45cbc66f60e957f19a95e826ccf7fbb321"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/ea76b17bced0500a28098626b84eda12dbcf119c",
-                "reference": "ea76b17bced0500a28098626b84eda12dbcf119c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d0896b45cbc66f60e957f19a95e826ccf7fbb321",
+                "reference": "d0896b45cbc66f60e957f19a95e826ccf7fbb321",
                 "shasum": ""
             },
             "require": {
@@ -5160,7 +5160,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-12-12 07:45:58"
+            "time": "2016-01-08 13:46:07"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
