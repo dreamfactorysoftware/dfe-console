@@ -58,14 +58,14 @@
                                class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance"
                                style="table-layout: fixed; width: 100%; display:none">
                             <thead>
-                            <tr>
-                                <th></th>
-                                <th style="min-width: 175px">Name</th>
-                                <th style="min-width: 175px">Cluster</th>
-                                <th style="min-width: 175px">Owner Email</th>
-                                <th style="min-width: 100px">Last Modified</th>
-                                <th>&nbsp;</th>
-                            </tr>
+                                <tr>
+                                    <th></th>
+                                    <th style="min-width: 100px">Name</th>
+                                    <th style="min-width: 100px">Cluster</th>
+                                    <th style="min-width: 150px">Owner Email</th>
+                                    <th style="min-width: 100px">Last Modified</th>
+                                    <th style="width: 50px">&nbsp;</th>
+                                </tr>
                             </thead>
                             <tbody>
 
