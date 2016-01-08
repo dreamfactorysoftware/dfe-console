@@ -205,6 +205,8 @@ class LimitController extends ViewController
                 throw new DatabaseException('Unable to update limit "' . $id . '"');
             }
 
+            $this->refreshInstanceConfig($limit['cluster_id'], $limit['instance_id']);
+
             \Session::flash('flash_message', 'The limit "' . $_input['label_text'] . '" was updated successfully!');
             \Session::flash('flash_type', 'alert-success');
 
@@ -273,6 +275,9 @@ class LimitController extends ViewController
             // The period is always the last element
             $_values['period_name'] = ucwords(str_replace('-', ' ', array_pop($_limit_key_array)));
 
+            // Can this limit be cleared?
+            $enableClear = true;
+
            // If there are any elements left in the array, it's the instance name/each_instance or user id/each_user
 
             if (!empty($_limit_key_array)) {
@@ -281,6 +286,9 @@ class LimitController extends ViewController
                     $_values['instance_id_text'] = array_shift($_limit_key_array);
                 } else {
                     $_values['instance_id_text'] = ucwords(str_replace('_', ' ', array_shift($_limit_key_array)));
+
+                    // This is an each_instance rule, can not be cleared individually
+                    $enableClear = false;
                 }
             }
 
@@ -313,6 +321,9 @@ class LimitController extends ViewController
                         // Invalid instance, skip it
                         continue;
                     }
+                } else {
+                    // This is an each_user instance, can not be cleared individually
+                    $enableClear = false;
                 }
             }
 
@@ -327,6 +338,7 @@ class LimitController extends ViewController
                 'label_text' => $_limit->label_text,
                 'active_ind' => $_limit->active_ind,
                 'limit_type_text' => $_values['limit_type_text'],
+                'enable_clear' => $enableClear,
             ];
         }
 
@@ -567,6 +579,7 @@ class LimitController extends ViewController
             }
 
             Limit::create($limit);
+            $this->refreshInstanceConfig($limit['cluster_id'], $limit['instance_id']);
 
             return \Redirect::to('/' . $this->getUiPrefix() . '/limits')
                 ->with('flash_message', 'The limit "' . $_input['label_text'] . '" was created successfully!')
@@ -599,18 +612,36 @@ class LimitController extends ViewController
             $limit_names = [];
 
             if ($ids == 'multi') {
-                $params = \Input::all();
-                $selected = $params['_selected'];
+                $selected = \Input::get('_selected');
                 $id_array = explode(',', $selected);
+            } elseif ($ids == 'resetcounter') {
+                $limit = Limit::where('id', '=', \Input::get('limit_id'))->first();
+
+                $this->resetLimitCounter($limit->instance_id, $limit->limit_key_text);
+
+                Session::flash('flash_message', 'The counter for the limit ' . $limit->limit_name . ' has been reset');
+                Session::flash('flash_type', 'alert-success');
+
+                return \Redirect::to('/' . $this->getUiPrefix() . '/limits');
+
+            } elseif($ids == 'resetallcounters') {
+                $instance_id = \Input::get('instance_id');
+
+                $this->resetAllLimitCounters($instance_id);
+
+                Session::flash('flash_message', 'All limit counters for the instance has been reset');
+                Session::flash('flash_type', 'alert-success');
+
+                return \Redirect::to('/' . $this->getUiPrefix() . '/instances');
             } else {
                 $id_array = explode(',', $ids);
             }
 
             foreach ($id_array as $id) {
-                $limit = Limit::where('id', '=', $id);
-                $limit_name = $limit->get(['label_text']);
-                array_push($limit_names, '"' . $limit_name[0]->label_text . '"');
+                $limit = Limit::where('id', '=', $id)->first();
+                array_push($limit_names, '"' . $limit->label_text . '"');
                 $limit->delete();
+                $this->refreshInstanceConfig($limit->cluster_id, $limit->instance_id);
             }
 
             if (count($id_array) > 1) {
@@ -631,11 +662,7 @@ class LimitController extends ViewController
             Session::flash('flash_message', $result_text);
             Session::flash('flash_type', 'alert-success');
 
-            $_redirect = '/';
-            $_redirect .= $this->getUiPrefix();
-            $_redirect .= '/limits';
-
-            return \Redirect::to($_redirect);
+            return \Redirect::to('/' . $this->getUiPrefix() . '/limits');
         } catch (QueryException $e) {
             //$res_text = $e->getMessage();
             Session::flash('flash_message', 'An error occurred! Please try again.');
@@ -696,6 +723,68 @@ class LimitController extends ViewController
         }
 
         return false;
+    }
+
+    protected function refreshInstanceConfig($clusterId, $instanceId)
+    {
+        $instances = $this->getInstancesForCluster($clusterId);
+
+        if (!is_null($instanceId)) {
+            $instances = ['id' => $instanceId];
+        }
+
+        foreach($instances as $instanceId) {
+            $this->_refreshInstanceConfig($instanceId);
+        }
+
+        return true;
+    }
+    private function _refreshInstanceConfig($instanceId)
+    {
+        if (!empty($instanceId)) {
+            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
+            return $this->formatResponse($_instance->call('/instance/refresh', [], [], Request::METHOD_PUT, false));
+        }
+
+        return false;
+    }
+
+    private function resetLimitCounter($instanceId, $limit_key_text)
+    {
+        if (!empty($limit_key_text) && !empty($instanceId)) {
+            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
+            return $this->formatResponse($_instance->call('/instance/clearlimitscounter/' . $limit_key_text, [], [], Request::METHOD_DELETE, false));
+        }
+
+        return false;
+    }
+
+    private function resetAllLimitCounters($instanceId)
+    {
+        if (!empty($instanceId)) {
+            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+
+            return $this->formatResponse($_instance->call('/instance/clearlimitscache', [], [], Request::METHOD_DELETE, false));
+        }
+
+        return false;
+    }
+
+    public function getInstancesForCluster($clusterId)
+    {
+        $_cluster = $this->_findCluster($clusterId);
+        $_rows = Instance::byClusterId($_cluster->id)->get(['id']);
+
+        $_response = [];
+
+        /** @type Instance $_instance */
+        foreach ($_rows as $_instance) {
+            $_response[] = ['id' => $_instance->id];
+        }
+
+        return $_response;
     }
 
     /**

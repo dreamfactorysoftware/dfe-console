@@ -224,6 +224,15 @@ function setTableInfo(){
     }
 }
 
+function resetCounter(id, name) {
+    if(confirm('Reset all limit counters for instance "' + name + '" ?')){
+        $('#reset_counter_' + id).submit();
+        return true;
+    }
+    else
+        return false;
+}
+
 $('#refresh').click(function(){
     table.state.clear();
     localStorage.removeItem('Instances_' + window.location.pathname);
