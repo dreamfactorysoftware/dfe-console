@@ -66,7 +66,7 @@ class Info extends ConsoleCommand
             return 0;
         };
 
-        $this->writeln($this->formatArray($_data, !$this->option('ugly'), $_entityType . ($_all ? 's' : null)));
+        $this->writeln($this->formatArray($_data, !$this->option('ugly'), $_entityType . ($_all ? 's' : null), $_entityType));
 
         return 0;
     }
