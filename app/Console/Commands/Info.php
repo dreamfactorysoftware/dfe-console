@@ -5,8 +5,6 @@ use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models;
-use DreamFactory\Library\Utility\DataShaper;
-use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -68,26 +66,7 @@ class Info extends ConsoleCommand
             return 0;
         };
 
-        //  Contain the data?
-        if (!$_all && $_format && $this->option('container')) {
-            $_data = [$_entityType => $_data,];
-        }
-
-        switch ($_format) {
-            case 'json':
-                $_options = ($this->option('ugly') ? 0 : JSON_PRETTY_PRINT) | ($this->option('escaped-slashes') ? 0 : JSON_UNESCAPED_SLASHES);
-                $this->writeln(Json::encode($_data, $_options));
-                break;
-
-            case 'xml':
-                $_shaper = new DataShaper();
-                $this->writeln($_shaper->reshape($_data, 'xml', ['pretty' => !$this->option('ugly'), 'root' => $_entityType]));
-                break;
-
-            default:
-                $this->writeln(print_r($_data, true));
-                break;
-        }
+        $this->writeln($this->formatArray($_data, !$this->option('ugly'), $_entityType . ($_all ? 's' : null)));
 
         return 0;
     }
@@ -213,12 +192,6 @@ class Info extends ConsoleCommand
                     'e',
                     InputOption::VALUE_REQUIRED,
                     'The end date for a range of <info>metrics</info> data',
-                ],
-                [
-                    'container',
-                    'c',
-                    InputOption::VALUE_NONE,
-                    'If specified, the result will be contained by <info>entity-type</info>',
                 ],
                 [
                     'format',
