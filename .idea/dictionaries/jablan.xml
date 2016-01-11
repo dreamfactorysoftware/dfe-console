@@ -35,6 +35,7 @@
       <w>eprovision</w>
       <w>favicons</w>
       <w>fieldset</w>
+      <w>filemanager</w>
       <w>fillable</w>
       <w>firstname</w>
       <w>flysystems</w>
@@ -59,6 +60,7 @@
       <w>misconfigured</w>
       <w>myisam</w>
       <w>mysqld</w>
+      <w>nodejs</w>
       <w>ownername</w>
       <w>packetized</w>
       <w>pagename</w>

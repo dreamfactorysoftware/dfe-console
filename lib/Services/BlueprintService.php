@@ -1,5 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
+use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Common\Services\GitService;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
@@ -36,6 +37,33 @@ class BlueprintService extends BaseService
      * @type string The repository path (relative to $repoBase)
      */
     protected $repoPath;
+    /**
+     * @type array Default resources to be excluded from blueprint
+     */
+    protected $filters = [
+        //  Skip pre-installed apps
+        'app'            => [
+            'key'     => 'name',
+            'exclude' => ['admin', 'swagger', 'filemanager',],
+        ],
+        //  Skip first admin user
+        'admin'          => [
+            'key'     => 'id',
+            'exclude' => [1,],
+        ],
+        'email_template' => [
+            'key'     => 'id',
+            'exclude' => [1, 2, 3,],
+        ],
+        'script_type'    => [
+            'key'     => 'name',
+            'exclude' => ['nodejs', 'php', 'v8js',],
+        ],
+        'service'        => [
+            'key'     => 'name',
+            'exclude' => ['system', 'api_docs', 'files', 'db', 'email', 'user',],
+        ],
+    ];
 
     //*************************************************************************
     //* Methods
@@ -47,8 +75,7 @@ class BlueprintService extends BaseService
         parent::boot();
 
         //  Make sure our repo path exists
-        $this->repoBase =
-            Disk::path([config('dfe.blueprints.path', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH)], true);
+        $this->repoBase = Disk::path([config('dfe.blueprints.path', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH)], true);
 
         //  Tack on the cluster for the organization
         $this->repoPath = Disk::path([$this->repoBase, $_repoName = config('dfe.cluster-id', gethostname()),], true);
@@ -71,14 +98,18 @@ class BlueprintService extends BaseService
      */
     public function make($instanceId, $options = [])
     {
-        $_key = null;
-
+        $_header = null;
         $_instance = $this->findInstance($instanceId);
-        if (config('dfe.blueprints.login-required')) {
-            throw \RuntimeException('This feature is not implemented');
-        } else {
-            $_client = InstanceApiClient::connect($_instance);
+
+        if (null !== ($_key = array_get($options, 'api-key'))) {
+            $_header = EnterpriseDefaults::INSTANCE_API_HEADER;
         }
+
+        if (config('dfe.blueprints.login-required')) {
+            throw new \RuntimeException('This feature is not implemented');
+        }
+
+        $_client = InstanceApiClient::connect($_instance, $_key, $_header);
 
         //  Get services
         if (false !== ($_result = $_client->resources())) {
@@ -87,11 +118,9 @@ class BlueprintService extends BaseService
             foreach ($_result as $_resource) {
                 $_name = is_object($_resource) ? $_resource->name : $_resource;
 
-                $_blueprint['resources'][$_name] = false;
-
                 try {
-                    $_response = $_client->get($_name);
-                    $_blueprint['resources'][$_name] = isset($_response->resource) ? $_response->resource : $_response;
+                    $_response = $_client->resource($_name);
+                    $_blueprint['resources'][$_name] = $this->filterResources($_name, $_response);
                 } catch (\Exception $_ex) {
                 }
             }
@@ -106,6 +135,32 @@ class BlueprintService extends BaseService
         }
 
         return false;
+    }
+
+    /**
+     * @param string $resource
+     * @param array  $data
+     *
+     * @return array|bool
+     */
+    protected function filterResources($resource, $data)
+    {
+        if (null === ($_excluded = array_get($this->filters, $resource))) {
+            return $data;
+        }
+
+        if (null !== ($_excludeKey = data_get($_excluded, 'key'))) {
+            $_excluded = data_get($_excluded, 'exclude');
+        }
+
+        foreach ($data as $_id => $_values) {
+            //  Check for exclusions (default installed stuff)
+            if ($_excluded && in_array(data_get($_values, $_excludeKey), $_excluded)) {
+                array_forget($data, $_id);
+            }
+        }
+
+        return $data;
     }
 
     /**
