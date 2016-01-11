@@ -726,12 +726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "6168257da08af6343376ef1c3b9b18b86d65cb16"
+                "reference": "4ed6e06b7fabf7e6f5a7eac55b4742daa557c638"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/6168257da08af6343376ef1c3b9b18b86d65cb16",
-                "reference": "6168257da08af6343376ef1c3b9b18b86d65cb16",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/4ed6e06b7fabf7e6f5a7eac55b4742daa557c638",
+                "reference": "4ed6e06b7fabf7e6f5a7eac55b4742daa557c638",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +789,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-01-07 04:08:20"
+            "time": "2016-01-08 21:53:52"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -797,12 +797,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "f465bf6204722eba4fecac27c097171c98290158"
+                "reference": "52bbdb7d30b554e5627bc9c695a70d1a52a84651"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/f465bf6204722eba4fecac27c097171c98290158",
-                "reference": "f465bf6204722eba4fecac27c097171c98290158",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/52bbdb7d30b554e5627bc9c695a70d1a52a84651",
+                "reference": "52bbdb7d30b554e5627bc9c695a70d1a52a84651",
                 "shasum": ""
             },
             "require": {
@@ -846,7 +846,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2016-01-07 04:09:19"
+            "time": "2016-01-08 21:10:12"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
@@ -1099,12 +1099,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/php-utils.git",
-                "reference": "3be35a1f3f940f5bde64c497cc6d4fbc60800477"
+                "reference": "c10f4e2d201dcf93ce9b5b8c02af244526aa2335"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/3be35a1f3f940f5bde64c497cc6d4fbc60800477",
-                "reference": "3be35a1f3f940f5bde64c497cc6d4fbc60800477",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/php-utils/zipball/c10f4e2d201dcf93ce9b5b8c02af244526aa2335",
+                "reference": "c10f4e2d201dcf93ce9b5b8c02af244526aa2335",
                 "shasum": ""
             },
             "require": {
@@ -1146,7 +1146,7 @@
                 "symfony",
                 "utility"
             ],
-            "time": "2016-01-08 06:47:11"
+            "time": "2016-01-08 21:57:01"
         },
         {
             "name": "graham-campbell/flysystem",
@@ -4557,12 +4557,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "df7aeeaa1fb31fc62f68687d5f1ec5fdbe5e80df"
+                "reference": "77904003c3e3c1ed393e598c842572ff3c0282d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/df7aeeaa1fb31fc62f68687d5f1ec5fdbe5e80df",
-                "reference": "df7aeeaa1fb31fc62f68687d5f1ec5fdbe5e80df",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/77904003c3e3c1ed393e598c842572ff3c0282d5",
+                "reference": "77904003c3e3c1ed393e598c842572ff3c0282d5",
                 "shasum": ""
             },
             "require": {
@@ -4620,7 +4620,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-01-07 12:15:02"
+            "time": "2016-01-09 00:23:19"
         },
         {
             "name": "doctrine/instantiator",

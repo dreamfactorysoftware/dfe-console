@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Services\BlueprintService;
 use DreamFactory\Enterprise\Services\Facades as Facades;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -47,6 +48,7 @@ class Blueprint extends ConsoleCommand implements SelfHandling
         parent::handle();
 
         try {
+            /** @type BlueprintService $_service */
             $_service = Facades\Blueprint::service();
 
             $_blueprint = $_service->make($this->argument('instance-id'),

@@ -53,8 +53,10 @@ return [
     //* Blueprint Repository
     //******************************************************************************
     'blueprints'              => [
-        'path' => env('DFE_BLUEPRINT_PATH', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
-        'vcs'  => true,
+        'path'           => env('DFE_BLUEPRINT_PATH', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
+        'vcs'            => true,
+        //  If true, admin credentials are required for blueprinting instances
+        'login-required' => env('DFE_LOGIN_REQUIRED_FOR_BLUEPRINT', false),
     ],
     //******************************************************************************
     //* Common settings across portions of app

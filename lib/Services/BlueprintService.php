@@ -67,42 +67,45 @@ class BlueprintService extends BaseService
      * @param array  $options    Options ['user'=['email','password','remember_me'], 'commit' =>true|false,]
      *
      * @return array
+     * @throws
      */
     public function make($instanceId, $options = [])
     {
+        $_key = null;
+
         $_instance = $this->findInstance($instanceId);
-        $_client = InstanceApiClient::connect($_instance);
-
-//        $_payload = [
-//            'email'       => array_get($options, 'email'),
-//            'password'    => array_get($options, 'password'),
-//            'remember_me' => array_get($options, 'remember_me', false),
-//        ];
-
-        $_blueprint = ['instance' => $_instance->toArray(), 'resources' => [], 'database' => [],];
+        if (config('dfe.blueprints.login-required')) {
+            throw \RuntimeException('This feature is not implemented');
+        } else {
+            $_client = InstanceApiClient::connect($_instance);
+        }
 
         //  Get services
-        $_result = $_client->resources();
+        if (false !== ($_result = $_client->resources())) {
+            $_blueprint = ['instance' => $_instance->toArray(), 'resources' => [], 'database' => [],];
 
-        foreach ($_result as $_resource) {
-            $_blueprint['resources'][$_resource->name] = [];
+            foreach ($_result as $_resource) {
+                $_name = is_object($_resource) ? $_resource->name : $_resource;
 
-            try {
-                $_response = $_client->get($_resource->name);
-                $_blueprint['resources'][$_resource->name] = isset($_response->resource) ? $_response->resource : $_response;
-            } catch (\Exception $_ex) {
+                $_blueprint['resources'][$_name] = false;
+
+                try {
+                    $_response = $_client->get($_name);
+                    $_blueprint['resources'][$_name] = isset($_response->resource) ? $_response->resource : $_response;
+                } catch (\Exception $_ex) {
+                }
             }
+
+            //  Get database
+            $_blueprint['database'] = $this->getStoredData($_instance);
+
+            //  Optionally commit and return...
+            array_get($options, 'commit', true) && $this->commitBlueprint($instanceId, $_blueprint);
+
+            return $_blueprint;
         }
 
-        //  Get database
-        $_blueprint['database'] = $this->getStoredData($_instance);
-
-        //  Do not commit this blueprint
-        if (array_get($options, 'commit', true)) {
-            return $this->commitBlueprint($instanceId, $_blueprint);
-        }
-
-        return $_blueprint;
+        return false;
     }
 
     /**
@@ -179,7 +182,6 @@ class BlueprintService extends BaseService
 
         \Event::fire('dfe.blueprint.post-commit',
             ['instance-id' => $instanceId, 'blueprint' => $blueprint, 'repository-path' => $this->repoPath,]);
-
 
         return true;
     }
