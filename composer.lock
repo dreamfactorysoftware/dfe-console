@@ -726,12 +726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "2c44225de2ee6a0bc35d7148fe9b31565c7e6c6d"
+                "reference": "6ee2bb183b823ebb5d0ed2507755c546c379070d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/2c44225de2ee6a0bc35d7148fe9b31565c7e6c6d",
-                "reference": "2c44225de2ee6a0bc35d7148fe9b31565c7e6c6d",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/6ee2bb183b823ebb5d0ed2507755c546c379070d",
+                "reference": "6ee2bb183b823ebb5d0ed2507755c546c379070d",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +789,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-01-11 04:31:06"
+            "time": "2016-01-11 16:54:14"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -1603,16 +1603,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.1.28",
+            "version": "5.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "3f0fd27939dfdafb1e50058423cd24e640894ba2"
+                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/3f0fd27939dfdafb1e50058423cd24e640894ba2",
-                "reference": "3f0fd27939dfdafb1e50058423cd24e640894ba2",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/132febfd9e9cbb954b532c7b601fae45a7523765",
+                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765",
                 "shasum": ""
             },
             "require": {
@@ -1727,7 +1727,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-12-31 17:41:30"
+            "time": "2015-12-04 23:08:52"
         },
         {
             "name": "league/event",

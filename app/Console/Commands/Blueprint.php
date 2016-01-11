@@ -54,9 +54,9 @@ class Blueprint extends ConsoleCommand implements SelfHandling
             $_blueprint = $_service->make($this->argument('instance-id'),
                 [
                     'commit' => !$this->option('no-commit'),
-                    'user'   => [
-                        'email'       => $this->argument('admin-email'),
-                        'password'    => $this->argument('admin-password'),
+                    'user' => [
+                        'email' => $this->argument('admin-email'),
+                        'password' => $this->argument('admin-password'),
                         'remember_me' => false,
                     ],
                 ]);
@@ -96,7 +96,7 @@ class Blueprint extends ConsoleCommand implements SelfHandling
             parent::getOptions(),
             [
                 ['no-commit', null, InputOption::VALUE_NONE, 'Do not commit the result to the repo',],
-                ['dump', 'd', InputOption::VALUE_NONE, 'Dump the blueprint to stdout',],
+                ['dump', 'd', InputOption::VALUE_NONE, 'Dump the blueprint to stdout as well as writing to disk',],
             ]);
     }
 }
