@@ -1,10 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use DreamFactory\Enterprise\Common\Enums\AppKeyClasses;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
-use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,7 +26,7 @@ class Users extends ConsoleCommand
     /**
      * @type string The console command description
      */
-    protected $description = 'Manage DFE Dashboard users.';
+    protected $description = 'Manage <comment>DFE Dashboard</comment> users.';
     /**
      * @type array The allowed operation list
      */
@@ -89,52 +86,18 @@ class Users extends ConsoleCommand
     protected function createUser($email)
     {
         try {
-            $_first = $this->option('first-name');
-            $_last = $this->option('last-name');
-            $_nickname = $this->option('nickname');
-            $_password = $this->option('password');
-
-            if (empty($_first) || empty($_last) || empty($_password)) {
-                $this->error('First name, last name, and password are required to create a new user.');
-
-                return false;
+            if (false === ($_user = User::artisanRegister($this))) {
             }
-
-            \DB::transaction(function() use ($email, $_first, $_last, $_nickname, $_password) {
-                /** @noinspection PhpUndefinedMethodInspection */
-                $_user = User::create([
-                    'first_name_text' => $_first,
-                    'last_name_text'  => $_last,
-                    'email_addr_text' => $email,
-                    'nickname_text'   => $_nickname,
-                    'password_text'   => \Hash::make($_password),
-                ]);
-
-                $_appKey = AppKey::create([
-                    'key_class_text' => AppKeyClasses::USER,
-                    'owner_id'       => $_user->id,
-                    'owner_type_nbr' => OwnerTypes::USER,
-                    'server_secret'  => config('dfe.security.console-api-key'),
-                ]);
-
-                //  Update the user with the key info and activate
-                $_user->api_token_text = $_appKey->client_id;
-                $_user->active_ind = 1;
-                $_user->save();
-            });
-
-            $this->writeln('User "<info>' . $email . '</info>" created');
-
-            return true;
         } catch (\Exception $_ex) {
-            if (false !== stripos($_ex->getMessage(), 'duplicate entry')) {
-                $this->error('User "' . $email . '" already exists');
-            } else {
-                $this->error('Error creating user "' . $email . '": ' . $_ex->getMessage());
-            }
+            $this->error($_ex->getMessage());
 
-            return false;
+            return 1;
         }
+
+        $this->writeln('User ID#' . $_user->id . ' created:');
+        $this->comment($this->formatArray($_user->toArray(), !$this->option('ugly'), 'user'));
+
+        return 1;
     }
 
     /**
@@ -150,7 +113,7 @@ class Users extends ConsoleCommand
             $_nickname = $this->option('nickname');
             $_password = $this->option('password');
 
-            if (empty($_first) || empty($_last) || empty($_password) || empty($_nickname)) {
+            if (empty($_first) && empty($_last) && empty($_password) && empty($_nickname)) {
                 $this->error('At least one of "first name", "last name", "nickname", or "password" are required for an update.');
 
                 return false;
@@ -168,12 +131,12 @@ class Users extends ConsoleCommand
             if ($_user->update($_updates)) {
                 $this->writeln('User "<info>' . $email . '</info>" updated');
 
-                return true;
+                return 0;
             }
 
             $this->writeln('No changes saved for user "<info>' . $email . '</info>"');
 
-            return true;
+            return 0;
         } catch (\Exception $_ex) {
             if (false !== stripos($_ex->getMessage(), 'duplicate entry')) {
                 $this->error('User "' . $email . '" already exists');
@@ -181,7 +144,7 @@ class Users extends ConsoleCommand
                 $this->error('Error creating user "' . $email . '": ' . $_ex->getMessage());
             }
 
-            return false;
+            return 1;
         }
     }
 
@@ -193,11 +156,19 @@ class Users extends ConsoleCommand
     protected function deleteUser($email)
     {
         try {
-            return 1 == User::byEmail($email)->delete();
+            if (!User::byEmail($email)->delete()) {
+                $this->error('User "' . $email . '" not found');
+
+                return 1;
+            }
+
+            $this->writeln('User "' . $email . '" deleted');
+
+            return 0;
         } catch (\Exception $_ex) {
             $this->error('Error deleting user "' . $email . '": ' . $_ex->getMessage());
 
-            return false;
+            return 1;
         }
     }
 

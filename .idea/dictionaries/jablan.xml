@@ -23,15 +23,19 @@
       <w>creds</w>
       <w>csrf</w>
       <w>datadir</w>
+      <w>datatables</w>
+      <w>datepicker</w>
       <w>deprovision</w>
       <w>deprovisioned</w>
       <w>deprovisioning</w>
       <w>dfac</w>
       <w>dfdsp</w>
       <w>docomo</w>
+      <w>dropdown</w>
       <w>eprovision</w>
       <w>favicons</w>
       <w>fieldset</w>
+      <w>filemanager</w>
       <w>fillable</w>
       <w>firstname</w>
       <w>flysystems</w>
@@ -56,6 +60,7 @@
       <w>misconfigured</w>
       <w>myisam</w>
       <w>mysqld</w>
+      <w>nodejs</w>
       <w>ownername</w>
       <w>packetized</w>
       <w>pagename</w>
@@ -85,6 +90,7 @@
       <w>subline</w>
       <w>subnode</w>
       <w>symlinking</w>
+      <w>tful</w>
       <w>topmenu</w>
       <w>topnav</w>
       <w>unassign</w>

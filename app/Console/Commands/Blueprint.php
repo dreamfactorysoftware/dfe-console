@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Services\BlueprintService;
 use DreamFactory\Enterprise\Services\Facades as Facades;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -47,16 +48,18 @@ class Blueprint extends ConsoleCommand implements SelfHandling
         parent::handle();
 
         try {
+            /** @type BlueprintService $_service */
             $_service = Facades\Blueprint::service();
 
             $_blueprint = $_service->make($this->argument('instance-id'),
                 [
-                    'commit' => !$this->option('no-commit'),
-                    'user'   => [
+                    'commit'  => !$this->option('no-commit'),
+                    'user'    => [
                         'email'       => $this->argument('admin-email'),
                         'password'    => $this->argument('admin-password'),
                         'remember_me' => false,
                     ],
+                    'api-key' => $this->option('api-key'),
                 ]);
 
             if ($this->option('dump')) {
@@ -76,25 +79,23 @@ class Blueprint extends ConsoleCommand implements SelfHandling
     /** @inheritdoc */
     protected function getArguments()
     {
-        return array_merge(
-            parent::getArguments(),
+        return array_merge(parent::getArguments(),
             [
                 ['instance-id', InputArgument::REQUIRED, 'The id of the instance to inspect.'],
                 ['instance-uri', InputArgument::OPTIONAL, 'The URI of the instance (i.e. "http://localhost")'],
                 ['admin-email', InputArgument::OPTIONAL, 'An instance administrator email'],
                 ['admin-password', InputArgument::OPTIONAL, 'An instance administrator password'],
-            ]
-        );
+            ]);
     }
 
     /** @inheritdoc */
     protected function getOptions()
     {
-        return array_merge(
-            parent::getOptions(),
+        return array_merge(parent::getOptions(),
             [
                 ['no-commit', null, InputOption::VALUE_NONE, 'Do not commit the result to the repo',],
-                ['dump', 'd', InputOption::VALUE_NONE, 'Dump the blueprint to stdout',],
+                ['dump', 'd', InputOption::VALUE_NONE, 'Dump the blueprint to stdout as well as writing to disk',],
+                ['api-key', 'k', InputOption::VALUE_REQUIRED, 'The API key to use instead of auto-generated token'],
             ]);
     }
 }

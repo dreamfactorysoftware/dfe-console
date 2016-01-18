@@ -166,7 +166,13 @@
             $.get('/v1/cluster/' + encodeURIComponent(_clusterId) + '/instances').done(function (data) {
                 $_select.empty();
                 $_select.append('<option value="">Select Instance</option>');
-                $_select.append('<option value="0">Each Instance</option>');
+
+                if(instance_id === '0') {
+                    $_select.append('<option value="0" selected>Each Instance</option>');
+                }
+                else {
+                    $_select.append('<option value="0">Each Instance</option>');
+                }
 
 
                 if ($.isArray(data) || data.length) {
@@ -215,8 +221,13 @@
                 var $_select = $('#user_id');
                 $_select.empty();
                 $_select.append('<option value="">Select User</option>');
-                $_select.append('<option value="0">Each User</option>');
 
+                if(user_id === '0') {
+                    $_select.append('<option value="0" selected>Each User</option>');
+                }
+                else {
+                    $_select.append('<option value="0">Each User</option>');
+                }
 
                 if ($.isArray(data) || data.length) {
                     $.each(data, function (index, item) {
