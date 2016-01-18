@@ -617,7 +617,15 @@ class LimitController extends ViewController
             } elseif ($ids == 'resetcounter') {
                 $limit = Limit::where('id', '=', \Input::get('limit_id'))->first();
 
-                $this->resetLimitCounter($limit->instance_id, $limit->limit_key_text);
+                if ($limit->limit_type_nbr == Limits::CLUSTER) {
+                    $instances = $this->getInstancesForCluster($limit->cluster_id);
+                } else {
+                    $instances = ['id' => $limit->instance_id];
+                }
+
+                foreach($instances as $instanceId) {
+                    $this->resetLimitCounter($instanceId, $limit->limit_key_text);
+                }
 
                 Session::flash('flash_message', 'The counter for the limit ' . $limit->limit_name . ' has been reset');
                 Session::flash('flash_type', 'alert-success');
