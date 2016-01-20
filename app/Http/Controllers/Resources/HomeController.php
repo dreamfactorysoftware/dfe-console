@@ -60,6 +60,13 @@ class HomeController extends FactoryController
             ]);
     }
 
+    public function logout()
+    {
+        \Auth::logout();
+
+        return \Redirect::guest('auth/login')->with('errors', 'Your session has expired or is otherwise not valid.');
+    }
+
     /**
      * Builds the parameter list to send with any home page links
      *

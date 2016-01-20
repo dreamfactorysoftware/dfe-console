@@ -53,10 +53,8 @@ return [
     //* Blueprint Repository
     //******************************************************************************
     'blueprints'              => [
-        'path'           => env('DFE_BLUEPRINT_PATH', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
-        'vcs'            => true,
-        //  If true, admin credentials are required for blueprinting instances
-        'login-required' => env('DFE_LOGIN_REQUIRED_FOR_BLUEPRINT', false),
+        'path' => env('DFE_BLUEPRINT_PATH', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
+        'vcs'  => true,
     ],
     //******************************************************************************
     //* Common settings across portions of app
@@ -75,6 +73,26 @@ return [
         'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
         /**  NavBar 194x50px image. Shown on top of inner pages. */
         'navbar-image'       => env('DFE_NAVBAR_IMAGE', '/theme/standard/img/logo.png'),
+    ],
+    //******************************************************************************
+    //* General instance settings
+    //******************************************************************************
+    'instance'                => [
+        /** Settings for dfe-api-client */
+        'api' => [
+            /**
+             * If true, admin credentials are required for instance API use.
+             * By default, the console utilizes the default provisioning channel
+             * to obtain metrics and resource information.
+             *
+             * **This setting trumps the "api-key" setting which follows**
+             */
+            'login-required' => env('DFE_INSTANCE_API_LOGIN_REQUIRED', false),
+            /** An API key to use for communications instead of provisioning channel */
+            'api-key'        => env('DFE_INSTANCE_API_KEY'),
+            /** The header to use when transmitting the API key. Defaults to "X-DreamFactory-API-Key" */
+            'api-key-header' => env('DFE_INSTANCE_API_HEADER', EnterpriseDefaults::INSTANCE_API_HEADER),
+        ],
     ],
     //******************************************************************************
     //* UI Settings

@@ -554,12 +554,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-api-client.git",
-                "reference": "a0fd2eb9037265d9a4787e9f5dacd8f172621bdf"
+                "reference": "2fb8a24c2c923d27b56f34b84d8332448bbf90da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-api-client/zipball/a0fd2eb9037265d9a4787e9f5dacd8f172621bdf",
-                "reference": "a0fd2eb9037265d9a4787e9f5dacd8f172621bdf",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-api-client/zipball/2fb8a24c2c923d27b56f34b84d8332448bbf90da",
+                "reference": "2fb8a24c2c923d27b56f34b84d8332448bbf90da",
                 "shasum": ""
             },
             "require": {
@@ -605,7 +605,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-api-client/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-api-client/issues"
             },
-            "time": "2016-01-11 04:32:04"
+            "time": "2016-01-11 19:30:14"
         },
         {
             "name": "dreamfactory/dfe-audit",
@@ -726,12 +726,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "6ee2bb183b823ebb5d0ed2507755c546c379070d"
+                "reference": "4109ff49240b9d691c8457516d83250a14d44514"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/6ee2bb183b823ebb5d0ed2507755c546c379070d",
-                "reference": "6ee2bb183b823ebb5d0ed2507755c546c379070d",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/4109ff49240b9d691c8457516d83250a14d44514",
+                "reference": "4109ff49240b9d691c8457516d83250a14d44514",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +789,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-01-11 16:54:14"
+            "time": "2016-01-11 19:29:57"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -1603,16 +1603,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "5.1.x-dev",
+            "version": "v5.1.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765"
+                "reference": "3f0fd27939dfdafb1e50058423cd24e640894ba2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/132febfd9e9cbb954b532c7b601fae45a7523765",
-                "reference": "132febfd9e9cbb954b532c7b601fae45a7523765",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3f0fd27939dfdafb1e50058423cd24e640894ba2",
+                "reference": "3f0fd27939dfdafb1e50058423cd24e640894ba2",
                 "shasum": ""
             },
             "require": {
@@ -1727,7 +1727,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-12-04 23:08:52"
+            "time": "2015-12-31 17:41:30"
         },
         {
             "name": "league/event",

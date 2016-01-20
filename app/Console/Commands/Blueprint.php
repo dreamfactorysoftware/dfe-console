@@ -66,6 +66,8 @@ class Blueprint extends ConsoleCommand implements SelfHandling
                 $this->writeln(json_encode($_blueprint, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
             }
 
+            $this->writeln('Blueprint written to "' . $_service-> $this->argument('instance-id') . '" was not found.');
+
             return true;
         } catch (ModelNotFoundException $_ex) {
             $this->error('The instance-id "' . $this->argument('instance-id') . '" was not found.');

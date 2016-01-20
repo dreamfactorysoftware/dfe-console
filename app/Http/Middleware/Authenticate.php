@@ -43,7 +43,7 @@ class Authenticate
         if ($this->auth->guest()) {
             return $request->ajax()
                 ? response()->json('Unauthorized.', 401)
-                : \Redirect::guest('auth/login')->with('Your session has expired or is otherwise not valid.', 'Invalid Session');
+                : \Redirect::guest('auth/login')->with('errors', 'Your session has expired or is otherwise not valid.');
         }
 
         return $next($request);

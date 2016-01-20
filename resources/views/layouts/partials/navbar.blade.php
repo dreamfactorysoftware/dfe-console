@@ -23,6 +23,10 @@
                             <li>
                                 <a href="/auth/logout"><i class="fa fa-fw fa-sign-out"></i>Logout</a>
                             </li>
+                            <li>
+                                <a href="logout"><i class="fa fa-fw fa-sign-out"></i>Logout2</a>
+                            </li>
+
                         </ul>
                     </li>
                 </ul>
