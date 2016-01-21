@@ -37,7 +37,7 @@ class Import extends ConsoleCommand implements SelfHandling
 
         $_request = PortableServiceRequest::makeImport($this->argument('instance-id'),
             $this->argument('snapshot'),
-            array_merge(['owner-id' => $this->argument('owner-id'),], $this->getOptions()));
+            array_merge(['indirect' => $this->option('indirect'), 'owner-id' => $this->argument('owner-id'),], $this->getOptions()));
 
         $_job = new ImportJob($_request);
         $_result = $this->dispatch($_job);
@@ -83,8 +83,8 @@ class Import extends ConsoleCommand implements SelfHandling
                     config('provisioning.default-cluster-id'),
                 ],
                 [
-                    'snapshot-id',
-                    'i',
+                    'indirect',
+                    null,
                     InputOption::VALUE_NONE,
                     'If specified, the "snapshot" value is a snapshot-id not a path',
                 ],

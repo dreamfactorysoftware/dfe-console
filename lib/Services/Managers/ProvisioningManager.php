@@ -15,8 +15,10 @@ use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use League\Flysystem\Filesystem;
+use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProvisioningManager extends BaseManager implements ResourceProvisionerAware, PortableProvisionerAware
@@ -138,7 +140,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function resolve($tag, $subkey = null)
     {
-        $_key = $this->_buildTag($tag, $subkey);
+        $_key = $this->buildTag($tag, $subkey);
 
         try {
             return parent::resolve($_key);
@@ -208,15 +210,13 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     /** @inheritdoc */
     public function provision(ProvisionJob $job)
     {
-        return $this->resolve($job->getInstance()->guest_location_nbr)
-            ->provision(ProvisionServiceRequest::createProvision($job->getInstance()));
+        return $this->resolve($job->getInstance()->guest_location_nbr)->provision(ProvisionServiceRequest::createProvision($job->getInstance()));
     }
 
     /** @inheritdoc */
     public function deprovision(DeprovisionJob $job)
     {
-        return $this->resolve($job->getInstance()->guest_location_nbr)
-            ->deprovision(ProvisionServiceRequest::createDeprovision($job->getInstance()));
+        return $this->resolve($job->getInstance()->guest_location_nbr)->deprovision(ProvisionServiceRequest::createDeprovision($job->getInstance()));
     }
 
     /**
@@ -232,12 +232,11 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         $_instanceId = $job->getInstanceId();
 
         //  Validate import file
-        $_snapshotId = $job->getTarget();
-        $_target = $this->validateImportTarget($_snapshotId);
+        $_target = $this->validateImportTarget($_snapshot = $job->getTarget());
 
         try {
             //  Find instance if it exists...
-            $_instance = $this->_findInstance($_instanceId);
+            $_instance = $this->findInstance($_instanceId);
         } catch (ModelNotFoundException $_ex) {
             try {
                 $_result = \Artisan::call('dfe:provision',
@@ -247,15 +246,18 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
                     ]);
 
                 if (0 == $_result) {
-                    $_instance = $this->_findInstance($_instanceId);
+                    $_instance = $this->findInstance($_instanceId);
                 } else {
                     throw new ModelNotFoundException();
                 }
             } catch (ModelNotFoundException $_ex) {
-                throw new \RuntimeException('The instance could not be provisioned.',
-                    Response::HTTP_PRECONDITION_FAILED);
+                $this->error('[provisioning:import] import instance "' . $_instanceId . '" provisioning failed');
+
+                throw new \RuntimeException('The instance could not be provisioned.', Response::HTTP_PRECONDITION_FAILED);
             }
         }
+
+        $this->info('[provisioning:import] import instance "' . $_instanceId . '" provisioned.');
 
         //  Get the services and options
         $_services = $this->getPortableServices(array_get($_options = $job->getOptions(false), 'guest-location'));
@@ -264,8 +266,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         if (empty($_services)) {
             $job->setResult(new PortableServiceResponse('Your instance "' .
                 $_instanceId .
-                '" has been created. However, no portable services are available for instance\'s "guest-location".',
-                Response::HTTP_PARTIAL_CONTENT));
+                '" has been created. However, no portable services are available for instance\'s "guest-location".', Response::HTTP_PARTIAL_CONTENT));
 
             return true;
         }
@@ -275,10 +276,27 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
         //  Allow each service to import individually, collecting the output
         $_request = PortableServiceRequest::makeImport($_instance,
             $_target,
-            array_merge(['snapshot-id' => $_snapshotId], $job->getOptions(false)));
+            array_merge(['snapshot-id' => $_snapshot], $job->getOptions(false)));
+
+        //  Get the manifest
+        try {
+            $_md = Json::decode($_target->read(config('snapshot.templates.metadata-file-name')));
+            $_request->put('original-instance-id', $_md['instance-id']);
+
+            $this->debug('[provisioning:import] uploaded file manifest', $_md);
+        } catch (\Exception $_ex) {
+            $this->error('[provisioning:import] uploaded file has no recognizable manifest.');
+
+            throw new \RuntimeException('The uploaded file does not appear to be a DFE export and/or snapshot.');
+        }
 
         foreach ($_services as $_type => $_service) {
-            $_imports[$_type] = $_service->import($_request);
+            try {
+                $_imports[$_type] = $_service->import($_request);
+                $this->info('[provisioning:import:sub-service] sub-service import: ' . print_r($_imports[$_type], true));
+            } catch (\Exception $_ex) {
+                $this->error('[provisioning:import:sub-service] exception: ' . $_ex->getMessage());
+            }
         }
 
         $job->setResult(new PortableServiceResponse($_imports));
@@ -294,10 +312,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     public function export(ExportJob $job)
     {
         try {
-            $_instance = $this->_findInstance($job->getInstanceId());
+            $_instance = $this->findInstance($job->getInstanceId());
         } catch (ModelNotFoundException $_ex) {
-            throw new \RuntimeException('Instance "' . $job->getInstanceId() . '" not found.',
-                Response::HTTP_NOT_FOUND);
+            throw new \RuntimeException('Instance "' . $job->getInstanceId() . '" not found.', Response::HTTP_NOT_FOUND);
         }
 
         //  Get the portable services of this instance provisioner
@@ -324,7 +341,7 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *
      * @return mixed
      */
-    protected function _buildTag(&$tag, $subkey = null, $connector = '.provides.')
+    protected function buildTag(&$tag, $subkey = null, $connector = '.provides.')
     {
         $tag = trim(GuestLocations::resolve($tag ?: $this->getDefaultProvisioner()));
 
@@ -344,6 +361,15 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     protected function validateImportTarget($snapshotId)
     {
-        return $this->_findSnapshot($snapshotId)->getMount();
+        try {
+            return $this->findSnapshot($snapshotId)->getMount();
+        } catch (ModelNotFoundException $_ex) {
+            //  Check if it's a physical local file...
+            if (is_file($snapshotId) && file_exists($snapshotId) && is_readable($snapshotId)) {
+                return new Filesystem(new ZipArchiveAdapter($snapshotId));
+            }
+
+            throw $_ex;
+        }
     }
 }
