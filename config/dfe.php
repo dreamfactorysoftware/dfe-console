@@ -73,6 +73,8 @@ return [
         'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
         /**  NavBar 194x50px image. Shown on top of inner pages. */
         'navbar-image'       => env('DFE_NAVBAR_IMAGE', '/theme/standard/img/logo.png'),
+        /** Custom css to load */
+        'custom-css-file'    => env('DFE_CUSTOM_CSS_FILE'),
     ],
     //******************************************************************************
     //* General instance settings
