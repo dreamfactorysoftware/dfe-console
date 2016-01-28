@@ -1,12 +1,10 @@
-@include('layouts.partials.topmenu')
 @extends('layouts.main')
+@include('layouts.partials.topmenu')
 @section('content')
     @include('layouts.partials.sidebar-menu',['resource'=>'servers'])
 
     <div class="col-xs-11 col-sm-10 col-md-10">
-        <div class="nav dfe-section-header">
-            <h4>Manage Servers</h4>
-        </div>
+        @include('layouts.partials.context-header', ['resource'=>'servers', 'title' => 'Manage Servers'])
 
         <div class="row">
             <form method="POST" action="/{{$prefix}}/servers/multi" id="multi_delete">
@@ -23,7 +21,7 @@
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle"
                                         data-toggle="dropdown" aria-expanded="false" aria-haspopup="true"><span
-                                            id="currentPage">Page 1</span>&nbsp;<span class="caret"></span></button>
+                                        id="currentPage">Page 1</span>&nbsp;<span class="caret"></span></button>
                                 <ul class="dropdown-menu" role="menu" id="tablePages"></ul>
                             </div>
                             <button type="button" disabled="disabled" class="btn btn-default btn-sm fa fa-fw fa-forward"
@@ -42,7 +40,7 @@
 
                         <div class="btn-group pull-right">
                             <button type="button" id="refresh" class="btn btn-default btn-sm" title="Reset sorting"><i
-                                        class="fa fa-fw fa-refresh"></i></button>
+                                    class="fa fa-fw fa-refresh"></i></button>
                         </div>
                     </div>
                 </div>
@@ -62,7 +60,8 @@
                 <div class="col-xs-12">
                     <div class="panel panel-default">
                         <table id="serverTable"
-                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-server" style="table-layout: fixed; width: 100%; display:none">
+                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-server"
+                               style="table-layout: fixed; width: 100%; display:none">
                             <thead>
                             <tr>
                                 <th></th>

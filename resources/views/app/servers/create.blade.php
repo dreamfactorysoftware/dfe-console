@@ -5,11 +5,8 @@
     @include('layouts.partials.sidebar-menu',['resource'=>'servers'])
 
     <div class="col-md-10">
-        <div>
-            <div class="nav nav-pills dfe-section-header">
-                <h4>Create Server</h4>
-            </div>
-        </div>
+        @include('layouts.partials.context-header',['resource'=>'servers','title' => 'Create Server'])
+
         <form method="POST" action="/{{ $prefix }}/servers">
             <input name="_method" type="hidden" value="POST">
             <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
@@ -176,23 +173,23 @@
     <script type="text/javascript" src="/js/blade-scripts/servers/servers.js"></script>
 
     <script type='text/javascript'>
-        jQuery(function ($) {
-                $(document.body).on('change', '#server_type_select', function () {
-                    var $_select = $('#server_type_select');
-                    var selected = $_select.val();
+        jQuery(function($) {
+            $(document.body).on('change', '#server_type_select', function() {
+                var $_select = $('#server_type_select');
+                var selected = $_select.val();
 
-                    $_select.find("option").each(function () {
-                        var opt = $(this).val();
+                $_select.find("option").each(function() {
+                    var opt = $(this).val();
 
-                        if ('' !== opt) {
-                            if (selected === opt)
-                                $('#server_type_' + opt).show();
-                            else
-                                $('#server_type_' + opt).hide();
+                    if ('' !== opt) {
+                        if (selected === opt) {
+                            $('#server_type_' + opt).show();
+                        } else {
+                            $('#server_type_' + opt).hide();
                         }
-                    });
+                    }
                 });
-            }
-        );
+            });
+        });
     </script>
 @stop

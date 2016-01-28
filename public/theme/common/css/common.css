@@ -78,6 +78,11 @@ form {
     padding: 8px 0;
 }
 
+button > i.fa-fw {
+    text-align:   left;
+    margin-right: 5px;
+}
+
 .dropdown-menu li a i.fa-fw {
     margin-right: 5px;
 }

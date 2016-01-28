@@ -75,6 +75,7 @@
       <w>provisioners</w>
       <w>queueable</w>
       <w>rackspacecloud</w>
+      <w>resetallcounters</w>
       <w>setdev</w>
       <w>shaper</w>
       <w>shapers</w>

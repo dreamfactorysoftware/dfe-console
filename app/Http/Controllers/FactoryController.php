@@ -36,7 +36,7 @@ abstract class FactoryController extends BaseController
     /**
      * @type string Any data to merge into view data when rendering
      */
-    protected $extraViewData = ['prefix' => ConsoleDefaults::UI_PREFIX];
+    protected $extraViewData = [];
 
     //******************************************************************************
     //* Methods
@@ -45,7 +45,7 @@ abstract class FactoryController extends BaseController
     /** @inheritdoc */
     public function __construct()
     {
-        $this->uiPrefix = config('dfe.ui.prefix', ConsoleDefaults::UI_PREFIX);
+        $this->uiPrefix = \View::shared('prefix', ConsoleDefaults::UI_PREFIX);
     }
 
     /**

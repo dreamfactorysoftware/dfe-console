@@ -2,10 +2,12 @@
 namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\Response;
+use DreamFactory\Enterprise\Database\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 
 class InstanceController extends ViewController
 {
@@ -30,62 +32,70 @@ class InstanceController extends ViewController
     //* Methods
     //******************************************************************************
 
+    /** @inheritdoc */
+    public function index()
+    {
+        return $this->renderView('app.instances', ['instances' => Instance::orderBy('instance_id_text')->with(['user', 'cluster'])->get()]);
+    }
+
+    /** @inheritdoc */
+    public function create(array $viewData = [])
+    {
+        return $this->renderView('app.instances.create', ['clusters' => Cluster::orderBy('cluster_id_text')->get()]);
+    }
+
     /**
-     * Display a listing of the resource.
+     * @param string $where
+     * @param array  $errors
      *
-     * @return Response
+     * @return $this
      */
-    protected function _loadData()
+    protected function bounceBack($where, $errors = [])
     {
-        //echo 'here';
-        $_columns = [
-            'instance_t.id',
-            'instance_t.instance_id_text',
-            'cluster_t.cluster_id_text',
-            'instance_t.create_date',
-            'user_t.email_addr_text',
-            'user_t.lmod_date',
-        ];
-
-        /** @type Builder $_query */
-        $_query = Instance::join('user_t', 'instance_t.user_id', '=', 'user_t.id')->join('cluster_t',
-            'instance_t.cluster_id',
-            '=',
-            'cluster_t.id')->select($_columns);
-
-        $test = $this->processDataRequest('instance_t', Instance::count(), $_columns, $_query);
-
-        echo $test->count();
-
-        return $this->processDataRequest('instance_t', Instance::count(), $_columns, $_query);
+        return \Redirect::to('/' . $this->getUiPrefix() . '/' . ltrim($where, '/'))->withInput()->withErrors($errors);
     }
 
-    /*
-    public function create( array $viewData = [] )
+    /** @inheritdoc */
+    public function store(Request $request)
     {
+        if (empty($_name = strtolower(trim(filter_var($request->input('instance_name_text', FILTER_SANITIZE_STRING)))))) {
+            return $this->bounceBack('/instances/create', 'Instance name "' . $_name . '" is invalid.');
+        }
 
-        $clusters = new Cluster();
-        $clusters_list = $clusters->all();
+        if (false === ($_instanceId = Instance::isNameAvailable($_name, \Auth::user()->admin_ind))) {
+            return $this->bounceBack('/instances/create', 'Instance name "' . $_name . '" is not available.');
+        }
 
-        return View::make( 'app.instances.create' )->with( 'prefix', $this->_prefix )->with( 'clusters', $clusters_list );
+        $_email = strtolower(trim(filter_var($request->input('owner_email'), FILTER_SANITIZE_EMAIL)));
 
+        try {
+            if (empty($_email)) {
+                return $this->bounceBack('/instances/create', 'Invalid email address.');
+            }
 
-        return 'OK';
+            $_owner = User::byEmail($_email)->firstOrFail();
+        } catch (ModelNotFoundException $_ex) {
+            return $this->bounceBack('/instances/create', 'Owner "' . $_email . '" not registered.');
+        }
+
+        if (0 != \Artisan::call('dfe:provision', ['owner-id' => $_owner->id, 'instance-id' => $_name, 'guest-location' => GuestLocations::DFE_CLUSTER])) {
+            return $this->bounceBack('/instances/create', 'Error while provisioning instance. Check console log for details.');
+        }
+
+        \Session::flash('flash_message', 'Instance "' . $_name . '" provisioning queued.');
+        \Session::flash('flash_type', 'alert-success');
+
+        return $this->index();
     }
-    */
 
+    /** @inheritdoc */
     public function edit($id)
     {
         return $this->renderView('app.instances.edit',
             [
                 'instance_id' => $id,
                 'instance'    => Instance::with(['user', 'cluster'])->find($id),
-                'clusters'    => Cluster::all(),
+                'clusters'    => Cluster::orderBy('cluster_id_text')->get(),
             ]);
-    }
-
-    public function index()
-    {
-        return $this->renderView('app.instances', ['instances' => Instance::with(['user', 'cluster'])->get()]);
     }
 }
