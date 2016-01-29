@@ -1,52 +1,44 @@
-<?php
-
-?>
 @extends('layouts.main')
 @include('layouts.partials.topmenu')
+
 @section('content')
     @include('layouts.partials.sidebar-menu',['resource'=>'instances'])
 
     <div class="col-xs-11 col-sm-10 col-md-10">
         @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Manage Instances'])
 
-            <!-- Tool Bar -->
+                <!-- Tool Bar -->
         <div class="row">
             <div class="col-md-12">
                 <div class="well well-sm">
-                    <div class="btn-group btn-group pull-right"></div>
-
-                    <div class="btn-group btn-group">
+                    <div class="btn-group btn-group-sm">
                         <button type="button"
                                 disabled="disabled"
-                                class="btn btn-default btn-sm fa fa-fw fa-backward"
+                                class="btn btn-default"
                                 id="_prev"
-                                style="height: 30px; width: 40px"></button>
+                                style="height: 30px;"><i class="fa fa-fw fa-backward"></i></button>
 
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-expanded="false">
-                                <span id="currentPage">Page 1</span> <span class="caret"></span>
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span id="currentPage" style="margin-right: 10px;">Page 1</span><span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" role="menu" id="tablePages"></ul>
                         </div>
 
                         <button type="button"
                                 disabled="disabled"
-                                class="btn btn-default btn-sm fa fa-fw fa-forward"
+                                class="btn btn-default"
                                 id="_next"
-                                style="height: 30px; width: 40px"></button>
+                                style="height: 30px;"><i class="fa fa-fw fa-forward"></i></button>
                     </div>
 
-                    <div class="btn-group">
+                    <div class="btn-group btn-group-sm">
                         <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="Search Instances...">
                     </div>
 
-                    <div class="btn-group pull-right">
-                        <button type="button"
-                                id="refresh"
-                                class="btn btn-default btn-sm fa fa-fw fa-refresh"
-                                title="Reset sorting"
-                                value=""
-                                style="width: 40px"></button>
+                    <div class="btn-group btn-group-md pull-right">
+                        <button type="button" id="refresh" class="btn btn-default btn-primary" title="Refresh Page"><i class=" fa fa-fw fa-refresh"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -73,7 +65,7 @@
                                 <th style="min-width: 100px">Cluster</th>
                                 <th style="min-width: 150px">Owner Email</th>
                                 <th style="min-width: 100px">Last Modified</th>
-                                <th style="width: 50px">&nbsp;</th>
+                                <th style="width: 50px">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -99,13 +91,20 @@
                                                    value="{{ $_instance->id }}">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input name="_token" type="hidden" value="{{ csrf_token() }}">
-                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-bolt"
-                                                    onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
-                                                    value="reset"
-                                                    style="width: 25px; display: inline; vertical-align: middle"
-                                                    data-toggle="tooltip" data-placement="right"
-                                                    title="Reset all limit counters for this instance">
-                                            </button>
+
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-default"
+                                                        onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
+                                                        value="reset"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        title="Reset all limit counters for this instance"><i class="fa fa-fw fa-bolt"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-default"
+                                                        onclick="deleteInstance('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}');"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        title="Deprovision"><i class="fa fa-fw fa-trash"></i>
+                                                </button>
+                                            </div>
                                         </form>
 
                                     </td>

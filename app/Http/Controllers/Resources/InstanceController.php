@@ -55,6 +55,24 @@ class InstanceController extends ViewController
         return \Redirect::to('/' . $this->getUiPrefix() . '/' . ltrim($where, '/'))->withInput()->withErrors($errors);
     }
 
+    /**
+     * @return \DreamFactory\Enterprise\Console\Http\Controllers\Resources\InstanceController|\Illuminate\Support\Facades\Response|\Illuminate\View\View
+     */
+    public function delete()
+    {
+        //  Delete an instance
+        $_instance = Instance::findOrFail($_id = \Input::get('instance-id'));
+
+        if (0 != \Artisan::call('dfe:deprovision', ['instance-id' => $_id,])) {
+            return $this->bounceBack('/instances', 'Instance "' . $_instance->instance_id_text . '" deprovisioning queue failure. Check logs for details.');
+        }
+
+        \Session::flash('flash_message', 'Instance "' . $_instance->instance_id_text . '" deprovisioning queued.');
+        \Session::flash('flash_type', 'alert-success');
+
+        return $this->index();
+    }
+
     /** @inheritdoc */
     public function store(Request $request)
     {

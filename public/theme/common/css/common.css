@@ -79,17 +79,17 @@ form {
 }
 
 button > i.fa-fw {
-    text-align:   left;
-    margin-right: 5px;
+    /*text-align:   left;*/
+    /*margin-right: 5px;*/
 }
 
 .dropdown-menu li a i.fa-fw {
-    margin-right: 5px;
+    /*margin-right: 5px;*/
 }
 
 .btn-group > button > i.fa-fw {
-    min-height:  18px;
-    padding-top: 3px;
+    /*min-height:  18px;*/
+    /*padding-top: 3px;*/
 }
 
 #tablePages {
@@ -440,4 +440,8 @@ button > i.fa-fw {
     font-size:      14px;
     cursor:         pointer;
     vertical-align: middle;
+}
+
+.tab-content {
+    padding: 25px 0;
 }
