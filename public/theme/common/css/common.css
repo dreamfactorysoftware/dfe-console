@@ -88,8 +88,9 @@ button > i.fa-fw {
 }
 
 .btn-group > button > i.fa-fw {
-    /*min-height:  18px;*/
-    /*padding-top: 3px;*/
+    min-height:  18px;
+    padding-top: 3px;
+    /*text-align: center;*/
 }
 
 #tablePages {
@@ -440,6 +441,12 @@ button > i.fa-fw {
     font-size:      14px;
     cursor:         pointer;
     vertical-align: middle;
+}
+
+table#instanceTable {
+    table-layout: fixed;
+    width:        100%;
+    display:      none;
 }
 
 .tab-content {

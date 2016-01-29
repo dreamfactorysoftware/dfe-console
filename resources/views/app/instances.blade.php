@@ -7,38 +7,34 @@
     <div class="col-xs-11 col-sm-10 col-md-10">
         @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Manage Instances'])
 
-                <!-- Tool Bar -->
+            <!-- Tool Bar -->
         <div class="row">
             <div class="col-md-12">
                 <div class="well well-sm">
-                    <div class="btn-group btn-group-sm">
-                        <button type="button"
-                                disabled="disabled"
-                                class="btn btn-default"
-                                id="_prev"
-                                style="height: 30px;"><i class="fa fa-fw fa-backward"></i></button>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" disabled="disabled" class="btn btn-default" id="_prev"><i class="fa fa-fw fa-backward"></i></button>
 
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                <span id="currentPage" style="margin-right: 10px;">Page 1</span><span class="caret"></span>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                <span id="currentPage">Page 1</span>&nbsp;<span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" role="menu" id="tablePages"></ul>
+                            <ul class="dropdown-menu" role="menu" id="tablePages">
+
+                            </ul>
                         </div>
 
-                        <button type="button"
-                                disabled="disabled"
-                                class="btn btn-default"
-                                id="_next"
-                                style="height: 30px;"><i class="fa fa-fw fa-forward"></i></button>
+                        <button type="button" disabled="disabled" class="btn btn-default btn-sm" id="_next"><i class="fa fa-fw fa-forward"></i></button>
                     </div>
 
                     <div class="btn-group btn-group-sm">
-                        <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="Search Instances...">
+                        <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="search term">
                     </div>
 
-                    <div class="btn-group btn-group-md pull-right">
-                        <button type="button" id="refresh" class="btn btn-default btn-primary" title="Refresh Page"><i class=" fa fa-fw fa-refresh"></i>
-                        </button>
+                    <div class="btn-group btn-group-sm pull-right">
+                        <button type="button"
+                                id="refresh"
+                                class="btn btn-default"
+                                title="Reset sorting"><i class="fa fa-fw fa-refresh"></i></button>
                     </div>
                 </div>
             </div>
@@ -56,16 +52,15 @@
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <table id="instanceTable"
-                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance"
-                               style="table-layout: fixed; width: 100%; display:none">
+                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance">
                             <thead>
                             <tr>
                                 <th></th>
-                                <th style="min-width: 100px">Name</th>
-                                <th style="min-width: 100px">Cluster</th>
-                                <th style="min-width: 150px">Owner Email</th>
-                                <th style="min-width: 100px">Last Modified</th>
-                                <th style="width: 50px">Actions</th>
+                                <th>Name</th>
+                                <th>Owner Email</th>
+                                <th>Cluster</th>
+                                <th style="min-width: 150px;">Created</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -81,9 +76,9 @@
                                             {{ $_instance->instance_id_text }}
                                         </a>
                                     </td>
-                                    <td>{{ $_instance->cluster->cluster_id_text }}</td>
                                     <td>{{ $_instance->user->email_addr_text }}</td>
-                                    <td style="width: 185px">{{ $_instance->lmod_date }}</td>
+                                    <td>{{ $_instance->cluster->cluster_id_text }}</td>
+                                    <td>{{ $_instance->create_date }}</td>
                                     <td>
                                         <form method="POST" action="/{{$prefix}}/limits/resetallcounters"
                                               id="reset_counter_{{ $_instance->id }}">
@@ -91,37 +86,28 @@
                                                    value="{{ $_instance->id }}">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input name="_token" type="hidden" value="{{ csrf_token() }}">
-
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" class="btn btn-default"
-                                                        onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
-                                                        value="reset"
-                                                        data-toggle="tooltip" data-placement="right"
-                                                        title="Reset all limit counters for this instance"><i class="fa fa-fw fa-bolt"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-default"
-                                                        onclick="deleteInstance('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}');"
-                                                        data-toggle="tooltip" data-placement="right"
-                                                        title="Deprovision"><i class="fa fa-fw fa-trash"></i>
-                                                </button>
-                                            </div>
+                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-bolt"
+                                                    onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
+                                                    value="reset"
+                                                    style="width: 25px; display: inline; vertical-align: middle"
+                                                    data-toggle="tooltip" data-placement="right"
+                                                    title="Reset all limit counters for this instance">
+                                            </button>
                                         </form>
 
                                     </td>
                                 </tr>
 
                             @endforeach
-
                             </tbody>
                         </table>
                     </div>
+
                     <span id="tableInfo"></span>
-                    <br><br><br><br>
                 </div>
             </div>
         </div>
     </div>
-
     <script type="text/javascript" src="/js/blade-scripts/instances/instances.js"></script>
 @stop
 
