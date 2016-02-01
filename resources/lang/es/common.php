@@ -1,6 +1,6 @@
 <?php
 /**
- * Spanish - Console strings
+ * Spanish - Common strings
  */
 return [
     //******************************************************************************
