@@ -11,7 +11,7 @@ if (true === config('dfe.enable-console-api', false)) {
         'prefix'     => 'api/v1',
         'middleware' => ['log.dfe-ops-api',],
     ],
-        function (){
+        function() {
             \Route::controller('ops', 'OpsController');
 
             \Route::resource('users', 'Ops\UserController');
@@ -34,18 +34,20 @@ if (true === config('dfe.enable-console-api', false)) {
 \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/home', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
+\Route::get('logout', 'Resources\HomeController@logout');
 
 //******************************************************************************
 //* General Resource Controllers
 //******************************************************************************
 
 \Route::group(['prefix' => ConsoleDefaults::UI_PREFIX,],
-    function (){
+    function() {
         //  Specialty routes for UI
         \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
         \Route::get('instance/{instanceId}/services', 'Resources\LimitController@getInstanceServices');
         \Route::get('instance/{instanceId}/users', 'Resources\LimitController@getInstanceUsers');
         \Route::get('instance/{instanceId}/admins', 'Resources\LimitController@getInstanceAdmins');
+        \Route::post('instance/{instanceId}/delete', 'Resources\InstanceController@delete');
         \Route::get('reports/kibana', 'Resources\ReportController@getKibana');
 
         //  UI resource controllers
@@ -71,13 +73,13 @@ if (true === config('dfe.enable-console-api', false)) {
 
 /** An endpoint to return the current version of dfe-console */
 \Route::get('/version',
-    function (){
+    function() {
         return `git rev-parse --verify HEAD`;
     });
 
 /** Login event listener */
 \Event::listen('auth.login',
-    function (){
+    function() {
         \Auth::user()->update([
             'last_login_date'    => date('c'),
             'last_login_ip_text' => \Request::server('REMOTE_ADDR'),

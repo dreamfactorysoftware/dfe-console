@@ -1,9 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Console\Tests\Services\Facades;
 
 use DreamFactory\Enterprise\Common\Contracts\ResourceProvisioner;
+use DreamFactory\Enterprise\Provisioners\DreamFactory\InstanceProvisioner;
+use DreamFactory\Enterprise\Provisioners\DreamFactory\StorageProvisioner;
 use DreamFactory\Enterprise\Services\Facades\Provision;
-use DreamFactory\Enterprise\Services\Provisioners\DreamFactory\InstanceProvisioner;
-use DreamFactory\Enterprise\Services\Provisioners\DreamFactory\StorageProvisioner;
 
 class ProvisionFacadeTest extends \TestCase
 {
@@ -17,7 +17,7 @@ class ProvisionFacadeTest extends \TestCase
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolve
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolveStorage
      * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::resolveDatabase
-     * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::_buildTag
+     * @covers DreamFactory\Enterprise\Services\Managers\ProvisioningManager::buildTag
      *
      * @return void
      */
@@ -35,5 +35,4 @@ class ProvisionFacadeTest extends \TestCase
         $_provisioner = Provision::getStorageProvisioner('dreamfactory');
         $this->assertTrue($_provisioner instanceof StorageProvisioner);
     }
-
 }

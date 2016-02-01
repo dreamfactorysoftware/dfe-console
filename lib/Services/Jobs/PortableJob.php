@@ -20,6 +20,10 @@ class PortableJob extends BaseInstanceJob
      * @type mixed Where to send the output
      */
     protected $outputFile;
+    /**
+     * @type bool If true, the default, $target is presumed to be an indirect pointer (snapshot-id for instance)
+     */
+    protected $indirect = true;
 
     //******************************************************************************
     //* Methods
@@ -36,8 +40,29 @@ class PortableJob extends BaseInstanceJob
         $this->outputFile = $request->get('output-file');
         $this->ownerId = $request->get('owner-id');
         $this->ownerType = $request->get('owner-type');
+        $this->indirect = $request->get('indirect', true);
 
         parent::__construct($request->getInstanceId(), $request->toArray());
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIndirect()
+    {
+        return $this->indirect;
+    }
+
+    /**
+     * @param boolean $indirect
+     *
+     * @return $this
+     */
+    public function setIndirect($indirect)
+    {
+        $this->indirect = $indirect;
+
+        return $this;
     }
 
     /**

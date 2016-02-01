@@ -39,18 +39,18 @@ class Provision extends ConsoleCommand
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         $_instanceId = $this->argument('instance-id');
 
         //	Check the name here for quicker response...
         if (false === ($_instanceName = Instance::isNameAvailable($_instanceId)) || is_numeric($_instanceName[0])) {
-            $this->error('The name of your instance cannot be "' .
-                $_instanceId .
-                '".  It is either currently in-use, or otherwise invalid.');
-            exit(1);
+            \Log::error('[dfe:provision] Provision failure: ' . ($_message = 'The instance name "' . $_instanceId . '" is either currently in-use or otherwise invalid.'));
+            $this->error($_message);
+
+            return 1;
         }
 
         $_ownerType = OwnerTypes::USER;

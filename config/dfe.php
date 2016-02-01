@@ -24,7 +24,7 @@ return [
     //  The hash algorithm for hashing api keys. Defaults to 'sha256'
     'signature-method'        => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
     //  The list of allowed partners
-    'allowed-partners'        => ['vz', 'hs', 'df',],
+    'allowed-partners'        => [env('DFE_PARTNER_ID', 'dfe'), 'hs', 'df',],
     'default-domain'          => env('DFE_DEFAULT_DOMAIN', '.dreamfactory.com'),
     'default-domain-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https'),
     //  Set this to FALSE to disallow contact with this console via the Ops API
@@ -73,6 +73,28 @@ return [
         'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
         /**  NavBar 194x50px image. Shown on top of inner pages. */
         'navbar-image'       => env('DFE_NAVBAR_IMAGE', '/theme/standard/img/logo.png'),
+        /** Custom css to load */
+        'custom-css-file'    => env('DFE_CUSTOM_CSS_FILE'),
+    ],
+    //******************************************************************************
+    //* General instance settings
+    //******************************************************************************
+    'instance'                => [
+        /** Settings for dfe-api-client */
+        'api' => [
+            /**
+             * If true, admin credentials are required for instance API use.
+             * By default, the console utilizes the default provisioning channel
+             * to obtain metrics and resource information.
+             *
+             * **This setting trumps the "api-key" setting which follows**
+             */
+            'login-required' => env('DFE_INSTANCE_API_LOGIN_REQUIRED', false),
+            /** An API key to use for communications instead of provisioning channel */
+            'api-key'        => env('DFE_INSTANCE_API_KEY'),
+            /** The header to use when transmitting the API key. Defaults to "X-DreamFactory-API-Key" */
+            'api-key-header' => env('DFE_INSTANCE_API_HEADER', EnterpriseDefaults::INSTANCE_API_HEADER),
+        ],
     ],
     //******************************************************************************
     //* UI Settings

@@ -115,7 +115,7 @@ class InstanceManager extends BaseManager implements Factory
                 throw new \InvalidArgumentException('No "owner-id" given. Cannot create instance.');
             }
 
-            if (null == ($_ownerType = array_get($options, 'owner-type'))) {
+            if (null === ($_ownerType = array_get($options, 'owner-type'))) {
                 $_ownerType = OwnerTypes::USER;
             }
 

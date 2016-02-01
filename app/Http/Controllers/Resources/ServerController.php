@@ -49,7 +49,6 @@ class ServerController extends ViewController
     public function index()
     {
         $asgn_servers = Server::join('cluster_server_asgn_t', 'server_id', '=', 'id')->get();
-
         $excludes = [];
 
         foreach ($asgn_servers as $obj) {
@@ -57,7 +56,6 @@ class ServerController extends ViewController
         }
 
         $not_asgn_servers = Server::whereNotIn('id', $excludes)->get();
-
         $result = array_merge(json_decode($asgn_servers), json_decode($not_asgn_servers));
 
         return \View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $result);
@@ -129,12 +127,8 @@ class ServerController extends ViewController
                     "required",
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-                'config.' .
-                $input['server_type_select'] .
-                '.port'                                                             => 'sometimes|required|numeric|min:1',
-                'config.' .
-                $input['server_type_select'] .
-                '.scheme'                                                           => 'sometimes|required|string|min:1',
+                'config.' . $input['server_type_select'] . '.port'                  => 'sometimes|required|numeric|min:1',
+                'config.' . $input['server_type_select'] . '.scheme'                => 'sometimes|required|string|min:1',
                 'config.' . $input['server_type_select'] . '.username'              => 'sometimes|required|string',
                 'config.' . $input['server_type_select'] . '.driver'                => 'sometimes|required|string',
                 'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string',
@@ -165,15 +159,13 @@ class ServerController extends ViewController
                         $flash_message = 'Protocol is not selected';
                         break;
                     case 'config.' . $input['server_type_select'] . '.username':
-                        $flash_message =
-                            'User Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'User Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.' . $input['server_type_select'] . '.driver':
                         $flash_message = 'Driver is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.' . $input['server_type_select'] . '.default-database-name':
-                        $flash_message =
-                            'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                 }
 
@@ -234,21 +226,17 @@ class ServerController extends ViewController
 
         $validator = Validator::make($input,
             [
-                'server_id_text'                                                    => 'required|string|min:1',
-                'server_type_select'                                                => 'required|string|min:1',
-                'host_text'                                                         => [
+                'server_id_text'     => 'required|string|min:1',
+                'server_type_select' => 'required|string|min:1',
+                'host_text'          => [
                     "required",
                     "Regex:/((https?|ftp)\:\/\/)?([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?(([a-z0-9-.]*)\.([a-z]{2,6}))|(([0-9]{1,3}\.){3}[0-9]{1,3})(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?/i",
                 ],
-                'config.' .
-                $input['server_type_select'] .
-                '.port'                                                             => 'sometimes|required|numeric|min:1',
-                'config.' .
-                $input['server_type_select'] .
-                '.scheme'                                                           => 'sometimes|required|string|min:1',
-                'config.' . $input['server_type_select'] . '.username'              => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.driver'                => 'sometimes|required|string',
-                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string',
+                //                'config.' . $input['server_type_select'] . '.port'                  => 'sometimes|required|numeric|min:1',
+                //                'config.' . $input['server_type_select'] . '.scheme'                => 'sometimes|required|string|min:1',
+                //                'config.' . $input['server_type_select'] . '.username'              => 'sometimes|required|string',
+                //                'config.' . $input['server_type_select'] . '.driver'                => 'sometimes|required|string',
+                //                'config.' . $input['server_type_select'] . '.default-database-name' => 'sometimes|required|string',
             ]);
 
         if ($validator->fails()) {
@@ -276,15 +264,13 @@ class ServerController extends ViewController
                         $flash_message = 'Scheme is not selected';
                         break;
                     case 'config.' . $input['server_type_select'] . '.username':
-                        $flash_message =
-                            'User Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'User Name is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.' . $input['server_type_select'] . '.driver':
                         $flash_message = 'Driver is blank or contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                     case 'config.' . $input['server_type_select'] . '.default-database-name':
-                        $flash_message =
-                            'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
+                        $flash_message = 'Default is blank or Database Name contains invalid characters (use a-z, A-Z, 0-9, . and -)';
                         break;
                 }
 

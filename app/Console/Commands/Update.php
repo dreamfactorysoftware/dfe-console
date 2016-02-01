@@ -13,16 +13,16 @@ class Update extends ConsoleCommand implements SelfHandling
     /** @inheritdoc */
     protected $name = 'dfe:update';
     /** @inheritdoc */
-    protected $description = 'Update DFE Console to the latest version.';
+    protected $description = 'Update <comment>DFE Console</comment> to the latest version.';
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
     /** @inheritdoc */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         if (empty($_git = $this->shell('which git'))) {
             $this->error('"git" does not appear to be installed on this system. It is required for this command');

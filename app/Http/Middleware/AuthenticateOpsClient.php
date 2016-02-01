@@ -82,7 +82,7 @@ class AuthenticateOpsClient extends BaseMiddleware
             return ErrorPacket::create(Response::HTTP_UNAUTHORIZED);
         }
 
-        $request->setUserResolver(function () use ($_owner){
+        $request->setUserResolver(function() use ($_owner) {
             return $_owner;
         });
 

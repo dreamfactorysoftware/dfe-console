@@ -32,6 +32,7 @@
         <option value="Illuminate\Support\Facades\Queue::getFacadeAccessor" />
         <option value="config" />
         <option value="DreamFactory\Enterprise\Common\Utility\Disk::segment" />
+        <option value="Illuminate\Foundation\Http\Kernel-&gt;sendRequestThroughRouter" />
       </list>
     </option>
   </component>

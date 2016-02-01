@@ -14,7 +14,7 @@
             <input name="_method" type="hidden" value="DELETE">
             <input name="_token" type="hidden" value="{{ csrf_token() }}">
             <input name="_selected" id="_selected" type="hidden" value="">
-            
+
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="well well-sm">
                     <div class="btn-group">
@@ -56,10 +56,11 @@
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <th>Name</th>
+                        <th>Type</th>
                         <th>Cluster</th>
                         <th>Instance</th>
                         <th>User</th>
-                        <th>Definition</th>
+                        <th>Limit</th>
                         <th style="text-align: center;">Status</th>
                     </tr>
                     </thead>
@@ -68,16 +69,27 @@
                         @foreach($limits as $value)
                             <tr>
                                 <td></td>
-                                <td id="actionColumn" class="" style="text-align: center; vertical-align: middle;">
-                                    <form method="POST" action="/{{$prefix}}/limits/{{$value['id']}}" id="single_delete_{{ $value['id'] }}">
-                                        <input type="hidden" id="limit_id" value="{{ $value['id'] }}">
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <input name="_token" type="hidden" value="{{ csrf_token() }}">
-                                        <input type="checkbox" value="{{ $value['id'] }}" id="server_checkbox_{{ $value['id'] }}" name="{{ $value['label_text'] }}">&nbsp;&nbsp;
-                                        <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeLimit('{{ $value['id'] }}', '{{ $value['label_text'] }}')" value="delete" style="width: 25px" ></button>
-                                    </form>
+                                <td id="actionColumn" class="form-container" style="text-align: center; vertical-align: middle;">
+                                    <div class="form-container" style="text-align: left; width: 85px; margin: auto;">
+                                        <form method="POST" action="/{{$prefix}}/limits/{{$value['id']}}" id="single_delete_{{ $value['id'] }}">
+                                            <input type="hidden" id="limit_id" value="{{ $value['id'] }}">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
+                                            <input type="checkbox" value="{{ $value['id'] }}" id="server_checkbox_{{ $value['id'] }}" name="{{ $value['label_text'] }}">&nbsp;&nbsp;
+                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash" onclick="removeLimit('{{ $value['id'] }}', '{{ $value['label_text'] }}')" value="delete" style="width: 25px;" ></button>
+                                        </form>
+                                        @if($value['enable_clear'])
+                                        <form method="POST" action="/{{$prefix}}/limits/resetcounter" id="reset_counter_{{ $value['id'] }}">
+                                            <input type="hidden" name="limit_id" id="limit_id" value="{{ $value['id'] }}">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
+                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-bolt" onclick="resetCounter('{{ $value['id'] }}', '{{ $value['label_text'] }}')" value="reset" style="width: 25px;" data-toggle="tooltip" data-placement="right" title="Reset counter"></button>
+                                        </form>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td>{{ $value['label_text'] }}</td>
+                                <td>{{ $value['limit_type_text'] }}</td>
                                 <td>{{ $value['cluster_id_text'] }}</td>
                                 <td>@if(empty($value['instance_id_text']))<em>All</em>@else{{ $value['instance_id_text'] }}@endif</td>
                                 <td>@if(empty($value['user_name']))<em>All</em>@else{{ $value['user_name'] }}@endif</td>
@@ -96,5 +108,18 @@
 </div>
 
     <script type="text/javascript" src="/js/blade-scripts/limits/limits.js"></script>
+
+
+    <style>
+        .form-container form,
+        .form-container form div {
+            display: inline;
+        }
+
+        .form-container button {
+            display: inline;
+            vertical-align: middle;
+        }
+    </style>
 
 @stop

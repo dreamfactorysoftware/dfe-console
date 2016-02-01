@@ -43,9 +43,9 @@ class Setup extends ConsoleCommand
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         $this->config = config('commands.setup');
 

@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Console\Console;
 
-use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -9,11 +8,10 @@ class Kernel extends ConsoleKernel
     //* Members
     //******************************************************************************
 
-    /**
-     * @var array The artisan commands provided by your application.
-     */
+    /** @inheritdoc */
     protected $commands = [
         //  Core
+        'DreamFactory\Enterprise\Console\Console\Commands\Users',
         'DreamFactory\Enterprise\Console\Console\Commands\Update',
         'DreamFactory\Enterprise\Console\Console\Commands\Setup',
         'DreamFactory\Enterprise\Console\Console\Commands\Register',
@@ -25,6 +23,7 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Blueprint',
         'DreamFactory\Enterprise\Console\Console\Commands\Capsule',
         'DreamFactory\Enterprise\Console\Console\Commands\MigrateInstance',
+        'DreamFactory\Enterprise\Console\Console\Commands\Info',
         //  Services
         'DreamFactory\Enterprise\Console\Console\Commands\Manifest',
         'DreamFactory\Enterprise\Console\Console\Commands\Provision',
@@ -32,10 +31,4 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Import',
         'DreamFactory\Enterprise\Console\Console\Commands\Export',
     ];
-
-    protected function schedule(Schedule $schedule)
-    {
-        parent::schedule($schedule);
-    }
-
 }

@@ -9,6 +9,7 @@
       <w>asgn</w>
       <w>authenticatable</w>
       <w>bcrypt</w>
+      <w>bein</w>
       <w>binlogging</w>
       <w>binlogs</w>
       <w>bootstrappers</w>
@@ -22,14 +23,19 @@
       <w>creds</w>
       <w>csrf</w>
       <w>datadir</w>
+      <w>datatables</w>
+      <w>datepicker</w>
       <w>deprovision</w>
       <w>deprovisioned</w>
       <w>deprovisioning</w>
       <w>dfac</w>
       <w>dfdsp</w>
+      <w>docomo</w>
+      <w>dropdown</w>
       <w>eprovision</w>
       <w>favicons</w>
       <w>fieldset</w>
+      <w>filemanager</w>
       <w>fillable</w>
       <w>firstname</w>
       <w>flysystems</w>
@@ -46,6 +52,7 @@
       <w>jerryablan</w>
       <w>jizz</w>
       <w>jsonable</w>
+      <w>keyup</w>
       <w>klingons</w>
       <w>lastname</w>
       <w>loginbox</w>
@@ -54,6 +61,8 @@
       <w>misconfigured</w>
       <w>myisam</w>
       <w>mysqld</w>
+      <w>nodejs</w>
+      <w>ownername</w>
       <w>packetized</w>
       <w>pagename</w>
       <w>pesce's</w>
@@ -67,21 +76,29 @@
       <w>provisioners</w>
       <w>queueable</w>
       <w>rackspacecloud</w>
+      <w>resetallcounters</w>
       <w>setdev</w>
       <w>shaper</w>
       <w>shapers</w>
+      <w>shhhhhh</w>
       <w>shortopts</w>
       <w>siloed</w>
       <w>snoozy</w>
+      <w>stderr</w>
       <w>stdout</w>
       <w>stooids</w>
       <w>stoopids</w>
       <w>stringified</w>
+      <w>subline</w>
+      <w>subnode</w>
       <w>symlinking</w>
+      <w>tablist</w>
+      <w>tful</w>
       <w>topmenu</w>
       <w>topnav</w>
       <w>unassign</w>
       <w>unmanaged</w>
+      <w>validatin</w>
       <w>weiner</w>
       <w>wikitable</w>
       <w>worky</w>

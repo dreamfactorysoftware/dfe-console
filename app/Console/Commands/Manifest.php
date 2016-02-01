@@ -3,9 +3,6 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\ServiceUser;
-use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Jobs\ManifestJob;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,9 +31,9 @@ class Manifest extends ConsoleCommand
     //******************************************************************************
 
     /** @inheritdoc */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         if ($this->option('create') && $this->option('show')) {
             throw new \InvalidArgumentException('The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.');
@@ -127,7 +124,7 @@ class Manifest extends ConsoleCommand
     }
 
     /**
-     * @return Cluster|Instance|Server|User|ServiceUser|\stdClass the owner of the manifest key
+     * @return \DreamFactory\Enterprise\Database\Models\Cluster|\DreamFactory\Enterprise\Database\Models\Instance|\DreamFactory\Enterprise\Database\Models\Server|\DreamFactory\Enterprise\Database\Models\User|\DreamFactory\Enterprise\Database\Models\ServiceUser|\stdClass the owner of the manifest key
      */
     public function getOwner()
     {

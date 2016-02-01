@@ -33,9 +33,9 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
     //******************************************************************************
 
     /** @inheritdoc */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         $this->setOutputPrefix('[' . $this->name . ']');
 

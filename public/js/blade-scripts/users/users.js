@@ -103,6 +103,7 @@ var table = $('#userTable').DataTable({
         }
     ],
     "bStateSave": true,
+    "pageLength": 50,
     "fnStateSave": function (oSettings, oData) {
         localStorage.setItem('Users_' + window.location.pathname, JSON.stringify(oData));
     },

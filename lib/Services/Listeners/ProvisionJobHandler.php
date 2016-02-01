@@ -7,7 +7,6 @@ use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceRequest;
-use DreamFactory\Library\Utility\Json;
 
 /**
  * Processes queued provision requests
@@ -38,15 +37,11 @@ class ProvisionJobHandler
 
         if (is_string($_guestLocation) && !is_numeric($_guestLocation)) {
             $_options['guest-location'] = GuestLocations::resolve($_guestLocation, true);
-            \Log::debug('[Provision] guest location "' .
-                $_options['guest-location'] .
-                '" resolved from "' .
-                $_guestLocation .
-                '".');
+            \Log::debug('[Provision] guest location "' . $_options['guest-location'] . '" resolved from "' . $_guestLocation . '".');
             $_guestLocation = $_options['guest-location'];
         }
 
-        \Log::info('[Provision] Request [guest=' . $_guestLocation . ']: ' . Json::encode($_options));
+        \Log::info('[Provision] Handler called', ['guest' => $_guestLocation, 'instance-id' => $command->getInstanceId(), 'options' => $_options]);
 
         try {
             //  Create the instance record

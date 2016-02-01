@@ -34,9 +34,9 @@ class Cluster extends ConsoleCommand
      *
      * @return mixed
      */
-    public function fire()
+    public function handle()
     {
-        parent::fire();
+        parent::handle();
 
         $_clusterId = $this->argument('cluster-id');
 

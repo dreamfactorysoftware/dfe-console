@@ -224,6 +224,15 @@ function removeLimit(id, name) {
         return false;
 }
 
+function resetCounter(id, name) {
+    if(confirm('Reset counter for Limit "' + name + '" ?')){
+        $('#reset_counter_' + id).submit();
+        return true;
+    }
+    else
+        return false;
+}
+
 
 $('#selectedLimitsRemove').click(function(){
 

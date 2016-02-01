@@ -12,15 +12,15 @@ require __DIR__ . '/form-logic.php';
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
 
     <style type="text/css">
         html, body {
-            width:      100%;
-            min-width:  550px;
-            height:     100%;
+            width: 100%;
+            min-width: 550px;
+            height: 100%;
             max-height: 100%;
         }
 
@@ -28,57 +28,20 @@ require __DIR__ . '/form-logic.php';
             font-family: "Open Sans", "Droid Sans", Arial, sans-serif;
         }
 
-        .navbar-inverse {
-            background-color: #000000;
-        }
-
-        .navbar-title-row {
-            margin-top: 10px;
-        }
-
-        .navbar-title {
-            color:     rgba(255, 255, 255, 1.0);
-            font-size: 3em;
-            margin:    5px 0 0;
-            padding:   0;
-        }
-
-        .align-left {
-            text-align: left;
-        }
-
-        .align-right {
-            text-align: right;
-        }
-
         .align-center {
             text-align: center;
         }
 
-        .btn-create {
-            color:                 #333;
-            background-color:      #FA2;
-            border-radius:         5px;
-            -moz-border-radius:    5px;
-            -webkit-border-radius: 5px;
-            border:                none;
-            font-size:             16px;
-            font-weight:           700;
-            height:                32px;
-            padding:               4px 16px;
-            width:                 200px;
-        }
-
         label {
             display: inline-block;
-            width:   150px;
+            width: 150px;
         }
 
         .has-error {
-            font-size:   11px;
-            text-align:  left;
+            font-size: 11px;
+            text-align: left;
             margin-left: 150px;
-            color:       darkred;
+            color: darkred;
         }
 
         ul {
@@ -92,32 +55,9 @@ require __DIR__ . '/form-logic.php';
         p {
             font-size: 16px;
         }
-
-        @media (max-width: 2048px) {
-            .navbar-title {
-                font-size: 3.5em;
-                margin:    20px 0 0;
-            }
-        }
-
-        @media (max-width: 1415px) {
-
-            .navbar-title {
-                margin: 5px 0 0;
-            }
-        }
-
-        @media (max-width: 960px) {
-
-            .navbar-title {
-                font-size: 2.5em;
-                margin:    5px 0 0;
-            }
-        }
-
     </style>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/static/jquery-2.1.4/jquery.min.js"></script>
     <!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
     <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -258,6 +198,6 @@ require __DIR__ . '/form-logic.php';
 
 <p style="margin-top: 25px; text-align: center;">© <?php echo date("Y"); ?> DreamFactory Software, Inc.</p>
 
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="/static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
 </body>
 </html>
