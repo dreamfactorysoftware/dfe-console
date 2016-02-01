@@ -56,21 +56,28 @@ class InstanceController extends ViewController
     }
 
     /**
+     * @param int $instanceId
+     *
      * @return \DreamFactory\Enterprise\Console\Http\Controllers\Resources\InstanceController|\Illuminate\Support\Facades\Response|\Illuminate\View\View
      */
-    public function delete()
+    public function delete($instanceId)
     {
         //  Delete an instance
-        $_instance = Instance::findOrFail($_id = \Input::get('instance-id'));
+        try {
+            $_instance = Instance::findOrFail($instanceId);
 
-        if (0 != \Artisan::call('dfe:deprovision', ['instance-id' => $_id,])) {
-            return $this->bounceBack('/instances', 'Instance "' . $_instance->instance_id_text . '" deprovisioning queue failure. Check logs for details.');
+            if (0 != \Artisan::call('dfe:deprovision', ['instance-id' => $instanceId,])) {
+                return $this->bounceBack('/instances',
+                    ['Instance "' . $_instance->instance_id_text . '" deprovisioning queue failure. Check logs for details.']);
+            }
+
+            \Session::flash('flash_message', 'Instance "' . $_instance->instance_id_text . '" deprovisioning queued.');
+            \Session::flash('flash_type', 'alert-success');
+
+            return $this->bounceBack('instances');
+        } catch (ModelNotFoundException $_ex) {
+            return $this->bounceBack('instances', ['The instance was not found. Deprovisioning failure.']);
         }
-
-        \Session::flash('flash_message', 'Instance "' . $_instance->instance_id_text . '" deprovisioning queued.');
-        \Session::flash('flash_type', 'alert-success');
-
-        return $this->index();
     }
 
     /** @inheritdoc */
