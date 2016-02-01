@@ -1150,16 +1150,16 @@
         },
         {
             "name": "graham-campbell/flysystem",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrahamCampbell/Laravel-Flysystem.git",
-                "reference": "b36a2b2a5a136347235ab003cdd21f5d1f0147e3"
+                "reference": "8aae9406db895a0a505867a0ba6023a09f267a99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Laravel-Flysystem/zipball/b36a2b2a5a136347235ab003cdd21f5d1f0147e3",
-                "reference": "b36a2b2a5a136347235ab003cdd21f5d1f0147e3",
+                "url": "https://api.github.com/repos/GrahamCampbell/Laravel-Flysystem/zipball/8aae9406db895a0a505867a0ba6023a09f267a99",
+                "reference": "8aae9406db895a0a505867a0ba6023a09f267a99",
                 "shasum": ""
             },
             "require": {
@@ -1235,7 +1235,7 @@
                 "laravel",
                 "s3"
             ],
-            "time": "2015-11-14 11:54:30"
+            "time": "2016-01-30 14:40:08"
         },
         {
             "name": "graham-campbell/manager",
@@ -1243,12 +1243,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/GrahamCampbell/Laravel-Manager.git",
-                "reference": "2514050401f31ec6ab4b72a142ad6818ba3644ff"
+                "reference": "35c0abf7679a0f48d61dcd7fb11894036e81f1f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GrahamCampbell/Laravel-Manager/zipball/2514050401f31ec6ab4b72a142ad6818ba3644ff",
-                "reference": "2514050401f31ec6ab4b72a142ad6818ba3644ff",
+                "url": "https://api.github.com/repos/GrahamCampbell/Laravel-Manager/zipball/35c0abf7679a0f48d61dcd7fb11894036e81f1f2",
+                "reference": "35c0abf7679a0f48d61dcd7fb11894036e81f1f2",
                 "shasum": ""
             },
             "require": {
@@ -1294,7 +1294,7 @@
                 "laravel",
                 "manager"
             ],
-            "time": "2016-01-24 12:12:11"
+            "time": "2016-01-30 14:13:56"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2219,16 +2219,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "1.1.5",
+            "version": "1.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "dd8998b7c846f6909f4e7a5f67fabebfc412a4f7"
+                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/dd8998b7c846f6909f4e7a5f67fabebfc412a4f7",
-                "reference": "dd8998b7c846f6909f4e7a5f67fabebfc412a4f7",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/e6f80ab77885151908d0ec743689ca700886e8b0",
+                "reference": "e6f80ab77885151908d0ec743689ca700886e8b0",
                 "shasum": ""
             },
             "require": {
@@ -2263,7 +2263,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-01-06 13:31:20"
+            "time": "2016-01-29 16:19:52"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -2583,12 +2583,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "a8b0b6b37d09e8c1d1dd329b8f8540cf62317e2e"
+                "reference": "2c881b1146b3f6a36d4db5f877341c9b186dc913"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/a8b0b6b37d09e8c1d1dd329b8f8540cf62317e2e",
-                "reference": "a8b0b6b37d09e8c1d1dd329b8f8540cf62317e2e",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/2c881b1146b3f6a36d4db5f877341c9b186dc913",
+                "reference": "2c881b1146b3f6a36d4db5f877341c9b186dc913",
                 "shasum": ""
             },
             "require": {
@@ -2606,7 +2606,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0.x-dev"
+                    "dev-master": "3.1.x-dev"
                 }
             },
             "autoload": {
@@ -2630,7 +2630,7 @@
                 "client",
                 "search"
             ],
-            "time": "2016-01-17 20:24:04"
+            "time": "2016-01-30 20:39:28"
         },
         {
             "name": "sebastian/git",
@@ -2792,12 +2792,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/class-loader.git",
-                "reference": "5fe4b278a65d5059a0e225a1c60d1d8ac42f56c9"
+                "reference": "517ab0554b6a5744d04480cb06873ffbd9442d73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/class-loader/zipball/5fe4b278a65d5059a0e225a1c60d1d8ac42f56c9",
-                "reference": "5fe4b278a65d5059a0e225a1c60d1d8ac42f56c9",
+                "url": "https://api.github.com/repos/symfony/class-loader/zipball/517ab0554b6a5744d04480cb06873ffbd9442d73",
+                "reference": "517ab0554b6a5744d04480cb06873ffbd9442d73",
                 "shasum": ""
             },
             "require": {
@@ -2837,7 +2837,7 @@
             ],
             "description": "Symfony ClassLoader Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-25 16:29:20"
+            "time": "2016-01-30 15:58:35"
         },
         {
             "name": "symfony/config",
@@ -3064,12 +3064,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "4952a6fd4fdd20f956e403164c766134d199e23f"
+                "reference": "185586600fb0a900db254516410eb54c5a5d5a02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/4952a6fd4fdd20f956e403164c766134d199e23f",
-                "reference": "4952a6fd4fdd20f956e403164c766134d199e23f",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/185586600fb0a900db254516410eb54c5a5d5a02",
+                "reference": "185586600fb0a900db254516410eb54c5a5d5a02",
                 "shasum": ""
             },
             "require": {
@@ -3118,7 +3118,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 11:34:40"
+            "time": "2016-01-30 15:58:35"
         },
         {
             "name": "symfony/dom-crawler",
@@ -3339,12 +3339,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/framework-bundle.git",
-                "reference": "514ca78709e7eb516a732a20f2d1388932b6961a"
+                "reference": "0f7b9e1f956a13f46ab9c670f271f932bf7466d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/514ca78709e7eb516a732a20f2d1388932b6961a",
-                "reference": "514ca78709e7eb516a732a20f2d1388932b6961a",
+                "url": "https://api.github.com/repos/symfony/framework-bundle/zipball/0f7b9e1f956a13f46ab9c670f271f932bf7466d4",
+                "reference": "0f7b9e1f956a13f46ab9c670f271f932bf7466d4",
                 "shasum": ""
             },
             "require": {
@@ -3418,7 +3418,7 @@
             ],
             "description": "Symfony FrameworkBundle",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 11:27:15"
+            "time": "2016-01-31 21:09:31"
         },
         {
             "name": "symfony/http-foundation",
@@ -4194,12 +4194,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "f87f664a73d8f8075bb9203ee0b2ba488fc04725"
+                "reference": "dd940c8cee336befb5aa27f01b8642da554493fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/f87f664a73d8f8075bb9203ee0b2ba488fc04725",
-                "reference": "f87f664a73d8f8075bb9203ee0b2ba488fc04725",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/dd940c8cee336befb5aa27f01b8642da554493fb",
+                "reference": "dd940c8cee336befb5aa27f01b8642da554493fb",
                 "shasum": ""
             },
             "require": {
@@ -4249,7 +4249,7 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 05:09:39"
+            "time": "2016-01-31 07:57:13"
         },
         {
             "name": "symfony/var-dumper",
