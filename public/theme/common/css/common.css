@@ -78,13 +78,10 @@ form {
     padding: 8px 0;
 }
 
-button > i.fa-fw {
-    /*text-align:   left;*/
-    /*margin-right: 5px;*/
-}
-
+button[type="submit"] > i.fa-fw,
 .dropdown-menu li a i.fa-fw {
-    /*margin-right: 5px;*/
+    text-align:   left;
+    margin-right: 5px;
 }
 
 .btn-group > button > i.fa-fw {
@@ -451,4 +448,10 @@ table#instanceTable {
 
 .tab-content {
     padding: 25px 0;
+}
+
+.dataTables_empty {
+    text-align:  center !important;
+    font-size:   21px;
+    font-weight: bold;
 }

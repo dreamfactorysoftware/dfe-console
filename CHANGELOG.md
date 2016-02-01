@@ -1,13 +1,19 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.12][v1.0.12]
+## Updated
+- Removed duplicate **Logout** command from profile menu
+- Instance delete ability added to instance console UI
+
 ## [1.0.11][v1.0.11]
 ## Added
-- Instance creation/deletion from console UI
+- Instance create ability added to instance console UI
 - Internationalization of UI strings for instance creation.
 - Support for customisation via CSS and graphic assets during installation
 - Standardized user creation via database model
-- New console commands *dfe:blueprint*, *dfe:capsule*, *dfe:info*, *dfe:migrate-instance*, and *dfe:users*
+- New console commands `dfe:blueprint`, `dfe:capsule`, `dfe:info`, `dfe:migrate-instance`, and `dfe:users` now available
+
 ## Updated
 - Unnecessary required fields removed from server create
 - Changed version constraint of PHPUNIT in composer.json to ensure only version 4.* is installed. Version 5.* requires PHP 5.6, which is not in the Ubuntu 14.04 repository.
@@ -27,6 +33,7 @@ All notable changes to this project will be documented in this file. This projec
 ## [1.0.8][v1.0.8]
 ## Added
 - Migration to correct index on `job_result_t`
+
 ## Fixed
 - Console registration failure corrected.
 
@@ -37,6 +44,7 @@ All notable changes to this project will be documented in this file. This projec
 - Add package `dreamfactory/dfe-capsule` for instance encapsulation
 - **Capsule** Artisan command
 - **CapsuleTest** unit test for **Capsule** Artisan command
+
 ## Updated
 - Update in `dreamfactory/dfe-common` for password resets incorporated
 - Updated `.env-dist` with new default directories for blueprint and migration services
@@ -54,6 +62,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.12]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.11...1.0.12
 [v1.0.11]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.10...1.0.11
 [v1.0.10]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.9...1.0.10
 [v1.0.9]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.8...1.0.9

@@ -15,18 +15,9 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="/v1/users/{{ Auth::user()->id }}/edit?user_type=admin"><i
-                                            class="fa fa-fw fa-user"></i>Profile</a>
-                            </li>
+                            <li><a href="/v1/users/{{ Auth::user()->id }}/edit?user_type=admin"><i class="fa fa-fw fa-user"></i>Profile</a></li>
                             <li class="divider"></li>
-                            <li>
-                                <a href="/auth/logout"><i class="fa fa-fw fa-sign-out"></i>Logout</a>
-                            </li>
-                            <li>
-                                <a href="logout"><i class="fa fa-fw fa-sign-out"></i>Logout2</a>
-                            </li>
-
+                            <li><a href="/auth/logout"><i class="fa fa-fw fa-sign-out"></i>Logout</a></li>
                         </ul>
                     </li>
                 </ul>

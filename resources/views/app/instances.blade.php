@@ -30,11 +30,11 @@
                         <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="search term">
                     </div>
 
-                    <div class="btn-group btn-group-sm pull-right">
+                    <div class="btn-group btn-group-md pull-right">
                         <button type="button"
                                 id="refresh"
-                                class="btn btn-default"
-                                title="Reset sorting"><i class="fa fa-fw fa-refresh"></i></button>
+                                class="btn btn-default btn-success"
+                                title="Refresh and reset sorting"><i class="fa fa-refresh"></i></button>
                     </div>
                 </div>
             </div>
@@ -80,24 +80,27 @@
                                     <td>{{ $_instance->cluster->cluster_id_text }}</td>
                                     <td>{{ $_instance->create_date }}</td>
                                     <td>
-                                        <form method="POST" action="/{{$prefix}}/limits/resetallcounters"
-                                              id="reset_counter_{{ $_instance->id }}">
-                                            <input type="hidden" name="instance_id" id="instance_id"
-                                                   value="{{ $_instance->id }}">
+                                        <form method="POST" action="/{{$prefix}}/limits/resetallcounters" id="reset_counter_{{ $_instance->id }}">
+                                            <input type="hidden" name="instance_id" id="instance_id" value="{{ $_instance->id }}">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input name="_token" type="hidden" value="{{ csrf_token() }}">
-                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-bolt"
-                                                    onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
-                                                    value="reset"
-                                                    style="width: 25px; display: inline; vertical-align: middle"
-                                                    data-toggle="tooltip" data-placement="right"
-                                                    title="Reset all limit counters for this instance">
-                                            </button>
-                                        </form>
 
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-default"
+                                                        onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
+                                                        value="reset"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        title="Reset all limit counters for this instance"><i class="fa fa-fw fa-bolt"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-default"
+                                                        onclick="deleteInstance('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}');"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        title="Deprovision"><i class="fa fa-fw fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </form>
                                     </td>
                                 </tr>
-
                             @endforeach
                             </tbody>
                         </table>
@@ -110,4 +113,3 @@
     </div>
     <script type="text/javascript" src="/js/blade-scripts/instances/instances.js"></script>
 @stop
-
