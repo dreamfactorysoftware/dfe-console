@@ -6,7 +6,6 @@ use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
-use DreamFactory\Enterprise\Services\UsageService;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputOption;
@@ -112,13 +111,11 @@ class Metrics extends ConsoleCommand
             $_metrics = null;
         }
 
-        /** @type UsageService $_service */
         if (!$_metrics || $this->option('force')) {
-            $_service = UsageServiceProvider::service();
-            $_stats = $_service->gatherStatistics(!$this->option('no-usage-data'));
+            $_stats = UsageServiceProvider::service()->gatherStatistics(!$this->option('no-usage-data'));
         } else {
             $_stats = $_metrics->getAttribute('metrics_data_text');
-            !$this->option('no-usage-data') && $_service->sendMetrics($_stats);
+            !$this->option('no-usage-data') && UsageServiceProvider::service()->sendMetrics($_stats);
         }
 
         if (!empty($_stats)) {
