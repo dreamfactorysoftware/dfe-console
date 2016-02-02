@@ -11,6 +11,7 @@ use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
+use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -71,9 +72,11 @@ class UsageService extends BaseService implements MetricsProvider
     /**
      * Returns statistics gathered from various sources as defined by the methods in this class and its subclasses
      *
+     * @param bool $send If true, send metrics data to usage endpoint
+     *
      * @return array
      */
-    public function gatherStatistics()
+    public function gatherStatistics($send = false)
     {
         $_stats = [];
 
@@ -92,6 +95,9 @@ class UsageService extends BaseService implements MetricsProvider
 
         //  Set our installation key
         $_stats['install-key'] = $_installKey;
+
+        //  Send metrics if wanted
+        $send && $this->sendMetrics($_stats);
 
         return $_stats;
     }
@@ -154,18 +160,17 @@ class UsageService extends BaseService implements MetricsProvider
      */
     protected function gatherInstanceStatistics()
     {
-        $_stats = [];
-        $_lastGuestLocation = null;
+        $_gathered = [];
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
-            $_stats[$_instance->instance_id_text] = ['uri' => $_instance->getProvisionedEndpoint(),];
+            $_stats = ['_raw' => $_instance->toArray(), 'uri' => $_instance->getProvisionedEndpoint(),];
 
             $_api = InstanceApiClient::connect($_instance);
 
             try {
                 if (!empty($_resources = $_api->resources())) {
-                    $_list = [];
+                    $_list = ['_raw' => json_encode($_resources),];
 
                     foreach ($_resources as $_resource) {
                         if (property_exists($_resource, 'name')) {
@@ -179,19 +184,47 @@ class UsageService extends BaseService implements MetricsProvider
                         }
                     }
 
-                    $_stats[$_instance->instance_id_text]['resources'] = $_list;
-                    $_stats[$_instance->instance_id_text]['_status'] = ['operational'];
+                    $_stats['resources'] = $_list;
+                    $_stats['_status'] = ['operational'];
                 }
             } catch (\Exception $_ex) {
                 //  Instance unavailable or not initialized
-                $_stats[$_instance->instance_id_text]['resources'] = [];
-                $_stats[$_instance->instance_id_text]['_status'] = ['unreachable'];
+                $_stats['resources'] = [];
+                $_stats['_status'] = ['unreachable'];
             }
+
+            $_gathered[$_instance->instance_id_text] = $_stats;
         }
 
-        return $_stats;
+        return $_gathered;
 
         //  The new way
         //return $this->telemetry->make('instance')->getTelemetry();
+    }
+
+    /**
+     * @param array $stats
+     *
+     * @return bool
+     */
+    public function sendMetrics(array $stats)
+    {
+        if (null !== ($_endpoint = config('license.endpoints.usage'))) {
+            try {
+                if (false === ($_result = Curl::post($_endpoint, json_encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
+                    throw new \RuntimeException('Network error during metrics send..');
+                }
+
+                \Log::debug('[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, $stats);
+
+                return true;
+            } catch (\Exception $_ex) {
+                \Log::error('[dfe.usage-service:sendMetrics] exception reporting usage data: ' . $_ex->getMessage());
+            }
+        } else {
+            \Log::notice('[dfe.usage-service:sendMetrics] No usage endpoint found for metrics send.');
+        }
+
+        return false;
     }
 }

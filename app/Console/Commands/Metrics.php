@@ -7,7 +7,6 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models;
 use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Enterprise\Services\UsageService;
-use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputOption;
@@ -116,16 +115,13 @@ class Metrics extends ConsoleCommand
         /** @type UsageService $_service */
         if (!$_metrics || $this->option('force')) {
             $_service = UsageServiceProvider::service();
-            $_stats = $_service->gatherStatistics();
+            $_stats = $_service->gatherStatistics(!$this->option('no-usage-data'));
         } else {
             $_stats = $_metrics->getAttribute('metrics_data_text');
+            !$this->option('no-usage-data') && $_service->sendMetrics($_stats);
         }
 
         if (!empty($_stats)) {
-            if (!$this->input->getOption('no-usage-data')) {
-                $_sent = $this->sendUsageData($_stats);
-            }
-
             if ($this->option('gather')) {
                 Models\Metrics::where('sent_ind', 0)->update(['sent_ind' => 2]);
 
@@ -148,29 +144,5 @@ class Metrics extends ConsoleCommand
         }
 
         return 0;
-    }
-
-    /**
-     * @param array $stats
-     *
-     * @return bool
-     */
-    protected function sendUsageData(array $stats)
-    {
-        if (null !== ($_endpoint = config('license.endpoints.usage'))) {
-            try {
-                if (false === ($_result = Curl::post($_endpoint, json_encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
-                    throw new \RuntimeException('Network error during post.');
-                }
-
-                \Log::info('[dfe:metrics] usage data sent to ' . $_endpoint, $stats);
-
-                return true;
-            } catch (\Exception $_ex) {
-                \Log::error('[dfe:metrics] exception reporting usage data: ' . $_ex->getMessage());
-            }
-        }
-
-        return false;
     }
 }
