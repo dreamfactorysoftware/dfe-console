@@ -181,7 +181,7 @@ class UsageService extends BaseService implements MetricsProvider
             $_api = InstanceApiClient::connect($_instance);
 
             try {
-                if (false === ($_status = $_api->status())) {
+                if (false === ($_status = $_api->status()) || empty($_status)) {
                     $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] !! ' . $_instance->instance_id_text);
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
@@ -202,10 +202,16 @@ class UsageService extends BaseService implements MetricsProvider
                         }
                     }
 
+                    if (empty($_list)) {
+                        throw new InstanceNotActivatedException($_instance->instance_id_text);
+                    }
+
                     $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] ** ' . $_instance->instance_id_text);
 
                     $_stats['resources'] = $_list;
                     $_stats['_status'] = ['operational'];
+                } else {
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
             } catch (\Exception $_ex) {
                 $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] -- ' . $_instance->instance_id_text);
