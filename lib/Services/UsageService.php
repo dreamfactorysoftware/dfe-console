@@ -194,8 +194,10 @@ class UsageService extends BaseService implements MetricsProvider
 
                     foreach ($_resources as $_resource) {
                         try {
-                            if (false !== ($_result = $_api->resource($_resource))) {
+                            if (false !== ($_result = $_api->resource($_resource)) && !empty($_result)) {
                                 $_list[$_resource] = count($_result);
+                            } else {
+                                $_list[$_resource] = 'unavailable';
                             }
                         } catch (\Exception $_ex) {
                             $_list[$_resource] = 'unavailable';
