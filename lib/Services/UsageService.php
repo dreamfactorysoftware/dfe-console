@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
@@ -73,10 +74,11 @@ class UsageService extends BaseService implements MetricsProvider
      * Returns statistics gathered from various sources as defined by the methods in this class and its subclasses
      *
      * @param bool $send If true, send metrics data to usage endpoint
+     * @param bool $verbose
      *
      * @return array
      */
-    public function gatherStatistics($send = false)
+    public function gatherStatistics($send = false, $verbose = false)
     {
         $_stats = [];
 
@@ -89,7 +91,7 @@ class UsageService extends BaseService implements MetricsProvider
         foreach ($_mirror->getMethods() as $_method) {
             if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
-                $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
+                $_stats[$_which] = call_user_func([get_called_class(), $_methodName], $verbose);
             }
         }
 
@@ -97,7 +99,7 @@ class UsageService extends BaseService implements MetricsProvider
         $_stats['install-key'] = $_installKey;
 
         //  Send metrics if wanted
-        $send && $this->sendMetrics($_stats);
+        $send && $this->sendMetrics($_stats, $verbose);
 
         return $_stats;
     }
@@ -120,12 +122,14 @@ class UsageService extends BaseService implements MetricsProvider
     }
 
     /**
+     * @param bool $verbose
+     *
      * @return array
      */
-    protected function gatherConsoleStatistics()
+    protected function gatherConsoleStatistics($verbose = false)
     {
         $_stats = [
-            'uri'      => config('app.url', \Request::getSchemeAndHttpHost()),
+            'uri'      => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
             'user'     => ServiceUser::count(),
             'mount'    => Mount::count(),
             'server'   => Server::count(),
@@ -134,6 +138,8 @@ class UsageService extends BaseService implements MetricsProvider
             'instance' => Instance::count(),
         ];
 
+        $verbose && \Log::info('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
+
         return $_stats;
 
         //  The new way
@@ -141,13 +147,17 @@ class UsageService extends BaseService implements MetricsProvider
     }
 
     /**
+     * @param bool $verbose
+     *
      * @return array
      */
-    protected function gatherDashboardStatistics()
+    protected function gatherDashboardStatistics($verbose = false)
     {
         $_stats = [
             'user' => User::count(),
         ];
+
+        $verbose && \Log::info('[dfe.usage-service:gatherDashboardStatistics] ** ' . json_encode($_stats));
 
         return $_stats;
 
@@ -156,9 +166,11 @@ class UsageService extends BaseService implements MetricsProvider
     }
 
     /**
+     * @param bool $verbose
+     *
      * @return array
      */
-    protected function gatherInstanceStatistics()
+    protected function gatherInstanceStatistics($verbose = false)
     {
         $_gathered = [];
 
@@ -169,6 +181,14 @@ class UsageService extends BaseService implements MetricsProvider
             $_api = InstanceApiClient::connect($_instance);
 
             try {
+                if (false === ($_status = $_api->status())) {
+                    $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] !! ' . $_instance->instance_id_text);
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
+
+                //  Save the environment!!
+                $_stats['environment'] = $_status;
+
                 if (!empty($_resources = $_api->resources())) {
                     $_list = [];
 
@@ -182,10 +202,14 @@ class UsageService extends BaseService implements MetricsProvider
                         }
                     }
 
+                    $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] ** ' . $_instance->instance_id_text);
+
                     $_stats['resources'] = $_list;
                     $_stats['_status'] = ['operational'];
                 }
             } catch (\Exception $_ex) {
+                $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] -- ' . $_instance->instance_id_text);
+
                 //  Instance unavailable or not initialized
                 $_stats['resources'] = [];
                 $_stats['_status'] = ['not activated'];
@@ -202,10 +226,11 @@ class UsageService extends BaseService implements MetricsProvider
 
     /**
      * @param array $stats
+     * @param bool  $verbose
      *
      * @return bool
      */
-    public function sendMetrics(array $stats)
+    public function sendMetrics(array $stats, $verbose = false)
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
             try {
@@ -213,7 +238,7 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new \RuntimeException('Network error during metrics send..');
                 }
 
-                \Log::debug('[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, $stats);
+                $verbose && \Log::debug('[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, $stats);
 
                 return true;
             } catch (\Exception $_ex) {

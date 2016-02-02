@@ -9,6 +9,7 @@ use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Metrics extends ConsoleCommand
 {
@@ -112,7 +113,9 @@ class Metrics extends ConsoleCommand
         }
 
         if (!$_metrics || $this->option('force')) {
-            $_stats = UsageServiceProvider::service()->gatherStatistics(!$this->option('no-usage-data'));
+            $_stats =
+                UsageServiceProvider::service()
+                    ->gatherStatistics(!$this->option('no-usage-data'), $this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE);
         } else {
             $_stats = $_metrics->getAttribute('metrics_data_text');
             !$this->option('no-usage-data') && UsageServiceProvider::service()->sendMetrics($_stats);
