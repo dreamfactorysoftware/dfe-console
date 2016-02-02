@@ -164,23 +164,21 @@ class UsageService extends BaseService implements MetricsProvider
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
-            $_stats = ['_raw' => $_instance->toArray(), 'uri' => $_instance->getProvisionedEndpoint(),];
+            $_stats = ['uri' => $_instance->getProvisionedEndpoint(),];
 
             $_api = InstanceApiClient::connect($_instance);
 
             try {
                 if (!empty($_resources = $_api->resources())) {
-                    $_list = ['_raw' => json_encode($_resources),];
+                    $_list = [];
 
                     foreach ($_resources as $_resource) {
-                        if (property_exists($_resource, 'name')) {
-                            try {
-                                if (false !== ($_result = $_api->resource($_resource->name))) {
-                                    $_list[$_resource->name] = count($_result);
-                                }
-                            } catch (\Exception $_ex) {
-                                $_list[$_resource->name] = 'unavailable';
+                        try {
+                            if (false !== ($_result = $_api->resource($_resource))) {
+                                $_list[$_resource] = count($_result);
                             }
+                        } catch (\Exception $_ex) {
+                            $_list[$_resource] = 'unavailable';
                         }
                     }
 
@@ -190,7 +188,7 @@ class UsageService extends BaseService implements MetricsProvider
             } catch (\Exception $_ex) {
                 //  Instance unavailable or not initialized
                 $_stats['resources'] = [];
-                $_stats['_status'] = ['unreachable'];
+                $_stats['_status'] = ['not activated'];
             }
 
             $_gathered[$_instance->instance_id_text] = $_stats;
