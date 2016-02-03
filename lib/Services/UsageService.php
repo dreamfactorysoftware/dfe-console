@@ -215,11 +215,12 @@ class UsageService extends BaseService implements MetricsProvider
                     $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] ** ' . $_instance->instance_id_text);
 
                     $_stats['resources'] = $_list;
+                    //$_instance->updateInstanceState(true);
                 } else {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
             } catch (InstanceNotActivatedException $_ex) {
-                $_instance->updateInstanceState(false);
+                //$_instance->updateInstanceState(false);
 
                 \Log::log($verbose ? 'info' : 'debug',
                     '[dfe.usage-service:gatherInstanceStatistics] !! ' . $_instance->instance_id_text . ' (deactivation queued)');
