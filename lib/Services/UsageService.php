@@ -192,20 +192,23 @@ class UsageService extends BaseService implements MetricsProvider
 
                 if (!empty($_resources = $_api->resources())) {
                     $_list = [];
+                    $_bogus = false;
 
                     foreach ($_resources as $_resource) {
                         try {
                             if (false !== ($_result = $_api->resource($_resource)) && !empty($_result)) {
                                 $_list[$_resource] = count($_result);
                             } else {
+                                $_bogus = true;
                                 $_list[$_resource] = 'unknown';
                             }
                         } catch (\Exception $_ex) {
+                            $_bogus = true;
                             $_list[$_resource] = 'unknown';
                         }
                     }
 
-                    if (empty($_list)) {
+                    if ($_bogus || empty($_list)) {
                         throw new InstanceNotActivatedException($_instance->instance_id_text);
                     }
 
