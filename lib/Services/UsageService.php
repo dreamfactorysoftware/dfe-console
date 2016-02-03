@@ -14,7 +14,6 @@ use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Monolog\Logger;
 
 /**
  * General usage services
@@ -219,12 +218,12 @@ class UsageService extends BaseService implements MetricsProvider
             } catch (InstanceNotActivatedException $_ex) {
                 $_instance->updateInstanceState(false);
 
-                \Log::log($verbose ? Logger::INFO : Logger::DEBUG,
+                \Log::log($verbose ? 'info' : 'debug',
                     '[dfe.usage-service:gatherInstanceStatistics] !! ' . $_instance->instance_id_text . ' (deactivation queued)');
                 //  Instance unavailable or not initialized
                 $_stats['_status'] = ['not activated'];
             } catch (\Exception $_ex) {
-                \Log::log($verbose ? Logger::INFO : Logger::DEBUG, '[dfe.usage-service:gatherInstanceStatistics] -- ' . $_instance->instance_id_text);
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] -- ' . $_instance->instance_id_text);
 
                 //  Instance unavailable or not initialized
                 $_stats['_status'] = ['unknown'];
