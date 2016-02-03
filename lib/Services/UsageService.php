@@ -14,6 +14,7 @@ use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Monolog\Logger;
 
 /**
  * General usage services
@@ -182,12 +183,13 @@ class UsageService extends BaseService implements MetricsProvider
 
             try {
                 if (false === ($_status = $_api->status()) || empty($_status)) {
-                    $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] !! ' . $_instance->instance_id_text);
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
                 //  Save the environment!!
                 $_stats['environment'] = $_status;
+                $_stats['resources'] = [];
+                $_stats['_status'] = ['activated'];
 
                 if (!empty($_resources = $_api->resources())) {
                     $_list = [];
@@ -197,10 +199,10 @@ class UsageService extends BaseService implements MetricsProvider
                             if (false !== ($_result = $_api->resource($_resource)) && !empty($_result)) {
                                 $_list[$_resource] = count($_result);
                             } else {
-                                $_list[$_resource] = 'unavailable';
+                                $_list[$_resource] = 'unknown';
                             }
                         } catch (\Exception $_ex) {
-                            $_list[$_resource] = 'unavailable';
+                            $_list[$_resource] = 'unknown';
                         }
                     }
 
@@ -211,16 +213,21 @@ class UsageService extends BaseService implements MetricsProvider
                     $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] ** ' . $_instance->instance_id_text);
 
                     $_stats['resources'] = $_list;
-                    $_stats['_status'] = ['operational'];
                 } else {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
+            } catch (InstanceNotActivatedException $_ex) {
+                $_instance->updateInstanceState(false);
+
+                \Log::log($verbose ? Logger::INFO : Logger::DEBUG,
+                    '[dfe.usage-service:gatherInstanceStatistics] !! ' . $_instance->instance_id_text . ' (deactivation queued)');
+                //  Instance unavailable or not initialized
+                $_stats['_status'] = ['not activated'];
             } catch (\Exception $_ex) {
-                $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] -- ' . $_instance->instance_id_text);
+                \Log::log($verbose ? Logger::INFO : Logger::DEBUG, '[dfe.usage-service:gatherInstanceStatistics] -- ' . $_instance->instance_id_text);
 
                 //  Instance unavailable or not initialized
-                $_stats['resources'] = [];
-                $_stats['_status'] = ['not activated'];
+                $_stats['_status'] = ['unknown'];
             }
 
             $_gathered[$_instance->instance_id_text] = $_stats;
