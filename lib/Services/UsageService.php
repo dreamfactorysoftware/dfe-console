@@ -192,42 +192,31 @@ class UsageService extends BaseService implements MetricsProvider
 
                 if (!empty($_resources = $_api->resources())) {
                     $_list = [];
-                    $_bogus = false;
 
                     foreach ($_resources as $_resource) {
                         try {
                             if (false !== ($_result = $_api->resource($_resource)) && !empty($_result)) {
                                 $_list[$_resource] = count($_result);
                             } else {
-                                $_bogus = true;
                                 $_list[$_resource] = 'unknown';
                             }
                         } catch (\Exception $_ex) {
-                            $_bogus = true;
                             $_list[$_resource] = 'unknown';
                         }
                     }
 
-                    if ($_bogus || empty($_list)) {
-                        throw new InstanceNotActivatedException($_instance->instance_id_text);
-                    }
-
-                    $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] ** ' . $_instance->instance_id_text);
+                    $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
 
                     $_stats['resources'] = $_list;
-                    //$_instance->updateInstanceState(true);
-                } else {
-                    throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
             } catch (InstanceNotActivatedException $_ex) {
-                //$_instance->updateInstanceState(false);
-
                 \Log::log($verbose ? 'info' : 'debug',
-                    '[dfe.usage-service:gatherInstanceStatistics] !! ' . $_instance->instance_id_text . ' (deactivation queued)');
+                    '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
+
                 //  Instance unavailable or not initialized
                 $_stats['_status'] = ['not activated'];
             } catch (\Exception $_ex) {
-                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] -- ' . $_instance->instance_id_text);
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
 
                 //  Instance unavailable or not initialized
                 $_stats['_status'] = ['unknown'];
