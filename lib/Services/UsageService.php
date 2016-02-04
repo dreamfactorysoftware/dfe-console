@@ -138,7 +138,7 @@ class UsageService extends BaseService implements MetricsProvider
             'instance' => Instance::count(),
         ];
 
-        $verbose && \Log::info('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
+        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
 
         return $_stats;
 
@@ -157,7 +157,7 @@ class UsageService extends BaseService implements MetricsProvider
             'user' => User::count(),
         ];
 
-        $verbose && \Log::info('[dfe.usage-service:gatherDashboardStatistics] ** ' . json_encode($_stats));
+        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherDashboardStatistics] ** ' . json_encode($_stats));
 
         return $_stats;
 
@@ -205,7 +205,7 @@ class UsageService extends BaseService implements MetricsProvider
                         }
                     }
 
-                    $verbose && \Log::info('[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
+                    \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
 
                     $_stats['resources'] = $_list;
                 }
@@ -245,7 +245,7 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new \RuntimeException('Network error during metrics send..');
                 }
 
-                $verbose && \Log::debug('[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, $stats);
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, $stats);
 
                 return true;
             } catch (\Exception $_ex) {
