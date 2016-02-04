@@ -61,7 +61,7 @@ return [
     //******************************************************************************
     'common'                  => [
         'display-name'       => 'DreamFactory Enterprise&trade; Console',
-        'display-version'    => env('DFE_VERSION'),
+        'display-version'    => env('DFE_VERSION', '1.0.13'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name
@@ -72,7 +72,7 @@ return [
         /** Auth pages 256x256px image */
         'login-splash-image' => env('DFE_LOGIN_SPLASH_IMAGE', '/vendor/dfe-common/img/logo-dfe.png'),
         /**  NavBar 194x50px image. Shown on top of inner pages. */
-        'navbar-image'       => env('DFE_NAVBAR_IMAGE', '/theme/standard/img/logo.png'),
+        'navbar-image'       => env('DFE_NAVBAR_IMAGE', '/img/logo-navbar-194x42.png'),
         /** Custom css to load */
         'custom-css-file'    => env('DFE_CUSTOM_CSS_FILE'),
     ],

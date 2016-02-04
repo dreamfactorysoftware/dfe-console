@@ -1,6 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
@@ -11,6 +12,7 @@ use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
+use DreamFactory\Library\Utility\Curl;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -71,9 +73,12 @@ class UsageService extends BaseService implements MetricsProvider
     /**
      * Returns statistics gathered from various sources as defined by the methods in this class and its subclasses
      *
+     * @param bool $send If true, send metrics data to usage endpoint
+     * @param bool $verbose
+     *
      * @return array
      */
-    public function gatherStatistics()
+    public function gatherStatistics($send = false, $verbose = false)
     {
         $_stats = [];
 
@@ -86,12 +91,15 @@ class UsageService extends BaseService implements MetricsProvider
         foreach ($_mirror->getMethods() as $_method) {
             if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
-                $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
+                $_stats[$_which] = call_user_func([get_called_class(), $_methodName], $verbose);
             }
         }
 
         //  Set our installation key
         $_stats['install-key'] = $_installKey;
+
+        //  Send metrics if wanted
+        $send && $this->sendMetrics($_stats, $verbose);
 
         return $_stats;
     }
@@ -114,12 +122,14 @@ class UsageService extends BaseService implements MetricsProvider
     }
 
     /**
+     * @param bool $verbose
+     *
      * @return array
      */
-    protected function gatherConsoleStatistics()
+    protected function gatherConsoleStatistics($verbose = false)
     {
         $_stats = [
-            'uri'      => config('app.url', \Request::getSchemeAndHttpHost()),
+            'uri'      => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
             'user'     => ServiceUser::count(),
             'mount'    => Mount::count(),
             'server'   => Server::count(),
@@ -128,6 +138,8 @@ class UsageService extends BaseService implements MetricsProvider
             'instance' => Instance::count(),
         ];
 
+        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
+
         return $_stats;
 
         //  The new way
@@ -135,13 +147,17 @@ class UsageService extends BaseService implements MetricsProvider
     }
 
     /**
+     * @param bool $verbose
+     *
      * @return array
      */
-    protected function gatherDashboardStatistics()
+    protected function gatherDashboardStatistics($verbose = false)
     {
         $_stats = [
             'user' => User::count(),
         ];
+
+        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherDashboardStatistics] ** ' . json_encode($_stats));
 
         return $_stats;
 
@@ -150,48 +166,95 @@ class UsageService extends BaseService implements MetricsProvider
     }
 
     /**
+     * @param bool $verbose
+     *
      * @return array
      */
-    protected function gatherInstanceStatistics()
+    protected function gatherInstanceStatistics($verbose = false)
     {
-        $_stats = [];
-        $_lastGuestLocation = null;
+        $_gathered = [];
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
-            $_stats[$_instance->instance_id_text] = ['uri' => $_instance->getProvisionedEndpoint(),];
+            $_stats = ['uri' => $_instance->getProvisionedEndpoint(),];
 
             $_api = InstanceApiClient::connect($_instance);
 
             try {
+                if (false === ($_status = $_api->status()) || empty($_status)) {
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
+
+                //  Save the environment!!
+                $_stats['environment'] = $_status;
+                $_stats['resources'] = [];
+                $_stats['_status'] = ['activated'];
+
                 if (!empty($_resources = $_api->resources())) {
                     $_list = [];
 
                     foreach ($_resources as $_resource) {
-                        if (property_exists($_resource, 'name')) {
-                            try {
-                                if (false !== ($_result = $_api->resource($_resource->name))) {
-                                    $_list[$_resource->name] = count($_result);
-                                }
-                            } catch (\Exception $_ex) {
-                                $_list[$_resource->name] = 'unavailable';
+                        try {
+                            if (false !== ($_result = $_api->resource($_resource)) && !empty($_result)) {
+                                $_list[$_resource] = count($_result);
+                            } else {
+                                $_list[$_resource] = 'unknown';
                             }
+                        } catch (\Exception $_ex) {
+                            $_list[$_resource] = 'unknown';
                         }
                     }
 
-                    $_stats[$_instance->instance_id_text]['resources'] = $_list;
-                    $_stats[$_instance->instance_id_text]['_status'] = ['operational'];
+                    \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
+
+                    $_stats['resources'] = $_list;
                 }
-            } catch (\Exception $_ex) {
+            } catch (InstanceNotActivatedException $_ex) {
+                \Log::log($verbose ? 'info' : 'debug',
+                    '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
+
                 //  Instance unavailable or not initialized
-                $_stats[$_instance->instance_id_text]['resources'] = [];
-                $_stats[$_instance->instance_id_text]['_status'] = ['unreachable'];
+                $_stats['_status'] = ['not activated'];
+            } catch (\Exception $_ex) {
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
+
+                //  Instance unavailable or not initialized
+                $_stats['_status'] = ['unknown'];
             }
+
+            $_gathered[$_instance->instance_id_text] = $_stats;
         }
 
-        return $_stats;
+        return $_gathered;
 
         //  The new way
         //return $this->telemetry->make('instance')->getTelemetry();
+    }
+
+    /**
+     * @param array $stats
+     * @param bool  $verbose
+     *
+     * @return bool
+     */
+    public function sendMetrics(array $stats, $verbose = false)
+    {
+        if (null !== ($_endpoint = config('license.endpoints.usage'))) {
+            try {
+                if (false === ($_result = Curl::post($_endpoint, json_encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
+                    throw new \RuntimeException('Network error during metrics send..');
+                }
+
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, $stats);
+
+                return true;
+            } catch (\Exception $_ex) {
+                \Log::error('[dfe.usage-service:sendMetrics] exception reporting usage data: ' . $_ex->getMessage());
+            }
+        } else {
+            \Log::notice('[dfe.usage-service:sendMetrics] No usage endpoint found for metrics send.');
+        }
+
+        return false;
     }
 }
