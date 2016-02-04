@@ -187,7 +187,7 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
-                if (false === ($_resources = $_api->resources())) {
+                if (false === ($_resources = $_api->resources()) || empty($_resources)) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
