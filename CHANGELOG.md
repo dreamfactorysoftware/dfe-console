@@ -1,51 +1,60 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.13][v1.0.13]
+### Updated
+- `dfe:metrics` command updated to check deactivation status
+- Removed extraneous debug logging
+
+### Added
+- Support for automated deactivation of instances
+
 ## [1.0.12][v1.0.12]
-## Updated
+### Updated
 - Removed duplicate **Logout** command from profile menu
 - Instance delete ability added to instance console UI
 
 ## [1.0.11][v1.0.11]
-## Added
+### Added
 - Instance create ability added to instance console UI
 - Internationalization of UI strings for instance creation.
 - Support for customisation via CSS and graphic assets during installation
 - Standardized user creation via database model
 - New console commands `dfe:blueprint`, `dfe:capsule`, `dfe:info`, `dfe:migrate-instance`, and `dfe:users` now available
 
-## Updated
+### Updated
 - Unnecessary required fields removed from server create
 - Changed version constraint of PHPUNIT in composer.json to ensure only version 4.* is installed. Version 5.* requires PHP 5.6, which is not in the Ubuntu 14.04 repository.
 - Instance limits system enhancements
 - Miscellaneous UI fixes and enhancements
 
 ## [1.0.10][v1.0.10]
-## Updated
+### Updated
 - Changed version constraint of PHPUNIT in composer.json to ensure only version 4.* is installed. Version 5.* requires PHP 5.6, which is not in the Ubuntu 14.04 repository.
 
 ## [1.0.9][v1.0.9]
-## Added
+### Added
 - Added `*-dist` copies of supplied branding assets.
-## Updated
+
+### Updated
 - Artisan commands **dfe:cluster**, **dfe:server**, and **dfe:mount** now have a "show" operation. 
 
 ## [1.0.8][v1.0.8]
-## Added
+### Added
 - Migration to correct index on `job_result_t`
 
-## Fixed
+### Fixed
 - Console registration failure corrected.
 
 ## [1.0.6][v1.0.6]
-## Added
+### Added
 - **MigrateInstance** Artisan command
 - **MigrateInstanceTest** unit test for **MigrateInstance** Artisan command
 - Add package `dreamfactory/dfe-capsule` for instance encapsulation
 - **Capsule** Artisan command
 - **CapsuleTest** unit test for **Capsule** Artisan command
 
-## Updated
+### Updated
 - Update in `dreamfactory/dfe-common` for password resets incorporated
 - Updated `.env-dist` with new default directories for blueprint and migration services
 
@@ -62,6 +71,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.13]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.12...1.0.13
 [v1.0.12]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.11...1.0.12
 [v1.0.11]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.10...1.0.11
 [v1.0.10]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.9...1.0.10
