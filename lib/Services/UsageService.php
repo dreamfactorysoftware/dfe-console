@@ -1,6 +1,5 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
-use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
@@ -188,30 +187,36 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
+                if (false === ($_resources = $_api->resources())) {
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
+
                 //  Save the environment!!
                 $_stats['environment'] = $_status;
                 $_stats['resources'] = [];
                 $_stats['_status'] = ['activated'];
 
-                if (!empty($_resources = $_api->resources())) {
-                    $_list = [];
+                $_list = [];
 
-                    foreach ($_resources as $_resource) {
-                        try {
-                            if (false !== ($_result = $_api->resource($_resource)) && !empty($_result)) {
-                                $_list[$_resource] = count($_result);
-                            } else {
-                                $_list[$_resource] = 'unknown';
-                            }
-                        } catch (\Exception $_ex) {
+                foreach ($_resources as $_resource) {
+                    try {
+                        if (false !== ($_result = $_api->resource($_resource))) {
+                            $_list[$_resource] = count($_result);
+                        } else {
                             $_list[$_resource] = 'unknown';
                         }
+                    } catch (\Exception $_ex) {
+                        $_list[$_resource] = 'unknown';
                     }
-
-                    \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-
-                    $_stats['resources'] = $_list;
                 }
+
+                if (0 === array_get($_list, 'user')) {
+                    //  database is setup but no users...
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
+
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
+                $_stats['resources'] = $_list;
             } catch (InstanceNotActivatedException $_ex) {
                 \Log::log($verbose ? 'info' : 'debug',
                     '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
