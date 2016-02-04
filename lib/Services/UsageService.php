@@ -1,10 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
+use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
+use DreamFactory\Enterprise\Database\Models\MetricsDetail;
 use DreamFactory\Enterprise\Database\Models\Mount;
 use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
@@ -172,7 +174,8 @@ class UsageService extends BaseService implements MetricsProvider
      */
     protected function gatherInstanceStatistics($verbose = false)
     {
-        $_gathered = [];
+        $_gatherDate = date('Y-m-d');
+        $_gathered = 0;
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
@@ -222,7 +225,30 @@ class UsageService extends BaseService implements MetricsProvider
                 $_stats['_status'] = ['unknown'];
             }
 
-            $_gathered[$_instance->instance_id_text] = $_stats;
+            try {
+                if (null === ($_row = $_instance->metrics($_gatherDate))) {
+                    $_row = new MetricsDetail();
+                    $_row->user_id = $_instance->user_id;
+                    $_row->instance_id = $_instance->id;
+                    $_row->gather_date = $_gatherDate;
+                }
+
+                $_row->data_text = $_stats;
+                $_row->save();
+
+                $_gathered++;
+            } catch (\Exception $_ex) {
+                \Log::error('[dfe.usage-service:gatherInstanceStatistics] ' . $_ex->getMessage());
+            }
+
+            unset($_stats);
+        }
+
+        $_gathered = [];
+
+        //  Pull all the details up into a single array and return it
+        foreach (MetricsDetail::byGatherDate($_gatherDate)->with('instance')->get() as $_detail) {
+            $_gathered[$_detail->instance->instance_id_text] = $_detail->data_text;
         }
 
         return $_gathered;
