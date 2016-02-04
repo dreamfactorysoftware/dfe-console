@@ -208,11 +208,11 @@ class UsageService extends BaseService implements MetricsProvider
                     } catch (\Exception $_ex) {
                         $_list[$_resource] = 'unknown';
                     }
-                }
 
-                if (0 === array_get($_list, 'user')) {
-                    //  database is setup but no users...
-                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                    if ($_resource == 'user' && $_list[$_resource] == 'unknown') {
+                        //  database is setup but no users...
+                        throw new InstanceNotActivatedException($_instance->instance_id_text);
+                    }
                 }
 
                 \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
