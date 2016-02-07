@@ -100,7 +100,7 @@ class UsageService extends BaseService implements MetricsProvider
         }
 
         //  Move aggregate to console
-        if (!empty($_aggregate = array_get($_stats, 'instance._aggregated'))) {
+        if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
             array_set($_stats, 'console.instance-aggregated', $_aggregate);
             array_forget($_stats, 'instance._aggregated');
         }
@@ -200,7 +200,7 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
-                $_stats['environment'] = array_merge(['version' => data_get(data_get($_status, 'platform'), 'version_current')], ['status' => 'activated']);
+                $_stats['environment'] = array_merge(['version' => data_get($_status, 'platform.version_current')], ['status' => 'activated']);
 
                 if (false === ($_resources = $_api->resources()) || empty($_resources)) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
