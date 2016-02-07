@@ -15,6 +15,7 @@ use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -54,7 +55,7 @@ class UsageService extends BaseService implements MetricsProvider
             }
         }
 
-        empty($this->installKey) && $this->installKey = $this->generateInstallKey();
+        empty($this->installKey) && $this->generateInstallKey();
     }
 
     /**
@@ -99,9 +100,9 @@ class UsageService extends BaseService implements MetricsProvider
         }
 
         //  Move aggregate to console
-        if (!empty($_aggregate = array_get($_stats, 'instance._aggregate'))) {
-            array_set($_stats, 'console.instance-aggregate', $_aggregate);
-            array_forget($_stats, 'instance._aggregate');
+        if (!empty($_aggregate = array_get($_stats, 'instance._aggregated'))) {
+            array_set($_stats, 'console.instance-aggregated', $_aggregate);
+            array_forget($_stats, 'instance._aggregated');
         }
 
         //  Send metrics if wanted
@@ -113,13 +114,13 @@ class UsageService extends BaseService implements MetricsProvider
     /**
      * @return bool|string
      */
-    public function generateInstallKey()
+    protected function generateInstallKey()
     {
         try {
             /** @type ServiceUser $_user */
             $_user = ServiceUser::firstOrFail();
 
-            return $_user->getHashedEmail();
+            return $this->installKey = $_user->getHashedEmail();
         } catch (ModelNotFoundException $_ex) {
             \Log::notice('No console users found. Nothing to report.');
 
@@ -178,94 +179,85 @@ class UsageService extends BaseService implements MetricsProvider
      */
     protected function gatherInstanceStatistics($verbose = false)
     {
-        $_gatherDate = date('Y-m-d');
         $_gathered = 0;
+        $_gatherDate = date('Y-m-d');
         $_metrics = null;
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
-            //  See if we even need to do this...
+            $_api = InstanceApiClient::connect($_instance);
+
             try {
-                $_metrics = $_instance->metrics($_gatherDate);
+                $_list = [];
+
+                //  Save the environment!!
+                $_stats = [
+                    'uri'       => $_instance->getProvisionedEndpoint(),
+                    'resources' => [],
+                ];
+
+                if (false === ($_status = $_api->status()) || empty($_status)) {
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
+
+                $_stats['environment'] = [
+                    'version' => array_get($_status, 'platform.version_current'),
+                    'status'  => 'activated',
+                ];
+
+                if (false === ($_resources = $_api->resources()) || empty($_resources)) {
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
+
+                foreach ($_resources as $_resource) {
+                    try {
+                        if (false !== ($_result = $_api->resource($_resource))) {
+                            $_list[$_resource] = count($_result);
+                        } else {
+                            $_list[$_resource] = 0;
+                        }
+                    } catch (\Exception $_ex) {
+                        $_list[$_resource] = 'error';
+                    }
+
+                    if ($_resource == 'user' && (0 === $_list[$_resource] || 'error' === $_list[$_resource])) {
+                        //  database is setup but no users...
+                        throw new InstanceNotActivatedException($_instance->instance_id_text);
+                    }
+                }
+
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
+                $_stats['resources'] = $_list;
+            } catch (InstanceNotActivatedException $_ex) {
+                \Log::log($verbose ? 'info' : 'debug',
+                    '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
+
+                //  Instance unavailable or not initialized
+                $_stats['environment']['status'] = 'not activated';
+            } catch (\Exception $_ex) {
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
+
+                //  Instance unavailable or not initialized
+                $_stats['environment']['status'] = 'error';
+            }
+
+            try {
+                if (null === ($_row = $_instance->metrics($_gatherDate))) {
+                    $_row = new MetricsDetail();
+                    $_row->user_id = $_instance->user_id;
+                    $_row->instance_id = $_instance->id;
+                    $_row->gather_date = $_gatherDate;
+                }
+
+                $_row->data_text = $_stats;
+                $_row->save();
+
+                $_gathered++;
             } catch (\Exception $_ex) {
                 \Log::error('[dfe.usage-service:gatherInstanceStatistics] ' . $_ex->getMessage());
             }
 
-            if (empty($_metrics)) {
-                $_api = InstanceApiClient::connect($_instance);
-
-                try {
-                    $_list = [];
-
-                    //  Save the environment!!
-                    $_stats = [
-                        'uri'       => $_instance->getProvisionedEndpoint(),
-                        'resources' => [],
-                    ];
-
-                    if (false === ($_status = $_api->status()) || empty($_status)) {
-                        throw new InstanceNotActivatedException($_instance->instance_id_text);
-                    }
-
-                    $_stats['environment'] = [
-                        'version' => array_get($_status, 'platform.version_current'),
-                        'status'  => 'activated',
-                    ];
-
-                    if (false === ($_resources = $_api->resources()) || empty($_resources)) {
-                        throw new InstanceNotActivatedException($_instance->instance_id_text);
-                    }
-
-                    foreach ($_resources as $_resource) {
-                        try {
-                            if (false !== ($_result = $_api->resource($_resource))) {
-                                $_list[$_resource] = count($_result);
-                            } else {
-                                $_list[$_resource] = 0;
-                            }
-                        } catch (\Exception $_ex) {
-                            $_list[$_resource] = 'error';
-                        }
-
-                        if ($_resource == 'user' && (0 === $_list[$_resource] || 'error' === $_list[$_resource])) {
-                            //  database is setup but no users...
-                            throw new InstanceNotActivatedException($_instance->instance_id_text);
-                        }
-                    }
-
-                    \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-                    $_stats['resources'] = $_list;
-                } catch (InstanceNotActivatedException $_ex) {
-                    \Log::log($verbose ? 'info' : 'debug',
-                        '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
-
-                    //  Instance unavailable or not initialized
-                    $_stats['environment']['status']= 'not activated';
-                } catch (\Exception $_ex) {
-                    \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
-
-                    //  Instance unavailable or not initialized
-                    $_stats['environment']['status'] = 'error';
-                }
-
-                try {
-                    if (null === ($_row = $_instance->metrics($_gatherDate))) {
-                        $_row = new MetricsDetail();
-                        $_row->user_id = $_instance->user_id;
-                        $_row->instance_id = $_instance->id;
-                        $_row->gather_date = $_gatherDate;
-                    }
-
-                    $_row->data_text = $_stats;
-                    $_row->save();
-
-                    $_gathered++;
-                } catch (\Exception $_ex) {
-                    \Log::error('[dfe.usage-service:gatherInstanceStatistics] ' . $_ex->getMessage());
-                }
-
-                unset($_metrics, $_stats, $_list, $_status);
-            }
+            unset($_stats, $_list, $_status);
         }
 
         return $this->bundleDailyMetrics($_gatherDate);
@@ -286,17 +278,19 @@ class UsageService extends BaseService implements MetricsProvider
         //  Pull all the details up into a single array and return it
         foreach (MetricsDetail::byGatherDate($date)->with('instance')->get() as $_detail) {
             $_metrics = $_detail->data_text;
+            $_cleaned = [];
 
             //  Aggregate
             foreach (data_get($_metrics, 'resources', []) as $_resource => $_count) {
                 !array_key_exists($_resource, $_totals) && $_totals[$_resource] = 0;
+                $_cleaned[$_resource] = $_count;
                 is_numeric($_count) && $_totals[$_resource] += $_count;
             }
 
-            $_gathered[$_detail->instance->instance_id_text] = $_metrics;
+            $_gathered[$_detail->instance->instance_id_text] = array_merge($_metrics, ['resources' => $_cleaned]);
         }
 
-        return array_merge(['_aggregate' => $_totals,], $_gathered);
+        return array_merge(['_aggregated' => $_totals,], $_gathered);
     }
 
     /**
@@ -308,8 +302,11 @@ class UsageService extends BaseService implements MetricsProvider
     public function sendMetrics(array $stats, $verbose = false)
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
+            //  Ensure the install key is in the root
+            $stats = array_merge($stats, ['install-key' => $this->installKey,]);
+
             try {
-                if (false === ($_result = Curl::post($_endpoint, json_encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
+                if (false === ($_result = Curl::post($_endpoint, Json::encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
                     throw new \RuntimeException('Network error during metrics send..');
                 }
 
