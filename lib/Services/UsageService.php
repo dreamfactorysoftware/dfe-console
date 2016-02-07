@@ -66,16 +66,14 @@ class UsageService extends BaseService implements MetricsProvider
      */
     public function getMetrics($options = [])
     {
-        if (config('telemetry.enabled', false)) {
-            //  If nobody has used the system, we can't report metrics
-            if (false === $this->installKey) {
-                return [];
-            }
-
-            return array_merge(['install-key' => $this->installKey,], $this->telemetry->getTelemetry());
+        //  If nobody has used the system, we can't report metrics
+        if (false === $this->installKey) {
+            return [];
         }
 
-        return $this->gatherStatistics();
+        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherStatistics();
+
+        return array_merge(['install-key' => $this->installKey,], $_metrics);
     }
 
     /**
@@ -88,14 +86,8 @@ class UsageService extends BaseService implements MetricsProvider
      */
     public function gatherStatistics($send = false, $verbose = false)
     {
-        if (false === $this->installKey) {
-            return [];
-        }
-
         //  Set our installation key
-        $_stats = [
-            'install-key' => $this->installKey,
-        ];
+        $_stats = [];
 
         $_mirror = new \ReflectionClass(get_called_class());
 
@@ -104,6 +96,12 @@ class UsageService extends BaseService implements MetricsProvider
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
                 $_stats[$_which] = call_user_func([get_called_class(), $_methodName], $verbose);
             }
+        }
+
+        //  Move aggregate to console
+        if (!empty($_aggregate = array_get($_stats, 'instance._aggregate'))) {
+            array_set($_stats, 'console.instance-aggregate', $_aggregate);
+            array_forget($_stats, 'instance._aggregate');
         }
 
         //  Send metrics if wanted
@@ -137,14 +135,13 @@ class UsageService extends BaseService implements MetricsProvider
     protected function gatherConsoleStatistics($verbose = false)
     {
         $_stats = [
-            'uri'         => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
-            'install-key' => $this->installKey,
-            'user'        => ServiceUser::count(),
-            'mount'       => Mount::count(),
-            'server'      => Server::count(),
-            'cluster'     => Cluster::count(),
-            'limit'       => Limit::count(),
-            'instance'    => Instance::count(),
+            'uri'      => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
+            'user'     => ServiceUser::count(),
+            'mount'    => Mount::count(),
+            'server'   => Server::count(),
+            'cluster'  => Cluster::count(),
+            'limit'    => Limit::count(),
+            'instance' => Instance::count(),
         ];
 
         \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
@@ -210,7 +207,10 @@ class UsageService extends BaseService implements MetricsProvider
                         throw new InstanceNotActivatedException($_instance->instance_id_text);
                     }
 
-                    $_stats['environment'] = array_merge(array_only(array_only($_status, 'platform'), 'version_current'), ['.known-status' => 'activated']);
+                    $_stats['environment'] = [
+                        'version' => array_get($_status, 'platform.version_current'),
+                        'status'  => 'activated',
+                    ];
 
                     if (false === ($_resources = $_api->resources()) || empty($_resources)) {
                         throw new InstanceNotActivatedException($_instance->instance_id_text);
@@ -240,12 +240,12 @@ class UsageService extends BaseService implements MetricsProvider
                         '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
 
                     //  Instance unavailable or not initialized
-                    $_stats['environment']['platform']['.known-status'] = 'not activated';
+                    $_stats['environment']['status']= 'not activated';
                 } catch (\Exception $_ex) {
                     \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
 
                     //  Instance unavailable or not initialized
-                    $_stats['environment']['platform']['.known-status'] = 'error';
+                    $_stats['environment']['status'] = 'error';
                 }
 
                 try {
@@ -296,7 +296,7 @@ class UsageService extends BaseService implements MetricsProvider
             $_gathered[$_detail->instance->instance_id_text] = $_metrics;
         }
 
-        return array_merge(['.aggregate' => $_totals,], $_gathered);
+        return array_merge(['_aggregate' => $_totals,], $_gathered);
     }
 
     /**
