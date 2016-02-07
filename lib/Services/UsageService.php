@@ -200,7 +200,7 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
-                $_stats['environment'] = array_merge(['version' => array_get(array_only($_status, 'platform'), 'version_current')], ['status' => 'activated']);
+                $_stats['environment'] = array_merge(['version' => data_get(data_get($_status, 'platform'), 'version_current')], ['status' => 'activated']);
 
                 if (false === ($_resources = $_api->resources()) || empty($_resources)) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
