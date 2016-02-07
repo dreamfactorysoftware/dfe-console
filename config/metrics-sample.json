@@ -1,33 +1,53 @@
 {
-  "install-key": null,
-  "console":     {
-    "uri":      "https://console.your.domain.com",
-    "user":     0,
-    "mount":    0,
-    "server":   0,
-    "cluster":  0,
-    "limit":    0,
-    "instance": 0
-  },
-  "dashboard":   {
-    "user": 0
-  },
-  "instance":    {
-    "instance-name-1": {
-      "uri":       "https://abc.your.domain.com",
-      "resources": {
-        "resource-1": 0,
-        "resource-2": 0,
-        "resource-3": 0
-      }
+    "install-key": null,
+    "console":     {
+        "uri":      "https://console.your.domain.com",
+        "user":     0,
+        "mount":    0,
+        "server":   0,
+        "cluster":  0,
+        "limit":    0,
+        "instance": 0
     },
-    "instance-name-2": {
-      "uri":       "https://xyz.your.domain.com",
-      "resources": {
-        "resource-1": 0,
-        "resource-2": 0,
-        "resource-3": 0
-      }
+    "dashboard":   {
+        "user": 0
+    },
+    "instance":    {
+        "instance-name-1": {
+            "uri":         "https://abc.your.domain.com",
+            "environment": {
+                "platform": {
+                    "version_current":   "2.x.x",
+                    "version_latest":    "2.x.x",
+                    "upgrade_available": false,
+                    "bitnami_demo":      false,
+                    "is_hosted":         "1",
+                    "host":              "console"
+                }
+            },
+            "resources":   {
+                "resource-1": 0,
+                "resource-2": 0,
+                "resource-3": 0
+            }
+        },
+        "instance-name-2": {
+            "uri":         "https://xyz.your.domain.com",
+            "environment": {
+                "platform": {
+                    "version_current":   "2.x.x",
+                    "version_latest":    "2.x.x",
+                    "upgrade_available": false,
+                    "bitnami_demo":      false,
+                    "is_hosted":         "1",
+                    "host":              "console"
+                }
+            },
+            "resources":   {
+                "resource-1": 0,
+                "resource-2": 0,
+                "resource-3": 0
+            }
+        }
     }
-  }
 }
