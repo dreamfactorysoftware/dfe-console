@@ -101,7 +101,7 @@ class UsageService extends BaseService implements MetricsProvider
 
         //  Move aggregate to console
         if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
-            array_set($_stats, 'console.instance-aggregated', $_aggregate);
+            array_set($_stats, 'console.totals', $_aggregate);
             array_forget($_stats, 'instance._aggregated');
         }
 
@@ -270,12 +270,23 @@ class UsageService extends BaseService implements MetricsProvider
      */
     protected function bundleDailyMetrics($date)
     {
-        $_gathered = $_totals = [];
+        $_gathered = $_totals = $_versions = $_states = [];
 
         //  Pull all the details up into a single array and return it
+        /** @noinspection PhpUndefinedMethodInspection */
         foreach (MetricsDetail::byGatherDate($date)->with('instance')->get() as $_detail) {
             $_metrics = $_detail->data_text;
             $_cleaned = [];
+
+            //  Aggregate versions
+            $_version = data_get($_metrics, 'environment.version');
+            $_version && !array_key_exists($_version, $_versions) && $_versions[$_version] = 0;
+            $_version && $_versions[$_version]++;
+
+            //  Aggregate statuses
+            $_state = data_get($_metrics, 'environment.status');
+            $_state && !array_key_exists($_state, $_states) && $_states[$_state] = 0;
+            $_state && $_states[$_state]++;
 
             //  Aggregate
             foreach (data_get($_metrics, 'resources', []) as $_resource => $_count) {
@@ -287,7 +298,7 @@ class UsageService extends BaseService implements MetricsProvider
             $_gathered[$_detail->instance->instance_id_text] = array_merge($_metrics, ['resources' => $_cleaned]);
         }
 
-        return array_merge(['_aggregated' => $_totals,], $_gathered);
+        return array_merge(['_aggregated' => ['versions' => $_versions, 'instances' => $_totals, 'states' => $_states,],], $_gathered);
     }
 
     /**
