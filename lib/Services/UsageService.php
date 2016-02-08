@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
+use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
@@ -23,6 +24,15 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
  */
 class UsageService extends BaseService implements MetricsProvider
 {
+    //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string The metrics format version
+     */
+    const METRICS_VERSION = '1.0';
+
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -74,7 +84,7 @@ class UsageService extends BaseService implements MetricsProvider
 
         $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherStatistics();
 
-        return array_merge(['install-key' => $this->installKey,], $_metrics);
+        return $this->bundleMetrics($_metrics);
     }
 
     /**
@@ -101,14 +111,11 @@ class UsageService extends BaseService implements MetricsProvider
 
         //  Move aggregate to console
         if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
-            array_set($_stats, 'console.totals', $_aggregate);
+            array_set($_stats, 'console.aggregate', $_aggregate);
             array_forget($_stats, 'instance._aggregated');
         }
 
-        //  Send metrics if wanted
-        $send && $this->sendMetrics($_stats, $verbose);
-
-        return $_stats;
+        return $this->bundleMetrics($_stats, $send);
     }
 
     /**
@@ -136,13 +143,15 @@ class UsageService extends BaseService implements MetricsProvider
     protected function gatherConsoleStatistics($verbose = false)
     {
         $_stats = [
-            'uri'      => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
-            'user'     => ServiceUser::count(),
-            'mount'    => Mount::count(),
-            'server'   => Server::count(),
-            'cluster'  => Cluster::count(),
-            'limit'    => Limit::count(),
-            'instance' => Instance::count(),
+            'uri'       => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
+            'resources' => [
+                'user'     => ServiceUser::count(),
+                'mount'    => Mount::count(),
+                'server'   => Server::count(),
+                'cluster'  => Cluster::count(),
+                'limit'    => Limit::count(),
+                'instance' => Instance::count(),
+            ],
         ];
 
         \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
@@ -161,10 +170,13 @@ class UsageService extends BaseService implements MetricsProvider
     protected function gatherDashboardStatistics($verbose = false)
     {
         $_stats = [
-            'user' => User::count(),
+            'uri'       => $_uri = config('dfe.dashboard-url'),
+            'resources' => [
+                'user' => User::count(),
+            ],
         ];
 
-        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherDashboardStatistics] ** ' . json_encode($_stats));
+        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
 
         return $_stats;
 
@@ -257,10 +269,33 @@ class UsageService extends BaseService implements MetricsProvider
             unset($_stats, $_list, $_status);
         }
 
-        return $this->bundleDailyMetrics($_gatherDate);
+        return $this->aggregateStoredMetrics($_gatherDate);
 
         //  The new way
         //return $this->telemetry->make('instance')->getTelemetry();
+    }
+
+    /**
+     * @param array $metrics The raw metrics data
+     * @param bool  $send    If true, sends anonymous metrics
+     *
+     * @return mixed
+     */
+    protected function bundleMetrics(array $metrics, $send = false)
+    {
+        $_bundle = array_merge([
+            'metrics' => [
+                'install-key' => $this->installKey,
+                'version'     => static::METRICS_VERSION,
+                'date'        => date('c'),
+            ],
+        ],
+            $metrics);
+
+        //  Send metrics if wanted
+        $send && $this->sendMetrics($_bundle);
+
+        return $_bundle;
     }
 
     /**
@@ -268,9 +303,10 @@ class UsageService extends BaseService implements MetricsProvider
      *
      * @return array [];
      */
-    protected function bundleDailyMetrics($date)
+    protected function aggregateStoredMetrics($date)
     {
-        $_gathered = $_totals = $_versions = $_states = [];
+        $_gathered = $_totals = $_versions = [];
+        $_states = ['activated' => 0, 'error' => 0, 'not activated' => 0];
 
         //  Pull all the details up into a single array and return it
         /** @noinspection PhpUndefinedMethodInspection */
@@ -298,7 +334,7 @@ class UsageService extends BaseService implements MetricsProvider
             $_gathered[$_detail->instance->instance_id_text] = array_merge($_metrics, ['resources' => $_cleaned]);
         }
 
-        return array_merge(['_aggregated' => ['versions' => $_versions, 'instances' => $_totals, 'states' => $_states,],], $_gathered);
+        return array_merge(['_aggregated' => ['versions' => $_versions, 'resources' => $_totals, 'states' => $_states,],], $_gathered);
     }
 
     /**
@@ -311,7 +347,7 @@ class UsageService extends BaseService implements MetricsProvider
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
             //  Ensure the install key is in the root
-            $stats = array_merge($stats, ['install-key' => $this->installKey,]);
+            array_set($stats, 'metrics.install-key', $this->installKey);
 
             try {
                 if (false === ($_result = Curl::post($_endpoint, Json::encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
