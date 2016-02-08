@@ -1,10 +1,13 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
+use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
+use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
+use DreamFactory\Enterprise\Database\Models\MetricsDetail;
 use DreamFactory\Enterprise\Database\Models\Mount;
 use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
@@ -13,6 +16,7 @@ use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -21,6 +25,15 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class UsageService extends BaseService implements MetricsProvider
 {
     //******************************************************************************
+    //* Constants
+    //******************************************************************************
+
+    /**
+     * @type string The metrics format version
+     */
+    const METRICS_VERSION = '1.0';
+
+    //******************************************************************************
     //* Members
     //******************************************************************************
 
@@ -28,6 +41,10 @@ class UsageService extends BaseService implements MetricsProvider
      * @type TelemetryService
      */
     protected $telemetry;
+    /**
+     * @type string This installation's identifier
+     */
+    protected $installKey;
 
     //*************************************************************************
     //* Methods
@@ -47,6 +64,8 @@ class UsageService extends BaseService implements MetricsProvider
                 $this->telemetry->registerProvider($_name, new $_provider());
             }
         }
+
+        empty($this->installKey) && $this->generateInstallKey();
     }
 
     /**
@@ -58,16 +77,14 @@ class UsageService extends BaseService implements MetricsProvider
      */
     public function getMetrics($options = [])
     {
-        if (config('telemetry.enabled', false)) {
-            //  If nobody has used the system, we can't report metrics
-            if (false === ($_installKey = $this->generateInstallKey())) {
-                return [];
-            }
-
-            return array_merge(['install-key' => $_installKey,], $this->telemetry->getTelemetry());
+        //  If nobody has used the system, we can't report metrics
+        if (false === $this->installKey) {
+            return [];
         }
 
-        return $this->gatherStatistics();
+        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherStatistics();
+
+        return $this->bundleMetrics($_metrics);
     }
 
     /**
@@ -80,11 +97,8 @@ class UsageService extends BaseService implements MetricsProvider
      */
     public function gatherStatistics($send = false, $verbose = false)
     {
+        //  Set our installation key
         $_stats = [];
-
-        if (false === ($_installKey = $this->generateInstallKey())) {
-            return [];
-        }
 
         $_mirror = new \ReflectionClass(get_called_class());
 
@@ -95,25 +109,25 @@ class UsageService extends BaseService implements MetricsProvider
             }
         }
 
-        //  Set our installation key
-        $_stats['install-key'] = $_installKey;
+        //  Move aggregate to console
+        if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
+            array_set($_stats, 'console.aggregate', $_aggregate);
+            array_forget($_stats, 'instance._aggregated');
+        }
 
-        //  Send metrics if wanted
-        $send && $this->sendMetrics($_stats, $verbose);
-
-        return $_stats;
+        return $this->bundleMetrics($_stats, $send);
     }
 
     /**
      * @return bool|string
      */
-    public function generateInstallKey()
+    protected function generateInstallKey()
     {
         try {
             /** @type ServiceUser $_user */
             $_user = ServiceUser::firstOrFail();
 
-            return $_user->getHashedEmail();
+            return $this->installKey = $_user->getHashedEmail();
         } catch (ModelNotFoundException $_ex) {
             \Log::notice('No console users found. Nothing to report.');
 
@@ -129,13 +143,15 @@ class UsageService extends BaseService implements MetricsProvider
     protected function gatherConsoleStatistics($verbose = false)
     {
         $_stats = [
-            'uri'      => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
-            'user'     => ServiceUser::count(),
-            'mount'    => Mount::count(),
-            'server'   => Server::count(),
-            'cluster'  => Cluster::count(),
-            'limit'    => Limit::count(),
-            'instance' => Instance::count(),
+            'uri'       => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
+            'resources' => [
+                'user'     => ServiceUser::count(),
+                'mount'    => Mount::count(),
+                'server'   => Server::count(),
+                'cluster'  => Cluster::count(),
+                'limit'    => Limit::count(),
+                'instance' => Instance::count(),
+            ],
         ];
 
         \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
@@ -154,10 +170,13 @@ class UsageService extends BaseService implements MetricsProvider
     protected function gatherDashboardStatistics($verbose = false)
     {
         $_stats = [
-            'user' => User::count(),
+            'uri'       => $_uri = config('dfe.dashboard-url'),
+            'resources' => [
+                'user' => User::count(),
+            ],
         ];
 
-        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherDashboardStatistics] ** ' . json_encode($_stats));
+        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
 
         return $_stats;
 
@@ -172,63 +191,150 @@ class UsageService extends BaseService implements MetricsProvider
      */
     protected function gatherInstanceStatistics($verbose = false)
     {
-        $_gathered = [];
+        $_gathered = 0;
+        $_gatherDate = date('Y-m-d');
+        $_metrics = null;
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
-            $_stats = ['uri' => $_instance->getProvisionedEndpoint(),];
-
             $_api = InstanceApiClient::connect($_instance);
 
             try {
+                $_list = [];
+
+                //  Save the environment!!
+                $_stats = [
+                    'uri'       => $_instance->getProvisionedEndpoint(),
+                    'resources' => [],
+                ];
+
                 if (false === ($_status = $_api->status()) || empty($_status)) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
-                //  Save the environment!!
-                $_stats['environment'] = $_status;
-                $_stats['resources'] = [];
-                $_stats['_status'] = ['activated'];
+                $_stats['environment'] = array_merge(['version' => data_get($_status, 'platform.version_current')], ['status' => 'activated']);
 
-                if (!empty($_resources = $_api->resources())) {
-                    $_list = [];
+                if (false === ($_resources = $_api->resources()) || empty($_resources)) {
+                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
 
-                    foreach ($_resources as $_resource) {
-                        try {
-                            if (false !== ($_result = $_api->resource($_resource)) && !empty($_result)) {
-                                $_list[$_resource] = count($_result);
-                            } else {
-                                $_list[$_resource] = 'unknown';
-                            }
-                        } catch (\Exception $_ex) {
-                            $_list[$_resource] = 'unknown';
+                foreach ($_resources as $_resource) {
+                    try {
+                        if (false !== ($_result = $_api->resource($_resource))) {
+                            $_list[$_resource] = count($_result);
+                        } else {
+                            $_list[$_resource] = 0;
                         }
+                    } catch (\Exception $_ex) {
+                        $_list[$_resource] = 'error';
                     }
 
-                    \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-
-                    $_stats['resources'] = $_list;
+                    if ($_resource == 'user' && (0 === $_list[$_resource] || 'error' === $_list[$_resource])) {
+                        //  database is setup but no users...
+                        throw new InstanceNotActivatedException($_instance->instance_id_text);
+                    }
                 }
+
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
+                $_stats['resources'] = $_list;
             } catch (InstanceNotActivatedException $_ex) {
                 \Log::log($verbose ? 'info' : 'debug',
                     '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
 
                 //  Instance unavailable or not initialized
-                $_stats['_status'] = ['not activated'];
+                $_stats['environment']['status'] = 'not activated';
             } catch (\Exception $_ex) {
                 \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
 
                 //  Instance unavailable or not initialized
-                $_stats['_status'] = ['unknown'];
+                $_stats['environment']['status'] = 'error';
             }
 
-            $_gathered[$_instance->instance_id_text] = $_stats;
+            try {
+                if (null === ($_row = $_instance->metrics($_gatherDate))) {
+                    $_row = new MetricsDetail();
+                    $_row->user_id = $_instance->user_id;
+                    $_row->instance_id = $_instance->id;
+                    $_row->gather_date = $_gatherDate;
+                }
+
+                $_row->data_text = $_stats;
+                $_row->save();
+
+                $_gathered++;
+            } catch (\Exception $_ex) {
+                \Log::error('[dfe.usage-service:gatherInstanceStatistics] ' . $_ex->getMessage());
+            }
+
+            unset($_stats, $_list, $_status);
         }
 
-        return $_gathered;
+        return $this->aggregateStoredMetrics($_gatherDate);
 
         //  The new way
         //return $this->telemetry->make('instance')->getTelemetry();
+    }
+
+    /**
+     * @param array $metrics The raw metrics data
+     * @param bool  $send    If true, sends anonymous metrics
+     *
+     * @return mixed
+     */
+    protected function bundleMetrics(array $metrics, $send = false)
+    {
+        $_bundle = array_merge([
+            'metrics' => [
+                'install-key' => $this->installKey,
+                'version'     => static::METRICS_VERSION,
+                'date'        => date('c'),
+            ],
+        ],
+            $metrics);
+
+        //  Send metrics if wanted
+        $send && $this->sendMetrics($_bundle);
+
+        return $_bundle;
+    }
+
+    /**
+     * @param string|Carbon $date
+     *
+     * @return array [];
+     */
+    protected function aggregateStoredMetrics($date)
+    {
+        $_gathered = $_totals = $_versions = [];
+        $_states = ['activated' => 0, 'error' => 0, 'not activated' => 0];
+
+        //  Pull all the details up into a single array and return it
+        /** @noinspection PhpUndefinedMethodInspection */
+        foreach (MetricsDetail::byGatherDate($date)->with('instance')->get() as $_detail) {
+            $_metrics = $_detail->data_text;
+            $_cleaned = [];
+
+            //  Aggregate versions
+            $_version = data_get($_metrics, 'environment.version');
+            $_version && !array_key_exists($_version, $_versions) && $_versions[$_version] = 0;
+            $_version && $_versions[$_version]++;
+
+            //  Aggregate statuses
+            $_state = data_get($_metrics, 'environment.status');
+            $_state && !array_key_exists($_state, $_states) && $_states[$_state] = 0;
+            $_state && $_states[$_state]++;
+
+            //  Aggregate
+            foreach (data_get($_metrics, 'resources', []) as $_resource => $_count) {
+                !array_key_exists($_resource, $_totals) && $_totals[$_resource] = 0;
+                $_cleaned[$_resource] = $_count;
+                is_numeric($_count) && $_totals[$_resource] += $_count;
+            }
+
+            $_gathered[$_detail->instance->instance_id_text] = array_merge($_metrics, ['resources' => $_cleaned]);
+        }
+
+        return array_merge(['_aggregated' => ['versions' => $_versions, 'resources' => $_totals, 'states' => $_states,],], $_gathered);
     }
 
     /**
@@ -240,8 +346,11 @@ class UsageService extends BaseService implements MetricsProvider
     public function sendMetrics(array $stats, $verbose = false)
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
+            //  Jam the install key into the root...
+            $_payload = Json::encode(array_merge(['install-key' => $this->installKey,], $stats));
+
             try {
-                if (false === ($_result = Curl::post($_endpoint, json_encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
+                if (false === ($_result = Curl::post($_endpoint, $_payload, [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
                     throw new \RuntimeException('Network error during metrics send..');
                 }
 
