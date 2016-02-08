@@ -347,10 +347,10 @@ class UsageService extends BaseService implements MetricsProvider
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
             //  Jam the install key into the root...
-            array_set($stats, 'install-key', $this->installKey);
+            $_payload = Json::encode(array_merge(['install-key' => $this->installKey,], $stats));
 
             try {
-                if (false === ($_result = Curl::post($_endpoint, Json::encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
+                if (false === ($_result = Curl::post($_endpoint, $_payload, [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
                     throw new \RuntimeException('Network error during metrics send..');
                 }
 
