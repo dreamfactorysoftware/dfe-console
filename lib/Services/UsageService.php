@@ -346,8 +346,8 @@ class UsageService extends BaseService implements MetricsProvider
     public function sendMetrics(array $stats, $verbose = false)
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
-            //  Ensure the install key is in the root
-            array_set($stats, 'metrics.install-key', $this->installKey);
+            //  Jam the install key into the root...
+            array_set($stats, 'install-key', $this->installKey);
 
             try {
                 if (false === ($_result = Curl::post($_endpoint, Json::encode($stats), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
