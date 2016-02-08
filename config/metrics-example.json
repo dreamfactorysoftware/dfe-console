@@ -1,0 +1,68 @@
+{
+    "metrics":   {
+        "install-key": "6c38d7e1e3f045995971a21e555c7618556c318a9adfc8b7337f5561a8ee5ad5",
+        "version":     "1.0",
+        "date":        "2016-02-07T19:23:29-05:00"
+    },
+    "console":   {
+        "uri":       "http:\/\/console.fabric.dreamfactory.com",
+        "resources": {
+            "user":     2,
+            "mount":    1,
+            "server":   3,
+            "cluster":  1,
+            "limit":    1,
+            "instance": 4
+        },
+        "aggregate": {
+            "versions":  {
+                "2.0.4": 3
+            },
+            "resources": [],
+            "states":    {
+                "activated":     0,
+                "error":         0,
+                "not activated": 4
+            }
+        }
+    },
+    "dashboard": {
+        "uri":       "dashboard.fabric.dreamfactory.com",
+        "resources": {
+            "user": 3
+        }
+    },
+    "instance":  {
+        "dfe2": {
+            "uri":         "http:\/\/dfe2.fabric.dreamfactory.com",
+            "resources":   [],
+            "environment": {
+                "version": "2.0.4",
+                "status":  "not activated"
+            }
+        },
+        "df55": {
+            "uri":         "http:\/\/df55.fabric.dreamfactory.com",
+            "resources":   [],
+            "environment": {
+                "status": "not activated"
+            }
+        },
+        "lee":  {
+            "uri":         "http:\/\/lee.fabric.dreamfactory.com",
+            "resources":   [],
+            "environment": {
+                "version": "2.0.4",
+                "status":  "not activated"
+            }
+        },
+        "ggg":  {
+            "uri":         "http:\/\/ggg.fabric.dreamfactory.com",
+            "resources":   [],
+            "environment": {
+                "version": "2.0.4",
+                "status":  "not activated"
+            }
+        }
+    }
+}
