@@ -121,7 +121,7 @@ class UsageService extends BaseService implements MetricsProvider
     /**
      * @return bool|string
      */
-    protected function generateInstallKey()
+    public function generateInstallKey()
     {
         if (empty($_key = config('metrics.install-key'))) {
             try {
