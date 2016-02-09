@@ -16,6 +16,7 @@ use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
+use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -365,14 +366,16 @@ class UsageService extends BaseService implements MetricsProvider
     public function sendMetrics(array $stats, $verbose = false)
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
+
             //  Jam the install key into the root...
-            $_payload = array_merge([
-                'install-key' => $this->installKey,
-            ],
-                $stats);
+            if (!empty($stats) && !is_scalar($stats)) {
+                $stats = Json::encode(array_merge(['install-key' => $this->installKey], $stats));
+            }
+
+            $_options = [CURLOPT_HTTPHEADER => ['Content-Type: application/json']];
 
             try {
-                if (false === ($_result = Curl::post($_endpoint, json_encode($_payload), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
+                if (false === ($_result = Curl::post($_endpoint, $stats, $_options))) {
                     throw new \RuntimeException('Network error during metrics send.');
                 }
 
