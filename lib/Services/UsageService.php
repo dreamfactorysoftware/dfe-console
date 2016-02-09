@@ -221,7 +221,7 @@ class UsageService extends BaseService implements MetricsProvider
 
                 $_stats['environment'] = array_merge(['version' => data_get($_status, 'platform.version_current')], ['status' => 'activated']);
 
-                //  No resources, but have environment? Calling it "no admin"
+                //  Resources
                 if (false === ($_resources = $_api->resources()) || empty($_resources)) {
                     throw new InstanceAdminException($_instance->instance_id_text);
                 }
@@ -250,7 +250,7 @@ class UsageService extends BaseService implements MetricsProvider
                 \Log::log($verbose ? 'info' : 'debug',
                     '[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_ex->getInstanceId());
 
-                //  Instance unavailable or not initialized
+                //  Instance available but no admin
                 $_stats['environment']['status'] = 'no admin';
             } catch (InstanceNotActivatedException $_ex) {
                 \Log::log($verbose ? 'info' : 'debug',
@@ -321,7 +321,7 @@ class UsageService extends BaseService implements MetricsProvider
     protected function aggregateStoredMetrics($date)
     {
         $_gathered = $_totals = $_versions = [];
-        $_states = ['activated' => 0, 'error' => 0, 'not activated' => 0];
+        $_states = ['activated' => 0, 'error' => 0, 'not activated' => 0, 'no admin' => 0];
 
         //  Pull all the details up into a single array and return it
         /** @noinspection PhpUndefinedMethodInspection */
