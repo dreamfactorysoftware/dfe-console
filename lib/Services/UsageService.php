@@ -2,6 +2,8 @@
 
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Database\Exceptions\InstanceAdminException;
+use DreamFactory\Enterprise\Database\Exceptions\InstanceException;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Cluster;
@@ -215,14 +217,15 @@ class UsageService extends BaseService implements MetricsProvider
                     'resources' => [],
                 ];
 
-                if (false === ($_status = $_api->status()) || empty($_status)) {
+                if (false === ($_status = $_api->status())) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
                 $_stats['environment'] = array_merge(['version' => data_get($_status, 'platform.version_current')], ['status' => 'activated']);
 
+                //  No resources, but have environment? Calling it "no admin"
                 if (false === ($_resources = $_api->resources()) || empty($_resources)) {
-                    throw new InstanceNotActivatedException($_instance->instance_id_text);
+                    throw new InstanceAdminException($_instance->instance_id_text);
                 }
 
                 foreach ($_resources as $_resource) {
@@ -235,15 +238,22 @@ class UsageService extends BaseService implements MetricsProvider
                     } catch (\Exception $_ex) {
                         $_list[$_resource] = 'error';
                     }
+                }
 
-                    if ($_resource == 'user' && (0 === $_list[$_resource] || 'error' === $_list[$_resource])) {
-                        //  database is setup but no users...
-                        throw new InstanceNotActivatedException($_instance->instance_id_text);
-                    }
+                //  Does it appear ok?
+                if (0 === ($_count = data_get($_list, 'user', 0)) || 'error' == $_count) {
+                    //  database is setup but no users...
+                    throw new InstanceAdminException($_instance->instance_id_text);
                 }
 
                 \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
                 $_stats['resources'] = $_list;
+            } catch (InstanceAdminException $_ex) {
+                \Log::log($verbose ? 'info' : 'debug',
+                    '[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_ex->getInstanceId());
+
+                //  Instance unavailable or not initialized
+                $_stats['environment']['status'] = 'no admin';
             } catch (InstanceNotActivatedException $_ex) {
                 \Log::log($verbose ? 'info' : 'debug',
                     '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
