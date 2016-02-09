@@ -1,9 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services;
 
 use Carbon\Carbon;
+use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Services\BaseService;
-use DreamFactory\Enterprise\Database\Exceptions\InstanceAdminException;
-use DreamFactory\Enterprise\Database\Exceptions\InstanceException;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
@@ -161,7 +160,7 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
+        \Log::debug('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
 
         return $_stats;
 
@@ -183,7 +182,7 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
+        \Log::debug('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
 
         return $_stats;
 
@@ -211,58 +210,63 @@ class UsageService extends BaseService implements MetricsProvider
 
                 //  Save the environment!!
                 $_stats = [
-                    'uri'       => $_instance->getProvisionedEndpoint(),
-                    'resources' => [],
+                    'uri'         => $_instance->getProvisionedEndpoint(),
+                    'resources'   => [],
+                    'environment' => ['status' => 'unknown'],
                 ];
 
                 if (false === ($_status = $_api->determineInstanceState(true))) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
-                $_stats['environment'] = array_merge(['version' => data_get($_status, 'platform.version_current')], ['status' => 'activated']);
+                array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
+
+                //  Does it appear ok?
+                switch ($_instance->ready_state_nbr) {
+                    case InstanceStates::READY:
+                        \Log::debug('[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
+                        array_set($_stats, 'environment.status', 'activated');
+                        break;
+
+                    case InstanceStates::ADMIN_REQUIRED:
+                        \Log::debug('[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_instance->instance_id_text);
+                        array_set($_stats, 'environment.status', 'no admin');
+                        break;
+
+                    case InstanceStates::INIT_REQUIRED:
+                    default:
+                        \Log::debug('[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_instance->instance_id_text);
+                        //  Just skip the resource attempts entirely if this guy isn't activated
+                        throw new InstanceNotActivatedException($_instance->instance_id_text);
+                }
 
                 //  Resources
                 if (false === ($_resources = $_api->resources()) || empty($_resources)) {
-                    throw new InstanceException($_instance->instance_id_text, 'No resources found. Improper provisioning probable.');
-                }
+                    \Log::debug('[dfe.usage-service:gatherInstanceStatistics] -> ' . $_instance->instance_id_text . ' has no resources');
+                } else {
 
-                foreach ($_resources as $_resource) {
-                    try {
-                        if (false !== ($_result = $_api->resource($_resource))) {
-                            $_list[$_resource] = count($_result);
-                        } else {
-                            $_list[$_resource] = 0;
+                    foreach ($_resources as $_resource) {
+                        try {
+                            if (false !== ($_result = $_api->resource($_resource))) {
+                                $_list[$_resource] = count($_result);
+                            } else {
+                                $_list[$_resource] = 0;
+                            }
+                        } catch (\Exception $_ex) {
+                            $_list[$_resource] = 'error';
                         }
-                    } catch (\Exception $_ex) {
-                        $_list[$_resource] = 'error';
                     }
+
+                    array_set($_stats, 'resources', $_list);
                 }
-
-                $_stats['resources'] = $_list;
-
-                //  Does it appear ok?
-                if (0 === ($_count = data_get($_list, 'admin', 0)) || 'error' == $_count) {
-                    throw new InstanceAdminException($_instance->instance_id_text);
-                }
-
-                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-            } catch (InstanceAdminException $_ex) {
-                \Log::log($verbose ? 'info' : 'debug',
-                    '[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_ex->getInstanceId());
-
-                //  Instance available but no admin
-                $_stats['environment']['status'] = 'no admin';
             } catch (InstanceNotActivatedException $_ex) {
-                \Log::log($verbose ? 'info' : 'debug',
-                    '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_instance->instance_id_text);
-
                 //  Instance unavailable or not initialized
-                $_stats['environment']['status'] = 'not activated';
+                array_set($_stats, 'environment.status', 'not activated');
             } catch (\Exception $_ex) {
-                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
+                \Log::debug('[dfe.usage-service:gatherInstanceStatistics] error ' . $_instance->instance_id_text);
 
                 //  Instance unavailable or not initialized
-                $_stats['environment']['status'] = 'error';
+                array_set($_stats, 'environment.status', 'error');
             }
 
             try {
@@ -372,7 +376,7 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new \RuntimeException('Network error during metrics send.');
                 }
 
-                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, Curl::getInfo());
+                \Log::debug('[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, Curl::getInfo());
 
                 return true;
             } catch (\Exception $_ex) {
