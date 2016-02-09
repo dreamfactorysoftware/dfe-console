@@ -3,9 +3,7 @@
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceAdminException;
-use DreamFactory\Enterprise\Database\Exceptions\InstanceException;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
-use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
@@ -256,9 +254,10 @@ class UsageService extends BaseService implements MetricsProvider
                 $_stats['environment']['status'] = 'no admin';
             } catch (InstanceNotActivatedException $_ex) {
                 \Log::log($verbose ? 'info' : 'debug',
+                    '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_instance->instance_id_text);
 
-                    //  Instance unavailable or not initialized
-                    $_stats['environment']['status'] = 'not activated';
+                //  Instance unavailable or not initialized
+                $_stats['environment']['status'] = 'not activated';
             } catch (\Exception $_ex) {
                 \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
 
