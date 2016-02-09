@@ -137,7 +137,7 @@ class Metrics extends ConsoleCommand
                     file_put_contents($_file, $_output);
                 }
 
-                $this->writeln($_output);
+                OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity() && $this->writeln($_output);
             }
         } else {
             $this->writeln('No metrics were gathered.');
