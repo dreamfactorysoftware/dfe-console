@@ -240,14 +240,14 @@ class UsageService extends BaseService implements MetricsProvider
                     }
                 }
 
+                $_stats['resources'] = $_list;
+
                 //  Does it appear ok?
                 if (0 === ($_count = data_get($_list, 'user', 0)) || 'error' == $_count) {
-                    //  database is setup but no users...
                     throw new InstanceAdminException($_instance->instance_id_text);
                 }
 
                 \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-                $_stats['resources'] = $_list;
             } catch (InstanceAdminException $_ex) {
                 \Log::log($verbose ? 'info' : 'debug',
                     '[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_ex->getInstanceId());
@@ -256,10 +256,9 @@ class UsageService extends BaseService implements MetricsProvider
                 $_stats['environment']['status'] = 'no admin';
             } catch (InstanceNotActivatedException $_ex) {
                 \Log::log($verbose ? 'info' : 'debug',
-                    '[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_ex->getInstanceId());
 
-                //  Instance unavailable or not initialized
-                $_stats['environment']['status'] = 'not activated';
+                    //  Instance unavailable or not initialized
+                    $_stats['environment']['status'] = 'not activated';
             } catch (\Exception $_ex) {
                 \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:gatherInstanceStatistics] unknown ' . $_instance->instance_id_text);
 
