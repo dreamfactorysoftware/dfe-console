@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Services\BaseService;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceAdminException;
+use DreamFactory\Enterprise\Database\Exceptions\InstanceException;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
@@ -16,7 +17,6 @@ use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
-use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -215,7 +215,7 @@ class UsageService extends BaseService implements MetricsProvider
                     'resources' => [],
                 ];
 
-                if (false === ($_status = $_api->status())) {
+                if (false === ($_status = $_api->determineInstanceState(true))) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
@@ -223,7 +223,7 @@ class UsageService extends BaseService implements MetricsProvider
 
                 //  Resources
                 if (false === ($_resources = $_api->resources()) || empty($_resources)) {
-                    throw new InstanceAdminException($_instance->instance_id_text);
+                    throw new InstanceException($_instance->instance_id_text, 'No resources found. Improper provisioning probable.');
                 }
 
                 foreach ($_resources as $_resource) {
@@ -241,7 +241,7 @@ class UsageService extends BaseService implements MetricsProvider
                 $_stats['resources'] = $_list;
 
                 //  Does it appear ok?
-                if (0 === ($_count = data_get($_list, 'user', 0)) || 'error' == $_count) {
+                if (0 === ($_count = data_get($_list, 'admin', 0)) || 'error' == $_count) {
                     throw new InstanceAdminException($_instance->instance_id_text);
                 }
 
