@@ -362,14 +362,17 @@ class UsageService extends BaseService implements MetricsProvider
     {
         if (null !== ($_endpoint = config('license.endpoints.usage'))) {
             //  Jam the install key into the root...
-            $_payload = Json::encode(array_merge(['install-key' => $this->installKey,], $stats));
+            $_payload = array_merge([
+                'install-key' => $this->installKey,
+            ],
+                $stats);
 
             try {
-                if (false === ($_result = Curl::post($_endpoint, $_payload, [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
-                    throw new \RuntimeException('Network error during metrics send..');
+                if (false === ($_result = Curl::post($_endpoint, json_encode($_payload), [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]))) {
+                    throw new \RuntimeException('Network error during metrics send.');
                 }
 
-                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, $stats);
+                \Log::log($verbose ? 'info' : 'debug', '[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, Curl::getInfo());
 
                 return true;
             } catch (\Exception $_ex) {
