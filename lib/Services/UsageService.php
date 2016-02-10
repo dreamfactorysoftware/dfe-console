@@ -387,7 +387,8 @@ class UsageService extends BaseService implements MetricsProvider
 
             //  Jam the install key into the root...
             if (!empty($stats) && !is_scalar($stats)) {
-                $stats = Json::encode(array_merge(['install-key' => $this->installKey], $stats));
+                !isset($stats['install-key']) && $stats['install-key'] = $this->installKey;
+                $stats = Json::encode($stats);
             }
 
             $_options = [CURLOPT_HTTPHEADER => ['Content-Type: application/json']];
