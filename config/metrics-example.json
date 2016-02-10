@@ -1,68 +1,47 @@
 {
     "metrics":   {
-        "install-key": "6c38d7e1e3f045995971a21e555c7618556c318a9adfc8b7337f5561a8ee5ad5",
+        "install-key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "version":     "1.0",
-        "date":        "2016-02-07T19:23:29-05:00"
+        "date":        "2016-02-10T07:37:02-05:00"
     },
-    "console":   {
-        "uri":       "http:\/\/console.fabric.dreamfactory.com",
+    "uri":       "https://console.dfe.example.com/",
+    "resources": {
+        "user":     17,
+        "mount":    3,
+        "server":   13,
+        "cluster":  3,
+        "limit":    0,
+        "instance": 5418
+    },
+    "aggregate": {
+        "versions":  {
+            "2.0.4": 3742
+        },
         "resources": {
-            "user":     2,
-            "mount":    1,
-            "server":   3,
-            "cluster":  1,
-            "limit":    1,
-            "instance": 4
+            "admin":          3794,
+            "app":            12110,
+            "app_group":      16,
+            "cache":          73,
+            "config":         0,
+            "constant":       0,
+            "cors":           312,
+            "custom":         0,
+            "email_template": 11230,
+            "environment":    0,
+            "event":          0,
+            "lookup":         11,
+            "role":           718,
+            "script_type":    11224,
+            "service":        22960,
+            "service_type":   104587,
+            "setting":        0,
+            "user":           577
         },
-        "aggregate": {
-            "versions":  {
-                "2.0.4": 3
-            },
-            "resources": [],
-            "states":    {
-                "activated":     0,
-                "error":         0,
-                "not activated": 4
-            }
+        "states":    {
+            "activated":     3742,
+            "error":         0,
+            "not activated": 1676,
+            "no admin":      0
         }
     },
-    "dashboard": {
-        "uri":       "dashboard.fabric.dreamfactory.com",
-        "resources": {
-            "user": 3
-        }
-    },
-    "instance":  {
-        "dfe2": {
-            "uri":         "http:\/\/dfe2.fabric.dreamfactory.com",
-            "resources":   [],
-            "environment": {
-                "version": "2.0.4",
-                "status":  "not activated"
-            }
-        },
-        "df55": {
-            "uri":         "http:\/\/df55.fabric.dreamfactory.com",
-            "resources":   [],
-            "environment": {
-                "status": "not activated"
-            }
-        },
-        "lee":  {
-            "uri":         "http:\/\/lee.fabric.dreamfactory.com",
-            "resources":   [],
-            "environment": {
-                "version": "2.0.4",
-                "status":  "not activated"
-            }
-        },
-        "ggg":  {
-            "uri":         "http:\/\/ggg.fabric.dreamfactory.com",
-            "resources":   [],
-            "environment": {
-                "version": "2.0.4",
-                "status":  "not activated"
-            }
-        }
-    }
 }

@@ -11,7 +11,7 @@ class UsageServiceTest extends \TestCase
     public function testHarvest()
     {
         /** @type UsageService $_service */
-        $_service = \App::make(UsageServiceProvider::IOC_NAME);
-        $_stats = $_service->gatherStatistics();
+        $_service = UsageServiceProvider::service();
+        $this->assertNotEmpty($_stats = $_service->getMetrics());
     }
 }

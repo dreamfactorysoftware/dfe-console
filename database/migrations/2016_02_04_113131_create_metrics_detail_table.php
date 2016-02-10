@@ -22,6 +22,9 @@ class CreateMetricsDetailTable extends Migration
                     $table->mediumText('data_text');
                     $table->timestamps();
 
+                    //  Unique index
+                    $table->unique(['user_id', 'instance_id', 'gather_date'], 'ux_metrics_detail_user_instance_date');
+
                     //  Foreign keys
                     $table->foreign('user_id', 'fk_metrics_detail_user_id')->references('id')->on('user_t')->onDelete('cascade');
                     $table->foreign('instance_id', 'fk_metrics_detail_instance_id')->references('id')->on('instance_t')->onDelete('cascade');
