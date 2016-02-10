@@ -17,14 +17,11 @@ use DreamFactory\Enterprise\Instance\Ops\Services\InstanceApiClientService;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
-use DreamFactory\Library\Utility\Curl;
-use DreamFactory\Library\Utility\Json;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * General usage services
  */
-class UsageService extends BaseLicenseService implements MetricsProvider
+class UsageService extends BaseService implements MetricsProvider
 {
     //******************************************************************************
     //* Constants
@@ -62,6 +59,9 @@ class UsageService extends BaseLicenseService implements MetricsProvider
                 $this->telemetry->registerProvider($_name, new $_provider());
             }
         }
+
+        //  Connect to the license server
+        License::connect();
     }
 
     /**
@@ -73,31 +73,19 @@ class UsageService extends BaseLicenseService implements MetricsProvider
      */
     public function getMetrics($options = [])
     {
-        //  If nobody has used the system, we can't report metrics
-        if (false === $this->installKey) {
-            return [];
-        }
+        $_send = array_get($options, 'send', false);
+        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherAllStatistics();
 
-        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherStatistics();
-
-        return $this->bundleMetrics($_metrics);
+        return $this->bundleMetrics($_metrics, $_send);
     }
 
     /**
      * Returns statistics gathered from various sources as defined by the methods in this class and its subclasses
      *
-     * @param bool $send If true, send metrics data to usage endpoint
-     * @param bool $verbose
-     *
      * @return array
      */
-    public function gatherStatistics($send = false, $verbose = false)
+    protected function gatherAllStatistics()
     {
-        //  If nobody has used the system, we can't report metrics
-        if (false === $this->installKey) {
-            return [];
-        }
-
         //  Set our installation key
         $_stats = [];
 
@@ -106,25 +94,23 @@ class UsageService extends BaseLicenseService implements MetricsProvider
         foreach ($_mirror->getMethods() as $_method) {
             if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
-                $_stats[$_which] = call_user_func([get_called_class(), $_methodName], $verbose);
+                $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
             }
         }
 
         //  Move aggregate to console
         if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
-            $_stats = array_set($_stats, 'console.aggregate', $_aggregate);
+            array_set($_stats, 'console.aggregate', $_aggregate);
             array_forget($_stats, 'instance._aggregated');
         }
 
-        return $this->bundleMetrics($_stats, $send);
+        return $_stats;
     }
 
     /**
-     * @param bool $verbose
-     *
      * @return array
      */
-    protected function gatherConsoleStatistics($verbose = false)
+    protected function gatherConsoleStatistics()
     {
         $_stats = [
             'uri'       => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
@@ -147,11 +133,9 @@ class UsageService extends BaseLicenseService implements MetricsProvider
     }
 
     /**
-     * @param bool $verbose
-     *
      * @return array
      */
-    protected function gatherDashboardStatistics($verbose = false)
+    protected function gatherDashboardStatistics()
     {
         $_stats = [
             'uri'       => $_uri = config('dfe.dashboard-url'),
@@ -169,11 +153,9 @@ class UsageService extends BaseLicenseService implements MetricsProvider
     }
 
     /**
-     * @param bool $verbose
-     *
      * @return array
      */
-    protected function gatherInstanceStatistics($verbose = false)
+    protected function gatherInstanceStatistics()
     {
         $_gathered = 0;
         $_gatherDate = date('Y-m-d');
@@ -183,76 +165,72 @@ class UsageService extends BaseLicenseService implements MetricsProvider
         foreach (Instance::all() as $_instance) {
             $_api = InstanceApiClient::connect($_instance);
 
+            //  Seed the stats
+            $_stats = [
+                'uri'         => $_api->getProvisionedEndpoint(),
+                'environment' => ['version' => null, 'inception' => $_instance->create_date, 'status' => 'not activated'],
+                'resources'   => [],
+            ];
+
             try {
-                //  Save the environment!!
-                $_stats = [
-                    'uri'         => $_instance->getProvisionedEndpoint(),
-                    'resources'   => [],
-                    'environment' => ['version' => null, 'date' => null, 'status' => null],
-                ];
+                if (false !== ($_status = $_api->determineInstanceState(true))) {
+                    array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
 
-                if (false === ($_status = $_api->determineInstanceState(true))) {
-                    throw new InstanceNotActivatedException($_instance->instance_id_text);
-                }
+                    //  Does it appear ok?
+                    $_instance->fresh();
 
-                array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
+                    switch ($_instance->ready_state_nbr) {
+                        case InstanceStates::READY:
+                            $_stats['environment']['status'] = 'activate';
+                            break;
 
-                //  Does it appear ok?
-                $_instance->fresh();
+                        case InstanceStates::ADMIN_REQUIRED:
+                            $_stats['environment']['status'] = 'no admin';
+                            break;
 
-                switch ($_instance->ready_state_nbr) {
-                    case InstanceStates::READY:
-                        \Log::debug('[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-                        array_set($_stats, 'environment.status', 'activated');
-                        break;
+                        default:
+                            $_stats['environment']['status'] = 'not activated';
+                            break;
+                    }
 
-                    case InstanceStates::ADMIN_REQUIRED:
-                        \Log::debug('[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_instance->instance_id_text);
-                        array_set($_stats, 'environment.status', 'no admin');
-                        break;
-
-                    case InstanceStates::INIT_REQUIRED:
-                    default:
-                        \Log::debug('[dfe.usage-service:gatherInstanceStatistics] inactive ' . $_instance->instance_id_text);
-                        //  Just skip the resource attempts entirely if this guy isn't activated
-                        throw new InstanceNotActivatedException($_instance->instance_id_text);
-                }
-
-                //  Resources
-                if (false === ($_stats['resources'] = $this->getResourceCounts($_api))) {
-                    \Log::debug('[dfe.usage-service:gatherInstanceStatistics] -> ' . $_instance->instance_id_text . ' has no resources');
-                    $_stats['resources'] = [];
+                    //  Resources
+                    if (InstanceStates::INIT_REQUIRED != $_instance->ready_state_nbr) {
+                        if (false === ($_stats['resources'] = $this->getResourceCounts($_api))) {
+                            $_stats['resources'] = [];
+                        } else {
+                            //  One more "no admin" check, just in case...
+                            if (0 == data_get($_stats['resources'], 'admin', 0)) {
+                                $_stats['environment']['status'] = 'no admin';
+                                $_instance->update(['ready_state_nbr' => InstanceStates::ADMIN_REQUIRED]);
+                            }
+                        }
+                    }
                 }
             } catch (InstanceNotActivatedException $_ex) {
                 //  Instance unavailable or not initialized
-                array_set($_stats, 'environment.status', 'not activated');
             } catch (\Exception $_ex) {
-                \Log::debug('[dfe.usage-service:gatherInstanceStatistics] error ' . $_instance->instance_id_text);
-
                 //  Instance unavailable or not initialized
                 array_set($_stats, 'environment.status', 'error');
             }
 
-            try {
-                if (null === ($_row = $_instance->metrics($_gatherDate))) {
-                    $_row = new MetricsDetail();
-                    $_row->user_id = $_instance->user_id;
-                    $_row->instance_id = $_instance->id;
-                }
+            \Log::debug('[dfe.usage-service:instance] ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
 
-                $_row->gather_date = $_gatherDate;
+            try {
+                $_row = MetricsDetail::firstOrCreate(['user_id' => $_instance->user_id, 'instance_id' => $_instance->id, 'gather_date' => $_gatherDate]);
                 $_row->data_text = $_stats;
                 $_row->save();
 
                 $_gathered++;
             } catch (\Exception $_ex) {
-                \Log::error('[dfe.usage-service:gatherInstanceStatistics] ' . $_ex->getMessage());
+                \Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
             unset($_stats, $_list, $_status);
         }
 
-        return $this->aggregateStoredMetrics($_gatherDate);
+        $this->info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
+
+        return $this->aggregateInstanceMetrics($_gatherDate);
 
         //  The new way
         //return $this->telemetry->make('instance')->getTelemetry();
@@ -268,7 +246,7 @@ class UsageService extends BaseLicenseService implements MetricsProvider
     {
         $_bundle = array_merge([
             'metrics' => [
-                'install-key' => $this->installKey,
+                'install-key' => License::getInstallKey(),
                 'version'     => static::METRICS_VERSION,
                 'date'        => date('c'),
             ],
@@ -276,7 +254,7 @@ class UsageService extends BaseLicenseService implements MetricsProvider
             $metrics);
 
         //  Send metrics if wanted
-        $send && License::sendUsageData($_bundle);
+        $send && License::reportStatistics($_bundle);
 
         return $_bundle;
     }
@@ -286,39 +264,45 @@ class UsageService extends BaseLicenseService implements MetricsProvider
      *
      * @return array [];
      */
-    protected function aggregateStoredMetrics($date)
+    protected function aggregateInstanceMetrics($date)
     {
-        $_gathered = $_totals = $_versions = [];
-        $_states = ['activated' => 0, 'error' => 0, 'not activated' => 0, 'no admin' => 0];
+        $_detailed = config('license.send-instance-details', false);
+        $_gathered = $_resourceCounts = $_versions = $_states = [];
 
         //  Pull all the details up into a single array and return it
         /** @noinspection PhpUndefinedMethodInspection */
         foreach (MetricsDetail::byGatherDate($date)->with('instance')->get() as $_detail) {
             $_metrics = $_detail->data_text;
-            $_cleaned = [];
 
             //  Aggregate versions
-            $_version = data_get($_metrics, 'environment.version');
-            $_version && !array_key_exists($_version, $_versions) && $_versions[$_version] = 0;
-            $_version && $_versions[$_version]++;
-
-            //  Aggregate statuses
-            $_state = data_get($_metrics, 'environment.status');
-            $_state && !array_key_exists($_state, $_states) && $_states[$_state] = 0;
-            $_state && $_states[$_state]++;
-
-            //  Aggregate
-            foreach (data_get($_metrics, 'resources', []) as $_resource => $_count) {
-                !array_key_exists($_resource, $_totals) && $_totals[$_resource] = 0;
-                $_cleaned[$_resource] = $_count;
-                is_numeric($_count) && $_totals[$_resource] += $_count;
+            if (!empty($_version = data_get($_metrics, 'environment.version'))) {
+                !array_key_exists($_version, $_versions) && $_versions[$_version] = 0;
+                $_versions[$_version]++;
             }
 
-            array_set($_metrics, 'resources', $_cleaned);
-            $_gathered[$_detail->instance->instance_id_text] = $_metrics;
+            //  Aggregate statuses
+            if (!empty($_state = data_get($_metrics, 'environment.status'))) {
+                !array_key_exists($_state, $_states) && $_states[$_state] = 0;
+                $_states[$_state]++;
+            }
+
+            //  Aggregate resource counts
+            foreach (data_get($_metrics, 'resources', []) as $_resource => $_count) {
+                !array_key_exists($_resource, $_resourceCounts) && $_resourceCounts[$_resource] = 0;
+                is_numeric($_count) && $_resourceCounts[$_resource] += $_count;
+            }
+
+            $_detailed && $_gathered[$_detail->instance->instance_id_text] = $_metrics;
         }
 
-        return array_merge(['_aggregated' => ['versions' => $_versions, 'resources' => $_totals, 'states' => $_states,],], $_gathered);
+        return array_merge($_gathered,
+            [
+                '_aggregated' => [
+                    'versions'  => $_versions,
+                    'resources' => $_resourceCounts,
+                    'states'    => $_states,
+                ],
+            ]);
     }
 
     /**

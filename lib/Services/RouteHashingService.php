@@ -42,8 +42,7 @@ class RouteHashingService extends BaseService implements RouteHasher
         $_model = RouteHash::create([
             'hash_text'        => $_hash,
             'actual_path_text' => $pathToHash,
-            'expire_date'      => Carbon::createFromTimestamp(time() +
-                ($keepDays * DateTimeIntervals::SECONDS_PER_DAY)),
+            'expire_date'      => Carbon::createFromTimestamp(time() + ($keepDays * DateTimeIntervals::SECONDS_PER_DAY)),
         ]);
 
         return $_model->hash_text;
@@ -74,8 +73,7 @@ class RouteHashingService extends BaseService implements RouteHasher
             /** @type Collection $_hashes */
             $_hashes = RouteHash::where('expire_date',
                 '<',
-                Carbon::createFromTimestamp(time() -
-                    config('snapshot.days-to-keep') * DateTimeIntervals::SECONDS_PER_DAY))->get();
+                Carbon::createFromTimestamp(time() - config('snapshot.days-to-keep') * DateTimeIntervals::SECONDS_PER_DAY))->get();
 
             if (!empty($_hashes)) {
                 foreach ($_hashes as $_hash) {

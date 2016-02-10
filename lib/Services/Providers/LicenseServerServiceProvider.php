@@ -1,16 +1,16 @@
 <?php namespace DreamFactory\Enterprise\Services\Providers;
 
 use DreamFactory\Enterprise\Common\Providers\BaseServiceProvider;
-use DreamFactory\Enterprise\Services\LicenseService;
+use DreamFactory\Enterprise\Services\LicenseServerService;
 
-class LicenseServiceProvider extends BaseServiceProvider
+class LicenseServerServiceProvider extends BaseServiceProvider
 {
     //******************************************************************************
     //* Constants
     //******************************************************************************
 
     /** @inheritdoc */
-    const IOC_NAME = 'dfe.license';
+    const IOC_NAME = 'dfe.license-server';
 
     //********************************************************************************
     //* Public Methods
@@ -20,8 +20,8 @@ class LicenseServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->singleton(static::IOC_NAME,
-            function ($app){
-                return new LicenseService($app);
+            function($app) {
+                return new LicenseServerService($app);
             });
     }
 }

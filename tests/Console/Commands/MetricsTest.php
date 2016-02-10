@@ -14,10 +14,6 @@ class MetricsTest extends \TestCase
      */
     public function testMetrics()
     {
-        /** @type UsageService $_service */
-        $_service = Usage::service();
-        $_stats = $_service->gatherStatistics();
-
-        $this->assertNotEmpty($_stats);
+        \Artisan::call('dfe:metrics');
     }
 }

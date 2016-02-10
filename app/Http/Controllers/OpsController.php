@@ -69,7 +69,7 @@ class OpsController extends BaseController implements IsVersioned
     {
         /** @type UsageService $_service */
         $_service = \App::make(UsageServiceProvider::IOC_NAME);
-        $_stats = $_service->gatherStatistics();
+        $_stats = $_service->getMetrics();
 
         if (empty($_stats)) {
             return $this->failure(Response::HTTP_INTERNAL_SERVER_ERROR, 'No stats returned from service.');

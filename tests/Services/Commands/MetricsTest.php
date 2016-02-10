@@ -12,13 +12,14 @@ class MetricsTest extends \TestCase
     /**
      * Tests metrics
      *
-     * @covers UsageService::gatherStatistics()
+     * @covers \DreamFactory\Enterprise\Services\UsageService::getMetrics()
+     * @covers \DreamFactory\Enterprise\Services\Providers\UsageServiceProvider::service()
      */
     public function testMetrics()
     {
         /** @type UsageService $_service */
         $_service = Usage::service();
-        $_stats = $_service->gatherStatistics();
+        $_stats = $_service->getMetrics();
 
         $this->assertNotEmpty($_stats);
     }

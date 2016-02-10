@@ -1,12 +1,17 @@
 <?php namespace DreamFactory\Enterprise\Services\Facades;
 
-use DreamFactory\Enterprise\Services\Providers\LicenseServiceProvider;
+use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\ServiceUser;
+use DreamFactory\Enterprise\Services\Providers\LicenseServerServiceProvider;
 use DreamFactory\Library\Utility\Facades\BaseFacade;
 
 /**
- * @method static bool|mixed|\stdClass sendUsageData($data = [])
- * @method static bool|mixed|\stdClass registerAdmin($serviceUser)
- * @method static bool|mixed|\stdClass registerInstance($instance)
+ * @method static string getInstallKey()
+ * @method static void connect(array $endpoints = [])
+ * @method static bool|mixed|\stdClass reportStatistics($data = [])
+ * @method static bool|mixed|\stdClass registerAdmin(ServiceUser $serviceUser)
+ * @method static bool|mixed|\stdClass registerInstall(ServiceUser $serviceUser)
+ * @method static bool|mixed|\stdClass registerInstance(Instance $instance)
  */
 class License extends BaseFacade
 {
@@ -19,6 +24,6 @@ class License extends BaseFacade
      */
     protected static function getFacadeAccessor()
     {
-        return LicenseServiceProvider::IOC_NAME;
+        return LicenseServerServiceProvider::IOC_NAME;
     }
 }

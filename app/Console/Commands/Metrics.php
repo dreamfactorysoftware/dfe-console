@@ -5,7 +5,8 @@ use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
 use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models;
-use DreamFactory\Enterprise\Services\Providers\UsageServiceProvider;
+use DreamFactory\Enterprise\Services\Facades\License;
+use DreamFactory\Enterprise\Services\Facades\Usage;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputOption;
@@ -96,6 +97,7 @@ class Metrics extends ConsoleCommand
         $_sent = false;
 
         try {
+            /** @var Models\Metrics $_metrics */
             if (null !== ($_metrics = Models\Metrics::whereRaw('DATE(create_date) = :create_date', [':create_date' => date('Y-m-d'),])->firstOrFail())) {
                 if (!$this->option('force') && $this->option('gather')) {
                     $this->output->error('Gather request would overwrite existing metrics for ' . date('Y-m-d') . '. Use --force to overwrite.');
@@ -113,12 +115,13 @@ class Metrics extends ConsoleCommand
         }
 
         if (!$_metrics || $this->option('force')) {
-            $_stats =
-                UsageServiceProvider::service()
-                    ->gatherStatistics(!$this->option('no-usage-data'), $this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE);
+            $_stats = Usage::getMetrics([
+                'send'    => !$this->option('no-usage-data'),
+                'verbose' => $this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE,
+            ]);
         } else {
             $_stats = $_metrics->getAttribute('metrics_data_text');
-            !$this->option('no-usage-data') && UsageServiceProvider::service()->sendMetrics($_stats);
+            !$this->option('no-usage-data') && License::reportStatistics($_stats);
         }
 
         if (!empty($_stats)) {
