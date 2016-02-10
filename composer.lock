@@ -554,12 +554,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-api-client.git",
-                "reference": "6319497efba3914561d033724997c5a0b9ab6bb8"
+                "reference": "2829e9b415419a6ea13f3988d2cea10f90217dc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-api-client/zipball/6319497efba3914561d033724997c5a0b9ab6bb8",
-                "reference": "6319497efba3914561d033724997c5a0b9ab6bb8",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-api-client/zipball/2829e9b415419a6ea13f3988d2cea10f90217dc8",
+                "reference": "2829e9b415419a6ea13f3988d2cea10f90217dc8",
                 "shasum": ""
             },
             "require": {
@@ -605,7 +605,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-api-client/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-api-client/issues"
             },
-            "time": "2016-02-08 01:19:11"
+            "time": "2016-02-10 22:26:10"
         },
         {
             "name": "dreamfactory/dfe-audit",
@@ -797,12 +797,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "6ada7c41de23a3aabdb3b9006aa72e91155cf98d"
+                "reference": "c9ff80871536b96cb4ecb6275981657abfcda2a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/6ada7c41de23a3aabdb3b9006aa72e91155cf98d",
-                "reference": "6ada7c41de23a3aabdb3b9006aa72e91155cf98d",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/c9ff80871536b96cb4ecb6275981657abfcda2a7",
+                "reference": "c9ff80871536b96cb4ecb6275981657abfcda2a7",
                 "shasum": ""
             },
             "require": {
@@ -846,7 +846,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2016-02-08 01:24:49"
+            "time": "2016-02-10 22:29:39"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
@@ -2172,12 +2172,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "e05ef2374367ae8d96101cd6f353b2f0362ad80f"
+                "reference": "d6361136e121c8b2bd64dd3437db127b7ae0c353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e05ef2374367ae8d96101cd6f353b2f0362ad80f",
-                "reference": "e05ef2374367ae8d96101cd6f353b2f0362ad80f",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/d6361136e121c8b2bd64dd3437db127b7ae0c353",
+                "reference": "d6361136e121c8b2bd64dd3437db127b7ae0c353",
                 "shasum": ""
             },
             "require": {
@@ -2215,7 +2215,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2016-01-28 16:03:02"
+            "time": "2016-02-09 12:30:39"
         },
         {
             "name": "paragonie/random_compat",
@@ -2583,12 +2583,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "2c881b1146b3f6a36d4db5f877341c9b186dc913"
+                "reference": "caef8dba58adecbe0761dfb7e52f8e8d299dd292"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/2c881b1146b3f6a36d4db5f877341c9b186dc913",
-                "reference": "2c881b1146b3f6a36d4db5f877341c9b186dc913",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/caef8dba58adecbe0761dfb7e52f8e8d299dd292",
+                "reference": "caef8dba58adecbe0761dfb7e52f8e8d299dd292",
                 "shasum": ""
             },
             "require": {
@@ -2630,7 +2630,7 @@
                 "client",
                 "search"
             ],
-            "time": "2016-01-30 20:39:28"
+            "time": "2016-02-08 23:01:08"
         },
         {
             "name": "sebastian/git",
@@ -5653,12 +5653,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "7e7f0903e26a01647ad76e53fb5f6e294da187b2"
+                "reference": "05a12065aa18e049f3cf91b0038374e4b1dbcb41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/7e7f0903e26a01647ad76e53fb5f6e294da187b2",
-                "reference": "7e7f0903e26a01647ad76e53fb5f6e294da187b2",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/05a12065aa18e049f3cf91b0038374e4b1dbcb41",
+                "reference": "05a12065aa18e049f3cf91b0038374e4b1dbcb41",
                 "shasum": ""
             },
             "require": {
@@ -5694,7 +5694,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-05 07:58:37"
+            "time": "2016-02-09 20:02:42"
         },
         {
             "name": "way/generators",
