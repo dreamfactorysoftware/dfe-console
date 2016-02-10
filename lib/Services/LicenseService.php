@@ -96,10 +96,7 @@ class LicenseService extends BaseService
                 return $_result;
             }
 
-            \Log::error('[dfe.license] POST failed with status "' .
-                Curl::getLastHttpCode() .
-                '". Response: ' .
-                print_r($_result, true));
+            \Log::error('[dfe.license] POST failed with status "' . Curl::getLastHttpCode() . '". Response: ' . print_r($_result, true));
         } catch (\Exception $_ex) {
             \Log::error('[dfe.license] Exception while POSTing: ' . $_ex->getMessage());
         }

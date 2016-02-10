@@ -13,6 +13,7 @@ use DreamFactory\Enterprise\Database\Models\Server;
 use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
+use DreamFactory\Enterprise\Instance\Ops\Services\InstanceApiClientService;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
@@ -119,7 +120,7 @@ class UsageService extends BaseService implements MetricsProvider
 
         //  Move aggregate to console
         if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
-            array_set($_stats, 'console.aggregate', $_aggregate);
+            $_stats = array_set($_stats, 'console.aggregate', $_aggregate);
             array_forget($_stats, 'instance._aggregated');
         }
 
@@ -231,25 +232,27 @@ class UsageService extends BaseService implements MetricsProvider
                 $_stats = [
                     'uri'         => $_instance->getProvisionedEndpoint(),
                     'resources'   => [],
-                    'environment' => ['status' => 'unknown'],
+                    'environment' => ['version' => null, 'date' => null, 'status' => null],
                 ];
 
                 if (false === ($_status = $_api->determineInstanceState(true))) {
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
-                array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
+                $_stats = array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
 
                 //  Does it appear ok?
+                $_instance->fresh();
+
                 switch ($_instance->ready_state_nbr) {
                     case InstanceStates::READY:
                         \Log::debug('[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-                        array_set($_stats, 'environment.status', 'activated');
+                        $_stats = array_set($_stats, 'environment.status', 'activated');
                         break;
 
                     case InstanceStates::ADMIN_REQUIRED:
                         \Log::debug('[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_instance->instance_id_text);
-                        array_set($_stats, 'environment.status', 'no admin');
+                        $_stats = array_set($_stats, 'environment.status', 'no admin');
                         break;
 
                     case InstanceStates::INIT_REQUIRED:
@@ -260,32 +263,18 @@ class UsageService extends BaseService implements MetricsProvider
                 }
 
                 //  Resources
-                if (false === ($_resources = $_api->resources()) || empty($_resources)) {
+                if (false === ($_stats['resources'] = $this->getResourceCounts($_api))) {
                     \Log::debug('[dfe.usage-service:gatherInstanceStatistics] -> ' . $_instance->instance_id_text . ' has no resources');
-                } else {
-
-                    foreach ($_resources as $_resource) {
-                        try {
-                            if (false !== ($_result = $_api->resource($_resource))) {
-                                $_list[$_resource] = count($_result);
-                            } else {
-                                $_list[$_resource] = 0;
-                            }
-                        } catch (\Exception $_ex) {
-                            $_list[$_resource] = 'error';
-                        }
-                    }
-
-                    array_set($_stats, 'resources', $_list);
+                    $_stats['resources'] = [];
                 }
             } catch (InstanceNotActivatedException $_ex) {
                 //  Instance unavailable or not initialized
-                array_set($_stats, 'environment.status', 'not activated');
+                $_stats = array_set($_stats, 'environment.status', 'not activated');
             } catch (\Exception $_ex) {
                 \Log::debug('[dfe.usage-service:gatherInstanceStatistics] error ' . $_instance->instance_id_text);
 
                 //  Instance unavailable or not initialized
-                array_set($_stats, 'environment.status', 'error');
+                $_stats = array_set($_stats, 'environment.status', 'error');
             }
 
             try {
@@ -293,9 +282,9 @@ class UsageService extends BaseService implements MetricsProvider
                     $_row = new MetricsDetail();
                     $_row->user_id = $_instance->user_id;
                     $_row->instance_id = $_instance->id;
-                    $_row->gather_date = $_gatherDate;
                 }
 
+                $_row->gather_date = $_gatherDate;
                 $_row->data_text = $_stats;
                 $_row->save();
 
@@ -409,5 +398,35 @@ class UsageService extends BaseService implements MetricsProvider
         }
 
         return false;
+    }
+
+    /**
+     * Iterates through, and counts an instance's resources
+     *
+     * @param InstanceApiClientService $client
+     *
+     * @return array
+     */
+    protected function getResourceCounts($client)
+    {
+        $_list = [];
+
+        if (false === ($_resources = $client->resources()) || empty($_resources)) {
+            return false;
+        }
+
+        foreach ($_resources as $_resource) {
+            try {
+                if (false !== ($_result = $client->resource($_resource))) {
+                    $_list[$_resource] = count($_result);
+                } else {
+                    $_list[$_resource] = 0;
+                }
+            } catch (\Exception $_ex) {
+                $_list[$_resource] = 'error';
+            }
+        }
+
+        return $_list;
     }
 }
