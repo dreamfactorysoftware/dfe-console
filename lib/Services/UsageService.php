@@ -226,8 +226,6 @@ class UsageService extends BaseService implements MetricsProvider
             $_api = InstanceApiClient::connect($_instance);
 
             try {
-                $_list = [];
-
                 //  Save the environment!!
                 $_stats = [
                     'uri'         => $_instance->getProvisionedEndpoint(),
@@ -239,7 +237,7 @@ class UsageService extends BaseService implements MetricsProvider
                     throw new InstanceNotActivatedException($_instance->instance_id_text);
                 }
 
-                $_stats = array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
+                array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
 
                 //  Does it appear ok?
                 $_instance->fresh();
@@ -247,12 +245,12 @@ class UsageService extends BaseService implements MetricsProvider
                 switch ($_instance->ready_state_nbr) {
                     case InstanceStates::READY:
                         \Log::debug('[dfe.usage-service:gatherInstanceStatistics] active ' . $_instance->instance_id_text);
-                        $_stats = array_set($_stats, 'environment.status', 'activated');
+                        array_set($_stats, 'environment.status', 'activated');
                         break;
 
                     case InstanceStates::ADMIN_REQUIRED:
                         \Log::debug('[dfe.usage-service:gatherInstanceStatistics] no admin ' . $_instance->instance_id_text);
-                        $_stats = array_set($_stats, 'environment.status', 'no admin');
+                        array_set($_stats, 'environment.status', 'no admin');
                         break;
 
                     case InstanceStates::INIT_REQUIRED:
@@ -269,12 +267,12 @@ class UsageService extends BaseService implements MetricsProvider
                 }
             } catch (InstanceNotActivatedException $_ex) {
                 //  Instance unavailable or not initialized
-                $_stats = array_set($_stats, 'environment.status', 'not activated');
+                array_set($_stats, 'environment.status', 'not activated');
             } catch (\Exception $_ex) {
                 \Log::debug('[dfe.usage-service:gatherInstanceStatistics] error ' . $_instance->instance_id_text);
 
                 //  Instance unavailable or not initialized
-                $_stats = array_set($_stats, 'environment.status', 'error');
+                array_set($_stats, 'environment.status', 'error');
             }
 
             try {
