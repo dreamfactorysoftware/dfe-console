@@ -15,6 +15,7 @@ use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Instance\Ops\Facades\InstanceApiClient;
 use DreamFactory\Enterprise\Instance\Ops\Services\InstanceApiClientService;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
+use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
 use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Json;
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 /**
  * General usage services
  */
-class UsageService extends BaseService implements MetricsProvider
+class UsageService extends BaseLicenseService implements MetricsProvider
 {
     //******************************************************************************
     //* Constants
@@ -42,22 +43,10 @@ class UsageService extends BaseService implements MetricsProvider
      * @type TelemetryService
      */
     protected $telemetry;
-    /**
-     * @type string This installation's identifier
-     */
-    protected $installKey;
 
     //*************************************************************************
     //* Methods
     //*************************************************************************
-
-    /** @inheritdoc */
-    public function __construct($app)
-    {
-        parent::__construct($app);
-
-        $this->installKey = $this->generateInstallKey();
-    }
 
     /** @inheritdoc */
     public function boot()
@@ -73,8 +62,6 @@ class UsageService extends BaseService implements MetricsProvider
                 $this->telemetry->registerProvider($_name, new $_provider());
             }
         }
-
-        empty($this->installKey) && $this->installKey = $this->generateInstallKey();
     }
 
     /**
@@ -106,6 +93,11 @@ class UsageService extends BaseService implements MetricsProvider
      */
     public function gatherStatistics($send = false, $verbose = false)
     {
+        //  If nobody has used the system, we can't report metrics
+        if (false === $this->installKey) {
+            return [];
+        }
+
         //  Set our installation key
         $_stats = [];
 
@@ -125,40 +117,6 @@ class UsageService extends BaseService implements MetricsProvider
         }
 
         return $this->bundleMetrics($_stats, $send);
-    }
-
-    /**
-     * @return bool|string
-     */
-    public function generateInstallKey()
-    {
-        if (empty($_key = config('metrics.install-key'))) {
-            try {
-                /** @type ServiceUser $_user */
-                $_user = ServiceUser::firstOrFail();
-
-                $_key = sha1(config('provisioning.default-domain') . $_user->getHashedEmail());
-
-                file_put_contents(config_path('metrics.php'),
-                    '<?php' .
-                    PHP_EOL .
-                    '// This file was automatically generated on ' .
-                    date('c') .
-                    ' by dfe.usage-service' .
-                    PHP_EOL .
-                    "return ['install-key' => '" .
-                    $_key .
-                    "',];");
-            } catch (ModelNotFoundException $_ex) {
-                \Log::notice('No console users found. Nothing to report.');
-
-                return false;
-            }
-
-            config(['metrics.install-key' => $_key]);
-        }
-
-        return $_key;
     }
 
     /**
@@ -318,7 +276,7 @@ class UsageService extends BaseService implements MetricsProvider
             $metrics);
 
         //  Send metrics if wanted
-        $send && $this->sendMetrics($_bundle);
+        $send && License::sendUsageData($_bundle);
 
         return $_bundle;
     }
@@ -356,46 +314,11 @@ class UsageService extends BaseService implements MetricsProvider
                 is_numeric($_count) && $_totals[$_resource] += $_count;
             }
 
-            $_gathered[$_detail->instance->instance_id_text] = array_merge($_metrics, ['resources' => $_cleaned]);
+            array_set($_metrics, 'resources', $_cleaned);
+            $_gathered[$_detail->instance->instance_id_text] = $_metrics;
         }
 
         return array_merge(['_aggregated' => ['versions' => $_versions, 'resources' => $_totals, 'states' => $_states,],], $_gathered);
-    }
-
-    /**
-     * @param array $stats
-     * @param bool  $verbose
-     *
-     * @return bool
-     */
-    public function sendMetrics(array $stats, $verbose = false)
-    {
-        if (null !== ($_endpoint = config('license.endpoints.usage'))) {
-
-            //  Jam the install key into the root...
-            if (!empty($stats) && !is_scalar($stats)) {
-                !isset($stats['install-key']) && $stats['install-key'] = $this->installKey;
-                $stats = Json::encode($stats);
-            }
-
-            $_options = [CURLOPT_HTTPHEADER => ['Content-Type: application/json']];
-
-            try {
-                if (false === ($_result = Curl::post($_endpoint, $stats, $_options))) {
-                    throw new \RuntimeException('Network error during metrics send.');
-                }
-
-                \Log::debug('[dfe.usage-service:sendMetrics] usage data sent to ' . $_endpoint, Curl::getInfo());
-
-                return true;
-            } catch (\Exception $_ex) {
-                \Log::error('[dfe.usage-service:sendMetrics] exception reporting usage data: ' . $_ex->getMessage());
-            }
-        } else {
-            \Log::notice('[dfe.usage-service:sendMetrics] No usage endpoint found for metrics send.');
-        }
-
-        return false;
     }
 
     /**
