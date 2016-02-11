@@ -1,2 +1,2 @@
-## DreamFactory Enterprise&trade; v1.0.17
+## DreamFactory Enterprise&trade; v1.0.18
 Please see the [DreamFactory](https://www.dreamfactory.com/) website for more information.
