@@ -104,6 +104,9 @@ class UsageService extends BaseService implements MetricsProvider
             array_forget($_stats, 'instance._aggregated');
         }
 
+        //  Remove the instance container if unwanted
+        config('license.send-instance-details', false) && array_forget($_stats, 'instance');
+
         return $_stats;
     }
 
