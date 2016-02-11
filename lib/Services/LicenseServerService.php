@@ -124,11 +124,10 @@ class LicenseServerService extends BaseService
             throw new \InvalidArgumentException('Invalid $payload. It must be an array.');
         }
 
-        $curlOptions = array_merge($curlOptions, [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]);
-
         //  Jam the install key into the root...
         $payload['install-key'] = $this->installKey;
         $payload = Json::encode($payload);
+        $curlOptions[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json; charset=utf8';
 
         return $this->doPost($_endpoint, $payload, $curlOptions);
     }
