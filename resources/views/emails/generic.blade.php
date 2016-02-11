@@ -1,4 +1,4 @@
-@extends('emails.layout')
+@extends('emails.responsive')
 {{--
 
  This is a generic blade for generating emails.

@@ -11,6 +11,15 @@
     <style type="text/css">
         @import url(//fonts.googleapis.com/css?family=Open+Sans|Roboto);
 
+        a {
+            text-decoration: none;
+            color:           #666;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
         body, table, p {
             font-family: Roboto, "Open Sans", Helvetica, Arial, sans-serif;
         }
@@ -22,7 +31,7 @@
             margin:           0 auto;
         }
 
-        table {
+        table.outer {
             border:           0;
             padding:          0;
             margin:           0;
@@ -75,15 +84,12 @@
        cellpadding="0"
        style="border-radius: 4px; background-color: #ffffff; font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; margin: 0 auto; border: 1px solid #ccc;"
        width="600"
-       bgcolor="#FFFFFF">
+       bgcolor="#FFFFFF"
+       class="outer">
     <tbody>
     <tr>
         <td style="padding:0;margin:0;" align="left">
-            <table
-                cellspacing="0"
-                cellpadding="0"
-                style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; "
-                width="100%">
+            <table cellspacing="0" cellpadding="0" style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif;" width="100%">
                 <tbody>
                 <tr>
                     <td style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif;color:#333333;">
@@ -109,20 +115,15 @@
        cellpadding="0"
        style="font-family:Roboto,'Open Sans',Helvetica,Arial,sans-serif; margin: 10px auto 0; padding: 0;"
        width="600"
-       class="responsive">
+       class="responsive outer">
     <tbody>
     <tr>
         <td style="font-size: 8pt;color: #aaa; padding: 0 5px;">
-            <p>
-                You received this email because you used the <a href="//www.dreamfactory.com/" target="_blank">DreamFactory
-                    Enterprise&trade;</a> Dashboard. This system will never use your email address other than to
-                communicate with you about your system usage.
-            </p>
-
             <p>If you need further assistance or have questions, please email <a
                     style="color:#0077B5;text-decoration:none;"
                     target="_blank"
                     href="mailto:{{ $support_email_address }}">DreamFactory Support</a>.</p>
+            <p>This email was sent by <a href="{{ config('dfe.dashboard-url') }}" target="_blank">DreamFactory Enterprise&trade;</a>.</p>
         </td>
     </tr>
     </tbody>

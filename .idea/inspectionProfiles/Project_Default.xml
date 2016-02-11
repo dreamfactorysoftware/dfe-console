@@ -4,6 +4,43 @@
     <option name="myLocal" value="false" />
     <inspection_tool class="CssUnknownTarget" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="HtmlFormInputWithoutLabel" enabled="true" level="IGNORED" enabled_by_default="true" />
+    <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="12">
+            <item index="0" class="java.lang.String" itemvalue="mc:hideable" />
+            <item index="1" class="java.lang.String" itemvalue="width" />
+            <item index="2" class="java.lang.String" itemvalue="align" />
+            <item index="3" class="java.lang.String" itemvalue="target" />
+            <item index="4" class="java.lang.String" itemvalue="bgcolor" />
+            <item index="5" class="java.lang.String" itemvalue="mc:edit" />
+            <item index="6" class="java.lang.String" itemvalue="height" />
+            <item index="7" class="java.lang.String" itemvalue="offset" />
+            <item index="8" class="java.lang.String" itemvalue="marginheight" />
+            <item index="9" class="java.lang.String" itemvalue="topmargin" />
+            <item index="10" class="java.lang.String" itemvalue="marginwidth" />
+            <item index="11" class="java.lang.String" itemvalue="leftmargin" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
+    <inspection_tool class="HtmlUnknownTag" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myValues">
+        <value>
+          <list size="7">
+            <item index="0" class="java.lang.String" itemvalue="nobr" />
+            <item index="1" class="java.lang.String" itemvalue="noembed" />
+            <item index="2" class="java.lang.String" itemvalue="comment" />
+            <item index="3" class="java.lang.String" itemvalue="noscript" />
+            <item index="4" class="java.lang.String" itemvalue="embed" />
+            <item index="5" class="java.lang.String" itemvalue="script" />
+            <item index="6" class="java.lang.String" itemvalue="center" />
+          </list>
+        </value>
+      </option>
+      <option name="myCustomValuesEnabled" value="true" />
+    </inspection_tool>
     <inspection_tool class="HtmlUnknownTarget" enabled="true" level="TYPO" enabled_by_default="true" />
     <inspection_tool class="JSUnusedLocalSymbols" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myIgnoreUnusedFunctionParameters" value="true" />
