@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.18][v1.0.1]
+### Updated
+- Refactor statistics method name to stop "recursive call"-caused segfaults
+- Ensure content-type is set properly in calls to license server
+
 ## [1.0.16][v1.0.16]
 ### Updated
 - Internal service reorganization and improvements
@@ -82,6 +87,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.18]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.16...1.0.18
 [v1.0.16]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.15...1.0.16
 [v1.0.15]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.14...1.0.15
 [v1.0.13]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.12...1.0.13
