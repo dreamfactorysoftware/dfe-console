@@ -4,6 +4,7 @@ use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
 use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Database\Models;
 use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Enterprise\Services\Facades\Usage;
@@ -18,7 +19,7 @@ class Metrics extends ConsoleCommand
     //* Traits
     //******************************************************************************
 
-    use EntityLookup, ArtisanOptionHelper, ArtisanHelper;
+    use EntityLookup, ArtisanOptionHelper, ArtisanHelper, Notifier;
 
     //******************************************************************************
     //* Members
@@ -142,6 +143,21 @@ class Metrics extends ConsoleCommand
 
                 OutputInterface::VERBOSITY_VERBOSE <= $this->output->getVerbosity() && $this->writeln($_output);
             }
+
+            $_user = Models\ServiceUser::first();
+            $this->notify($_user->email_addr_text,
+                $_user->first_name_text . ' ' . $_user->last_name_text,
+                'Metrics Recorded',
+                [
+                    'firstName'     => $_user->first_name_text,
+                    'headTitle'     => 'Metrics Complete',
+                    'contentHeader' => 'Metrics have been generated successfully',
+                    'emailBody'     => '<p>Metrics have been generated for the date ' .
+                        date('Y-m-d') .
+                        '.</p><p><pre>' .
+                        Json::encode($_stats, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
+                        '</pre></p>',
+                ]);
         } else {
             $this->writeln('No metrics were gathered.');
         }

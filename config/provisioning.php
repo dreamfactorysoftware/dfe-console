@@ -48,4 +48,10 @@ return [
     'default-vendor-image-id'     => 4647,
     //	i386
     'default-vendor-image-flavor' => 0,
+    //******************************************************************************
+    //* Auto-deactivation System
+    //******************************************************************************
+    'enable-auto-deactivation'    => true,
+    'allowed-inactive-days'       => 7,
+    'send-notifications'          => true,
 ];

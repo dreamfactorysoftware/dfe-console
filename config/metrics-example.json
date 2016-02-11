@@ -1,47 +1,53 @@
 {
     "metrics":   {
-        "install-key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "install_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "version":     "1.0",
-        "date":        "2016-02-10T07:37:02-05:00"
+        "date":        "2016-02-11T15:02:02-05:00"
     },
-    "uri":       "https://console.dfe.example.com/",
-    "resources": {
-        "user":     17,
-        "mount":    3,
-        "server":   13,
-        "cluster":  3,
-        "limit":    0,
-        "instance": 5418
-    },
-    "aggregate": {
-        "versions":  {
-            "2.0.4": 3742
-        },
+    "console":   {
+        "uri":       "http:\/\/console.dfe.example.com",
         "resources": {
-            "admin":          3794,
-            "app":            12110,
-            "app_group":      16,
-            "cache":          73,
-            "config":         0,
-            "constant":       0,
-            "cors":           312,
-            "custom":         0,
-            "email_template": 11230,
-            "environment":    0,
-            "event":          0,
-            "lookup":         11,
-            "role":           718,
-            "script_type":    11224,
-            "service":        22960,
-            "service_type":   104587,
-            "setting":        0,
-            "user":           577
+            "user":     2,
+            "mount":    1,
+            "server":   3,
+            "cluster":  1,
+            "limit":    0,
+            "instance": 3
         },
-        "states":    {
-            "activated":     3742,
-            "error":         0,
-            "not activated": 1676,
-            "no admin":      0
+        "aggregate": {
+            "versions":  {
+                "2.0.2": 2
+            },
+            "resources": {
+                "admin":          2,
+                "app":            6,
+                "app_group":      0,
+                "cache":          0,
+                "config":         0,
+                "constant":       0,
+                "cors":           0,
+                "custom":         0,
+                "email_template": 6,
+                "environment":    0,
+                "event":          0,
+                "lookup":         0,
+                "role":           0,
+                "script_type":    6,
+                "service":        12,
+                "service_type":   56,
+                "setting":        0,
+                "user":           0
+            },
+            "states":    {
+                "activated":     2,
+                "not activated": 1
+            }
         }
     },
+    "dashboard": {
+        "uri":       "http:\/\/dashboard.docomo.dreamfactory.com",
+        "resources": {
+            "user": 8
+        }
+    }
 }
