@@ -16,7 +16,7 @@
         },
         "aggregate": {
             "versions":  {
-                "2.0.4": 0
+                "2.x.x": 0
             },
             "resources": {
                 "admin":          0,
@@ -41,7 +41,8 @@
             "states":    {
                 "not activated": 0,
                 "activated":     0,
-                "error":         0
+                "error":         0,
+                "no admin":      0
             }
         }
     },
