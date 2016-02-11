@@ -181,7 +181,7 @@ class UsageService extends BaseService implements MetricsProvider
 
                     switch ($_instance->ready_state_nbr) {
                         case InstanceStates::READY:
-                            $_stats['environment']['status'] = 'activate';
+                            $_stats['environment']['status'] = 'activated';
                             break;
 
                         case InstanceStates::ADMIN_REQUIRED:
