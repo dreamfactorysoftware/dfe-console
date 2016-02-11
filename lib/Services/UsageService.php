@@ -74,7 +74,7 @@ class UsageService extends BaseService implements MetricsProvider
     public function getMetrics($options = [])
     {
         $_send = array_get($options, 'send', false);
-        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherAllStatistics();
+        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherStatistics();
 
         return $this->bundleMetrics($_metrics, $_send);
     }
@@ -84,7 +84,7 @@ class UsageService extends BaseService implements MetricsProvider
      *
      * @return array
      */
-    protected function gatherAllStatistics()
+    protected function gatherStatistics()
     {
         //  Set our installation key
         $_stats = [];
