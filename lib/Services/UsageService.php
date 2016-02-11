@@ -74,7 +74,7 @@ class UsageService extends BaseService implements MetricsProvider
     public function getMetrics($options = [])
     {
         $_send = array_get($options, 'send', false);
-        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherAllStatistics();
+        $_metrics = config('telemetry.enabled', false) ? $this->telemetry->getTelemetry() : $this->gatherStatistics();
 
         return $this->bundleMetrics($_metrics, $_send);
     }
@@ -84,7 +84,7 @@ class UsageService extends BaseService implements MetricsProvider
      *
      * @return array
      */
-    protected function gatherAllStatistics()
+    protected function gatherStatistics()
     {
         //  Set our installation key
         $_stats = [];
@@ -181,7 +181,7 @@ class UsageService extends BaseService implements MetricsProvider
 
                     switch ($_instance->ready_state_nbr) {
                         case InstanceStates::READY:
-                            $_stats['environment']['status'] = 'activate';
+                            $_stats['environment']['status'] = 'activated';
                             break;
 
                         case InstanceStates::ADMIN_REQUIRED:
@@ -213,7 +213,7 @@ class UsageService extends BaseService implements MetricsProvider
                 array_set($_stats, 'environment.status', 'error');
             }
 
-            \Log::debug('[dfe.usage-service:instance] ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
+            \Log::debug('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
 
             try {
                 $_row = MetricsDetail::firstOrCreate(['user_id' => $_instance->user_id, 'instance_id' => $_instance->id, 'gather_date' => $_gatherDate]);
@@ -225,10 +225,10 @@ class UsageService extends BaseService implements MetricsProvider
                 \Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
-            unset($_stats, $_list, $_status);
+            unset($_api, $_stats, $_list, $_status, $_row);
         }
 
-        $this->info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
+        \Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
 
         return $this->aggregateInstanceMetrics($_gatherDate);
 
