@@ -114,10 +114,6 @@ class LicenseServerService extends BaseService
         //  Make sure we're connected
         $this->connect();
 
-        if (LicenseOperations::has($operation)) {
-            throw new \InvalidArgumentException('Operation "' . $operation . '" is invalid.');
-        }
-
         if (empty($_endpoint = array_get($this->endpoints, $operation))) {
             throw new \InvalidArgumentException('The requested operation has no associated endpoint.');
         }
@@ -128,11 +124,10 @@ class LicenseServerService extends BaseService
             throw new \InvalidArgumentException('Invalid $payload. It must be an array.');
         }
 
-        $curlOptions = array_merge($curlOptions, [CURLOPT_HTTPHEADER => ['Content-Type: application/json']]);
-
         //  Jam the install key into the root...
         $payload['install-key'] = $this->installKey;
         $payload = Json::encode($payload);
+        $curlOptions[CURLOPT_HTTPHEADER][] = 'Content-Type: application/json; charset=utf8';
 
         return $this->doPost($_endpoint, $payload, $curlOptions);
     }

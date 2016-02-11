@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dfe-console.local (cli dfe:setup)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:setup --admin-password=argyle39 jerryablan@dreamfactory.com">
+  <configuration default="false" name="dfe-console.local (cli dfe:setup)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:setup --force --admin-password=&quot;argyle39&quot; &quot;jerryablan@dreamfactory.com&quot;">
     <method />
   </configuration>
 </component>

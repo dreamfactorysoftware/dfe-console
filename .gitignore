@@ -10,3 +10,4 @@ vendor/
 /database/dfe/*
 bootstrap/cache/*
 /storage/*
+config/metrics.php
