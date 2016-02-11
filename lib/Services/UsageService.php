@@ -92,8 +92,11 @@ class UsageService extends BaseService implements MetricsProvider
         $_mirror = new \ReflectionClass(get_called_class());
 
         foreach ($_mirror->getMethods() as $_method) {
+            logger('[dfe.usage-service:gather] * checking ' . $_method->getShortName());
+
             if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
+                logger('[dfe.usage-service:gather] * calling ' . $_methodName);
                 $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
             }
         }
@@ -163,6 +166,8 @@ class UsageService extends BaseService implements MetricsProvider
 
         /** @type Instance $_instance */
         foreach (Instance::all() as $_instance) {
+            \Log::debug('[dfe.usage-service:gatherInstanceStatistics] > ' . $_instance->instance_name_text);
+
             $_api = InstanceApiClient::connect($_instance);
 
             //  Seed the stats
@@ -225,10 +230,10 @@ class UsageService extends BaseService implements MetricsProvider
                 \Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
-            unset($_stats, $_list, $_status);
+            unset($_api, $_stats, $_list, $_status, $_row);
         }
 
-        $this->info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
+        \Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
 
         return $this->aggregateInstanceMetrics($_gatherDate);
 
