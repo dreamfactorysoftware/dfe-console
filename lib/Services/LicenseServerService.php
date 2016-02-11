@@ -114,7 +114,7 @@ class LicenseServerService extends BaseService
         //  Make sure we're connected
         $this->connect();
 
-        if (LicenseOperations::has($operation)) {
+        if (!LicenseOperations::has($operation)) {
             throw new \InvalidArgumentException('Operation "' . $operation . '" is invalid.');
         }
 
