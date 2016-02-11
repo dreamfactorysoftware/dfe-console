@@ -61,7 +61,7 @@ return [
     //******************************************************************************
     'common'                  => [
         'display-name'       => 'DreamFactory Enterprise&trade; Console',
-        'display-version'    => env('DFE_VERSION', '1.0.16'),
+        'display-version'    => env('DFE_VERSION', '1.0.17'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name
