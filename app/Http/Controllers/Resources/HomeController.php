@@ -2,6 +2,7 @@
 
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
 use DreamFactory\Enterprise\Console\Http\Controllers\FactoryController;
+use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Enterprise\Services\Facades\Usage;
 
 class HomeController extends FactoryController
@@ -76,7 +77,7 @@ class HomeController extends FactoryController
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return [
-            'e_k' => Usage::service()->generateInstallKey(),
+            'e_k' => License::getInstallKey(),
         ];
     }
 

@@ -154,9 +154,9 @@ class Metrics extends ConsoleCommand
                     'contentHeader' => 'Metrics have been generated successfully',
                     'emailBody'     => '<p>Metrics have been generated for the date ' .
                         date('Y-m-d') .
-                        '.</p><p>' .
+                        '.</p><p><pre>' .
                         Json::encode($_stats, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .
-                        '</p>',
+                        '</pre></p>',
                 ]);
         } else {
             $this->writeln('No metrics were gathered.');
