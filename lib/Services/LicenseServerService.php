@@ -114,10 +114,6 @@ class LicenseServerService extends BaseService
         //  Make sure we're connected
         $this->connect();
 
-        if (!LicenseOperations::has($operation)) {
-            throw new \InvalidArgumentException('Operation "' . $operation . '" is invalid.');
-        }
-
         if (empty($_endpoint = array_get($this->endpoints, $operation))) {
             throw new \InvalidArgumentException('The requested operation has no associated endpoint.');
         }
