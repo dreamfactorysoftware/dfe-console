@@ -9,11 +9,10 @@
  $firstName           The first name of the recipient
  $contentHeader       The callout/header of the email's body
  $emailBody           The actual guts of the email
- $supportEmail        The email address for customer support
 
 --}}
 @section('contentBody')
-    <div style="padding: 10px;">
+    <div>
         <p>
             {{ $firstName }},
         </p>
@@ -23,6 +22,7 @@
         </div>
 
         <p>
+            Thanks!
             <cite>-- Team DreamFactory</cite>
         </p>
     </div>

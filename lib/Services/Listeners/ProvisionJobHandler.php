@@ -1,5 +1,7 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
+use DreamFactory\Enterprise\Common\Traits\Notifier;
+use DreamFactory\Enterprise\Console\Enums\ConsoleOperations;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
@@ -17,7 +19,7 @@ class ProvisionJobHandler
     //* Traits
     //******************************************************************************
 
-    use InstanceValidation;
+    use InstanceValidation, Notifier;
 
     //******************************************************************************
     //* Methods
@@ -50,6 +52,13 @@ class ProvisionJobHandler
             if (!$_instance) {
                 throw new ProvisioningException('InstanceManager::make() failed');
             }
+
+            $this->notifyJobOwner(ConsoleOperations::PROVISION,
+                $_instance->user->email_addr_text,
+                trim($_instance->user->first_name_text . ' ' . $_instance->user->last_name_text),
+                [
+                    'instance' => $_instance,
+                ]);
         } catch (\Exception $_ex) {
             \Log::error('[Provision] failure, exception creating instance: ' . $_ex->getMessage());
 
