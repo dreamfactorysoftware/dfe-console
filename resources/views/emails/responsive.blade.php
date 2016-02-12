@@ -447,10 +447,10 @@
                                                                     <tr>
                                                                         <td align="left" class="textContent">
                                                                             <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%; display:none;">
-                                                                                If you can't see this message, <a href="#"
-                                                                                                                  target="_blank"
-                                                                                                                  style="text-decoration:none;border-bottom:1px solid #424242;color:#424242;"><span
-                                                                                        style="color:#424242;">view&nbsp;it&nbsp;in&nbsp;your&nbsp;browser</span></a>.
+                                                                                {{--If you can't see this message, <a href="#"--}}
+                                                                                {{--target="_blank"--}}
+                                                                                {{--style="text-decoration:none;border-bottom:1px solid #424242;color:#424242;"><span--}}
+                                                                                {{--style="color:#424242;">view&nbsp;it&nbsp;in&nbsp;your&nbsp;browser</span></a>.--}}
                                                                             </div>
                                                                         </td>
                                                                     </tr>
