@@ -34,6 +34,7 @@ if (true === config('dfe.enable-console-api', false)) {
 \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/home', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
+\Route::any('/soft_launch', ['uses' => 'Resources\HomeController@softLaunch']);
 \Route::get('logout', 'Resources\HomeController@logout');
 
 //******************************************************************************

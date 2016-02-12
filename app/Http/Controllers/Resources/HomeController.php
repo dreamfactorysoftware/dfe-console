@@ -40,7 +40,7 @@ class HomeController extends FactoryController
     {
         parent::__construct();
 
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['softLaunch']]);
     }
 
     /**
@@ -66,6 +66,11 @@ class HomeController extends FactoryController
         \Auth::logout();
 
         return \Redirect::guest('auth/login')->with('errors', 'Your session has expired or is otherwise not valid.');
+    }
+
+    public function softLaunch()
+    {
+        return view('soft-launch.layout');
     }
 
     /**

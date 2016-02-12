@@ -53,7 +53,7 @@ class Setup extends ConsoleCommand
         if (0 != ServiceUser::count()) {
             if ($this->option('force')) {
                 $this->writeln('system has users. <comment>--force</comment> override in place.');
-                $this->_backupServiceUsers();
+                $this->backupServiceUsers();
             } else {
                 $this->writeln('system has users. use --force to override.', 'error');
 
@@ -62,8 +62,7 @@ class Setup extends ConsoleCommand
         }
 
         //  1.5 Generate an API secret and stick it in config for AppKey
-        \Config::set('dfe.security.console-api-key',
-            $_apiSecret = $this->option('api-secret') ?: $this->_generateApiSecret());
+        config(['dfe.security.console-api-key' => $_apiSecret = $this->option('api-secret') ?: $this->generateApiSecret()]);
 
         //  2. Create initial admin user
         try {
@@ -130,7 +129,7 @@ DFE_CONSOLE_API_CLIENT_ID={$_consoleKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_consoleKey->client_secret}
 INI;
 
-        $this->_writeFile('console.env', $config);
+        $this->writeFile('console.env', $config);
 
         //  6.  Make a dashboard config file...
         $config = <<<INI
@@ -139,7 +138,7 @@ DFE_CONSOLE_API_CLIENT_ID={$_dashboardKey->client_id}
 DFE_CONSOLE_API_CLIENT_SECRET={$_dashboardKey->client_secret}
 INI;
 
-        return $this->_writeFile('dashboard.env', $config);
+        return $this->writeFile('dashboard.env', $config);
     }
 
     /** @inheritdoc */
@@ -182,7 +181,7 @@ INI;
      *
      * @return bool
      */
-    protected function _writeFile($filename, $contents, $jsonEncode = false)
+    protected function writeFile($filename, $contents, $jsonEncode = false)
     {
         $_path = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
@@ -199,7 +198,7 @@ INI;
     /**
      * @return bool
      */
-    protected function _backupServiceUsers()
+    protected function backupServiceUsers()
     {
         $_backupPath = base_path() . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'dfe';
 
@@ -226,7 +225,7 @@ INI;
     /**
      * @return string
      */
-    private function _generateApiSecret()
+    private function generateApiSecret()
     {
         return rtrim(base64_encode(hash('sha256', microtime())), '=');
     }
