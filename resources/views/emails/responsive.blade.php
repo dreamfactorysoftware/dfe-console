@@ -552,7 +552,7 @@
                                                                     <div>Copyright &#169; {{ date('Y') }} <a href="https://www.dreamfactory.com/"
                                                                                                              target="_blank"
                                                                                                              style="text-decoration:none;color:#424242;"><span
-                                                                                style="color:#424242;">DreamFactory Software, Inc.</span></a>.
+                                                                                style="color:#424242;">DreamFactory Software, Inc.</span></a>
                                                                         All&nbsp;rights&nbsp;reserved.
                                                                     </div>
                                                                     <div>This email was sent by <a href="{{ $dashboard_url }}"

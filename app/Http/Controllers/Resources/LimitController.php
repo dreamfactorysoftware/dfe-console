@@ -51,10 +51,10 @@ class LimitController extends ViewController
         parent::__construct();
 
         $this->periods = [
-            'Minute' => DateTimeIntervals::MINUTES_PER_MINUTE,
-            'Hour' => DateTimeIntervals::MINUTES_PER_HOUR,
-            'Day' => DateTimeIntervals::MINUTES_PER_DAY,
-            '7 Days' => DateTimeIntervals::MINUTES_PER_WEEK,
+            'Minute'  => DateTimeIntervals::MINUTES_PER_MINUTE,
+            'Hour'    => DateTimeIntervals::MINUTES_PER_HOUR,
+            'Day'     => DateTimeIntervals::MINUTES_PER_DAY,
+            '7 Days'  => DateTimeIntervals::MINUTES_PER_WEEK,
             '30 Days' => DateTimeIntervals::MINUTES_PER_MONTH,
         ];
     }
@@ -69,14 +69,14 @@ class LimitController extends ViewController
         return \View::make('app.limits.create',
             [
                 'limitPeriods' => $this->periods,
-                'prefix' => $this->_prefix,
-                'clusters' => Cluster::all(),
+                'prefix'       => $this->_prefix,
+                'clusters'     => Cluster::all(),
             ]);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param integer $id
+     * @param integer                  $id
      *
      * @return \Illuminate\View\View
      * @throws \DreamFactory\Enterprise\Database\Exceptions\DatabaseException
@@ -86,12 +86,12 @@ class LimitController extends ViewController
         $validator = Validator::make(\Input::all(),
             [
                 'type_select' => 'required|string',
-                'label_text' => 'required|string',
-                'cluster_id' => 'required|string',
+                'label_text'  => 'required|string',
+                'cluster_id'  => 'required|string',
                 'instance_id' => 'sometimes|min:1',
-                'user_id' => 'sometimes|min:1',
+                'user_id'     => 'sometimes|min:1',
                 'period_name' => 'required|string|min:1',
-                'limit_nbr' => 'required|numeric|min:1',
+                'limit_nbr'   => 'required|numeric|min:1',
 
             ]);
 
@@ -142,16 +142,16 @@ class LimitController extends ViewController
             // Build the limit record
 
             foreach ([
-                         'type_select' => 'cluster',
-                         'cluster_id' => null,
-                         'instance_id' => null,
-                         'service_name' => null,
-                         'user_id' => 0,
-                         'period_name' => "Minute",
-                         'limit_nbr' => 0,
-                         'active_ind' => 0,
-                         'label_text' => null,
-                     ] as $_input_key => $_input_default) {
+                'type_select'  => 'cluster',
+                'cluster_id'   => null,
+                'instance_id'  => null,
+                'service_name' => null,
+                'user_id'      => 0,
+                'period_name'  => "Minute",
+                'limit_nbr'    => 0,
+                'active_ind'   => 0,
+                'label_text'   => null,
+            ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
             }
 
@@ -162,27 +162,34 @@ class LimitController extends ViewController
                     $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' . $_time_period;
                     break;
                 case Limits::INSTANCE:
-                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
-                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') . '.' .
+                    $_limit_key_text =
+                        $this->_findCluster($_input['cluster_id'])->cluster_id_text .
+                        '.' .
+                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') .
+                        '.' .
                         $_time_period;
                     break;
                 case Limits::USER:
-                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
-                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') . '.' .
-                        (!empty($_input['user_id']) ? 'user:' . $_input['user_id'] : 'each_user') . '.' .
+                    $_limit_key_text =
+                        $this->_findCluster($_input['cluster_id'])->cluster_id_text .
+                        '.' .
+                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') .
+                        '.' .
+                        (!empty($_input['user_id']) ? 'user:' . $_input['user_id'] : 'each_user') .
+                        '.' .
                         $_time_period;
                     break;
             }
 
             $limit = [
                 'limit_type_nbr' => $_input['type_select'],
-                'cluster_id' => $_input['cluster_id'],
-                'instance_id' => empty($_input['instance_id']) ? null : $_input['instance_id'],
+                'cluster_id'     => $_input['cluster_id'],
+                'instance_id'    => empty($_input['instance_id']) ? null : $_input['instance_id'],
                 'limit_key_text' => $_limit_key_text,
-                'period_nbr' => $this->periods[$_input['period_name']],
-                'limit_nbr' => $_input['limit_nbr'],
-                'active_ind' => $_input['active_ind'] ? 1 : 0,
-                'label_text' => $_input['label_text'],
+                'period_nbr'     => $this->periods[$_input['period_name']],
+                'limit_nbr'      => $_input['limit_nbr'],
+                'active_ind'     => $_input['active_ind'] ? 1 : 0,
+                'label_text'     => $_input['label_text'],
             ];
 
             $res =
@@ -234,32 +241,33 @@ class LimitController extends ViewController
     public function index()
     {
         $_valueTemplate = [
-            'limit_nbr' => null,
-            'user_id' => null,
-            'service_name' => null,
-            'role_id' => null,
-            'api_key' => null,
-            'period_name' => null,
-            'label_text' => null,
-            'cluster_id_text' => null,
-            'user_name' => ' ',
+            'limit_nbr'        => null,
+            'user_id'          => null,
+            'service_name'     => null,
+            'role_id'          => null,
+            'api_key'          => null,
+            'period_name'      => null,
+            'label_text'       => null,
+            'cluster_id_text'  => null,
+            'user_name'        => ' ',
             'instance_id_text' => ' ',
-            'limit_type_text' => null,
+            'limit_type_text'  => null,
         ];
 
         $_limits = [];
 
         $_limit_types = [
-            Limits::CLUSTER => 'Cluster',
+            Limits::CLUSTER  => 'Cluster',
             Limits::INSTANCE => 'Instance',
-            Limits::USER => 'User',
+            Limits::USER     => 'User',
         ];
 
         /** @type Limit $_limit */
         foreach (Limit::all() as $_limit) {
             $_cluster = null;
 
-            $_values = array_merge($_valueTemplate, ['limit_nbr' => $_limit->id, 'label_text' => $_limit->label_text, 'limit_type_text' => $_limit_types[$_limit->limit_type_nbr]]);
+            $_values = array_merge($_valueTemplate,
+                ['limit_nbr' => $_limit->id, 'label_text' => $_limit->label_text, 'limit_type_text' => array_get($_limit_types, $_limit->limit_type_nbr)]);
 
             $_limit_key_array = explode('.', $_limit['limit_key_text']);
 
@@ -278,7 +286,7 @@ class LimitController extends ViewController
             // Can this limit be cleared?
             $enableClear = true;
 
-           // If there are any elements left in the array, it's the instance name/each_instance or user id/each_user
+            // If there are any elements left in the array, it's the instance name/each_instance or user id/each_user
 
             if (!empty($_limit_key_array)) {
                 // Do we have a specific instance?
@@ -328,17 +336,17 @@ class LimitController extends ViewController
             }
 
             $_limits[] = [
-                'id' => $_limit['id'],
-                'cluster_id_text' => $_values['cluster_id_text'],
+                'id'               => $_limit['id'],
+                'cluster_id_text'  => $_values['cluster_id_text'],
                 'instance_id_text' => $_values['instance_id_text'],
                 //'service_desc' => empty($_values['service_name']) === true ?'':$_services[$_values['service_name']],
-                'user_name' => $_values['user_name'],
-                'period_name' => $_values['period_name'],
-                'limit_nbr' => $_limit->limit_nbr,
-                'label_text' => $_limit->label_text,
-                'active_ind' => $_limit->active_ind,
-                'limit_type_text' => $_values['limit_type_text'],
-                'enable_clear' => $enableClear,
+                'user_name'        => $_values['user_name'],
+                'period_name'      => $_values['period_name'],
+                'limit_nbr'        => $_limit->limit_nbr,
+                'label_text'       => $_limit->label_text,
+                'active_ind'       => $_limit->active_ind,
+                'limit_type_text'  => $_values['limit_type_text'],
+                'enable_clear'     => $enableClear,
             ];
         }
 
@@ -360,16 +368,16 @@ class LimitController extends ViewController
         $_limit = Limit::find($id);
 
         $_values = [
-            'limit_nbr' => $_limit->limit_nbr,
-            'user_id' => null,
-            'service_name' => null,
-            'role_id' => 0,
-            'api_key' => null,
-            'period_name' => null,
-            'label_text' => $_limit->label_text,
-            'cluster_id_text' => null,
+            'limit_nbr'        => $_limit->limit_nbr,
+            'user_id'          => null,
+            'service_name'     => null,
+            'role_id'          => 0,
+            'api_key'          => null,
+            'period_name'      => null,
+            'label_text'       => $_limit->label_text,
+            'cluster_id_text'  => null,
             'instance_id_text' => null,
-            'user_name' => ' ',
+            'user_name'        => ' ',
         ];
 
         $_limit_key_array = explode('.', $_limit['limit_key_text']);
@@ -426,18 +434,18 @@ class LimitController extends ViewController
         }
 
         $_limits = [
-            'id' => $_limit['id'],
-            'type' => $_limit->limit_type_nbr,
-            'cluster_id' => $_limit['cluster_id'],
-            'cluster_id_text' => $_values['cluster_id_text'],
-            'instance_id' => empty($_limit['instance_id']) ? 0 : $_limit['instance_id'],
+            'id'               => $_limit['id'],
+            'type'             => $_limit->limit_type_nbr,
+            'cluster_id'       => $_limit['cluster_id'],
+            'cluster_id_text'  => $_values['cluster_id_text'],
+            'instance_id'      => empty($_limit['instance_id']) ? 0 : $_limit['instance_id'],
             'instance_id_text' => $_values['instance_id_text'],
-            'user_id' => empty($_values['user_id']) ? 0 : $_values['user_id'],
-            'user_name' => $_values['user_name'],
-            'period_name' => $_values['period_name'],
-            'limit_nbr' => $_limit->limit_nbr,
-            'label_text' => $_limit->label_text,
-            'active_ind' => $_limit->active_ind,
+            'user_id'          => empty($_values['user_id']) ? 0 : $_values['user_id'],
+            'user_name'        => $_values['user_name'],
+            'period_name'      => $_values['period_name'],
+            'limit_nbr'        => $_limit->limit_nbr,
+            'label_text'       => $_limit->label_text,
+            'active_ind'       => $_limit->active_ind,
         ];
 
         logger('limit: ' . print_r($_limits, true));
@@ -445,9 +453,9 @@ class LimitController extends ViewController
         return \View::make('app.limits.edit',
             [
                 'limitPeriods' => $this->periods,
-                'prefix' => $this->_prefix,
-                'clusters' => Cluster::all(),
-                'limit' => $_limits,
+                'prefix'       => $this->_prefix,
+                'clusters'     => Cluster::all(),
+                'limit'        => $_limits,
             ]);
     }
 
@@ -463,13 +471,13 @@ class LimitController extends ViewController
 
         $validator = Validator::make(\Input::all(),
             [
-                'label_text' => 'required|string',
+                'label_text'  => 'required|string',
                 'type_select' => 'required|string',
-                'cluster_id' => 'required|string',
+                'cluster_id'  => 'required|string',
                 'instance_id' => 'sometimes|string',
-                'user_id' => 'sometimes|string|min:1',
+                'user_id'     => 'sometimes|string|min:1',
                 'period_name' => 'required|string|min:1',
-                'limit_nbr' => 'required|numeric|min:1',
+                'limit_nbr'   => 'required|numeric|min:1',
 
             ]);
 
@@ -520,16 +528,16 @@ class LimitController extends ViewController
             // Build the limit record
 
             foreach ([
-                         'type_select' => 'cluster',
-                         'cluster_id' => null,
-                         'instance_id' => null,
-                         'service_name' => null,
-                         'user_id' => 0,
-                         'period_name' => "Minute",
-                         'limit_nbr' => 0,
-                         'active_ind' => 0,
-                         'label_text' => null,
-                     ] as $_input_key => $_input_default) {
+                'type_select'  => 'cluster',
+                'cluster_id'   => null,
+                'instance_id'  => null,
+                'service_name' => null,
+                'user_id'      => 0,
+                'period_name'  => "Minute",
+                'limit_nbr'    => 0,
+                'active_ind'   => 0,
+                'label_text'   => null,
+            ] as $_input_key => $_input_default) {
                 $_input[$_input_key] = \Input::get($_input_key, $_input_default);
             }
 
@@ -540,27 +548,34 @@ class LimitController extends ViewController
                     $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' . $_time_period;
                     break;
                 case Limits::INSTANCE:
-                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
-                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') . '.' .
+                    $_limit_key_text =
+                        $this->_findCluster($_input['cluster_id'])->cluster_id_text .
+                        '.' .
+                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') .
+                        '.' .
                         $_time_period;
                     break;
                 case Limits::USER:
-                    $_limit_key_text = $this->_findCluster($_input['cluster_id'])->cluster_id_text . '.' .
-                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') . '.' .
-                        (!empty($_input['user_id']) ? 'user:' . $_input['user_id'] : 'each_user') . '.' .
+                    $_limit_key_text =
+                        $this->_findCluster($_input['cluster_id'])->cluster_id_text .
+                        '.' .
+                        (!empty($_input['instance_id']) ? $this->_findInstance($_input['instance_id'])->instance_id_text : 'each_instance') .
+                        '.' .
+                        (!empty($_input['user_id']) ? 'user:' . $_input['user_id'] : 'each_user') .
+                        '.' .
                         $_time_period;
                     break;
             }
 
             $limit = [
                 'limit_type_nbr' => $_input['type_select'],
-                'cluster_id' => $_input['cluster_id'],
-                'instance_id' => empty($_input['instance_id']) ? null : $_input['instance_id'],
+                'cluster_id'     => $_input['cluster_id'],
+                'instance_id'    => empty($_input['instance_id']) ? null : $_input['instance_id'],
                 'limit_key_text' => $_limit_key_text,
-                'period_nbr' => $this->periods[$_input['period_name']],
-                'limit_nbr' => $_input['limit_nbr'],
-                'active_ind' => $_input['active_ind'] ? 1 : 0,
-                'label_text' => $_input['label_text'],
+                'period_nbr'     => $this->periods[$_input['period_name']],
+                'limit_nbr'      => $_input['limit_nbr'],
+                'active_ind'     => $_input['active_ind'] ? 1 : 0,
+                'label_text'     => $_input['label_text'],
             ];
 
             $res =
@@ -623,7 +638,7 @@ class LimitController extends ViewController
                     $instances = ['id' => $limit->instance_id];
                 }
 
-                foreach($instances as $instanceId) {
+                foreach ($instances as $instanceId) {
                     $this->resetLimitCounter($instanceId, $limit->limit_key_text);
                 }
 
@@ -631,8 +646,7 @@ class LimitController extends ViewController
                 Session::flash('flash_type', 'alert-success');
 
                 return \Redirect::to('/' . $this->getUiPrefix() . '/limits');
-
-            } elseif($ids == 'resetallcounters') {
+            } elseif ($ids == 'resetallcounters') {
                 $instance_id = \Input::get('instance_id');
 
                 $this->resetAllLimitCounters($instance_id);
@@ -741,12 +755,13 @@ class LimitController extends ViewController
             $instances = ['id' => $instanceId];
         }
 
-        foreach($instances as $instanceId) {
+        foreach ($instances as $instanceId) {
             $this->_refreshInstanceConfig($instanceId);
         }
 
         return true;
     }
+
     private function _refreshInstanceConfig($instanceId)
     {
         if (!empty($instanceId)) {
@@ -820,7 +835,7 @@ class LimitController extends ViewController
         }
 
         usort($_results,
-            function ($a, $b) {
+            function($a, $b) {
                 return strcasecmp($a['name'], $b['name']);
             });
 

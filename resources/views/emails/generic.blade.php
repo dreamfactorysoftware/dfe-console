@@ -23,7 +23,7 @@
         </div>
 
         <p>
-            <cite>-- The Dream Team</cite>
+            <cite>-- Team DreamFactory</cite>
         </p>
     </div>
 @stop
