@@ -180,7 +180,7 @@ class UsageService extends BaseService implements MetricsProvider
                     array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
 
                     //  Does it appear ok?
-                    $_instance->fresh();
+                    $_instance = $_instance->fresh();
 
                     switch ($_instance->ready_state_nbr) {
                         case InstanceStates::READY:

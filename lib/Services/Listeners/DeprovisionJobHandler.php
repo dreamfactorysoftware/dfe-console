@@ -1,6 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Listeners;
 
 use DreamFactory\Enterprise\Common\Listeners\BaseListener;
+use DreamFactory\Enterprise\Common\Traits\Notifier;
+use DreamFactory\Enterprise\Console\Enums\ConsoleOperations;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
@@ -11,6 +13,12 @@ use DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceRequest;
  */
 class DeprovisionJobHandler extends BaseListener
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use Notifier;
+
     //******************************************************************************
     //* Methods
     //******************************************************************************
@@ -54,9 +62,26 @@ class DeprovisionJobHandler extends BaseListener
 
             $command->setResult($_response);
 
+            $this->notifyJobOwner(ConsoleOperations::DEPROVISION,
+                $_instance->user->email_addr_text,
+                trim($_instance->user->first_name_text . ' ' . $_instance->user->last_name_text),
+                [
+                    'instance' => $_instance->fresh(['user']),
+                ]);
+
             return $_response;
         } catch (\Exception $_ex) {
             $this->error('[Deprovision] deprovision "' . $command->getInstanceId() . '" request exception: ' . $_ex->getMessage());
+
+            $_owner = $command->getOwner();
+
+            $this->notifyJobOwner(ConsoleOperations::PROVISION,
+                $_owner->email_addr_text,
+                trim($_owner->first_name_text . ' ' . $_owner->last_name_text),
+                [
+                    'instance'     => false,
+                    'instanceName' => $command->getInstanceId(),
+                ]);
         }
 
         $this->debug('[Deprovision] Instance "' . $command->getInstanceId() . '" deprovision failed.');

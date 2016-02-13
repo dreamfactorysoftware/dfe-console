@@ -57,10 +57,20 @@ class ProvisionJobHandler
                 $_instance->user->email_addr_text,
                 trim($_instance->user->first_name_text . ' ' . $_instance->user->last_name_text),
                 [
-                    'instance' => $_instance,
+                    'instance' => $_instance->fresh(['user']),
                 ]);
         } catch (\Exception $_ex) {
             \Log::error('[Provision] failure, exception creating instance: ' . $_ex->getMessage());
+
+            $_owner = $command->getOwner();
+
+            $this->notifyJobOwner(ConsoleOperations::PROVISION,
+                $_owner->email_addr_text,
+                trim($_owner->first_name_text . ' ' . $_owner->last_name_text),
+                [
+                    'instance'     => false,
+                    'instanceName' => $command->getInstanceId(),
+                ]);
 
             return false;
         }

@@ -1,7 +1,7 @@
 @extends('emails.responsive')
 {{--
 
- This blade is for generating provisioning emails.
+ This blade is for generating import emails.
 
  The following view data is expected:
 
@@ -26,10 +26,10 @@
 
         <div>
             @if(false !== $instanceUrl)
-                <p>Congratulations, your DreamFactory&trade; instance has been created!</p>
+                <p>Congratulations, your imported DreamFactory&trade; instance has been created!</p>
                 <p>To log into your DreamFactory&trade; instance, go to: <a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a></p>
             @else
-                <p>The requested provisioning of your instance <strong>{{$instanceName}}</strong> did not complete successfully.</p>
+                <p>Your import did not complete successfully.</p>
             @endif
         </div>
 
@@ -39,6 +39,7 @@
                 you can manage all of your instances in one
                 convenient place.</p>
         </div>
+
 
         <div>{!! $emailBody !!}</div>
 

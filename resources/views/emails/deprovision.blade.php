@@ -1,7 +1,7 @@
 @extends('emails.responsive')
 {{--
 
- This blade is for generating provisioning emails.
+ This blade is for generating deprovisioning emails.
 
  The following view data is expected:
 
@@ -25,19 +25,9 @@
         </p>
 
         <div>
-            @if(false !== $instanceUrl)
-                <p>Congratulations, your DreamFactory&trade; instance has been created!</p>
-                <p>To log into your DreamFactory&trade; instance, go to: <a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a></p>
-            @else
-                <p>The requested provisioning of your instance <strong>{{$instanceName}}</strong> did not complete successfully.</p>
-            @endif
-        </div>
-
-        <div>
-            <p>You can also go to <a href="{{ $dashboard_url }}" target="_blank">{{ $dashboard_url }}</a> to access your DreamFactory&trade; Dashboard.
-                There
-                you can manage all of your instances in one
-                convenient place.</p>
+            <p>Your instance <strong>{{ $instanceName }}</strong> has been retired, as requested.</p>
+            <p>Go to your DreamFactory&trade; Dashboard at <a href="{{ $dashboard_url }}" target="_blank">{{ $dashboard_url }}</a> to create a new instance, or
+                manage your other instances.</p>
         </div>
 
         <div>{!! $emailBody !!}</div>

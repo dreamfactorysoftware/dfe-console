@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Common\Support\SnapshotManifest;
 use DreamFactory\Enterprise\Common\Traits\Archivist;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Notifier;
+use DreamFactory\Enterprise\Console\Enums\ConsoleOperations;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\RouteHash;
 use DreamFactory\Enterprise\Database\Models\Snapshot;
@@ -117,10 +118,7 @@ class SnapshotService extends BaseService
                 //  Copy to $destination if requested
                 if ($destination) {
                     if (false === ($_fd = fopen($this->workPath . $_snapshotName, 'r'))) {
-                        throw new FileSystemException('Unable to open export file "' .
-                            $this->workPath .
-                            $_snapshotName .
-                            '".');
+                        throw new FileSystemException('Unable to open export file "' . $this->workPath . $_snapshotName . '".');
                     }
 
                     $destination->putStream($_snapshotName, $_fd);
@@ -128,21 +126,10 @@ class SnapshotService extends BaseService
                 }
 
                 //  Let the user know...
-                $this->notifyInstanceOwner($instance,
-                    'Export successful',
-                    [
-                        'firstName'     => $instance->user->first_name_text,
-                        'headTitle'     => 'Export Complete',
-                        'contentHeader' => 'Your export has completed',
-                        'emailBody'     => <<<HTML
-<p>Your export is complete. It may be downloaded it for up to {$keepDays} days, from the following link:<br/>
-<br/>
-<strong><a href="{$_routeLink}" target="_blank">{$_routeLink}</a></strong>
-</p>
-HTML
-
-                        ,
-                    ]);
+                $this->notifyJobOwner(ConsoleOperations::EXPORT,
+                    $instance->user->email_addr_text,
+                    trim($instance->user->first_name_text . ' ' . $instance->user->last_name_text),
+                    ['downloadLink' => $_routeLink,]);
 
                 $_success = true;
             } catch (\Exception $_ex) {
@@ -152,17 +139,14 @@ HTML
         } catch (\Exception $_ex) {
             $this->error('exception during sub-provisioner export call: ' . $_ex->getMessage());
 
-            $this->notifyInstanceOwner($instance,
-                'Export failure',
+            //  Let the user know...
+            $this->notifyJobOwner(ConsoleOperations::EXPORT,
+                $instance->user->email_addr_text,
+                trim($instance->user->first_name_text . ' ' . $instance->user->last_name_text),
                 [
-                    'firstName'     => $instance->user->first_name_text,
+                    'downloadLink'  => false,
                     'headTitle'     => 'Export Failure',
-                    'contentHeader' => 'Your export was not created',
-                    'emailBody'     => <<<HTML
-<p>The export requested did not complete properly. Please make sure your instance is up and running, then try again. If the issue persists, please contact support.</p>
-HTML
-
-                    ,
+                    'contentHeader' => 'Your export did not complete',
                 ]);
 
             $_success = false;
@@ -204,8 +188,7 @@ HTML
                 throw new \InvalidArgumentException('The snapshot "' . $snapshot . '" is unrecognized or invalid."');
             }
 
-            return Provision::import(new ImportJob(new PortableServiceRequest($_instance,
-                ['target' => $_snapshot->snapshot_id_text])));
+            return Provision::import(new ImportJob(new PortableServiceRequest($_instance, ['target' => $_snapshot->snapshot_id_text])));
         }
 
         //  Mount the snapshot
