@@ -34,7 +34,8 @@ if (true === config('dfe.enable-console-api', false)) {
 \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/home', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
-\Route::any('/soft_launch', ['uses' => 'SoftLaunchController@index']);
+\Route::get('/fast-track', ['uses' => 'FastTrackController@index']);
+\Route::post('/fast-track', ['uses' => 'FastTrackController@autoRegister']);
 \Route::get('logout', 'Resources\HomeController@logout');
 
 //******************************************************************************

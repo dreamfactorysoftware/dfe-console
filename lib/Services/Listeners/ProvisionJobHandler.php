@@ -3,12 +3,15 @@
 use DreamFactory\Enterprise\Common\Traits\Notifier;
 use DreamFactory\Enterprise\Console\Enums\ConsoleOperations;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Traits\InstanceValidation;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\InstanceManager;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * Processes queued provision requests
@@ -97,6 +100,42 @@ class ProvisionJobHandler
             if (!$_instance->delete()) {
                 throw new \LogicException('Unable to remove created instance "' . $_instance->instance_id_text . '".');
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $request
+     *
+     * @return bool|\DreamFactory\Enterprise\Database\Models\Instance
+     */
+    public static function provision(array $request)
+    {
+        try {
+            \Log::info('[Provision] *api* provision request', $request);
+
+            $_instanceId = array_get($request, 'instance-id');
+            $_ownerType = array_get($request, 'owner-type', OwnerTypes::USER);
+            $_ownerId = array_get($request, 'owner-id');
+            $_guestLocation = array_get($request, 'guest-location', GuestLocations::DFE_CLUSTER);
+
+            $_job = new ProvisionJob($_instanceId, [
+                'guest-location' => $_guestLocation,
+                'owner-id'       => $_ownerId,
+                'owner-type'     => $_ownerType,
+                'cluster-id'     => array_get($request, 'cluster-id', config('dfe.cluster-id')),
+            ]);
+
+            \Queue::push($_job);
+
+            try {
+                return Instance::byNameOrId($_job->getInstanceId())->firstOrFail();
+            } catch (ModelNotFoundException $_ex) {
+                \Log::error('[Provision] *api* error during job run');
+            }
+        } catch (\Exception $_ex) {
+            \Log::error('[Provision] *api* error: ' . $_ex->getMessage());
         }
 
         return false;

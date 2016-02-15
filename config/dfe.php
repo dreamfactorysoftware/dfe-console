@@ -37,6 +37,12 @@ return [
     'dashboard-url'           => env('DFE_DASHBOARD_URL'),
     //  The support email
     'support-email-address'   => env('DFE_SUPPORT_EMAIL_ADDRESS', 'support@dreamfactory.com'),
+    /** Enable/disable the fast-track "one-click" pipeline */
+    'enable-fast-track'       => env('DFE_ENABLE_FAST_TRACK', false),
+    /** Enable/disable FastTrack, the auto-registration "one-click" pipeline */
+    'fast-track-route'        => '/fast-track',
+    /** Only allow HubSpot landing pages to use FastTrack */
+    'fast-track-hubspot-only' => false,
     //******************************************************************************
     //* Auditing details for instances
     //******************************************************************************

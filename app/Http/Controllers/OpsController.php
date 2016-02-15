@@ -89,8 +89,8 @@ class OpsController extends BaseController implements IsVersioned
         $_id = $request->input('id');
 
         try {
-            $_owner = $this->_validateOwner($request);
-            $_instance = $this->_findInstance($request->input('id'));
+            $_owner = $this->validateOwner($request);
+            $_instance = $this->findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
                 \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
@@ -176,7 +176,7 @@ class OpsController extends BaseController implements IsVersioned
      */
     public function postInstances(Request $request)
     {
-        $_owner = $this->_validateOwner($request);
+        $_owner = $this->validateOwner($request);
 
         $_response = [];
 
@@ -253,7 +253,7 @@ class OpsController extends BaseController implements IsVersioned
             \Queue::push($_job);
 
             try {
-                return $this->success($this->_findInstance($_job->getInstanceId()));
+                return $this->success($this->findInstance($_job->getInstanceId()));
             } catch (ModelNotFoundException $_ex) {
                 throw new \Exception('Instance not found after provisioning.');
             }
@@ -403,7 +403,7 @@ class OpsController extends BaseController implements IsVersioned
      *
      * @return User
      */
-    protected function _validateOwner(Request $request)
+    protected function validateOwner(Request $request)
     {
         /** middleware registers a user resolver with the request for us */
         $_owner = $request->user();
