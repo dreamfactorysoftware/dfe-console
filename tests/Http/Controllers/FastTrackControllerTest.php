@@ -5,7 +5,7 @@ use Illuminate\Http\Response;
 
 class FastTrackControllerTest extends \TestCase
 {
-    static $_userId;
+    static $userId;
 
     public function testAutoRegister()
     {
@@ -19,6 +19,7 @@ class FastTrackControllerTest extends \TestCase
             ]);
 
         $this->assertNotEmpty($_response->getStatus() != Response::HTTP_BAD_REQUEST);
+        static::$userId = 'mistertesterler@gmail.com';
     }
 
     public static function tearDownAfterClass()
@@ -27,7 +28,11 @@ class FastTrackControllerTest extends \TestCase
 
         try {
             \Artisan::call('dfe:deprovision', ['instance-id' => 'mistertestler']);
-            Curl::delete('/ops/v1/user/' . $_response['user']['id']);
+        } catch (\Exception $_ex) {
+        }
+
+        try {
+            static::$userId && Curl::delete('/ops/v1/user/' . static::$userId);
         } catch (\Exception $_ex) {
         }
     }
