@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Listeners\ProvisionJobHandler;
 use DreamFactory\Library\Utility\Curl;
+use DreamFactory\Library\Utility\Uri;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -116,7 +117,9 @@ class FastTrackController extends FactoryController
         }
 
         //  3.  Simulate login to instance to initialize
-        if (false === ($_result = Curl::get($_endpoint))) {
+        $_result = Curl::get($_endpoint, [], [CURLOPT_HTTPHEADER => ['Host: ' . $_instance->getProvisionedEndpoint(false)]]);
+
+        if (false === $_result) {
             \Log::info('[dfe.fast-track.auto-register] partial success - instance init failure');
 
             //  Return partial success...
