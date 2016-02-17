@@ -19,28 +19,15 @@
 --}}
 @section('contentBody')
     <div>
-        <p>
-            {{ $firstName }},
-        </p>
-
-        <div>
-            @if(false !== $downloadLink)
-                <p>Your requested export is complete. It may be downloaded it for up to {{ config('snapshot.days-to-keep', 7 ) }} days, from the following
-                    link:<br />
-                    <br />
-                    <strong><a href="{{ $downloadLink }}" target="_blank">{{ $downloadLink }}</a></strong>
-                </p>
-            @else
-                <p>The export you requested did not complete properly. Please make sure your instance is up and running and that you've logged into the Admin
-                    application at least one time. If the issue persists, please contact support.</p>
-            @endif
-        </div>
-
-        <div>{!! $emailBody !!}</div>
-
-        <p>
-            Thanks!
-            <cite>-- Team DreamFactory</cite>
-        </p>
+        @if(false !== $downloadLink)
+            <p>Your requested export is complete. It may be downloaded it for up to {{ config('snapshot.days-to-keep', 7 ) }} days, from the following
+                link:<br />
+                <br />
+                <strong><a href="{{ $downloadLink }}" target="_blank">{{ $downloadLink }}</a></strong>
+            </p>
+        @else
+            <p>The export you requested did not complete properly. Please make sure your instance is up and running and that you've logged into the Admin
+                application at least one time. If the issue persists, please contact support.</p>
+        @endif
     </div>
 @stop

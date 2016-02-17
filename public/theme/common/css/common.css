@@ -173,20 +173,27 @@ button[type="submit"] > i.fa-fw,
 *
 ***********************************************************/
 
+.dfe-table-server td:first-child .input-addon {
+}
+
+.dfe-table-server th {
+    vertical-align: middle;
+}
+
 .dfe-table-server th:nth-child(1) {
-    text-align:     center;
+    /*text-align:     center;*/
     vertical-align: middle;
     width:          125px;
 }
 
 .dfe-table-server th:nth-child(2) {
-    text-align:     left;
+    /*text-align:     left;*/
     vertical-align: middle;
     width:          150px;
 }
 
 .dfe-table-server th:nth-child(3) {
-    text-align:     center;
+    text-align:     left;
     vertical-align: middle;
     width:          105px;
 }
@@ -198,19 +205,19 @@ button[type="submit"] > i.fa-fw,
 }
 
 .dfe-table-server th:nth-child(5) {
-    text-align:     center;
+    text-align:     left;
     vertical-align: middle;
     width:          125px;
 }
 
 .dfe-table-server th:nth-child(6) {
-    text-align:     center;
+    text-align:     left;
     vertical-align: middle;
     width:          175px;
 }
 
 .dfe-table-server td:nth-child(1) {
-    text-align:     center;
+    text-align:     left;
     vertical-align: middle;
     width:          125px;
 }
@@ -222,7 +229,7 @@ button[type="submit"] > i.fa-fw,
 }
 
 .dfe-table-server td:nth-child(3) {
-    text-align:     center;
+    text-align:     left;
     vertical-align: middle;
     width:          105px;
 }
@@ -246,10 +253,21 @@ button[type="submit"] > i.fa-fw,
 }
 
 .dfe-table-server {
-    font-family:    "Arial", sans-serif;
-    font-size:      14px;
-    cursor:         pointer;
+    /*font-family:    "Lato", "Open Sans", "Arial", sans-serif;*/
+    font-size:     14px;
+    /*cursor:         pointer;*/
+    /*vertical-align: middle;*/
+    border-radius: 4px;
+}
+
+.table.dfe-table-server > tbody > tr > td {
     vertical-align: middle;
+    font-size:      14px;
+}
+
+.table.dfe-table-server > tbody > tr > td:first-child, .table.dfe-table-server > thead > tr > th:first-child,
+.table.dfe-table-server > tbody > tr > td:nth-child(5), .table.dfe-table-server > thead > tr > th:nth-child(5) {
+    text-align: center;
 }
 
 /**********************************************************

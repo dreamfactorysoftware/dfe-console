@@ -3,6 +3,13 @@
 //* Application Bootstrap
 //******************************************************************************
 
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Handler\RotatingFileHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\SyslogHandler;
+use Monolog\Logger;
+
 if (!function_exists('__dfe_bootstrap')) {
     /**
      * @return \Illuminate\Foundation\Application

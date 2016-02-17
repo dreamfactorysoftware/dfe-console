@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
+use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Listeners\ProvisionJobHandler;
 use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Uri;
@@ -105,6 +106,10 @@ class FastTrackController extends FactoryController
                 'guest-location' => array_get($_input, 'guest-location', GuestLocations::DFE_CLUSTER),
             ]);
 
+            if (empty($_instance)) {
+                throw new ProvisioningException('Instance provisioning failed.');
+            }
+
             $_response['instance-id'] = $_instanceId;
             $_response['instance'] = $_instance->toArray();
 
@@ -117,7 +122,7 @@ class FastTrackController extends FactoryController
         }
 
         //  3.  Simulate login to instance to initialize
-        $_result = Curl::get($_endpoint, [], [CURLOPT_HTTPHEADER => ['Host: ' . $_instance->getProvisionedEndpoint(false)]]);
+        $_result = Curl::get($_endpoint . '/', [], [CURLOPT_HTTPHEADER => ['Host: ' . $_instance->getProvisionedEndpoint(false)]]);
 
         if (false === $_result) {
             \Log::info('[dfe.fast-track.auto-register] partial success - instance init failure');
@@ -132,7 +137,7 @@ class FastTrackController extends FactoryController
         //  4.  Send notification
         //  5.  Redirect with auto-login to new instance
 
-        return \Redirect::to($_endpoint, ['submissionGuid' => $_guid]);
+        return \Redirect::to($_endpoint . '?submissionGuid=' . $_guid);
     }
 
     /**

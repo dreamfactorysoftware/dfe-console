@@ -48,6 +48,5 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="library" name="moment" level="application" />
   </component>
 </module>

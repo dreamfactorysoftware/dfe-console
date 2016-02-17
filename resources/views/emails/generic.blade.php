@@ -12,18 +12,4 @@
 
 --}}
 @section('contentBody')
-    <div>
-        <p>
-            {{ $firstName }},
-        </p>
-
-        <div>
-            {!! $emailBody !!}
-        </div>
-
-        <p>
-            Thanks!
-            <cite>-- Team DreamFactory</cite>
-        </p>
-    </div>
 @stop

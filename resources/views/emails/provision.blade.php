@@ -20,31 +20,12 @@
 --}}
 @section('contentBody')
     <div>
-        <p>
-            {{ $firstName }},
-        </p>
-
-        <div>
-            @if(false !== $instanceUrl)
-                <p>Congratulations, your DreamFactory&trade; instance has been created!</p>
-                <p>To log into your DreamFactory&trade; instance, go to: <a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a></p>
-            @else
-                <p>The requested provisioning of your instance <strong>{{$instanceName}}</strong> did not complete successfully.</p>
-            @endif
-        </div>
-
-        <div>
-            <p>You can also go to <a href="{{ $dashboard_url }}" target="_blank">{{ $dashboard_url }}</a> to access your DreamFactory&trade; Dashboard.
-                There
-                you can manage all of your instances in one
-                convenient place.</p>
-        </div>
-
-        <div>{!! $emailBody !!}</div>
-
-        <p>
-            Thanks!
-            <cite>-- Team DreamFactory</cite>
-        </p>
+        @if(false !== $instanceUrl)
+            <p>Congratulations, your DreamFactory&trade; instance has been created!</p>
+            <p>Use the following link to log directly into your DreamFactory&trade; instance:</p>
+            <p><a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a></p>
+        @else
+            <p>The requested provisioning of your instance <strong>{{$instanceName}}</strong> did not complete successfully.</p>
+        @endif
     </div>
 @stop

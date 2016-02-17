@@ -38,6 +38,7 @@ class ProvisionJobHandler
     public function handle(ProvisionJob $command)
     {
         $_options = $command->getOptions();
+        $_instanceId = $command->getInstanceId();
         $_guestLocation = array_get($_options, 'guest-location', config('provisioning.default-guest-location'));
 
         if (is_string($_guestLocation) && !is_numeric($_guestLocation)) {
@@ -46,11 +47,11 @@ class ProvisionJobHandler
             $_guestLocation = $_options['guest-location'];
         }
 
-        \Log::info('[Provision] Handler called', ['guest' => $_guestLocation, 'instance-id' => $command->getInstanceId(), 'options' => $_options]);
+        \Log::info('[Provision] Handler called', ['guest' => $_guestLocation, 'instance-id' => $_instanceId, 'options' => $_options]);
 
         try {
             //  Create the instance record
-            $_instance = InstanceManager::make($command->getInstanceId(), $_options);
+            $_instance = InstanceManager::make($_instanceId, $_options);
 
             if (!$_instance) {
                 throw new ProvisioningException('InstanceManager::make() failed');
@@ -73,6 +74,7 @@ class ProvisionJobHandler
                 [
                     'instance'     => false,
                     'instanceName' => $command->getInstanceId(),
+                    'firstName'    => $_owner->first_name_text,
                 ]);
 
             return false;

@@ -20,21 +20,6 @@
 --}}
 @section('contentBody')
     <div>
-        <p>
-            {{ $firstName }},
-        </p>
-
-        <div>
-            <p>Your instance <strong>{{ $instanceName }}</strong> has been retired, as requested.</p>
-            <p>Go to your DreamFactory&trade; Dashboard at <a href="{{ $dashboard_url }}" target="_blank">{{ $dashboard_url }}</a> to create a new instance, or
-                manage your other instances.</p>
-        </div>
-
-        <div>{!! $emailBody !!}</div>
-
-        <p>
-            Thanks!
-            <cite>-- Team DreamFactory</cite>
-        </p>
+        <p>Your instance <strong>{{ $instanceName }}</strong> has been retired, as requested.</p>
     </div>
 @stop
