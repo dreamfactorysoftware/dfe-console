@@ -53,50 +53,20 @@ class FastTrackController extends FactoryController
         }
 
         //  1.  Validate and create a dashboard user
-        if (false === ($_email = filter_var(array_get($_input, 'email', array_get($_input, 'email-address')), FILTER_SANITIZE_EMAIL)) || empty($_email)) {
-            \Log::error('[dfe.fast-track.auto-register] invalid email address', $_input);
-
-            return ErrorPacket::create(null, Response::HTTP_BAD_REQUEST, 'Invalid email address.');
-        }
-
         try {
-            /**
-             * @type array|User $_result
-             * @type User       $_user
-             */
-            $_result = User::register($request);
-            $_user = array_get($_result, 'response');
-
-            if (empty($_user)) {
-                throw new DatabaseException('Unable to create new user.');
-            }
-
-            \Log::info('[dfe.fast-track.auto-register] user created - ' . $_user->email_addr_text);
-        } catch (\InvalidArgumentException $_ex) {
-            \Log::error('[dfe.fast-track.auto-register] validation exception creating user: ' . $_ex->getMessage());
-
-            return ErrorPacket::create($_input, Response::HTTP_BAD_REQUEST, $_ex);
+            $_user = $this->createDashboardUser($request);
         } catch (\Exception $_ex) {
-            \Log::error('[dfe.fast-track.auto-register] exception creating user: ' . $_ex->getMessage());
-
-            return ErrorPacket::make(false, null, $_ex);
+            return ErrorPacket::create($_input, Response::HTTP_BAD_REQUEST, $_ex);
         }
 
-        //  2.  Generate an instance name for this dude
         $_response = [
             'user'        => $_user->toArray(),
             'instance-id' => false,
             'instance'    => $_instance = false,
         ];
 
-        if (null === ($_instanceId = array_get($_input, 'instance-id'))) {
-            if (false === ($_instanceId = $this->generateNameForUser($_user))) {
-                \Log::info('[dfe.fast-track.auto-register] partial success - instance name unavailable');
-
-                //  Return partial success...
-                return SuccessPacket::create($_response, Response::HTTP_PARTIAL_CONTENT);
-            }
-        }
+        //  2.  Generate an instance name for this dude
+        $_instanceId = $this->autoNameInstance($_input);
 
         //  3.  Create an instance
         try {
@@ -158,5 +128,49 @@ class FastTrackController extends FactoryController
         }
 
         return $_check;
+    }
+
+    /**
+     * Creates a dashboard user
+     *
+     * @param Request $request
+     *
+     * @return \DreamFactory\Enterprise\Database\Models\User
+     * @throws \DreamFactory\Enterprise\Database\Exceptions\DatabaseException
+     */
+    protected function createDashboardUser(Request $request)
+    {
+        $_input = $request->input();
+
+        if (false === ($_email = filter_var(array_get($_input, 'email', array_get($_input, 'email-address')), FILTER_SANITIZE_EMAIL)) || empty($_email)) {
+            \Log::error('[dfe.fast-track.auto-register] invalid email address', $_input);
+            throw new \InvalidArgumentException('Invalid email address.');
+        }
+
+        /**
+         * @type User  $_user
+         * @type array $_result
+         */
+        $_result = User::register($request);
+        $_user = array_get($_result, 'response');
+
+        if (empty($_user)) {
+            throw new DatabaseException('Unable to create new user.');
+        }
+
+        \Log::info('[dfe.fast-track.auto-register] user created - ' . $_user->email_addr_text);
+
+        return $_user;
+    }
+
+    protected function autoNameInstance($input, $user)
+    {
+        if (null === ($_instanceId = array_get($input, 'instance-id'))) {
+            if (false === ($_instanceId = $this->generateNameForUser($user))) {
+                \Log::info('[dfe.fast-track.auto-register] partial success - instance name unavailable');
+
+                return false;
+            }
+        }
     }
 }
