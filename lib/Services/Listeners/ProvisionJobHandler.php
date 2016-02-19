@@ -64,9 +64,11 @@ class ProvisionJobHandler
                 $_owner->email_addr_text,
                 trim($_owner->first_name_text . ' ' . $_owner->last_name_text),
                 [
-                    'instance'     => false,
-                    'instanceName' => $command->getInstanceId(),
-                    'firstName'    => $_owner->first_name_text,
+                    'instance'      => false,
+                    'instanceName'  => $command->getInstanceId(),
+                    'firstName'     => $_owner->first_name_text,
+                    'headTitle'     => 'Provision Error',
+                    'contentHeader' => 'Your instance was not created',
                 ]);
 
             return false;
@@ -100,9 +102,11 @@ class ProvisionJobHandler
                 $_owner->email_addr_text,
                 trim($_owner->first_name_text . ' ' . $_owner->last_name_text),
                 [
-                    'instance'     => false,
-                    'instanceName' => $command->getInstanceId(),
-                    'firstName'    => $_owner->first_name_text,
+                    'instance'      => false,
+                    'instanceName'  => $command->getInstanceId(),
+                    'firstName'     => $_owner->first_name_text,
+                    'headTitle'     => 'Provision Error',
+                    'contentHeader' => 'Your instance was not created',
                 ]);
 
             //  Delete instance record...

@@ -2,9 +2,6 @@
 
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
-use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Utility\FastTrack;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;

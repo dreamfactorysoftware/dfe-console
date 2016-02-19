@@ -145,8 +145,8 @@ class Metrics extends ConsoleCommand
             }
 
             $_user = Models\ServiceUser::first();
-            $this->notify($_user->email_addr_text,
-                $_user->first_name_text . ' ' . $_user->last_name_text,
+            $this->notify(config('license.notification-address'),
+                config('license.notification-name'),
                 'Metrics Recorded',
                 [
                     'firstName'     => $_user->first_name_text,

@@ -68,6 +68,8 @@ return [
         DreamFactory\Enterprise\Partner\Providers\PartnerServiceProvider::class,
         /** DreamFactory Instance API Services Provider */
         DreamFactory\Enterprise\Instance\Ops\Providers\InstanceApiClientServiceProvider::class,
+        /** DreamFactory Enterprise Console Operations API Services Provider */
+        DreamFactory\Enterprise\Console\Ops\Providers\OpsClientServiceProvider::class,
         /** 3rd-party Service Providers */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Barryvdh\Cors\CorsServiceProvider::class,

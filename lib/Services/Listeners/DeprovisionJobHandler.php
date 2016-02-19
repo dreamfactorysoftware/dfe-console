@@ -79,8 +79,10 @@ class DeprovisionJobHandler extends BaseListener
                 $_owner->email_addr_text,
                 trim($_owner->first_name_text . ' ' . $_owner->last_name_text),
                 [
-                    'instance'     => false,
-                    'instanceName' => $command->getInstanceId(),
+                    'instance'      => false,
+                    'instanceName'  => $command->getInstanceId(),
+                    'headTitle'     => 'Deprovision Error',
+                    'contentHeader' => 'Your instance was not retired',
                 ]);
         }
 

@@ -6,7 +6,7 @@ use Illuminate\Http\Response;
 class FastTrackControllerTest extends \TestCase
 {
     static $emailAddress = 'mistertestler@gmail.com';
-    static $deleteTestObjects = false;
+    static $deleteTestObjects = true;
 
     public function testAutoRegister()
     {

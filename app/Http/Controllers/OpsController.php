@@ -3,7 +3,6 @@
 use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
-use DreamFactory\Enterprise\Common\Http\Middleware\ApiLogger;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;

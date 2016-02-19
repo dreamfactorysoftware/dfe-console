@@ -7,6 +7,7 @@ return [
     'send-instance-details' => false,
     'bcc-notifications'     => false,
     'notification-address'  => 'ops@dreamfactory.com',
+    'notification-name'     => 'DFE Operations',
     /** The endpoints for license server services */
     'endpoints'             => [
         'install'  => 'http://license.dreamfactory.com/register/install',

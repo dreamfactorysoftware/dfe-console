@@ -1,15 +1,12 @@
 <?php namespace DreamFactory\Enterprise\Services\Utility;
 
-use DreamFactory\Enterprise\Console\Ops\Providers\OpsClientServiceProvider;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
-use DreamFactory\Enterprise\Services\Listeners\ProvisionJobHandler;
 use DreamFactory\Library\Utility\Curl;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -51,9 +48,9 @@ class FastTrack
         $_response = [
             'user'                 => $_user->toArray(),
             'instance-id'          => false,
-            'instance-initialized' => false,
             'instance'             => $_instance = false,
-            'notification-sent'    => false,
+            'instance-initialized' => false,
+            'instance-admin'       => false,
         ];
 
         //  3.  Generate an instance name for this dude
@@ -65,7 +62,7 @@ class FastTrack
             return $_response;
         }
 
-        $_response['instance'] = $_instance;
+        $_response['instance'] = $_instance->toArray();
         $_response['instance-id'] = $_instanceId;
 
         //  5.  Initialize instance
@@ -76,8 +73,15 @@ class FastTrack
 
         $_response['instance-initialized'] = true;
 
-        //  6.  Send notification
-        $_response['notification-sent'] = false;
+        //  6.  Create first admin user
+        if (false === ($_admin = static::createInstanceAdmin($_user, $_instance, $request))) {
+            //  Something's goofed
+            return $_response;
+        }
+
+        $_response['instance-admin'] = $_admin;
+
+        //  7.  Redirect
 
         return $_response;
     }
@@ -219,6 +223,70 @@ class FastTrack
             return false;
         }
 
-        return true;
+        return static::waitForInstanceInitialization($instance);
+    }
+
+    /**
+     * Wait for up to two minutes for an instance to initialize
+     *
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
+     *
+     * @return bool
+     */
+    protected static function waitForInstanceInitialization(Instance $instance)
+    {
+        $_db = $instance->instanceConnection($instance);
+        $_counter = 0;
+
+        logger('[dfe.fast-track.wait-for-instance-initialization] waiting for instance to finish initialization');
+
+        while (true) {
+            $_row = $_db->select('SELECT COUNT(*) AS table_count FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :table_schema',
+                [':table_schema' => $instance->db_name_text]);
+
+            if (!empty($_row) && data_get($_row, 'table_count', 0) > 40) {
+                logger('[dfe.fast-track.wait-for-instance-initialization] instance initialization completed in ' . ($_counter * 10) . ' seconds');
+
+                return true;
+            }
+
+            if (++$_counter >= 6) {
+                \Log::error('[dfe.fast-track.wait-for-instance-initialization] instance initialization not complete after 60 seconds');
+
+                return false;
+            }
+
+            logger('[dfe.fast-track.wait-for-instance-initialization] ** waiting ' . $_counter);
+            sleep(10);
+        }
+    }
+
+    /**
+     * @param \DreamFactory\Enterprise\Database\Models\User     $user
+     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
+     * @param \Illuminate\Http\Request                          $request
+     *
+     * @return bool|\stdClass
+     */
+    protected static function createInstanceAdmin(User $user, Instance $instance, Request $request)
+    {
+        $_payload = [
+            'email'                 => $user->email_addr_text,
+            'password'              => $request->input('password'),
+            'password_confirmation' => $request->input('password'),
+            'first_name'            => $user->first_name_text,
+            'last_name'             => $user->last_name_text,
+            'name'                  => $user->nickname_text ?: $user->first_name_text,
+        ];
+
+        $_curlOptions = [CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],];
+
+        if (false === ($_response = $instance->call('/setup', $_payload, $_curlOptions))) {
+            \Log::error('[dfe.fast-track.create-instance-admin] creation of instance admin failed.');
+
+            return false;
+        }
+
+        return $_response;
     }
 }
