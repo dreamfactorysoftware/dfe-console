@@ -6,6 +6,7 @@ use Illuminate\Http\Response;
 class FastTrackControllerTest extends \TestCase
 {
     static $emailAddress = 'mistertestler@gmail.com';
+    static $deleteTestObjects = false;
 
     public function testAutoRegister()
     {
@@ -18,16 +19,18 @@ class FastTrackControllerTest extends \TestCase
                 'nickname'   => 'Mister',
             ]);
 
-        $this->assertNotEmpty($_response->getStatus() != Response::HTTP_BAD_REQUEST);
+//        $this->assertNotEmpty($_response->getStatus() != Response::HTTP_BAD_REQUEST);
 
-        try {
-            \Artisan::call('dfe:deprovision', ['instance-id' => 'mistertestler']);
-        } catch (\Exception $_ex) {
-        }
+        if (static::$deleteTestObjects) {
+            try {
+                \Artisan::call('dfe:deprovision', ['instance-id' => 'mistertestler']);
+            } catch (\Exception $_ex) {
+            }
 
-        try {
-            User::byEmail(static::$emailAddress)->delete();
-        } catch (\Exception $_ex) {
+            try {
+                User::byEmail(static::$emailAddress)->delete();
+            } catch (\Exception $_ex) {
+            }
         }
     }
 }

@@ -42,7 +42,7 @@ class Provision extends ConsoleCommand
     public function handle()
     {
         parent::handle();
-
+        
         $_instanceId = $this->argument('instance-id');
 
         //	Check the name here for quicker response...

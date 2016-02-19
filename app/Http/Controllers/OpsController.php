@@ -57,7 +57,7 @@ class OpsController extends BaseController implements IsVersioned
      */
     public function __construct()
     {
-        $this->middleware(AuthenticateOpsClient::ALIAS, ['except' => 'postPartner',]);
+        $this->middleware(AuthenticateOpsClient::ALIAS, ['except' => ['postPartner', 'fastTrackProvision'],]);
     }
 
     /**
@@ -224,6 +224,18 @@ class OpsController extends BaseController implements IsVersioned
         } catch (\Exception $_ex) {
             return $this->failure($_ex);
         }
+    }
+
+    /**
+     * Handle internally requested provisioning
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function fastTrackProvision(Request $request)
+    {
+        return $this->postProvision($request);
     }
 
     /**

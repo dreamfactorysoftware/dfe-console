@@ -1,13 +1,17 @@
 <?php namespace DreamFactory\Enterprise\Services\Utility;
 
+use DreamFactory\Enterprise\Console\Ops\Providers\OpsClientServiceProvider;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
+use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Listeners\ProvisionJobHandler;
 use DreamFactory\Library\Utility\Curl;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -121,7 +125,7 @@ class FastTrack
      */
     protected static function generateInstanceName($seed)
     {
-        //  Strip off anything past '@' 
+        //  Strip off anything past '@'
         $_name = $_check = substr($seed, 0, strpos($seed, '@'));
 
         while (true) {
@@ -143,7 +147,7 @@ class FastTrack
     protected static function validateHubspot(Request $request)
     {
         //  Validate that it came from a HubSpot landing page
-        if (config('dfe.fast-track.validate-hubspot', false) && empty($request->input('submissionGuid'))) {
+        if (config('dfe.fast-track-hubspot-only', false) && empty($request->input('submissionGuid'))) {
             return false;
         }
 
@@ -153,25 +157,28 @@ class FastTrack
     /**
      * @param \DreamFactory\Enterprise\Database\Models\User $user
      * @param string                                        $instanceId
+     * @param int                                           $guestLocation
      *
      * @return bool|\DreamFactory\Enterprise\Database\Models\Instance
      */
     protected static function createInstance(User $user, $instanceId, $guestLocation = GuestLocations::DFE_CLUSTER)
     {
         try {
-            $_instance = ProvisionJobHandler::provision([
-                'owner-id'       => $user->id,
-                'instance-id'    => $instanceId,
-                'guest-location' => $guestLocation,
-            ]);
+            $_response = Curl::post(config('app.url') . '/ops/api/v1/provision-ft',
+                [
+                    'owner-id'       => $user->id,
+                    'owner-type'     => OwnerTypes::USER,
+                    'instance-id'    => $instanceId,
+                    'guest-location' => $guestLocation,
+                ]);
 
-            if (empty($_instance)) {
-                throw new ProvisioningException('Instance provisioning failed.');
+            if (!$_response || !$_response->success) {
+                throw new ProvisioningException('failure during provisioning process');
             }
 
             \Log::info('[dfe.fast-track.create-instance] instance created - ' . $instanceId);
 
-            return $_instance;
+            return Instance::byNameOrId($instanceId)->firstOrFail();
         } catch (\Exception $_ex) {
             \Log::error('[dfe.fast-track.create-instance] exception: ' . $_ex->getMessage());
         }
@@ -186,14 +193,31 @@ class FastTrack
      */
     protected static function initializeInstance(Instance $instance)
     {
-        if (false === ($_result = Curl::get($instance->getProvisionedEndpoint()))) {
-            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance');
+        $_host = str_ireplace(['http://', 'https://'], null, $_endpoint = $instance->getProvisionedEndpoint());
+
+        if (false === ($_result = Curl::get($instance->getProvisionedEndpoint(),
+                [],
+                [CURLOPT_HTTPHEADER => ['Host: ' . $_host, 'User-Agent' => config('dfe.user-agent', 'DreamFactory Enterprise/1.x')]]))
+        ) {
+            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - network error',
+                ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 
             return false;
         }
 
-        //  Construct first admin form post from response
-        $_token = substr($_result, stripos($_result, 'name="_token"') - 20, 100);
+        if (Response::HTTP_OK != Curl::getLastHttpCode()) {
+            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - error response',
+                ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
+
+            return false;
+        }
+
+        if (false === stripos($_result, 'DreamFactory Software')) {
+            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - unrecognized page',
+                ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
+
+            return false;
+        }
 
         return true;
     }
