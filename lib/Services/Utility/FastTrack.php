@@ -7,8 +7,10 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Library\Utility\Curl;
+use DreamFactory\Library\Utility\Disk;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -74,15 +76,18 @@ class FastTrack
         $_response['instance-initialized'] = true;
 
         //  6.  Create first admin user
-        if (false === ($_admin = static::createInstanceAdmin($_user, $_instance, $request))) {
+        if (false === ($_result = static::createInstanceAdmin($_user, $_instance, $request))) {
             //  Something's goofed
             return $_response;
         }
 
-        $_response['instance-admin'] = $_admin;
-
         //  7.  Redirect
+        if (false !== strpos($_result, 'dreamfactoryApp')) {
+            $_response['instance-admin'] = true;
+            \Redirect::to($_instance->getProvisionedEndpoint())->withInput(['fastTrackGuid' => $_instance->getOwnerHash()]);
+        }
 
+        //  Otherwise return status...
         return $_response;
     }
 
@@ -198,13 +203,40 @@ class FastTrack
     protected static function initializeInstance(Instance $instance)
     {
         $_host = str_ireplace(['http://', 'https://'], null, $_endpoint = $instance->getProvisionedEndpoint());
+        $_cookieJar = Disk::path([sys_get_temp_dir(), '.dfe-cache', 'cookies', sha1($instance->storage_id_text)], true);
+        $_options = [
+            CURLOPT_HTTPHEADER => [
+                'Host: ' . $_host,
+                'User-Agent: ' . config('dfe.user-agent', 'DreamFactory Enterprise/1.x'),
+                'Content-Type: application/x-www-form-urlencoded',
+            ],
+            CURLOPT_COOKIEJAR  => $_cookieJar,
+        ];
 
-        if (false === ($_result = Curl::get($instance->getProvisionedEndpoint(),
-                [],
-                [CURLOPT_HTTPHEADER => ['Host: ' . $_host, 'User-Agent' => config('dfe.user-agent', 'DreamFactory Enterprise/1.x')]]))
-        ) {
+        //  First do a get...
+        if (false === ($_result = Curl::get($instance->getProvisionedEndpoint() . '/setup_db', [], $_options))) {
             \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - network error',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
+
+            @unlink($_cookieJar);
+
+            return false;
+        }
+
+        //  Now post-back in JSON
+        $_options = [
+            CURLOPT_HTTPHEADER => [
+                'Host: ' . $_host,
+                'User-Agent: ' . config('dfe.user-agent', 'DreamFactory Enterprise/1.x'),
+                'Content-Type: application/json',
+            ],
+        ];
+
+        if (false === ($_result = Curl::post($instance->getProvisionedEndpoint() . '/setup_db', null, $_options))) {
+            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - network error',
+                ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
+
+            @unlink($_cookieJar);
 
             return false;
         }
@@ -213,52 +245,21 @@ class FastTrack
             \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - error response',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 
+            @unlink($_cookieJar);
+
             return false;
         }
 
-        if (false === stripos($_result, 'DreamFactory Software')) {
-            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - unrecognized page',
+        if (false === stripos($_result, 'form-control email required')) {
+            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - unrecognized response',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 
+            @unlink($_cookieJar);
+
             return false;
         }
 
-        return static::waitForInstanceInitialization($instance);
-    }
-
-    /**
-     * Wait for up to two minutes for an instance to initialize
-     *
-     * @param \DreamFactory\Enterprise\Database\Models\Instance $instance
-     *
-     * @return bool
-     */
-    protected static function waitForInstanceInitialization(Instance $instance)
-    {
-        $_db = $instance->instanceConnection($instance);
-        $_counter = 0;
-
-        logger('[dfe.fast-track.wait-for-instance-initialization] waiting for instance to finish initialization');
-
-        while (true) {
-            $_row = $_db->select('SELECT COUNT(*) AS table_count FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :table_schema',
-                [':table_schema' => $instance->db_name_text]);
-
-            if (!empty($_row) && data_get($_row, 'table_count', 0) > 40) {
-                logger('[dfe.fast-track.wait-for-instance-initialization] instance initialization completed in ' . ($_counter * 10) . ' seconds');
-
-                return true;
-            }
-
-            if (++$_counter >= 6) {
-                \Log::error('[dfe.fast-track.wait-for-instance-initialization] instance initialization not complete after 60 seconds');
-
-                return false;
-            }
-
-            logger('[dfe.fast-track.wait-for-instance-initialization] ** waiting ' . $_counter);
-            sleep(10);
-        }
+        return true;
     }
 
     /**
@@ -279,9 +280,7 @@ class FastTrack
             'name'                  => $user->nickname_text ?: $user->first_name_text,
         ];
 
-        $_curlOptions = [CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],];
-
-        if (false === ($_response = $instance->call('/setup', $_payload, $_curlOptions))) {
+        if (false === ($_response = $instance->call('/setup', $_payload))) {
             \Log::error('[dfe.fast-track.create-instance-admin] creation of instance admin failed.');
 
             return false;
