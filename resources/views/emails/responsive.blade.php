@@ -188,7 +188,7 @@
 
         .buttonContent {
             color:       #FFFFFF;
-            font-family: Helvetica, san-serif;
+            font-family: Helvetica, sans-serif;
             font-size:   18px;
             font-weight: bold;
             line-height: 100%;

@@ -8,6 +8,9 @@ class FastTrackControllerTest extends \TestCase
     static $emailAddress = 'mistertestler@gmail.com';
     static $deleteTestObjects = true;
 
+    /**
+     * Test the FastTrack instance endpoint
+     */
     public function testAutoRegister()
     {
         $_response = $this->post('http://console.dfe.3wipes.com/fast-track',
@@ -19,7 +22,13 @@ class FastTrackControllerTest extends \TestCase
                 'nickname'   => 'Mister',
             ]);
 
-//        $this->assertNotEmpty($_response->getStatus() != Response::HTTP_BAD_REQUEST);
+        $this->assertTrue($_response->getStatus() != Response::HTTP_BAD_REQUEST);
+    }
+
+    /** @inheritdoc */
+    public function tearDown()
+    {
+        parent::tearDown();
 
         if (static::$deleteTestObjects) {
             try {

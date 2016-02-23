@@ -43,9 +43,11 @@ return [
     'fast-track-route'        => '/fast-track',
     /** Only allow HubSpot landing pages to use FastTrack */
     'fast-track-hubspot-only' => false,
+    /** The string to search for during instance initialization to indicate success */
+    'fast-track-admin-html'   => 'Create a System Admin User',
     /** When making web requests, the User-Agent to usef */
     'user-agent'              => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
-    //******************************************************************************
+    //*****************************************************************************
     //* Auditing details for instances
     //******************************************************************************
     'audit'                   => [

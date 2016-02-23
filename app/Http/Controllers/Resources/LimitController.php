@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Library\Utility\Enums\DateTimeIntervals;
 use DreamFactory\Library\Utility\Enums\Limits;
+use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -773,23 +774,29 @@ class LimitController extends ViewController
         return false;
     }
 
-    private function resetLimitCounter($instanceId, $limit_key_text)
+    /**
+     * @param string $instanceId
+     * @param string $limitKey
+     *
+     * @return array|bool
+     */
+    protected function resetLimitCounter($instanceId, $limitKey)
     {
-        if (!empty($limit_key_text) && !empty($instanceId)) {
-            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
+        if (!empty($limitKey) && !empty($instanceId)) {
+            $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->findInstance($instanceId);
 
-            return $this->formatResponse($_instance->call('/instance/clearlimitscounter/' . $limit_key_text, [], [], Request::METHOD_DELETE, false));
+            return $this->formatResponse($_instance->call('/instance/clear-limits-counter/' . $limitKey, [], [], Request::METHOD_DELETE, false));
         }
 
         return false;
     }
 
-    private function resetAllLimitCounters($instanceId)
+    protected function resetAllLimitCounters($instanceId)
     {
         if (!empty($instanceId)) {
             $_instance = ($instanceId instanceof Instance) ? $instanceId : $this->_findInstance($instanceId);
 
-            return $this->formatResponse($_instance->call('/instance/clearlimitscache', [], [], Request::METHOD_DELETE, false));
+            return $this->formatResponse($_instance->call('/instance/clear-limits-cache', [], [], Request::METHOD_DELETE, false));
         }
 
         return false;
@@ -821,24 +828,29 @@ class LimitController extends ViewController
     {
         if (null === ($_rows = (array)data_get($response, 'resource'))) {
             logger('invalid response format: ' . print_r($response, true));
-            throw new \RuntimeException('Invalid console response.');
+            throw new \RuntimeException('Invalid instance response.');
         }
 
         $_results = [];
 
         foreach ($_rows as $_index => $_row) {
-            if (array_key_exists('is_active', $_row) && 1 != $_row['is_active']) {
-                continue;
+            if (IfSet::getBool($_row, 'is_active') && !empty(trim(array_get($_row, 'first_name') . ' ' . array_get($_row, 'last_name')))) {
+                $_results[] = [
+                    'id'   => $_row['id'],
+                    'name' => $_row['first_name'] . ' ' . $_row['last_name'],
+                ];
             }
-
-            $_results[] = ['id' => $_row['id'], 'name' => $_row['first_name'] . ' ' . $_row['last_name']];
         }
 
-        usort($_results,
+        !empty($_results) && usort($_results,
             function($a, $b) {
                 return strcasecmp($a['name'], $b['name']);
             });
 
         return $_results;
+    }
+
+    protected function getInstance($instanceId) {
+        return ($instanceId instanceOf Instance) ? $instanceId : $this->findInstance($instanceId);        
     }
 }

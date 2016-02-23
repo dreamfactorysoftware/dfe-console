@@ -8,9 +8,9 @@ use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Disk;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Redirect;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -25,7 +25,7 @@ class FastTrack
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public static function register(Request $request)
     {
@@ -77,18 +77,17 @@ class FastTrack
 
         //  6.  Create first admin user
         if (false === ($_result = static::createInstanceAdmin($_user, $_instance, $request))) {
-            //  Something's goofed
+            //  Return partial success...
             return $_response;
         }
 
-        //  7.  Redirect
-        if (false !== strpos($_result, 'dreamfactoryApp')) {
-            $_response['instance-admin'] = true;
-            \Redirect::to($_instance->getProvisionedEndpoint())->withInput(['fastTrackGuid' => $_instance->getOwnerHash()]);
-        }
+        //  7.  Check the result
+        $_response['instance-admin'] = true;
 
-        //  Otherwise return status...
-        return $_response;
+        //  8.  Redirect to the login endpoint
+        return \Redirect::to($_instance->getProvisionedEndpoint() . '/instance/fast-track')->withInput([
+            'fastTrackGuid' => sha1($_user->email_addr_text . $_user->first_name_text . $_user->last_name_text),
+        ]);
     }
 
     /**
@@ -241,6 +240,7 @@ class FastTrack
             return false;
         }
 
+        //  Make sure it was cool
         if (Response::HTTP_OK != Curl::getLastHttpCode()) {
             \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - error response',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
@@ -250,7 +250,8 @@ class FastTrack
             return false;
         }
 
-        if (false === stripos($_result, 'form-control email required')) {
+        //  Also make sure the "Create Admin" page came up
+        if (false === stripos($_result, config('dfe.fast-track-admin-html', 'dreamfactoryApp'))) {
             \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - unrecognized response',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 

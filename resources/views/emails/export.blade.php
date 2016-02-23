@@ -20,7 +20,7 @@
 @section('contentBody')
     <div>
         @if(false !== $downloadLink)
-            <p>Your requested export is complete. It may be downloaded it for up to {{ config('snapshot.days-to-keep', 7 ) }} days, from the following
+            <p>Your requested export is complete. It may be downloaded it for up to {{ $daysToKeep || 30 }} days, from the following
                 link:<br />
                 <br />
                 <strong><a href="{{ $downloadLink }}" target="_blank">{{ $downloadLink }}</a></strong>
