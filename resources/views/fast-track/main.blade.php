@@ -51,7 +51,7 @@
     <img class="img-responsive img-center uplifted" src="/img/img-fast-track.png">
 </header>
 
-<section>
+<section style="padding-bottom: 5px;">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
@@ -153,7 +153,7 @@
 
 <footer>
     <div class="container">
-            <div class="row">
+        <div class="row">
             <div class="col-lg-12">
                 <div class="social-links pull-right">
                     <ul class="list-inline">
