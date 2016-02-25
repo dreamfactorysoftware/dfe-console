@@ -1,12 +1,18 @@
-<!DOCTYPE html>
+<?php
+/**
+ * @var string $launchButtonText
+ * @var string $endpoint
+ */
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>DreamFactory Enterprise&trade; Soft Launch</title>
-    <link href="/static/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/soft-launch.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/vendor/dfe-fast-track/css/common.css" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
     <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -41,58 +47,111 @@
 </nav>
 
 <header class="image-bg-fluid-height">
-    <img class="img-responsive img-center" src="/img/logo-soft-launch.png" alt="DreamFactory">
+    <img class="img-responsive img-center" src="/vendor/dfe-fast-track/img/header-fast-track.png" alt="DreamFactory">
+    <img class="img-responsive img-center uplifted" src="/vendor/dfe-fast-track/img/img-fast-track.png">
 </header>
 
 <section>
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="section-heading">Congratulations!</h1>
-                <p class="lead section-lead">DreamFactory Enterprise&trade; has been successfully installed.</p>
-                <p class="section-paragraph">[NEED COPY] Below are some additional setup steps you make take. These options will quickly get your started
-                    working with
-                    DreamFactory&trade;.</p>
-            </div>
-        </div>
-    </div>
-</section>
+                {{--<h1 class="section-heading">Welcome!</h1>--}}
+                <p class="lead section-paragraph">You are <em>one</em> step away from having your very own DreamFactory instance! Just fill out the form below
+                    and press
+                    the
+                    <strong>{{ $launchButtonText }}</strong> button.</p>
 
-<aside class="image-bg-fixed-height"></aside>
-
-<section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="section-heading">Create Your Dream!</h1>
-                <p class="section-paragraph">[NEED COPY] Simply fill out the form below and press <strong>Launch</strong>.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <form class="form-horizontal">
+                <form id="ft-register">
+                    <input type="hidden" id="nickname" name="nickname" value="">
                     <div class="form-group">
-                        <div class="col-lg-2">
-                            <label class="control-label" for="email-address">Email Address</label>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <input class="form-control" type="email" id="email-address" name="email-address" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control"
+                                       type="text"
+                                       minlength="3"
+                                       maxlength="32"
+                                       id="first-name"
+                                       name="first-name"
+                                       required
+                                       placeholder="First Name">
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control"
+                                       type="text"
+                                       minlength="3"
+                                       maxlength="32"
+                                       id="last-name"
+                                       name="last-name"
+                                       required
+                                       placeholder="Last Name">
+                            </div>
                         </div>
                     </div>
+
                     <div class="form-group">
-                        <div class="col-lg-2">
-                            <label class="control-label" for="password">Password</label>
+                        <input class="form-control"
+                               type="text"
+                               minlength="5"
+                               maxlength="128"
+                               id="email"
+                               name="email"
+                               required
+                               placeholder="Email Address">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control"
+                               type="text"
+                               maxlength="40"
+                               id="phone"
+                               name="phone"
+                               required
+                               placeholder="Phone">
+                    </div>
+
+                    <div class="form-group">
+                        <input class="form-control"
+                               type="text"
+                               maxlength="64"
+                               id="company"
+                               name="company"
+                               required
+                               placeholder="Company">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input class="form-control"
+                                       type="password"
+                                       minlength="3"
+                                       maxlength="16"
+                                       id="password"
+                                       name="password"
+                                       placeholder="Password"
+                                       required>
+                            </div>
+                            <div class="col-md-6">
+                                <input class="form-control"
+                                       type="password"
+                                       id="password-confirmation"
+                                       name="password-confirmation"
+                                       maxlength="128"
+                                       placeholder="Confirm password">
+                            </div>
                         </div>
-                        <div class="col-lg-6">
-                            <input class="form-control" type="password" id="password" name="password" required>
-                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button id="btn-launch" type="submit" class="btn btn-warning">{{ $launchButtonText }}</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </section>
+
+<aside class="image-bg-fixed-height"></aside>
 
 <footer>
     <div class="container">
@@ -105,7 +164,40 @@
     </div>
 </footer>
 
-<script src="/static/jquery-2.1.4/jquery.min.js"></script>
-<script src="/static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script>
+    jQuery(function($) {
+        $('#btn-launch').on('click', function(e) {
+            e.preventDefault();
+
+            //  do something...
+
+            //  Show overlay
+
+            //  make call
+            $.ajax('{{ $endpoint }}', {
+                method:   'POST',
+                dataType: 'json',
+                data:     $('#ft-register').serializeArray()
+            }).done(function(data) {
+                //  Successful? Redirect
+                if (!data.success) {
+                    alert('failure');
+                    return;
+                } else {
+                    if (data.location) {
+                        window.top.location = data.location;
+                    }
+                }
+                //  Partial success, show that stuff
+                alert('partial');
+            }).fail(function(data) {
+                //  Fail? Show errors
+                alert('fatal');
+            });
+        });
+    });
+</script>
 </body>
 </html>

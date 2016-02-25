@@ -4,6 +4,7 @@ use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Services\Utility\FastTrack;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -18,7 +19,11 @@ class FastTrackController extends FactoryController
      */
     public function index()
     {
-        return view('fast-track.main');
+        return view('fast-track.main',
+            [
+                'launchButtonText' => \Lang::get('fast-track.launch-button-text'),
+                'endpoint'         => config('dfe.fast-track-route'),
+            ]);
     }
 
     /**
@@ -32,11 +37,16 @@ class FastTrackController extends FactoryController
     {
         try {
             $_response = FastTrack::register($request);
+
+            //  Redirect's get returned verbatim
+            if ($request->input('redirect', true) && $_response instanceof RedirectResponse) {
+                return $_response;
+            }
         } catch (HttpException $_ex) {
             return ErrorPacket::create(null, $_ex->getCode(), $_ex->getMessage());
         }
 
-        //  Redirect with auto-login to new instance
+        //  Send back the response...
         return SuccessPacket::create($_response);
     }
 }

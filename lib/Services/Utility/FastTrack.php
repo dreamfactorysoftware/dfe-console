@@ -53,6 +53,7 @@ class FastTrack
             'instance'             => $_instance = false,
             'instance-initialized' => false,
             'instance-admin'       => false,
+            'redirect'             => false,
         ];
 
         //  3.  Generate an instance name for this dude
@@ -76,18 +77,19 @@ class FastTrack
         $_response['instance-initialized'] = true;
 
         //  6.  Create first admin user
-        if (false === ($_result = static::createInstanceAdmin($_user, $_instance, $request))) {
-            //  Return partial success...
-            return $_response;
+        if (false !== ($_result = static::createInstanceAdmin($_user, $_instance, $request))) {
+            //  7.  Check the result
+            $_response['instance-admin'] = true;
+
+            //  8.  Fill in the redirect information and return
+            $_response['redirect'] = [
+                'location'    => $_instance->getProvisionedEndpoint() . '/instance/fast-track',
+                'status-code' => Response::HTTP_FOUND,
+                'payload'     => ['fastTrackGuid' => sha1($_user->email_addr_text . $_user->first_name_text . $_user->last_name_text),],
+            ];
         }
 
-        //  7.  Check the result
-        $_response['instance-admin'] = true;
-
-        //  8.  Redirect to the login endpoint
-        return \Redirect::to($_instance->getProvisionedEndpoint() . '/instance/fast-track')->withInput([
-            'fastTrackGuid' => sha1($_user->email_addr_text . $_user->first_name_text . $_user->last_name_text),
-        ]);
+        return $_response;
     }
 
     /**

@@ -22,6 +22,8 @@ class FastTrackControllerTest extends \TestCase
                 'nickname'   => 'Mister',
             ]);
 
+        $this->dump();
+
         $this->assertTrue($_response->getStatus() != Response::HTTP_BAD_REQUEST);
     }
 
