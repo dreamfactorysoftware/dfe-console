@@ -9,10 +9,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>DreamFactory Enterprise&trade; Soft Launch</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/vendor/dfe-fast-track/css/common.css" rel="stylesheet">
+    <title>DreamFactory Enterprise&trade; FastTrack</title>
+    <link href="/static/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/fast-track.css" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
     <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -47,8 +47,8 @@
 </nav>
 
 <header class="image-bg-fluid-height">
-    <img class="img-responsive img-center" src="/vendor/dfe-fast-track/img/header-fast-track.png" alt="DreamFactory">
-    <img class="img-responsive img-center uplifted" src="/vendor/dfe-fast-track/img/img-fast-track.png">
+    <img class="img-responsive img-center" src="/img/header-fast-track.png" alt="DreamFactory">
+    <img class="img-responsive img-center uplifted" src="/img/img-fast-track.png">
 </header>
 
 <section>
@@ -165,7 +165,7 @@
 </footer>
 
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="/static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
 <script>
     jQuery(function($) {
         $('#btn-launch').on('click', function(e) {
