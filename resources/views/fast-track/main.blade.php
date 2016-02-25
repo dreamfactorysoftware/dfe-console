@@ -151,13 +151,30 @@
     </div>
 </section>
 
-<aside class="image-bg-fixed-height"></aside>
-
 <footer>
     <div class="container">
-        <div class="row">
+            <div class="row">
             <div class="col-lg-12">
-                <p>Copyright &copy; {{ date('Y') }} <a href="https://www.dreamfactory.com/" target="_blank">DreamFactory Software, Inc.</a> All rights reserved.
+                <div class="social-links pull-right">
+                    <ul class="list-inline">
+                        <li>
+                            <a target="_blank"
+                               href="https://github.com/dreamfactorysoftware/"><i class="fa fa-github-square fa-2x"></i></a>
+                        </li>
+                        <li>
+                            <a target="_blank"
+                               href="https://facebook.com/dfsoftwareinc/"><i class="fa fa fa-facebook-square fa-2x"></i></a>
+                        </li>
+                        <li>
+                            <a target="_blank"
+                               href="https://twitter.com/dfsoftwareinc/"><i class="fa fa-twitter-square fa-2x"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+                <p><span class="pull-left hidden-xs hidden-sm">DreamFactory Enterprise&trade; FastTrack
+                        <small style="margin-left: 5px;font-size: 9px;">({!! config('dfe.common.display-version') !!})</small>
+                        </span> <span class="pull-right">{!! config('dfe.common.display-copyright') !!}</span>
                 </p>
             </div>
         </div>
