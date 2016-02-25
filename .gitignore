@@ -1,6 +1,5 @@
-/vendor/
+vendor/
 !.env-dist
-!/public/vendor/dfe-fast-track/
 .env*
 .idea/*.iml
 .idea/workspace.xml
