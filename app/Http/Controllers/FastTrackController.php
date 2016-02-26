@@ -43,10 +43,10 @@ class FastTrackController extends FactoryController
                 return $_response;
             }
         } catch (HttpException $_ex) {
-            return ErrorPacket::create(null, $_ex->getCode(), $_ex->getMessage());
+            return \Response::json(ErrorPacket::create($_ex));
         }
 
         //  Send back the response...
-        return SuccessPacket::create($_response);
+        return \Response::json(SuccessPacket::create($_response));
     }
 }

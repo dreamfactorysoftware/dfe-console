@@ -43,8 +43,8 @@ class FastTrack
         }
 
         //  2.  Validate and create a dashboard user
-        if (false === ($_user = static::createDashboardUser($request))) {
-            throw new BadRequestHttpException();
+        if (false === ($_user = static::createDashboardUser($request, $message))) {
+            throw new BadRequestHttpException($message);
         }
 
         $_response = [
@@ -78,14 +78,16 @@ class FastTrack
 
         //  6.  Create first admin user
         if (false !== ($_result = static::createInstanceAdmin($_user, $_instance, $request))) {
+            $_guid = sha1($_user->email_addr_text . $_user->first_name_text . $_user->last_name_text);
+
             //  7.  Check the result
             $_response['instance-admin'] = true;
 
             //  8.  Fill in the redirect information and return
             $_response['redirect'] = [
-                'location'    => $_instance->getProvisionedEndpoint() . '/instance/fast-track',
+                'location'    => $_instance->getProvisionedEndpoint() . '/instance/fast-track?fastTrackGuid=' . $_guid,
                 'status-code' => Response::HTTP_FOUND,
-                'payload'     => ['fastTrackGuid' => sha1($_user->email_addr_text . $_user->first_name_text . $_user->last_name_text),],
+                'payload'     => ['fastTrackGuid' => $_guid,],
             ];
         }
 
@@ -95,11 +97,12 @@ class FastTrack
     /**
      * Creates a dashboard user
      *
-     * @param Request $request
+     * @param Request     $request
+     * @param string|null $message Any error message will be returned here
      *
      * @return bool|\DreamFactory\Enterprise\Database\Models\User
      */
-    protected static function createDashboardUser(Request $request)
+    protected static function createDashboardUser(Request $request, &$message = null)
     {
         try {
             $_input = $request->input();
@@ -120,7 +123,7 @@ class FastTrack
 
             return $_user;
         } catch (\Exception $_ex) {
-            \Log::error('[dfe.fast-track.create-dashboard-user] exception: ' . $_ex->getMessage());
+            \Log::error('[dfe.fast-track.create-dashboard-user] exception: ' . ($message = $_ex->getMessage()));
         }
 
         return false;

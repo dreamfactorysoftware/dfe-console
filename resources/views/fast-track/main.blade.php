@@ -55,17 +55,26 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                {{--<h1 class="section-heading">Welcome!</h1>--}}
-                <p class="lead section-paragraph">You are <em>one</em> step away from having your very own DreamFactory instance! Just fill out the form below
+                <p class="lead section-paragraph">You are <strong><em>one</em></strong> step away from having your very own DreamFactory instance! Just fill out
+                    the form below
                     and press
                     the
                     <strong>{{ $launchButtonText }}</strong> button.</p>
 
+                <div id="error-alert" class="alert alert-danger alert-dismissible fade in hidden" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 id="error-header">There was a problem...</h4>
+                    <div id="error-body"></div>
+                </div>
+
                 <form id="ft-register">
                     <input type="hidden" id="nickname" name="nickname" value="">
+                    <input type="hidden" id="redirect" name="redirect" value="true">
+
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
+                                <label class="sr-only" for="first-name">First Name</label>
                                 <input class="form-control"
                                        type="text"
                                        minlength="3"
@@ -73,9 +82,11 @@
                                        id="first-name"
                                        name="first-name"
                                        required
-                                       placeholder="First Name">
+                                       placeholder="First Name" value="{{ \Input::old('first-name') }}">
                             </div>
+
                             <div class="col-md-6">
+                                <label class="sr-only" for="last-name">Last Name</label>
                                 <input class="form-control"
                                        type="text"
                                        minlength="3"
@@ -83,45 +94,59 @@
                                        id="last-name"
                                        name="last-name"
                                        required
-                                       placeholder="Last Name">
+                                       placeholder="Last Name" value="{{ \Input::old('last-name') }}">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <input class="form-control"
-                               type="text"
-                               minlength="5"
-                               maxlength="128"
-                               id="email"
-                               name="email"
-                               required
-                               placeholder="Email Address">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="sr-only" for="email">Email Address</label>
+                                <input class="form-control"
+                                       type="text"
+                                       minlength="5"
+                                       maxlength="128"
+                                       id="email"
+                                       name="email"
+                                       required
+                                       placeholder="Email Address" value="{{ \Input::old('email') }}">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <input class="form-control"
-                               type="text"
-                               maxlength="40"
-                               id="phone"
-                               name="phone"
-                               required
-                               placeholder="Phone">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="sr-only" for="phone">Phone Number</label>
+                                <input class="form-control"
+                                       type="text"
+                                       maxlength="40"
+                                       id="phone"
+                                       name="phone"
+                                       placeholder="Phone" value="{{ \Input::old('phone') }}">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <input class="form-control"
-                               type="text"
-                               maxlength="64"
-                               id="company"
-                               name="company"
-                               required
-                               placeholder="Company">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="sr-only" for="company">Company Name</label>
+                                <input class="form-control"
+                                       type="text"
+                                       maxlength="64"
+                                       id="company"
+                                       name="company"
+                                       placeholder="Company" value="{{ \Input::old('company') }}">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
+                                <label class="sr-only" for="password">Password</label>
                                 <input class="form-control"
                                        type="password"
                                        minlength="3"
@@ -131,13 +156,18 @@
                                        placeholder="Password"
                                        required>
                             </div>
-                            <div class="col-md-6">
-                                <input class="form-control"
-                                       type="password"
-                                       id="password-confirmation"
-                                       name="password-confirmation"
-                                       maxlength="128"
-                                       placeholder="Confirm password">
+
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label class="sr-only" for="password_confirmation">Confirm Password</label>
+                                    <input class="form-control"
+                                           type="password"
+                                           id="password_confirmation"
+                                           name="password_confirmation"
+                                           maxlength="128"
+                                           required
+                                           placeholder="Confirm password">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +184,7 @@
 <footer>
     <div class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-md-12">
                 <div class="social-links pull-right">
                     <ul class="list-inline">
                         <li>
@@ -172,7 +202,7 @@
                     </ul>
                 </div>
                 <div class="clearfix"></div>
-                <p><span class="pull-left hidden-xs hidden-sm">DreamFactory Enterprise&trade; FastTrack
+                <p><span class="pull-left hidden-xs">DreamFactory Enterprise&trade; FastTrack
                         <small style="margin-left: 5px;font-size: 9px;">({!! config('dfe.common.display-version') !!})</small>
                         </span> <span class="pull-right">{!! config('dfe.common.display-copyright') !!}</span>
                 </p>
@@ -181,40 +211,17 @@
     </div>
 </footer>
 
+<div class="please-wait hidden">
+    <div class="loading-text">Preparing your instance&#8230;</div>
+    <div class="loading-icon"><i class="fa fa-fw fa-circle-o-notch fa-spin"></i></div>
+</div>
+
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
 <script src="/static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script src="/js/fast-track.js"></script>
 <script>
-    jQuery(function($) {
-        $('#btn-launch').on('click', function(e) {
-            e.preventDefault();
-
-            //  do something...
-
-            //  Show overlay
-
-            //  make call
-            $.ajax('{{ $endpoint }}', {
-                method:   'POST',
-                dataType: 'json',
-                data:     $('#ft-register').serializeArray()
-            }).done(function(data) {
-                //  Successful? Redirect
-                if (!data.success) {
-                    alert('failure');
-                    return;
-                } else {
-                    if (data.location) {
-                        window.top.location = data.location;
-                    }
-                }
-                //  Partial success, show that stuff
-                alert('partial');
-            }).fail(function(data) {
-                //  Fail? Show errors
-                alert('fatal');
-            });
-        });
-    });
+    var fast_track_endpoint = '{{ $endpoint }}';
 </script>
 </body>
 </html>
