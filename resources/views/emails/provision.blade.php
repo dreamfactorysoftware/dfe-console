@@ -21,9 +21,10 @@
 @section('contentBody')
     <div>
         @if(false !== $instanceUrl)
-            <p>Congratulations, your DreamFactory&trade; instance has been created!</p>
-            <p>Use the following link to log directly into your DreamFactory&trade; instance:</p>
-            <p><a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a></p>
+            <p>Your DreamFactory&trade; instance has been successfully created!</p>
+            <p>To log in to your DreamFactory instance, go to <a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a>.</p>
+            <p>You can also go to <a href="{{ $dashboard_url }}" target="_blank">{{ $dashboard_url }}</a> to access your DreamFactory&trade; Dashboard, where
+                you can manage all of your instances.</p>
         @else
             <p>The requested provisioning of your instance <strong>{{$instanceName}}</strong> did not complete successfully.</p>
         @endif

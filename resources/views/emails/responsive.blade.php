@@ -570,7 +570,7 @@
                                         <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
                                             <tr>
                                                 <td align="center" valign="top" width="500" class="flexibleContainerCell">
-                                                    <table border="0" cellpadding="3" cellspacing="0" width="100%" style="padding: 3px 10px;">
+                                                    <table border="0" cellpadding="5" cellspacing="0" width="100%" style="padding: 5px 10px;">
                                                         <tr>
                                                             <td align="center" valign="top" class="textContent">
                                                                 <p>Your <a href="{{ $dashboard_url }}"
