@@ -91,7 +91,7 @@ return [
     //******************************************************************************
     'instance'                => [
         /** Settings for dfe-api-client */
-        'api' => [
+        'api'                  => [
             /**
              * If true, admin credentials are required for instance API use.
              * By default, the console utilizes the default provisioning channel
@@ -105,6 +105,8 @@ return [
             /** The header to use when transmitting the API key. Defaults to "X-DreamFactory-API-Key" */
             'api-key-header' => env('DFE_INSTANCE_API_HEADER', EnterpriseDefaults::INSTANCE_API_HEADER),
         ],
+        /** The resource URI from which to pull resource information. Currently, only "environment" is supported. */
+        'metrics-resource-uri' => 'environment',
     ],
     //******************************************************************************
     //* UI Settings
