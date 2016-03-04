@@ -24,6 +24,8 @@ class ConsoleDefaults extends FactoryEnum
      * @type string The default prefix for outgoing email
      */
     const EMAIL_SUBJECT_PREFIX = EnterpriseDefaults::EMAIL_SUBJECT_PREFIX;
+    /** @type string The default hash algorithm for hashing */
+    const DEFAULT_HASH_ALGORITHM = EnterpriseDefaults::DEFAULT_HASH_ALGORITHM;
     /**
      * @type string The default hash algorithm used for signing requests
      */

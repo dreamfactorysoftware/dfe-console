@@ -2,6 +2,12 @@
   <profile version="1.0" is_locked="false">
     <option name="myName" value="Project Default" />
     <option name="myLocal" value="false" />
+    <inspection_tool class="BashGlobalLocalVarDef" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="BashInternalCommandFunctionOverride" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="BashReplaceWithBackquote" enabled="false" level="INFO" enabled_by_default="false" />
+    <inspection_tool class="BashSimpleVarUsage" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="BashWrapFunction" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="BashWrapWord" enabled="false" level="INFO" enabled_by_default="false" />
     <inspection_tool class="CssUnknownTarget" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="HtmlFormInputWithoutLabel" enabled="true" level="IGNORED" enabled_by_default="true" />
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
@@ -45,11 +51,21 @@
     <inspection_tool class="JSUnusedLocalSymbols" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myIgnoreUnusedFunctionParameters" value="true" />
     </inspection_tool>
-    <inspection_tool class="PhpInconsistentReturnPointsInspection" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="PhpDivisionByZeroInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpDuplicateArrayKeysInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpInconsistentReturnPointsInspection" enabled="false" level="INFO" enabled_by_default="false" />
     <inspection_tool class="PhpMethodParametersCountMismatchInspection" enabled="true" level="INFO" enabled_by_default="true" />
+    <inspection_tool class="PhpMissingDocCommentInspection" enabled="true" level="UNUSED ENTRY" enabled_by_default="true">
+      <option name="CHECK_CONSTANT" value="true" />
+      <option name="CHECK_CLASS" value="false" />
+      <option name="CHECK_FIELD" value="true" />
+      <option name="CHECK_CLASS_CONSTANT" value="true" />
+    </inspection_tool>
     <inspection_tool class="PhpMissingParentCallCommonInspection" enabled="true" level="IGNORED" enabled_by_default="true" />
     <inspection_tool class="PhpMissingParentCallMagicInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpMultipleClassesDeclarationsInOneFile" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpRedundantClosingTagInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpTooManyParametersInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpUndefinedClassInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="DONT_REPORT_MULTI_RESOLVE" value="true" />
     </inspection_tool>
@@ -59,13 +75,16 @@
     <inspection_tool class="PhpUndefinedMethodInspection" enabled="true" level="ERROR" enabled_by_default="true">
       <option name="DOWNGRADE_SEVERITY" value="true" />
     </inspection_tool>
+    <inspection_tool class="PhpUnnecessaryFullyQualifiedNameInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="IGNORE_GLOBAL_NAMESPACE" value="false" />
+    </inspection_tool>
     <inspection_tool class="PhpUnusedLocalVariableInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ENABLE_IN_FILE_SCOPE" value="true" />
       <option name="DONT_REPORT_INSIDE_LIST" value="true" />
     </inspection_tool>
-    <inspection_tool class="PhpUnusedParameterInspection" enabled="true" level="IGNORED" enabled_by_default="true">
+    <inspection_tool class="PhpUnusedParameterInspection" enabled="true" level="UNUSED ENTRY" enabled_by_default="true">
       <option name="DONT_REPORT_ABSTRACT_CLASS" value="true" />
       <option name="DONT_REPORT_PARAMETERS_COUNT_ACCESS" value="true" />
     </inspection_tool>
-    <inspection_tool class="PhpVoidFunctionResultUsedInspection" enabled="false" level="WARNING" enabled_by_default="false" />
   </profile>
 </component>
