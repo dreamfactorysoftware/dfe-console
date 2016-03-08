@@ -715,12 +715,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "23fdd4fe89997bf5e51e42e11013e2c963bd4ae8"
+                "reference": "b7aa8c6f175d8425ae54f318c6a0b3ecc8ca319b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/23fdd4fe89997bf5e51e42e11013e2c963bd4ae8",
-                "reference": "23fdd4fe89997bf5e51e42e11013e2c963bd4ae8",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/b7aa8c6f175d8425ae54f318c6a0b3ecc8ca319b",
+                "reference": "b7aa8c6f175d8425ae54f318c6a0b3ecc8ca319b",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2016-03-07 22:48:19"
+            "time": "2016-03-08 18:18:02"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
