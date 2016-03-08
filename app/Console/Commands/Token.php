@@ -2,11 +2,10 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Token extends ConsoleCommand implements SelfHandling
+class Token extends ConsoleCommand
 {
     //******************************************************************************
     //* Traits
@@ -32,7 +31,7 @@ class Token extends ConsoleCommand implements SelfHandling
         parent::handle();
 
         try {
-            $_instance = $this->_findInstance($this->argument('instance-id'));
+            $_instance = $this->findInstance($this->argument('instance-id'));
             $this->writeln('token: ' . $_instance->generateToken());
 
             return true;

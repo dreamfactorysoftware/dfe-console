@@ -4,7 +4,9 @@ use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -54,7 +56,7 @@ class Cluster extends ConsoleCommand
                 return $this->showServers($_clusterId);
         }
 
-        throw new \InvalidArgumentException('The command "' . $_command . '" is invalid');
+        throw new InvalidArgumentException('The command "' . $_command . '" is invalid');
     }
 
     /**
@@ -76,7 +78,7 @@ class Cluster extends ConsoleCommand
                     '</comment>');
             }
         } catch (ModelNotFoundException $_ex) {
-            throw new \InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
+            throw new InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
         }
     }
 
@@ -168,7 +170,7 @@ class Cluster extends ConsoleCommand
             $this->writeln('cluster-id "' . $clusterId . '" is not valid.', 'error');
 
             return false;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->writeln('error updating cluster record: ' . $_ex->getMessage(), 'error');
 
             return false;
@@ -196,7 +198,7 @@ class Cluster extends ConsoleCommand
             $this->writeln('error deleting cluster id "' . $clusterId . '"', 'error');
         } catch (ModelNotFoundException $_ex) {
             $this->writeln('cluster id "' . $clusterId . '" is not valid.', 'error');
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->writeln('error deleting cluster record: ' . $_ex->getMessage());
         }
 

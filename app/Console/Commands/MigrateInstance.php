@@ -4,14 +4,14 @@ use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Instance\Capsule\InstanceCapsule;
-use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\JsonFile;
-use Illuminate\Contracts\Bus\SelfHandling;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Log;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class MigrateInstance extends ConsoleCommand implements SelfHandling
+class MigrateInstance extends ConsoleCommand
 {
     //******************************************************************************
     //* Traits
@@ -80,7 +80,7 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
                 try {
                     $_results[$_id] = $this->migrateSingleInstance($_id);
                     $this->info('* <comment>' . $_id . ':</comment> <info>success</info>');
-                } catch (\Exception $_ex) {
+                } catch (Exception $_ex) {
                     $_results[$_id] =
                         ['success' => false, 'output' => $_ex->getMessage(), 'exit_code' => $_ex->getCode()];
                     $this->info('* <comment>' . $_id . ':</comment> <error>failure</error>');
@@ -109,7 +109,7 @@ class MigrateInstance extends ConsoleCommand implements SelfHandling
         $_output = null;
 
         if (0 !== ($_result = $_capsule->call('migrate', $this->option('seed') ? ['--seed' => true] : []))) {
-            \Log::error('Error result "' . $_result . '" returned', ['output' => $_output]);
+            Log::error('Error result "' . $_result . '" returned', ['output' => $_output]);
 
             return ['success' => false, 'output' => $_output, 'exit_code' => $_result];
         }
