@@ -39,8 +39,6 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         /** Application Service Providers... */
         DreamFactory\Enterprise\Console\Providers\AppServiceProvider::class,
-        DreamFactory\Enterprise\Console\Providers\BusServiceProvider::class,
-        DreamFactory\Enterprise\Console\Providers\ConfigServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\EventServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\RouteServiceProvider::class,
         /** DreamFactory Common service providers */
@@ -70,7 +68,6 @@ return [
         DreamFactory\Enterprise\Console\Ops\Providers\OpsClientServiceProvider::class,
         /** 3rd-party Service Providers */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        Barryvdh\Cors\CorsServiceProvider::class,
         GrahamCampbell\Flysystem\FlysystemServiceProvider::class,
     ],
     //******************************************************************************

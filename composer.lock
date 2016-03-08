@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f59c4e4bdff2c273389c5577b1a8efb5",
-    "content-hash": "d8c8d7f5170b2edd651594471dfc1a6d",
+    "hash": "d1c45a845ca4b87860b908dcb0efa292",
+    "content-hash": "f0a86fffd856f125ebd06157c6ef0044",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -472,25 +472,25 @@
         },
         {
             "name": "dreamfactory/dfe-api-client",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-api-client.git",
-                "reference": "edb64176bece3d29ac10fc1b45c8ab1772949cfb"
+                "reference": "174f5f59ca383c690d91ba90b55037fe65c084e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-api-client/zipball/edb64176bece3d29ac10fc1b45c8ab1772949cfb",
-                "reference": "edb64176bece3d29ac10fc1b45c8ab1772949cfb",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-api-client/zipball/174f5f59ca383c690d91ba90b55037fe65c084e0",
+                "reference": "174f5f59ca383c690d91ba90b55037fe65c084e0",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-common": "1.0.*",
-                "dreamfactory/dfe-database": "1.0.*"
+                "dreamfactory/dfe-common": "dev-feature/l52-upgrade as dev-master",
+                "dreamfactory/dfe-database": "dev-feature/l52-upgrade as dev-master"
             },
             "require-dev": {
                 "guzzlehttp/guzzle": "~4.0",
-                "laravel/framework": "~5.1.0",
+                "laravel/framework": "5.2.*",
                 "phpspec/phpspec": "~2.1",
                 "phpunit/phpunit": "~4.0"
             },
@@ -514,7 +514,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) Instance API Service Library",
+            "description": "DreamFactory(tm) Enterprise Instance API Service Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "api",
@@ -524,27 +524,27 @@
                 "dreamfactory"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-api-client/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-api-client/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-api-client/issues"
             },
-            "time": "2016-02-15 07:47:44"
+            "time": "2016-03-07 23:47:29"
         },
         {
             "name": "dreamfactory/dfe-audit",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-audit.git",
-                "reference": "7d19e5b7a5e2c74c9111bafb21eb2fe30411fc8a"
+                "reference": "48e27f834158a8ca16acb34b791ccb2b99963494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/7d19e5b7a5e2c74c9111bafb21eb2fe30411fc8a",
-                "reference": "7d19e5b7a5e2c74c9111bafb21eb2fe30411fc8a",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-audit/zipball/48e27f834158a8ca16acb34b791ccb2b99963494",
+                "reference": "48e27f834158a8ca16acb34b791ccb2b99963494",
                 "shasum": ""
             },
             "require-dev": {
-                "laravel/framework": "5.1.*",
+                "laravel/framework": "5.1.*|5.2.*",
                 "phpunit/phpunit": "@stable"
             },
             "type": "library",
@@ -576,32 +576,32 @@
                 "utility"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-audit/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-audit/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-audit/issues"
             },
-            "time": "2015-10-19 18:48:24"
+            "time": "2016-03-07 23:50:40"
         },
         {
             "name": "dreamfactory/dfe-capsule",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-capsule.git",
-                "reference": "b16a2d0cd28e010091cd2419b272e54c52b46a7b"
+                "reference": "3a5a79ce257a2d28643c21c1aa97fd29ef27cfc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/b16a2d0cd28e010091cd2419b272e54c52b46a7b",
-                "reference": "b16a2d0cd28e010091cd2419b272e54c52b46a7b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-capsule/zipball/3a5a79ce257a2d28643c21c1aa97fd29ef27cfc9",
+                "reference": "3a5a79ce257a2d28643c21c1aa97fd29ef27cfc9",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-common": "1.0.*",
-                "dreamfactory/dfe-database": "1.0.*"
+                "dreamfactory/dfe-common": "dev-feature/l52-upgrade as dev-master",
+                "dreamfactory/dfe-database": "dev-feature/l52-upgrade as dev-master"
             },
             "require-dev": {
                 "guzzlehttp/guzzle": "~4.0",
-                "laravel/framework": "~5.1.0",
+                "laravel/framework": "~5.2.0",
                 "phpspec/phpspec": "~2.1",
                 "phpunit/phpunit": "~4.0"
             },
@@ -625,7 +625,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) Encapsulation Library",
+            "description": "DreamFactory(tm) Enterprise Instance Encapsulation Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "api",
@@ -637,37 +637,33 @@
                 "instance"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-capsule/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-capsule/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-capsule/issues"
             },
-            "time": "2016-01-26 17:30:33"
+            "time": "2016-03-08 17:48:12"
         },
         {
             "name": "dreamfactory/dfe-common",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "c7518dd40257243a4b823a0f078ff36a285206b2"
+                "reference": "cba918bdc38e6a306138d3ef29645332240bee1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/c7518dd40257243a4b823a0f078ff36a285206b2",
-                "reference": "c7518dd40257243a4b823a0f078ff36a285206b2",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/cba918bdc38e6a306138d3ef29645332240bee1b",
+                "reference": "cba918bdc38e6a306138d3ef29645332240bee1b",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-database": "1.0.*",
                 "dreamfactory/php-utils": "1.1.*",
-                "league/flysystem-sftp": "*",
-                "league/flysystem-ziparchive": "*",
+                "league/flysystem-ziparchive": "~1.0",
                 "ruflin/elastica": "*",
                 "wpb/string-blade-compiler": "2.*@dev"
             },
             "require-dev": {
-                "barryvdh/laravel-ide-helper": "~2.0",
-                "doctrine/dbal": "~2.3",
-                "laravel/framework": "5.1.*",
+                "laravel/framework": "5.2.*",
                 "phpspec/phpspec": "~2.1",
                 "phpunit/phpunit": "~4.0",
                 "way/generators": "~3.0"
@@ -698,7 +694,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) Common Components",
+            "description": "DreamFactory(tm) Enterprise Common Component Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "common",
@@ -708,31 +704,31 @@
                 "utility"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-03-07 21:26:09"
+            "time": "2016-03-07 22:55:38"
         },
         {
             "name": "dreamfactory/dfe-database",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "b383629b7f23c3cc69b9373fd52a93dd18d65eb3"
+                "reference": "23fdd4fe89997bf5e51e42e11013e2c963bd4ae8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/b383629b7f23c3cc69b9373fd52a93dd18d65eb3",
-                "reference": "b383629b7f23c3cc69b9373fd52a93dd18d65eb3",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/23fdd4fe89997bf5e51e42e11013e2c963bd4ae8",
+                "reference": "23fdd4fe89997bf5e51e42e11013e2c963bd4ae8",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-common": "1.0.*",
-                "dreamfactory/dfe-storage": "1.0.*"
+                "dreamfactory/dfe-common": "dev-feature/l52-upgrade"
             },
             "require-dev": {
-                "laravel/framework": "5.1.*",
+                "dreamfactory/dfe-storage": "dev-feature/l52-upgrade",
+                "laravel/framework": "5.2.*",
                 "phpunit/phpunit": "@stable"
             },
             "type": "library",
@@ -755,7 +751,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) Database Library",
+            "description": "DreamFactory(tm) Enterprise Database Components Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "database",
@@ -765,41 +761,37 @@
                 "utility"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2016-03-07 20:53:11"
+            "time": "2016-03-07 22:48:19"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git",
-                "reference": "cf54d7aba9d9b1fedbe71b2898da0e6634da86b0"
+                "reference": "97c1de9299b166f0805f25b667cedb1e247f3157"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-dreamfactory-provisioner/zipball/cf54d7aba9d9b1fedbe71b2898da0e6634da86b0",
-                "reference": "cf54d7aba9d9b1fedbe71b2898da0e6634da86b0",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-dreamfactory-provisioner/zipball/97c1de9299b166f0805f25b667cedb1e247f3157",
+                "reference": "97c1de9299b166f0805f25b667cedb1e247f3157",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-common": "1.0.*",
-                "dreamfactory/dfe-database": "1.0.*",
-                "dreamfactory/dfe-storage": "1.0.*",
+                "dreamfactory/dfe-common": "dev-feature/l52-upgrade as dev-master",
+                "dreamfactory/dfe-database": "dev-feature/l52-upgrade as dev-master",
+                "dreamfactory/dfe-storage": "dev-feature/l52-upgrade as dev-master",
                 "dreamfactory/php-utils": "1.1.*",
-                "graham-campbell/flysystem": "~3.0",
+                "graham-campbell/flysystem": "^3.0",
                 "league/flysystem-eventable-filesystem": "~1.0",
-                "league/flysystem-sftp": "~1.0",
                 "league/flysystem-ziparchive": "~1.0"
             },
             "require-dev": {
-                "dreamfactory/dfe-console": "dev-develop as dev-master",
-                "guzzlehttp/guzzle": "~4.0",
-                "laravel/framework": "5.1.*",
-                "phpunit/phpunit": "@stable",
-                "wpb/string-blade-compiler": "2.*@dev"
+                "laravel/framework": "5.2.*",
+                "phpunit/phpunit": "@stable"
             },
             "type": "library",
             "extra": {
@@ -821,7 +813,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) DreamFactory Provisioner",
+            "description": "DreamFactory(tm) Enterprise DreamFactory Provisioner Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "dfe",
@@ -830,32 +822,32 @@
                 "provisioner"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner/issues"
             },
-            "time": "2016-02-18 04:53:42"
+            "time": "2016-03-08 17:58:11"
         },
         {
             "name": "dreamfactory/dfe-ops-client",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-ops-client.git",
-                "reference": "6d19691ef8f147365db50f2d72b999dd9dbe958a"
+                "reference": "358c1540384eb9dfce0f7ab8ad9c95a1609e00a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-ops-client/zipball/6d19691ef8f147365db50f2d72b999dd9dbe958a",
-                "reference": "6d19691ef8f147365db50f2d72b999dd9dbe958a",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-ops-client/zipball/358c1540384eb9dfce0f7ab8ad9c95a1609e00a6",
+                "reference": "358c1540384eb9dfce0f7ab8ad9c95a1609e00a6",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-common": "1.0.*",
-                "dreamfactory/dfe-database": "1.0.*",
+                "dreamfactory/dfe-common": "dev-feature/l52-upgrade as dev-master",
+                "dreamfactory/dfe-database": "dev-feature/l52-upgrade as dev-master",
                 "guzzlehttp/guzzle": "~4.0"
             },
             "require-dev": {
-                "laravel/framework": "5.1.*",
+                "laravel/framework": "5.2.*",
                 "phpspec/phpspec": "~2.1",
                 "phpunit/phpunit": "@stable"
             },
@@ -879,7 +871,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) Console API Service Library",
+            "description": "DreamFactory(tm) Enterprise Console API Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "common",
@@ -890,33 +882,32 @@
                 "utility"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-ops-client/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-ops-client/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-ops-client/issues"
             },
-            "time": "2016-02-19 22:01:00"
+            "time": "2016-03-08 17:23:45"
         },
         {
             "name": "dreamfactory/dfe-partner",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-partner.git",
-                "reference": "729b962c5680eb76314173be942e5bf8f0d5ea84"
+                "reference": "65e72cd5c228c5bb653e99d9bd98c04c19a05758"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-partner/zipball/729b962c5680eb76314173be942e5bf8f0d5ea84",
-                "reference": "729b962c5680eb76314173be942e5bf8f0d5ea84",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-partner/zipball/65e72cd5c228c5bb653e99d9bd98c04c19a05758",
+                "reference": "65e72cd5c228c5bb653e99d9bd98c04c19a05758",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-common": "1.0.*",
-                "dreamfactory/dfe-database": "1.0.*"
+                "dreamfactory/dfe-common": "dev-feature/l52-upgrade as master"
             },
             "require-dev": {
-                "graham-campbell/flysystem": "~2.1",
-                "laravel/laravel": "5.1.*",
-                "league/flysystem-sftp": "~1.0",
+                "dreamfactory/dfe-database": "dev-feature/l52-upgrade as master",
+                "graham-campbell/flysystem": "^3.0",
+                "laravel/framework": "5.2.*",
                 "league/flysystem-ziparchive": "~1.0",
                 "phpunit/phpunit": "@stable"
             },
@@ -940,7 +931,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) Partner Services Library",
+            "description": "DreamFactory(tm) Enterprise Partner Services Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "dfe",
@@ -950,35 +941,34 @@
                 "utility"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-partner/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-partner/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-partner/issues"
             },
-            "time": "2015-10-31 01:14:43"
+            "time": "2016-03-07 23:38:56"
         },
         {
             "name": "dreamfactory/dfe-storage",
-            "version": "dev-develop",
+            "version": "dev-feature/l52-upgrade",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-storage.git",
-                "reference": "8536fba2c77bbaecbb4ba63d5ebbd53ba07e9fd6"
+                "reference": "7100deb9d02130579cea7421a65d3e8226fd66b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-storage/zipball/8536fba2c77bbaecbb4ba63d5ebbd53ba07e9fd6",
-                "reference": "8536fba2c77bbaecbb4ba63d5ebbd53ba07e9fd6",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-storage/zipball/7100deb9d02130579cea7421a65d3e8226fd66b3",
+                "reference": "7100deb9d02130579cea7421a65d3e8226fd66b3",
                 "shasum": ""
             },
             "require": {
-                "dreamfactory/dfe-common": "1.0.*",
-                "dreamfactory/dfe-database": "1.0.*"
+                "dreamfactory/dfe-common": "dev-feature/l52-upgrade as master",
+                "graham-campbell/flysystem": "^3.0",
+                "league/flysystem-ziparchive": "~1.0"
             },
             "require-dev": {
-                "graham-campbell/flysystem": "~2.1",
-                "laravel/laravel": "5.1.*",
-                "league/flysystem-sftp": "~1.0",
-                "league/flysystem-ziparchive": "~1.0",
-                "phpunit/phpunit": "@stable"
+                "dreamfactory/dfe-database": "dev-feature/l52-upgrade as master",
+                "laravel/framework": "5.2.*",
+                "phpunit/phpunit": "~4.0"
             },
             "type": "library",
             "extra": {
@@ -1000,7 +990,7 @@
                     "email": "jerryablan@dreamfactory.com"
                 }
             ],
-            "description": "DreamFactory Enterprise(tm) Storage Library",
+            "description": "DreamFactory(tm) Enterprise Storage Components Package",
             "homepage": "https://www.dreamfactory.com/",
             "keywords": [
                 "dfe",
@@ -1010,10 +1000,10 @@
                 "utility"
             ],
             "support": {
-                "source": "https://github.com/dreamfactorysoftware/dfe-storage/tree/develop",
+                "source": "https://github.com/dreamfactorysoftware/dfe-storage/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-storage/issues"
             },
-            "time": "2016-02-19 01:48:29"
+            "time": "2016-03-07 22:48:12"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -1785,53 +1775,6 @@
             "time": "2015-01-21 22:20:01"
         },
         {
-            "name": "league/flysystem-sftp",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/flysystem-sftp.git",
-                "reference": "d20a70c3528f0919d397d6dab16dfa19ee4f7641"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/d20a70c3528f0919d397d6dab16dfa19ee4f7641",
-                "reference": "d20a70c3528f0919d397d6dab16dfa19ee4f7641",
-                "shasum": ""
-            },
-            "require": {
-                "league/flysystem": "~1.0",
-                "php": ">=5.4.0",
-                "phpseclib/phpseclib": "~2.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "League\\Flysystem\\Sftp\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Frank de Jonge",
-                    "email": "info@frenky.net"
-                }
-            ],
-            "description": "Flysystem adapter for SFTP",
-            "time": "2016-02-19 15:56:00"
-        },
-        {
             "name": "league/flysystem-ziparchive",
             "version": "dev-master",
             "source": {
@@ -2193,95 +2136,6 @@
                 }
             ],
             "time": "2015-02-03 12:10:50"
-        },
-        {
-            "name": "phpseclib/phpseclib",
-            "version": "2.0.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "e666562569a2127f47c50b9bb77b6301e90187ff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/e666562569a2127f47c50b9bb77b6301e90187ff",
-                "reference": "e666562569a2127f47c50b9bb77b6301e90187ff",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phing/phing": "~2.7",
-                "phpunit/phpunit": "~4.0",
-                "sami/sami": "~2.0",
-                "squizlabs/php_codesniffer": "~2.0"
-            },
-            "suggest": {
-                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
-                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
-                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
-                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "phpseclib\\": "phpseclib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jim Wigginton",
-                    "email": "terrafrost@php.net",
-                    "role": "Lead Developer"
-                },
-                {
-                    "name": "Patrick Monnerat",
-                    "email": "pm@datasphere.ch",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Andreas Fischer",
-                    "email": "bantu@phpbb.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Hans-Jürgen Petrich",
-                    "email": "petrich@tronic-media.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Graham Campbell",
-                    "email": "graham@alt-three.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
-            "homepage": "http://phpseclib.sourceforge.net",
-            "keywords": [
-                "BigInteger",
-                "aes",
-                "asn.1",
-                "asn1",
-                "blowfish",
-                "crypto",
-                "cryptography",
-                "encryption",
-                "rsa",
-                "security",
-                "sftp",
-                "signature",
-                "signing",
-                "ssh",
-                "twofish",
-                "x.509",
-                "x509"
-            ],
-            "time": "2016-03-02 16:13:15"
         },
         {
             "name": "psr/log",
@@ -5355,10 +5209,74 @@
             "time": "2014-10-01 04:00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-audit"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-capsule"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-common"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-partner"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-ops-client"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-api-client"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-storage"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-database"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-feature/l52-upgrade",
+            "package": "dreamfactory/dfe-dreamfactory-provisioner"
+        }
+    ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "wpb/string-blade-compiler": 20
+        "wpb/string-blade-compiler": 20,
+        "dreamfactory/dfe-audit": 20,
+        "dreamfactory/dfe-capsule": 20,
+        "dreamfactory/dfe-common": 20,
+        "dreamfactory/dfe-partner": 20,
+        "dreamfactory/dfe-ops-client": 20,
+        "dreamfactory/dfe-api-client": 20,
+        "dreamfactory/dfe-storage": 20,
+        "dreamfactory/dfe-database": 20,
+        "dreamfactory/dfe-dreamfactory-provisioner": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

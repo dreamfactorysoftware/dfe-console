@@ -80,15 +80,15 @@
         "sebastian/git":                             "1.0.*",
         "dreamfactory/console-tools":                "1.0.*",
         "dreamfactory/dfe-audit":                    "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-capsule":                  "1.0.*",
-        "dreamfactory/php-utils":                    "1.1.*",
+        "dreamfactory/dfe-capsule":                  "dev-feature/l52-upgrade as dev-master",
         "dreamfactory/dfe-common":                   "dev-feature/l52-upgrade as dev-master",
         "dreamfactory/dfe-partner":                  "dev-feature/l52-upgrade as dev-master",
         "dreamfactory/dfe-ops-client":               "dev-feature/l52-upgrade as dev-master",
         "dreamfactory/dfe-api-client":               "dev-feature/l52-upgrade as dev-master",
         "dreamfactory/dfe-storage":                  "dev-feature/l52-upgrade as dev-master",
         "dreamfactory/dfe-database":                 "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-dreamfactory-provisioner": "1.0.*",
+        "dreamfactory/dfe-dreamfactory-provisioner": "dev-feature/l52-upgrade as dev-master",
+        "dreamfactory/php-utils":                    "1.1.*",
         "barryvdh/laravel-ide-helper":               "~2.1"
     },
     "require-dev":       {
