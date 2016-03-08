@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "cba918bdc38e6a306138d3ef29645332240bee1b"
+                "reference": "dfc673d7aa1233451825380cad613ef6f41ad8ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/cba918bdc38e6a306138d3ef29645332240bee1b",
-                "reference": "cba918bdc38e6a306138d3ef29645332240bee1b",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/dfc673d7aa1233451825380cad613ef6f41ad8ff",
+                "reference": "dfc673d7aa1233451825380cad613ef6f41ad8ff",
                 "shasum": ""
             },
             "require": {
@@ -707,7 +707,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/feature/l52-upgrade",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-03-07 22:55:38"
+            "time": "2016-03-08 18:05:14"
         },
         {
             "name": "dreamfactory/dfe-database",
