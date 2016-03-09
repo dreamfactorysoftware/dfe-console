@@ -70,8 +70,8 @@ return [
     //* Common settings across portions of app
     //******************************************************************************
     'common'                  => [
-        'display-name'       => 'DreamFactory Enterprise&trade; Console',
-        'display-version'    => env('DFE_VERSION', '1.0.19'),
+        'display-name'       => 'DreamFactory™ Enterprise Console',
+        'display-version'    => env('DFE_VERSION', '1.0.21'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name

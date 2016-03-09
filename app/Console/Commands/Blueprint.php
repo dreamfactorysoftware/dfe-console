@@ -4,12 +4,11 @@ use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\BlueprintService;
 use DreamFactory\Enterprise\Services\Facades as Facades;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Blueprint extends ConsoleCommand implements SelfHandling
+class Blueprint extends ConsoleCommand
 {
     //******************************************************************************
     //* Traits
