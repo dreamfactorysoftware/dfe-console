@@ -37,15 +37,15 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+
         /** Application Service Providers... */
         DreamFactory\Enterprise\Console\Providers\AppServiceProvider::class,
-        DreamFactory\Enterprise\Console\Providers\AuthServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\EventServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\RouteServiceProvider::class,
         /** DreamFactory Common service providers */
+        DreamFactory\Enterprise\Common\Providers\Auth\ConsoleAuthProvider::class,
         DreamFactory\Enterprise\Common\Providers\DataShaperServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\LibraryAssetsProvider::class,
-        DreamFactory\Enterprise\Common\Providers\Auth\ConsoleAuthProvider::class,
         DreamFactory\Enterprise\Common\Providers\PacketServiceProvider::class,
         DreamFactory\Enterprise\Common\Providers\ScalpelServiceProvider::class,
         /** DreamFactory Storage service providers */
