@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Console\Ops\Services\OpsClientService;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\User;
 use Log;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -54,6 +55,7 @@ class Provision extends ConsoleCommand
             return 1;
         }
 
+        /** @type User $_owner */
         $_owner = $this->findOwner($this->argument('owner-id'), $this->option('owner-type'));
 
         $_payload = [

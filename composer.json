@@ -31,7 +31,6 @@
             "role":  "Front-end, user interface"
         }
     ],
-    "minimum-stability": "dev",
     "repositories":      [
         {
             "type": "vcs",
@@ -70,8 +69,11 @@
             "url":  "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git"
         }
     ],
+    "prefer-stable":     false,
+    "minimum-stability": "dev",
     "require":           {
         "laravel/framework":                         "5.2.*",
+        "laravelcollective/bus":                     "5.2.*",
         "guzzlehttp/guzzle":                         "~4.0",
         "wpb/string-blade-compiler":                 "2.*@dev",
         "graham-campbell/flysystem":                 "^3.0",
@@ -79,15 +81,15 @@
         "league/flysystem-eventable-filesystem":     "~1.0",
         "sebastian/git":                             "1.0.*",
         "dreamfactory/console-tools":                "1.0.*",
-        "dreamfactory/dfe-audit":                    "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-capsule":                  "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-common":                   "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-partner":                  "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-ops-client":               "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-api-client":               "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-storage":                  "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-database":                 "dev-feature/l52-upgrade as dev-master",
-        "dreamfactory/dfe-dreamfactory-provisioner": "dev-feature/l52-upgrade as dev-master",
+        "dreamfactory/dfe-audit":                    "1.0.*",
+        "dreamfactory/dfe-capsule":                  "1.0.*",
+        "dreamfactory/dfe-common":                   "1.0.*",
+        "dreamfactory/dfe-partner":                  "1.0.*",
+        "dreamfactory/dfe-ops-client":               "1.0.*",
+        "dreamfactory/dfe-api-client":               "1.0.*",
+        "dreamfactory/dfe-storage":                  "1.0.*",
+        "dreamfactory/dfe-database":                 "1.0.*",
+        "dreamfactory/dfe-dreamfactory-provisioner": "1.0.*",
         "dreamfactory/php-utils":                    "1.1.*",
         "barryvdh/laravel-ide-helper":               "~2.1"
     },

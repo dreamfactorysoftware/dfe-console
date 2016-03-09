@@ -18,7 +18,7 @@ return [
         /** Laravel Framework Service Providers... */
         Illuminate\Auth\AuthServiceProvider::class,
         Illuminate\Broadcasting\BroadcastServiceProvider::class,
-        Illuminate\Bus\BusServiceProvider::class,
+        DreamFactory\Enterprise\Console\Providers\BusServiceProvider::class,
         Illuminate\Cache\CacheServiceProvider::class,
         Illuminate\Foundation\Providers\ConsoleSupportServiceProvider::class,
         Illuminate\Cookie\CookieServiceProvider::class,
@@ -39,6 +39,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         /** Application Service Providers... */
         DreamFactory\Enterprise\Console\Providers\AppServiceProvider::class,
+        DreamFactory\Enterprise\Console\Providers\AuthServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\EventServiceProvider::class,
         DreamFactory\Enterprise\Console\Providers\RouteServiceProvider::class,
         /** DreamFactory Common service providers */
@@ -87,6 +88,7 @@ return [
         'Eloquent'        => Illuminate\Database\Eloquent\Model::class,
         'Event'           => Illuminate\Support\Facades\Event::class,
         'File'            => Illuminate\Support\Facades\File::class,
+        'Gate'            => Illuminate\Support\Facades\Gate::class,
         'Hash'            => Illuminate\Support\Facades\Hash::class,
         'Input'           => Illuminate\Support\Facades\Input::class,
         'Inspiring'       => Illuminate\Foundation\Inspiring::class,
