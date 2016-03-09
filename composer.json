@@ -69,7 +69,7 @@
             "url":  "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git"
         }
     ],
-    "prefer-stable":     true,
+    "prefer-stable":     false,
     "minimum-stability": "dev",
     "require":           {
         "laravel/framework":                         "5.2.*",
