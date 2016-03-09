@@ -11,6 +11,17 @@ return [
     //******************************************************************************
     //  The root path of where instances' data will live
     'storage-root'                => env('DFE_HOSTED_BASE_PATH', storage_path()),
+    //  The modes for the storage path
+    'storage-permissions'         => [
+        'file' => [
+            'public'  => 0764,
+            'private' => 0700,
+        ],
+        'dir'  => [
+            'public'  => 2775,
+            'private' => 0700,
+        ],
+    ],
     //  Either "static" or "dynamic"
     'storage-zone-type'           => env('DFE_STORAGE_ZONE_TYPE', 'static'),
     //  The "static" storage zone

@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Database\Models\ServerType;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
@@ -48,17 +49,24 @@ class ServerController extends ViewController
     /** @inheritdoc */
     public function index()
     {
-        $asgn_servers = Server::join('cluster_server_asgn_t', 'server_id', '=', 'id')->get();
-        $excludes = [];
+        $_servers = \DB::select(<<< MYSQL
+SELECT
+    s.*,
+    (SELECT
+        csa.cluster_id
+    FROM
+        cluster_server_asgn_t csa
+    WHERE
+        csa.server_id = s.id
+    ) AS 'cluster_id'
+FROM
+    server_t s
+ORDER BY
+    s.server_id_text
+MYSQL
+        );
 
-        foreach ($asgn_servers as $obj) {
-            array_push($excludes, $obj->id);
-        }
-
-        $not_asgn_servers = Server::whereNotIn('id', $excludes)->get();
-        $result = array_merge(json_decode($asgn_servers), json_decode($not_asgn_servers));
-
-        return \View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $result);
+        return \View::make('app.servers')->with('prefix', $this->_prefix)->with('servers', $_servers);
     }
 
     /**

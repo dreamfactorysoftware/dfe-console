@@ -8,30 +8,6 @@ use DreamFactory\Enterprise\Services\Facades\Usage;
 class HomeController extends FactoryController
 {
     //******************************************************************************
-    //* Constants
-    //******************************************************************************
-
-    /**
-     * @type int Cache for 5 minutes
-     */
-    const LINK_CACHE_TTL = 5;
-
-    //******************************************************************************
-    //* Members
-    //******************************************************************************
-
-    /**
-     * @type array The data points collected
-     */
-    protected $dataPoints = [
-        'users'        => 0,
-        'admins'       => 0,
-        'services'     => 0,
-        'ext_services' => 0,
-        'apps'         => 0,
-    ];
-
-    //******************************************************************************
     //* Methods
     //******************************************************************************
 
@@ -65,7 +41,7 @@ class HomeController extends FactoryController
     {
         \Auth::logout();
 
-        return \Redirect::guest('auth/login')->with('errors', 'Your session has expired or is otherwise not valid.');
+        return \Redirect::guest('auth/login');
     }
 
     /**

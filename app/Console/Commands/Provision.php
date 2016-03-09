@@ -2,10 +2,13 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Console\Ops\Providers\OpsClientServiceProvider;
+use DreamFactory\Enterprise\Console\Ops\Services\OpsClientService;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
+use DreamFactory\Enterprise\Database\Models\User;
+use Log;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -43,30 +46,39 @@ class Provision extends ConsoleCommand
     {
         parent::handle();
 
-        $_instanceId = $this->argument('instance-id');
-
         //	Check the name here for quicker response...
-        if (false === ($_instanceName = Instance::isNameAvailable($_instanceId)) || is_numeric($_instanceName[0])) {
-            \Log::error('[dfe:provision] Provision failure: ' . ($_message = 'The instance name "' . $_instanceId . '" is either currently in-use or otherwise invalid.'));
+        if (false === ($_instanceId = Instance::isNameAvailable($this->argument('instance-id'))) || is_numeric($_instanceId[0])) {
+            Log::error('[dfe:provision] Provision failure: ' .
+                ($_message = 'The instance name "' . $this->argument('instance-id') . '" is either currently in-use or otherwise invalid.'));
             $this->error($_message);
 
             return 1;
         }
 
-        $_ownerType = OwnerTypes::USER;
-        $_ownerId = $this->argument('owner-id');
-        $_guestLocation = $this->argument('guest-location');
+        /** @type User $_owner */
+        $_owner = $this->findOwner($this->argument('owner-id'), $this->option('owner-type'));
 
-        $_owner = $this->_locateOwner($_ownerId, $_ownerType);
+        $_payload = [
+            'instance-id'    => $_instanceId,
+            'owner-id'       => $_owner->id,
+            'guest-location' => $this->argument('guest-location'),
+            'owner-type'     => $_owner->owner_type_nbr,
+        ];
 
         $this->writeln('Provisioning instance <comment>"' . $_instanceId . '"</comment>.');
 
-        return \Queue::push(new ProvisionJob($_instanceId, [
-            'guest-location' => $_guestLocation,
-            'owner-id'       => $_owner->id,
-            'owner-type'     => $_ownerType ?: OwnerTypes::USER,
-            'cluster-id'     => $this->option('cluster-id'),
-        ]));
+        /** @type OpsClientService $_client */
+        $_client = OpsClientServiceProvider::service();
+
+        if (false === ($_result = $_client->provision($_payload)) || !$_result->success) {
+            $this->error('Error while provisioning.');
+
+            return 1;
+        }
+
+        $this->writeln('Instance <comment>' . $_instanceId . '</comment> provisioned.');
+
+        return 0;
     }
 
     /**
@@ -98,6 +110,13 @@ class Provision extends ConsoleCommand
     {
         return array_merge(parent::getOptions(),
             [
+                [
+                    'owner-type',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'The "owner-id" type. Values: ' . OwnerTypes::prettyList('"', false, true),
+                    OwnerTypes::USER,
+                ],
                 [
                     'cluster-id',
                     'c',

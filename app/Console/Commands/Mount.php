@@ -7,7 +7,9 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\MountTypes;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -87,7 +89,7 @@ class Mount extends ConsoleCommand
             case 'update':
             case 'delete':
                 if (empty($_mountId = $this->argument('mount-id'))) {
-                    throw new \InvalidArgumentException('No "mount-id" provided.');
+                    throw new InvalidArgumentException('No "mount-id" provided.');
                 }
 
                 return $this->{'_' . $_command . 'Mount'}($this->argument('mount-id'));
@@ -96,7 +98,7 @@ class Mount extends ConsoleCommand
                 return $this->showMounts();
         }
 
-        throw new \InvalidArgumentException('The "' . $_command . '" operation is not valid');
+        throw new InvalidArgumentException('The "' . $_command . '" operation is not valid');
     }
 
     /**
@@ -170,7 +172,7 @@ class Mount extends ConsoleCommand
             $this->writeln('error updating mount id "' . $mountId . '"', 'error');
         } catch (ModelNotFoundException $_ex) {
             $this->writeln('mount-id "' . $mountId . '" is not valid.', 'error');
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->writeln('error updating mount record: ' . $_ex->getMessage(), 'error');
         }
 
@@ -202,7 +204,7 @@ class Mount extends ConsoleCommand
             $this->writeln('the mount-id "' . $mountId . '" is not valid.', 'error');
 
             return false;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->writeln('error deleting mount record: ' . $_ex->getMessage(), 'error');
 
             return false;
@@ -242,7 +244,7 @@ class Mount extends ConsoleCommand
         try {
             $_type = MountTypes::defines(trim(strtoupper($_mountType)), true);
             $_data['mount_type_nbr'] = $_type;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             if ($create) {
                 $this->writeln('the mount-type "' . $_mountType . '" is not valid.', 'error');
 

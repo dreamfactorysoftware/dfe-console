@@ -7,7 +7,9 @@ use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
 use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -86,7 +88,7 @@ class Server extends ConsoleCommand
             case 'update':
             case 'delete':
                 if (empty($_serverId = $this->argument('server-id'))) {
-                    throw new \InvalidArgumentException('No "server-id" provided.');
+                    throw new InvalidArgumentException('No "server-id" provided.');
                 }
 
                 return $this->{'_' . $_command . 'Server'}($_serverId);
@@ -95,7 +97,7 @@ class Server extends ConsoleCommand
                 return $this->showServers();
         }
 
-        throw new \InvalidArgumentException('The "' . $_command . '" operation is not valid');
+        throw new InvalidArgumentException('The "' . $_command . '" operation is not valid');
     }
 
     /**
@@ -174,7 +176,7 @@ class Server extends ConsoleCommand
             $this->writeln('error updating server id "' . $serverId . '"', 'error');
         } catch (ModelNotFoundException $_ex) {
             $this->writeln('server-id "' . $serverId . '" is not valid.', 'error');
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->writeln('error updating server record: ' . $_ex->getMessage(), 'error');
         }
 
@@ -206,7 +208,7 @@ class Server extends ConsoleCommand
             $this->writeln('the server-id "' . $serverId . '" is not valid.', 'error');
 
             return false;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->writeln('error deleting server record: ' . $_ex->getMessage(), 'error');
 
             return false;
@@ -246,7 +248,7 @@ class Server extends ConsoleCommand
         try {
             $_type = ServerTypes::defines(trim(strtoupper($_serverType)), true);
             $_data['server_type_id'] = $_type;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             if ($create) {
                 $this->writeln('the server-type "' . $_serverType . '" is not valid.', 'error');
 
@@ -260,7 +262,7 @@ class Server extends ConsoleCommand
         try {
             $_mount = $this->_findMount($_mountId);
             $_data['mount_id'] = $_mount->id;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             if ($create) {
                 $this->writeln('the mount-id "' . $_mountId . '" does not exists.', 'error');
 

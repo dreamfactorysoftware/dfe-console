@@ -1,3 +1,9 @@
+<?php
+
+use DreamFactory\Enterprise\Common\Enums\ServerTypes;
+
+?>
+
 @extends('layouts.main')
 @include('layouts.partials.topmenu')
 @section('content')
@@ -9,7 +15,7 @@
         <div class="row">
             <form method="POST" action="/{{$prefix}}/servers/multi" id="multi_delete">
                 <input name="_method" type="hidden" value="DELETE">
-                <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                <input name="_token" type="hidden" value="<?php use DreamFactory\Enterprise\Database\Models\Server;echo csrf_token(); ?>">
                 <input name="_selected" id="_selected" type="hidden" value="">
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -58,86 +64,80 @@
 
             <div class="row">
                 <div class="col-xs-12">
-                    <div class="panel panel-default">
-                        <table id="serverTable"
-                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-server"
-                               style="table-layout: fixed; width: 100%; display:none">
-                            <thead>
+                    <table id="serverTable"
+                           class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-server"
+                        {{--style="table-layout: fixed; width: 100%; display:none"--}}>
+                        <thead>
+                        <tr>
+                            <th style="width: 0 !important;"></th>
+                            <th>Actions</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Host</th>
+                            <th>Status</th>
+                            <th>Last Modified</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @foreach($servers as $key => $value)
                             <tr>
-                                <th></th>
-                                <th style="max-width: 100px"></th>
-                                <th style="min-width: 125px">Name</th>
-                                <th style="min-width: 100px">Type</th>
-                                <th style="min-width: 175px">Host</th>
-                                <th style="min-width: 125px">Status</th>
-                                <th style="min-width: 175px">Last Modified</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            @foreach($servers as $key => $value)
-                                <tr>
-                                    <td></td>
-                                    <td id="actionColumn">
-                                        <form method="POST" action="/{{$prefix}}/servers/{{$value->id}}"
-                                              id="single_delete_{{ $value->id }}">
-                                            <input type="hidden" id="server_id" value="{{ $value->id }}">
-                                            <input name="_method" type="hidden" value="DELETE">
-                                            <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
-                                            @if (array_key_exists('cluster_id', $value))
-                                                <div class="tooltip-wrapper"
-                                                     data-title="Server In Use - Delete Disabled">
-                                                    <input type="checkbox" disabled>&nbsp;&nbsp;
-                                                    <button type="button"
-                                                            class="btn btn-default btn-xs fa fa-fw fa-trash" disabled
-                                                            style="width: 25px"></button>
-                                                </div>
-                                            @else
-                                                <input type="checkbox" value="{{ $value->id }}"
-                                                       id="server_checkbox_{{ $value->id }}"
-                                                       name="{{ $value->server_id_text }}">&nbsp;&nbsp;
-                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash"
-                                                        onclick="removeServer('{{ $value->id }}', '{{ $value->server_id_text }}')"
-                                                        value="delete" style="width: 25px"></button>
-                                            @endif
-                                        </form>
-                                    </td>
-
-                                    <td>{{ $value->server_id_text }}</td>
-
-                                    @if ( $value->server_type_id == "1" )
-                                        <td><span class="label label-primary">DB</span></td>
-                                    @elseif ( $value->server_type_id == "2" )
-                                        <td><span class="label label-success">WEB</span></td>
-                                    @elseif ( $value->server_type_id == "3" )
-                                        <td><span class="label label-warning">APP</span></td>
-                                    @endif
-
-                                    <td>{{ $value->host_text }}</td>
-
-                                    <td>
-                                        @if ( array_key_exists( 'cluster_id', $value ) && ( $value->server_type_id == "1" ) )
-                                            @if ( array_key_exists( 'multi-assign', $value->config_text ) )
-                                                <span class="label label-primary">Assignable</span>
-                                            @else
-                                                <span class="label label-warning">Assigned</span>
-                                            @endif
-                                        @elseif( array_key_exists( 'cluster_id', $value ) && ( $value->server_type_id != "1" ))
-                                            <span class="label label-warning">Assigned</span>
+                                <td style="width: 0 !important;"></td>
+                                <td id="actionColumn">
+                                    <form method="POST" action="/{{$prefix}}/servers/{{$value->id}}"
+                                          id="single_delete_{{ $value->id }}">
+                                        <input name="server_id" id="server_id" type="hidden" value="{{ $value->id }}">
+                                        <input name="_method" type="hidden" value="DELETE">
+                                        <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
+                                        <div class="form-group tooltip-wrapper" data-placement="left" data-title="Server In Use - Delete Disabled">
+                                            @if (!empty($value->cluster_id))
+                                                <input type="checkbox" disabled style="margin-top: auto; vertical-align: middle">
+                                                <button type="button" style="margin-top: auto; vertical-align: middle"
+                                                        class="btn btn-default btn-sm"
+                                                        disabled><i class="fa fa-fw fa-trash"></i></button>
+                                        </div>
                                         @else
-                                            <span class="label label-success">Not Assigned</span>
+                                            <input type="checkbox"
+                                                   value="{{ $value->id }}"
+                                                   id="server_checkbox_{{ $value->id }}"
+                                                   name="{{ $value->server_id_text }}" style="margin-top: auto; vertical-align: middle">&nbsp;&nbsp;
+                                            <button type="button" class="btn btn-default btn-sm" style="margin-top: auto; vertical-align: middle"
+                                                    onclick="removeServer('{{ $value->id }}', '{{ $value->server_id_text }}')"
+                                                    value="delete"><i class="fa fa-fw fa-trash"></i></button>
                                         @endif
-                                    </td>
-                                    <td>{{ $value->lmod_date }}</td>
-                                </tr>
-                            @endforeach
+                                    </form>
+                                </td>
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <span id="tableInfo"></span>
-                    <br><br><br><br>
+                                <td>{{ $value->server_id_text }}</td>
+
+                                <td>
+                                    <div class="tooltip-wrapper" data-title="Server In Use - Delete Disabled">
+                                        <i class="text-primary fa fa-fw {{ config('icons.server-types.'.$value->server_type_id,'fa-server') }}"></i>&nbsp;{{ ServerTypes::nameOf($value->server_type_id, false, true) }}
+
+                                </td>
+
+                                <td>{{ $value->host_text }}</td>
+
+                                <td>
+                                    @if(empty($value->cluster_id))
+                                        <span class="label label-success">Available</span>
+                                    @else
+                                        @if ( !empty(data_get($value->config_text, 'multi-assign')) )
+                                            <span class="label label-success">Available</span>
+                                        @else
+                                            <span class="label label-warning">In Use</span>
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>{{ $value->lmod_date }}</td>
+                            </tr>
+                        @endforeach
+
+                        </tbody>
+                    </table>
                 </div>
+                <span id="tableInfo"></span>
+                <br><br><br><br>
             </div>
         </div>
     </div>

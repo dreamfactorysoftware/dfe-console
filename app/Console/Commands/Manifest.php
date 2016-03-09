@@ -4,6 +4,7 @@ use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Services\Jobs\ManifestJob;
+use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -36,7 +37,7 @@ class Manifest extends ConsoleCommand
         parent::handle();
 
         if ($this->option('create') && $this->option('show')) {
-            throw new \InvalidArgumentException('The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.');
+            throw new InvalidArgumentException('The --create and --show commands are mutually exclusive. You may choose one or the other, but not both.');
         }
 
         $this->job = new ManifestJob($this->argument('cluster-id'), $this->argument('web-server-id'), ServerTypes::WEB);

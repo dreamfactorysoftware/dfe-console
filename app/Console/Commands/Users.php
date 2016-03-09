@@ -3,7 +3,9 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Models\User;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -46,7 +48,7 @@ class Users extends ConsoleCommand
         parent::handle();
 
         if (!filter_var($_email = $this->argument('email'), FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException('The email "' . $_email . '" is not valid.');
+            throw new InvalidArgumentException('The email "' . $_email . '" is not valid.');
         }
 
         $_operation = trim(strtolower($this->argument('operation')));
@@ -55,7 +57,7 @@ class Users extends ConsoleCommand
             return call_user_func([$this, $_operation . 'User'], $_email);
         }
 
-        throw new \InvalidArgumentException('The operation "' . $_operation . '" is not valid.');
+        throw new InvalidArgumentException('The operation "' . $_operation . '" is not valid.');
     }
 
     /**
@@ -88,7 +90,7 @@ class Users extends ConsoleCommand
         try {
             if (false === ($_user = User::artisanRegister($this))) {
             }
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->error($_ex->getMessage());
 
             return 1;
@@ -137,7 +139,7 @@ class Users extends ConsoleCommand
             $this->writeln('No changes saved for user "<info>' . $email . '</info>"');
 
             return 0;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             if (false !== stripos($_ex->getMessage(), 'duplicate entry')) {
                 $this->error('User "' . $email . '" already exists');
             } else {
@@ -165,7 +167,7 @@ class Users extends ConsoleCommand
             $this->writeln('User "' . $email . '" deleted');
 
             return 0;
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->error('Error deleting user "' . $email . '": ' . $_ex->getMessage());
 
             return 1;

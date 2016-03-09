@@ -3,12 +3,11 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Instance\Capsule\InstanceCapsule;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Capsule extends ConsoleCommand implements SelfHandling
+class Capsule extends ConsoleCommand
 {
     //******************************************************************************
     //* Traits

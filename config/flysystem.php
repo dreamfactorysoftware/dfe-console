@@ -7,6 +7,21 @@ use DreamFactory\Enterprise\Common\Enums\EnterpriseDefaults;
 return [
     //  Default connection
     'default'     => 'local',
+    //  Default permissions
+    'permissions' => [
+        'file' => [
+            'public'  => 0764,
+            'private' => 0700,
+        ],
+        'dir'  => [
+            'public'  => 2775,
+            'private' => 0700,
+        ],
+    ],
+    //  Default file lock mode
+    'lock-mode'   => LOCK_EX,
+    //  Allow symlinks?
+    'allow-links' => true,
     //  Connections
     'connections' => [
         /**

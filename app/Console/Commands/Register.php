@@ -7,6 +7,7 @@ use DreamFactory\Enterprise\Database\Models\AppKey;
 use DreamFactory\Enterprise\Services\Jobs\RegisterJob;
 use DreamFactory\Library\Utility\IfSet;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Queue;
 use Symfony\Component\Console\Input\InputArgument;
 
 class Register extends ConsoleCommand
@@ -41,7 +42,7 @@ class Register extends ConsoleCommand
 
         $_command = new RegisterJob($this->argument('owner-id'), strtolower($this->argument('owner-type')));
 
-        \Queue::push($_command);
+        Queue::push($_command);
 
         $_result = $_command->getResult();
 

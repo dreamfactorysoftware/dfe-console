@@ -3,11 +3,10 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class Import extends ConsoleCommand implements SelfHandling
+class Import extends ConsoleCommand
 {
     //******************************************************************************
     //* Members

@@ -37,7 +37,17 @@ return [
     'dashboard-url'           => env('DFE_DASHBOARD_URL'),
     //  The support email
     'support-email-address'   => env('DFE_SUPPORT_EMAIL_ADDRESS', 'support@dreamfactory.com'),
-    //******************************************************************************
+    /** Enable/disable the fast-track "one-click" pipeline */
+    'enable-fast-track'       => env('DFE_ENABLE_FAST_TRACK', false),
+    /** The route to use for the FastTrack auto-registration "one-click" pipeline */
+    'fast-track-route'        => '/fast-track',
+    /** Only allow HubSpot landing pages to use FastTrack */
+    'fast-track-hubspot-only' => false,
+    /** The string to search for during instance initialization to indicate success */
+    'fast-track-admin-html'   => 'Create a System Admin User',
+    /** When making web requests, the User-Agent to usef */
+    'user-agent'              => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
+    //*****************************************************************************
     //* Auditing details for instances
     //******************************************************************************
     'audit'                   => [
@@ -61,7 +71,7 @@ return [
     //******************************************************************************
     'common'                  => [
         'display-name'       => 'DreamFactory Enterprise&trade; Console',
-        'display-version'    => env('DFE_VERSION', '1.0.19'),
+        'display-version'    => env('DFE_VERSION', '1.0.20'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
         /**
          * Theme selection -- a bootswatch theme name
@@ -81,7 +91,7 @@ return [
     //******************************************************************************
     'instance'                => [
         /** Settings for dfe-api-client */
-        'api' => [
+        'api'                  => [
             /**
              * If true, admin credentials are required for instance API use.
              * By default, the console utilizes the default provisioning channel
@@ -95,6 +105,8 @@ return [
             /** The header to use when transmitting the API key. Defaults to "X-DreamFactory-API-Key" */
             'api-key-header' => env('DFE_INSTANCE_API_HEADER', EnterpriseDefaults::INSTANCE_API_HEADER),
         ],
+        /** The resource URI from which to pull resource information. Currently, only "environment" is supported. */
+        'metrics-resource-uri' => 'environment',
     ],
     //******************************************************************************
     //* UI Settings

@@ -42,10 +42,13 @@
       <w>fillable</w>
       <w>firstname</w>
       <w>flysystems</w>
+      <w>fopen</w>
       <w>gmail</w>
       <w>guzzlehttp</w>
       <w>gzips</w>
+      <w>hdpi</w>
       <w>horiz</w>
+      <w>hotmail</w>
       <w>hubspotutk</w>
       <w>hutk</w>
       <w>hypervisor</w>
@@ -58,10 +61,13 @@
       <w>keyup</w>
       <w>klingons</w>
       <w>lastname</w>
+      <w>ldpi</w>
       <w>loginbox</w>
       <w>longopts</w>
       <w>lookups</w>
+      <w>mdpi</w>
       <w>misconfigured</w>
+      <w>mistertestler</w>
       <w>myisam</w>
       <w>mysqld</w>
       <w>nodejs</w>
@@ -80,6 +86,7 @@
       <w>queueable</w>
       <w>rackspacecloud</w>
       <w>resetallcounters</w>
+      <w>resized</w>
       <w>setdev</w>
       <w>shaper</w>
       <w>shapers</w>
@@ -95,12 +102,16 @@
       <w>subline</w>
       <w>subnode</w>
       <w>symlinking</w>
+      <w>syntaxhighlighter</w>
       <w>tablist</w>
+      <w>testler</w>
       <w>tful</w>
       <w>topmenu</w>
       <w>topnav</w>
       <w>unassign</w>
+      <w>unlinking</w>
       <w>unmanaged</w>
+      <w>unstyle</w>
       <w>validatin</w>
       <w>weiner</w>
       <w>wikitable</w>

@@ -3,7 +3,6 @@
 use DreamFactory\Enterprise\Common\Contracts\IsVersioned;
 use DreamFactory\Enterprise\Common\Contracts\OfferingsAware;
 use DreamFactory\Enterprise\Common\Http\Controllers\BaseController;
-use DreamFactory\Enterprise\Common\Http\Middleware\ApiLogger;
 use DreamFactory\Enterprise\Common\Packets\ErrorPacket;
 use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
@@ -57,7 +56,7 @@ class OpsController extends BaseController implements IsVersioned
      */
     public function __construct()
     {
-        $this->middleware(AuthenticateOpsClient::ALIAS, ['except' => 'postPartner',]);
+        $this->middleware(AuthenticateOpsClient::ALIAS, ['except' => ['postPartner', 'fastTrackProvision'],]);
     }
 
     /**
@@ -89,8 +88,8 @@ class OpsController extends BaseController implements IsVersioned
         $_id = $request->input('id');
 
         try {
-            $_owner = $this->_validateOwner($request);
-            $_instance = $this->_findInstance($request->input('id'));
+            $_owner = $this->validateOwner($request);
+            $_instance = $this->findInstance($request->input('id'));
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
                 \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
@@ -176,7 +175,7 @@ class OpsController extends BaseController implements IsVersioned
      */
     public function postInstances(Request $request)
     {
-        $_owner = $this->_validateOwner($request);
+        $_owner = $this->validateOwner($request);
 
         $_response = [];
 
@@ -227,6 +226,18 @@ class OpsController extends BaseController implements IsVersioned
     }
 
     /**
+     * Handle internally requested provisioning
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function fastTrackProvision(Request $request)
+    {
+        return $this->postProvision($request);
+    }
+
+    /**
      * Provision an instance...
      *
      * @param Request $request
@@ -253,7 +264,7 @@ class OpsController extends BaseController implements IsVersioned
             \Queue::push($_job);
 
             try {
-                return $this->success($this->_findInstance($_job->getInstanceId()));
+                return $this->success($this->findInstance($_job->getInstanceId()));
             } catch (ModelNotFoundException $_ex) {
                 throw new \Exception('Instance not found after provisioning.');
             }
@@ -403,7 +414,7 @@ class OpsController extends BaseController implements IsVersioned
      *
      * @return User
      */
-    protected function _validateOwner(Request $request)
+    protected function validateOwner(Request $request)
     {
         /** middleware registers a user resolver with the request for us */
         $_owner = $request->user();

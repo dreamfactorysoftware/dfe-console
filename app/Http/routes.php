@@ -36,6 +36,13 @@ if (true === config('dfe.enable-console-api', false)) {
 \Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('logout', 'Resources\HomeController@logout');
 
+//  FastTrack
+if (config('dfe.enable-fast-track')) {
+    \Route::get(config('dfe.fast-track-route', '/fast-track'), ['uses' => 'FastTrackController@index']);
+    \Route::post(config('dfe.fast-track-route', '/fast-track'), ['uses' => 'FastTrackController@autoRegister']);
+    \Route::post('/ops/api/v1/provision-ft', ['uses' => 'OpsController@fastTrackProvision']);
+}
+
 //******************************************************************************
 //* General Resource Controllers
 //******************************************************************************

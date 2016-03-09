@@ -1,11 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--suppress CssUnusedSymbol, CssOptimizeSimilarProperties -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:mc="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="format-detection" content="telephone=no" /> <!-- disable auto telephone linking in iOS -->
-    <title>{{ $headTitle }} | DreamFactory Enterprise&trade;</title>
+    <title>{{ isset($headTitle) ? $headTitle : 'Notification' }} | DreamFactory Enterprise&trade;</title>
     <style type="text/css">
         /* RESET STYLES */
         html {
@@ -19,7 +20,7 @@
             margin:      0;
             padding:     0;
             width:       100% !important;
-            font-family: Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-family: Arial, "Helvetica Neue", Helvetica, "Lucida Grande", sans-serif;
         }
 
         a {
@@ -129,6 +130,7 @@
             font-style:  normal;
             font-weight: normal;
             line-height: 120%;
+            color:       #666;
         }
 
         h3 {
@@ -188,7 +190,7 @@
 
         .buttonContent {
             color:       #FFFFFF;
-            font-family: Helvetica, san-serif;
+            font-family: Helvetica, sans-serif;
             font-size:   18px;
             font-weight: bold;
             line-height: 100%;
@@ -277,6 +279,29 @@
             color:           #606060 !important;
             pointer-events:  auto !important;
             cursor:          default !important;
+        }
+
+        .bg-gradient {
+            border-bottom: 1px solid #3498db;
+            background:    #3498db; /* For browsers that do not support gradients */
+            background:    -webkit-linear-gradient(left top, #84e8fb, #2488eb); /* For Safari 5.1 to 6.0 */
+            background:    -o-linear-gradient(bottom right, #84e8fb, #2488eb); /* For Opera 11.1 to 12.0 */
+            background:    -moz-linear-gradient(bottom right, #84e8fb, #2488eb); /* For Firefox 3.6 to 15 */
+            background:    linear-gradient(to bottom right, #84e8fb, #2488eb); /* Standard syntax */
+        }
+
+        .callout {
+            border-bottom: 1px solid #3498db;
+            background:    #3498db; /* For browsers that do not support gradients */
+            background:    -webkit-linear-gradient(left top, #FAF684, #EA8624); /* For Safari 5.1 to 6.0 */
+            background:    -o-linear-gradient(bottom right, #FAF684, #EA8624); /* For Opera 11.1 to 12.0 */
+            background:    -moz-linear-gradient(bottom right, #FAF684, #EA8624); /* For Firefox 3.6 to 15 */
+            background:    linear-gradient(to bottom right, #FAF684, #EA8624); /* Standard syntax */
+        }
+
+        .callout p {
+            color:     #555;
+            font-size: 12px;
         }
 
         /* MOBILE STYLES */
@@ -442,20 +467,6 @@
                                                                     </tr>
                                                                 </table>
                                                             </td>
-                                                            <td align="right" valign="middle" class="flexibleContainerBox">
-                                                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:100%;">
-                                                                    <tr>
-                                                                        <td align="left" class="textContent">
-                                                                            <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%; display:none;">
-                                                                                If you can't see this message, <a href="#"
-                                                                                                                  target="_blank"
-                                                                                                                  style="text-decoration:none;border-bottom:1px solid #424242;color:#424242;"><span
-                                                                                        style="color:#424242;">view&nbsp;it&nbsp;in&nbsp;your&nbsp;browser</span></a>.
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                </table>
-                                                            </td>
                                                         </tr>
                                                     </table>
                                                 </td>
@@ -472,7 +483,7 @@
                 <table bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" width="500" id="emailBody">
                     <tr>
                         <td align="center" valign="top">
-                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" bgcolor="#3498db">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" class="bg-gradient">
                                 <tr>
                                     <td align="center" valign="top">
                                         <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
@@ -485,7 +496,7 @@
                                                                      alt="DreamFactory"
                                                                      style="text-align:center; width: 215px; border:none;text-decoration:none;margin-bottom: 10px;" />
                                                                 <h2 style="text-align:center;font-weight:normal;font-family:Helvetica,Arial,sans-serif;font-size:23px;margin-bottom:10px;color:#205478;line-height:135%;">
-                                                                    {{ $contentHeader }}</h2>
+                                                                    {{ isset($contentHeader)? $contentHeader : 'Notification' }}</h2>
                                                                 @if(isset($headDescription))
                                                                     <div style="text-align:center;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;color:#FFFFFF;line-height:135%;">
                                                                         {{ $headDescription }}
@@ -517,11 +528,59 @@
                                                                     <tr>
                                                                         <td valign="top" class="textContent">
                                                                             <div style="text-align:left;font-family:Helvetica,Arial,sans-serif;font-size:15px;margin-bottom:0;margin-top:3px;color:#5F5F5F;line-height:135%;">
-                                                                                @yield('contentBody')
+                                                                                <div>
+                                                                                    @if(isset($firstName))
+                                                                                        <p>
+                                                                                            {{ $firstName }},
+                                                                                        </p>
+                                                                                    @endif
+
+                                                                                    @yield('contentBody')
+
+                                                                                    @if(isset($emailBody))
+                                                                                        <div>{!! $emailBody !!}</div>
+                                                                                    @endif
+
+                                                                                    <p>
+                                                                                        Thanks!<br /><br />
+                                                                                        <cite>-- Team DreamFactory</cite>
+                                                                                    </p>
+                                                                                </div>
+
                                                                             </div>
                                                                         </td>
                                                                     </tr>
                                                                 </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" class="callout">
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
+                                            <tr>
+                                                <td align="center" valign="top" width="500" class="flexibleContainerCell">
+                                                    <table border="0" cellpadding="3" cellspacing="0" width="100%" style="padding: 3px 10px;">
+                                                        <tr>
+                                                            <td align="center" valign="top" class="textContent">
+                                                                <p>Your <a href="{{ $dashboard_url }}"
+                                                                           target="_blank"
+                                                                           style="text-decoration: none; color:#424242;">DreamFactory&trade; Dashboard</a> is
+                                                                    always available here: <br />
+                                                                    <a href="{{ $dashboard_url }}"
+                                                                       target="_blank" style="text-decoration: none; color:#424242;">{{ $dashboard_url
+                                                                        }}</a><br />There you can create and/or manage <em>all</em> of your DreamFactory&trade;
+                                                                    instances.</p>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -549,16 +608,17 @@
                                                             <td valign="top" bgcolor="#E1E1E1">
 
                                                                 <div style="font-family:Helvetica,Arial,sans-serif;font-size:13px;color:#828282;text-align:center;line-height:120%;">
-                                                                    <div>Copyright &#169; {{ date('Y') }} <a href="https://www.dreamfactory.com/"
-                                                                                                             target="_blank"
-                                                                                                             style="text-decoration:none;color:#424242;"><span
-                                                                                style="color:#424242;">DreamFactory Software, Inc.</span></a>.
-                                                                        All&nbsp;rights&nbsp;reserved.
+                                                                    <div style="white-space: nowrap;">Copyright &#169; {{ date('Y') }}
+                                                                        <a href="https://www.dreamfactory.com/"
+                                                                           target="_blank"
+                                                                           style="text-decoration:none;color:#424242;"><span
+                                                                                style="color:#424242;">DreamFactory Software, Inc.</span></a>&nbsp;All rights
+                                                                        reserved.
                                                                     </div>
-                                                                    <div>This email was sent by <a href="{{ $dashboard_url }}"
-                                                                                                   target="_blank"
-                                                                                                   style="text-decoration: none; color:#424242;"><span
-                                                                                style="color:#424242;">DreamFactory Enterprise&trade;</span></a>.
+                                                                    <div style="white-space: nowrap;">This email was sent by the <a href="{{ $dashboard_url }}"
+                                                                                                                                    target="_blank"
+                                                                                                                                    style="text-decoration: none; color:#424242;"><span
+                                                                                style="color:#424242;">DreamFactory Enterprise&trade; Console</span></a>.
                                                                     </div>
                                                                 </div>
 

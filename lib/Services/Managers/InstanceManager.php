@@ -1,16 +1,20 @@
 <?php namespace DreamFactory\Enterprise\Services\Managers;
 
+use DB;
 use DreamFactory\Enterprise\Common\Contracts\Factory;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Managers\BaseManager;
-use DreamFactory\Enterprise\Common\Traits\StaticComponentLookup;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Enums\ProvisionStates;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceGuest;
 use DreamFactory\Enterprise\Services\Exceptions\DuplicateInstanceException;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Creates and manages instances
@@ -21,7 +25,7 @@ class InstanceManager extends BaseManager implements Factory
     //* Traits
     //******************************************************************************
 
-    use StaticComponentLookup;
+    use EntityLookup;
 
     //******************************************************************************
     //* Methods
@@ -112,7 +116,7 @@ class InstanceManager extends BaseManager implements Factory
         try {
             //  Basic checks...
             if (null === ($_ownerId = array_get($options, 'owner-id'))) {
-                throw new \InvalidArgumentException('No "owner-id" given. Cannot create instance.');
+                throw new InvalidArgumentException('No "owner-id" given. Cannot create instance.');
             }
 
             if (null === ($_ownerType = array_get($options, 'owner-type'))) {
@@ -122,10 +126,10 @@ class InstanceManager extends BaseManager implements Factory
             try {
                 $_owner = OwnerTypes::getOwner($_ownerId, $_ownerType);
             } catch (ModelNotFoundException $_ex) {
-                throw new \InvalidArgumentException('The "owner-id" and/or "owner-type" specified is/are invalid.');
+                throw new InvalidArgumentException('The "owner-id" and/or "owner-type" specified is/are invalid.');
             }
 
-            //$this->debug('owner validated: ' . $_owner->id . ($_owner->admin_ind ? ' (admin)' : ' (non-admin)'));
+            //logger('owner validated: ' . $_owner->id . ($_owner->admin_ind ? ' (admin)' : ' (non-admin)'));
 
             if (false === ($_sanitized = Instance::isNameAvailable($instanceName, $_owner->admin_ind))) {
                 throw new DuplicateInstanceException('The instance name "' . $instanceName . '" is not available.');
@@ -136,7 +140,7 @@ class InstanceManager extends BaseManager implements Factory
 
             //  Validate the cluster and pull component ids
             $_clusterId = array_get($options, 'cluster-id', config('provisioning.default-cluster-id'));
-            $_clusterConfig = $this->getServersForCluster($_clusterId);
+            $_clusterConfig = $this->getClusterServerIds($_clusterId);
             $_ownerId = $_owner->id;
 
             $_attributes = [
@@ -163,21 +167,21 @@ class InstanceManager extends BaseManager implements Factory
             ];
 
             //  Write it out
-            return \DB::transaction(function () use ($_ownerId, $_attributes, $_guestAttributes){
+            return DB::transaction(function() use ($_ownerId, $_attributes, $_guestAttributes) {
                 $_instance = Instance::create($_attributes);
-                //$this->debug('created instance row id#' . $_instance->id);
+                //logger('created instance row id#' . $_instance->id);
 
                 $_guestAttributes['instance_id'] = $_instance->id;
                 $_guest = InstanceGuest::create($_guestAttributes);
-                //$this->debug('created guest row id#' . $_guest->id);
+                //logger('created guest row id#' . $_guest->id);
 
                 if (!$_instance || !$_guest) {
-                    throw new \RuntimeException('Instance creation failed');
+                    throw new RuntimeException('Instance creation failed');
                 }
 
                 return $_instance;
             });
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             throw new ProvisioningException('Error creating new instance: ' . $_ex->getMessage());
         }
     }
@@ -188,12 +192,11 @@ class InstanceManager extends BaseManager implements Factory
      * @return array
      * @throws ProvisioningException
      */
-    protected function getServersForCluster($clusterId)
+    protected function getClusterServerIds($clusterId)
     {
         try {
-            $_cluster = static::_lookupCluster($clusterId);
-            $_servers = static::_lookupClusterServers($_cluster);
-
+            $_cluster = $this->findCluster($clusterId);
+            $_servers = $this->findClusterServers($_cluster);
             $_serverIds = $this->extractServerIds($_servers);
 
             return [
@@ -208,36 +211,30 @@ class InstanceManager extends BaseManager implements Factory
     }
 
     /**
-     * @param array  $servers
+     * @param array  $servers A list of servers indexed by ServerType
      * @param string $name
      *
+     * @see ServerTypes
      * @return mixed
      */
     protected function extractServerIds(array $servers, $name = 'id')
     {
-        $_list = ServerTypes::getDefinedConstants(true);
-        $_types = array_flip($_list);
+        $_ids = [];
 
-        foreach ($_list as $_typeId => $_typeName) {
-            $_types[$_typeId] = false;
+        //  Default the result
+        foreach (ServerTypes::all() as $_constant => $_value) {
+            $_ids[$_value] = null;
+        }
 
-            if (null === ($_server = array_get($servers, $_typeId))) {
-                continue;
-            }
-
-            if (null !== ($_id = array_get($_server, '.' . $name))) {
-                $_types[$_typeId] = $_id;
-                continue;
-            }
-
-            if (null !== ($_ids = array_get($_server, '.' . $name . 's'))) {
-                if (is_array($_ids) && !empty($_ids)) {
-                    $_types[$_typeId] = $_ids[0];
-                    continue;
-                }
+        //  Spin through the assigned servers
+        foreach ($servers as $_type => $_pool) {
+            //  Right now, we're only using the first entry in the pool
+            foreach ($_pool as $_server) {
+                $_ids[$_type] = data_get($_server, $name);
+                break;
             }
         }
 
-        return $_types;
+        return $_ids;
     }
 }
