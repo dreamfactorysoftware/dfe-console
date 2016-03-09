@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "a8de1971a38dc962c3b59715934cf12f9e6e9349"
+                "reference": "305111f3cc5fb59642790b8854b095bef9b5b91e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/a8de1971a38dc962c3b59715934cf12f9e6e9349",
-                "reference": "a8de1971a38dc962c3b59715934cf12f9e6e9349",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/305111f3cc5fb59642790b8854b095bef9b5b91e",
+                "reference": "305111f3cc5fb59642790b8854b095bef9b5b91e",
                 "shasum": ""
             },
             "require": {
@@ -707,7 +707,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-03-08 22:48:20"
+            "time": "2016-03-09 20:25:13"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -1479,12 +1479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "4065e160af1febe13f095299e35bb4ad183a2b81"
+                "reference": "af0523ee848d055a0c991ddb28bc4677b0b5f7fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/4065e160af1febe13f095299e35bb4ad183a2b81",
-                "reference": "4065e160af1febe13f095299e35bb4ad183a2b81",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/af0523ee848d055a0c991ddb28bc4677b0b5f7fe",
+                "reference": "af0523ee848d055a0c991ddb28bc4677b0b5f7fe",
                 "shasum": ""
             },
             "require": {
@@ -1599,7 +1599,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-03-09 16:55:02"
+            "time": "2016-03-09 17:23:34"
         },
         {
             "name": "laravelcollective/bus",
@@ -2042,12 +2042,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "06d9ba42dedcee9cda97e81aec92cd876a023e8c"
+                "reference": "aa199120c73d2d7a5fd1fb4d6a75025ccbaef886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/06d9ba42dedcee9cda97e81aec92cd876a023e8c",
-                "reference": "06d9ba42dedcee9cda97e81aec92cd876a023e8c",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/aa199120c73d2d7a5fd1fb4d6a75025ccbaef886",
+                "reference": "aa199120c73d2d7a5fd1fb4d6a75025ccbaef886",
                 "shasum": ""
             },
             "require": {
@@ -2085,7 +2085,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2016-03-03 19:52:13"
+            "time": "2016-03-09 20:31:54"
         },
         {
             "name": "paragonie/random_compat",
@@ -4245,142 +4245,6 @@
                 "instantiate"
             ],
             "time": "2015-06-14 21:17:01"
-        },
-        {
-            "name": "league/flysystem-sftp",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thephpleague/flysystem-sftp.git",
-                "reference": "d20a70c3528f0919d397d6dab16dfa19ee4f7641"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/d20a70c3528f0919d397d6dab16dfa19ee4f7641",
-                "reference": "d20a70c3528f0919d397d6dab16dfa19ee4f7641",
-                "shasum": ""
-            },
-            "require": {
-                "league/flysystem": "~1.0",
-                "php": ">=5.4.0",
-                "phpseclib/phpseclib": "~2.0"
-            },
-            "require-dev": {
-                "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "League\\Flysystem\\Sftp\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Frank de Jonge",
-                    "email": "info@frenky.net"
-                }
-            ],
-            "description": "Flysystem adapter for SFTP",
-            "time": "2016-02-19 15:56:00"
-        },
-        {
-            "name": "phpseclib/phpseclib",
-            "version": "2.0.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "9e586e79f1fadced93cea6b8dfa09c1bde7904c2"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/9e586e79f1fadced93cea6b8dfa09c1bde7904c2",
-                "reference": "9e586e79f1fadced93cea6b8dfa09c1bde7904c2",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phing/phing": "~2.7",
-                "phpunit/phpunit": "~4.0",
-                "sami/sami": "~2.0",
-                "squizlabs/php_codesniffer": "~2.0"
-            },
-            "suggest": {
-                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
-                "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
-                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
-                "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "phpseclib\\": "phpseclib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jim Wigginton",
-                    "email": "terrafrost@php.net",
-                    "role": "Lead Developer"
-                },
-                {
-                    "name": "Patrick Monnerat",
-                    "email": "pm@datasphere.ch",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Andreas Fischer",
-                    "email": "bantu@phpbb.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Hans-Jürgen Petrich",
-                    "email": "petrich@tronic-media.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Graham Campbell",
-                    "email": "graham@alt-three.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
-            "homepage": "http://phpseclib.sourceforge.net",
-            "keywords": [
-                "BigInteger",
-                "aes",
-                "asn.1",
-                "asn1",
-                "blowfish",
-                "crypto",
-                "cryptography",
-                "encryption",
-                "rsa",
-                "security",
-                "sftp",
-                "signature",
-                "signing",
-                "ssh",
-                "twofish",
-                "x.509",
-                "x509"
-            ],
-            "time": "2016-03-08 22:57:16"
         },
         {
             "name": "phpspec/php-diff",
