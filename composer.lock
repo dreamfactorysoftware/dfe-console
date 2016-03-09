@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2cb8ccf876cb1b43d45929b0bea4c31f",
-    "content-hash": "0aebe80a4d9f700991c2bc53af9981a2",
+    "hash": "c478ab1237af09cf1c795d85b618d1b2",
+    "content-hash": "be67c8665d49257dc6312630625e1f47",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -715,12 +715,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "df574b7e012149cc67a853faa3ce1dab2300452a"
+                "reference": "59276aabf0d074a4835a9446becbd22a73f9f339"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/df574b7e012149cc67a853faa3ce1dab2300452a",
-                "reference": "df574b7e012149cc67a853faa3ce1dab2300452a",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/59276aabf0d074a4835a9446becbd22a73f9f339",
+                "reference": "59276aabf0d074a4835a9446becbd22a73f9f339",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2016-03-08 23:03:36"
+            "time": "2016-03-09 01:39:38"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
@@ -5375,8 +5375,8 @@
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "wpb/string-blade-compiler": 20,
-        "dreamfactory/console-tools": 20
+        "dreamfactory/console-tools": 20,
+        "wpb/string-blade-compiler": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
