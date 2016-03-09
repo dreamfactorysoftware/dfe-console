@@ -74,13 +74,7 @@
     "require":           {
         "laravel/framework":                         "5.2.*",
         "laravelcollective/bus":                     "5.2.*",
-        "guzzlehttp/guzzle":                         "~4.0",
-        "wpb/string-blade-compiler":                 "2.*@dev",
-        "graham-campbell/flysystem":                 "^3.0",
-        "league/flysystem-ziparchive":               "~1.0",
-        "league/flysystem-eventable-filesystem":     "~1.0",
-        "sebastian/git":                             "1.0.*",
-        "dreamfactory/console-tools":                "1.0.*",
+        "dreamfactory/console-tools":                "dev-develop as dev-master",
         "dreamfactory/dfe-audit":                    "1.0.*",
         "dreamfactory/dfe-capsule":                  "1.0.*",
         "dreamfactory/dfe-common":                   "1.0.*",
@@ -91,13 +85,21 @@
         "dreamfactory/dfe-database":                 "1.0.*",
         "dreamfactory/dfe-dreamfactory-provisioner": "1.0.*",
         "dreamfactory/php-utils":                    "1.1.*",
+        "guzzlehttp/guzzle":                         "~4.0",
+        "wpb/string-blade-compiler":                 "2.*@dev",
+        "graham-campbell/flysystem":                 "^3.0",
+        "league/flysystem-ziparchive":               "~1.0",
+        "league/flysystem-eventable-filesystem":     "~1.0",
+        "sebastian/git":                             "1.0.*",
         "barryvdh/laravel-ide-helper":               "~2.1"
     },
     "require-dev":       {
-        "phpunit/phpunit": "~4.0",
-        "doctrine/dbal":   "~2.3",
-        "phpspec/phpspec": "~2.1",
-        "way/generators":  "~3.0"
+        "symfony/dom-crawler":  "~3.0",
+        "symfony/css-selector": "~3.0",
+        "phpunit/phpunit":      "~4.0",
+        "doctrine/dbal":        "~2.3",
+        "phpspec/phpspec":      "~2.1",
+        "way/generators":       "~3.0"
     },
     "autoload":          {
         "psr-4": {
