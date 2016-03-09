@@ -6,6 +6,8 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -148,7 +150,7 @@ class Info extends ConsoleCommand
                     '</comment>');
             }
         } catch (ModelNotFoundException $_ex) {
-            throw new \InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
+            throw new InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
         }
     }
 
@@ -231,7 +233,7 @@ class Info extends ConsoleCommand
                     break;
 
                 default:
-                    throw new \InvalidArgumentException('The format "' . $_format . '" is invalid.');
+                    throw new InvalidArgumentException('The format "' . $_format . '" is invalid.');
             }
         }
 
@@ -249,17 +251,17 @@ class Info extends ConsoleCommand
         $_all = $this->option('all');
 
         if (empty($_entityId = $this->argument('entity-id')) && 'metrics' != $_entityType && !$_all) {
-            throw new \InvalidArgumentException('The <comment>entity-id</comment> is required.');
+            throw new InvalidArgumentException('The <comment>entity-id</comment> is required.');
         }
 
         if (!in_array($_entityType, $this->entities)) {
-            throw new \InvalidArgumentException('The entity-type "' . $_entityType . '" is invalid.');
+            throw new InvalidArgumentException('The entity-type "' . $_entityType . '" is invalid.');
         }
 
         $_studlyType = studly_case($_entityType);
 
         if (!method_exists($this, 'find' . $_studlyType)) {
-            throw new \RuntimeException('The entity-type "' . $_entityType . '" is supported but has no associated handler.');
+            throw new RuntimeException('The entity-type "' . $_entityType . '" is supported but has no associated handler.');
         }
 
         return [$_entityType, $_entityId, $_all, $_studlyType];

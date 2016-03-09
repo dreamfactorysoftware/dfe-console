@@ -1,10 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use Illuminate\Contracts\Bus\SelfHandling;
 use Symfony\Component\Console\Input\InputOption;
 
-class Update extends ConsoleCommand implements SelfHandling
+class Update extends ConsoleCommand
 {
     //******************************************************************************
     //* Members

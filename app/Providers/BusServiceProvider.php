@@ -1,15 +1,17 @@
 <?php namespace DreamFactory\Enterprise\Console\Providers;
 
-use Illuminate\Bus\Dispatcher;
-use Illuminate\Support\ServiceProvider;
+use Collective\Bus\Dispatcher;
+use Collective\Bus\BusServiceProvider as CollectiveBusServiceProvider;
 
-class BusServiceProvider extends ServiceProvider
+class BusServiceProvider extends CollectiveBusServiceProvider
 {
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    /** @inheritdoc */
+    /**
+     * @param \Collective\Bus\Dispatcher $dispatcher
+     */
     public function boot(Dispatcher $dispatcher)
     {
         $dispatcher->mapUsing(function($command) {
@@ -17,10 +19,5 @@ class BusServiceProvider extends ServiceProvider
                 'DreamFactory\Enterprise\Services\Jobs',
                 'DreamFactory\Enterprise\Services\Listeners');
         });
-    }
-
-    /** @inheritdoc */
-    public function register()
-    {
     }
 }

@@ -9,6 +9,8 @@ use DreamFactory\Enterprise\Database\Models\ServiceUser;
 use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Library\Utility\Disk;
 use DreamFactory\Library\Utility\JsonFile;
+use Exception;
+use Hash;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -76,12 +78,12 @@ class Setup extends ConsoleCommand
                 'last_name_text'  => 'Administrator',
                 'nickname_text'   => 'Admin',
                 'email_addr_text' => $this->argument('admin-email'),
-                'password_text'   => \Hash::make($this->option('admin-password')),
+                'password_text'   => Hash::make($this->option('admin-password')),
                 'active_ind'      => 1,
             ]);
 
             if (empty($_user)) {
-                throw new \Exception('Invalid response from user::create');
+                throw new Exception('Invalid response from user::create');
             }
 
             $this->writeln('user <comment>' . $this->argument('admin-email') . '</comment> created.', 'info');
@@ -90,7 +92,7 @@ class Setup extends ConsoleCommand
             if (false === License::registerAdmin($_user)) {
                 $this->writeln('Error while registering installation');
             }
-        } catch (\Exception $_ex) {
+        } catch (Exception $_ex) {
             $this->writeln('Error while creating admin user: ' . $_ex->getMessage(), 'error');
 
             return 1;

@@ -7,8 +7,8 @@ use DreamFactory\Enterprise\Console\Ops\Services\OpsClientService;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
-use DreamFactory\Library\Utility\Curl;
+use DreamFactory\Enterprise\Database\Models\User;
+use Log;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -48,13 +48,14 @@ class Provision extends ConsoleCommand
 
         //	Check the name here for quicker response...
         if (false === ($_instanceId = Instance::isNameAvailable($this->argument('instance-id'))) || is_numeric($_instanceId[0])) {
-            \Log::error('[dfe:provision] Provision failure: ' .
+            Log::error('[dfe:provision] Provision failure: ' .
                 ($_message = 'The instance name "' . $this->argument('instance-id') . '" is either currently in-use or otherwise invalid.'));
             $this->error($_message);
 
             return 1;
         }
 
+        /** @type User $_owner */
         $_owner = $this->findOwner($this->argument('owner-id'), $this->option('owner-type'));
 
         $_payload = [
