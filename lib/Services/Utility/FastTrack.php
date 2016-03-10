@@ -8,9 +8,12 @@ use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Library\Utility\Curl;
 use DreamFactory\Library\Utility\Disk;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use InvalidArgumentException;
+use Log;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -30,14 +33,14 @@ class FastTrack
     public static function register(Request $request)
     {
         if (!config('dfe.enable-fast-track', false)) {
-            \Log::error('[dfe.fast-track.register] not enabled.');
+            Log::error('[dfe.fast-track.register] not enabled.');
 
             throw new NotFoundHttpException();
         }
 
         //  1. Check request for hubspot, if required
         if (!static::validateHubspot($request)) {
-            \Log::error('[dfe.fast-track.auto-register] hubspot required, no submissionGuid found', $request->input());
+            Log::error('[dfe.fast-track.auto-register] hubspot required, no submissionGuid found', $request->input());
 
             throw new NotFoundHttpException();
         }
@@ -108,8 +111,8 @@ class FastTrack
             $_input = $request->input();
 
             if (false === ($_email = filter_var(array_get($_input, 'email', array_get($_input, 'email-address')), FILTER_SANITIZE_EMAIL)) || empty($_email)) {
-                \Log::error('[dfe.fast-track.create-dashboard-user] invalid email address', $_input);
-                throw new \InvalidArgumentException('Invalid email address.');
+                Log::error('[dfe.fast-track.create-dashboard-user] invalid email address', $_input);
+                throw new InvalidArgumentException('Invalid email address.');
             }
 
             $_result = User::register($request);
@@ -119,11 +122,11 @@ class FastTrack
                 throw new DatabaseException('Unable to create new user.');
             }
 
-            \Log::info('[dfe.fast-track.create-dashboard-user] user created - ' . $_user->email_addr_text);
+            Log::info('[dfe.fast-track.create-dashboard-user] user created - ' . $_user->email_addr_text);
 
             return $_user;
-        } catch (\Exception $_ex) {
-            \Log::error('[dfe.fast-track.create-dashboard-user] exception: ' . ($message = $_ex->getMessage()));
+        } catch (Exception $_ex) {
+            Log::error('[dfe.fast-track.create-dashboard-user] exception: ' . ($message = $_ex->getMessage()));
         }
 
         return false;
@@ -139,7 +142,7 @@ class FastTrack
     protected static function generateInstanceName($seed)
     {
         //  Strip off anything past '@'
-        $_name = $_check = substr($seed, 0, strpos($seed, '@'));
+        $_name = $_check = ('ft-' . substr($seed, 0, strpos($seed, '@')));
 
         while (true) {
             if (false !== ($_check = Instance::isNameAvailable($_check))) {
@@ -189,11 +192,11 @@ class FastTrack
                 throw new ProvisioningException('failure during provisioning process');
             }
 
-            \Log::info('[dfe.fast-track.create-instance] instance created - ' . $instanceId);
+            Log::info('[dfe.fast-track.create-instance] instance created - ' . $instanceId);
 
             return Instance::byNameOrId($instanceId)->firstOrFail();
-        } catch (\Exception $_ex) {
-            \Log::error('[dfe.fast-track.create-instance] exception: ' . $_ex->getMessage());
+        } catch (Exception $_ex) {
+            Log::error('[dfe.fast-track.create-instance] exception: ' . $_ex->getMessage());
         }
 
         return false;
@@ -219,7 +222,7 @@ class FastTrack
 
         //  First do a get...
         if (false === ($_result = Curl::get($instance->getProvisionedEndpoint() . '/setup_db', [], $_options))) {
-            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - network error',
+            Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - network error',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 
             @unlink($_cookieJar);
@@ -237,7 +240,7 @@ class FastTrack
         ];
 
         if (false === ($_result = Curl::post($instance->getProvisionedEndpoint() . '/setup_db', null, $_options))) {
-            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - network error',
+            Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - network error',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 
             @unlink($_cookieJar);
@@ -247,7 +250,7 @@ class FastTrack
 
         //  Make sure it was cool
         if (Response::HTTP_OK != Curl::getLastHttpCode()) {
-            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - error response',
+            Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - error response',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 
             @unlink($_cookieJar);
@@ -257,7 +260,7 @@ class FastTrack
 
         //  Also make sure the "Create Admin" page came up
         if (false === stripos($_result, config('dfe.fast-track-admin-html', 'dreamfactoryApp'))) {
-            \Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - unrecognized response',
+            Log::error('[dfe.fast-track.auto-register] unable to initialize new instance - unrecognized response',
                 ['endpoint' => $_endpoint, 'host' => $_host, 'info' => Curl::getInfo()]);
 
             @unlink($_cookieJar);
@@ -287,7 +290,7 @@ class FastTrack
         ];
 
         if (false === ($_response = $instance->call('/setup', $_payload))) {
-            \Log::error('[dfe.fast-track.create-instance-admin] creation of instance admin failed.');
+            Log::error('[dfe.fast-track.create-instance-admin] creation of instance admin failed.');
 
             return false;
         }
