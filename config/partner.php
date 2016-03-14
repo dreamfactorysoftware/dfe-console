@@ -20,13 +20,11 @@ return [
         'name'      => 'Docomo',
         'referrers' => ['hubspot.com', 'dreamfactory.com', 'docomo.com',],
         'commands'  => ['register'],
-        'brand'     => [
-            'logo'              => '/img/partners/docomo-256x256.png',
-            'icon'              => '/img/partners/docomo-256x100.png',
-            'copyright'         => '&copy; ' . date('Y') . ' Verizon',
-            'copyright-minimal' => '&copy; ' . date('Y') . ' Verizon',
-            'copy'              => null,
-            'copy-minimal'      => null,
-        ],
+    ],
+    /** Verizon **/
+    'vz' => [
+        'name'      => 'Verizon',
+        'referrers' => ['verizon.com', 'hubspot.com', 'dreamfactory.com'],
+        'commands'  => ['register'],
     ],
 ];
