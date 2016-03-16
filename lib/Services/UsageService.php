@@ -17,6 +17,10 @@ use DreamFactory\Enterprise\Instance\Ops\Services\InstanceApiClientService;
 use DreamFactory\Enterprise\Services\Contracts\MetricsProvider;
 use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Enterprise\Services\Facades\Telemetry;
+use Exception;
+use Log;
+use ReflectionClass;
+use Request;
 
 /**
  * General usage services
@@ -89,7 +93,7 @@ class UsageService extends BaseService implements MetricsProvider
         //  Set our installation key
         $_stats = [];
 
-        $_mirror = new \ReflectionClass(get_called_class());
+        $_mirror = new ReflectionClass(get_called_class());
 
         foreach ($_mirror->getMethods() as $_method) {
             if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
@@ -116,7 +120,7 @@ class UsageService extends BaseService implements MetricsProvider
     protected function gatherConsoleStatistics()
     {
         $_stats = [
-            'uri'       => $_uri = config('app.url', \Request::getSchemeAndHttpHost()),
+            'uri'       => $_uri = config('app.url', Request::getSchemeAndHttpHost()),
             'resources' => [
                 'user'     => ServiceUser::count(),
                 'mount'    => Mount::count(),
@@ -127,7 +131,7 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        \Log::debug('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
+        Log::debug('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
 
         return $_stats;
 
@@ -147,7 +151,7 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        \Log::debug('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
+        Log::debug('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
 
         return $_stats;
 
@@ -211,27 +215,28 @@ class UsageService extends BaseService implements MetricsProvider
                 }
             } catch (InstanceNotActivatedException $_ex) {
                 //  Instance unavailable or not initialized
-            } catch (\Exception $_ex) {
+            } catch (Exception $_ex) {
                 //  Instance unavailable or not initialized
                 array_set($_stats, 'environment.status', 'error');
             }
 
-            \Log::debug('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
+            Log::debug('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
 
             try {
+                /** @type MetricsDetail $_row */
                 $_row = MetricsDetail::firstOrCreate(['user_id' => $_instance->user_id, 'instance_id' => $_instance->id, 'gather_date' => $_gatherDate]);
                 $_row->data_text = $_stats;
                 $_row->save();
 
                 $_gathered++;
-            } catch (\Exception $_ex) {
-                \Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
+            } catch (Exception $_ex) {
+                Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
             unset($_api, $_stats, $_list, $_status, $_row);
         }
 
-        \Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
+        Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
 
         return $this->aggregateInstanceMetrics($_gatherDate);
 
@@ -330,7 +335,7 @@ class UsageService extends BaseService implements MetricsProvider
                 } else {
                     $_list[$_resource] = 0;
                 }
-            } catch (\Exception $_ex) {
+            } catch (Exception $_ex) {
                 $_list[$_resource] = 'error';
             }
         }
