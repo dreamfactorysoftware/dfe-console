@@ -77,7 +77,17 @@ class ClusterController extends ViewController
         $_assigned = [];
         $_rows = Server::get(['id', 'server_type_id', 'server_id_text']);
 
-        $_response = ['web apps' => [], 'apps' => [], 'database' => [],];
+	$types = [
+		'web apps' => '2',
+		'apps' => '3',
+		'database' => '1',
+	];
+
+       	$_response = [
+		'1' => [],
+		'2' => [],
+		'3' => [],
+	];
 
         foreach (ClusterServer::get(['server_id']) as $_row) {
             $_assigned[] = $_row->server_id;
@@ -85,8 +95,7 @@ class ClusterController extends ViewController
 
         foreach ($_rows as $_row) {
             if (!in_array($_row->id, $_assigned)) {
-                $_response[strtolower(ServerTypes::nameOf($_row->server_type_id, false))][] =
-                    ['id' => $_row->id, 'name' => $_row->server_id_text];
+                  $_response[$_row->server_type_id][] =  ['id' => $_row->id, 'name' => $_row->server_id_text];
             }
         }
 
@@ -97,14 +106,18 @@ class ClusterController extends ViewController
     public function create(array $viewData = [])
     {
         $servers = $this->getAvailableServers();
-	
-	return $this->renderView('app.clusters.create', 
-		[//$this->getAvailableServers());
-		'db'         => $servers['database'],
-                'web'        => $servers['web apps'],
-                'app'        => $servers['apps'],
-		]);
-    }
+	$types = [
+		'database' => '1',
+		'web apps' => '2',
+		'apps'     => '3',
+	];
+
+	return $this->renderView('app.clusters.create', [
+		'db'  	=> $servers[$types['database']],
+                'web'   => $servers[$types['web apps']],
+                'app'   => $servers[$types['apps']],
+	]);
+   }
 
     /**
      * @param int|string $id
@@ -123,24 +136,27 @@ class ClusterController extends ViewController
             'apps' => null,
         ];
 
-        foreach ($_clusterServers as $_type => $_servers) {
-            $_serverType = strtolower(ServerTypes::nameOf($_type, false));
+	$types = [
+		'1' => 'database',
+		'2' => 'web apps',
+		'3' => 'apps',
+	];
 
+        foreach ($_clusterServers as $_type => $_servers) {
             foreach ($_servers as $_server) {
-                $_datas[$_serverType] = [
+                $_datas[$types[$_type]] = [
                     'id'   => $_server->id,
                     'name' => $_server->server_id_text,
                 ];
             }
         }
 
-        return $this->renderView('app.clusters.edit',
-            [
+        return $this->renderView('app.clusters.edit', [
                 'cluster_id' => $id,
                 'cluster'    => $_cluster,
-                'db'         => $servers['database'],
-                'web'        => $servers['web apps'],
-                'app'        => $servers['apps'],
+                'db'         => $servers[array_search('database', $types)],
+                'web'        => $servers[array_search('web apps', $types)],
+                'app'        => $servers[array_search('apps', $types)],
                 'datas'      => $_datas,
             ]);
     }
