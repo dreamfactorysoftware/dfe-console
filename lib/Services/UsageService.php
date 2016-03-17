@@ -136,7 +136,7 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        Log::debug('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
+        logger('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
 
         return $_stats;
     }
@@ -153,7 +153,7 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        Log::debug('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
+        logger('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
 
         return $_stats;
     }
@@ -219,7 +219,7 @@ class UsageService extends BaseService implements MetricsProvider
                 array_set($_stats, 'environment.status', 'error');
             }
 
-            Log::debug('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
+            logger('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
 
             try {
                 /** @type MetricsDetail $_row */
