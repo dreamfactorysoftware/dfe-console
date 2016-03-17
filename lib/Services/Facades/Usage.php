@@ -7,6 +7,8 @@ use DreamFactory\Library\Utility\Facades\BaseFacade;
  * @method static string generateInstallKey()
  * @method static array getMetrics($options = [])
  * @method static array gatherStatistics()
+ *
+ * @see \DreamFactory\Enterprise\Services\UsageService
  */
 class Usage extends BaseFacade
 {

@@ -98,7 +98,12 @@ class UsageService extends BaseService implements MetricsProvider
         foreach ($_mirror->getMethods() as $_method) {
             if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
-                $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
+
+                //  Call the stats gatherer, don't add if empty
+                if (!empty($_result = call_user_func([get_called_class(), $_methodName]))) {
+                    $_stats[$_which] = $_result;
+                    unset($_result);
+                }
             }
         }
 
@@ -134,9 +139,6 @@ class UsageService extends BaseService implements MetricsProvider
         Log::debug('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
 
         return $_stats;
-
-        //  The new way
-        //return $this->telemetry->make('console')->getTelemetry();
     }
 
     /**
@@ -154,9 +156,6 @@ class UsageService extends BaseService implements MetricsProvider
         Log::debug('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
 
         return $_stats;
-
-        //  The new way
-        //return $this->telemetry->make('dashboard')->getTelemetry();
     }
 
     /**
@@ -172,7 +171,7 @@ class UsageService extends BaseService implements MetricsProvider
         foreach (Instance::all() as $_instance) {
             $_api = InstanceApiClient::connect($_instance);
 
-            //  Seed the stats
+            //  Seed the stats, defaults to "not activated"
             $_stats = [
                 'uri'         => $_api->getProvisionedEndpoint(),
                 'environment' => ['version' => null, 'inception' => $_instance->create_date, 'status' => 'not activated'],
@@ -239,9 +238,6 @@ class UsageService extends BaseService implements MetricsProvider
         Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
 
         return $this->aggregateInstanceMetrics($_gatherDate);
-
-        //  The new way
-        //return $this->telemetry->make('instance')->getTelemetry();
     }
 
     /**
@@ -260,6 +256,11 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ],
             $metrics);
+
+        //  Remove empty instance container
+        if (empty(array_get($metrics, 'instance'))) {
+            unset($metrics['instance']);
+        }
 
         //  Send metrics if wanted
         $send && License::reportStatistics($_bundle);
