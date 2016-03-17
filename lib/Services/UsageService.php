@@ -199,17 +199,9 @@ class UsageService extends BaseService implements MetricsProvider
                             break;
                     }
 
-                    //  Resources
-                    if (InstanceStates::INIT_REQUIRED != $_instance->ready_state_nbr) {
-                        if (false === ($_stats['resources'] = $this->getResourceCounts($_api))) {
-                            $_stats['resources'] = [];
-                        } else {
-                            //  One more "no admin" check, just in case...
-                            if (0 == data_get($_stats['resources'], 'admin', 0)) {
-                                $_stats['environment']['status'] = 'no admin';
-                                $_instance->update(['ready_state_nbr' => InstanceStates::ADMIN_REQUIRED]);
-                            }
-                        }
+                    //  Get resource counts
+                    if (InstanceStates::INIT_REQUIRED != $_instance->ready_state_nbr && false === ($_stats['resources'] = $this->getResourceCounts($_api))) {
+                        $_stats['resources'] = [];
                     }
                 }
             } catch (InstanceNotActivatedException $_ex) {
