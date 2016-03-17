@@ -45,7 +45,7 @@
                             <div class="form-group">
                                 <label>Select Web Server</label>
                                 <select class="form-control" id="web_server_id" name="web_server_id">
-                                    <option value="{{$datas['web']['id']}}" selected>{{$datas['web']['name']}}</option>
+                                    <option value="{{$datas['web apps']['id']}}" selected>{{$datas['web apps']['name']}}</option>
                                     @foreach ($web as $_web)
                                         <option value="{{ $_web['id'] }}" {{ Input::old('web_server_id') == $_web['id'] ? 'selected="selected"' : null }}>{{ $_web['name'] }}</option>
                                     @endforeach
@@ -54,7 +54,7 @@
                             <div class="form-group">
                                 <label>Select Database Server</label>
                                 <select class="form-control" id="db_server_id" name="db_server_id">
-                                    <option value="{{$datas['db']['id']}}" selected>{{$datas['db']['name']}}</option>
+                                    <option value="{{$datas['database']['id']}}" selected>{{$datas['database']['name']}}</option>
                                     @foreach ($db as $_db)
                                         <option value="{{ $_db['id'] }}" {{ Input::old('db_server_id') == $_db['id'] ? 'selected="selected"' : null }}>{{ $_db['name'] }}</option>
                                     @endforeach
@@ -63,7 +63,7 @@
                             <div class="form-group">
                                 <label>Select App Server</label>
                                 <select class="form-control" id="app_server_id" name="app_server_id">
-                                    <option value="{{$datas['app']['id']}}" {{ Input::old('app_server_id') ? null : 'selected="selected"' }}>{{$datas['app']['name']}}</option>
+                                    <option value="{{$datas['apps']['id']}}" {{ Input::old('app_server_id') ? null : 'selected="selected"' }}>{{$datas['apps']['name']}}</option>
                                     @foreach ($app as $_app)
                                         <option value="{{ $_app['id'] }}" {{ Input::old('app_server_id') == $_app['id'] ? 'selected="selected"' : null }}>{{ $_app['name'] }}</option>
                                     @endforeach

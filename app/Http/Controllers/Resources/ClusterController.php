@@ -77,7 +77,7 @@ class ClusterController extends ViewController
         $_assigned = [];
         $_rows = Server::get(['id', 'server_type_id', 'server_id_text']);
 
-        $_response = ['web' => [], 'app' => [], 'db' => [],];
+        $_response = ['web apps' => [], 'apps' => [], 'database' => [],];
 
         foreach (ClusterServer::get(['server_id']) as $_row) {
             $_assigned[] = $_row->server_id;
@@ -96,7 +96,14 @@ class ClusterController extends ViewController
     /** @inheritdoc */
     public function create(array $viewData = [])
     {
-        return $this->renderView('app.clusters.create', $this->getAvailableServers());
+        $servers = $this->getAvailableServers();
+	
+	return $this->renderView('app.clusters.create', 
+		[//$this->getAvailableServers());
+		'db'         => $servers['database'],
+                'web'        => $servers['web apps'],
+                'app'        => $servers['apps'],
+		]);
     }
 
     /**
@@ -110,10 +117,10 @@ class ClusterController extends ViewController
         $_cluster = $this->_findCluster($id);
         $_clusterServers = $this->_clusterServers($id);
 
-        $_datas = [
-            'web' => null,
-            'db'  => null,
-            'app' => null,
+	$_datas = [
+            'web apps' => null,
+            'database'  => null,
+            'apps' => null,
         ];
 
         foreach ($_clusterServers as $_type => $_servers) {
@@ -131,9 +138,9 @@ class ClusterController extends ViewController
             [
                 'cluster_id' => $id,
                 'cluster'    => $_cluster,
-                'db'         => $servers['db'],
-                'web'        => $servers['web'],
-                'app'        => $servers['app'],
+                'db'         => $servers['database'],
+                'web'        => $servers['web apps'],
+                'app'        => $servers['apps'],
                 'datas'      => $_datas,
             ]);
     }
