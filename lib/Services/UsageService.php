@@ -159,16 +159,20 @@ class UsageService extends BaseService implements MetricsProvider
     }
 
     /**
+     * @param int|null $start The instance id to start with
+     *
      * @return array
      */
-    protected function gatherInstanceStatistics()
+    protected function gatherInstanceStatistics($start = null)
     {
         $_gathered = 0;
         $_gatherDate = date('Y-m-d');
         $_metrics = null;
 
+        $_instances = $start ? Instance::where('id >= :id', $start)->orderBy('id')->get() : Instance::orderBy('id')->get();
+
         /** @type Instance $_instance */
-        foreach (Instance::all() as $_instance) {
+        foreach ($_instances as $_instance) {
             $_api = InstanceApiClient::connect($_instance);
 
             //  Seed the stats, defaults to "not activated"
@@ -211,7 +215,7 @@ class UsageService extends BaseService implements MetricsProvider
                 array_set($_stats, 'environment.status', 'error');
             }
 
-            logger('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
+            logger('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->id . ':' . $_instance->instance_id_text);
 
             try {
                 /** @type MetricsDetail $_row */
@@ -224,7 +228,7 @@ class UsageService extends BaseService implements MetricsProvider
                 Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
-            unset($_api, $_stats, $_list, $_status, $_row);
+            unset($_api, $_stats, $_list, $_status, $_row, $_instance);
         }
 
         Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');

@@ -1,5 +1,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!--suppress CssUnusedSymbol, CssOptimizeSimilarProperties -->
+<?php
+if (!isset($dashboard_url) || empty($dashboard_url)) {
+    $dashboard_url = config('dfe.dashboard_url');
+}
+?><!--suppress CssUnusedSymbol, CssOptimizeSimilarProperties -->
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:mc="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
