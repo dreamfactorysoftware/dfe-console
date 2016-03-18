@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Database\Models\Telemetry;
 use DreamFactory\Enterprise\Services\Contracts\ProvidesTelemetry;
 use DreamFactory\Enterprise\Services\Contracts\TelemetryAggregator;
 use DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider;
+use InvalidArgumentException;
 
 /**
  * A pluggable generic telemetry service
@@ -48,7 +49,7 @@ class TelemetryService extends BaseService implements TelemetryAggregator
                 try {
                     $this->instances[$name] = new $provider();
                 } catch (\Exception $_ex) {
-                    throw new \InvalidArgumentException('The $provider is invalid.');
+                    throw new InvalidArgumentException('The $provider is invalid.');
                 }
             }
         }
@@ -85,7 +86,7 @@ class TelemetryService extends BaseService implements TelemetryAggregator
     public function make($name)
     {
         if (!isset($this->instances, $this->instances[$name])) {
-            throw new \InvalidArgumentException('The provider "' . $name . '" is not registered.');
+            throw new InvalidArgumentException('The provider "' . $name . '" is not registered.');
         }
 
         return $this->instances[$name];

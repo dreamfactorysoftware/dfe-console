@@ -98,17 +98,29 @@ class UsageService extends BaseService implements MetricsProvider
         foreach ($_mirror->getMethods() as $_method) {
             if (preg_match("/^gather(.+)Statistics$/i", $_methodName = $_method->getShortName())) {
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
-                $_stats[$_which] = call_user_func([get_called_class(), $_methodName]);
+
+                //  Call the stats gatherer, don't add if empty
+                try {
+                    $_result = call_user_func([get_called_class(), $_methodName]);
+
+                    if (!empty($_result)) {
+                        $_stats[$_which] = $_result;
+                    }
+
+                    unset($_result);
+                } catch (Exception $_ex) {
+                    Log::error('[dfe.usage-service:gatherStatistics] exception during gather "' . $_methodName . '": ' . $_ex->getMessage());
+                }
             }
         }
 
-        //  Move aggregate to console
+        //  Move instance aggregate to console
         if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
             array_set($_stats, 'console.aggregate', $_aggregate);
             array_forget($_stats, 'instance._aggregated');
         }
 
-        //  Remove the instance container if unwanted
+        //  Remove instance container if details disabled
         config('license.send-instance-details', false) && array_forget($_stats, 'instance');
 
         return $_stats;
@@ -131,12 +143,9 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        Log::debug('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
+        logger('[dfe.usage-service:gatherConsoleStatistics] ** ' . $_uri);
 
         return $_stats;
-
-        //  The new way
-        //return $this->telemetry->make('console')->getTelemetry();
     }
 
     /**
@@ -151,28 +160,29 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ];
 
-        Log::debug('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
+        logger('[dfe.usage-service:gatherDashboardStatistics] ** ' . $_uri);
 
         return $_stats;
-
-        //  The new way
-        //return $this->telemetry->make('dashboard')->getTelemetry();
     }
 
     /**
+     * @param int|null $start The instance id to start with
+     *
      * @return array
      */
-    protected function gatherInstanceStatistics()
+    protected function gatherInstanceStatistics($start = null)
     {
         $_gathered = 0;
         $_gatherDate = date('Y-m-d');
         $_metrics = null;
 
+        $_instances = $start ? Instance::where('id >= :id', $start)->orderBy('id')->get() : Instance::orderBy('id')->get();
+
         /** @type Instance $_instance */
-        foreach (Instance::all() as $_instance) {
+        foreach ($_instances as $_instance) {
             $_api = InstanceApiClient::connect($_instance);
 
-            //  Seed the stats
+            //  Seed the stats, defaults to "not activated"
             $_stats = [
                 'uri'         => $_api->getProvisionedEndpoint(),
                 'environment' => ['version' => null, 'inception' => $_instance->create_date, 'status' => 'not activated'],
@@ -200,17 +210,9 @@ class UsageService extends BaseService implements MetricsProvider
                             break;
                     }
 
-                    //  Resources
-                    if (InstanceStates::INIT_REQUIRED != $_instance->ready_state_nbr) {
-                        if (false === ($_stats['resources'] = $this->getResourceCounts($_api))) {
-                            $_stats['resources'] = [];
-                        } else {
-                            //  One more "no admin" check, just in case...
-                            if (0 == data_get($_stats['resources'], 'admin', 0)) {
-                                $_stats['environment']['status'] = 'no admin';
-                                $_instance->update(['ready_state_nbr' => InstanceStates::ADMIN_REQUIRED]);
-                            }
-                        }
+                    //  Get resource counts
+                    if (InstanceStates::INIT_REQUIRED != $_instance->ready_state_nbr && false === ($_stats['resources'] = $this->getResourceCounts($_api))) {
+                        $_stats['resources'] = [];
                     }
                 }
             } catch (InstanceNotActivatedException $_ex) {
@@ -220,7 +222,7 @@ class UsageService extends BaseService implements MetricsProvider
                 array_set($_stats, 'environment.status', 'error');
             }
 
-            Log::debug('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->instance_id_text);
+            logger('[dfe.usage-service:instance] > ' . $_stats['environment']['status'] . ' ' . $_instance->id . ':' . $_instance->instance_id_text);
 
             try {
                 /** @type MetricsDetail $_row */
@@ -233,15 +235,12 @@ class UsageService extends BaseService implements MetricsProvider
                 Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
-            unset($_api, $_stats, $_list, $_status, $_row);
+            unset($_api, $_stats, $_list, $_status, $_row, $_instance);
         }
 
         Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
 
         return $this->aggregateInstanceMetrics($_gatherDate);
-
-        //  The new way
-        //return $this->telemetry->make('instance')->getTelemetry();
     }
 
     /**

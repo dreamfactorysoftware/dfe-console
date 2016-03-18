@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.26][v1.0.26]
+### Updated
+- Stats gathering service speed issue addressed
+- UI fixes
+
 ## [1.0.25][v1.0.25]
 ### Updated
 - Configuration file reorganization and changes
@@ -99,6 +104,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.26]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.25...1.0.26
 [v1.0.25]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.20...1.0.25
 [v1.0.20]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.19...1.0.20
 [v1.0.19]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.16...1.0.19
