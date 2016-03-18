@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Traits\ArtisanHelper;
 use DreamFactory\Enterprise\Common\Traits\ArtisanOptionHelper;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Notifier;
+use DreamFactory\Enterprise\Console\Enums\ConsoleOperations;
 use DreamFactory\Enterprise\Database\Models;
 use DreamFactory\Enterprise\Services\Facades\License;
 use DreamFactory\Enterprise\Services\Facades\Usage;
@@ -145,14 +146,13 @@ class Metrics extends ConsoleCommand
             }
 
             $_user = Models\ServiceUser::first();
-            $this->notify(config('license.notification-address'),
+
+            $this->notifyJobOwner(ConsoleOperations::METRICS,
+                config('license.notification-address'),
                 config('license.notification-name'),
-                'Metrics Recorded',
                 [
-                    'firstName'     => $_user->first_name_text,
-                    'headTitle'     => 'Metrics Complete',
-                    'contentHeader' => 'Metrics have been generated successfully',
-                    'emailBody'     => '<p>Metrics have been generated for the date ' .
+                    'firstName' => $_user->first_name_text,
+                    'emailBody' => '<p>Metrics have been generated for the date ' .
                         date('Y-m-d') .
                         '.</p><p><pre>' .
                         Json::encode($_stats, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) .

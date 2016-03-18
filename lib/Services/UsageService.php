@@ -100,20 +100,27 @@ class UsageService extends BaseService implements MetricsProvider
                 $_which = str_slug(str_ireplace(['gather', 'statistics'], null, $_methodName));
 
                 //  Call the stats gatherer, don't add if empty
-                if (!empty($_result = call_user_func([get_called_class(), $_methodName]))) {
-                    $_stats[$_which] = $_result;
+                try {
+                    $_result = call_user_func([get_called_class(), $_methodName]);
+
+                    if (!empty($_result)) {
+                        $_stats[$_which] = $_result;
+                    }
+
                     unset($_result);
+                } catch (Exception $_ex) {
+                    Log::error('[dfe.usage-service:gatherStatistics] exception during gather "' . $_methodName . '": ' . $_ex->getMessage());
                 }
             }
         }
 
-        //  Move aggregate to console
+        //  Move instance aggregate to console
         if (!empty($_aggregate = data_get($_stats, 'instance._aggregated'))) {
             array_set($_stats, 'console.aggregate', $_aggregate);
             array_forget($_stats, 'instance._aggregated');
         }
 
-        //  Remove the instance container if unwanted
+        //  Remove instance container if details disabled
         config('license.send-instance-details', false) && array_forget($_stats, 'instance');
 
         return $_stats;
@@ -252,11 +259,6 @@ class UsageService extends BaseService implements MetricsProvider
             ],
         ],
             $metrics);
-
-        //  Remove empty instance container
-        if (empty(array_get($metrics, 'instance'))) {
-            unset($metrics['instance']);
-        }
 
         //  Send metrics if wanted
         $send && License::reportStatistics($_bundle);
