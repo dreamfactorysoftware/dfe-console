@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="DocTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
-    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Console\Commands\DocTest" file="$PROJECT_DIR$/tests/Console/Commands/DocTest.php" scope="Class" />
-    <method />
-  </configuration>
-</component>

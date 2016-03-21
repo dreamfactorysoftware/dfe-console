@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ProvisionTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
-    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Services\Commands\ProvisionTest" file="$PROJECT_DIR$/tests/Services/Commands/ProvisionTest.php" scope="Class" />
-    <method />
-  </configuration>
-</component>

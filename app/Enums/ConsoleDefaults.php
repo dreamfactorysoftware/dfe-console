@@ -71,9 +71,17 @@ class ConsoleDefaults extends FactoryEnum
      */
     const DEFAULT_DOMAIN_PROTOCOL = EnterpriseDefaults::DEFAULT_DOMAIN_PROTOCOL;
     /**
+     * @type int The default number of days to keep password reset requests
+     */
+    const DEFAULT_RESETS_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_RESETS_DAYS_TO_KEEP;
+    /**
      * @type int The default number of days to keep system metrics
      */
     const DEFAULT_METRICS_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_METRICS_DAYS_TO_KEEP;
+    /**
+     * @type int The default number of days to keep system metrics details
+     */
+    const DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP;
     /**
      * @type string The default path of the blueprint repository
      */

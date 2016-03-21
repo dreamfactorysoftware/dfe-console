@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="UsageServiceTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
-    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Services\UsageServiceTest" file="$PROJECT_DIR$/tests/Services/UsageServiceTest.php" scope="Class" />
-    <method />
-  </configuration>
-</component>

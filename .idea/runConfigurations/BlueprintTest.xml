@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="BlueprintTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
-    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Console\Commands\BlueprintTest" file="$PROJECT_DIR$/tests/Console/Commands/BlueprintTest.php" scope="Class" />
-    <method />
-  </configuration>
-</component>

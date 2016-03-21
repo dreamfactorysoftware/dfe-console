@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="App &amp; Lib" pattern="file[dfe-console]:app//*||file[dfe-console]:lib//*||file[dfe-console]:resources/views//*||file[dfe-console]:bootstrap//*" />
-</component>

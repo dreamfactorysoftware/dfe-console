@@ -13,44 +13,45 @@ return [
     //* Licensing
     //******************************************************************************
     //  The installation key given to you by DreamFactory sales
-    'install-key'             => env('DFE_INSTALL_KEY'),
+    'install-key'              => env('DFE_INSTALL_KEY'),
     //******************************************************************************
     //* General
     //******************************************************************************
     //  The id of THIS cluster
-    'cluster-id'              => env('DFE_CLUSTER_ID'),
+    'cluster-id'               => env('DFE_CLUSTER_ID'),
     //  A string to be pre-pended to instance names for non-admin users
-    'instance-prefix'         => env('DFE_DEFAULT_INSTANCE_PREFIX'),
+    'instance-prefix'          => env('DFE_DEFAULT_INSTANCE_PREFIX'),
     //  The hash algorithm for hashing api keys. Defaults to 'sha256'
-    'signature-method'        => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
+    'signature-method'         => env('DFE_SIGNATURE_METHOD', EnterpriseDefaults::DEFAULT_SIGNATURE_METHOD),
     //  The list of allowed partners
-    'allowed-partners'        => [env('DFE_PARTNER_ID', 'dfe'), 'hs', 'df',],
-    'default-domain'          => env('DFE_DEFAULT_DOMAIN', '.dreamfactory.com'),
-    'default-domain-protocol' => env('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https'),
+    'allowed-partners'         => [env('DFE_PARTNER_ID', 'dfe'), 'hs', 'df',],
+    'default-domain'           => env('DFE_DEFAULT_DOMAIN', '.dreamfactory.com'),
+    'default-domain-protocol'  => env('DFE_DEFAULT_DOMAIN_PROTOCOL', 'https'),
     //  Set this to FALSE to disallow contact with this console via the Ops API
-    'enable-console-api'      => true,
+    'enable-console-api'       => true,
     //  The default number of days to keep metrics data
-    'metrics-keep-days'       => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
+    'metrics-keep-days'        => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
+    'metrics-detail-keep-days' => env('DFE_METRICS_DETAIL_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP),
     //  The url to download the current version of DFE console
-    'dist-update-url'         => 'https://github.com/dreamfactorysoftware/dfe-console/archive/master.zip',
+    'dist-update-url'          => 'https://github.com/dreamfactorysoftware/dfe-console/archive/master.zip',
     //  The dashboard URL
-    'dashboard-url'           => env('DFE_DASHBOARD_URL'),
+    'dashboard-url'            => env('DFE_DASHBOARD_URL'),
     //  The support email
-    'support-email-address'   => env('DFE_SUPPORT_EMAIL_ADDRESS', 'support@dreamfactory.com'),
+    'support-email-address'    => env('DFE_SUPPORT_EMAIL_ADDRESS', 'support@dreamfactory.com'),
     /** Enable/disable the fast-track "one-click" pipeline */
-    'enable-fast-track'       => env('DFE_ENABLE_FAST_TRACK', false),
+    'enable-fast-track'        => env('DFE_ENABLE_FAST_TRACK', false),
     /** The route to use for the FastTrack auto-registration "one-click" pipeline */
-    'fast-track-route'        => '/fast-track',
+    'fast-track-route'         => '/fast-track',
     /** Only allow HubSpot landing pages to use FastTrack */
-    'fast-track-hubspot-only' => false,
+    'fast-track-hubspot-only'  => false,
     /** The string to search for during instance initialization to indicate success */
-    'fast-track-admin-html'   => 'Create a System Admin User',
+    'fast-track-admin-html'    => 'Create a System Admin User',
     /** When making web requests, the User-Agent to usef */
-    'user-agent'              => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
+    'user-agent'               => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
     //*****************************************************************************
     //* Auditing details for instances
     //******************************************************************************
-    'audit'                   => [
+    'audit'                    => [
         //  For audit messages
         'host'           => env('DFE_AUDIT_HOST'),
         'port'           => env('DFE_AUDIT_PORT'),
@@ -62,14 +63,14 @@ return [
     //******************************************************************************
     //* Blueprint Repository
     //******************************************************************************
-    'blueprints'              => [
+    'blueprints'               => [
         'path' => env('DFE_BLUEPRINT_PATH', ConsoleDefaults::DEFAULT_BLUEPRINT_REPO_PATH),
         'vcs'  => true,
     ],
     //******************************************************************************
     //* Common settings across portions of app
     //******************************************************************************
-    'common'                  => [
+    'common'                   => [
         'display-name'       => 'DreamFactory™ Enterprise Console',
         'display-version'    => env('DFE_VERSION', '1.0.26'),
         'display-copyright'  => '© DreamFactory Software, Inc. 2012-' . date('Y') . '. All Rights Reserved.',
@@ -89,7 +90,7 @@ return [
     //******************************************************************************
     //* General instance settings
     //******************************************************************************
-    'instance'                => [
+    'instance'                 => [
         /** Settings for dfe-api-client */
         'api'                  => [
             /**
@@ -111,7 +112,7 @@ return [
     //******************************************************************************
     //* UI Settings
     //******************************************************************************
-    'ui'                      => [
+    'ui'                       => [
         'prefix'          => 'v1',
         'button-contexts' => [
             ServerTypes::DB  => 'primary',
@@ -122,7 +123,7 @@ return [
     //******************************************************************************
     //* Console API Keys
     //******************************************************************************
-    'security'                => [
+    'security'                 => [
         'console-api-url'           => env('DFE_CONSOLE_API_URL'),
         /** This key needs to match the key configured in the dashboard */
         'console-api-key'           => env('DFE_CONSOLE_API_KEY'),

@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         'DreamFactory\Enterprise\Console\Console\Commands\Capsule',
         'DreamFactory\Enterprise\Console\Console\Commands\MigrateInstance',
         'DreamFactory\Enterprise\Console\Console\Commands\Info',
+        'DreamFactory\Enterprise\Console\Console\Commands\Daily',
         //  Services
         'DreamFactory\Enterprise\Console\Console\Commands\Manifest',
         'DreamFactory\Enterprise\Console\Console\Commands\Provision',
