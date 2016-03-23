@@ -32,6 +32,7 @@ return [
     //  The default number of days to keep metrics data
     'metrics-keep-days'        => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
     'metrics-detail-keep-days' => env('DFE_METRICS_DETAIL_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP),
+    'activate-by-days'         => env('DFE_ACTIVATE_DAYS_BY', ConsoleDefaults::DEFAULT_ACTIVATE_DAYS_BY),
     //  The url to download the current version of DFE console
     'dist-update-url'          => 'https://github.com/dreamfactorysoftware/dfe-console/archive/master.zip',
     //  The dashboard URL

@@ -1,7 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
-use DreamFactory\Enterprise\Database\Models;
+use DreamFactory\Enterprise\Database\Models\JobResult;
+use Illuminate\Support\Facades\DB;
 use Log;
 use ReflectionClass;
 
@@ -25,49 +26,73 @@ class Daily extends ConsoleCommand
     {
         parent::handle();
 
-        $_mirror = new ReflectionClass(get_called_class());
+        $_results = [];
+        $_tasks = config('tasks.daily', []);
 
-        foreach ($_mirror->getMethods() as $_method) {
-            if (preg_match("/^do(.+)Tasks$/i", $_methodName = $_method->getShortName())) {
-                $_which = str_slug(str_ireplace(['do', 'tasks'], null, $_methodName));
-
-                try {
-                    logger('[dfe.daily] executing daily task: "' . $_which . '"');
-                    call_user_func([get_called_class(), $_methodName]);
-                } catch (\Exception $_ex) {
-                    Log::error('[dfe.daily] exception during "' . $_methodName . '": ' . $_ex->getMessage());
-                }
+        //  Grab all the task configurations and make calls based on the name
+        foreach ($_tasks as $_taskName => $_task) {
+            if (method_exists($this, 'do' . $_taskName . 'Tasks')) {
+                $_results[$_taskName] = $this->{'do' . $_taskName . 'Tasks'}($_task);
+            } else {
+                Log::warning('[dfe.daily] no method available for daily task "' . $_taskName . '"');
             }
         }
+
+        //  Store results for posterity
+        JobResult::create(['result_id_text' => 'dfe.daily.' . date('YMDHis'), 'result_text' => $_results]);
     }
 
-    protected function doDatabaseTasks()
+    /**
+     * @param array $config
+     *
+     * @return array
+     */
+    protected function doDatabaseTasks(array $config)
     {
         $_results = [];
-        $_tasks = config('tasks.daily.database', []);
 
         //  Process the configured tasks for this run
-        foreach (array_get($_tasks, 'delete', []) as $_table => $_task) {
-            $_sql = array_get($_task, 'sql');
-            $_bindings = array_get($_task, 'bindings');
-            $_label = array_get($_task, 'label', 'Execute "' . $_sql . '"');
+        foreach ($config as $_operation => $_taskConfig) {
+            foreach ($_taskConfig as $_table => $_task) {
+                $_sql = array_get($_task, 'sql');
+                $_bindings = array_get($_task, 'bindings');
+                $_label = array_get($_task, 'label', 'Execute "' . $_sql . '"');
 
-            if (!empty($_sql)) {
-                try {
-                    $_results[$_table] = \DB::delete($_sql, $_bindings);
-                    Log::info('[dfe.daily.database.' . $_table . '] ' . $_label);
-                } catch (\Exception $_ex) {
-                    Log::error('[dfe.daily.database.' . $_table . '] exception while deleting: ' . $_ex->getMessage());
+                if (!empty($_sql)) {
+                    try {
+                        $_results[$_table] = call_user_func([DB::class, $_operation], $_sql, $_bindings);
+                        Log::info('[dfe.daily.database.' . $_operation . '] ' . $_label);
+                    } catch (\Exception $_ex) {
+                        Log::error($_results[$_table] = '[dfe.daily.database.' . $_operation . '] exception: ' . $_ex->getMessage());
+                    }
                 }
             }
         }
+
+        return $_results;
     }
 
-    protected function doStorageTasks()
+    /**
+     * @param array $config
+     *
+     * @return array
+     */
+    protected function doStorageTasks(array $config)
     {
+        $_results = [];
+
+        return $_results;
     }
 
-    protected function doInstanceTasks()
+    /**
+     * @param array $config
+     *
+     * @return array
+     */
+    protected function doInstanceTasks(array $config)
     {
+        $_results = [];
+
+        return $_results;
     }
 }

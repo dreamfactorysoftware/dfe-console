@@ -86,4 +86,8 @@ class ConsoleDefaults extends FactoryEnum
      * @type string The default path of the blueprint repository
      */
     const DEFAULT_BLUEPRINT_REPO_PATH = EnterpriseDefaults::DEFAULT_BLUEPRINT_REPO_PATH;
+    /**
+     * @type int The default number of days an instance may remain non-active
+     */
+    const DEFAULT_ACTIVATE_DAYS_BY = EnterpriseDefaults::DEFAULT_ACTIVATE_DAYS_BY;
 }
