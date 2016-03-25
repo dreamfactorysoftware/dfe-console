@@ -1,9 +1,6 @@
 <?php namespace DreamFactory\Enterprise\Services\Utility;
 
-use DreamFactory\Enterprise\Console\Ops\Providers\OpsClientServiceProvider;
-use DreamFactory\Enterprise\Console\Ops\Services\OpsClientService;
-use DreamFactory\Enterprise\Database\Models\Instance;
-use Log;
+use DreamFactory\Enterprise\Console\Ops\Facades\OpsClient;
 
 /**
  * General deprovisioner
@@ -48,9 +45,6 @@ MYSQL;
         $_count = $_errors = 0;
         $_rows = \DB::select($_sql, [':days' => $days]);
 
-        /** @type OpsClientService $_client */
-        $_client = OpsClientServiceProvider::service();
-
         if (!empty($_rows)) {
             foreach ($_rows as $_instance) {
                 if (!empty($extends) && $_instance->extend_count_nbr <= $extends) {
@@ -63,19 +57,19 @@ MYSQL;
 
                 try {
                     if (false === $dryRun) {
-                        $_result = $_client->deprovision(['instance-id' => $_instance->instance_id_text,]);
+                        $_result = OpsClient::deprovision(['instance-id' => $_instance->instance_id_text,]);
                     } else {
                         $_result = new \stdClass();
                         $_result->success = true;
                     }
 
-                    if (false === $_result = $_client->deprovision(['instance-id' => $_instance->instance_id_text,]) || !$_result->success) {
+                    if (false === $_result || !is_object($_result) || !$_result->success) {
                         $_errors++;
-                        Log::error('[dfe.deactivation-service] * error deprovisioning "' . $_instance->instance_id_text . '"');
+                        \Log::error('[dfe.deactivation-service] * error deprovisioning "' . $_instance->instance_id_text . '"');
                     }
                 } catch (\Exception $_ex) {
                     $_errors++;
-                    Log::error('[dfe.deactivation-service] * exception deprovisioning "' . $_instance->instance_id_text . '": ' . $_ex->getMessage());
+                    \Log::error('[dfe.deactivation-service] * exception deprovisioning "' . $_instance->instance_id_text . '": ' . $_ex->getMessage());
                 }
 
                 $_results[$_instance->instance_id_text] = [
@@ -88,7 +82,7 @@ MYSQL;
             }
         }
 
-        Log::notice('[dfe.deactivation-service] processed ' . number_format($_count, 0) . ' deactivations with ' . number_format($_errors, 0) . ' error(s)');
+        \Log::notice('[dfe.deactivation-service] processed ' . number_format($_count, 0) . ' deactivations with ' . number_format($_errors, 0) . ' error(s)');
 
         return $_results;
     }
