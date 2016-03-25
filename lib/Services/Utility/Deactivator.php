@@ -51,7 +51,13 @@ MYSQL;
                     continue;
                 }
 
-                logger('[dfe.deactivation-service] auto-deprovisioning instance "' . $_instance->instance_id_text . '"');
+                logger('[dfe.deactivation-service] deprovision instance "' .
+                    $_instance->instance_id_text .
+                    '" created on ' .
+                    $_instance->create_date .
+                    ' with ' .
+                    $_instance->extend_count_nbr .
+                    ' extension(s)');
 
                 $_result = null;
 
