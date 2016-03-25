@@ -30,7 +30,8 @@ SELECT
     d.id, 
     d.instance_id,
     d.extend_count_nbr,
-    i.instance_id_text 
+    i.instance_id_text,
+    i.create_date
 FROM 
     deactivation_t  d, 
     instance_t i 
