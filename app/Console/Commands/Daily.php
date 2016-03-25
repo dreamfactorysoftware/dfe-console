@@ -2,6 +2,8 @@
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Database\Models\JobResult;
+use DreamFactory\Enterprise\Services\DeactivationService;
+use DreamFactory\Enterprise\Services\Utility\Deactivator;
 use Illuminate\Support\Facades\DB;
 use Log;
 use ReflectionClass;
@@ -92,6 +94,9 @@ class Daily extends ConsoleCommand
     protected function doInstanceTasks(array $config)
     {
         $_results = [];
+
+        $_results['deactivation'] =
+            Deactivator::deprovisionInactiveInstances(array_get($config, 'activate-by-days'), array_get($config, 'activate-allowed-extends'));
 
         return $_results;
     }

@@ -56,7 +56,6 @@ return [
         DreamFactory\Enterprise\Services\Providers\LicenseServerServiceProvider::class,
         //DreamFactory\Enterprise\Services\Providers\TelemetryServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\UsageServiceProvider::class,
-        DreamFactory\Enterprise\Services\Providers\DeactivationServiceProvider::class,
         DreamFactory\Enterprise\Services\Auditing\AuditServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\InstanceServiceProvider::class,
         DreamFactory\Enterprise\Services\Providers\ProvisioningServiceProvider::class,

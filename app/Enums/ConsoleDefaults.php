@@ -90,4 +90,8 @@ class ConsoleDefaults extends FactoryEnum
      * @type int The default number of days an instance may remain non-active
      */
     const DEFAULT_ACTIVATE_DAYS_BY = EnterpriseDefaults::DEFAULT_ACTIVATE_DAYS_BY;
+    /**
+     * @type int The allowed number of activation extensions
+     */
+    const DEFAULT_ACTIVATE_ALLOWED_EXTENDS = EnterpriseDefaults::DEFAULT_ACTIVATE_ALLOWED_EXTENDS;
 }

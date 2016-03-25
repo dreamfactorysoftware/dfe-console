@@ -1,12 +1,11 @@
-<?php namespace DreamFactory\Enterprise\Services;
+<?php namespace DreamFactory\Enterprise\Services\Utility;
 
-use DreamFactory\Enterprise\Common\Services\BaseService;
 use Log;
 
 /**
- * General deactivation service
+ * General deprovisioner
  */
-class DeactivationService extends BaseService
+class Deactivator
 {
     //*************************************************************************
     //* Methods
@@ -20,7 +19,7 @@ class DeactivationService extends BaseService
      *
      * @return array
      */
-    public function deprovisionInactiveInstances($days = null, $extends = null)
+    public static function deprovisionInactiveInstances($days = null, $extends = null)
     {
         $days = $days ?: config('dfe.activate-by-days');
         $extends = $extends ?: config('dfe.activate-allowed-extensions');
