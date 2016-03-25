@@ -995,14 +995,6 @@ FOR EACH ROW BEGIN
                               WHERE `server_t`.`id` = old.id;
 END */$$
 
-/*!50003 DROP TRIGGER *//*!50032 IF EXISTS */ /*!50003 `appKey_beforeDelete` */$$
-  /*!50003 CREATE */ /*!50003 TRIGGER `appKey_beforeDelete` BEFORE DELETE ON `app_key_t`
-FOR EACH ROW BEGIN
-  INSERT INTO `app_key_arch_t` SELECT *
-                              FROM `app_key_t`
-                              WHERE `app_key_t`.`id` = old.id;
-END */$$
-
 DELIMITER ;
 
 /********************************************************************************
