@@ -101,7 +101,7 @@ class Daily extends ConsoleCommand
                 Deactivator::deprovisionInactiveInstances(
                     config('dfe.activate-by-days'),
                     config('dfe.activate-allowed-extends'),
-                    true
+                    $this->option('dry-run')
                 ),
         ];
 
