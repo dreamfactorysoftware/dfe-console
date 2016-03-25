@@ -7,6 +7,8 @@ use DreamFactory\Enterprise\Services\Utility\Deactivator;
 use Illuminate\Support\Facades\DB;
 use Log;
 use ReflectionClass;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 class Daily extends ConsoleCommand
 {
@@ -93,11 +95,31 @@ class Daily extends ConsoleCommand
      */
     protected function doInstanceTasks(array $config)
     {
-        $_results = [];
-
-        $_results['deactivation'] =
-            Deactivator::deprovisionInactiveInstances(array_get($config, 'activate-by-days'), array_get($config, 'activate-allowed-extends'));
+        $_results = [
+            //  Run the auto-deactivation process
+            'deactivation' =>
+                Deactivator::deprovisionInactiveInstances(
+                    config('dfe.activate-by-days'),
+                    config('dfe.activate-allowed-extends'),
+                    true
+                ),
+        ];
 
         return $_results;
     }
+
+    /** @inheritdoc */
+    protected function getOptions()
+    {
+        return array_merge(parent::getOptions(),
+            [
+                [
+                    'dry-run',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'When specified, no instances will be deprovisioned.',
+                ],
+            ]);
+    }
+
 }

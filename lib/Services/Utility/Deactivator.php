@@ -1,5 +1,8 @@
 <?php namespace DreamFactory\Enterprise\Services\Utility;
 
+use DreamFactory\Enterprise\Console\Ops\Providers\OpsClientServiceProvider;
+use DreamFactory\Enterprise\Console\Ops\Services\OpsClientService;
+use DreamFactory\Enterprise\Database\Models\Instance;
 use Log;
 
 /**
@@ -16,10 +19,11 @@ class Deactivator
      *
      * @param int|null $days
      * @param int|null $extends
+     * @param bool     $dryRun If true, go through the motions but do not deprovision instances.
      *
      * @return array
      */
-    public static function deprovisionInactiveInstances($days = null, $extends = null)
+    public static function deprovisionInactiveInstances($days = null, $extends = null, $dryRun = false)
     {
         $days = $days ?: config('dfe.activate-by-days');
         $extends = $extends ?: config('dfe.activate-allowed-extensions');
@@ -28,28 +32,64 @@ class Deactivator
 SELECT 
     d.id, 
     d.instance_id,
+    d.extend_count_nbr,
     i.instance_id_text 
 FROM 
     deactivation_t  d, 
     instance_t i 
 WHERE 
     DATEDIFF(CURRENT_DATE, d.create_date) > :days AND 
-    d.extend_count_nbr > :extends AND 
     d.instance_id = i.id 
 ORDER BY 
     d.instance_id, d.create_date
 MYSQL;
 
-        $_rows = \DB::select($_sql, [':days' => $days, ':extends' => $extends]);
+        $_results = [];
+        $_count = $_errors = 0;
+        $_rows = \DB::select($_sql, [':days' => $days]);
 
-        if (empty($_rows)) {
-            Log::info('[dfe.deactivation-service] no deactivations queued.');
+        /** @type OpsClientService $_client */
+        $_client = OpsClientServiceProvider::service();
 
-            return [];
+        if (!empty($_rows)) {
+            foreach ($_rows as $_instance) {
+                if (!empty($extends) && $_instance->extend_count_nbr <= $extends) {
+                    continue;
+                }
+
+                logger('[dfe.deactivation-service] auto-deprovisioning instance "' . $_instance->instance_id_text . '"');
+
+                $_result = null;
+
+                try {
+                    if (false === $dryRun) {
+                        $_result = $_client->deprovision(['instance-id' => $_instance->instance_id_text,]);
+                    } else {
+                        $_result = new \stdClass();
+                        $_result->success = true;
+                    }
+
+                    if (false === $_result = $_client->deprovision(['instance-id' => $_instance->instance_id_text,]) || !$_result->success) {
+                        $_errors++;
+                        Log::error('[dfe.deactivation-service] * error deprovisioning "' . $_instance->instance_id_text . '"');
+                    }
+                } catch (\Exception $_ex) {
+                    $_errors++;
+                    Log::error('[dfe.deactivation-service] * exception deprovisioning "' . $_instance->instance_id_text . '": ' . $_ex->getMessage());
+                }
+
+                $_results[$_instance->instance_id_text] = [
+                    'job-data' => $_instance,
+                    'result'   => $_result,
+                    'id'       => $_count++,
+                ];
+
+                unset($_result, $_instance);
+            }
         }
 
-        foreach ($_rows as $_instance) {
-            $_results[$_instance->id] = \Artisan::call('dfe::deprovision', ['instance-id' => $_instance->instance_id_text]);
-        }
+        Log::notice('[dfe.deactivation-service] processed ' . number_format($_count, 0) . ' deactivations with ' . number_format($_errors, 0) . ' error(s)');
+
+        return $_results;
     }
 }

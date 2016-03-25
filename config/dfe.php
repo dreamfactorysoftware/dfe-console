@@ -32,6 +32,7 @@ return [
     //  The default number of days to keep metrics data
     'metrics-keep-days'        => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
     'metrics-detail-keep-days' => env('DFE_METRICS_DETAIL_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP),
+    //  Auto-deactivation settings
     'activate-by-days'         => env('DFE_ACTIVATE_DAYS_BY', ConsoleDefaults::DEFAULT_ACTIVATE_DAYS_BY),
     'activate-allowed-extends' => env('DFE_ACTIVATE_ALLOWED_EXTENDS', ConsoleDefaults::DEFAULT_ACTIVATE_ALLOWED_EXTENDS),
     //  The url to download the current version of DFE console

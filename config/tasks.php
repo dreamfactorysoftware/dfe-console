@@ -22,7 +22,7 @@ return [
             //******************************************************************************
             //* The list of SQL delete statements to run
             //******************************************************************************
-            'delete'   => [
+            'delete' => [
                 'auth_reset_t'     => [
                     'label'    => 'Remove expired password resets',
                     'sql'      => 'DELETE FROM auth_reset_t WHERE DATEDIFF(CURRENT_DATE, created_at) > :keep_days',
@@ -39,8 +39,10 @@ return [
                     'bindings' => [':keep_days' => env('DFE_METRICS_DETAIL_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP)],
                 ],
             ],
-            'storage'  => [],
-            'instance' => [],
+        ],
+        'storage'  => [],
+        'instance' => [
+            'deactivation' => [],
         ],
     ],
     //******************************************************************************
