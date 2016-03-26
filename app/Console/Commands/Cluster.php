@@ -222,7 +222,11 @@ class Cluster extends ConsoleCommand
         try {
             $_server = $this->findServer($serverId);
         } catch (ModelNotFoundException $_ex) {
-            $this->writeln('"server-id" is a required option for this operation.');
+            $this->writeln('server-id "' . $serverId . '" was not found.');
+
+            return false;
+        } catch (Exception $_ex) {
+            $this->writeln('Error adding server: ' . $_ex->getMessage());
 
             return false;
         }
