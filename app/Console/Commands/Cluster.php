@@ -46,7 +46,7 @@ class Cluster extends ConsoleCommand
             case 'create':
             case 'update':
             case 'delete':
-                return $this->{'_' . $_command . 'Cluster'}($_clusterId);
+                return $this->{$_command . 'Cluster'}($_clusterId);
 
             case 'add':
             case 'remove':
@@ -61,6 +61,8 @@ class Cluster extends ConsoleCommand
 
     /**
      * @param string|int $clusterId
+     *
+     * @return int
      */
     protected function showServers($clusterId)
     {
@@ -130,7 +132,7 @@ class Cluster extends ConsoleCommand
      *
      * @return bool|\DreamFactory\Enterprise\Database\Models\Cluster
      */
-    protected function _createCluster($clusterId)
+    protected function createCluster($clusterId)
     {
         if (false === ($_data = $this->prepareData($clusterId))) {
             return false;
@@ -150,10 +152,10 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _updateCluster($clusterId)
+    protected function updateCluster($clusterId)
     {
         try {
-            $_cluster = $this->_findCluster($clusterId);
+            $_cluster = $this->findCluster($clusterId);
 
             if (false === ($_data = $this->prepareData())) {
                 return false;
@@ -186,10 +188,10 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _deleteCluster($clusterId)
+    protected function deleteCluster($clusterId)
     {
         try {
-            $_cluster = $this->_findCluster($clusterId);
+            $_cluster = $this->findCluster($clusterId);
 
             if ($_cluster->delete()) {
                 $this->concat('cluster id ')->asComment($clusterId)->flush(' deleted.');
@@ -272,7 +274,7 @@ class Cluster extends ConsoleCommand
             $create = true;
 
             try {
-                $this->_findCluster($_clusterId);
+                $this->findCluster($_clusterId);
 
                 $this->writeln('dfe: The cluster-id "' . $_clusterId . '" already exists.', 'error');
 
