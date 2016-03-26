@@ -50,7 +50,7 @@ class Cluster extends ConsoleCommand
 
             case 'add':
             case 'remove':
-                return $this->{'_' . $_command . 'Server'}($_clusterId, $this->option('server-id'));
+                return $this->{$_command . 'Server'}($_clusterId, $this->option('server-id'));
 
             case 'show':
                 return $this->showServers($_clusterId);
@@ -80,6 +80,8 @@ class Cluster extends ConsoleCommand
         } catch (ModelNotFoundException $_ex) {
             throw new InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
         }
+
+        return 0;
     }
 
     /** @inheritdoc */
@@ -130,7 +132,7 @@ class Cluster extends ConsoleCommand
      */
     protected function _createCluster($clusterId)
     {
-        if (false === ($_data = $this->_prepareData($clusterId))) {
+        if (false === ($_data = $this->prepareData($clusterId))) {
             return false;
         }
 
@@ -153,7 +155,7 @@ class Cluster extends ConsoleCommand
         try {
             $_cluster = $this->_findCluster($clusterId);
 
-            if (false === ($_data = $this->_prepareData())) {
+            if (false === ($_data = $this->prepareData())) {
                 return false;
             }
 
@@ -213,7 +215,7 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _addServer($clusterId, $serverId)
+    protected function addServer($clusterId, $serverId)
     {
         try {
             $_server = $this->findServer($serverId);
@@ -236,12 +238,16 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _removeServer($clusterId, $serverId)
+    protected function removeServer($clusterId, $serverId)
     {
         try {
             $_server = $this->findServer($serverId);
         } catch (ModelNotFoundException $_ex) {
-            $this->writeln('"server-id" is a required option for this operation.');
+            $this->writeln('server-id "' . $serverId . '" was not found.');
+
+            return false;
+        } catch (Exception $_ex) {
+            $this->writeln('Error adding server: ' . $_ex->getMessage());
 
             return false;
         }
@@ -257,7 +263,7 @@ class Cluster extends ConsoleCommand
      *
      * @return array|bool
      */
-    protected function _prepareData($create = false)
+    protected function prepareData($create = false)
     {
         $_data = [];
 
