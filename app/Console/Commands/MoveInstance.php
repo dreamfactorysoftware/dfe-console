@@ -113,9 +113,9 @@ class MoveInstance extends ConsoleCommand
     }
 
     /**
-     * @param string $instanceId
+     * @param string                                          $instanceId
      * @param \DreamFactory\Enterprise\Database\Models\Server $server
-     * @param bool $mute If true, no message will be displayed
+     * @param bool                                            $mute If true, no message will be displayed
      *
      * @return bool
      */
@@ -299,22 +299,20 @@ class MoveInstance extends ConsoleCommand
      */
     protected function grantPrivileges($db, $user, $pass, $database, $host)
     {
-        return $db->transaction(function() use ($db, $user, $pass, $database, $host) {
-            //  Create users
-            $_users = $this->getDatabaseUsers($user, $host);
+        //  Create users
+        $_users = $this->getDatabaseUsers($user, $host);
 
-            try {
-                foreach ($_users as $_user) {
-                    $db->statement('GRANT ALL PRIVILEGES ON ' . $database . '.* TO ' . $_user . ' IDENTIFIED BY \'' . $pass . '\'');
-                }
-
-                //	Grants for instance database
-                return true;
-            } catch (\Exception $_ex) {
-                $this->error('[dfe.move-instance.grantPrivileges] issue grants - failure: ' . $_ex->getMessage());
-
-                return false;
+        try {
+            foreach ($_users as $_user) {
+                $db->statement('GRANT ALL PRIVILEGES ON ' . $database . '.* TO ' . $_user . ' IDENTIFIED BY \'' . $pass . '\'');
             }
-        });
+
+            //	Grants for instance database
+            return true;
+        } catch (\Exception $_ex) {
+            $this->error('[dfe.move-instance.grantPrivileges] issue grants - failure: ' . $_ex->getMessage());
+
+            return false;
+        }
     }
 }
