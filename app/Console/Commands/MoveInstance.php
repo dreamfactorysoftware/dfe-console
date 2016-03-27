@@ -126,16 +126,16 @@ class MoveInstance extends ConsoleCommand
             $server->server_id_text .
             '</comment>"');
 
-        try {
-            $_connection = null;
+        $_connection = null;
 
+        try {
             //  1.  Get the full instance row
             $_instance = $this->findInstance($instanceId);
 
             //  2. Create new credentials on new server if required
             if (ServerTypes::DB == $server->server_type_id) {
                 $_user = $this->findSuitableCredentials($_instance);
-                $_user['Host'] = $_instance->webServer->host_text;
+                $_user['Host'] = gethostbyname($_instance->webServer->host_text);
 
                 if (empty($_connection = \DB::connection('dfe-remote'))) {
                     throw new DatabaseException('cannot connect to "dfe-remote", see help for more info.');
@@ -202,6 +202,10 @@ class MoveInstance extends ConsoleCommand
             $this->info('* <comment>' . $instanceId . ':</comment> <error>failure</error> - not found');
         } catch (DatabaseException $_ex) {
             $this->info('* <comment>' . $instanceId . ':</comment> <error>failure</error> - ' . $_ex->getMessage());
+        }
+        finally {
+            $_connection && $_connection->disconnect();
+            unset($_connection);
         }
 
         return false;
