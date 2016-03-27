@@ -6,6 +6,7 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\JsonFile;
+use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -112,9 +113,9 @@ class MoveInstance extends ConsoleCommand
     }
 
     /**
-     * @param string                                          $instanceId
+     * @param string $instanceId
      * @param \DreamFactory\Enterprise\Database\Models\Server $server
-     * @param bool                                            $mute If true, no message will be displayed
+     * @param bool $mute If true, no message will be displayed
      *
      * @return bool
      */
@@ -134,22 +135,15 @@ class MoveInstance extends ConsoleCommand
 
             //  2. Create new credentials on new server if required
             if (ServerTypes::DB == $server->server_type_id) {
-                $_user = $this->findSuitableCredentials($_instance);
-                $_user['Host'] = gethostbyname($_instance->webServer->host_text);
-
                 if (empty($_connection = \DB::connection('dfe-remote'))) {
                     throw new DatabaseException('cannot connect to "dfe-remote", see help for more info.');
                 }
 
-                try {
-                    $_userId = \DB::table('mysql.user')->insertGetId($_user);
-                    logger('[dfe.move-instance] created new MySQL user id ' . $_userId . ' on "' . $server->server_id_text . '"');
-                } catch (\Exception $_ex) {
-                    //  Ignore dupes
-                    if (false === stripos($_ex->getMessage(), 'duplicate entry')) {
-                        throw new DatabaseException('error creating new user credentials');
-                    }
-                }
+                $this->grantPrivileges($_connection,
+                    $_instance->db_user_text,
+                    $_instance->db_password_text,
+                    $_instance->db_name_text,
+                    $_instance->webServer->host_text);
             }
 
             //  3. Change instance database pointers
@@ -274,5 +268,53 @@ class MoveInstance extends ConsoleCommand
                     'If specified with "--all", only the instances managed by "cluster-id" will be moved.',
                 ],
             ]);
+    }
+
+    /**
+     * @param string $user
+     * @param string $host
+     *
+     * @return array
+     */
+    protected function getDatabaseUsers($user, $host)
+    {
+        return [
+            '\'' . $user . '\'@\'%\'',
+            '\'' . $user . '\'@\'localhost\'',
+            '\'' . $user . '\'@\'' . $host . '\'',
+            '\'' . $user . '\'@\'' . gethostbyname($host) . '\'',
+        ];
+    }
+
+    /**
+     * @param Connection $db
+     * @param string     $user
+     * @param string     $pass
+     * @param string     $database
+     * @param string     $host
+     *
+     * @return bool
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    protected function grantPrivileges($db, $user, $pass, $database, $host)
+    {
+        return $db->transaction(function() use ($db, $user, $pass, $database, $host) {
+            //  Create users
+            $_users = $this->getDatabaseUsers($user, $host);
+
+            try {
+                foreach ($_users as $_user) {
+                    $db->statement('GRANT ALL PRIVILEGES ON ' . $database . '.* TO ' . $_user . ' IDENTIFIED BY \'' . $pass . '\'');
+                }
+
+                //	Grants for instance database
+                return true;
+            } catch (\Exception $_ex) {
+                $this->error('[dfe.move-instance.grantPrivileges] issue grants - failure: ' . $_ex->getMessage());
+
+                return false;
+            }
+        });
     }
 }
