@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file. This projec
  - `DFE_RESET_DAYS_TO_KEEP` sets the number of days password resets are allowed to be valid
  - `DFE_ACTIVATE_DAYS_BY` sets the number of days that an instance may remain non-activated before auto-deprovisioning occurs
  - `DFE_ACTIVATE_ALLOWED_EXTENDS` sets the number of _extensions_ (in days) allowed before an instance is auto-deprovisioned
+
 ### Updated
 - Miscellaneous PSR-2 code formatting
 - PhpDoc updates and cleanup 
