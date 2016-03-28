@@ -1,6 +1,22 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.27][v1.0.27]
+### Added
+- New `dfe:move-instance` command to relocate instances from one server to another
+- New `DFE_REMOTE_*` environment variables added to `.env-dist` 
+- New `dfe:daily` command added for performing daily maintenance tasks
+- New `config/tasks.php` configuration file added for configuration of the new `dfe:daily` command
+- New non-activated instance deprovisioning automation introduced as part of the daily maintenance tasks
+- New environment variables added to `.env-dist`:
+ - `DFE_REMOTE_*` database variables for use with the `dfe:move-instance` command
+ - `DFE_RESET_DAYS_TO_KEEP` sets the number of days password resets are allowed to be valid
+ - `DFE_ACTIVATE_DAYS_BY` sets the number of days that an instance may remain non-activated before auto-deprovisioning occurs
+ - `DFE_ACTIVATE_ALLOWED_EXTENDS` sets the number of _extensions_ (in days) allowed before an instance is auto-deprovisioned
+### Updated
+- Miscellaneous PSR-2 code formatting
+- PhpDoc updates and cleanup 
+
 ## [1.0.26][v1.0.26]
 ### Updated
 - Stats gathering service speed issue addressed
@@ -104,6 +120,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.27]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.26...1.0.27
 [v1.0.26]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.25...1.0.26
 [v1.0.25]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.20...1.0.25
 [v1.0.20]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.19...1.0.20
