@@ -72,6 +72,32 @@ class MoveInstance extends ConsoleCommand
         return 0;
     }
 
+    /** @inheritdoc */
+    protected function getArguments()
+    {
+        return array_merge(parent::getArguments(),
+            [
+                ['server-id', InputArgument::REQUIRED, 'The destination server of the move',],
+                ['instance-id', InputArgument::OPTIONAL, 'The instance to move',],
+            ]);
+    }
+
+    /** @inheritdoc */
+    protected function getOptions()
+    {
+        return array_merge(parent::getOptions(),
+            [
+                ['all', 'a', InputOption::VALUE_NONE, 'Move *all* instances',],
+                ['purge', 'p', InputOption::VALUE_NONE, 'Purge existing credentials from database. Only used with database server moves.'],
+                [
+                    'cluster-id',
+                    'c',
+                    InputOption::VALUE_REQUIRED,
+                    'If specified with "--all", only the instances managed by "cluster-id" will be moved.',
+                ],
+            ]);
+    }
+
     /**
      * Moves all instances known, or in a cluster
      *
@@ -83,6 +109,7 @@ class MoveInstance extends ConsoleCommand
     {
         $this->info('Moving <comment>all</comment> instances to <comment>' . $server->server_id_text . '</comment>');
 
+        /** @type Instance[] $_instances */
         if (null !== ($_clusterId = $this->option('cluster-id'))) {
             $_instances = $this->findClusterInstances($_clusterId, ['instance_id_text']);
         } else {
@@ -95,6 +122,11 @@ class MoveInstance extends ConsoleCommand
         if (!empty($_instances)) {
             foreach ($_instances as $_instance) {
                 $_id = $_instance->instance_id_text;
+
+                if ($_instance->db_host_text == $server->host_text) {
+                    continue;
+                }
+
                 try {
                     if (false !== ($_results[$_id] = $this->moveSingleInstance($_id, $server, true))) {
                         $_count++;
@@ -130,7 +162,6 @@ class MoveInstance extends ConsoleCommand
         try {
             //  1.  Get the full instance row
             $_instance = $this->findInstance($instanceId);
-            $_config = $_instance->instance_data_text;
 
             //  2. Change instance database pointers
             switch ($server->server_type_id) {
@@ -140,12 +171,16 @@ class MoveInstance extends ConsoleCommand
 
                 case ServerTypes::WEB_APPS:
                     $_instance->web_server_id = $server->id;
-                    $this->setConfigData($_config, ['audit.web-server-id' => $server->server_id_text]);
+                    $_config = $_instance->instance_data_text;
+                    array_set($_config, 'audit.web-server-id', $server->server_id_text);
+                    $_instance->instance_data_text = $_config;
                     break;
 
                 case ServerTypes::APPS:
                     $_instance->app_server_id = $server->id;
-                    $this->setConfigData($_config, ['audit.app-server-id' => $server->server_id_text]);
+                    $_config = $_instance->instance_data_text;
+                    array_set($_config, 'audit.app-server-id', $server->server_id_text);
+                    $_instance->instance_data_text = $_config;
                     break;
             }
 
@@ -204,32 +239,6 @@ class MoveInstance extends ConsoleCommand
         }
     }
 
-    /** @inheritdoc */
-    protected function getArguments()
-    {
-        return array_merge(parent::getArguments(),
-            [
-                ['server-id', InputArgument::REQUIRED, 'The destination server of the move',],
-                ['instance-id', InputArgument::OPTIONAL, 'The instance to move',],
-            ]);
-    }
-
-    /** @inheritdoc */
-    protected function getOptions()
-    {
-        return array_merge(parent::getOptions(),
-            [
-                ['all', 'a', InputOption::VALUE_NONE, 'Move *all* instances',],
-                ['purge', 'p', InputOption::VALUE_NONE, 'Purge existing credentials from database. Only used with database server moves.'],
-                [
-                    'cluster-id',
-                    'c',
-                    InputOption::VALUE_REQUIRED,
-                    'If specified with "--all", only the instances managed by "cluster-id" will be moved.',
-                ],
-            ]);
-    }
-
     /**
      * @param Instance                                        $instance
      * @param \DreamFactory\Enterprise\Database\Models\Server $server
@@ -262,13 +271,13 @@ class MoveInstance extends ConsoleCommand
                 $instance->db_server_id = $server->id;
                 $instance->db_host_text = $dbHost ?: $server->host_text;
 
-                if (null === ($_db = array_get($_config, 'db.' . $instance->instance_id_text))) {
+                if (empty($_db = array_get($_config, 'db.' . $_instanceId))) {
                     return false;
                 }
 
-                $_dbKey = 'db.' . $_instanceId;
-
-                $this->setConfigData($_config, [$_dbKey . '.id' => $_serverId, $_dbKey . '.db-server-id' => $_serverId, 'audit.db-server-id' => $_serverId]);
+                array_set($_config, 'db.' . $_instanceId . '.id', $_serverId);
+                array_set($_config, 'db.' . $_instanceId . '.db-server-id', $_serverId);
+                array_set($_config, 'audit.db-server-id', $_serverId);
             }
             finally {
                 $this->mysqlDisconnect();
@@ -278,20 +287,5 @@ class MoveInstance extends ConsoleCommand
         $instance->instance_data_text = $_config;
 
         return true;
-    }
-
-    /**
-     * @param array $config
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function setConfigData(array &$config, array $data = [])
-    {
-        foreach ($data as $_key => $_value) {
-            array_set($config, $_key, $_value);
-        }
-
-        return $config;
     }
 }

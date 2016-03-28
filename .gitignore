@@ -1,3 +1,4 @@
+/app/move-instance-one.sh
 vendor/
 !.env-dist
 .env*
