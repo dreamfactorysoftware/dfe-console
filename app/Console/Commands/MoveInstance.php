@@ -3,10 +3,10 @@
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
 use DreamFactory\Enterprise\Common\Enums\ServerTypes;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
+use DreamFactory\Enterprise\Common\Traits\MySqlAdmin;
 use DreamFactory\Enterprise\Database\Exceptions\DatabaseException;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Library\Utility\JsonFile;
-use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,7 +17,7 @@ class MoveInstance extends ConsoleCommand
     //* Traits
     //******************************************************************************
 
-    use EntityLookup;
+    use EntityLookup, MySqlAdmin;
 
     //******************************************************************************
     //* Members
@@ -127,61 +127,25 @@ class MoveInstance extends ConsoleCommand
             $server->server_id_text .
             '</comment>"');
 
-        $_connection = null;
-
         try {
             //  1.  Get the full instance row
             $_instance = $this->findInstance($instanceId);
+            $_config = $_instance->instance_data_text;
 
-            //  2. Create new credentials on new server if required
-            if (ServerTypes::DB == $server->server_type_id) {
-                if (empty($_connection = \DB::connection('dfe-remote'))) {
-                    throw new DatabaseException('cannot connect to "dfe-remote", see help for more info.');
-                }
-
-                $this->grantPrivileges($_connection,
-                    $_instance->db_user_text,
-                    $_instance->db_password_text,
-                    $_instance->db_name_text,
-                    $_instance->webServer->host_text);
-            }
-
-            //  3. Change instance database pointers
+            //  2. Change instance database pointers
             switch ($server->server_type_id) {
                 case ServerTypes::DATABASE:
-                    $_instance->db_server_id = $server->id;
-                    $_instance->db_host_text = $_connection->getConfig('host');
-
-                    //  Replace the db server id within the config JSON
-                    $_config = $_instance->instance_data_text;
-
-                    if (!empty($_db = array_get($_config, 'db'))) {
-                        foreach ($_db as $_name => $_entry) {
-                            array_set($_config, 'db.' . $_name . '.id', $server->server_id_text);
-                            array_set($_config, 'db.' . $_name . '.db-server-id', $server->server_id_text);
-                        }
-                    }
-
-                    array_set($_config, 'audit.db-server-id', $server->server_id_text);
-                    $_instance->instance_data_text = $_config;
+                    $this->updateInstanceConfig($_instance, $server);
                     break;
 
                 case ServerTypes::WEB_APPS:
                     $_instance->web_server_id = $server->id;
-
-                    //  Replace the db server id within the config JSON
-                    $_config = $_instance->instance_data_text;
-                    array_set($_config, 'audit.web-server-id', $server->server_id_text);
-                    $_instance->instance_data_text = $_config;
+                    $this->setConfigData($_config, ['audit.web-server-id' => $server->server_id_text]);
                     break;
 
                 case ServerTypes::APPS:
                     $_instance->app_server_id = $server->id;
-
-                    //  Replace the db server id within the config JSON
-                    $_config = $_instance->instance_data_text;
-                    array_set($_config, 'audit.app-server-id', $server->server_id_text);
-                    $_instance->instance_data_text = $_config;
+                    $this->setConfigData($_config, ['audit.app-server-id' => $server->server_id_text]);
                     break;
             }
 
@@ -196,10 +160,6 @@ class MoveInstance extends ConsoleCommand
             $this->info('* <comment>' . $instanceId . ':</comment> <error>failure</error> - not found');
         } catch (DatabaseException $_ex) {
             $this->info('* <comment>' . $instanceId . ':</comment> <error>failure</error> - ' . $_ex->getMessage());
-        }
-        finally {
-            $_connection && $_connection->disconnect();
-            unset($_connection);
         }
 
         return false;
@@ -271,48 +231,67 @@ class MoveInstance extends ConsoleCommand
     }
 
     /**
-     * @param string $user
-     * @param string $host
+     * @param Instance                                        $instance
+     * @param \DreamFactory\Enterprise\Database\Models\Server $server
+     * @param string                                          $dbHost The host name of the database server, if any
      *
-     * @return array
+     * @return bool
+     * @throws \DreamFactory\Enterprise\Database\Exceptions\DatabaseException
      */
-    protected function getDatabaseUsers($user, $host)
+    protected function updateInstanceConfig(&$instance, $server, $dbHost = null)
     {
-        return [
-            '\'' . $user . '\'@\'%\'',
-            '\'' . $user . '\'@\'localhost\'',
-            '\'' . $user . '\'@\'' . $host . '\'',
-            '\'' . $user . '\'@\'' . gethostbyname($host) . '\'',
-        ];
+        $_config = $instance->instance_data_text;
+        $_serverId = $server->server_id_text;
+        $_instanceId = $instance->instance_id_text;
+
+        if ($server->isServerType(ServerTypes::DATABASE)) {
+            try {
+                $this->mysqlSetConnection('dfe-remote');
+
+                //  Grant new privileges on remote database
+                $this->mysqlGrantPrivileges(
+                    $instance->db_user_text,
+                    $instance->db_password_text,
+                    $instance->db_name_text,
+                    $instance->webServer->host_text);
+
+                //  Purge existing if desired
+                $this->option('purge') && $this->mysqlDropUser($instance->db_user_text);
+
+                //  Update the instance row
+                $instance->db_server_id = $server->id;
+                $instance->db_host_text = $dbHost ?: $server->host_text;
+
+                if (null === ($_db = array_get($_config, 'db.' . $instance->instance_id_text))) {
+                    return false;
+                }
+
+                $_dbKey = 'db.' . $_instanceId;
+
+                $this->setConfigData($_config, [$_dbKey . '.id' => $_serverId, $_dbKey . '.db-server-id' => $_serverId, 'audit.db-server-id' => $_serverId]);
+            }
+            finally {
+                $this->mysqlDisconnect();
+            }
+        }
+
+        $instance->instance_data_text = $_config;
+
+        return true;
     }
 
     /**
-     * @param Connection $db
-     * @param string     $user
-     * @param string     $pass
-     * @param string     $database
-     * @param string     $host
+     * @param array $config
+     * @param array $data
      *
-     * @return bool
-     * @throws \Exception
-     * @throws \Throwable
+     * @return array
      */
-    protected function grantPrivileges($db, $user, $pass, $database, $host)
+    protected function setConfigData(array &$config, array $data = [])
     {
-        //  Create users
-        $_users = $this->getDatabaseUsers($user, $host);
-
-        try {
-            foreach ($_users as $_user) {
-                $db->statement('GRANT ALL PRIVILEGES ON ' . $database . '.* TO ' . $_user . ' IDENTIFIED BY \'' . $pass . '\'');
-            }
-
-            //	Grants for instance database
-            return true;
-        } catch (\Exception $_ex) {
-            $this->error('[dfe.move-instance.grantPrivileges] issue grants - failure: ' . $_ex->getMessage());
-
-            return false;
+        foreach ($data as $_key => $_value) {
+            array_set($config, $_key, $_value);
         }
+
+        return $config;
     }
 }
