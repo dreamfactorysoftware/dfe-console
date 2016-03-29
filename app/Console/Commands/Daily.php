@@ -1,13 +1,9 @@
 <?php namespace DreamFactory\Enterprise\Console\Console\Commands;
 
 use DreamFactory\Enterprise\Common\Commands\ConsoleCommand;
+use DreamFactory\Enterprise\Console\Enums\TaskOperations;
 use DreamFactory\Enterprise\Database\Models\JobResult;
-use DreamFactory\Enterprise\Services\DeactivationService;
 use DreamFactory\Enterprise\Services\Utility\Deactivator;
-use Illuminate\Support\Facades\DB;
-use Log;
-use ReflectionClass;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 class Daily extends ConsoleCommand
@@ -34,11 +30,36 @@ class Daily extends ConsoleCommand
         $_tasks = config('tasks.daily', []);
 
         //  Grab all the task configurations and make calls based on the name
-        foreach ($_tasks as $_taskName => $_task) {
+        foreach ($_tasks as $_taskName => $_taskConfig) {
             if (method_exists($this, 'do' . $_taskName . 'Tasks')) {
-                $_results[$_taskName] = $this->{'do' . $_taskName . 'Tasks'}($_task);
+                $_results[$_taskName] = $this->{'do' . $_taskName . 'Tasks'}($_taskConfig);
             } else {
-                Log::warning('[dfe.daily] no method available for daily task "' . $_taskName . '"');
+                \Log::warning('[dfe.daily] no method available for daily task "' . $_taskName . '"');
+            }
+        }
+
+        //  Store results for posterity
+        JobResult::create(['result_id_text' => 'dfe.daily.' . date('YMDHis'), 'result_text' => $_results]);
+    }
+
+    /**
+     * @param string $which The task type to perform
+     *
+     * @return bool
+     */
+    protected function performTasks($which)
+    {
+        $_results = [];
+
+        //  Grab all the task configurations and make calls based on the name
+        if (!empty($_tasks = config('tasks.' . $which, []))) {
+            foreach ($_tasks as $_taskName => $_taskConfig) {
+                if (method_exists($this, 'do' . $_taskName . 'Tasks')) {
+                    $_results[$_taskName] = $this->{'do' . $_taskName . 'Tasks'}($_taskConfig);
+                } else {
+                    \Log::notice('[dfe.daily] no method available for configured task "daily.' . $_taskName . '"');
+                    $_results[$_taskName] = false;
+                }
             }
         }
 
@@ -64,10 +85,10 @@ class Daily extends ConsoleCommand
 
                 if (!empty($_sql)) {
                     try {
-                        $_results[$_table] = call_user_func([DB::class, $_operation], $_sql, $_bindings);
-                        Log::info('[dfe.daily.database.' . $_operation . '] ' . $_label);
+                        $_results[$_table] = call_user_func([\DB::class, $_operation], $_sql, $_bindings);
+                        \Log::info('[dfe.daily.database.' . $_operation . '] ' . $_label);
                     } catch (\Exception $_ex) {
-                        Log::error($_results[$_table] = '[dfe.daily.database.' . $_operation . '] exception: ' . $_ex->getMessage());
+                        \Log::error($_results[$_table] = '[dfe.daily.database.' . $_operation . '] exception: ' . $_ex->getMessage());
                     }
                 }
             }
@@ -95,15 +116,22 @@ class Daily extends ConsoleCommand
      */
     protected function doInstanceTasks(array $config)
     {
-        $_results = [
-            //  Run the auto-deactivation process
-            'deactivation' =>
-                Deactivator::deprovisionInactiveInstances(
-                    config('dfe.activate-by-days'),
-                    config('dfe.activate-allowed-extends'),
-                    $this->option('dry-run')
-                ),
-        ];
+        $_results = [];
+
+        //  Process the configured tasks for this run
+        foreach ($config as $_operation => $_taskConfig) {
+            switch ($_operation) {
+                case TaskOperations::DEACTIVATION:
+                    if (false !== array_get($_taskConfig, 'enable', false)) {
+                        $_results[$_operation] =
+                            Deactivator::deprovisionInactiveInstances(
+                                array_get($_taskConfig, 'activate-days-by'),
+                                array_get($_taskConfig, 'activate-allowed-extends'),
+                                array_get($_taskConfig, 'dry-run', true));
+                    }
+                    break;
+            }
+        }
 
         return $_results;
     }
@@ -113,13 +141,7 @@ class Daily extends ConsoleCommand
     {
         return array_merge(parent::getOptions(),
             [
-                [
-                    'dry-run',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'When specified, no instances will be deprovisioned.',
-                ],
+                ['dry-run', null, InputOption::VALUE_NONE, 'When specified, no instances will be deprovisioned.',],
             ]);
     }
-
 }

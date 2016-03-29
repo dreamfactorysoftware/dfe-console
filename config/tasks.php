@@ -10,18 +10,24 @@ return [
     //* Always do these tasks
     //******************************************************************************
     '*'       => [
+        /** Database tasks */
         'database' => [],
+        /** Storage tasks */
         'storage'  => [],
+        /** Instance tasks */
         'instance' => [],
     ],
     //******************************************************************************
     //* Tasks to perform daily
     //******************************************************************************
     'daily'   => [
+        /** Database tasks */
         'database' => [
-            //******************************************************************************
-            //* The list of SQL delete statements to run
-            //******************************************************************************
+            /** INSERT statements */
+            'insert' => [],
+            /** UPDATE statements */
+            'update' => [],
+            /** DELETE statements */
             'delete' => [
                 'auth_reset_t'     => [
                     'label'    => 'Remove expired password resets',
@@ -40,33 +46,51 @@ return [
                 ],
             ],
         ],
+        /** Storage tasks */
         'storage'  => [],
+        /** Instance tasks */
         'instance' => [
-            'deactivation' => [],
+            /** The automated deactivate system */
+            'deactivation' => [
+                'enable'                   => true,
+                'activate-days-by'         => env('DFE_ACTIVATE_DAYS_BY', ConsoleDefaults::DEFAULT_ACTIVATE_DAYS_BY),
+                'activate-allowed-extends' => env('DFE_ACTIVATE_ALLOWED_EXTENDS', ConsoleDefaults::DEFAULT_ACTIVATE_ALLOWED_EXTENDS),
+                /** If true, all the deactivation logic will run, but instances will not be deprovisioned. However, the extension count will be incremented. */
+                'dry-run'                  => true,
+            ],
         ],
     ],
     //******************************************************************************
     //* Tasks to perform weekly
     //******************************************************************************
     'weekly'  => [
+        /** Database tasks */
         'database' => [],
+        /** Storage tasks */
         'storage'  => [],
+        /** Instance tasks */
         'instance' => [],
     ],
     //******************************************************************************
     //* Tasks to perform monthly
     //******************************************************************************
     'monthly' => [
+        /** Database tasks */
         'database' => [],
+        /** Storage tasks */
         'storage'  => [],
+        /** Instance tasks */
         'instance' => [],
     ],
     //******************************************************************************
     //* Tasks to perform yearly
     //******************************************************************************
     'yearly'  => [
+        /** Database tasks */
         'database' => [],
+        /** Storage tasks */
         'storage'  => [],
+        /** Instance tasks */
         'instance' => [],
     ],
 ];
