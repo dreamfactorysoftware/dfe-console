@@ -11,8 +11,9 @@ All notable changes to this project will be documented in this file. This projec
 - New environment variables added to `.env-dist`:
  - `DFE_REMOTE_*` database variables for use with the `dfe:move-instance` command
  - `DFE_RESET_DAYS_TO_KEEP` sets the number of days password resets are allowed to be valid
- - `DFE_ACTIVATE_DAYS_BY` sets the number of days that an instance may remain non-activated before auto-deprovisioning occurs
- - `DFE_ACTIVATE_ALLOWED_EXTENDS` sets the number of _extensions_ (in days) allowed before an instance is auto-deprovisioned
+ - `DFE_ADS_ACTIVATE_BY_DAYS` sets the number of days that an instance may remain in a non-activated state before auto-deprovisioning occurs
+ - `DFE_ADS_ACTIVATE_ALLOWED_EXTENDS` sets the number of _extensions_ (in days) allowed before an instance is auto-deprovisioned
+ - `DFE_ADS_ALLOWED_INACTIVE_DAYS` sets the number of days that an instance may remain idle (post activation) before auto-deprovisioning occurs
 
 ### Updated
 - Miscellaneous PSR-2 code formatting

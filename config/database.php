@@ -13,7 +13,8 @@ return [
         /** dfe-local is the main console/dashboard database */
         'dfe-local'  => [
             'driver'    => env('DB_DRIVER', 'mysql'),
-            'host'      => env('DB_HOST', 'localhost'),
+            //            'host'      => env('DB_HOST', 'localhost'),
+            'host'      => env('DB_HOST', 'db-east-3.fabric.dreamfactory.com'),
             'port'      => env('DB_PORT', 3306),
             'database'  => env('DB_DATABASE', 'dfe_local'),
             'username'  => env('DB_USERNAME', 'dfe_user'),

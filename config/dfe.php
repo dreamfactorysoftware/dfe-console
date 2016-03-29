@@ -32,9 +32,6 @@ return [
     //  The default number of days to keep metrics data
     'metrics-keep-days'        => env('DFE_METRICS_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DAYS_TO_KEEP),
     'metrics-detail-keep-days' => env('DFE_METRICS_DETAIL_DAYS_TO_KEEP', ConsoleDefaults::DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP),
-    //  Auto-deactivation settings
-    'activate-by-days'         => env('DFE_ACTIVATE_DAYS_BY', ConsoleDefaults::DEFAULT_ACTIVATE_DAYS_BY),
-    'activate-allowed-extends' => env('DFE_ACTIVATE_ALLOWED_EXTENDS', ConsoleDefaults::DEFAULT_ACTIVATE_ALLOWED_EXTENDS),
     //  The url to download the current version of DFE console
     'dist-update-url'          => 'https://github.com/dreamfactorysoftware/dfe-console/archive/master.zip',
     //  The dashboard URL
@@ -51,6 +48,13 @@ return [
     'fast-track-admin-html'    => 'Create a System Admin User',
     /** When making web requests, the User-Agent to use */
     'user-agent'               => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
+    //******************************************************************************
+    //* ADS Settings
+    //******************************************************************************
+    /** @todo move these to its own config file (ads.php) */
+    'activate-by-days'         => env('DFE_ADS_ACTIVATE_BY_DAYS', ConsoleDefaults::DEFAULT_ADS_ACTIVATE_BY_DAYS),
+    'activate-allowed-extends' => env('DFE_ADS_ACTIVATE_ALLOWED_EXTENDS', ConsoleDefaults::DEFAULT_ADS_ALLOWED_EXTENDS),
+    'ads-allowed-idle-days'    => env('DFE_ADS_ALLOWED_INACTIVE_DAYS', ConsoleDefaults::DEFAULT_ADS_ALLOWED_IDLE_DAYS),
     //*****************************************************************************
     //* Auditing details for instances
     //******************************************************************************

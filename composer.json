@@ -66,10 +66,6 @@
         },
         {
             "type": "vcs",
-            "url":  "https://github.com/dreamfactorysoftware/df-managed.git"
-        },
-        {
-            "type": "vcs",
             "url":  "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git"
         }
     ],
@@ -78,7 +74,6 @@
         "laravel/framework":                         "5.2.*",
         "laravelcollective/bus":                     "5.2.*",
         "dreamfactory/console-tools":                "dev-develop as dev-master",
-        "dreamfactory/df-managed":                   "1.1.*",
         "dreamfactory/dfe-audit":                    "1.0.*",
         "dreamfactory/dfe-capsule":                  "1.0.*",
         "dreamfactory/dfe-common":                   "1.0.*",

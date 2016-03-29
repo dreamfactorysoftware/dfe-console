@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
@@ -27,6 +28,12 @@ use Request;
  */
 class UsageService extends BaseService implements MetricsProvider
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
+
     //******************************************************************************
     //* Constants
     //******************************************************************************
@@ -176,11 +183,14 @@ class UsageService extends BaseService implements MetricsProvider
         $_gatherDate = date('Y-m-d');
         $_metrics = null;
 
-        $_instances = $start ? Instance::where('id >= :id', $start)->orderBy('id')->get() : Instance::orderBy('id')->get();
+        //  Get a list of all instance pk's
+        $_instanceIds = $start
+            ? \DB::select('SELECT id FROM instance_t WHERE id >= :id', [':id' => $start])
+            : \DB::select('SELECT id FROM instance_t');
 
         /** @type Instance $_instance */
-        foreach ($_instances as $_instance) {
-            $_api = InstanceApiClient::connect($_instance);
+        foreach ($_instanceIds as $_item) {
+            $_api = InstanceApiClient::connect($_instance = $this->findInstance($_item->id));
 
             //  Seed the stats, defaults to "not activated"
             $_stats = [
@@ -235,7 +245,7 @@ class UsageService extends BaseService implements MetricsProvider
                 Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
-            unset($_api, $_stats, $_list, $_status, $_row, $_instance);
+            unset($_api, $_stats, $_list, $_status, $_row, $_instance, $_instanceId);
         }
 
         Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');

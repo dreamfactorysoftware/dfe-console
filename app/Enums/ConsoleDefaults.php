@@ -89,9 +89,13 @@ class ConsoleDefaults extends FactoryEnum
     /**
      * @type int The default number of days an instance may remain non-active
      */
-    const DEFAULT_ACTIVATE_DAYS_BY = EnterpriseDefaults::DEFAULT_ACTIVATE_DAYS_BY;
+    const DEFAULT_ADS_ACTIVATE_BY_DAYS = EnterpriseDefaults::DEFAULT_ADS_ACTIVATE_BY_DAYS;
     /**
      * @type int The allowed number of activation extensions
      */
-    const DEFAULT_ACTIVATE_ALLOWED_EXTENDS = EnterpriseDefaults::DEFAULT_ACTIVATE_ALLOWED_EXTENDS;
+    const DEFAULT_ADS_ALLOWED_EXTENDS = EnterpriseDefaults::DEFAULT_ADS_ALLOWED_EXTENDS;
+    /**
+     * @type int The allowed number days an instance may remain unused/idle
+     */
+    const DEFAULT_ADS_ALLOWED_IDLE_DAYS = EnterpriseDefaults::DEFAULT_ADS_ALLOWED_IDLE_DAYS;
 }

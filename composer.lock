@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c478ab1237af09cf1c795d85b618d1b2",
-    "content-hash": "be67c8665d49257dc6312630625e1f47",
+    "hash": "a1c15bebde8c20af67b5b0181a7e0ea7",
+    "content-hash": "8b90c2fdb17a0145a2fc73c094c6fb7e",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -469,6 +469,70 @@
                 "utility"
             ],
             "time": "2016-03-08 18:21:18"
+        },
+        {
+            "name": "dreamfactory/df-managed",
+            "version": "2.0.15",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dreamfactorysoftware/df-managed.git",
+                "reference": "f0d12e331cbe339810b2a6cf2656f3274878f666"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/df-managed/zipball/f0d12e331cbe339810b2a6cf2656f3274878f666",
+                "reference": "f0d12e331cbe339810b2a6cf2656f3274878f666",
+                "shasum": ""
+            },
+            "require": {
+                "dreamfactory/php-utils": "1.1.*"
+            },
+            "require-dev": {
+                "dreamfactory/df-core": "0.2.*",
+                "laravel/laravel": "5.1.*",
+                "phpunit/phpunit": "@stable"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DreamFactory\\Managed\\": "src/"
+                }
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jerry Ablan",
+                    "email": "jerryablan@dreamfactory.com"
+                },
+                {
+                    "name": "David L. Weiner",
+                    "email": "davidweiner@dreamfactory.com"
+                },
+                {
+                    "name": "Arif Islam",
+                    "email": "arifislam@dreamfactory.com"
+                }
+            ],
+            "description": "DreamFactory(tm) Managed Service Library",
+            "homepage": "https://www.dreamfactory.com/",
+            "keywords": [
+                "dreamfactory",
+                "enterprise",
+                "manager",
+                "remote"
+            ],
+            "support": {
+                "source": "https://github.com/dreamfactorysoftware/df-managed/tree/2.0.15",
+                "issues": "https://github.com/dreamfactorysoftware/df-managed/issues"
+            },
+            "time": "2016-02-09 17:05:51"
         },
         {
             "name": "dreamfactory/dfe-api-client",
@@ -1479,12 +1543,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "428cc72d6f974710d04e2496a3dbd0e6df3ca3ae"
+                "reference": "2bf085181de735dbc6d40a7fcdd393d3cc5ab360"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/428cc72d6f974710d04e2496a3dbd0e6df3ca3ae",
-                "reference": "428cc72d6f974710d04e2496a3dbd0e6df3ca3ae",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/2bf085181de735dbc6d40a7fcdd393d3cc5ab360",
+                "reference": "2bf085181de735dbc6d40a7fcdd393d3cc5ab360",
                 "shasum": ""
             },
             "require": {
@@ -1599,7 +1663,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-03-28 02:21:11"
+            "time": "2016-03-28 15:57:25"
         },
         {
             "name": "laravelcollective/bus",

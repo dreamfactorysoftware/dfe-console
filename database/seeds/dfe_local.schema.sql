@@ -539,9 +539,12 @@ CREATE TABLE `instance_t` (
   `trial_instance_ind`  TINYINT(1)              NOT NULL   DEFAULT '1',
   `provision_ind`       TINYINT(1)              NOT NULL   DEFAULT '0',
   `deprovision_ind`     TINYINT(1)              NOT NULL   DEFAULT '0',
-  `state_nbr`           INT(11)                 NOT NULL   DEFAULT '0',
-  `ready_state_nbr`     INT(11)                 NOT NULL   DEFAULT '0',
-  `platform_state_nbr`  INT(11)                 NOT NULL   DEFAULT '0',
+  `state_nbr`           INT(11)                 NOT NULL   DEFAULT '0'
+  COMMENT 'provisioning state',
+  `ready_state_nbr`     INT(11)                 NOT NULL   DEFAULT '0'
+  COMMENT 'instance runtime state',
+  `platform_state_nbr`  INT(11)                 NOT NULL   DEFAULT '0'
+  COMMENT 'general operational state',
   `storage_version_nbr` INT(11)                 NOT NULL   DEFAULT '0',
   `last_state_date`     DATETIME                NOT NULL,
   `start_date`          DATETIME                           DEFAULT NULL,

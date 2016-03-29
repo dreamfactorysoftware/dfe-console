@@ -125,7 +125,7 @@ class Daily extends ConsoleCommand
                     if (false !== array_get($_taskConfig, 'enable', false)) {
                         $_results[$_operation] =
                             Deactivator::deprovisionInactiveInstances(
-                                array_get($_taskConfig, 'activate-days-by'),
+                                array_get($_taskConfig, 'activate-by-days'),
                                 array_get($_taskConfig, 'activate-allowed-extends'),
                                 array_get($_taskConfig, 'dry-run', true));
                     }

@@ -50,12 +50,12 @@ return [
         'storage'  => [],
         /** Instance tasks */
         'instance' => [
-            /** The automated deactivate system */
+            /** Automated Deactivation System (ADS) */
             'deactivation' => [
                 'enable'                   => true,
-                'activate-days-by'         => env('DFE_ACTIVATE_DAYS_BY', ConsoleDefaults::DEFAULT_ACTIVATE_DAYS_BY),
-                'activate-allowed-extends' => env('DFE_ACTIVATE_ALLOWED_EXTENDS', ConsoleDefaults::DEFAULT_ACTIVATE_ALLOWED_EXTENDS),
-                /** If true, all the deactivation logic will run, but instances will not be deprovisioned. However, the extension count will be incremented. */
+                'activate-by-days'         => env('DFE_ADS_ACTIVATE_BY_DAYS', ConsoleDefaults::DEFAULT_ADS_ACTIVATE_BY_DAYS),
+                'activate-allowed-extends' => env('DFE_ADS_ACTIVATE_ALLOWED_EXTENDS', ConsoleDefaults::DEFAULT_ADS_ALLOWED_EXTENDS),
+                /** If true, all the deactivation logic will run, but instances will *not* be deprovisioned. However, the extension count will be incremented. */
                 'dry-run'                  => true,
             ],
         ],
