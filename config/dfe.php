@@ -48,13 +48,6 @@ return [
     'fast-track-admin-html'    => 'Create a System Admin User',
     /** When making web requests, the User-Agent to use */
     'user-agent'               => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.109 Safari/537.36',
-    //******************************************************************************
-    //* ADS Settings
-    //******************************************************************************
-    /** @todo move these to its own config file (ads.php) */
-    'activate-by-days'         => env('DFE_ADS_ACTIVATE_BY_DAYS', ConsoleDefaults::DEFAULT_ADS_ACTIVATE_BY_DAYS),
-    'activate-allowed-extends' => env('DFE_ADS_ACTIVATE_ALLOWED_EXTENDS', ConsoleDefaults::DEFAULT_ADS_ALLOWED_EXTENDS),
-    'ads-allowed-idle-days'    => env('DFE_ADS_ALLOWED_INACTIVE_DAYS', ConsoleDefaults::DEFAULT_ADS_ALLOWED_IDLE_DAYS),
     //*****************************************************************************
     //* Auditing details for instances
     //******************************************************************************

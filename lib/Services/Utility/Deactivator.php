@@ -6,6 +6,8 @@ use DreamFactory\Enterprise\Database\Enums\DeactivationReasons;
 use DreamFactory\Enterprise\Database\Models\EnterpriseModel;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
+use DreamFactory\Enterprise\Services\Facades\Provision;
+use Illuminate\Support\Facades\Artisan;
 
 /**
  * General deprovisioner
@@ -31,8 +33,8 @@ class Deactivator
         $_results = [];
         $_count = $_errors = 0;
 
-        $days = $days ?: config('dfe.activate-by-days');
-        $extends = $extends ?: config('dfe.activate-allowed-extensions');
+        $days = $days ?: config('ads.activate-by-days');
+        $extends = $extends ?: config('ads.activate-allowed-extensions');
 
         $_rows = Instance::eligibleDeactivations($days, $ids);
 
@@ -82,7 +84,7 @@ class Deactivator
 
         try {
             if (false === $dryRun) {
-                $_result = OpsClient::deprovision(['instance-id' => $instance->instance_id_text,]);
+                $_result = \Artisan::call('dfe:deprovision', ['instance-id' => $instance->instance_id_text]);
             } else {
                 //  Deactivate if activated...
                 if ($instance->activate_ind && !Instance::find($instance->instance_id)->update(['activate_ind' => false, 'platform_state_nbr' => $state])) {

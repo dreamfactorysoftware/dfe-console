@@ -345,9 +345,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      *                           as deactivated and the operational state is set to DEACTIVATED
      *
      * @see \DreamFactory\Enterprise\Common\Enums\OperationalStates
-     * @return \DreamFactory\Enterprise\Common\Provisioners\BaseResponse|\DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceResponse|mixed
+     * @return array|bool
      */
-    protected function selfDestruct($instanceId, $days = null, $extends = null, $dryRun = false)
+    public function selfDestruct($instanceId, $days = null, $extends = null, $dryRun = false)
     {
         return Deactivator::deprovisionInactiveInstances($days, $extends, $dryRun, [$instanceId]);
     }

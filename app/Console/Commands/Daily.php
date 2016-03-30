@@ -121,13 +121,13 @@ class Daily extends ConsoleCommand
         //  Process the configured tasks for this run
         foreach ($config as $_operation => $_taskConfig) {
             switch ($_operation) {
-                case TaskOperations::DEACTIVATION:
+                case TaskOperations::ADS:
                     if (false !== array_get($_taskConfig, 'enable', false)) {
                         $_results[$_operation] =
                             Deactivator::deprovisionInactiveInstances(
-                                array_get($_taskConfig, 'activate-by-days'),
-                                array_get($_taskConfig, 'activate-allowed-extends'),
-                                array_get($_taskConfig, 'dry-run', true));
+                                config('ads.activate-by-days'),
+                                config('ads.activate-allowed-extends'),
+                                config('ads.dry-run', true));
                     }
                     break;
             }

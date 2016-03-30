@@ -12,7 +12,7 @@ class TaskOperations extends FactoryEnum
     //******************************************************************************
 
     /**
-     * @type string
+     * @type string Automated Deactivation System
      */
-    const DEACTIVATION = 'deactivation';
+    const ADS = 'ads';
 }
