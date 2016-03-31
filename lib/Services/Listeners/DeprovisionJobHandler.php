@@ -66,7 +66,8 @@ class DeprovisionJobHandler extends BaseListener
                 $_instance->user->email_addr_text,
                 trim($_instance->user->first_name_text . ' ' . $_instance->user->last_name_text),
                 [
-                    'instance' => $_instance->fresh(['user']),
+                    'instance'     => $_instance->fresh(['user']),
+                    'instanceName' => $_instance->instance_id_text,
                 ]);
 
             return $_response;

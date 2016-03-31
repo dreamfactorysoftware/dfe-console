@@ -20,7 +20,7 @@
 --}}
 <?php
 if (!isset($dashboard_url) || empty($dashboard_url)) {
-    $dashboard_url = config('dfe.dashboard_url');
+    $dashboard_url = config('dfe.dashboard-url');
 }
 ?>
 @section('contentBody')
