@@ -378,4 +378,16 @@ class UsageService extends BaseService implements MetricsProvider
 
         return $_list;
     }
+
+    /**
+     * Retrieves the current instance database connection
+     *
+     * @return \Illuminate\Database\Connection
+     */
+    protected function getConnection()
+    {
+        static $_db;
+
+        return $_db ?: $_db = $this->instance->instanceConnection();
+    }
 }
