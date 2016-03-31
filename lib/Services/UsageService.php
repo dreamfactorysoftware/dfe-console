@@ -270,6 +270,9 @@ class UsageService extends BaseService implements MetricsProvider
                 Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
+            //  Let it go
+            $_api->disconnect();
+
             unset($_api, $_stats, $_list, $_status, $_row, $_instance, $_instanceId);
         }
 
