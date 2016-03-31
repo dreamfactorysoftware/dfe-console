@@ -296,7 +296,7 @@ if (!isset($dashboard_url) || empty($dashboard_url)) {
 
         .callout {
             border-bottom: 1px solid #3498db;
-            background:    #3498db; /* For browsers that do not support gradients */
+            background:    #fa9634; /* For browsers that do not support gradients */
             background:    -webkit-linear-gradient(left top, #FAF684, #EA8624); /* For Safari 5.1 to 6.0 */
             background:    -o-linear-gradient(bottom right, #FAF684, #EA8624); /* For Opera 11.1 to 12.0 */
             background:    -moz-linear-gradient(bottom right, #FAF684, #EA8624); /* For Firefox 3.6 to 15 */
@@ -487,7 +487,7 @@ if (!isset($dashboard_url) || empty($dashboard_url)) {
                 <table bgcolor="#FFFFFF" border="0" cellpadding="0" cellspacing="0" width="500" id="emailBody">
                     <tr>
                         <td align="center" valign="top">
-                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" class="bg-gradient">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;background-color:#3498db;" class="bg-gradient">
                                 <tr>
                                     <td align="center" valign="top">
                                         <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">
@@ -568,7 +568,7 @@ if (!isset($dashboard_url) || empty($dashboard_url)) {
                     </tr>
                     <tr>
                         <td align="center" valign="top">
-                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;" class="callout">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="color:#FFFFFF;background-color:#fa9634;" class="callout">
                                 <tr>
                                     <td align="center" valign="top">
                                         <table border="0" cellpadding="0" cellspacing="0" width="500" class="flexibleContainer">

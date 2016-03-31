@@ -205,10 +205,10 @@ class UsageService extends BaseService implements MetricsProvider
         //  Get a list of all instance pk's
         $_instanceIds = $start
             //  NOT all
-            ? \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind AND id >= :id',
+            ? \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind AND id >= :id LIMIT 1',
                 [':id' => $start, ':activate_ind' => $activated])
             //  All
-            : \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind',
+            : \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind LIMIT 100',
                 [':activate_ind' => $activated]);
 
         /** @type Instance $_instance */
