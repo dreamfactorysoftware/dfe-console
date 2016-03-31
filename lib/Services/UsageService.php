@@ -213,7 +213,8 @@ class UsageService extends BaseService implements MetricsProvider
 
         /** @type Instance $_instance */
         foreach ($_instanceIds as $_item) {
-            $_api = InstanceApiClient::connect($_instance = $this->findInstance($_item->id));
+            $_api = new InstanceApiClientService($this->app);
+            $_api->connect($_instance = $this->findInstance($_item->id));
 
             //  Seed the stats, defaults to "not activated"
             $_stats = [
