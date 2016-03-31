@@ -208,7 +208,7 @@ class UsageService extends BaseService implements MetricsProvider
             ? \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind AND id >= :id',
                 [':id' => $start, ':activate_ind' => $activated])
             //  All
-            : \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind AND id >= :id',
+            : \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind',
                 [':activate_ind' => $activated]);
 
         /** @type Instance $_instance */
