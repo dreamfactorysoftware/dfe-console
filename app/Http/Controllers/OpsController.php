@@ -9,6 +9,7 @@ use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Versioned;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
+use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
@@ -89,7 +90,7 @@ class OpsController extends BaseController implements IsVersioned
 
         try {
             $_owner = $this->validateOwner($request);
-            $_instance = $this->findInstance($request->input('id'));
+            $_instance = $this->findInstance($_id);
 
             if ($_owner->type < OwnerTypes::CONSOLE && $_instance->user_id != $_owner->id) {
                 \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
@@ -98,6 +99,7 @@ class OpsController extends BaseController implements IsVersioned
             }
         } catch (\Exception $_ex) {
             //  Check the deleted instances
+            /** @type Instance $_instance */
             if (null === ($_instance = InstanceArchive::byNameOrId($_id)->first())) {
                 \Log::error('/api/v1/ops/status: Instance "' . $_id . '" not found.');
 
@@ -117,6 +119,8 @@ class OpsController extends BaseController implements IsVersioned
             'owner-private-path' => $_instance->getOwnerPrivatePath(),
             'private-path'       => $_instance->getPrivatePath(),
             'home-links'         => config('links', []),
+            'packages'           => $_instance->getPackages(),
+            'package-path'       => $_instance->getPackagePath(),
             //  morse
             'instance-id'        => $_instance->instance_name_text,
             'vendor-instance-id' => $_instance->instance_id_text,
@@ -248,17 +252,18 @@ class OpsController extends BaseController implements IsVersioned
     {
         try {
             $_instanceId = $request->input('instance-id');
-            $_ownerType = OwnerTypes::USER;
+            $_ownerType = $request->input('owner-type', OwnerTypes::USER);
             $_ownerId = $request->input('owner-id');
-            $_guestLocation = $request->input('guest-location');
+            $_guestLocation = $request->input('guest-location', GuestLocations::DFE_CLUSTER);
 
             $this->info('[ops-api] provision request', $request->input());
 
             $_job = new ProvisionJob($_instanceId, [
                 'guest-location' => $_guestLocation,
                 'owner-id'       => $_ownerId,
-                'owner-type'     => $_ownerType ?: OwnerTypes::USER,
+                'owner-type'     => $_ownerType,
                 'cluster-id'     => $request->input('cluster-id', config('dfe.cluster-id')),
+                'packages'       => array_merge($request->input('packages', []), config('provisioning.default-packages', [])),
             ]);
 
             \Queue::push($_job);
