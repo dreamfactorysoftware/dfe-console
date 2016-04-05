@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c478ab1237af09cf1c795d85b618d1b2",
-    "content-hash": "be67c8665d49257dc6312630625e1f47",
+    "hash": "1107de4cc25a846600389174148451b9",
+    "content-hash": "18931d1cfd1aa60935dd820498c9cf02",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -772,12 +772,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git",
-                "reference": "b8524d8061e191255dae83ac1d4e8e1a5480d95f"
+                "reference": "ef90f9e2f97939c7b4c22a0d91667dea2f6a4fe2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-dreamfactory-provisioner/zipball/b8524d8061e191255dae83ac1d4e8e1a5480d95f",
-                "reference": "b8524d8061e191255dae83ac1d4e8e1a5480d95f",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-dreamfactory-provisioner/zipball/ef90f9e2f97939c7b4c22a0d91667dea2f6a4fe2",
+                "reference": "ef90f9e2f97939c7b4c22a0d91667dea2f6a4fe2",
                 "shasum": ""
             },
             "require": {
@@ -827,7 +827,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner/issues"
             },
-            "time": "2016-04-05 01:54:54"
+            "time": "2016-04-05 21:31:15"
         },
         {
             "name": "dreamfactory/dfe-ops-client",
@@ -5375,11 +5375,53 @@
             "alias_normalized": "9999999-dev",
             "version": "dev-develop",
             "package": "dreamfactory/console-tools"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
+            "package": "dreamfactory/dfe-common"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
+            "package": "dreamfactory/dfe-ops-client"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
+            "package": "dreamfactory/dfe-api-client"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
+            "package": "dreamfactory/dfe-storage"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
+            "package": "dreamfactory/dfe-database"
+        },
+        {
+            "alias": "dev-master",
+            "alias_normalized": "9999999-dev",
+            "version": "dev-develop",
+            "package": "dreamfactory/dfe-dreamfactory-provisioner"
         }
     ],
     "minimum-stability": "dev",
     "stability-flags": {
         "dreamfactory/console-tools": 20,
+        "dreamfactory/dfe-common": 20,
+        "dreamfactory/dfe-ops-client": 20,
+        "dreamfactory/dfe-api-client": 20,
+        "dreamfactory/dfe-storage": 20,
+        "dreamfactory/dfe-database": 20,
+        "dreamfactory/dfe-dreamfactory-provisioner": 20,
         "wpb/string-blade-compiler": 20
     },
     "prefer-stable": false,
