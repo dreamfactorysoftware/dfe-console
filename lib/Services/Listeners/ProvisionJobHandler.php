@@ -81,7 +81,9 @@ class ProvisionJobHandler
                 throw new \RuntimeException('The provisioner of the request is not valid.');
             }
 
-            if (false === ($_response = $_provisioner->provision(new ProvisionServiceRequest($_instance)))) {
+            $_response = $_provisioner->provision(ProvisionServiceRequest::createProvision($_instance, null, false, ['packages' => $command->getPackages()]));
+
+            if (false === $_response) {
                 throw new ProvisioningException('provisioning error');
             }
 

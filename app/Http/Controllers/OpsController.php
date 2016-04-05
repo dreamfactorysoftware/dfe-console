@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Common\Packets\SuccessPacket;
 use DreamFactory\Enterprise\Common\Provisioners\PortableServiceRequest;
 use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Common\Traits\Versioned;
+use DreamFactory\Enterprise\Common\Utility\Ini;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
@@ -256,14 +257,19 @@ class OpsController extends BaseController implements IsVersioned
             $_ownerId = $request->input('owner-id');
             $_guestLocation = $request->input('guest-location', GuestLocations::DFE_CLUSTER);
 
-            $this->info('[ops-api] provision request', $request->input());
+            //  Get any install packages
+            $_packages = Ini::parseDelimitedString($request->input('packages', []));
+            $_defaultPackages = Ini::parseDelimitedString(config('provisioning.default-packages', []));
+
+            $this->info('[dfe.ops-controller.provision] provision request',
+                array_merge($request->input(), ['packages' => $_packages, 'default-packages' => $_defaultPackages]));
 
             $_job = new ProvisionJob($_instanceId, [
                 'guest-location' => $_guestLocation,
                 'owner-id'       => $_ownerId,
                 'owner-type'     => $_ownerType,
                 'cluster-id'     => $request->input('cluster-id', config('dfe.cluster-id')),
-                'packages'       => array_merge($request->input('packages', []), config('provisioning.default-packages', [])),
+                'packages'       => array_merge($_packages, $_defaultPackages),
             ]);
 
             \Queue::push($_job);
