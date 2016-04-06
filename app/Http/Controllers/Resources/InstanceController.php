@@ -1,5 +1,4 @@
-<?php
-namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
+<?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
 use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
@@ -18,27 +17,30 @@ class InstanceController extends ViewController
     /**
      * @type string
      */
-    protected $_tableName = 'instance_t';
+    protected $tableName = 'instance_t';
     /**
      * @type string
      */
-    protected $_model = 'DreamFactory\\Enterprise\\Database\\Models\\Instance';
+    protected $model = 'DreamFactory\\Enterprise\\Database\\Models\\Instance';
     /** @type string */
-    protected $_resource = 'instance';
-
-    protected $_prefix = 'v1';
+    protected $resource = 'instance';
 
     //******************************************************************************
     //* Methods
     //******************************************************************************
 
-    /** @inheritdoc */
+    /** @noinspection PhpMissingParentCallCommonInspection */
     public function index()
     {
         return $this->renderView('app.instances', ['instances' => Instance::orderBy('instance_id_text')->with(['user', 'cluster'])->get()]);
     }
 
-    /** @inheritdoc */
+    /** @noinspection PhpMissingParentCallCommonInspection */
+    /**
+     * @param array $viewData
+     *
+     * @return \Illuminate\View\View
+     */
     public function create(array $viewData = [])
     {
         return $this->renderView('app.instances.create', ['clusters' => Cluster::orderBy('cluster_id_text')->get()]);
@@ -87,6 +89,7 @@ class InstanceController extends ViewController
             return $this->bounceBack('/instances/create', 'Instance name "' . $_name . '" is invalid.');
         }
 
+        /** @noinspection PhpUndefinedFieldInspection */
         if (false === ($_instanceId = Instance::isNameAvailable($_name, \Auth::user()->admin_ind))) {
             return $this->bounceBack('/instances/create', 'Instance name "' . $_name . '" is not available.');
         }
@@ -113,7 +116,12 @@ class InstanceController extends ViewController
         return $this->index();
     }
 
-    /** @inheritdoc */
+    /** @noinspection PhpMissingParentCallCommonInspection */
+    /**
+     * @param $id
+     *
+     * @return array|\Illuminate\View\View
+     */
     public function edit($id)
     {
         return $this->renderView('app.instances.edit',
@@ -122,5 +130,31 @@ class InstanceController extends ViewController
                 'instance'    => Instance::with(['user', 'cluster'])->find($id),
                 'clusters'    => Cluster::orderBy('cluster_id_text')->get(),
             ]);
+    }
+
+    /**
+     * Show default provisioning settings page
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getSettings()
+    {
+        return $this->renderView('app.instances.settings');
+    }
+
+    /**
+     * Store default provisioning settings
+     */
+    public function postSettings()
+    {
+        //  Delete an instance
+        try {
+            \Session::flash('flash_message', 'Provisioning defaults saved.');
+            \Session::flash('flash_type', 'alert-success');
+
+            return $this->bounceBack('instances');
+        } catch (ModelNotFoundException $_ex) {
+            return $this->bounceBack('instances', ['Error storing provisioning defaults.']);
+        }
     }
 }
