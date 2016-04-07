@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="UpdateTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
-    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Services\Commands\UpdateTest" file="$PROJECT_DIR$/tests/Services/Commands/UpdateTest.php" scope="Class" />
-    <method />
-  </configuration>
-</component>

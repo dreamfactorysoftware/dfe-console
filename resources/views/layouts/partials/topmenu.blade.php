@@ -7,8 +7,8 @@ $prefix = isset($prefix) ? $prefix : ConsoleDefaults::UI_PREFIX;
 
 //  And page name (derived from route)
 if (!isset($pageName) || empty($pageName)) {
-    $_parts = explode('.', Route::getCurrentRoute()->getName());
-    $pageName = isset($_parts, $_parts[sizeof($_parts) - 2]) ? Str::title($_parts[sizeof($_parts) - 2]) : null;
+    $_parts = explode('/', str_replace($prefix . '/', null, \Route::getCurrentRoute()->getUri()));
+    $pageName = !empty($_parts) ? ucwords($_parts[0]) : null;
 }
 
 $_linkPrefix = '/' . ConsoleDefaults::UI_PREFIX . '/';

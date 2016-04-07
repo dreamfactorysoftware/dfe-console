@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use DreamFactory\Enterprise\Common\Enums\InstanceStates;
 use DreamFactory\Enterprise\Common\Services\BaseService;
+use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
@@ -27,6 +28,12 @@ use Request;
  */
 class UsageService extends BaseService implements MetricsProvider
 {
+    //******************************************************************************
+    //* Traits
+    //******************************************************************************
+
+    use EntityLookup;
+
     //******************************************************************************
     //* Constants
     //******************************************************************************
@@ -121,7 +128,7 @@ class UsageService extends BaseService implements MetricsProvider
         }
 
         //  Remove instance container if details disabled
-        config('license.send-instance-details', false) && array_forget($_stats, 'instance');
+        !config('license.send-instance-details', false) && array_forget($_stats, 'instance');
 
         return $_stats;
     }
@@ -172,20 +179,47 @@ class UsageService extends BaseService implements MetricsProvider
      */
     protected function gatherInstanceStatistics($start = null)
     {
+        $_gatherDate = date('Y-m-d');
+
+        //  Do the non-activated first
+        $this->processInstanceStatistics(false, $start);
+
+        //  Then activated
+        $this->processInstanceStatistics(true, $start);
+
+        //  Then bundle 'em up.
+        return $this->aggregateInstanceMetrics($_gatherDate);
+    }
+
+    /**
+     * @param bool     $activated If true, only activated instances will be used. If false, non-activated instances will be processed.
+     * @param int|null $start     The instance id to start with, for restarting the process from a prior run
+     *
+     * @return array
+     */
+    protected function processInstanceStatistics($activated = true, $start = null)
+    {
         $_gathered = 0;
         $_gatherDate = date('Y-m-d');
-        $_metrics = null;
 
-        $_instances = $start ? Instance::where('id >= :id', $start)->orderBy('id')->get() : Instance::orderBy('id')->get();
+        //  Get a list of all instance pk's
+        $_instanceIds = $start
+            //  NOT all
+            ? \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind AND id >= :id',
+                [':id' => $start, ':activate_ind' => $activated])
+            //  All
+            : \DB::select('SELECT id FROM instance_t WHERE activate_ind = :activate_ind',
+                [':activate_ind' => $activated]);
 
         /** @type Instance $_instance */
-        foreach ($_instances as $_instance) {
-            $_api = InstanceApiClient::connect($_instance);
+        foreach ($_instanceIds as $_item) {
+            $_api = new InstanceApiClientService($this->app);
+            $_api->connect($_instance = $this->findInstance($_item->id));
 
             //  Seed the stats, defaults to "not activated"
             $_stats = [
-                'uri'         => $_api->getProvisionedEndpoint(),
-                'environment' => ['version' => null, 'inception' => $_instance->create_date, 'status' => 'not activated'],
+                'uri'         => $_instance->getProvisionedEndpoint(),
+                'environment' => ['version' => null, 'inception' => $_instance->create_date, 'status' => $activated ? 'activated' : 'not activated'],
                 'resources'   => [],
             ];
 
@@ -194,20 +228,22 @@ class UsageService extends BaseService implements MetricsProvider
                     array_set($_stats, 'environment.version', data_get($_status, 'platform.version_current'));
 
                     //  Does it appear ok?
-                    $_instance = $_instance->fresh();
+                    if (!$activated) {
+                        $_instance = $_instance->fresh();
 
-                    switch ($_instance->ready_state_nbr) {
-                        case InstanceStates::READY:
-                            $_stats['environment']['status'] = 'activated';
-                            break;
+                        switch ($_instance->ready_state_nbr) {
+                            case InstanceStates::READY:
+                                $_stats['environment']['status'] = 'activated';
+                                break;
 
-                        case InstanceStates::ADMIN_REQUIRED:
-                            $_stats['environment']['status'] = 'no admin';
-                            break;
+                            case InstanceStates::ADMIN_REQUIRED:
+                                $_stats['environment']['status'] = 'no admin';
+                                break;
 
-                        default:
-                            $_stats['environment']['status'] = 'not activated';
-                            break;
+                            default:
+                                $_stats['environment']['status'] = 'not activated';
+                                break;
+                        }
                     }
 
                     //  Get resource counts
@@ -235,12 +271,13 @@ class UsageService extends BaseService implements MetricsProvider
                 Log::error('[dfe.usage-service:instance] ' . $_ex->getMessage());
             }
 
-            unset($_api, $_stats, $_list, $_status, $_row, $_instance);
+            //  Let it go
+            $_api->disconnect();
+
+            unset($_api, $_stats, $_list, $_status, $_row, $_instance, $_instanceId);
         }
 
         Log::info('[dfe.usage-service:instance] ' . number_format($_gathered, 0) . ' instance(s) examined.');
-
-        return $this->aggregateInstanceMetrics($_gatherDate);
     }
 
     /**
@@ -340,5 +377,17 @@ class UsageService extends BaseService implements MetricsProvider
         }
 
         return $_list;
+    }
+
+    /**
+     * Retrieves the current instance database connection
+     *
+     * @return \Illuminate\Database\Connection
+     */
+    protected function getConnection()
+    {
+        static $_db;
+
+        return $_db ?: $_db = $this->instance->instanceConnection();
     }
 }

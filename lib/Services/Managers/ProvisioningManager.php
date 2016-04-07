@@ -14,11 +14,10 @@ use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use DreamFactory\Enterprise\Services\Jobs\ExportJob;
 use DreamFactory\Enterprise\Services\Jobs\ImportJob;
 use DreamFactory\Enterprise\Services\Jobs\ProvisionJob;
-use DreamFactory\Enterprise\Services\Listeners\ProvisionJobHandler;
 use DreamFactory\Enterprise\Services\Provisioners\ProvisionServiceRequest;
+use DreamFactory\Enterprise\Services\Utility\Deactivator;
 use DreamFactory\Library\Utility\Json;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Queue;
 use League\Flysystem\Filesystem;
 use League\Flysystem\ZipArchive\ZipArchiveAdapter;
 use Symfony\Component\HttpFoundation\Response;
@@ -334,6 +333,23 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
             $_exports,
             $job->getTarget() ?: array_get($job->getOptions(), 'target'),
             array_get($job->getOptions(), 'keep-days'));
+    }
+
+    /**
+     * Deactivate/deprovision an instance if eligible
+     *
+     * @param string $instanceId The instance to process
+     * @param null   $days       The number of days instance has to activate
+     * @param null   $extends    The number of allowed extensions
+     * @param bool   $dryRun     If true, the instance is physically deprovisioned. If false, the instance is marked
+     *                           as deactivated and the operational state is set to DEACTIVATED
+     *
+     * @see \DreamFactory\Enterprise\Common\Enums\OperationalStates
+     * @return array|bool
+     */
+    public function selfDestruct($instanceId, $days = null, $extends = null, $dryRun = false)
+    {
+        return Deactivator::deprovisionInactiveInstances($days, $extends, $dryRun, [$instanceId]);
     }
 
     /**

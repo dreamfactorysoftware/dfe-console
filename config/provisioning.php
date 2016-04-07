@@ -59,6 +59,10 @@ return [
     'default-vendor-image-id'     => 4647,
     //	i386
     'default-vendor-image-flavor' => 0,
+    //  Any default packages with which to provision all instances
+    'default-packages'            => env('DFE_DEFAULT_PACKAGES'),
+    //  The subdirectory in instance private path where packages are stored
+    'package-path-name'           => 'packages',
     //******************************************************************************
     //* Auto-deactivation System
     //******************************************************************************

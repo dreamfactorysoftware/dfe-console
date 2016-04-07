@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dfe-console.local (cli)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:manifest cluster-gha web-gha outfile.out">
-    <RunnerSettings RunnerId="PhpScriptDebugRunner" />
-    <ConfigurationWrapper RunnerId="PhpScriptDebugRunner" />
-    <method />
-  </configuration>
-</component>

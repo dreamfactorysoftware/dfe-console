@@ -32,6 +32,7 @@ class ProvisionServiceRequest extends BaseRequest
             'deprovision' => !!$deprovision,
             'force'       => !!$force,
             'success'     => null,
+            'packages'    => [],
         ],
             $options);
 
@@ -194,6 +195,26 @@ class ProvisionServiceRequest extends BaseRequest
             $this->put('instance', $this->_findInstance($instanceId));
             $this->put('instance-id', $this->getInstance()->instance_id_text);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPackages()
+    {
+        return $this->get('packages', []);
+    }
+
+    /**
+     * @param array $packages
+     *
+     * @return $this
+     */
+    public function setPackages($packages)
+    {
+        $this->put('packages', $packages);
 
         return $this;
     }

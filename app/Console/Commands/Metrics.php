@@ -35,58 +35,6 @@ class Metrics extends ConsoleCommand
     //* Methods
     //******************************************************************************
 
-    /** @inheritdoc */
-    protected function getOptions()
-    {
-        return array_merge(parent::getOptions(),
-            [
-                [
-                    'gather',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'When specified, all metrics are gathered and written to the database. Use when scheduling jobs.',
-                ],
-                [
-                    'to-file',
-                    'f',
-                    InputOption::VALUE_REQUIRED,
-                    'Write metrics to a file.',
-                ],
-                [
-                    'console-only',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'Only gather "console" metrics',
-                ],
-                [
-                    'dashboard-only',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'Only gather "dashboard" metrics',
-                ],
-                [
-                    'instance-only',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'Only gather "dashboard" metrics',
-                ],
-                [
-                    'no-usage-data',
-                    null,
-                    InputOption::VALUE_OPTIONAL,
-                    'Do not send usage data if true',
-                    false,
-                ],
-                [
-                    'force',
-                    null,
-                    InputOption::VALUE_NONE,
-                    'Force overwrite of daily gather',
-                ],
-            ]);
-    }
-
-    /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * Handle the command
      *
@@ -163,5 +111,56 @@ class Metrics extends ConsoleCommand
         }
 
         return 0;
+    }
+
+    /** @inheritdoc */
+    protected function getOptions()
+    {
+        return array_merge(parent::getOptions(),
+            [
+                [
+                    'gather',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'When specified, all metrics are gathered and written to the database. Use when scheduling jobs.',
+                ],
+                [
+                    'to-file',
+                    'f',
+                    InputOption::VALUE_REQUIRED,
+                    'Write metrics to a file.',
+                ],
+                [
+                    'console-only',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Only gather "console" metrics',
+                ],
+                [
+                    'dashboard-only',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Only gather "dashboard" metrics',
+                ],
+                [
+                    'instance-only',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Only gather "dashboard" metrics',
+                ],
+                [
+                    'no-usage-data',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Do not send usage data if true',
+                    false,
+                ],
+                [
+                    'force',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'Force overwrite of daily gather',
+                ],
+            ]);
     }
 }

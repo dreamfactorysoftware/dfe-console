@@ -1,5 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dfe-console.local (cli dfe:blueprint) " type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:blueprint gha http://gha.dfe.3wipes.com jerryablan@dreamfactory.com argyle39">
-    <method />
-  </configuration>
-</component>

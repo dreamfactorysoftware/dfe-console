@@ -71,11 +71,31 @@ class ConsoleDefaults extends FactoryEnum
      */
     const DEFAULT_DOMAIN_PROTOCOL = EnterpriseDefaults::DEFAULT_DOMAIN_PROTOCOL;
     /**
+     * @type int The default number of days to keep password reset requests
+     */
+    const DEFAULT_RESETS_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_RESETS_DAYS_TO_KEEP;
+    /**
      * @type int The default number of days to keep system metrics
      */
     const DEFAULT_METRICS_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_METRICS_DAYS_TO_KEEP;
     /**
+     * @type int The default number of days to keep system metrics details
+     */
+    const DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP = EnterpriseDefaults::DEFAULT_METRICS_DETAIL_DAYS_TO_KEEP;
+    /**
      * @type string The default path of the blueprint repository
      */
     const DEFAULT_BLUEPRINT_REPO_PATH = EnterpriseDefaults::DEFAULT_BLUEPRINT_REPO_PATH;
+    /**
+     * @type int The default number of days an instance may remain non-active
+     */
+    const DEFAULT_ADS_ACTIVATE_BY_DAYS = EnterpriseDefaults::DEFAULT_ADS_ACTIVATE_BY_DAYS;
+    /**
+     * @type int The allowed number of activation extensions
+     */
+    const DEFAULT_ADS_ALLOWED_EXTENDS = EnterpriseDefaults::DEFAULT_ADS_ALLOWED_EXTENDS;
+    /**
+     * @type int The allowed number days an instance may remain unused/idle
+     */
+    const DEFAULT_ADS_ALLOWED_IDLE_DAYS = EnterpriseDefaults::DEFAULT_ADS_ALLOWED_IDLE_DAYS;
 }

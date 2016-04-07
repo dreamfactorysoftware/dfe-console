@@ -8,6 +8,9 @@ use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
+use DreamFactory\Library\Utility\Disk;
+use DreamFactory\Library\Utility\Enums\GlobFlags;
+use DreamFactory\Library\Utility\File;
 use Log;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -63,6 +66,7 @@ class Provision extends ConsoleCommand
             'owner-id'       => $_owner->id,
             'guest-location' => $this->argument('guest-location'),
             'owner-type'     => $_owner->owner_type_nbr,
+            'packages'       => $this->getPackages(),
         ];
 
         $this->writeln('Provisioning instance <comment>"' . $_instanceId . '"</comment>.');
@@ -112,10 +116,17 @@ class Provision extends ConsoleCommand
             [
                 [
                     'owner-type',
-                    null,
+                    't',
                     InputOption::VALUE_OPTIONAL,
                     'The "owner-id" type. Values: ' . OwnerTypes::prettyList('"', false, true),
                     OwnerTypes::USER,
+                ],
+                [
+                    'packages',
+                    'p',
+                    InputOption::VALUE_OPTIONAL,
+                    'A comma separated list of packages with which to provision the instance',
+                    null,
                 ],
                 [
                     'cluster-id',
@@ -125,5 +136,67 @@ class Provision extends ConsoleCommand
                     config('provisioning.default-cluster-id'),
                 ],
             ]);
+    }
+
+    /**
+     * Scans the input for valid packages
+     *
+     * @return array
+     */
+    protected function getPackages()
+    {
+        $_result = [];
+
+        if (null === ($_packages = trim($this->option('packages')))) {
+            return [];
+        }
+
+        $_packages = explode(',', $_packages);
+
+        foreach ($_packages as $_index => $_package) {
+            if (is_dir($_package = trim($_package))) {
+                if (false !== ($_files = Disk::glob(scandir($_package), GlobFlags::GLOB_NODIR | GlobFlags::GLOB_NODOTS))) {
+                    foreach ($_files as $_file) {
+                        $_file = Disk::path([$_package, $_file]);
+                        if ($this->isValidPackage($_file)) {
+                            $_result[] = $_file;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $_result;
+    }
+
+    /**
+     * Checks to see if a package file is a valid DF package
+     *
+     * @param string $file The absolute path to the file to check
+     *
+     * @return bool
+     */
+    protected function isValidPackage($file)
+    {
+        try {
+            $_zip = new \ZipArchive();
+
+            if (true !== ($_code = $_zip->open($file))) {
+                return false;
+            }
+
+            //  Make sure the package file is valid
+            if (false === $_zip->getFromName('package.json')) {
+                return false;
+            }
+
+            //  Close and release...
+            $_zip->close();
+            $_zip = null;
+
+            return true;
+        } catch (\Exception $_ex) {
+            return false;
+        }
     }
 }

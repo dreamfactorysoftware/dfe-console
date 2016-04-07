@@ -5,9 +5,8 @@
     @include('layouts.partials.sidebar-menu',['resource'=>'instances'])
 
     <div class="col-xs-11 col-sm-10 col-md-10">
-        @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Manage Instances'])
-
-            <!-- Tool Bar -->
+    @include('layouts.partials.context-header',['resource'=>'instances', 'title' => 'Manage Instances'])
+    <!-- Tool Bar -->
         <div class="row">
             <div class="col-md-12">
                 <div class="well well-sm">

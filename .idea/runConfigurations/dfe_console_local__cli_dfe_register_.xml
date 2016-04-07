@@ -1,5 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="dfe-console.local (cli dfe:register)" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="true" path="$PROJECT_DIR$/artisan" scriptParameters="dfe:register 0 application">
-    <method />
-  </configuration>
-</component>

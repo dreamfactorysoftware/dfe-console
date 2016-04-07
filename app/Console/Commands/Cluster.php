@@ -46,11 +46,11 @@ class Cluster extends ConsoleCommand
             case 'create':
             case 'update':
             case 'delete':
-                return $this->{'_' . $_command . 'Cluster'}($_clusterId);
+                return $this->{$_command . 'Cluster'}($_clusterId);
 
             case 'add':
             case 'remove':
-                return $this->{'_' . $_command . 'Server'}($_clusterId, $this->option('server-id'));
+                return $this->{$_command . 'Server'}($_clusterId, $this->option('server-id'));
 
             case 'show':
                 return $this->showServers($_clusterId);
@@ -61,6 +61,8 @@ class Cluster extends ConsoleCommand
 
     /**
      * @param string|int $clusterId
+     *
+     * @return int
      */
     protected function showServers($clusterId)
     {
@@ -80,6 +82,8 @@ class Cluster extends ConsoleCommand
         } catch (ModelNotFoundException $_ex) {
             throw new InvalidArgumentException('The cluster-id "' . $clusterId . '" is invalid.');
         }
+
+        return 0;
     }
 
     /** @inheritdoc */
@@ -128,9 +132,9 @@ class Cluster extends ConsoleCommand
      *
      * @return bool|\DreamFactory\Enterprise\Database\Models\Cluster
      */
-    protected function _createCluster($clusterId)
+    protected function createCluster($clusterId)
     {
-        if (false === ($_data = $this->_prepareData($clusterId))) {
+        if (false === ($_data = $this->prepareData($clusterId))) {
             return false;
         }
 
@@ -148,12 +152,12 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _updateCluster($clusterId)
+    protected function updateCluster($clusterId)
     {
         try {
-            $_cluster = $this->_findCluster($clusterId);
+            $_cluster = $this->findCluster($clusterId);
 
-            if (false === ($_data = $this->_prepareData())) {
+            if (false === ($_data = $this->prepareData())) {
                 return false;
             }
 
@@ -184,10 +188,10 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _deleteCluster($clusterId)
+    protected function deleteCluster($clusterId)
     {
         try {
-            $_cluster = $this->_findCluster($clusterId);
+            $_cluster = $this->findCluster($clusterId);
 
             if ($_cluster->delete()) {
                 $this->concat('cluster id ')->asComment($clusterId)->flush(' deleted.');
@@ -213,12 +217,16 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _addServer($clusterId, $serverId)
+    protected function addServer($clusterId, $serverId)
     {
         try {
             $_server = $this->findServer($serverId);
         } catch (ModelNotFoundException $_ex) {
-            $this->writeln('"server-id" is a required option for this operation.');
+            $this->writeln('server-id "' . $serverId . '" was not found.');
+
+            return false;
+        } catch (Exception $_ex) {
+            $this->writeln('Error adding server: ' . $_ex->getMessage());
 
             return false;
         }
@@ -236,12 +244,16 @@ class Cluster extends ConsoleCommand
      *
      * @return bool
      */
-    protected function _removeServer($clusterId, $serverId)
+    protected function removeServer($clusterId, $serverId)
     {
         try {
             $_server = $this->findServer($serverId);
         } catch (ModelNotFoundException $_ex) {
-            $this->writeln('"server-id" is a required option for this operation.');
+            $this->writeln('server-id "' . $serverId . '" was not found.');
+
+            return false;
+        } catch (Exception $_ex) {
+            $this->writeln('Error adding server: ' . $_ex->getMessage());
 
             return false;
         }
@@ -257,7 +269,7 @@ class Cluster extends ConsoleCommand
      *
      * @return array|bool
      */
-    protected function _prepareData($create = false)
+    protected function prepareData($create = false)
     {
         $_data = [];
 
@@ -266,7 +278,7 @@ class Cluster extends ConsoleCommand
             $create = true;
 
             try {
-                $this->_findCluster($_clusterId);
+                $this->findCluster($_clusterId);
 
                 $this->writeln('dfe: The cluster-id "' . $_clusterId . '" already exists.', 'error');
 

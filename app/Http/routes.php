@@ -49,6 +49,10 @@ if (config('dfe.enable-fast-track')) {
 
 \Route::group(['prefix' => ConsoleDefaults::UI_PREFIX,],
     function() {
+        //  Provisioning settings
+        \Route::get('instances/settings', 'Resources\InstanceController@getSettings');
+        \Route::post('instances/settings', 'Resources\InstanceController@postSettings');
+
         //  Specialty routes for UI
         \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
         \Route::get('instance/{instanceId}/services', 'Resources\LimitController@getInstanceServices');
@@ -87,6 +91,7 @@ if (config('dfe.enable-fast-track')) {
 /** Login event listener */
 \Event::listen('auth.login',
     function() {
+        /** @noinspection PhpUndefinedMethodInspection */
         \Auth::user()->update([
             'last_login_date'    => date('c'),
             'last_login_ip_text' => \Request::server('REMOTE_ADDR'),

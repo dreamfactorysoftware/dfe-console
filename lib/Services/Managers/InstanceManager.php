@@ -169,7 +169,7 @@ class InstanceManager extends BaseManager implements Factory
             //  Write it out
             return DB::transaction(function() use ($_ownerId, $_attributes, $_guestAttributes) {
                 $_instance = Instance::create($_attributes);
-                //logger('created instance row id#' . $_instance->id);
+                logger('created instance row id#' . $_instance->id);
 
                 $_guestAttributes['instance_id'] = $_instance->id;
                 $_guest = InstanceGuest::create($_guestAttributes);

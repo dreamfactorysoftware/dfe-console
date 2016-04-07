@@ -18,10 +18,15 @@
  $support_email_address     The support email address
 
 --}}
+<?php
+if (!isset($dashboard_url) || empty($dashboard_url)) {
+    $dashboard_url = config('dfe.dashboard-url');
+}
+?>
 @section('contentBody')
     <div>
         @if(false !== $instanceUrl)
-            <p>Your DreamFactory&trade; instance has been successfully created!</p>
+            <p>Your DreamFactory&trade; instance <strong>{{ $instanceName }}</strong> has been successfully created!</p>
             <p>To log in to your DreamFactory instance, go to <a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a>.</p>
             <p>You can also go to <a href="{{ $dashboard_url }}" target="_blank">{{ $dashboard_url }}</a> to access your DreamFactory&trade; Dashboard, where
                 you can manage all of your instances.</p>

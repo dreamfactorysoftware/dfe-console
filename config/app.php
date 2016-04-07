@@ -4,6 +4,7 @@ return [
     //* Application Settings
     //******************************************************************************
     'debug'           => env('APP_DEBUG', false),
+    'env'             => env('APP_ENV', 'production'),
     'url'             => env('APP_URL', 'http://dfe-console.local'),
     'timezone'        => 'America/New_York',
     'locale'          => 'en',

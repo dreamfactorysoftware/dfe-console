@@ -6,6 +6,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
 
 /**
+ * @see \DreamFactory\Enterprise\Services\Managers\InstanceManager
+ * 
  * @method static \DreamFactory\Enterprise\Services\Managers\InstanceManager registerInstances(array $instances)
  * @method static \DreamFactory\Enterprise\Services\Managers\InstanceManager registerInstance($tag, Instance $instance)
  * @method static \DreamFactory\Enterprise\Services\Managers\InstanceManager unregisterInstance($tag, Instance $instance)

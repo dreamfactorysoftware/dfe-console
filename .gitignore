@@ -1,9 +1,8 @@
+/app/move-instance-one.sh
 vendor/
 !.env-dist
 .env*
-.idea/*.iml
-.idea/workspace.xml
-.idea/composerJson.xml
+.idea/
 /build
 /tests/storage/
 /_ide_*.php

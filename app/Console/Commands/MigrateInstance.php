@@ -118,19 +118,6 @@ class MigrateInstance extends ConsoleCommand
     }
 
     /** @inheritdoc */
-    protected function configure()
-    {
-        $this->setHelp(<<<EOT
-The <info>dfe:migrate-instance</info> command initiates a "php artisan migrate"
-for an instance under management.
-
-<info>php artisan dfe:migrate-instance [-s|--seed] [-a|--all] [-c|--cluster-id=<cluster-id>] "instance-id"</info>
-
-EOT
-        );
-    }
-
-    /** @inheritdoc */
     protected function getArguments()
     {
         return array_merge(parent::getArguments(),

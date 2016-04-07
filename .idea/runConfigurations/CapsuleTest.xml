@@ -1,6 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CapsuleTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true">
-    <TestRunner class="DreamFactory\Enterprise\Console\Tests\Console\Commands\CapsuleTest" file="$PROJECT_DIR$/tests/Console/Commands/CapsuleTest.php" scope="Class" />
-    <method />
-  </configuration>
-</component>
