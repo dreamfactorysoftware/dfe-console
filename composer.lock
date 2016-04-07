@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "39864803cd3ec25ca75e17dac2c7e211b02ebadd"
+                "reference": "7ffb6a9fd9b07b81ffeb2779a7da46ea35bbaf69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/39864803cd3ec25ca75e17dac2c7e211b02ebadd",
-                "reference": "39864803cd3ec25ca75e17dac2c7e211b02ebadd",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/7ffb6a9fd9b07b81ffeb2779a7da46ea35bbaf69",
+                "reference": "7ffb6a9fd9b07b81ffeb2779a7da46ea35bbaf69",
                 "shasum": ""
             },
             "require": {
@@ -707,7 +707,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-04-05 01:53:16"
+            "time": "2016-04-06 20:30:33"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -715,12 +715,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "e4b1da2ec4e114332683ac7c9dcad750855d170a"
+                "reference": "ad161d0ce9a486cfd3ea1c6edb4ae2452c29e6ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/e4b1da2ec4e114332683ac7c9dcad750855d170a",
-                "reference": "e4b1da2ec4e114332683ac7c9dcad750855d170a",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/ad161d0ce9a486cfd3ea1c6edb4ae2452c29e6ab",
+                "reference": "ad161d0ce9a486cfd3ea1c6edb4ae2452c29e6ab",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2016-04-05 01:53:54"
+            "time": "2016-04-05 22:30:18"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
@@ -772,12 +772,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner.git",
-                "reference": "ef90f9e2f97939c7b4c22a0d91667dea2f6a4fe2"
+                "reference": "616ab21ccd37b820b1db5ba9a89e53fca4cfd2a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-dreamfactory-provisioner/zipball/ef90f9e2f97939c7b4c22a0d91667dea2f6a4fe2",
-                "reference": "ef90f9e2f97939c7b4c22a0d91667dea2f6a4fe2",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-dreamfactory-provisioner/zipball/616ab21ccd37b820b1db5ba9a89e53fca4cfd2a2",
+                "reference": "616ab21ccd37b820b1db5ba9a89e53fca4cfd2a2",
                 "shasum": ""
             },
             "require": {
@@ -827,7 +827,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-dreamfactory-provisioner/issues"
             },
-            "time": "2016-04-05 21:31:15"
+            "time": "2016-04-07 00:28:55"
         },
         {
             "name": "dreamfactory/dfe-ops-client",
@@ -835,12 +835,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-ops-client.git",
-                "reference": "fbef32ed80a0fcbad7cafaada611cafccc250d23"
+                "reference": "f491307d524a32054fa912bb18a563439c0e7b64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-ops-client/zipball/fbef32ed80a0fcbad7cafaada611cafccc250d23",
-                "reference": "fbef32ed80a0fcbad7cafaada611cafccc250d23",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-ops-client/zipball/f491307d524a32054fa912bb18a563439c0e7b64",
+                "reference": "f491307d524a32054fa912bb18a563439c0e7b64",
                 "shasum": ""
             },
             "require": {
@@ -887,7 +887,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-ops-client/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-ops-client/issues"
             },
-            "time": "2016-03-25 23:40:03"
+            "time": "2016-04-07 00:26:28"
         },
         {
             "name": "dreamfactory/dfe-partner",
@@ -954,12 +954,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-storage.git",
-                "reference": "ac4749b11402981e1cb2430186199c7465a7f741"
+                "reference": "5a7e101779caeb95a006067ed5f1c050e0985621"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-storage/zipball/ac4749b11402981e1cb2430186199c7465a7f741",
-                "reference": "ac4749b11402981e1cb2430186199c7465a7f741",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-storage/zipball/5a7e101779caeb95a006067ed5f1c050e0985621",
+                "reference": "5a7e101779caeb95a006067ed5f1c050e0985621",
                 "shasum": ""
             },
             "require": {
@@ -1005,7 +1005,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-storage/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-storage/issues"
             },
-            "time": "2016-04-05 01:54:08"
+            "time": "2016-04-06 23:33:13"
         },
         {
             "name": "dreamfactory/php-utils",
@@ -1479,12 +1479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "8495627adf080c1cb47201b4b427b2f633c279a6"
+                "reference": "1333d7d87174fea868469d6b1ef2e8a35770cfd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/8495627adf080c1cb47201b4b427b2f633c279a6",
-                "reference": "8495627adf080c1cb47201b4b427b2f633c279a6",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/1333d7d87174fea868469d6b1ef2e8a35770cfd8",
+                "reference": "1333d7d87174fea868469d6b1ef2e8a35770cfd8",
                 "shasum": ""
             },
             "require": {
@@ -1599,7 +1599,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-04-05 14:14:01"
+            "time": "2016-04-06 13:47:44"
         },
         {
             "name": "laravelcollective/bus",
@@ -2042,12 +2042,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "5fa84936755c16eeb257efdf56ee144f65e86a32"
+                "reference": "1565a2815d7c42ac58b4138b8ba1e7451d99b461"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/5fa84936755c16eeb257efdf56ee144f65e86a32",
-                "reference": "5fa84936755c16eeb257efdf56ee144f65e86a32",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1565a2815d7c42ac58b4138b8ba1e7451d99b461",
+                "reference": "1565a2815d7c42ac58b4138b8ba1e7451d99b461",
                 "shasum": ""
             },
             "require": {
@@ -2085,7 +2085,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2016-04-05 01:37:45"
+            "time": "2016-04-05 10:19:20"
         },
         {
             "name": "paragonie/random_compat",
