@@ -172,11 +172,10 @@ class InstanceController extends ViewController
         try {
             \Session::flash('flash_type', 'alert-success');
 
-            if (!empty($_packages = $request->input('package-list', []))) {
-                Config::putValue('packages.default-packages', $_packages);
-                \Session::flash('flash_message', 'Default packages updated.');
-            }
-
+            $_packages = $request->input('package-list', []);
+            Config::putValue('packages.default-packages', $_packages);
+            \Session::flash('flash_message', 'Default packages updated.');
+        }
             if (\Input::file('package-upload')) {
                 $_name = \Input::file('package-upload')->getClientOriginalName();
                 logger('[dfe.resources.instance] package upload: ' . \Input::file('package-upload')->getClientOriginalName());
@@ -196,10 +195,14 @@ class InstanceController extends ViewController
             }
 
             return $this->bounceBack('instances/packages');
-        } catch (FileException $_ex) {
-            return $this->bounceBack('instances/packages', ['There was a problem with your package upload.']);
-        } catch (\Exception $_ex) {
-            return $this->bounceBack('instances/packages', ['Error storing provisioning defaults. ' . $_ex->getMessage()]);
-        }
+        } catch (FileException $_ex)
+{
+return $this->bounceBack('instances/packages', ['There was a problem with your package upload.']);
+}
+
+catch
+(\Exception $_ex) {
+    return $this->bounceBack('instances/packages', ['Error storing provisioning defaults. ' . $_ex->getMessage()]);
+}
     }
 }
