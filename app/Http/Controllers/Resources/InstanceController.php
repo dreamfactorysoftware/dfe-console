@@ -5,6 +5,7 @@ use DreamFactory\Enterprise\Common\Utility\Ini;
 use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Cluster;
+use DreamFactory\Enterprise\Database\Models\Config;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Library\Utility\Disk;
@@ -151,35 +152,47 @@ class InstanceController extends ViewController
 
         return $this->renderView('app.instances.packages',
             [
-                'package_storage_path' => config('provisioning.package-storage-path'),
-                'packages'             => config('packages', []),
-                'default_packages'     => Ini::parseDelimitedString(env('DFE_DEFAULT_PACKAGES')),
+                'package_storage_path' => Config::getValue('packages.storage-path'),
+                'packages'             => Config::getValue('packages.package-list', []),
+                'default_packages'     => Config::getValue('packages.default-packages', Ini::parseDelimitedString(env('DFE_DEFAULT_PACKAGES'))),
             ]);
     }
 
     /**
      * Store default provisioning settings
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \DreamFactory\Enterprise\Console\Http\Controllers\Resources\InstanceController
      */
-    public function postPackages()
+    public function postPackages(Request $request)
     {
         logger('postPackages');
 
         try {
+            \Session::flash('flash_type', 'alert-success');
+
+            if (!empty($_packages = $request->input('package-list', []))) {
+                Config::putValue('packages.default-packages', $_packages);
+                \Session::flash('flash_message', 'Default packages updated.');
+            }
+
             if (\Input::file('package-upload')) {
                 $_name = \Input::file('package-upload')->getClientOriginalName();
                 logger('[dfe.resources.instance] package upload: ' . \Input::file('package-upload')->getClientOriginalName());
                 \Input::file('package-upload')->move(Disk::path([config('provisioning.package-storage-path')], true),
                     $_name);
 
-                $_packages = config('packages', []);
-                $_packages[] = $_name;
+                $_packages = Config::getValue('packages.package-list', []);
 
-                if (ConfigWriter::make('packages', $_packages)) {
-                    logger('[dfe.resources.instance] packages configuration updated.');
-                }
-
-                \Session::flash('flash_message', 'Package uploaded.');
-                \Session::flash('flash_type', 'alert-success');
+                if (!in_array($_name, $_packages)) {
+                    $_packages[] = $_name;
+                    Config::putValue('packages.package-list', $_packages);
+                    \Session::flash('flash_message', 'Package uploaded.');
+                } else {
+                    \Session::flash('flash_message', 'Duplicate package. Not saved.');
+                    \Session::flash('flash_type', 'alert-warning');
+                };
             }
 
             return $this->bounceBack('instances/packages');

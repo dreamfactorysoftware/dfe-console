@@ -68,4 +68,5 @@ HTML
     'package-upload-label'        => 'Upload a Package',
     'package-upload-help'         => '<p class="help-block">Select a DreamFactory&trade; package file to upload from your system and click the <strong>Upload</strong> button.</p>',
     'package-upload-button-text'  => 'Upload Package',
+    'make-default-button-text'    => 'Make Default',
 ];

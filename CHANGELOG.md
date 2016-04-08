@@ -14,7 +14,6 @@ All notable changes to this project will be documented in this file. This projec
  - `DFE_ADS_ACTIVATE_BY_DAYS` sets the number of days that an instance may remain in a non-activated state before auto-deprovisioning occurs
  - `DFE_ADS_ACTIVATE_ALLOWED_EXTENDS` sets the number of _extensions_ (in days) allowed before an instance is auto-deprovisioned
  - `DFE_ADS_ALLOWED_INACTIVE_DAYS` sets the number of days that an instance may remain idle (post activation) before auto-deprovisioning occurs
-- New default package installation setting (`provisioning.default-packages`) in `config/provisioning.php` 
 
 ### Updated
 - Miscellaneous PSR-2 code formatting

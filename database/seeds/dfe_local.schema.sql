@@ -107,7 +107,25 @@ CREATE TABLE `environment_t` (
   UNIQUE KEY `ux_environment_environment_id` (`environment_id_text`)
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_general_ci;
+
+/********************************************************************************
+* Configuration Settings: config_t
+********************************************************************************/
+
+CREATE TABLE `config_t` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name_text`   VARCHAR(64)  NOT NULL,
+  `value_text`  TEXT,
+  `create_date` DATETIME     NOT NULL,
+  `lmod_date`   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ux_config_name_text` (`name_text`)
+)
+  ENGINE = INNODB
+  CHARSET = utf8
+  COLLATE = utf8_general_ci;
 
 /********************************************************************************
 * Metrics & Telemetry: metrics_t / telemetry_t

@@ -12,6 +12,7 @@ use DreamFactory\Enterprise\Common\Utility\Ini;
 use DreamFactory\Enterprise\Console\Http\Middleware\AuthenticateOpsClient;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Enums\OwnerTypes;
+use DreamFactory\Enterprise\Database\Models\Config;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\InstanceArchive;
 use DreamFactory\Enterprise\Database\Models\User;
@@ -259,7 +260,7 @@ class OpsController extends BaseController implements IsVersioned
 
             //  Get any install packages
             $_packages = Ini::parseDelimitedString($request->input('packages', []));
-            $_defaultPackages = Ini::parseDelimitedString(config('provisioning.default-packages', []));
+            $_defaultPackages = Config::getValue('packages.default-packages', []);
 
             $this->info('[dfe.ops-controller.provision] provision request',
                 array_merge($request->input(), ['packages' => $_packages, 'default-packages' => $_defaultPackages]));
