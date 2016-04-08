@@ -59,7 +59,11 @@ return [
     'default-vendor-image-id'     => 4647,
     //	i386
     'default-vendor-image-flavor' => 0,
-    //  Any default packages with which to provision all instances
+    //******************************************************************************
+    //* Provisioning Packages
+    //******************************************************************************
+    'package-storage-path'        => env('DFE_PACKAGE_STORAGE_PATH', ConsoleDefaults::DEFAULT_PACKAGE_STORAGE_PATH),
+    //  Any default packages with which to provision all instances (pipe-delimited)
     'default-packages'            => env('DFE_DEFAULT_PACKAGES'),
     //  The subdirectory in instance private path where packages are stored
     'package-path-name'           => 'packages',

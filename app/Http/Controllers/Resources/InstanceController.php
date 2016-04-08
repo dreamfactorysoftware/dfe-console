@@ -1,12 +1,16 @@
 <?php namespace DreamFactory\Enterprise\Console\Http\Controllers\Resources;
 
+use DreamFactory\Enterprise\Common\Utility\ConfigWriter;
+use DreamFactory\Enterprise\Common\Utility\Ini;
 use DreamFactory\Enterprise\Console\Http\Controllers\ViewController;
 use DreamFactory\Enterprise\Database\Enums\GuestLocations;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Database\Models\User;
+use DreamFactory\Library\Utility\Disk;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class InstanceController extends ViewController
 {
@@ -32,6 +36,8 @@ class InstanceController extends ViewController
     /** @noinspection PhpMissingParentCallCommonInspection */
     public function index()
     {
+        logger('index');
+
         return $this->renderView('app.instances', ['instances' => Instance::orderBy('instance_id_text')->with(['user', 'cluster'])->get()]);
     }
 
@@ -66,6 +72,7 @@ class InstanceController extends ViewController
     {
         //  Delete an instance
         try {
+            /** @type Instance $_instance */
             $_instance = Instance::findOrFail($instanceId);
 
             if (0 != \Artisan::call('dfe:deprovision', ['instance-id' => $instanceId,])) {
@@ -101,6 +108,7 @@ class InstanceController extends ViewController
                 return $this->bounceBack('/instances/create', 'Invalid email address.');
             }
 
+            /** @type User $_owner */
             $_owner = User::byEmail($_email)->firstOrFail();
         } catch (ModelNotFoundException $_ex) {
             return $this->bounceBack('/instances/create', 'Owner "' . $_email . '" not registered.');
@@ -137,24 +145,48 @@ class InstanceController extends ViewController
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getSettings()
+    public function getPackages()
     {
-        return $this->renderView('app.instances.settings');
+        logger('getPackages');
+
+        return $this->renderView('app.instances.packages',
+            [
+                'package_storage_path' => config('provisioning.package-storage-path'),
+                'packages'             => config('packages', []),
+                'default_packages'     => Ini::parseDelimitedString(env('DFE_DEFAULT_PACKAGES')),
+            ]);
     }
 
     /**
      * Store default provisioning settings
      */
-    public function postSettings()
+    public function postPackages()
     {
-        //  Delete an instance
-        try {
-            \Session::flash('flash_message', 'Provisioning defaults saved.');
-            \Session::flash('flash_type', 'alert-success');
+        logger('postPackages');
 
-            return $this->bounceBack('instances');
-        } catch (ModelNotFoundException $_ex) {
-            return $this->bounceBack('instances', ['Error storing provisioning defaults.']);
+        try {
+            if (\Input::file('package-upload')) {
+                $_name = \Input::file('package-upload')->getClientOriginalName();
+                logger('[dfe.resources.instance] package upload: ' . \Input::file('package-upload')->getClientOriginalName());
+                \Input::file('package-upload')->move(Disk::path([config('provisioning.package-storage-path')], true),
+                    $_name);
+
+                $_packages = config('packages', []);
+                $_packages[] = $_name;
+
+                if (ConfigWriter::make('packages', $_packages)) {
+                    logger('[dfe.resources.instance] packages configuration updated.');
+                }
+
+                \Session::flash('flash_message', 'Package uploaded.');
+                \Session::flash('flash_type', 'alert-success');
+            }
+
+            return $this->bounceBack('instances/packages');
+        } catch (FileException $_ex) {
+            return $this->bounceBack('instances/packages', ['There was a problem with your package upload.']);
+        } catch (\Exception $_ex) {
+            return $this->bounceBack('instances/packages', ['Error storing provisioning defaults. ' . $_ex->getMessage()]);
         }
     }
 }

@@ -10,4 +10,5 @@ vendor/
 bootstrap/cache/*
 /storage/*
 config/metrics.php
+config/packages.php
 /tests/Http/Controllers/20*.json
