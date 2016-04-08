@@ -648,12 +648,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-common.git",
-                "reference": "7ffb6a9fd9b07b81ffeb2779a7da46ea35bbaf69"
+                "reference": "62c141a01ee7b3d6cd6422cf18650280b016f6e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/7ffb6a9fd9b07b81ffeb2779a7da46ea35bbaf69",
-                "reference": "7ffb6a9fd9b07b81ffeb2779a7da46ea35bbaf69",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-common/zipball/62c141a01ee7b3d6cd6422cf18650280b016f6e5",
+                "reference": "62c141a01ee7b3d6cd6422cf18650280b016f6e5",
                 "shasum": ""
             },
             "require": {
@@ -707,7 +707,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-common/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-common/issues"
             },
-            "time": "2016-04-06 20:30:33"
+            "time": "2016-04-08 00:06:56"
         },
         {
             "name": "dreamfactory/dfe-database",
@@ -715,12 +715,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dreamfactorysoftware/dfe-database.git",
-                "reference": "ad161d0ce9a486cfd3ea1c6edb4ae2452c29e6ab"
+                "reference": "889c8958cbcd90c2db7a1c9376bf77814ebea911"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/ad161d0ce9a486cfd3ea1c6edb4ae2452c29e6ab",
-                "reference": "ad161d0ce9a486cfd3ea1c6edb4ae2452c29e6ab",
+                "url": "https://api.github.com/repos/dreamfactorysoftware/dfe-database/zipball/889c8958cbcd90c2db7a1c9376bf77814ebea911",
+                "reference": "889c8958cbcd90c2db7a1c9376bf77814ebea911",
                 "shasum": ""
             },
             "require": {
@@ -764,7 +764,7 @@
                 "source": "https://github.com/dreamfactorysoftware/dfe-database/tree/develop",
                 "issues": "https://github.com/dreamfactorysoftware/dfe-database/issues"
             },
-            "time": "2016-04-05 22:30:18"
+            "time": "2016-04-08 20:45:02"
         },
         {
             "name": "dreamfactory/dfe-dreamfactory-provisioner",
@@ -1479,12 +1479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "1333d7d87174fea868469d6b1ef2e8a35770cfd8"
+                "reference": "28e60c2f5ddfdee35564833ac36d0f13450690e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/1333d7d87174fea868469d6b1ef2e8a35770cfd8",
-                "reference": "1333d7d87174fea868469d6b1ef2e8a35770cfd8",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/28e60c2f5ddfdee35564833ac36d0f13450690e7",
+                "reference": "28e60c2f5ddfdee35564833ac36d0f13450690e7",
                 "shasum": ""
             },
             "require": {
@@ -1599,7 +1599,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-04-06 13:47:44"
+            "time": "2016-04-08 20:07:38"
         },
         {
             "name": "laravelcollective/bus",
@@ -2042,12 +2042,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "1565a2815d7c42ac58b4138b8ba1e7451d99b461"
+                "reference": "2d0c3b70f8e701b957fc2e5a35ff32ba57ee5d21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1565a2815d7c42ac58b4138b8ba1e7451d99b461",
-                "reference": "1565a2815d7c42ac58b4138b8ba1e7451d99b461",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2d0c3b70f8e701b957fc2e5a35ff32ba57ee5d21",
+                "reference": "2d0c3b70f8e701b957fc2e5a35ff32ba57ee5d21",
                 "shasum": ""
             },
             "require": {
@@ -2085,7 +2085,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2016-04-05 10:19:20"
+            "time": "2016-04-07 05:39:20"
         },
         {
             "name": "paragonie/random_compat",
@@ -4252,19 +4252,24 @@
         },
         {
             "name": "phpspec/php-diff",
-            "version": "v1.0.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/php-diff.git",
-                "reference": "30e103d19519fe678ae64a60d77884ef3d71b28a"
+                "reference": "0464787bfa7cd13576c5a1e318709768798bec6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/php-diff/zipball/30e103d19519fe678ae64a60d77884ef3d71b28a",
-                "reference": "30e103d19519fe678ae64a60d77884ef3d71b28a",
+                "url": "https://api.github.com/repos/phpspec/php-diff/zipball/0464787bfa7cd13576c5a1e318709768798bec6a",
+                "reference": "0464787bfa7cd13576c5a1e318709768798bec6a",
                 "shasum": ""
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Diff": "lib/"
@@ -4277,12 +4282,11 @@
             "authors": [
                 {
                     "name": "Chris Boulton",
-                    "homepage": "http://github.com/chrisboulton",
-                    "role": "Original developer"
+                    "homepage": "http://github.com/chrisboulton"
                 }
             ],
             "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
-            "time": "2013-11-01 13:02:21"
+            "time": "2016-04-07 12:29:16"
         },
         {
             "name": "phpspec/phpspec",
@@ -4670,12 +4674,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "477f77eb841cd7c8ff27351d8d57e72e7df26d23"
+                "reference": "f9733ae34271bec6a6a6a1d4e9a8dd28f2ac1628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/477f77eb841cd7c8ff27351d8d57e72e7df26d23",
-                "reference": "477f77eb841cd7c8ff27351d8d57e72e7df26d23",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f9733ae34271bec6a6a6a1d4e9a8dd28f2ac1628",
+                "reference": "f9733ae34271bec6a6a6a1d4e9a8dd28f2ac1628",
                 "shasum": ""
             },
             "require": {
@@ -4734,7 +4738,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-04-05 14:35:21"
+            "time": "2016-04-07 07:09:31"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
