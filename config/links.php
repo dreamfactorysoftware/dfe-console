@@ -28,7 +28,7 @@ return [
     'console'   => [
         [
             'name'       => 'Welcome',
-            'href'       => '//license.dreamfactory.com/welcome.html',
+            'href'       => '//www.dreamfactory.com/in_enterprise_v1/welcome.html',
             'attributes' => [],
             'show'       => true,
         ],
