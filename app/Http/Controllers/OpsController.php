@@ -261,6 +261,11 @@ class OpsController extends BaseController implements IsVersioned
             //  Get any install packages
             $_packages = Ini::parseDelimitedString($request->input('packages', []));
             $_defaultPackages = Config::getValue('packages.default-packages', []);
+            $packagePath = config('provisioning.package-storage-path');
+
+            foreach ($_defaultPackages as $i => $df){
+                $_defaultPackages[$i] = $packagePath . DIRECTORY_SEPARATOR . $df;
+            }
 
             $this->info('[dfe.ops-controller.provision] provision request',
                 array_merge($request->input(), ['packages' => $_packages, 'default-packages' => $_defaultPackages]));
