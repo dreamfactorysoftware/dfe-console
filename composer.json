@@ -29,6 +29,10 @@
             "name":  "Carsten Jacobsen",
             "email": "carstenjacobsen@dreamfactory.com",
             "role":  "Front-end, user interface"
+        },
+        {
+            "name":  "Arif Islam",
+            "email": "arifislam@dreamfactory.com"
         }
     ],
     "repositories":      [
