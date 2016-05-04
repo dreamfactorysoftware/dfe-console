@@ -62,7 +62,7 @@ class ImportJobHandler extends BaseListener
             //  Let the user know...
             $this->notifyJobOwner(ConsoleOperations::IMPORT,
                 $_owner->email_addr_text,
-                trim($_owner->user->first_name_text . ' ' . $_owner->user->last_name_text),
+                trim($_owner->first_name_text . ' ' . $_owner->last_name_text),
                 [
                     'instance' => Instance::byNameOrId($_instanceId)->first(),
                 ]);
@@ -73,7 +73,7 @@ class ImportJobHandler extends BaseListener
             //  Let the user know...
             $this->notifyJobOwner(ConsoleOperations::IMPORT,
                 $_owner->email_addr_text,
-                trim($_owner->user->first_name_text . ' ' . $_owner->user->last_name_text),
+                trim($_owner->first_name_text . ' ' . $_owner->last_name_text),
                 [
                     'instance'      => false,
                     'instanceUrl'   => false,
