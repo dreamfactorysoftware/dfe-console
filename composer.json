@@ -33,6 +33,10 @@
         {
             "name":  "Arif Islam",
             "email": "arifislam@dreamfactory.com"
+        },
+        {
+            "name": "Charles Harmon",
+            "email": "charlesharmon@dreamfactory.com"
         }
     ],
     "repositories":      [
