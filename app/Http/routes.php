@@ -50,8 +50,8 @@ if (config('dfe.enable-fast-track')) {
 \Route::group(['prefix' => ConsoleDefaults::UI_PREFIX,],
     function() {
         //  Provisioning settings
-        \Route::get('instances/settings', 'Resources\InstanceController@getSettings');
-        \Route::post('instances/settings', 'Resources\InstanceController@postSettings');
+        \Route::get('instances/packages', 'Resources\InstanceController@getPackages');
+        \Route::post('instances/packages', 'Resources\InstanceController@postPackages');
 
         //  Specialty routes for UI
         \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');

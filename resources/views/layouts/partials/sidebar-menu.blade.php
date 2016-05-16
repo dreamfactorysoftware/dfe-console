@@ -8,7 +8,7 @@ $_base = '/' . $prefix . '/' . $resource;
 $_active = ' class="active"';
 $_items = ['Manage' => $_base, 'Create' => $_base . '/create'];
 if ('instances' == $resource)
-    $_items['Settings'] = $_base . '/settings';
+    $_items['Packages'] = $_base . '/packages';
 ?>
 <div class="col-xs-1 col-sm-2 col-md-2 df-sidebar-nav">
     <ul class="nav nav-pills nav-stacked visible-md visible-lg">

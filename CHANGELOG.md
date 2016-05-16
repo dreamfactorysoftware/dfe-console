@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.28][v1.0.28]
+### Updated
+- Fixes to DF package import
+
 ## [1.0.27][v1.0.27]
 ### Added
 - New `dfe:move-instance` command to relocate instances from one server to another
@@ -14,7 +18,6 @@ All notable changes to this project will be documented in this file. This projec
  - `DFE_ADS_ACTIVATE_BY_DAYS` sets the number of days that an instance may remain in a non-activated state before auto-deprovisioning occurs
  - `DFE_ADS_ACTIVATE_ALLOWED_EXTENDS` sets the number of _extensions_ (in days) allowed before an instance is auto-deprovisioned
  - `DFE_ADS_ALLOWED_INACTIVE_DAYS` sets the number of days that an instance may remain idle (post activation) before auto-deprovisioning occurs
-- New default package installation setting (`provisioning.default-packages`) in `config/provisioning.php` 
 
 ### Updated
 - Miscellaneous PSR-2 code formatting
@@ -123,6 +126,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.28]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.27...1.0.28
 [v1.0.27]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.26...1.0.27
 [v1.0.26]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.25...1.0.26
 [v1.0.25]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.20...1.0.25

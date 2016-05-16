@@ -98,4 +98,8 @@ class ConsoleDefaults extends FactoryEnum
      * @type int The allowed number days an instance may remain unused/idle
      */
     const DEFAULT_ADS_ALLOWED_IDLE_DAYS = EnterpriseDefaults::DEFAULT_ADS_ALLOWED_IDLE_DAYS;
+    /**
+     * @type string The default path to store provisioning packages relative to STORAGE_ROOT
+     */
+    const DEFAULT_PACKAGE_STORAGE_PATH = EnterpriseDefaults::DEFAULT_PACKAGE_STORAGE_PATH;
 }

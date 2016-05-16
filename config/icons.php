@@ -20,6 +20,7 @@ return [
     'launch'       => 'fa-rocket',
     'create'       => 'fa-rocket',
     'start'        => 'fa-play',
+    'star'         => 'fa-star',
     'stop'         => 'fa-stop',
     'server-types' => [
         ServerTypes::DB  => 'fa-database',

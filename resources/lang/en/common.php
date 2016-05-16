@@ -60,4 +60,13 @@ HTML
     //* Others
     //******************************************************************************
     'session-expired'             => 'Your session has expired or is otherwise not valid.',
+    //******************************************************************************
+    //* Packages
+    //******************************************************************************
+    'package-list-label'          => 'Available Packages',
+    'package-list-help'           => '<p class="help-block">These packages are available for instance provisioning.</p>',
+    'package-upload-label'        => 'Upload a Package',
+    'package-upload-help'         => '<p class="help-block">Select a DreamFactory&trade; package file to upload from your system and click the <strong>Upload</strong> button.</p>',
+    'package-upload-button-text'  => 'Upload Package',
+    'make-default-button-text'    => 'Make Default',
 ];
