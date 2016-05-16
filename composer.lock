@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "44b16dec4417fccbeef4b26390b0ba1c",
-    "content-hash": "18931d1cfd1aa60935dd820498c9cf02",
+    "hash": "2e2eb536afd172930c003e2042228d08",
+    "content-hash": "7f5fa475da4ac4a18952601b7bee5baa",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -5381,59 +5381,9 @@
             "time": "2014-10-01 04:00:00"
         }
     ],
-    "aliases": [
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/console-tools"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/dfe-common"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/dfe-ops-client"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/dfe-api-client"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/dfe-storage"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/dfe-database"
-        },
-        {
-            "alias": "dev-master",
-            "alias_normalized": "9999999-dev",
-            "version": "dev-develop",
-            "package": "dreamfactory/dfe-dreamfactory-provisioner"
-        }
-    ],
+    "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "dreamfactory/console-tools": 20,
-        "dreamfactory/dfe-common": 20,
-        "dreamfactory/dfe-ops-client": 20,
-        "dreamfactory/dfe-api-client": 20,
-        "dreamfactory/dfe-storage": 20,
-        "dreamfactory/dfe-database": 20,
-        "dreamfactory/dfe-dreamfactory-provisioner": 20,
         "wpb/string-blade-compiler": 20
     },
     "prefer-stable": false,
