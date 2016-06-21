@@ -1,9 +1,209 @@
+var table;
+var usrSearch;
+var tableRowIndex = null;
+var tableColIndex = null;
+
+$(function() {
+
+    table = $('#userTable').DataTable({
+        "dom": '<"toolbar">ti',
+        "columns": [
+            {
+                "class": "details-control",
+                "orderable":false,
+                "data": null,
+                "defaultContent": "",
+                "render": function (data) {
+                    var userData = JSON.parse(data.original);
+                    var $template = $('form.user_frm_template').clone();
+                    var adminFlag = (userData.admin === true) ? 'admin' : 'user';
+                    $template.attr('action', 'users/' + userData.id);
+                    $template.prop('id', 'single_delete_' + userData.id + '_');
+                    $template.find('input#edit_url').val('users/edit/'+ userData.id + '/' + adminFlag);
+                    $template.find('input#user_name').val(userData.first_name_text + ' ' + userData.last_name_text);
+                    $template.find('.user_checkbox').prop('id', 'user_checkbox_' + userData.id);
+                    $template.find('input#user_id').val(userData.id);
+                    if (userData.admin === true) {
+                        $template.find('input#user_type').val('1');
+                        $template.find('.user_checkbox, button.remove_user').remove();
+                    }
+                    return $template.prop('outerHTML');
+                }
+            },
+            {
+                "name": "first_name_text",
+                "data": "first_name"
+            },
+            {
+                "name": "last_name_text",
+                "data": "last_name"
+            },
+            {
+                "name": "email_addr_text",
+                "data": "email"
+            },
+            {
+                "class": "details-control",
+                "orderable":false,
+                "data": null,
+                "defaultContent": "",
+                "render": function (data) {
+                    var userData = JSON.parse(data.original);
+                    if(userData.admin === true){
+                        return '<span class="label label-primary" id="user_type">System Administrator</span>';
+                    } else {
+                        return '<span class="label label-info" id="user_type">Instance Owner</span>';
+                    }
+
+                }
+            },
+            {
+                "class": "details-control",
+                "orderable":false,
+                "data": null,
+                "defaultContent": "",
+                "render": function (data) {
+                    var userData = JSON.parse(data.original);
+                    if(userData.active_ind === true){
+                        return '<span class="label label-success">Active</span>';
+                    } else {
+                        return '<span class="label label-warning">Not Active</span>';
+                    }
+
+                }
+            }
+        ],
+        "order": [[1, 'asc']],
+        "processing" : true,
+        "serverSide" : true,
+        "ajax": {
+            "url": "/v1/users/get_users"
+        },
+        "pageLength": 50,
+        "infoCallback": function( settings, start, end, max, total, pre ) {
+            return "Showing " + start + " to " + end +" of " + total.toLocaleString() + " Users";
+        }
+
+    });
+
+    /**
+     * Main draw callback for datatable.
+     */
+    table.on('draw', function () {
+        /**
+         * Highlight feature for search terms
+         */
+        if(table.search){
+            var body = $( table.table().body() );
+            body.unhighlight();
+            body.highlight( table.search() );
+        }
+        updatePageDropdown()
+    });
+
+    table.on('preXhr', function(){
+        add_waiting();
+    });
+
+    $(window).keydown(function(event){
+        if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+        }
+    });
+
+    $('#userSearch').on( 'keyup', function () {
+        $('#searchclear').show();
+        window.clearTimeout(usrSearch);
+        if($('#userSearch').val().length >= 3){
+            usrSearch = setTimeout(function(){
+                    table.search($('#userSearch').val()).ajax.reload();
+            }, 600);
+        } else if($('#userSearch').val().length == 0){
+            table.search('').ajax.reload();
+            $('#searchclear').hide();
+        }
+
+    });
+
+    $('#searchclear').on('click', function(){
+        $('#userSearch').val('');
+        $('#searchclear').hide();
+        table.search('').ajax.reload();
+    });
+
+    $('#userTable').on('click', '.remove_user', function(){
+        var uid = $(this).parent().find('#user_id').val();
+        var name = $(this).parent().find('#user_name').val();
+        removeUser(uid, name, '');
+
+    });
+
+
+    $("div.toolbar").html('');
+
+    $('#_next').on( 'click', function () {
+        _nextPage();
+    } );
+
+    $('#_prev').on( 'click', function () {
+        _prevPage();
+    });
+
+
+    $("#new_password").keyup(checkPasswordMatch);
+    $("#retype_new_password").keyup(checkPasswordMatch);
+
+
+    $('#selectedUsersRemove').click(function(){
+
+        var deleteArrayIds = [];
+        var deleteArrayTypes = [];
+        var deleteNames = '';
+
+        $('input[type=checkbox]').each(function () {
+            if($(this).is(':checked')){
+                deleteNames += '"' + $(this).parent().find('input#user_name').val() + '", ';
+                deleteArrayIds.push($(this).parent().find('input#user_id').val());
+                deleteArrayTypes.push($(this).parent().find('input#user_type').val());
+            }
+        });
+
+        deleteNames = deleteNames.substring(0, deleteNames.length - 2);
+
+        if(!deleteArrayIds.length){
+            alert('No User(s) Selected!');
+            return true;
+        }
+
+        $('#_selectedIds').val(deleteArrayIds);
+        $('#_selectedTypes').val(deleteArrayTypes);
+
+        if(confirm('Remove Selected Users ' + deleteNames + ' ?')){
+            $('#multi_delete').submit();
+            return true;
+        }
+        else
+            return false;
+    });
+
+    $('#refresh').click(function(){
+        table.ajax.reload();
+    });
+
+
+    /* TODO:Make this a modal */
+    $('#userTable tbody').on( 'click', 'tr', function (e) {
+        if( ! $(e.target).is('input:checkbox, button.remove_user')) {
+            window.location = $(this).find('form input#edit_url').val();
+        }
+    });
+
+}); //end ready()
 
 function cancelCreateUser(){
-
     window.location = '/v1/users';
 }
-
 
 function checkPasswordMatch() {
     var password = $("#new_password").val();
@@ -17,200 +217,20 @@ function checkPasswordMatch() {
     }
 }
 
-
 function cancelEditUser(){
     window.location = '/v1/users';
 }
-
-
-function initUserEditSet(status){
-
-    if(status)
-        $("#advancedUserOptions").show();
-    else
-        $("#advancedUserOptions").hide();
-}
-
 
 function removeUser(id, name, type) {
 
     if(confirm('Remove User "' + name + '" ? ')){
         $('#single_delete_' + id + '_' + type).submit();
         return true;
-    }
-    else
+    } else {
         return false;
+    }
 
 }
-
-
-$('#selectedUsersRemove').click(function(){
-
-    var deleteArrayIds = [];
-    var deleteArrayTypes = [];
-    var deleteNames = '';
-
-    $('input[type=checkbox]').each(function () {
-
-        var val = this.value.split(',');
-
-        if(this.checked){
-            deleteNames += '"' + this.name + '", ';
-            deleteArrayIds.push(val[0]);
-            deleteArrayTypes.push(val[1]);
-        }
-    });
-
-    deleteNames = deleteNames.substring(0, deleteNames.length - 2);
-
-    if(!deleteArrayIds.length){
-        alert('No User(s) Selected!');
-        return true;
-    }
-
-    $('#_selectedIds').val(deleteArrayIds);
-    $('#_selectedTypes').val(deleteArrayTypes);
-
-    if(confirm('Remove Selected Users ' + deleteNames + ' ?')){
-        $('#multi_delete').submit();
-        return true;
-    }
-    else
-        return false;
-});
-
-
-$('#refresh').click(function(){
-    table.state.clear();
-    localStorage.removeItem('Users_' + window.location.pathname);
-    window.location.reload();
-});
-
-
-var tableRowIndex = null;
-var tableColIndex = null;
-
-var table = $('#userTable').DataTable({
-    "dom": '<"toolbar">',
-    "aoColumnDefs": [
-        {
-            "bSortable": false,
-            "aTargets": [1]
-        },
-        {
-            "targets": [0],
-            "visible": false
-        }
-    ],
-    "bStateSave": true,
-    "pageLength": 50,
-    "fnStateSave": function (oSettings, oData) {
-        localStorage.setItem('Users_' + window.location.pathname, JSON.stringify(oData));
-    },
-    "fnStateLoad": function (oSettings) {
-        var data = localStorage.getItem('Users_' + window.location.pathname);
-        return JSON.parse(data);
-    }
-});
-
-
-$('#userTable tbody').on( 'click', 'tr', function () {
-
-    tableRowIndex = null;
-
-    var $tr = $(this);
-
-    while(tableColIndex === null){
-        //wait
-    }
-
-    var user_id = $tr.find('input[type="hidden"][id="user_id"]').val();
-    var user_admin = $tr.find('input[type="hidden"][id="user_type"]').val();
-
-    tableRowIndex = user_id;
-
-    var user_type = null;
-
-    if(tableColIndex !== null){
-
-        if(user_admin)
-            user_type = 'admin';
-        else
-            user_type = 'user';
-
-         if(tableColIndex > 1)
-             window.location = 'users/' + user_id + '/edit?user_type=' + user_type;
-    }
-} );
-
-
-$('#userTable tbody').on( 'click', 'td', function () {
-
-    tableColIndex = null;
-
-    var cellId = table.cell( this ).index().column;
-
-    tableColIndex = cellId;
-});
-
-
-
-function _nextPage(){
-    table.page( 'next' ).draw( false );
-
-    if((table.page.info().page + 1) === table.page.info().pages){
-        $('#_next').prop('disabled', true);
-    }
-
-    if(table.page.info().page > 0){
-        $('#_prev').prop('disabled', false);
-    }
-
-    $('#currentPage').html('Page ' + (table.page.info().page + 1));
-
-    setTableInfo();
-}
-
-function _prevPage(){
-    table.page( 'previous' ).draw( false );
-
-    if(table.page.info().page === 0)
-        $('#_prev').prop('disabled', true);
-
-    if((table.page.info().page + 1) === table.page.info().pages)
-        $('#_next').prop('disabled', true);
-
-    if(table.page.info().pages > 1)
-        $('#_next').prop('disabled', false);
-
-    $('#currentPage').html('Page ' + (table.page.info().page + 1));
-
-    setTableInfo();
-}
-
-function _gotoPage(page){
-    selectPage(page);
-}
-
-
-var table = $('#userTable').DataTable();
-var info = table.page.info();
-
-$("div.toolbar").html('');
-
-if($('#tableInfo').html() === '')
-    setTableInfo();
-
-
-$('#_next').on( 'click', function () {
-    _nextPage();
-} );
-
-$('#_prev').on( 'click', function () {
-    _prevPage();
-});
-
-
 
 function selectPage(page) {
 
@@ -229,23 +249,27 @@ function selectPage(page) {
     if((page + 1) === table.page.info().pages)
         $('#_next').prop('disabled', true);
 
-    setTableInfo();
 }
 
-
-
-function setTableInfo(){
-    $('#tableInfo').html('Showing Users ' + (table.page.info().start + 1) + ' to ' + table.page.info().end + ' of ' + table.page.info().recordsDisplay);
+function add_waiting(){
+    $('#userTable tbody').empty().append(
+        '<tr><td colspan="6"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td></tr>'
+    );
 }
-
 
 function updatePageDropdown(){
 
     $('#tablePages').empty();
+    var pages = table.page.info().pages;
+    $('#currentPage').text('Page '+ (parseInt(table.page.info().page)+1));
 
-    for(var i = 0; i < table.page.info().pages; i++){
-        $('#currentPage').text('Page 1');
-        $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
+    for(var i = 0; i < pages; i++){
+        var $li = $('<li/>');
+        if(table.page.info().page == i){
+            $li.addClass('active');
+        }
+        $li.html('<a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a>');
+        $('#tablePages').append($li);
     }
 
     if(table.page.info().page === 0)
@@ -261,47 +285,40 @@ function updatePageDropdown(){
         $('#_next').prop('disabled', true);
 }
 
+function _nextPage(){
+    table.page( 'next' ).draw( false );
 
+    if((table.page.info().page + 1) === table.page.info().pages){
+        $('#_next').prop('disabled', true);
+    }
 
-function filterGlobal () {
-    $('#userTable').DataTable().search(
-        $('#userSearch').val()
-    ).draw();
+    if(table.page.info().page > 0){
+        $('#_prev').prop('disabled', false);
+    }
 
-    updatePageDropdown();
-    setTableInfo();
+    $('#currentPage').html('Page ' + (table.page.info().page + 1));
+
 }
 
-$( document ).ready(function() {
-    $(window).keydown(function(event){
-        if(event.keyCode == 13) {
-            event.preventDefault();
-            return false;
-        }
-    });
+function _prevPage(){
+    table.page( 'previous' ).draw( false );
 
-    $("#new_password").keyup(checkPasswordMatch);
-    $("#retype_new_password").keyup(checkPasswordMatch);
-
-    if(info){
-        for(var i = 0; i < info.pages; i++){
-            $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
-        }
-
-        if(info.pages > 1)
-            $('#_next').prop('disabled', false);
-
+    if(table.page.info().page === 0)
         $('#_prev').prop('disabled', true);
 
-        $('#userSearch').on( 'keyup click', function () {
-            filterGlobal();
-        } );
+    if((table.page.info().page + 1) === table.page.info().pages)
+        $('#_next').prop('disabled', true);
 
-        updatePageDropdown();
-        selectPage(info.page);
-        $('#userSearch').val(table.search());
-        $('#userTable').show();
-    }
-});
+    if(table.page.info().pages > 1)
+        $('#_next').prop('disabled', false);
+
+    $('#currentPage').html('Page ' + (table.page.info().page + 1));
+
+}
+
+function _gotoPage(page){
+    selectPage(page);
+}
+
 
 

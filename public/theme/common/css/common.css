@@ -45,6 +45,11 @@ form {
     /*cursor: pointer;*/
 }
 
+table span.highlight {
+    background-color: #FFFF88;
+}
+
+
 .sorting {
     /*background: url('../../../img/sort-both.png') no-repeat center right;*/
 }

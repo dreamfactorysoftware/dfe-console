@@ -63,6 +63,9 @@ if (config('dfe.enable-fast-track')) {
 
         //  UI resource controllers
         \Route::resource('home', 'Resources\HomeController');
+        \Route::get('users', 'Resources\UserController@index');
+        \Route::get('users/get_users', 'Resources\UserController@get_users');
+        \Route::get('users/edit/{id}/{user_type}', 'Resources\UserController@edit');
         \Route::resource('users', 'Resources\UserController');
         \Route::resource('servers', 'Resources\ServerController');
         \Route::resource('clusters', 'Resources\ClusterController');

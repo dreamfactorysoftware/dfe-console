@@ -107,12 +107,18 @@
         "phpunit/phpunit":      "~4.0",
         "doctrine/dbal":        "~2.3",
         "phpspec/phpspec":      "~2.1",
-        "way/generators":       "~3.0"
+        "way/generators":       "~3.0",
+        "fzaninotto/faker":     "~1.4"
     },
     "autoload":          {
+        "classmap": [
+            "database"
+        ],
         "psr-4": {
             "DreamFactory\\Enterprise\\Console\\":  "app/",
-            "DreamFactory\\Enterprise\\Services\\": "lib/Services/"
+            "DreamFactory\\Enterprise\\Services\\": "lib/Services/",
+            "DreamFactory\\Enterprise\\Provisioners\\DreamFactory\\": "workbench/repos/dfe-dreamfactory-provisioner/src/",
+            "DreamFactory\\Enterprise\\Common\\": "workbench/repos/dfe-common/src/"
         }
     },
     "autoload-dev":      {
