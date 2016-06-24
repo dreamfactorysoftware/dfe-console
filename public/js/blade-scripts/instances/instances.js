@@ -1,86 +1,142 @@
-var table = $('#instanceTable').DataTable({
-    "dom":            '<"toolbar">', "aoColumnDefs": [{
-        "targets": [0], "visible": false
-    }], "bStateSave": true, "fnStateSave": function(oSettings, oData) {
-        localStorage.setItem('Instances_' + window.location.pathname, JSON.stringify(oData));
-    }, "fnStateLoad": function(oSettings) {
-        var data = localStorage.getItem('Instances_' + window.location.pathname);
-        return JSON.parse(data);
-    },
-    language:         {
-        emptyTable: 'No instances found'
-    }
-});
+var table;
+var info;
+var instSearch;
 
-var info = table.page.info();
+$(function(){
+    table = $('#instanceTable').DataTable({
+        "dom": '<"toolbar">ti',
+        "columns": [
+            {
+                "name": "instance_id_text",
+                "data": null,
+                "render": function(data){
+                    var $input = $('<input/>').attr('type', 'hidden').prop('id', 'instance_id').val(data.id);
+                    var $link  = $('<a/>')
+                        .addClass('instance-link')
+                        .attr('href', protocol + '://' + data.instance_id_text + '.' + data.default_domain)
+                        .attr('target', '_blank')
+                        .text(data.instance_id_text)
+                        .prop('outerHTML');
+                    return $input.prop('outerHTML') + $link;
+                }
+            },
+            {
+                "name": "email_addr_text",
+                "data": "email_addr_text"
+            },
+            {
+                "name": "cluster",
+                "data": "cluster"
+            },
+            {
+                "name": "create_date",
+                "data": "create_date"
+            },
+            {
+                "class": "details-control",
+                "orderable":false,
+                "data": null,
+                "defaultContent": "",
+                "render": function (data) {
+                    var $template = $('.frm_template form').clone();
+                    $template.attr('id', 'reset_counter_'+ data.id);
+                    $template.find('input#instance_id').val(data.id);
+                    $template.find('input#instance_id_text').val(data.instance_id_text);
+                    return $template.prop('outerHTML');
+                }
+            }
 
-function selectPage(page) {
-    table.page(page).draw(false);
-    $('#currentPage').html('Page ' + (page + 1));
+        ],
+        "order": [[0, 'asc']],
+        "processing" : true,
+        "serverSide" : true,
+        "ajax": {
+            "url": "instances/get_instances"
+        },
+        "pageLength": 25,
+        "infoCallback": function( settings, start, end, max, total, pre ) {
+            return "Showing " + start + " to " + end +" of " + total.toLocaleString() + " Instances";
+        },
+        language: {
+            emptyTable: 'No instances found.'
+        }
 
-    if (page == 0) {
-        $('#_prev').prop('disabled', true);
-    }
+    });
 
-    if ((page + 1) < info.pages) {
-        $('#_next').prop('disabled', false);
-    }
+    /**
+     * Main draw callback for datatable.
+     */
+    table.on('draw', function () {
+        /**
+         * Highlight feature for search terms
+         */
+        if(table.search){
+            var body = $( table.table().body() );
+            body.unhighlight();
+            body.highlight( table.search() );
+        }
+        updatePageDropdown();
+    });
 
-    if (page > 0) {
-        $('#_prev').prop('disabled', false);
-    }
+    table.on('preXhr', function(){
+        add_waiting();
+    });
 
-    if ((page + 1) == info.pages) {
-        $('#_next').prop('disabled', true);
-    }
+    $('#instanceSearch').on( 'keyup', function () {
+        $('#searchclear').show();
+            window.clearTimeout(instSearch);
+        if($('#instanceSearch').val().length >= 3){
+            instSearch = setTimeout(function(){
+                table.search($('#instanceSearch').val()).ajax.reload();
+            }, 600);
+        } else if($('#instanceSearch').val().length == 0){
+            table.search('').ajax.reload();
+            $('#searchclear').hide();
+        }
 
-    setTableInfo();
-}
+    });
 
-function filterGlobal() {
-    $('#instanceTable').DataTable().search($('#instanceSearch').val()).draw();
+    $('#searchclear').on('click', function(){
+        $('#instanceSearch').val('');
+        $('#searchclear').hide();
+        table.search('').ajax.reload();
+    });
 
-    setTableInfo();
+    $('#_next').on( 'click', function () {
+        _nextPage();
+    } );
+
+    $('#_prev').on( 'click', function () {
+        _prevPage();
+    });
+
+    $('#instanceTable').on('click', '.reset_counters', function(){
+        var inst_id = $(this).closest('form').find('#instance_id').val();
+        var inst_name = $(this).closest('form').find('#instance_id_text').val();
+        resetCounter(inst_id, inst_name);
+    });
+
+    $('#instanceTable').on('click', '.delete_instance', function(){
+        var inst_id = $(this).closest('form').find('#instance_id').val();
+        var inst_name = $(this).closest('form').find('#instance_id_text').val();
+        deleteInstance(inst_id, inst_name);
+    });
+
+    $('#refresh').click(function(){
+        $('#searchclear').trigger('click');
+        table.order([[0, 'asc']]);
+        table.ajax.reload();
+    });
+}); //end ready()
+
+function add_waiting(){
+    $('#instanceTable tbody').empty().append(
+        '<tr><td colspan="6" style="text-align: center;"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td></tr>'
+    );
 }
 
 function cancelEditInstance() {
     window.location = '/v1/instances';
-}
-
-function updatePageDropdown() {
-    var $_pages = $('#tablePages');
-    $_pages.empty();
-
-    for (var i = 0; i < info.pages; i++) {
-        $_pages.append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
-    }
-
-    if (info.page == 0) {
-        $('#_prev').prop('disabled', true);
-    }
-
-    if ((info.page + 1) < info.pages) {
-        $('#_next').prop('disabled', false);
-    }
-
-    if (info.page > 0) {
-        $('#_prev').prop('disabled', false);
-    }
-
-    if ((info.page + 1) == info.pages) {
-        $('#_next').prop('disabled', true);
-    }
-
-    setTableInfo();
-}
-
-function setTableInfo() {
-    $('#currentPage').html('Page ' + (info.page + 1));
-    $('#tableInfo').html(
-        info.recordsDisplay < 2
-            ? ''
-            : 'Showing ' + info.end + ' of ' + info.recordsTotal + ' instances'
-    );
 }
 
 function resetCounter(id, name) {
@@ -96,63 +152,6 @@ function deleteInstance(id, name) {
     if (confirm('Really deprovision instance "' + name + '"?')) {
         return $('#reset_counter_' + id).attr('action', '/v1/instance/' + id + '/delete').submit();
     }
-
     return false;
 }
 
-jQuery(function($) {
-    $('#instanceTable').show();
-
-    if (info) {
-        for (var i = 0; i < info.pages; i++) {
-            $('#tablePages').append('<li><a href="javascript:selectPage(' + i + ');">' + (i + 1) + '</a></li>')
-        }
-
-        $('#instanceSearch').on('keyup click', function() {
-            filterGlobal();
-        }).val(table.search());
-
-        updatePageDropdown();
-        selectPage(info.page);
-    }
-
-    //$('div.toolbar').empty();
-
-    $('#_next').on('click', function() {
-        table.page('next').draw(false);
-
-        if ((info.page + 1) == info.pages) {
-            $('#_next').prop('disabled', true);
-        }
-
-        if (info.page > 0) {
-            $('#_prev').prop('disabled', false);
-        }
-
-        setTableInfo();
-    }).prop('disabled', (info.pages <= 1));
-
-    $('#_prev').on('click', function() {
-        table.page('previous').draw(false);
-
-        $('#_prev').prop('disabled', (0 == info.page));
-
-        if ((info.page + 1) == info.pages) {
-            $('#_next').prop('disabled', true);
-        }
-
-        if (info.pages > 1) {
-            $('#_next').prop('disabled', false);
-        }
-
-        setTableInfo();
-    }).prop('disabled', (0 == info.page));
-
-    $('#refresh').click(function() {
-        table.state.clear();
-        localStorage.removeItem('Instances_' + window.location.pathname);
-        window.location.reload();
-    });
-
-    setTableInfo();
-});

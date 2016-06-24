@@ -2,22 +2,6 @@
 @extends('layouts.main')
 @section('content')
     @include('layouts.partials.sidebar-menu',['resource'=>'users'])
-<style type="text/css">
-    #searchinput {
-        width: 200px;
-    }
-    #searchclear {
-        position: absolute;
-        right: 5px;
-        top: 0;
-        bottom: 0;
-        height: 14px;
-        margin: auto;
-        font-size: 14px;
-        cursor: pointer;
-        color: #ccc;
-    }
-</style>
 
     <div class="col-md-10">
         <div>
@@ -123,7 +107,7 @@
             <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash remove_user" value="delete" style="width: 25px;"></button>
         </form>
     </div>
-
+    <script type="text/javascript" src="/js/blade-scripts/common.js"></script>
     <script type="text/javascript" src="/js/blade-scripts/users/users.js"></script>
     <script type="text/javascript" src="/static/plugins/bartaz/jquery.highlight.js"></script>
 

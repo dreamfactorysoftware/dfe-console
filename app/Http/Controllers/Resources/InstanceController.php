@@ -42,6 +42,97 @@ class InstanceController extends ViewController
         return $this->renderView('app.instances', ['instances' => Instance::orderBy('instance_id_text')->with(['user', 'cluster'])->get()]);
     }
 
+    public function get_instances(Request $request){
+
+        $instances = Instance::orderBy('instance_id_text')->with(['user', 'cluster'])->get()->toArray();
+        $rt = count($instances);
+
+        /* Determine if a datatables request */
+        if($request->has('draw')){
+            $dtParams = $request->all();
+
+            /* Search for terms */
+            if(isset($dtParams['search']['value']) && !empty($dtParams['search']['value'])){
+                $instances = $this->_search_instances($instances, $dtParams['search']['value']);
+            }
+
+            /* Sort users */
+            $this->_sort_instances($instances, $dtParams);
+
+            /* Important to get count before slicing */
+            $tInstances = count($instances);
+
+            /* Slice users */
+            $instances = array_slice($instances, $dtParams['start'], $dtParams['length']);
+
+
+            $return = [
+                'draw' => $dtParams['draw'],
+                'recordsTotal' => $rt,
+                'recordsFiltered' => $tInstances,
+                'data' => []
+            ];
+
+            foreach($instances as $k=>$instance){
+                $return['data'][] = [
+                    'id'               => $instance['id'],
+                    'instance_id_text' => $instance['instance_id_text'],
+                    'email_addr_text'  => $instance['user']['email_addr_text'],
+                    'cluster'          => $instance['cluster']['cluster_id_text'],
+                    'create_date'      => $instance['create_date'],
+                    'default_domain'   => $instance['instance_data_text']['env']['default-domain']
+                ];
+            }
+        }
+
+        return isset($return) ? json_encode($return) : array();
+    }
+
+    protected function _search_instances($instances, $term){
+        $finds = array();
+        foreach($instances as $idx=>$instance){
+            $email = (isset($instance['user']['email_addr_text'])) ? $instance['user']['email_addr_text'] : null;
+            if(stripos($instance['instance_id_text'], $term) !== false ||
+                stripos($email, $term) !== false ){
+                $finds[$idx] = $instance;
+            }
+
+        }
+        return $finds;
+    }
+
+    protected function _sort_instances(&$instances, $dtParams){
+        $srtCol = $dtParams['columns'][(int)$dtParams['order'][0]['column']]['name'];
+        $srtDir = $dtParams['order'][0]['dir'];
+
+        /* Pull out sort order and act upon it */
+        $sortable = array();
+        foreach($instances as $key=>$instance){
+            switch($srtCol){
+                case 'email_addr_text':
+                    $sortable[$key] = strtolower($instance['user'][$srtCol]);
+                    break;
+                case 'cluster':
+                    $sortable[$key] = strtolower($instance['cluster']['cluster_id_text']);
+                    break;
+                default:
+                    $sortable[$key] = strtolower($instance[$srtCol]);
+                    break;
+            }
+        }
+
+        switch ($srtDir){
+            case 'asc':
+            default:
+                array_multisort($sortable, SORT_ASC, $instances);
+                break;
+            case 'desc':
+                array_multisort($sortable, SORT_DESC, $instances);
+                break;
+        }
+    }
+
+
     /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * @param array $viewData
