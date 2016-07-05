@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.29][v1.0.29]
+### Updated
+- Made Instances and Users datatables use AJAX for only desired records, not entire set.
+
 ## [1.0.28][v1.0.28]
 ### Updated
 - Fixes to DF package import
@@ -126,6 +130,7 @@ All notable changes to this project will be documented in this file. This projec
 - Initial Release
 - Full suite of command line tests
 
+[v1.0.29]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.28...1.0.29
 [v1.0.28]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.27...1.0.28
 [v1.0.27]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.26...1.0.27
 [v1.0.26]: https://github.com/dreamfactorysoftware/dfe-console/compare/1.0.25...1.0.26
