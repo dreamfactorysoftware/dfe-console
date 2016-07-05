@@ -27,12 +27,13 @@
 
                     <div class="btn-group btn-group-sm">
                         <input id="instanceSearch" class="form-control input-sm" value="" type="text" placeholder="search term">
+                        <span id="searchclear" class="glyphicon glyphicon-remove-circle" style="display:none;"></span>
                     </div>
 
                     <div class="btn-group btn-group-md pull-right">
                         <button type="button"
                                 id="refresh"
-                                class="btn btn-default btn-success"
+                                class="btn btn-default"
                                 title="Refresh and reset sorting"><i class="fa fa-refresh"></i></button>
                     </div>
                 </div>
@@ -49,12 +50,10 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <div class="panel panel-default">
                         <table id="instanceTable"
-                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance">
-                            <thead>
+                               class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-instance" >
+                            <thead style="width:100%">
                             <tr>
-                                <th></th>
                                 <th>Name</th>
                                 <th>Owner Email</th>
                                 <th>Cluster</th>
@@ -63,52 +62,43 @@
                             </tr>
                             </thead>
                             <tbody>
-
-                            @foreach($instances as $_instance)
                                 <tr>
-                                    <td></td>
-                                    <td>
-                                        <input type="hidden" id="instance_id" value="{{ $_instance->id }}">
-                                        <a class="instance-link"
-                                           target="_blank"
-                                           href="{{ config('dfe.default-domain-protocol', \DreamFactory\Enterprise\Console\Enums\ConsoleDefaults::DEFAULT_DOMAIN_PROTOCOL) . '://' . $_instance->instance_id_text . '.' . data_get($_instance->instance_data_text,'env.default-domain') }}">
-                                            {{ $_instance->instance_id_text }}
-                                        </a>
-                                    </td>
-                                    <td>{{ $_instance->user->email_addr_text }}</td>
-                                    <td>{{ $_instance->cluster->cluster_id_text }}</td>
-                                    <td>{{ $_instance->create_date }}</td>
-                                    <td>
-                                        <form method="POST" action="/{{$prefix}}/limits/resetallcounters" id="reset_counter_{{ $_instance->id }}">
-                                            <input type="hidden" name="instance_id" id="instance_id" value="{{ $_instance->id }}">
-                                            <input name="_method" type="hidden" value="DELETE">
-                                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
-
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" class="btn btn-default"
-                                                        onclick="resetCounter('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}')"
-                                                        value="reset"
-                                                        data-toggle="tooltip" data-placement="right"
-                                                        title="Reset all limit counters for this instance"><i class="fa fa-fw fa-bolt"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-default"
-                                                        onclick="deleteInstance('{{ $_instance->id }}', '{{ $_instance->instance_id_text }}');"
-                                                        data-toggle="tooltip" data-placement="right"
-                                                        title="Deprovision"><i class="fa fa-fw fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </td>
+                                    <td colspan="6" style="text-align: center;"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td>
                                 </tr>
-                            @endforeach
+
                             </tbody>
                         </table>
-                    </div>
-
                     <span id="tableInfo"></span>
                 </div>
             </div>
         </div>
     </div>
+    <div style="display:none" class="frm_template">
+        <form method="POST" action="/v1/limits/resetallcounters" id="reset_counter_x">
+            <input type="hidden" name="instance_id" id="instance_id" value="">
+            <input type="hidden" name="instance_id_text" id="instance_id_text" value="">
+            <input name="_method" type="hidden" value="DELETE">
+            <input name="_token" type="hidden" value="{{ csrf_token() }}">
+
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-default reset_counters"
+                        value="reset"
+                        data-toggle="tooltip" data-placement="right"
+                        title="Reset all limit counters for this instance"><i class="fa fa-fw fa-bolt"></i>
+                </button>
+                <button type="button" class="btn btn-default delete_instance"
+                        data-toggle="tooltip" data-placement="right"
+                        title="Deprovision"><i class="fa fa-fw fa-trash"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+        var protocol = '<?= config('dfe.default-domain-protocol', \DreamFactory\Enterprise\Console\Enums\ConsoleDefaults::DEFAULT_DOMAIN_PROTOCOL); ?>';
+    </script>
+    <script type="text/javascript" src="/js/blade-scripts/common.js"></script>
+
     <script type="text/javascript" src="/js/blade-scripts/instances/instances.js"></script>
+    <script type="text/javascript" src="/static/plugins/bartaz/jquery.highlight.js"></script>
+
 @stop

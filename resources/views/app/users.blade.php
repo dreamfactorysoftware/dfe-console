@@ -3,7 +3,6 @@
 @section('content')
     @include('layouts.partials.sidebar-menu',['resource'=>'users'])
 
-
     <div class="col-md-10">
         <div>
             <div>
@@ -50,6 +49,8 @@
                         <div class="btn-group">
                             <input id="userSearch" class="form-control input-sm" value="" type="text"
                                    placeholder="Search Users...">
+                            <span id="searchclear" class="glyphicon glyphicon-remove-circle" style="display:none;"></span>
+
                         </div>
                         <div class="btn-group pull-right">
                             <button type="button" id="refresh" class="btn btn-default btn-sm fa fa-fw fa-refresh"
@@ -69,88 +70,46 @@
 
         <div class="row">
             <div class="col-xs-12">
-                <div class="panel panel-default">
                     <table cellpadding="0" cellspacing="0" border="0"
                            class="table table-responsive table-bordered table-striped table-hover table-condensed dfe-table-user"
-                           id="userTable" style="table-layout: fixed; width: 100%; display:none">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th style="max-width: 100px"></th>
-                            <th style="min-width: 175px">Name</th>
-                            <th style="min-width: 125px">Display Name</th>
-                            <th style="min-width: 175px">Email</th>
-                            <th style="min-width: 150px">Role</th>
-                            <th style="min-width: 100px">Status</th>
-                        </tr>
+                           id="userTable" style="table-layout: fixed; width: 100%;">
+                        <thead style="width:100%">
+                            <tr>
+                                <th style="max-width:100px; width:100px;"></th>
+                                <th style="max-width:200px; width:200px;">First Name</th>
+                                <th style="max-width:200px; width:200px;">Last Name</th>
+                                <th>Email</th>
+                                <th style="max-width:175px; width:175px;">Role</th>
+                                <th style="max-width:100px; width:100px;">Status</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach($users as $key => $value)
                             <tr>
-                                <td>
-                                    <input type="hidden" id="user_id" value="{{ $value->id }}">
-                                    <input type="hidden" id="user_type" value="{{ $value->admin }}">
-                                </td>
-                                <td style="height: 25px" id="actionColumn">
-                                    <form method="POST" action="/{{$prefix}}/users/{{$value->id}}"
-                                          id="single_delete_{{ $value->id }}_{{ $value->admin }}">
-                                        <input type="hidden" id="user_id" name="user_id" value="{{ $value->id }}">
-                                        <input type="hidden" id="user_type" name="user_type"
-                                               value="{{ $value->admin }}">
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <input name="_token" type="hidden" value="<?php echo csrf_token(); ?>">
-
-                                        @if( Auth::user()->id != $value->id)
-                                            <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}"
-                                                   id="user_checkbox_{{ $value->id }}"
-                                                   name="{{ $value->first_name_text }} {{ $value->last_name_text }}">
-                                            &nbsp;&nbsp;
-                                            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash"
-                                                    onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')"
-                                                    value="delete" style="width: 25px"></button>
-                                        @else
-                                            @if($value->admin == 0)
-                                                <input type="checkbox" value="{{ $value->id }},{{ $value->admin }}"
-                                                       id="user_checkbox_{{ $value->id }}"
-                                                       name="{{ $value->first_name_text }} {{ $value->last_name_text }}">
-                                                &nbsp;&nbsp;
-                                                <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash"
-                                                        onclick="removeUser({{ $value->id }}, '{{ $value->first_name_text }} {{ $value->last_name_text }}', '{{ $value->admin }}')"
-                                                        value="delete" style="width: 25px"></button>
-                                            @endif
-                                        @endif
-
-                                    </form>
-                                </td>
-                                <td>{{ $value->first_name_text }} {{ $value->last_name_text }}</td>
-                                <td>{{ $value->nickname_text }}</td>
-                                <td>{{ $value->email_addr_text }}</td>
-
-                                @if($value->admin == 0)
-                                    <td><span class="label label-info" id="user_type">Instance Owner</span></td>
-                                @else
-                                    <td><span class="label label-primary" id="user_type">System Administrator</span>
-                                    </td>
-                                @endif
-
-                                @if($value->active_ind == 0)
-                                    <td><span class="label label-warning">Not Active</span></td>
-                                @else
-                                    <td><span class="label label-success">Active</span></td>
-                                @endif
+                                <td colspan="6"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td>
                             </tr>
-                        @endforeach
                         </tbody>
                     </table>
-                </div>
-                <span id="tableInfo"></span>
                 <br><br><br><br>
             </div>
             <br><br><br><br>
         </div>
     </div>
+    <div style="display:none;" class="templates">
+        <form method="POST" action="/v1/users/1" id="single_delete_1_" class="user_frm_template">
+            <input type="hidden" id="user_id" name="user_id" value="1">
+            <input type="hidden" id="user_type" name="user_type" value=""/>
+            <input type="hidden" id="user_name" name="user_name" value=""/>
+            <input name="_method" type="hidden" value="DELETE">
+            <input name="_token" type="hidden" value="<?= csrf_token(); ?>">
+            <input type="hidden" id="edit_url" name="edit_url" value="" />
 
-    <script type="text/javascript" src="../../../js/blade-scripts/users/users.js"></script>
+            <input class="user_checkbox" type="checkbox" value="" id="user_checkbox_1" name="DreamFactory Admin">&nbsp;&nbsp;
+            <button type="button" class="btn btn-default btn-xs fa fa-fw fa-trash remove_user" value="delete" style="width: 25px;"></button>
+        </form>
+    </div>
+    <script type="text/javascript" src="/js/blade-scripts/common.js"></script>
+    <script type="text/javascript" src="/js/blade-scripts/users/users.js"></script>
+    <script type="text/javascript" src="/static/plugins/bartaz/jquery.highlight.js"></script>
 
     <script>
 

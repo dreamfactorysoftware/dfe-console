@@ -108,6 +108,12 @@ class MigrateInstance extends ConsoleCommand
 
         $_output = null;
 
+        /*Clears the framework cache after instance bootup */
+        if( 0 !== ($_result = $_capsule->call('cache:clear'))){
+            Log::error('Error result "' . $_result . '" returned');
+
+        }
+
         if (0 !== ($_result = $_capsule->call('migrate', $this->option('seed') ? ['--seed' => true] : []))) {
             Log::error('Error result "' . $_result . '" returned', ['output' => $_output]);
 

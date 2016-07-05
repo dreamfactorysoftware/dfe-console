@@ -33,10 +33,8 @@ class UserController extends ViewController
         return parent::create($viewData);
     }
 
-    public function edit($id)
+    public function edit($id, $user_type = null)
     {
-        if (isset($_GET['user_type'])) {
-            $user_type = $_GET['user_type'];
             $is_admin = false;
 
             if ($user_type == 'admin') {
@@ -51,9 +49,7 @@ class UserController extends ViewController
 
             return $this->renderView('app.users.edit',
                 ['user_id' => $id, 'user' => $user_data, 'is_admin' => $is_admin]);
-        } else {
-            return 'FAIL';
-        }
+
     }
 
     public function store(Request $request)
@@ -384,6 +380,66 @@ class UserController extends ViewController
 
     public function index()
     {
+
+        $users = $this->_get_users();
+
+        return $this->renderView('app.users', ['users' => $users]);
+
+    }
+
+    /**
+     * Gets all users
+     * @return string All users
+     */
+    public function get_users(Request $request){
+        /* Need to get users anyway */
+        $users = $this->_get_users();
+        $rt = count($users);
+
+        /* Determine if a datatables request */
+        if($request->has('draw')){
+            $dtParams = $request->all();
+
+            /* Search for terms */
+            if(isset($dtParams['search']['value']) && !empty($dtParams['search']['value'])){
+                $users = $this->_search_users($users, $dtParams['search']['value']);
+            }
+
+            /* Sort users */
+            $this->_sort_users($users, $dtParams);
+
+            /* Important to get count before slicing */
+            $tUsers = count($users);
+
+            /* Slice users */
+            $users = array_slice($users, $dtParams['start'], $dtParams['length']);
+
+
+            $return = [
+                'draw' => $dtParams['draw'],
+                'recordsTotal' => $rt,
+                'recordsFiltered' => $tUsers,
+                'data' => []
+            ];
+
+            foreach($users as $k=>$user){
+                $return['data'][] = [
+                    'original'   => json_encode($user),
+                    'first_name' => $user['first_name_text'],
+                    'last_name'  => $user['last_name_text'],
+                    'email'      => $user['email_addr_text']
+                ];
+            }
+        }
+
+        return json_encode($return);
+    }
+
+    /**
+     * Combinator function for combining and sorting service and admin users
+     * @return array
+     */
+    protected function _get_users(){
         $users_owners = new ServiceUser;
         $users_admins = new User;
 
@@ -397,27 +453,58 @@ class UserController extends ViewController
             'active_ind',
         ];
 
-        $o_users = $users_owners->get($_columns);
-        $a_users = $users_admins->get($_columns);
+        $o_users = $users_owners->get($_columns)->toArray();
+        $a_users = $users_admins->get($_columns)->toArray();
 
-        $o_users_array = json_decode($o_users);
-        $a_users_array = json_decode($a_users);
-
-        array_walk($o_users_array,
-            function (&$o_user_array){
-                $o_user_array->admin = true;
+        array_walk($o_users,
+            function (&$o_users){
+                $o_users['admin'] = true;
             });
 
-        array_walk($a_users_array,
-            function (&$a_user_array){
-                $a_user_array->admin = false;
+        array_walk($a_users,
+            function (&$a_users){
+                $a_users['admin'] = false;
             });
 
-        $result = array_merge($o_users_array, $a_users_array);
-        $result = array_map("unserialize", array_unique(array_map("serialize", $result)));
-        sort($result);
+        /* Now we have a merged & complete array of users */
+        $users = array_merge($o_users, $a_users);
 
-        return $this->renderView('app.users', ['users' => $result]);
+        return $users;
+
+    }
+
+    protected function _search_users($users, $term){
+        $finds = array();
+        foreach($users as $idx=>$user){
+            if(stripos($user['email_addr_text'], $term) !== false ||
+                stripos($user['first_name_text'], $term) !== false ||
+                stripos($user['last_name_text'], $term) !== false){
+                $finds[$idx] = $user;
+            }
+
+        }
+        return $finds;
+    }
+
+    protected function _sort_users(&$users, $dtParams){
+        $srtCol = $dtParams['columns'][(int)$dtParams['order'][0]['column']]['name'];
+        $srtDir = $dtParams['order'][0]['dir'];
+
+        /* Pull out sort order and act upon it */
+        $sortable = array();
+        foreach($users as $key=>$user){
+            $sortable[$key] = strtolower($user[$srtCol]);
+        }
+
+        switch ($srtDir){
+            case 'asc':
+            default:
+                array_multisort($sortable, SORT_ASC, $users);
+                break;
+            case 'desc':
+                array_multisort($sortable, SORT_DESC, $users);
+                break;
+        }
     }
 
 }

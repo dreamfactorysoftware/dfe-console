@@ -45,6 +45,11 @@ form {
     /*cursor: pointer;*/
 }
 
+table span.highlight {
+    background-color: #FFFF88;
+}
+
+
 .sorting {
     /*background: url('../../../img/sort-both.png') no-repeat center right;*/
 }
@@ -444,7 +449,9 @@ button[type="submit"] > i.fa-fw,
     cursor:         text;
     vertical-align: middle;
 }
-
+.table>tbody>tr>td {
+    line-height:2;
+}
 /**********************************************************
 *
 *   Policies
@@ -461,7 +468,6 @@ button[type="submit"] > i.fa-fw,
 table#instanceTable {
     table-layout: fixed;
     width:        100%;
-    display:      none;
 }
 
 .tab-content {
@@ -472,4 +478,19 @@ table#instanceTable {
     text-align:  center !important;
     font-size:   21px;
     font-weight: bold;
+}
+
+#searchinput {
+    width: 200px;
+}
+#searchclear {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: auto;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ccc;
 }

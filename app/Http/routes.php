@@ -54,7 +54,11 @@ if (config('dfe.enable-fast-track')) {
         \Route::post('instances/packages', 'Resources\InstanceController@postPackages');
 
         //  Specialty routes for UI
+        \Route::get('users', 'Resources\UserController@index');
+        \Route::get('users/get_users', 'Resources\UserController@get_users');
+        \Route::get('users/edit/{id}/{user_type}', 'Resources\UserController@edit');
         \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
+        \Route::get('instances/get_instances', 'Resources\InstanceController@get_instances');
         \Route::get('instance/{instanceId}/services', 'Resources\LimitController@getInstanceServices');
         \Route::get('instance/{instanceId}/users', 'Resources\LimitController@getInstanceUsers');
         \Route::get('instance/{instanceId}/admins', 'Resources\LimitController@getInstanceAdmins');

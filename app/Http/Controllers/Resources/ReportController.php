@@ -31,7 +31,9 @@ class ReportController extends ViewController
     {
         $url = (env('DFE_AUDIT_CLIENT_HOST') ? env('DFE_AUDIT_CLIENT_HOST') : env('DFE_AUDIT_HOST'));
 
-        $url .= ':'.(env('DFE_AUDIT_CLIENT_PORT') ? env('DFE_AUDIT_CLIENT_PORT') : '5601');
+        if(!empty(env('DFE_AUDIT_CLIENT_PORT'))){
+            $url .= ':'. env('DFE_AUDIT_CLIENT_PORT');
+        }
 
         if (strpos($url, 'http') === false) {
             $url = env('DFE_DEFAULT_DOMAIN_PROTOCOL').'://'.$url;
