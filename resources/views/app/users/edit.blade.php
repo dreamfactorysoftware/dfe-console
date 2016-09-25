@@ -52,6 +52,20 @@
                                    placeholder="Enter nickname." type="text">
                         </div>
                         <div class="form-group">
+                            <label>Company Name</label>
+                            <input id="company_name_text" name="company_name_text"
+                                   @if (Input::old('company_name_text')) value="{{ Input::old('company_name_text') }}"
+                                   @else value="{{$user->company_name_text}}" @endif class="form-control"
+                                   placeholder="Enter Company name (optional)." type="text" >
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input id="phone_text" name="phone_text"
+                                   @if (Input::old('phone_text')) value="{{ Input::old('phone_text') }}"
+                                   @else value="{{$user->phone_text}}" @endif class="form-control"
+                                   placeholder="Enter phone number (optional)." >
+                        </div>
+                        <div class="form-group">
                             <div id="set_password_form">
                                 <label>Set Password</label>
                                 <input id="new_password" name="new_password" class="form-control"

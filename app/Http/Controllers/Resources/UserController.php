@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Session;
 use Validator;
+use Excel;
+
+
 
 class UserController extends ViewController
 {
@@ -414,7 +417,6 @@ class UserController extends ViewController
             /* Slice users */
             $users = array_slice($users, $dtParams['start'], $dtParams['length']);
 
-
             $return = [
                 'draw' => $dtParams['draw'],
                 'recordsTotal' => $rt,
@@ -423,11 +425,20 @@ class UserController extends ViewController
             ];
 
             foreach($users as $k=>$user){
+                $is_active = 0;
+                /* Normalize active user flag - TODO: Need to redo this column in the database when combining tables. */
+                if((isset($user['active_ind']) && $user['active_ind'] === true) || isset($user['active_ind']) && $user['active_ind'] == 1){
+                    $is_active = 1;
+                }
                 $return['data'][] = [
-                    'original'   => json_encode($user),
-                    'first_name' => $user['first_name_text'],
-                    'last_name'  => $user['last_name_text'],
-                    'email'      => $user['email_addr_text']
+                'original'   => json_encode($user),
+                'create_date'=> $user['create_date'],
+                'first_name' => $user['first_name_text'],
+                'last_name'  => $user['last_name_text'],
+                'email'      => $user['email_addr_text'],
+                'company'    => (!is_null($user['company_name_text'])) ? $user['company_name_text'] : '',
+                'phoneText'  => (!is_null($user['phone_text'])) ? $user['phone_text'] : '',
+                    'is_active'  => $is_active
                 ];
             }
         }
@@ -445,6 +456,7 @@ class UserController extends ViewController
 
         $_columns = [
             'id',
+            'create_date',
             'first_name_text',
             'last_name_text',
             'nickname_text',
@@ -452,13 +464,18 @@ class UserController extends ViewController
             'owner_id',
             'active_ind',
         ];
-
         $o_users = $users_owners->get($_columns)->toArray();
-        $a_users = $users_admins->get($_columns)->toArray();
 
+        array_push($_columns,
+            'company_name_text',
+            'phone_text'
+        );
+        $a_users = $users_admins->get($_columns)->toArray();
         array_walk($o_users,
             function (&$o_users){
                 $o_users['admin'] = true;
+                $o_users['company_name_text'] = '';
+                $o_users['phone_text'] = '';
             });
 
         array_walk($a_users,
@@ -468,8 +485,54 @@ class UserController extends ViewController
 
         /* Now we have a merged & complete array of users */
         $users = array_merge($o_users, $a_users);
-
         return $users;
+
+    }
+
+    public function export_excel(){
+        $users = $this->_get_users();
+        $this->_sort_users($users, array(), 'create_date', 'desc');
+
+        $header = [
+            'Create Date',
+            'First Name',
+            'Last Name',
+            'Nickname',
+            'Email Address',
+            'Company Name',
+            'Phone Number',
+        ];
+
+        $mapping_order = [
+            'create_date',
+            'first_name_text',
+            'last_name_text',
+            'nickname_text',
+            'email_addr_text',
+            'company_name_text',
+            'phone_text',
+        ];
+
+        $target = array();
+        foreach ($users as $idx=>$user){
+            if(!isset($target[$idx])){
+                foreach($mapping_order as $tgt_order){
+                    $target[$idx][] = $user[$tgt_order];
+                }
+            }
+        }
+        array_unshift($target, $header);
+        Excel::create('DFE_Users', function($excel) use ($target){
+            $excel->sheet('DFE_Users', function($sheet) use ($target) {
+
+                $sheet->fromArray($target, null, 'A1', true, false);
+
+            });
+
+        })->download('xlsx');
+
+
+
 
     }
 
@@ -486,9 +549,13 @@ class UserController extends ViewController
         return $finds;
     }
 
-    protected function _sort_users(&$users, $dtParams){
-        $srtCol = $dtParams['columns'][(int)$dtParams['order'][0]['column']]['name'];
-        $srtDir = $dtParams['order'][0]['dir'];
+    protected function _sort_users(&$users, $dtParams = array(), $srtCol = NULL, $srtDir = NULL){
+
+        if(is_null($srtCol) && is_null($srtDir)){
+            $srtCol = $dtParams['columns'][(int)$dtParams['order'][0]['column']]['name'];
+            $srtDir = $dtParams['order'][0]['dir'];
+        }
+
 
         /* Pull out sort order and act upon it */
         $sortable = array();

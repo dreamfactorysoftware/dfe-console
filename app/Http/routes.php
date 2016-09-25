@@ -56,6 +56,7 @@ if (config('dfe.enable-fast-track')) {
         //  Specialty routes for UI
         \Route::get('users', 'Resources\UserController@index');
         \Route::get('users/get_users', 'Resources\UserController@get_users');
+        \Route::get('users/export_excel', 'Resources\UserController@export_excel');
         \Route::get('users/edit/{id}/{user_type}', 'Resources\UserController@edit');
         \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
         \Route::get('instances/get_instances', 'Resources\InstanceController@get_instances');
