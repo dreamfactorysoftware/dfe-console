@@ -238,7 +238,8 @@ class UserController extends ViewController
 
         if ($is_system_admin != '') {
             $user = ServiceUser::where('email_addr_text', '=', $user_data['email_addr_text'])->first();
-
+            unset($user_data['company_name_text']);
+            unset($user_data['phone_text']);
             if ($user != null) {
                 if ($user->id != $id) {
                     return 'FAIL';
