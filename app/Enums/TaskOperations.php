@@ -15,4 +15,5 @@ class TaskOperations extends FactoryEnum
      * @type string Automated Deactivation System
      */
     const ADS = 'ads';
+    const REMINDER = 'reminder';
 }

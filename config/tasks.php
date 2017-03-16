@@ -50,10 +50,15 @@ return [
         'storage'  => [],
         /** Instance tasks */
         'instance' => [
-            /** Automated Deactivation System (ADS) */
+            /** Automated Deactivation System (ADS)
+             See config/ads.php for deeper configuration*/
             'ads' => [
-                'enable' => true,
+                'enable' => true
             ],
+            'reminder' => [
+                /** Send reminders before decativation -  (ads.php)*/
+                'enable' => true
+            ]
         ],
     ],
     //******************************************************************************

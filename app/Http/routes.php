@@ -33,6 +33,7 @@ if (true === config('dfe.enable-console-api', false)) {
 //  Main page
 \Route::get(ConsoleDefaults::UI_PREFIX, ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('/home', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
+\Route::get('/email', ['uses' => 'Resources\HomeController@testEmail']);
 \Route::get('/', ['as' => 'home', 'uses' => 'Resources\HomeController@index']);
 \Route::get('logout', 'Resources\HomeController@logout');
 

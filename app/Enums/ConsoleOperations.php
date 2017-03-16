@@ -35,4 +35,10 @@ class ConsoleOperations extends FactoryEnum
      * @type string
      */
     const METRICS = 'metrics';
+
+    /**
+     * Reminder message that an instance is about to expire.
+     * @type string
+     */
+    const REMINDER = 'reminder';
 }
