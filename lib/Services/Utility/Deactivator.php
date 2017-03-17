@@ -20,10 +20,9 @@ class Deactivator
     //*************************************************************************
 
     /**
-     * Deactivate instances that haven't been activated in "x" days
+     * Deactivate instances that have past the expiration for trial
      *
-     * @param int|null   $days
-     * @param int|null   $extends
+     * @param int|null   $expiresDays Days past creation date where instances become eligible for removal.
      * @param bool       $dryRun If true, go through the motions but do not deprovision instances.
      * @param array|null $ids    An array of one or more instance-id's that should only be considered
      *
@@ -92,6 +91,10 @@ class Deactivator
                     'url' => $instanceDataText['env']['instance-id'] . '.' . $instanceDataText['env']['default-domain'],
 
                 ];
+                logger('[dfe.deactivator.processReminders] Deactivation ' . $days . ' day reminder sent for instance "' .
+                    $_rows->instance_id_text .
+                    '" created on ' .
+                    $_rows->create_date);
             }
         }
 
@@ -116,26 +119,12 @@ class Deactivator
         logger('[dfe.deactivator.self-destruct] deprovisioning instance "' .
             $instance->instance_id_text .
             '" created on ' .
-            $instance->create_date .
-            ' with ' .
-            $instance->extend_count_nbr .
-            ' extension(s)');
+            $instance->create_date);
 
         try {
             if (false === $dryRun) {
                 $_result = \Artisan::call('dfe:deprovision', ['instance-id' => $instance->instance_id_text]);
             } else {
-                //  Deactivate if activated...
-                if ($instance->activate_ind &&
-                    !Instance::find($instance->instance_id)->update([
-                        'activate_ind'       => false,
-                        'platform_state_nbr' => $state
-                    ])
-                ) {
-                    throw new ProvisioningException('[dfe.deactivator.self-destruct] * error updating state of "' .
-                        $instance->instance_id_text);
-                }
-
                 $_result = new \stdClass();
                 $_result->success = true;
             }
