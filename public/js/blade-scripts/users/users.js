@@ -31,6 +31,10 @@ $(function() {
                 }
             },
             {
+                "name": "create_date",
+                "data": "create_date"
+            },
+            {
                 "name": "first_name_text",
                 "data": "first_name"
             },
@@ -43,19 +47,12 @@ $(function() {
                 "data": "email"
             },
             {
-                "class": "details-control",
-                "orderable":false,
-                "data": null,
-                "defaultContent": "",
-                "render": function (data) {
-                    var userData = JSON.parse(data.original);
-                    if(userData.admin === true){
-                        return '<span class="label label-primary" id="user_type">System Administrator</span>';
-                    } else {
-                        return '<span class="label label-info" id="user_type">Instance Owner</span>';
-                    }
-
-                }
+                "name": "company_name_text",
+                "data": "company"
+            },
+            {
+                "name": "phone_text",
+                "data": "phoneText"
             },
             {
                 "class": "details-control",
@@ -64,16 +61,21 @@ $(function() {
                 "defaultContent": "",
                 "render": function (data) {
                     var userData = JSON.parse(data.original);
-                    if(userData.active_ind === true){
-                        return '<span class="label label-success">Active</span>';
+                    if(userData.admin === true){
+                        var str = '<span class="label label-primary" id="user_type">System Admin</span><br/>';
                     } else {
-                        return '<span class="label label-warning">Not Active</span>';
+                        var str = '<span class="label label-info" id="user_type">Instance Owner</span><br/>';
+                    }
+                    if(data.is_active == 1){
+                        return str + ' <span class="label label-success">Active</span>';
+                    } else {
+                        return str + ' <span class="label label-warning">Not Active</span>';
                     }
 
                 }
             }
         ],
-        "order": [[1, 'asc']],
+        "order": [[1, 'desc']],
         "processing" : true,
         "serverSide" : true,
         "ajax": {
@@ -236,11 +238,6 @@ function removeUser(id, name, type) {
 
 function add_waiting(){
     $('#userTable tbody').empty().append(
-        '<tr><td colspan="6"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td></tr>'
+        '<tr><td colspan="8"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td></tr>'
     );
 }
-
-
-
-
-

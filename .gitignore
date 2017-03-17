@@ -2,6 +2,7 @@
 vendor/
 !.env-dist
 .env*
+.DS_Store
 .idea/
 /build
 /tests/storage/

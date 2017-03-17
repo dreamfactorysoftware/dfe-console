@@ -147,26 +147,17 @@ class Provision extends ConsoleCommand
     {
         $_result = [];
 
-        if (null === ($_packages = trim($this->option('packages')))) {
+        if (null === ($_file = trim($this->option('packages')))) {
             return [];
         }
 
-        $_packages = explode(',', $_packages);
+        if(file_exists($_file)){
+            $this->isValidPackage($_file);
+            return $_result[] = $_file;
+        } else {
+            $this->error('Error while provisioning - could not locate package file.');
 
-        foreach ($_packages as $_index => $_package) {
-            if (is_dir($_package = trim($_package))) {
-                if (false !== ($_files = Disk::glob(scandir($_package), GlobFlags::GLOB_NODIR | GlobFlags::GLOB_NODOTS))) {
-                    foreach ($_files as $_file) {
-                        $_file = Disk::path([$_package, $_file]);
-                        if ($this->isValidPackage($_file)) {
-                            $_result[] = $_file;
-                        }
-                    }
-                }
-            }
         }
-
-        return $_result;
     }
 
     /**

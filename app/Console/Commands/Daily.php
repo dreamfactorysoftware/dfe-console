@@ -5,9 +5,14 @@ use DreamFactory\Enterprise\Console\Enums\TaskOperations;
 use DreamFactory\Enterprise\Database\Models\JobResult;
 use DreamFactory\Enterprise\Services\Utility\Deactivator;
 use Symfony\Component\Console\Input\InputOption;
+use DreamFactory\Enterprise\Common\Traits\Notifier;
+use Carbon\Carbon;
 
 class Daily extends ConsoleCommand
 {
+
+    use Notifier;
+
     //******************************************************************************
     //* Members
     //******************************************************************************
@@ -120,16 +125,32 @@ class Daily extends ConsoleCommand
 
         //  Process the configured tasks for this run
         foreach ($config as $_operation => $_taskConfig) {
+
             switch ($_operation) {
+
+                case TaskOperations::REMINDER:
+                    if (false !== array_get($_taskConfig, 'enable', false)) {
+                       $reminderInfo = Deactivator::processReminders(
+                           config('ads.instance-expires-days'),
+                           config('ads.reminder-days')
+                       );
+                    }
+                    if(!empty($reminderInfo)){
+                       $this->sendReminders($reminderInfo);
+                    }
+
+                    break;
+
                 case TaskOperations::ADS:
                     if (false !== array_get($_taskConfig, 'enable', false)) {
                         $_results[$_operation] =
                             Deactivator::deprovisionInactiveInstances(
-                                config('ads.activate-by-days'),
-                                config('ads.activate-allowed-extends'),
+                                config('ads.instance-expires-days'),
                                 config('ads.dry-run', true));
                     }
                     break;
+
+
             }
         }
 
@@ -143,5 +164,29 @@ class Daily extends ConsoleCommand
             [
                 ['dry-run', null, InputOption::VALUE_NONE, 'When specified, no instances will be deprovisioned.',],
             ]);
+    }
+
+
+    protected function sendReminders($reminderInfo){
+
+        foreach($reminderInfo as $days=>$data){
+            $this->notify(
+            $data['email'],
+            $data['display_name'],
+            'DreamFactory Trial Instance Expiration',
+            [
+                'instance'      => false,
+                'instanceUrl' => 'https://' . $data['url'],
+                'instanceName'  => $data['instance_id_text'],
+                'firstName'     => $data['firstname'],
+                'contentHeader' => 'Instance Trial Expiring.',
+                'headTitle' =>    'DreamFactory Trial Expiration Notification',
+                'daysRemaining' => $data['days'],
+                'expDate' => $data['expDate'],
+                'email-view' => 'emails.reminder'
+            ]);
+        }
+
+
     }
 }

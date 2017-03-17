@@ -72,6 +72,7 @@ return [
         /** 3rd-party Service Providers */
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         GrahamCampbell\Flysystem\FlysystemServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
     //******************************************************************************
     //* Aliases
@@ -120,5 +121,6 @@ return [
         'Snapshot'        => DreamFactory\Enterprise\Services\Facades\Snapshot::class,
         /** Third-party Aliases */
         'Flysystem'       => GrahamCampbell\Flysystem\Facades\Flysystem::class,
+        'Excel'           => Maatwebsite\Excel\Facades\Excel::class,
     ],
 ];

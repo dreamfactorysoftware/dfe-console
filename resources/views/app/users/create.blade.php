@@ -41,6 +41,18 @@
                                    value="{{ Input::old('nickname_text') }}">
                         </div>
                         <div class="form-group">
+                            <label>Company Name</label>
+                            <input id="company_name_text" name="company_name_text" class="form-control"
+                                   placeholder="Enter Company name (optional)." type="text"
+                                   value="{{ Input::old('company_name_text') }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input id="phone_text" name="phone_text" class="form-control"
+                                   placeholder="Enter phone number (optional)." type="text"
+                                   value="{{ Input::old('phone_text') }}">
+                        </div>
+                        <div class="form-group">
                             <div id="">
                                 <label>Set Password</label>
                                 <input id="new_password" name="new_password" class="form-control" value=""

@@ -26,13 +26,12 @@ if (!isset($dashboard_url) || empty($dashboard_url)) {
 @section('contentBody')
     <div>
         @if(false !== $instanceUrl)
-            <p>Your DreamFactory&trade; instance <strong>{{ $instanceName }}</strong> has been successfully created!</p>
+            <p>Thank you again for your interest in DreamFactory. Your trial period is scheduled to end in {{$daysRemaining}} days on {{$expDate}}. </p>
+            <p>After this date, your DreamFactory&trade; instance <strong>{{ $instanceName }}</strong> will no longer be available.</p>
+            <p>If you are interested in setting up your own DreamFactory instance or for questions regarding how to set up and export existing packages into your own instance, please contact
+            us at <a href="mailto:dspsales@dreamfactory.com" >dspsales@dreamfactory.com</a> or call +1-650-641-1800.</p>
             <p>To log in to your DreamFactory instance, go to <a href="{{ $instanceUrl }}" target="_blank">{{ $instanceUrl }}</a>.</p>
-            <p>You can also go to <a href="{{ $dashboard_url }}" target="_blank">{{ $dashboard_url }}</a> to access your DreamFactory&trade; Dashboard, where
-                you can manage all of your instances.</p>
-            <p>Please note that this instance is a fully featured trial and will be deleted after 30 days on {{ Carbon\Carbon::parse('now')->addMonth()->format('M j, Y') }}.</p>
-        @else
-            <p>The requested provisioning of your instance <strong>{{$instanceName}}</strong> did not complete successfully.</p>
+
         @endif
     </div>
 @stop

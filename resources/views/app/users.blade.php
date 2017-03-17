@@ -54,7 +54,11 @@
                         </div>
                         <div class="btn-group pull-right">
                             <button type="button" id="refresh" class="btn btn-default btn-sm fa fa-fw fa-refresh"
-                                    title="Reset sorting" value="" style="width: 40px"></button>
+                                    title="Reset sorting" value="" style="width: 40px; margin-right:7px;"></button>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <a type="button" id="export" class="btn btn-default btn-sm fa fa-fw fa-share-square-o"
+                               title="Export Table" href="/{{$prefix}}/users/export_excel" style="width: 40px; margin-right:7px; ">&nbsp</a>
                         </div>
                     </div>
                 </div>
@@ -75,17 +79,19 @@
                            id="userTable" style="table-layout: fixed; width: 100%;">
                         <thead style="width:100%">
                             <tr>
-                                <th style="max-width:100px; width:100px;"></th>
-                                <th style="max-width:200px; width:200px;">First Name</th>
-                                <th style="max-width:200px; width:200px;">Last Name</th>
-                                <th>Email</th>
-                                <th style="max-width:175px; width:175px;">Role</th>
-                                <th style="max-width:100px; width:100px;">Status</th>
+                                <th style="max-width:75px; width:75px;"></th>
+                                <th style="max-width:125px; width:125px;">Create Date</th>
+                                <th style="max-width:125px; width:125px;">First Name</th>
+                                <th style="max-width:125px; width:125px;">Last Name</th>
+                                <th style="max-width:200px; width:200px;">Email</th>
+                                <th style="max-width:150px; width:150px;">Company Name</th>
+                                <th style="max-width:150px; width:150px;" >Phone</th>
+                                <th style="max-width:175px; width:175px;">Role/Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="6"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td>
+                                <td colspan="8"><i class="fa fa-spinner fa-spin" style="font-size:24px"></i></td>
                             </tr>
                         </tbody>
                     </table>

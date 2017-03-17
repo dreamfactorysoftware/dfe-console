@@ -8,6 +8,7 @@ use DreamFactory\Enterprise\Database\Models\Instance;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
 use Illuminate\Support\Facades\Artisan;
+use Carbon\Carbon;
 
 /**
  * General deprovisioner
@@ -19,30 +20,25 @@ class Deactivator
     //*************************************************************************
 
     /**
-     * Deactivate instances that haven't been activated in "x" days
+     * Deactivate instances that have past the expiration for trial
      *
-     * @param int|null   $days
-     * @param int|null   $extends
+     * @param int|null   $expiresDays Days past creation date where instances become eligible for removal.
      * @param bool       $dryRun If true, go through the motions but do not deprovision instances.
      * @param array|null $ids    An array of one or more instance-id's that should only be considered
      *
      * @return array
      */
-    public static function deprovisionInactiveInstances($days = null, $extends = null, $dryRun = false, $ids = null)
+    public static function deprovisionInactiveInstances($expiresDays = null, $dryRun = false, $ids = null)
     {
         $_results = [];
         $_count = $_errors = 0;
 
-        $days = $days ?: config('ads.activate-by-days');
-        $extends = $extends ?: config('ads.activate-allowed-extensions');
+        $expiresDays = $expiresDays ?: config('ads.instance-expires-days');
 
-        $_rows = Instance::eligibleDeactivations($days, $ids);
+        $_rows = Instance::eligibleDeactivations($expiresDays, $ids);
 
         if (!empty($_rows)) {
             foreach ($_rows as $_instance) {
-                if (!empty($extends) && $_instance->extend_count_nbr <= $extends) {
-                    continue;
-                }
 
                 if (false === ($_result = static::selfDestruct($_instance, $dryRun, OperationalStates::DEACTIVATED))) {
                     $_errors++;
@@ -58,17 +54,63 @@ class Deactivator
             }
         }
 
-        \Log::notice('[dfe.deactivation-service] processed ' . number_format($_count, 0) . ' deactivations with ' . number_format($_errors, 0) . ' error(s)');
+        \Log::notice('[dfe.deactivation-service] processed ' .
+            number_format($_count, 0) .
+            ' deactivations with ' .
+            number_format($_errors, 0) .
+            ' error(s)');
 
         return $_results;
+    }
+
+    public static function processReminders($expiresDays = null, $reminderDays = [])
+    {
+
+        $expiresDays = $expiresDays ?: config('ads.instance-expires-days');
+        $reminderDays = $reminderDays ?: config('ads.instance-reminder-days');
+        $reminderInfo = [];
+
+        /** this will iterate through the number of days prior to expiration and gather qualifying instances $days */
+        foreach ($reminderDays as $days) {
+            if (!is_int($days)) {
+                throw new \Exception('Config ads.instance-reminder-days must be an integer!');
+            }
+            $_rows = Instance::getEligibleReminders(($expiresDays - $days));
+            if ($_rows) {
+                $instanceDataText = json_decode($_rows->instance_data_text, true);
+                $dt = Carbon::parse($_rows->create_date);
+                $exp = $dt->addDays($expiresDays);
+                $reminderInfo[$days] = [
+                    'days' => $days,
+                    'expDate' => $exp->format('M j, Y'),
+                    'instance_id_text' => $_rows->instance_id_text,
+                    'instance_data_text' => $instanceDataText,
+                    'firstname' => $_rows->firstname,
+                    'display_name' => $_rows->firstname,
+                    'email' => $_rows->email,
+                    'url' => $instanceDataText['env']['instance-id'] . '.' . $instanceDataText['env']['default-domain'],
+
+                ];
+                logger('[dfe.deactivator.processReminders] Deactivation ' . $days . ' day reminder sent for instance "' .
+                    $_rows->instance_id_text .
+                    '" created on ' .
+                    $_rows->create_date);
+            }
+        }
+
+        return $reminderInfo;
     }
 
     /**
      * Instructs an instance to deprovision itself
      *
      * @param \DreamFactory\Enterprise\Database\Models\Instance|EnterpriseModel $instance The instance
-     * @param bool                                                              $dryRun   If true, don't actually deprovision but put into DEACTIVATED state.
-     * @param int                                                               $state    The platform state to set when deactivation on a dry run
+     * @param bool                                                              $dryRun   If true, don't actually
+     *                                                                                    deprovision but put into
+     *                                                                                    DEACTIVATED state.
+     * @param int                                                               $state    The platform state to set
+     *                                                                                    when deactivation on a dry
+     *                                                                                    run
      *
      * @return array
      */
@@ -77,30 +119,27 @@ class Deactivator
         logger('[dfe.deactivator.self-destruct] deprovisioning instance "' .
             $instance->instance_id_text .
             '" created on ' .
-            $instance->create_date .
-            ' with ' .
-            $instance->extend_count_nbr .
-            ' extension(s)');
+            $instance->create_date);
 
         try {
             if (false === $dryRun) {
                 $_result = \Artisan::call('dfe:deprovision', ['instance-id' => $instance->instance_id_text]);
             } else {
-                //  Deactivate if activated...
-                if ($instance->activate_ind && !Instance::find($instance->instance_id)->update(['activate_ind' => false, 'platform_state_nbr' => $state])) {
-                    throw new ProvisioningException('[dfe.deactivator.self-destruct] * error updating state of "' . $instance->instance_id_text);
-                }
-
                 $_result = new \stdClass();
                 $_result->success = true;
             }
 
             if (false === $_result || !is_object($_result) || !$_result->success) {
-                throw new ProvisioningException('error deprovisioning instance-id "' . $instance->instance_id_text . '", check log for details');
+                throw new ProvisioningException('error deprovisioning instance-id "' .
+                    $instance->instance_id_text .
+                    '", check log for details');
             }
         } catch (\Exception $_ex) {
             $_result = false;
-            \Log::error('[dfe.deactivator.self-destruct] * exception deprovisioning "' . $instance->instance_id_text . '": ' . $_ex->getMessage());
+            \Log::error('[dfe.deactivator.self-destruct] * exception deprovisioning "' .
+                $instance->instance_id_text .
+                '": ' .
+                $_ex->getMessage());
         }
 
         return $_result;
