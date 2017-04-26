@@ -162,9 +162,19 @@ class FastTrack
      */
     protected static function validateHubspot(Request $request)
     {
-        //  Validate that it came from a HubSpot landing page
-        if (config('dfe.fast-track-hubspot-only', false) && empty($request->input('submissionGuid'))) {
-            return false;
+        $bodyContent = json_decode($request->getContent(), true);
+        /** Look for contact form content */
+        if(isset($bodyContent['is-contact']) && $bodyContent['is-contact'] === true){
+            $formInfo = $bodyContent['properties'];
+            /** Add to the request */
+            $request['first-name'] = $formInfo['firstname']['value'];
+            $request['last-name']  = $formInfo['lastname']['value'];
+            $request['email']  = $formInfo['email']['value'];
+            $request['phone']  = $formInfo['phone']['value'];
+            $request['company']  = $formInfo['company']['value'];
+            $request['password']  = $formInfo['password']['value'];
+            $request['password_confirmation']  = $formInfo['password_confirm']['value'];
+
         }
 
         return true;

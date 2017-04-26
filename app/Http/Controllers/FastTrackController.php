@@ -36,6 +36,7 @@ class FastTrackController extends FactoryController
     public function autoRegister(Request $request)
     {
         try {
+
             $_response = FastTrack::register($request);
 
             //  Redirect's get returned verbatim
