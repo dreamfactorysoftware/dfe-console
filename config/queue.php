@@ -15,7 +15,7 @@ return [
             'table'    => 'job_t',
             'queue'    => 'default',
             'expire'   => 60,
-            'database' => 'dfe-local',
+            'database' => 'dfe_local',
         ],
     ],
     //  Failed Queue Jobs

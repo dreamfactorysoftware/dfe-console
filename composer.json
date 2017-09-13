@@ -118,7 +118,8 @@
     ],
     "psr-4": {
       "DreamFactory\\Enterprise\\Console\\":  "app/",
-      "DreamFactory\\Enterprise\\Services\\": "lib/Services/"
+      "DreamFactory\\Enterprise\\Services\\": "lib/Services/",
+      "DreamFactory\\Enterprise\\Provisioners\\DreamFactory\\": "workbench/repos/dfe-dreamfactory-provisioner/src/"
     }
   },
   "autoload-dev":      {

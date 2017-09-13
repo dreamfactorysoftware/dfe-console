@@ -40,7 +40,7 @@ class Deprovision extends ConsoleCommand
     {
         parent::handle();
 
-        return \Queue::push(new DeprovisionJob($this->argument('instance-id'),
+        return $this->dispatch(new DeprovisionJob($this->argument('instance-id'),
             ['cluster-id' => $this->option('cluster-id'),]));
     }
 

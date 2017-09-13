@@ -53,7 +53,7 @@ return [
             /** Automated Deactivation System (ADS)
              See config/ads.php for deeper configuration*/
             'ads' => [
-                'enable' => false
+                'enable' => true
             ],
             'reminder' => [
                 /** Send reminders before decativation -  (ads.php)*/
