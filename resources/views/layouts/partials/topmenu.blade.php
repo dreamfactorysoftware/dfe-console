@@ -1,6 +1,5 @@
 <?php
 use DreamFactory\Enterprise\Console\Enums\ConsoleDefaults;
-use Illuminate\Support\Str;
 
 //  Set prefix if missing
 $prefix = isset($prefix) ? $prefix : ConsoleDefaults::UI_PREFIX;
@@ -12,7 +11,7 @@ if (!isset($pageName) || empty($pageName)) {
 }
 
 $_linkPrefix = '/' . ConsoleDefaults::UI_PREFIX . '/';
-$_resources = ['Home', 'Servers', 'Clusters', 'Users', 'Instances', 'Limits'];
+$_resources = ['Home', 'Servers', 'Clusters', 'Users', 'Instances'];
 
 if (!empty(config('reports.connections.' . config('reports.default') . '.client-host'))) {
     $_resources[] = 'Reports';

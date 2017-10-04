@@ -4,8 +4,8 @@
 $_uri = URL::getRequest()->getRequestUri();
 $_active = ' active';
 ?>
-@include('layouts.partials.topmenu',['pageName' => 'Home', 'prefix' => $prefix])
 @section('content')
+    @include('layouts.partials.topmenu',['pageName' => 'Home', 'prefix' => $prefix])
     <div class="col-xs-1 col-sm-2 col-md-2">
         <ul class="nav nav-pills nav-stacked visible-md visible-lg visible-sm">
             @foreach( $links as $_link)

@@ -10,6 +10,7 @@ if (null !== ($_customCssFile = config('dfe.common.custom-css-file'))) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{!! "DreamFactory Enterprise&trade;" !!} | @yield('page-title','Welcome!')</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
     <link rel="icon" type="image/png" href="/public/img/apple-touch-icon.png">
     <link href="/static/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet">
@@ -30,17 +31,14 @@ if (null !== ($_customCssFile = config('dfe.common.custom-css-file'))) {
     {!! $_customCssFile !!}
 </head>
 <body class="@yield('body-class')">
-<div>
     @include('layouts.partials.navbar')
 
     <div id="page-content" class="container-fluid container-content">
-        <div class="row">
-            <div id="content" class="col-xs-12 col-sm-12 col-md-12 main">
-                @yield('content')
-            </div>
+        <div id="content" class="col-xs-12 col-sm-12 col-md-12 main">
+            @yield('content')
         </div>
     </div>
-</div>
+<div class="clearfix"></div>
 <script type="text/javascript" src="/static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/bootstrap-datepicker-1.4.0/js/bootstrap-datepicker.min.js"></script>
 </body>

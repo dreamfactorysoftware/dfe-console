@@ -22,7 +22,6 @@ if (true === config('dfe.enable-console-api', false)) {
             \Route::resource('mounts', 'Ops\MountController');
             \Route::resource('app-keys', 'Ops\AppKeyController');
             \Route::resource('instances', 'Ops\InstanceController');
-            \Route::resource('limits', 'Ops\LimitController');
         });
 }
 
@@ -60,9 +59,6 @@ if (config('dfe.enable-fast-track')) {
         \Route::get('users/edit/{id}/{user_type}', 'Resources\UserController@edit');
         \Route::get('cluster/{clusterId}/instances', 'Resources\ClusterController@getInstances');
         \Route::get('instances/get_instances', 'Resources\InstanceController@get_instances');
-        \Route::get('instance/{instanceId}/services', 'Resources\LimitController@getInstanceServices');
-        \Route::get('instance/{instanceId}/users', 'Resources\LimitController@getInstanceUsers');
-        \Route::get('instance/{instanceId}/admins', 'Resources\LimitController@getInstanceAdmins');
         \Route::delete('instance/{instanceId}/delete', 'Resources\InstanceController@delete');
         \Route::get('reports/kibana', 'Resources\ReportController@getKibana');
 
@@ -72,7 +68,6 @@ if (config('dfe.enable-fast-track')) {
         \Route::resource('servers', 'Resources\ServerController');
         \Route::resource('clusters', 'Resources\ClusterController');
         \Route::resource('instances', 'Resources\InstanceController');
-        \Route::resource('limits', 'Resources\LimitController');
         \Route::resource('reports', 'Resources\ReportController');
     });
 

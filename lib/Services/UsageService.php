@@ -7,7 +7,6 @@ use DreamFactory\Enterprise\Common\Traits\EntityLookup;
 use DreamFactory\Enterprise\Database\Exceptions\InstanceNotActivatedException;
 use DreamFactory\Enterprise\Database\Models\Cluster;
 use DreamFactory\Enterprise\Database\Models\Instance;
-use DreamFactory\Enterprise\Database\Models\Limit;
 use DreamFactory\Enterprise\Database\Models\MetricsDetail;
 use DreamFactory\Enterprise\Database\Models\Mount;
 use DreamFactory\Enterprise\Database\Models\Server;
@@ -145,7 +144,6 @@ class UsageService extends BaseService implements MetricsProvider
                 'mount'    => Mount::count(),
                 'server'   => Server::count(),
                 'cluster'  => Cluster::count(),
-                'limit'    => Limit::count(),
                 'instance' => Instance::count(),
             ],
         ];
