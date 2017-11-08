@@ -93,7 +93,8 @@ class Daily extends ConsoleCommand
                         $_results[$_table] = call_user_func([\DB::class, $_operation], $_sql, $_bindings);
                         \Log::info('[dfe.daily.database.' . $_operation . '] ' . $_label);
                     } catch (\Exception $_ex) {
-                        \Log::error($_results[$_table] = '[dfe.daily.database.' . $_operation . '] exception: ' . $_ex->getMessage());
+                        \Log::error($_results[$_table] =
+                            '[dfe.daily.database.' . $_operation . '] exception: ' . $_ex->getMessage());
                     }
                 }
             }
@@ -130,27 +131,35 @@ class Daily extends ConsoleCommand
 
                 case TaskOperations::REMINDER:
                     if (false !== array_get($_taskConfig, 'enable', false)) {
-                       $reminderInfo = Deactivator::processReminders(
-                           config('ads.instance-expires-days'),
-                           config('ads.reminder-days')
-                       );
+                        $reminderInfo = Deactivator::processReminders(
+                            config('ads.instance-expires-days'),
+                            config('ads.reminder-days')
+                        );
                     }
-                    if(!empty($reminderInfo)){
-                       $this->sendReminders($reminderInfo);
+                    if (!empty($reminderInfo)) {
+                        $this->sendReminders($reminderInfo);
                     }
 
                     break;
 
                 case TaskOperations::ADS:
                     if (false !== array_get($_taskConfig, 'enable', false)) {
-                        $_results[$_operation] =
-                            Deactivator::deprovisionInactiveInstances(
-                                config('ads.instance-expires-days'),
-                                config('ads.dry-run', true));
+                        $deactivator = new Deactivator();
+
+                        if (config('ads.deactivate-by-user') === true) {
+                            $_results[$_operation] =
+                                $deactivator->deprovisionInactiveUsers(
+                                    config('ads.instance-expires-days'),
+                                    config('ads.dry-run', true));
+
+                        } else {
+                            $_results[$_operation] =
+                                $deactivator->deprovisionInactiveInstances(
+                                    config('ads.instance-expires-days'),
+                                    config('ads.dry-run', true));
+                        }
                     }
                     break;
-
-
             }
         }
 
@@ -166,27 +175,25 @@ class Daily extends ConsoleCommand
             ]);
     }
 
+    protected function sendReminders($reminderInfo)
+    {
 
-    protected function sendReminders($reminderInfo){
-
-        foreach($reminderInfo as $days=>$data){
+        foreach ($reminderInfo as $days => $data) {
             $this->notify(
-            $data['email'],
-            $data['display_name'],
-            'DreamFactory Trial Instance Expiration',
-            [
-                'instance'      => false,
-                'instanceUrl' => 'https://' . $data['url'],
-                'instanceName'  => $data['instance_id_text'],
-                'firstName'     => $data['firstname'],
-                'contentHeader' => 'Instance Trial Expiring.',
-                'headTitle' =>    'DreamFactory Trial Expiration Notification',
-                'daysRemaining' => $data['days'],
-                'expDate' => $data['expDate'],
-                'email-view' => 'emails.reminder'
-            ]);
+                $data['email'],
+                $data['display_name'],
+                'DreamFactory Trial Instance Expiration',
+                [
+                    'instance'      => false,
+                    'instanceUrl'   => 'https://' . $data['url'],
+                    'instanceName'  => $data['instance_id_text'],
+                    'firstName'     => $data['firstname'],
+                    'contentHeader' => 'Instance Trial Expiring.',
+                    'headTitle'     => 'DreamFactory Trial Expiration Notification',
+                    'daysRemaining' => $data['days'],
+                    'expDate'       => $data['expDate'],
+                    'email-view'    => 'emails.reminder'
+                ]);
         }
-
-
     }
 }

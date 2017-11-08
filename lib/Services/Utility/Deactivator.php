@@ -5,16 +5,23 @@ use DreamFactory\Enterprise\Console\Ops\Facades\OpsClient;
 use DreamFactory\Enterprise\Database\Enums\DeactivationReasons;
 use DreamFactory\Enterprise\Database\Models\EnterpriseModel;
 use DreamFactory\Enterprise\Database\Models\Instance;
+use DreamFactory\Enterprise\Database\Models\User;
 use DreamFactory\Enterprise\Services\Exceptions\ProvisioningException;
 use DreamFactory\Enterprise\Services\Facades\Provision;
+use DreamFactory\Enterprise\Services\Jobs\DeprovisionJob;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Carbon\Carbon;
+use League\Flysystem\Exception;
 
 /**
  * General deprovisioner
  */
 class Deactivator
 {
+
+    use DispatchesJobs;
+
     //*************************************************************************
     //* Methods
     //*************************************************************************
@@ -23,12 +30,12 @@ class Deactivator
      * Deactivate instances that have past the expiration for trial
      *
      * @param int|null   $expiresDays Days past creation date where instances become eligible for removal.
-     * @param bool       $dryRun If true, go through the motions but do not deprovision instances.
-     * @param array|null $ids    An array of one or more instance-id's that should only be considered
+     * @param bool       $dryRun      If true, go through the motions but do not deprovision instances.
+     * @param array|null $ids         An array of one or more instance-id's that should only be considered
      *
      * @return array
      */
-    public static function deprovisionInactiveInstances($expiresDays = null, $dryRun = false, $ids = null)
+    public function deprovisionInactiveInstances($expiresDays = null, $dryRun = false, $ids = null)
     {
         $_results = [];
         $_count = $_errors = 0;
@@ -63,6 +70,35 @@ class Deactivator
         return $_results;
     }
 
+    public function deprovisionInactiveUsers($expiresDays = null, $dryRun = false, $ids = null)
+    {
+
+        $_count = $_errors = 0;
+        $_results = [];
+
+        $users = User::eligibleDeactivations($expiresDays);
+
+        /** Now see if those users have any instances we need to clean up first. */
+        foreach ($users as $user) {
+            $instances = $user->instances;
+            foreach ($instances as $instance) {
+                \Log::notice('[dfe.deactivation-users]' .
+                    sprintf(' User instance %s is being removed for user: %s', $instance->instance_name_text,
+                        $user->email_addr_text));
+
+                $this->dispatch(new DeprovisionJob($instance->instance_name_text));
+            }
+            \Log::notice('[dfe.deactivation-users]' .
+                sprintf(' User %s is being removed - email: %s', $user->id, $user->email_addr_text));
+        }
+
+        $userIds = $users->pluck('id')->toArray();
+
+        User::destroy($userIds);
+
+        return $_results;
+    }
+
     public static function processReminders($expiresDays = null, $reminderDays = [])
     {
 
@@ -81,17 +117,21 @@ class Deactivator
                 $dt = Carbon::parse($_rows->create_date);
                 $exp = $dt->addDays($expiresDays);
                 $reminderInfo[$days] = [
-                    'days' => $days,
-                    'expDate' => $exp->format('M j, Y'),
-                    'instance_id_text' => $_rows->instance_id_text,
+                    'days'               => $days,
+                    'expDate'            => $exp->format('M j, Y'),
+                    'instance_id_text'   => $_rows->instance_id_text,
                     'instance_data_text' => $instanceDataText,
-                    'firstname' => $_rows->firstname,
-                    'display_name' => $_rows->firstname,
-                    'email' => $_rows->email,
-                    'url' => $instanceDataText['env']['instance-id'] . '.' . $instanceDataText['env']['default-domain'],
+                    'firstname'          => $_rows->firstname,
+                    'display_name'       => $_rows->firstname,
+                    'email'              => $_rows->email,
+                    'url'                => $instanceDataText['env']['instance-id'] .
+                        '.' .
+                        $instanceDataText['env']['default-domain'],
 
                 ];
-                logger('[dfe.deactivator.processReminders] Deactivation ' . $days . ' day reminder sent for instance "' .
+                logger('[dfe.deactivator.processReminders] Deactivation ' .
+                    $days .
+                    ' day reminder sent for instance "' .
                     $_rows->instance_id_text .
                     '" created on ' .
                     $_rows->create_date);

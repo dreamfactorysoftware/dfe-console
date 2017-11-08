@@ -1,6 +1,8 @@
 /app/move-instance-one.sh
 vendor/
 !.env-dist
+composer.json
+composer.lock
 .env*
 .DS_Store
 .idea/

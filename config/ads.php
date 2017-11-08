@@ -12,4 +12,8 @@ return [
     'reminder-days'            => env('DFE_ADS_REMINDER_DAYS', [10, 3]),
     /** If true, all the deactivation logic will run, but instances will *not* be deprovisioned. However, the extension count will be incremented. */
     'dry-run'                  => false,
+    /** Deactivate by user will look at users' signups and not when the instances expire. It will also destroy all instances belonging to that user as
+     * well as the user's account. Default behavior is deactivate by instance, not by user. */
+    'deactivate-by-user'       => true,
+
 ];

@@ -217,7 +217,9 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
     /** @inheritdoc */
     public function deprovision(DeprovisionJob $job)
     {
-        return $this->resolve($job->getInstance()->guest_location_nbr)->deprovision(ProvisionServiceRequest::createDeprovision($job->getInstance()));
+        $deProvisionReq = ProvisionServiceRequest::createDeprovision($job->getInstance());
+
+        return $this->resolve($job->getInstance()->guest_location_nbr)->deprovision($deProvisionReq);
     }
 
     /**
@@ -349,7 +351,8 @@ class ProvisioningManager extends BaseManager implements ResourceProvisionerAwar
      */
     public function selfDestruct($instanceId, $days = null, $extends = null, $dryRun = false)
     {
-        return Deactivator::deprovisionInactiveInstances($days, $extends, $dryRun, [$instanceId]);
+        $deactivator = new Deactivator();
+        return $deactivator->deprovisionInactiveInstances($days, $dryRun);
     }
 
     /**
